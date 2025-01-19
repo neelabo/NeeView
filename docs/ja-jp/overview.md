@@ -1,8 +1,7 @@
-<ANNOUNCE/>
-
-## 概要
+# 説明
 
   フォルダーや圧縮ファイルにある画像を本のように閲覧できる画像ビューアーです。  
+  強力なカスタマイズが可能です。
   
   * 標準対応画像フォーマット (bmp, jpg, gif, tiff, png, ico, WIC対応画像)
   * 圧縮ファイル対応 (zip, rar, 7z, lzh, cbr, cbz, cb7, ...)
@@ -21,7 +20,8 @@
   * Webブラウザからの画像ドロップ
   * Susieプラグイン対応
  
-  詳細は以下のページを参照してください。
-  
-  * [NeeView Site](https://neelabo.github.io/NeeView/ja-jp/)
+  詳細は  [NeeView Site](https://neelabo.github.io/NeeView/ja-jp/) を参照してください。
 
+# システム要件
+
+  * Windows 10 64bit 以降

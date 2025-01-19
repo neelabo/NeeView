@@ -1,8 +1,7 @@
-<ANNOUNCE/>
+# Description
 
-## Overview
-
-  Image viewer that displays images in folders and compressed files like books.
+Image viewer that displays images in folders and compressed files like books.  
+Powerful customization is possible.
 
   * Standard correspondence image format (bmp, jpg, gif, tiff, png, ico, WIC image)
   * Compressed file support (zip, rar, 7z, lzh, cbr, cbz, cb7, ...)
@@ -21,6 +20,8 @@
   * Image drop from web browser
   * Susie plugin support
 
-  For details, refer to the following page.
-  
-  * [NeeView Project Wiki](https://bitbucket.org/neelabo/neeview/wiki/)
+See [NeeView Site](https://neelabo.github.io/NeeView/en-us/) for details.
+
+# System Requirements
+
+  * Windows 10, Windows 11 (64bit)

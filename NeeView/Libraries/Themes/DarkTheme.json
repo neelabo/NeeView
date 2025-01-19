@@ -1,6 +1,6 @@
 {
   "Format": "NeeView.Theme/1.0.0",
-  "FormatManual": "https://bitbucket.org/neelabo/neeview/wiki/Theme",
+  "FormatManual": "https://neelabo.github.io/NeeView/en-us/theme.html",
   "Colors": {
     "Window.Background": "#FF000000",
     "Window.Foreground": "#FFF0F0F0",

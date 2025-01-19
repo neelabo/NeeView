@@ -1,5 +1,5 @@
 param (
-    [string]$Path = "ChangeLog.md",
+    [string]$Path = "changelog.md",
     [string]$Version,
     [string]$Culture
 )
@@ -61,9 +61,9 @@ Write-Output ""
 Write-Output "----"
 Write-Output ""
 if ($Culture -eq "ja-jp") {
-    Write-Output "これ以前の更新履歴は[こちら](https://bitbucket.org/neelabo/neeview/wiki/ChangeLog)を参照してください。"
+    Write-Output "これ以前の更新履歴は [こちら](https://neelabo.github.io/NeeView/ja-jp/changelog.html) を参照してください。"
 }
 else {
-    Write-Output "Please see [here](https://bitbucket.org/neelabo/neeview/wiki/ChangeLog) for the previous change log."
+    Write-Output "Please see [here](https://neelabo.github.io/NeeView/en-us/changelog.html) for the previous change log."
 }
 

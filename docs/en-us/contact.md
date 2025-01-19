@@ -1,8 +1,8 @@
 # Support Contact
 
-Create your issue on Bitbucket.
+Create your issue on GitHub.
 
-* [RealtimeSearch (Bitbucket)](https://bitbucket.org/neelabo/neeview)
+* [NeeView (GitHub)](https://github.com/neelabo/NeeView)
 
 Or comment on our blog.
 

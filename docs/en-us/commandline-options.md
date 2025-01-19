@@ -1,4 +1,4 @@
-## :pushpin: 起動オプション
+# 起動オプション
 
 > NeeView.exe [Options...] [File or Folder]
 
@@ -16,17 +16,16 @@
 |--script=<string> | 指定されたスクリプトファイルを起動時に実行します
 |-- | オプションリストの終わりを示す。これ以降の引数はファイル名とみなされます
 
-:information_source: コマンドラインオプションは`設定`よりも優先されます。
+> [!NOTE]  
+> コマンドラインオプションは`設定`よりも優先されます。
 
-### 使用例
+## 使用例
 
 `NeeView.exe -s "E:\Pictures"`  
 `NeeView.exe -o "E:\Pictures?search=foobar"`
 `NeeView.exe --window=full`  
 `NeeView.exe --setting="C:\Sample\CustomUserSetting.xml" --new-window=off`
 
-----
+## その他
 
-## :pushpin: その他
-
-* `SHIFTキー` を押しながら起動すると新しいウィンドウで起動します。
+* `SHIFT` を押しながら起動すると新しいウィンドウで起動します。

@@ -41,7 +41,7 @@ Read-Host "Press Enter to continue"
 # environment
 $product = 'NeeView'
 $Win10SDK = "C:\Program Files (x86)\Windows Kits\10\bin\10.0.22621.0\x64"
-$issuesUrl = "https://bitbucket.org/neelabo/neeview/issues"
+$issuesUrl = "https://github.com/neelabo/NeeView/issues"
 
 # sync current directory
 [System.IO.Directory]::SetCurrentDirectory((Get-Location -PSProvider FileSystem).Path)
@@ -222,7 +222,7 @@ function Build-ProjectFrameworkDependent($platform) {
 }
 
 # package section
-function New-Package($platform, $productName, $productDir, $packageDir) {
+function New-Package($platform, $productName, $productDir, $packageDir, $fd) {
 	New-Item $packageDir -ItemType Directory > $null
 
 	Copy-Item $productDir\* $packageDir -Recurse -Exclude ("*.pdb", "$product.settings.json")
@@ -241,8 +241,9 @@ function New-Package($platform, $productName, $productDir, $packageDir) {
 	New-ConfigForZip $productDir "$productName.settings.json" $packageDir
 
 	# generate README.html
-	New-Readme $packageDir "en-us" "Zip"
-	New-Readme $packageDir "ja-jp" "Zip"
+	$target = $fd ? "Zip-fd" : "Zip"
+	New-Readme $packageDir "en-us" $target
+	New-Readme $packageDir "ja-jp" $target
 }
 
 function Edit-Markdown{
@@ -252,8 +253,7 @@ function Edit-Markdown{
 		[object[]]$Value,
 		[switch]$IncrementDepth,
 		[switch]$DecrementDepth,
-		[switch]$ChopTitle,
-		[switch]$ChopLanguageHeader
+		[switch]$ChopTitle
 	)
 
 	process {
@@ -272,8 +272,6 @@ function Edit-Markdown{
 				else {
 					$line
 				}
-			}
-			elseif ($ChopLanguageHeader -and ($line -match "^<div\s+id=""lang""")) {
 			}
 			else {
 				$line
@@ -295,31 +293,38 @@ function New-Readme {
 
 	$source = @()
 
+	$rev = "Rev. ${revision}"
 	if ($target -eq "Canary") {
-		$postfix = "Canary ${dateVersion}"
-		$source += @("Rev. ${revision}", "")
-		$source += Get-Content "$readmeSource/canary.md"
+		$source += Get-Content "$readmeSource\package-canary.md" | Edit-Markdown -IncrementDepth | ForEach-Object { $_.replace("<custom-revision/>", $rev)}
+	}
+	elseif ($target -eq "Beta") {
+		$source += Get-Content "$readmeSource\package-beta.md" | Edit-Markdown -IncrementDepth | ForEach-Object { $_.replace("<custom-revision/>", $rev)}
 	}
 
-	$overviewContent = Get-Content "$readmeSource\overview.md"
+	$overviewContent = Get-Content "$readmeSource\overview.md" | Edit-Markdown -IncrementDepth
 	$source += @("")
 	$source += $overviewContent
 
-	$environmentContent = Get-Content "$readmeSource\environment.md"
-	$environmentContent = $environmentContent -replace "<VERSION/>", $postfix
-	$source += @("")
-	$source += $environmentContent
+	# $environmentContent = Get-Content "$readmeSource\environment.md"
+	# $environmentContent = $environmentContent -replace "<VERSION/>", $postfix
+	# $source += @("")
+	# $source += $environmentContent
 	
-	<#
-	if (($target -eq ".zip") -or ($target -eq ".beta")) {
-		$inputs += "$readmeDir\Package-Zip.md"
+	$source += @("")
+	if (($target -eq "Zip") -or ($target -eq "Beta")) {
+		$source += Get-Content "$readmeSource\package-zip.md" | Edit-Markdown -IncrementDepth
 	}
-	elseif (($target -eq ".zip-fd") -or ($target -eq ".canary")) {
-		$inputs += "$readmeDir\Package-ZipFd.md"
+	elseif (($target -eq "Zip-fd") -or ($target -eq "Canary")) {
+		$source += Get-Content "$readmeSource\package-zip-fd.md" | Edit-Markdown -IncrementDepth
 	}
-	#>
+	elseif ($target -eq "Msi") {
+		$source += Get-Content "$readmeSource\package-installer.md" | Edit-Markdown -IncrementDepth
+	}
+	elseif ($target -eq "Appx") {
+		$source += Get-Content "$readmeSource\package-storeapp.md" | Edit-Markdown -IncrementDepth
+	}
 
-	$contactContent = Get-Content "$readmeSource\contact.md" | Edit-Markdown -IncrementDepth -ChopLanguageHeader
+	$contactContent = Get-Content "$readmeSource\contact.md" | Edit-Markdown -IncrementDepth
 	$source += @("")
 	$source += $contactContent
 
@@ -339,12 +344,12 @@ function New-Readme {
 	$source += $thirdPartyLicenseContent
 
 	if ($target -eq "Canary") {
-		$changeLogContent = Get-GitLogMarkdown "$product <VERSION/> - ChangeLog"
+		$changeLogContent = Get-GitLogMarkdown "$product $postfix - Changelog"
 	}
 	else {
-		$changeLogContent = .\SelectChangeLog.ps1 -Path "$readmeSource\changelog.md" -Culture $culture
+		$changeLogContent = .\SelectChangelog.ps1 -Path "$readmeSource\changelog.md" -Culture $culture
 	}
-	$changeLogContent = $changeLogContent -replace "<VERSION/>", $postfix
+	# $changeLogContent = $changeLogContent -replace "<VERSION/>", $postfix
 	$source += @("")
 	$source += $changeLogContent
 
@@ -467,6 +472,10 @@ function New-PackageAppend($packageDir, $packageAppendDir) {
 	# configure customize
 	New-ConfigForMsi $packageDir "${product}.settings.json" $packageAppendDir
 
+	# generate README.html
+	New-Readme $packageAppendDir "en-us" "Msi"
+	New-Readme $packageAppendDir "ja-jp" "Msi"
+
 	# icons
 	Copy-Item "$projectDir\Resources\App.ico" $packageAppendDir
 }
@@ -509,27 +518,23 @@ function New-Msi($arch, $packageDir, $packageAppendDir, $packageMsi) {
 
 		[xml]$xml = Get-Content $wxs
 
-		# remove $product.exe
-		$node = $xml.Wix.Fragment[0].DirectoryRef.Component | Where-Object { $_.File.Source -match "$product\.exe" }
-		if ($null -ne $node) {
-			$componentId = $node.Id
-			$xml.Wix.Fragment[0].DirectoryRef.RemoveChild($node)
-
-			$node = $xml.Wix.Fragment[1].ComponentGroup.ComponentRef | Where-Object { $_.Id -eq $componentId }
-			$xml.Wix.Fragment[1].ComponentGroup.RemoveChild($node)
-		}
-
-		# remove $product.settings.json
-		$node = $xml.Wix.Fragment[0].DirectoryRef.Component | Where-Object { $_.File.Source -match "$product\.settings\.json" }
-		if ($null -ne $node) {
-			$componentId = $node.Id
-			$xml.Wix.Fragment[0].DirectoryRef.RemoveChild($node)
-
-			$node = $xml.Wix.Fragment[1].ComponentGroup.ComponentRef | Where-Object { $_.Id -eq $componentId }
-			$xml.Wix.Fragment[1].ComponentGroup.RemoveChild($node)
-		}
+		Remove-WixComponentNode $xml "$product.exe"
+		Remove-WixComponentNode $xml "$product.settings.json"
+		Remove-WixComponentNode $xml "README.html"
+		Remove-WixComponentNode $xml "README.ja-jp.html"
 
 		$xml.Save($wxs)
+	}
+	
+	function Remove-WixComponentNode($xml, $name) {
+		$node = $xml.Wix.Fragment[0].DirectoryRef.Component | Where-Object { (Split-Path $_.File.Source -Leaf) -eq $name }
+		if ($null -ne $node) {
+			$componentId = $node.Id
+			$xml.Wix.Fragment[0].DirectoryRef.RemoveChild($node)
+
+			$node = $xml.Wix.Fragment[1].ComponentGroup.ComponentRef | Where-Object { $_.Id -eq $componentId }
+			$xml.Wix.Fragment[1].ComponentGroup.RemoveChild($node)
+		}
 	}
 
 	function New-MsiSub($packageMsi, $culture) {
@@ -739,7 +744,7 @@ function Build-PackageSource-x64 {
 	
 	# create package source
 	Write-Host "`n[Package] ...`n" -fore Cyan
-	New-Package "x64" $product $publishDir_x64 $packageDir_x64
+	New-Package "x64" $product $publishDir_x64 $packageDir_x64 $false
 
 	$global:build_x64 = $true
 }
@@ -753,7 +758,7 @@ function Build-PackageSource-x64-fd {
 	
 	# create package source
 	Write-Host "`n[Package framework dependent] ...`n" -fore Cyan
-	New-Package "x64" $product $publishDir_x64_fd $packageDir_x64_fd
+	New-Package "x64" $product $publishDir_x64_fd $packageDir_x64_fd $true
 
 	$global:build_x64_fd = $true
 }
@@ -886,15 +891,14 @@ $packageMsi_x64 = "$packageName_x64.msi"
 $packageAppxDir_x64 = "${product}${appVersion}-appx-x64"
 $packageX64Appx = "${product}${appVersion}.appx"
 
-$packageCanaryDir = "${product}Canary"
-$packageCanary = "${product}Canary${dateVersion}.zip"
-$packageCanaryWild = "${product}Canary*.zip"
+# $packageCanaryDir = "${product}Canary"
+# $packageCanary = "${product}Canary${dateVersion}.zip"
+# $packageCanaryWild = "${product}Canary*.zip"
 
-$packageBetaDir = "${product}Beta"
-$packageBeta = "${product}Beta${dateVersion}.zip"
-$packageBetaWild = "${product}Beta*.zip"
+# $packageBetaDir = "${product}Beta"
+# $packageBeta = "${product}Beta${dateVersion}.zip"
+# $packageBetaWild = "${product}Beta*.zip"
 
-<# -- new Canary/Beta package name (after GitHub) 
 $packageNameCanary = "${product}${appVersion}-Canary${dateVersion}"
 $packageCanaryDir = "$packageNameCanary"
 $packageCanary = "$packageNameCanary.zip"
@@ -904,7 +908,6 @@ $packageNameBeta = "${product}${appVersion}-Beta${dateVersion}"
 $packageBetaDir = "$packageNameBeta"
 $packageBeta = "$packageNameBeta.zip"
 $packageBetaWild = "${product}${appVersion}-Beta*.zip"
-#>
 
 if (-not $continue) {
 	Build-Clear

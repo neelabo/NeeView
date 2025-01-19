@@ -568,7 +568,7 @@
 
 - ほぼすべてのUIコントロールが調整されました。
 - テーマを増やしました。メニュー部のテーマーカラー設定は廃止されました。 (設定 > ウィンドウ > テーマ)
-- カスタムテーマを作成することで自由に配色することが可能になりました。テーマファイルフォーマットは[こちら](https://bitbucket.org/neelabo/neeview/wiki/Theme)を参照してください。
+- カスタムテーマを作成することで自由に配色することが可能になりました。テーマファイルフォーマットは[こちら](https://neelabo.github.io/NeeView/ja-jp/theme.html)を参照してください。
 - 設定ウィンドウにもテーマが適用されるようになりました。
 - フォントの設定が全体的に見直されました (設定 > フォント)
 
@@ -601,7 +601,7 @@
 - スクリプト：ページ切り替えイベント OnPageChanged を追加。
 - スクリプト：ページ読み込み完了を待機する命令 nv.Book.Wait() 追加。
 - スクリプト：nv.Environment追加
-- 開発：多言語開発環境を整備。詳細は[こちら](https://bitbucket.org/neelabo/neeview/src/master/Language/Readme.md)を参照してください。
+- 開発：多言語開発環境を整備。詳細は[こちら](https://github.com/neelabo/NeeView/tree/master/NeeView/Languages)を参照してください。
 
 ### 修正
 
@@ -1613,7 +1613,7 @@
 * 「検索ボックスの表示ON/OFF」コマンド追加
 
 現在のフォルダー以下からブックのファイル名検索をします。ただし、圧縮フォルダー内では無効です。  
-ある程度のあいまい検索を行うようにしています。検索オプション等の詳細は [ユーザーガイド](https://bitbucket.org/neelabo/neeview/wiki/UserGuide) の「フォルダーリストの検索ボックスについて」を参照してください。
+ある程度のあいまい検索を行うようにしています。検索オプション等の詳細は [ユーザーガイド](https://neelabo.github.io/NeeView/ja-jp/userguide.html) の「フォルダーリストの検索ボックスについて」を参照してください。
 
 ### 圧縮ファイルに含まれる圧縮ファイルのブック対応
 
@@ -1732,7 +1732,7 @@
 ### ストアアプリ公開
 
 [ストアアプリ](https://www.microsoft.com/store/apps/9p24z53hc1jr)を公開しました。基本的な動作は通常版と同じです。
-詳細は [こちら](https://bitbucket.org/neelabo/neeview/wiki/StoreApp) を参照してください。
+詳細は [こちら](https://neelabo.github.io/NeeView/ja-jp/package-storeapp.html) を参照してください。
 
 
 ### アプリアイコン変更
@@ -1829,7 +1829,7 @@ PDFに対応しました。
 
 1.23から仕組みを変更していましたが、いくつか修正したため、あらためてお知らせいたします。  
 
-オプションの詳細は [こちら](https://bitbucket.org/neelabo/neeview/wiki/CommandlineOption) を参照してください。
+オプションの詳細は [こちら](https://neelabo.github.io/NeeView/ja-jp/commandline-options.html) を参照してください。
 
 * コマンドラインヘルプ表示対応。 "--help" もしくは "-h" で説明を表示するようにしました。
 * 短いオプション名("-h"等)追加。

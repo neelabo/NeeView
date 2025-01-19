@@ -1,4 +1,4 @@
-# ChangeLog
+# Changelog
 
 
 ## 42.5
@@ -555,7 +555,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 
 - Almost all UI controls have been tuned.
 - We increased the theme. The theme color setting in the menu section has been abolished. (Settings > Window > Theme)
-- It is now possible to freely color by creating a custom theme. See [here](https://bitbucket.org/neelabo/neeview/wiki/Theme) for the theme file format.
+- It is now possible to freely color by creating a custom theme. See [here](https://neelabo.github.io/NeeView/en-us/theme.html) for the theme file format.
 - Themes are now applied to the settings window as well.
 - The font settings have been totally revised. (Settings > Fonts)
 
@@ -588,7 +588,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 - Script: Added page switching event OnPageChanged.
 - Script: Added instruction nv.Book.Wait() to wait for page loading to complete.
 - Script: Added nv.Environment
-- Develop: We have prepared a multilingual development environment. See [here](https://bitbucket.org/neelabo/neeview/src/master/Language/Readme.md) for more information.
+- Develop: We have prepared a multilingual development environment. See [here](https://github.com/neelabo/NeeView/tree/master/NeeView/Languages) for more information.
 
 ### Fixed
 
@@ -920,4 +920,4 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 - Other minor bug fixes.
 
 > [!NOTE]
-> There is no English version of ChangeLog prior to 37.0.
+> There is no English version of Changelog prior to 37.0.

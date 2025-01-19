@@ -1,26 +1,14 @@
 # NeeView
 
-  フォルダー内の画像を本のように閲覧できる画像ビューアーです。  
-  使い方は[こちらのページ](userguide.md)を参照してください。
+画像ビューアーです。 使い方は [ユーザー ガイド](userguide.md) を参照してください。
+
+## スクリーンショット
 
 ![NeeView39.jpg](../assets/images/neeview39.jpg)
 
-## ダウンロード
+## 説明
 
-- [GitHub Releases](https://github.com/neelabo/NeeView/releases)
-- [Microsoft Store](https://www.microsoft.com/store/apps/9p24z53hc1jr)
-- [Vector](https://www.vector.co.jp/soft/winnt/art/se512262.html)
-
-## 更新履歴
-
-  * [更新履歴](changelog.md)
-  * [既知の不具合](https://github.com/neelabo/NeeView/issues?q=is%3Aissue%20state%3Aopen%20label%3Abug)
-
-## 動作環境
-
-  * Windows 10, Windows 11 (64bit)
-
-## 特徴
+  フォルダー内の画像を本のように閲覧できる画像ビューアーです。  強力なカスタマイズが可能です。
 
   * 標準対応画像フォーマット (bmp, jpg, gif, tiff, png, ico, svg, WIC対応画像)
   * 圧縮ファイル対応 (zip, rar, 7z, lzh, cbr, cbz, cb7, ...)
@@ -39,10 +27,20 @@
   * マルチスレッド、先読み対応
   * Webブラウザからの画像ドロップ
 
-## 目次
+## システム要件
+
+  * Windows 10 64bit 以降
+
+## ダウンロード
+
+- [GitHub Releases](https://github.com/neelabo/NeeView/releases)
+- [Microsoft Store](https://www.microsoft.com/store/apps/9p24z53hc1jr)
+- [Vector](https://www.vector.co.jp/soft/winnt/art/se512262.html)
+
+## 追加情報
 
  * [ユーザーガイド](userguide.md)
- * [起動オプション](boot-option.md)
+ * [コマンドライン オプション](commandline-options.md)
  * [環境変数](environment-value.md)
  * [テーマファイル仕様](theme.md)
  * パッケージの種類

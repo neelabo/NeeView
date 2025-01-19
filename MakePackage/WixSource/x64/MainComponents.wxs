@@ -182,12 +182,6 @@
       <Component Id="cmp5C49F5914B0668CB6DFDBB8DECA56D57" Guid="*">
         <File Id="fil6600874976ACEC333389DC5F11937D8A" KeyPath="yes" Source="$(var.ContentDir)\ReachFramework.dll" />
       </Component>
-      <Component Id="cmp4118AC6D52E8B8B69D7F6C32F68325D8" Guid="*">
-        <File Id="fil97769374407AB6582861A06C4DA76F1D" KeyPath="yes" Source="$(var.ContentDir)\README.html" />
-      </Component>
-      <Component Id="cmp290C4AF8975CE73DC75DA1C734ACCCE4" Guid="*">
-        <File Id="filC265276C95A5C66B40DF6304AECFE285" KeyPath="yes" Source="$(var.ContentDir)\README.ja-jp.html" />
-      </Component>
       <Component Id="cmpC2F3DD86FC1DDE44BE7017F68FB47FE5" Guid="*">
         <File Id="filD1A22E373D9FC051CCB4E2A4E88D45F6" KeyPath="yes" Source="$(var.ContentDir)\SevenZipSharpNE.dll" />
       </Component>
@@ -1775,8 +1769,6 @@
       <ComponentRef Id="cmpAAD5497968A7B8FFCB626EB296EB0E32" />
       <ComponentRef Id="cmpD9D2AA3C9EEDF60DA5590A0295DA82BF" />
       <ComponentRef Id="cmp5C49F5914B0668CB6DFDBB8DECA56D57" />
-      <ComponentRef Id="cmp4118AC6D52E8B8B69D7F6C32F68325D8" />
-      <ComponentRef Id="cmp290C4AF8975CE73DC75DA1C734ACCCE4" />
       <ComponentRef Id="cmpC2F3DD86FC1DDE44BE7017F68FB47FE5" />
       <ComponentRef Id="cmp2649E92579A3537BFD6860026671FCE5" />
       <ComponentRef Id="cmp3B4FCC07CAECDB94A069031BC168324E" />

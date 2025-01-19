@@ -107,6 +107,12 @@
         <File Source="$(var.AppendDir)NeeView.settings.json" KeyPath="yes" />
       </Component>
       <Component>
+        <File Source="$(var.AppendDir)README.html" KeyPath="yes" />
+      </Component>
+      <Component>
+        <File Source="$(var.AppendDir)README.ja-jp.html" KeyPath="yes" />
+      </Component>
+      <Component>
         <RegistryValue Root="HKLM" Key="SOFTWARE\NeeLaboratory\NeeView" Name="InstallDir" Type="string" Value="[INSTALLFOLDER]" KeyPath="yes"/>
      </Component>
     </ComponentGroup>

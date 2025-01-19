@@ -27,7 +27,7 @@ namespace NeeView
         public string ApplicationName => Environment.ApplicationName;
         public string DispVersion => Environment.DispVersion + $" ({(Environment.IsX64 ? "64bit" : "32bit")})";
         public string LicenseUri { get; private set; }
-        public string ProjectUri => "https://bitbucket.org/neelabo/neeview/";
+        public string ProjectUri => "https://github.com/neelabo/NeeView";
         public bool IsCheckerEnabled => Checker.IsEnabled;
 
         public BitmapFrame Icon { get; set; }

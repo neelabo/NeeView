@@ -1,8 +1,8 @@
 # 問い合わせ先
 
-Bitbucket で課題を作成してください。
+GitHub で課題を作成してください。
 
-* [NeeView (Bitbucket)](https://bitbucket.org/neelabo/neeview)
+* [NeeView (GitHub)](https://github.com/neelabo/NeeView)
 
 もしくは、ブログにコメントしてください。
 
