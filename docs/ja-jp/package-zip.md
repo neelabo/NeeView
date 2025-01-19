@@ -1,7 +1,5 @@
 # NeeView ZIP版について
 
-パッケージ名: `NeeViewXX.X.zip`
-
 ポータブル パッケージです。  
 
 * インストール不要です。Zipを展開後、そのまま `NeeView.exe` を実行してください。  

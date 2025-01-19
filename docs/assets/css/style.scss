@@ -1,0 +1,21 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+.inner {
+    max-width: 1012px;
+}
+
+#culture_switch {
+    text-align: right;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    color: #fff;
+}
+
+#culture_switch a {
+    color: #fff;
+}
+

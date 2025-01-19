@@ -298,14 +298,14 @@ function New-Readme {
 	if ($target -eq "Canary") {
 		$postfix = "Canary ${dateVersion}"
 		$source += @("Rev. ${revision}", "")
-		$source += Get-Content "$readmeSource/Canary.md"
+		$source += Get-Content "$readmeSource/canary.md"
 	}
 
-	$overviewContent = Get-Content "$readmeSource\Overview.md"
+	$overviewContent = Get-Content "$readmeSource\overview.md"
 	$source += @("")
 	$source += $overviewContent
 
-	$environmentContent = Get-Content "$readmeSource\Environment.md"
+	$environmentContent = Get-Content "$readmeSource\environment.md"
 	$environmentContent = $environmentContent -replace "<VERSION/>", $postfix
 	$source += @("")
 	$source += $environmentContent
@@ -319,14 +319,14 @@ function New-Readme {
 	}
 	#>
 
-	$contactContent = Get-Content "$readmeSource\Contact.md" | Edit-Markdown -IncrementDepth -ChopLanguageHeader
+	$contactContent = Get-Content "$readmeSource\contact.md" | Edit-Markdown -IncrementDepth -ChopLanguageHeader
 	$source += @("")
 	$source += $contactContent
 
 	$licenseContent = Get-Content "$solutionDir\LICENSE.md"
 	$licenseContent = @("## License") + $licenseContent
-	if (Test-Path "$readmeSource\LicenseAppendix.md") {
-		$licenseAppendixContent = Get-Content "$readmeSource\LicenseAppendix.md"
+	if (Test-Path "$readmeSource\license-appendix.md") {
+		$licenseAppendixContent = Get-Content "$readmeSource\license-appendix.md"
 		$licenseContent += @("")
 		$licenseContent += $licenseAppendixContent
 	}
@@ -342,7 +342,7 @@ function New-Readme {
 		$changeLogContent = Get-GitLogMarkdown "$product <VERSION/> - ChangeLog"
 	}
 	else {
-		$changeLogContent = .\SelectChangeLog.ps1 -Path "$readmeSource\ChangeLog.md" -Culture $culture
+		$changeLogContent = .\SelectChangeLog.ps1 -Path "$readmeSource\changelog.md" -Culture $culture
 	}
 	$changeLogContent = $changeLogContent -replace "<VERSION/>", $postfix
 	$source += @("")

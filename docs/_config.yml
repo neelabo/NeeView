@@ -1,0 +1,16 @@
+theme: jekyll-theme-slate
+
+title: NeeView
+
+defaults:
+- scope:
+    path: 'en-us'
+  values:
+    language: en-US
+    description: An image viewer that allows you to browse images in folders and compressed files like a book. Powerful customization is available.
+- scope:
+    path: 'ja-jp'
+  values:
+    language: ja-JP
+    description: フォルダ内の画像や圧縮ファイルを本のように閲覧できる画像ビューア。強力なカスタマイズが可能です。
+

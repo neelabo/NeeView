@@ -1,7 +1,5 @@
 # NeeView Canary 版について
 
- パッケージ名: `NeeViewXX.X-CanaryXXXX.zip`
-
 NeeView Canary は、開発中のスナップショットです。  
 正式版で提供される予定の機能を先行体験するためのものです。
 

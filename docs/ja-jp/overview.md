@@ -23,5 +23,5 @@
  
   詳細は以下のページを参照してください。
   
-  * [NeeViewプロジェクト Wiki](https://bitbucket.org/neelabo/neeview/wiki/)
+  * [NeeView Site](https://neelabo.github.io/NeeView/ja-jp/)
 

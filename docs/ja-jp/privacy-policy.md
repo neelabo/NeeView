@@ -1,5 +1,3 @@
-<div id="lang" style="text-align: right; font-weight: bold;"><u>JA</u> / <a href="../en-us/PrivacyPolicy">EN</a></div>
-
 # 個人情報保護方針
 
 (Last update: 2018-04-09)

@@ -1,7 +1,5 @@
 # NeeView Beta 版について
 
- パッケージ名: `NeeViewXX.X-BetaXXXX.zip`
-
 NeeView Beta は、正式版リリース直前のバージョンです。  
 新機能追加はなく、不具合修正のみを行います。おおよそ１～２週間で正式版がリリースされます。
 

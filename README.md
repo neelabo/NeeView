@@ -1,8 +1,14 @@
+[Click here for NeeView user site](https://neelabo.github.io/NeeView/en-us/) / [NeeView ユーザー サイトはこちら](https://neelabo.github.io/NeeView/ja-jp/)
+
+----
+
 # NeeView
 
 ![App Icon](MakePackage/Appx/Resources/Assets/AppStoreLogo.scale-100.png) 
 
-![Screenshot](docs/images/NeeView39.jpg)
+![Screenshot](docs/assets/images/neeview39.jpg)
+
+## 概要
 
  フォルダーや圧縮ファイルにある画像を本のように閲覧できる画像ビューアーです。  
  強力かカスタマイズが可能です。
@@ -23,6 +29,7 @@
   * マルチスレッド、先読み対応
   * Webブラウザからの画像ドロップ
   * Susieプラグイン対応
+
  
  ## 動作環境
 
