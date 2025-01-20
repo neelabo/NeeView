@@ -1,3 +1,6 @@
+> [!NOTE]  
+> English version is under construction.
+
 # 最新版での不具合
 
 こちらの [課題リスト](https://github.com/neelabo/NeeView/issues?q=is%3Aissue%20state%3Aopen%20label%3Abug) から確認できます。

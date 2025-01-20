@@ -1,3 +1,6 @@
+> [!NOTE]  
+> English version is under construction.
+
 # NeeView ユーザーガイド
 (2019-07-13 更新)
 

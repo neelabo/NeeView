@@ -1,5 +1,5 @@
-# 環境変数
+# Environment Variable
 
-|name|detail
+|name|description
 |----|------
-|NEEVIEW_PROFILE | ユーザーデータの既定の保存場所を指定します。全てのパッケージで機能します。
+|NEEVIEW_PROFILE | Specifies the default storage location for user data. Works for all packages.

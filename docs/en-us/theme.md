@@ -1,192 +1,186 @@
-# テーマファイル仕様
+# Theme File Specifications
 
-テーマのコントロール配色を定義します。JSONフォーマットです。
+Defines the control color scheme for the theme, in JSON format.
 
-ZIP版であれば、既定のテーマの定義ファイルは "Libraries/Themes" に配置されています。カスタムテーマを作る際の参考にしてください。
+For the ZIP version, the default theme definition files are located in “Libraries/Themes”. Please use it as a reference when creating a custom theme.
 
-## Format
+### Element: Format
 
-テーマファイルであることを示す固定値です。
+A fixed value indicating that this is a theme file.
 
     "Format": "NeeView.Theme/1.0.0",
 
-## FormatManual
+### Element: FormatManual
 
-このページのURLです。アプリはこの項目を無視します。
+URL for this page. The application ignores this item.
 
-    "FormatManual": "https://neelabo.github.io/NeeView/ja-jp/theme.html",
+    "FormatManual": "https://neelabo.github.io/NeeView/en-us/theme.html",
 
-## BasedOn
+### Element: BasedOn
 
-定義を継承します。この設定は省略可能です。
+Inherits the definition. This setting is optional.
 
-`themes://` を指定した場合は既定のテーマファイルを参照します。そのままのファイル名の場合は同じフォルダーのファイルを参照します。
+If `themes://` is specified, it refers to the default theme file. If the file name is left as it is, it refers to a file in the same folder.
 
-この継承を使用して、変更したい部分だけの色定義をするといった使用ができます。
+This inheritance can be used to define only the portions of the code that need to be changed.
 
-例：既定のダークテーマを継承
+e.g., Inherit default dark theme
 
     "BasedOn": "themes://DarkTheme.json",
 
-## Colors
+### Element: Colors
 
-「コントロールの色定義」の連想配列です。
+An associative array of “Control Color Definition".
 
     "Colors": {
         :
     }
 
 
-# コントロールの色定義
+## Control Color Definition
 
-## キー
+### Key
 
-フォーマット：
+    e.g., Button.MouseOver.Background
 
-    [部位(.補足)].[属性]
+Keys are defined by letters and periods.
+It is expressed in terms of control name, status, attribute, etc., and indicates where it is to be applied.
+The last token is an “attribute” and is important for fallback.
 
-キーはアルファベットとピリオドで定義されます。
-「部位」は適用するコントロールを示します。
-「属性」はそのコントロール内部でのパーツ指定です。
+### Value
 
+Format:
 
-## 値
+    [Color|ReferenceKey](/Opacity)
 
-フォーマット：
+#### Color
 
-    [色|参照キー](/不透明度)
+Colors are specified in .NET color specification format: `#AARRGGBB`, `#RRGGBB`, `#ARGB`, `#RGB`, color string (e.g., `Red`).
 
-### 色
-
-「色」は #AARRGGBB, #RRGGBB, #ARGB, #RGB, 色文字列(例:"Red") といった .NET の色指定フォーマットで色指定します。
-
-例： Window.Background は黒色
+e.g., Window.Background is black
 
     "Window.Background": "#FF000000",
 
-### 参照キー
+#### ReferenceKey
 
-色の変わりに他のキーを指定します。
+Specify another key instead of a color and use that color.
 
-例： IconButton.Pressed.Border の色は Control.Accent と同じ
+e.g., IconButton.Pressed.Border color is the same as Control.Accent
 
     "IconButton.Pressed.Border": "Control.Accent",
 
-### 不透明度
+#### Opacity
 
-「不透明度」は "/少数" で指定します。"/0.0"で完全に透明になります。
-省略した場合は "/1.0" を指定するのと同じで不透明になります。
+Opacity is specified by `/[0.0-1.0]`.
+If omitted, it will be opaque, the same as specifying `/1.0`.
 
-
-例： Window.InactiveTitle の色は Window.ActiveTitle の 50% の半透明色
+e.g., Window.InactiveTitle is 50% translucent color of Window.
 
     "Window.InactiveTitle": "Window.ActiveTitle/0.5",
 
+## Fallback
 
-## フォールバック
+Automatically determines a substitute color if the key or value is undefined.
 
-キーもしくは値が未定義の場合に代用の色を自動で決定します。
+- If the attribute “Foreground” is not defined for AAA, it refers to “Window.Foreground”.
+- If the attribute “Background” is not defined for AAA, it refers to “Window.Background”.
+- If no other attributes of AAA are defined, refer to “AAA.Background”.
 
-- 部位 AAA の属性 "Foreground" が定義されていない場合、"Window.Foreground" を参照します。
-- 部位 AAA の属性 "Background" が定義されていない場合、"Window.Background" を参照します。
-- 部位 AAA のそれ以外の属性が定義されていない場合、"AAA.Background" を参照します。
-
-例： SideBar.Border の値が未定義なので SideBar.Background を参照する。（この定義自体が存在しない場合も同様）
+e.g., SideBar.Background is referenced because the value of SideBar.Border is undefined. The same applies if this definition itself does not exist. 
 
     "SideBar.Border": "",
 
 
+## List of keys used in the theme
 
-# テーマで使用されるキーのリスト
-
-キー|説明
+Key|Description
 --|--
-Window.Background | ウィンドウ背景色
-Window.Foreground | ウィンドウ文字色
-Window.Border | ウィンドウボーダー色
-Window.ActiveTitle | ウィンドウアクティブ時のタイトル文字色
-Window.InactiveTitle | ウィンドウ非アクティブ時のタイトル文字色
-Window.Dialog.Border | ダイアログウィンドウのボーダー色
-Control.Background | 汎用：コントロールの背景色
-Control.Foreground | 汎用：コントロールの文字色
-Control.Border | 汎用：コントロールのボーダー色
-Control.GrayText | 汎用：コントロールの灰色文字色
-Control.Accent | 汎用：コントロールのアクセントカラー
-Control.AccentText | 汎用：コントロールのアクセントカラー上の文字色
-Control.Focus | 汎用：コントロールのフォーカス色
-Item.Separator | リスト項目の区切りの色
-Item.MouseOver.Background | リスト項目上にマウスカーソルがあるときの背景色
-Item.MouseOver.Border | リスト項目にマウスカーソルがあるときのボーダー色
-Item.Selected.Background | 選択されたリスト項目の背景色
-Item.Selected.Border | 選択されたリスト項目のボーダー色
-Item.Inactive.Background | 選択されたリスト項目が非アクティブなときの背景色
-Item.Inactive.Border | 選択されたリスト項目が非アクティブなときのボーダー色
-Button.Background | ボタンの背景色
-Button.Foreground | ボタンの文字色
-Button.Border | ボタンのボーダー色
-Button.MouseOver.Background | ボタンにマウスカーソルがあるときの背景色
-Button.MouseOver.Border | ボタンにマウスカーソルがあるときのボーダー色
-Button.Checked.Background | トグルボタンがチェックされているときの背景色
-Button.Checked.Border |トグルボタンがチェックされているときのボーダー色
-Button.Pressed.Background | ボタンが押されているときの背景色
-Button.Pressed.Border | ボタンが押されているときのボーダー色
-IconButton.Background | アイコンボタンの背景色
-IconButton.Foreground | アイコンボタンの文字色
-IconButton.Border | アイコンボタンのボーダー色
-IconButton.MouseOver.Background | アイコンボタンにマウスカーソルがあるときの背景色
-IconButton.MouseOver.Border | アイコンボタンにマウスカーソルがあるときのボーダー色
-IconButton.Checked.Background | トグルアイコンボタンがチェックされているときの背景色
-IconButton.Checked.Border | トグルアイコンボタンがチェックされているときのボーダー色
-IconButton.Pressed.Background | アイコンボタンが押されているときの背景色
-IconButton.Pressed.Border | アイコンボタンが押されているときの背景色
-Slider.Background | スライダーコントロールの背景色
-Slider.Foreground | スライダーコントロールの文字色
-Slider.Border | スライダーコントロールのボーダー色
-Slider.Thumb | スライダーコントロールのつまみ部分の色
-Slider.Track | スライダーコントロールのトラック部分の色
-ScrollBar.Background | スクロールバーの背景色
-ScrollBar.Foreground | スクロールバーの文字色
-ScrollBar.Border | スクロールバーのボーダー色
-ScrollBar.MouseOver | スクロールバーにマウスカーソルがあるときの色
-ScrollBar.Pressed | スクロールバーが押されたときの色
-TextBox.Background | テキストボックスの背景色
-TextBox.Foreground | テキストボックスの文字色
-TextBox.Border | テキストボックスのボーダー色
-Menu.Background | メニューの背景色
-Menu.Foreground | メニューの文字色
-Menu.Border | メニューのボーダー色
-Menu.Separator | メニューの区切りの色
-SideBar.Background | サイドバーの背景色
-SideBar.Foreground | サイドバーの文字色
-SideBar.Border | サイドバーのボーダー色
-Panel.Background | パネルの背景色
-Panel.Foreground | パネルの文字色
-Panel.Border | パネルのボーダー色
-Panel.Header | パネルのサブタイトルの文字色
-Panel.Note | パネルの補足説明の文字色
-Panel.Separator | パネルでの区切りの色
-Panel.Splitter | パネルとパネルの区切りの色
-MenuBar.Background | メニューバーの背景色
-MenuBar.Foreground | メニューバーの文字色
-MenuBar.Border | メニューバーのボーダー色
-MenuBar.Address.Background | メニューバーのアドレス領域の背景色
-MenuBar.Address.Border | メニューバーのアドレス領域のボーダー色
-BottomBar.Background | ページスライダー部の背景色
-BottomBar.Foreground | ページスライダー部の文字色
-BottomBar.Border | ページスライダー部のボーダー色
-BottomBar.Slider.Background | ページスライダーの背景色
-BottomBar.Slider.Foreground | ページスライダーの文字色
-BottomBar.Slider.Border | ページスライダーのボーダー色
-BottomBar.Slider.Thumb | ページスライダーのつまみ部の色
-BottomBar.Slider.Track | ページスライダーのトラック部の色
-Toast.Background | トースト通知の背景色
-Toast.Foreground | トースト通知の文字色
-Toast.Border | トースト通知のボーダー色
-Notification.Background | メインビュー通知の背景色
-Notification.Foreground | メインビュー通知の文字色
-Thumbnail.Background | サムネイルの背景色
-Thumbnail.Foreground | サムネイルの文字色
-SelectedMark.Foreground | 現在項目を示すアイコンの色
-CheckIcon.Foreground | 履歴登録済アイコンの色
-BookmarkIcon.Foreground | ブックマークアイコンの色
-PlaylistItemIcon.Foreground | プレイリスト項目アイコンの色
+Window.Background | Window background color
+Window.Foreground | Window text color
+Window.Border | Window border color
+Window.ActiveTitle | Title text color when window is active
+Window.InactiveTitle | Title text color when window is inactive
+Window.Dialog.Border | Dialog window border color
+Control.Background | Generic: Background color of the control
+Control.Foreground | Generic: Text color of control
+Control.Border | Generic: Border color of control
+Control.GrayText | Generic: Gray text color of the control
+Control.Accent | Generic: Accent color for control
+Control.AccentText | Generic: Text color on control accent color
+Control.Focus | Generic: Focus color of control
+Item.Separator | List item separator color
+Item.MouseOver.Background | Background color when the mouse cursor is over a list item
+Item.MouseOver.Border | Border color when the mouse cursor is over a list item
+Item.Selected.Background | Background color of selected list item
+Item.Selected.Border | Border color of selected list item
+Item.Inactive.Background | Background color when selected list item is inactive
+Item.Inactive.Border | Border color when selected list item is inactive
+Button.Background | Background color of button
+Button.Foreground | Text color of button
+Button.Border | Border color of button
+Button.MouseOver.Background | Background color when the mouse cursor is on the button
+Button.MouseOver.Border | Border color when mouse cursor is on a button
+Button.Checked.Background | Background color when toggle button is checked
+Button.Checked.Border |Border color when toggle button is checked
+Button.Pressed.Background | Background color when button is pressed
+Button.Pressed.Border | Border color when button is pressed
+IconButton.Background | Background color of icon button
+IconButton.Foreground | Text color of icon button
+IconButton.Border | Border color of icon button
+IconButton.MouseOver.Background | Background color when the mouse cursor is on the icon button
+IconButton.MouseOver.Border | Border color when mouse cursor is on icon button
+IconButton.Checked.Background | Background color when toggle icon button is checked
+IconButton.Checked.Border | Border color when toggle icon button is checked
+IconButton.Pressed.Background | Background color when icon button is pressed
+IconButton.Pressed.Border | Border color when icon button is pressed
+Slider.Background | Background color of slider control
+Slider.Foreground | Text color of slider control
+Slider.Border | Border color of slider control
+Slider.Thumb | Color of the thumb of the slider control
+Slider.Track | Color of the track of the slider control
+ScrollBar.Background | Background color of scrollbar
+ScrollBar.Foreground | Text color of scrollbar
+ScrollBar.Border | Border color of scrollbar
+ScrollBar.MouseOver | Color when mouse cursor is on scrollbar
+ScrollBar.Pressed | Color when scrollbar is pressed
+TextBox.Background | Background color of text box
+TextBox.Foreground | Text color of text box
+TextBox.Border | Border color of text box
+Menu.Background | Background color of menu
+Menu.Foreground | Text color of menu
+Menu.Border | Border color of menu
+Menu.Separator | Menu separator color
+SideBar.Background | Background color of sidebar
+SideBar.Foreground | Text color of sidebar
+SideBar.Border | Border color of sidebar
+Panel.Background | Background color of panel
+Panel.Foreground | Text color of panel
+Panel.Border | Border color of panel
+Panel.Header | Text color of the subtitle of the panel
+Panel.Note | Text color of the panel's supplementary description
+Panel.Separator | Color of separator in panel
+Panel.Splitter | Panel-to-panel separator color
+MenuBar.Background | Background color of menu bar
+MenuBar.Foreground | Text color of menu bar
+MenuBar.Border | Border color of menu bar
+MenuBar.Address.Background | Background color of address area of menu bar
+MenuBar.Address.Border | Border color of address area of menu bar
+BottomBar.Background | Background color of the page slider section
+BottomBar.Foreground | Text color of the page slider section
+BottomBar.Border | Border color of the page slider section
+BottomBar.Slider.Background | Background color of page slider
+BottomBar.Slider.Foreground | Text color of page slider
+BottomBar.Slider.Border | Border color of page slider
+BottomBar.Slider.Thumb | Thumb color of page slider
+BottomBar.Slider.Track | Track color of page slider
+Toast.Background | Background color of toast notification
+Toast.Foreground | Text color of toast notification
+Toast.Border | Border color of toast notification
+Notification.Background | Background color of main view notification
+Notification.Foreground | Text color of main view notification
+Thumbnail.Background | Background color of thumbnail
+Thumbnail.Foreground | Text color of thumbnail
+SelectedMark.Foreground | Color of icon indicating current item
+CheckIcon.Foreground | Color of history registered icon
+BookmarkIcon.Foreground | Bookmark icon color
+PlaylistItemIcon.Foreground | Playlist item icon color

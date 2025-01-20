@@ -4,19 +4,19 @@
 
 ZIP版であれば、既定のテーマの定義ファイルは "Libraries/Themes" に配置されています。カスタムテーマを作る際の参考にしてください。
 
-## Format
+### 要素 : Format
 
 テーマファイルであることを示す固定値です。
 
     "Format": "NeeView.Theme/1.0.0",
 
-## FormatManual
+### 要素 : FormatManual
 
 このページのURLです。アプリはこの項目を無視します。
 
     "FormatManual": "https://neelabo.github.io/NeeView/ja-jp/theme.html",
 
-## BasedOn
+### 要素 : BasedOn
 
 定義を継承します。この設定は省略可能です。
 
@@ -28,7 +28,7 @@ ZIP版であれば、既定のテーマの定義ファイルは "Libraries/Theme
 
     "BasedOn": "themes://DarkTheme.json",
 
-## Colors
+### 要素 : Colors
 
 「コントロールの色定義」の連想配列です。
 
@@ -37,26 +37,23 @@ ZIP版であれば、既定のテーマの定義ファイルは "Libraries/Theme
     }
 
 
-# コントロールの色定義
+## コントロールの色定義
 
-## キー
+### キー
 
-フォーマット：
-
-    [部位(.補足)].[属性]
+    例：Button.MouseOver.Background
 
 キーはアルファベットとピリオドで定義されます。
-「部位」は適用するコントロールを示します。
-「属性」はそのコントロール内部でのパーツ指定です。
+コントロール名、コントロールの状態、コントロール部位などで表現されており、適用する場所を示しています。
+最後のトークンは「属性」であり、フォールバックで重要な意味を持ちます。
 
-
-## 値
+### 値
 
 フォーマット：
 
     [色|参照キー](/不透明度)
 
-### 色
+#### 色
 
 「色」は #AARRGGBB, #RRGGBB, #ARGB, #RGB, 色文字列(例:"Red") といった .NET の色指定フォーマットで色指定します。
 
@@ -64,15 +61,15 @@ ZIP版であれば、既定のテーマの定義ファイルは "Libraries/Theme
 
     "Window.Background": "#FF000000",
 
-### 参照キー
+#### 参照キー
 
-色の変わりに他のキーを指定します。
+色の変わりに他のキーを指定し、その色を使用します。
 
 例： IconButton.Pressed.Border の色は Control.Accent と同じ
 
     "IconButton.Pressed.Border": "Control.Accent",
 
-### 不透明度
+#### 不透明度
 
 「不透明度」は "/少数" で指定します。"/0.0"で完全に透明になります。
 省略した場合は "/1.0" を指定するのと同じで不透明になります。
@@ -87,17 +84,17 @@ ZIP版であれば、既定のテーマの定義ファイルは "Libraries/Theme
 
 キーもしくは値が未定義の場合に代用の色を自動で決定します。
 
-- 部位 AAA の属性 "Foreground" が定義されていない場合、"Window.Foreground" を参照します。
-- 部位 AAA の属性 "Background" が定義されていない場合、"Window.Background" を参照します。
-- 部位 AAA のそれ以外の属性が定義されていない場合、"AAA.Background" を参照します。
+- AAA の属性 "Foreground" が定義されていない場合、"Window.Foreground" を参照します。
+- AAA の属性 "Background" が定義されていない場合、"Window.Background" を参照します。
+- AAA のそれ以外の属性が定義されていない場合、"AAA.Background" を参照します。
 
-例： SideBar.Border の値が未定義なので SideBar.Background を参照する。（この定義自体が存在しない場合も同様）
+例： SideBar.Border の値が未定義なので SideBar.Background を参照する。この定義自体が存在しない場合も同様。
 
     "SideBar.Border": "",
 
 
 
-# テーマで使用されるキーのリスト
+## テーマで使用されるキーのリスト
 
 キー|説明
 --|--
@@ -138,7 +135,7 @@ IconButton.MouseOver.Border | アイコンボタンにマウスカーソルが�
 IconButton.Checked.Background | トグルアイコンボタンがチェックされているときの背景色
 IconButton.Checked.Border | トグルアイコンボタンがチェックされているときのボーダー色
 IconButton.Pressed.Background | アイコンボタンが押されているときの背景色
-IconButton.Pressed.Border | アイコンボタンが押されているときの背景色
+IconButton.Pressed.Border | アイコンボタンが押されているときのボーダー色
 Slider.Background | スライダーコントロールの背景色
 Slider.Foreground | スライダーコントロールの文字色
 Slider.Border | スライダーコントロールのボーダー色

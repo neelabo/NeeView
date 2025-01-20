@@ -1,3 +1,6 @@
+> [!NOTE]  
+> English version is under construction.
+
 # 起動オプション
 
 > NeeView.exe [Options...] [File or Folder]
