@@ -1,15 +1,22 @@
+<div id="culture_home"></div>
 <div id="culture_switch"></div>
 
 <script>
-    function setCultureSwitch() {
+    function getCurrentCulture() {
+        const path = location.pathname.split('/');
+        if (path.length < 3) return null;
+        const culture = path[2];
+        switch (culture) {
+            case "ja-jp":
+            case "en-us":
+                return culture;
+            default:
+                return null;
+        }
+    }
 
-        var element = document.getElementById("culture_switch");
-        if (element == null) return;
-
-        var path = location.pathname.split('/');
-        var cultureIndex = path.length - 2;
-
-        switch (path[cultureIndex]) {
+    function setCultureSwitch(culture) {
+        switch (culture) {
             case "ja-jp":
                 var nextCulture = "en-us";
                 var nextCultureString = "ENGLISH"
@@ -22,11 +29,29 @@
                 return;
         }
 
-        path[cultureIndex] = nextCulture;
-        var nextPath = path.join('/');
+        const path = location.pathname.split('/');
+        if (path.length < 3) return;
+        path[2] = nextCulture;
+        const nextPath = path.join('/');
 
+        const element = document.getElementById("culture_switch");
+        if (element == null) return;
         element.innerHTML = `<a href=\"${nextPath}\">${nextCultureString}</a>`;
     }
 
-    setCultureSwitch();
+    function setCultureHome(culture) {
+        if (culture == null) return;
+        const element = document.getElementById("culture_home");
+        if (element == null) return;
+        element.innerHTML = `<a href=\"{{ site.baseurl }}/${culture}/\">HOME</a>`;
+    }
+
+    function setCultureElement() {
+        const culture = getCurrentCulture();
+        if (culture == null) return;
+        setCultureSwitch(culture);
+        setCultureHome(culture);
+    }
+
+    setCultureElement();
 </script>
