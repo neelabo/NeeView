@@ -106,6 +106,13 @@ namespace NeeView
             catch (OperationCanceledException ex)
             {
                 Trace.WriteLine("InitializeCancelException: " + ex.Message);
+                bootLock.Dispose();
+
+                if (ex is OperationCanceledWithDialogException dialogException)
+                {
+                    dialogException.ShowDialog();
+                }
+
                 ShutdownWithoutSave();
                 return;
             }

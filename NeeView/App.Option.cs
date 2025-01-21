@@ -118,7 +118,7 @@ namespace NeeView
 
             var query = new QueryPath(src);
             if (query.Path is null) return null;
-            
+
             if (query.Scheme != QueryScheme.File)
             {
                 return query;
@@ -155,8 +155,10 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                new MessageDialog(ex.Message, NeeView.Properties.TextResources.GetString("BootErrorDialog.Title")).ShowDialog();
-                throw new OperationCanceledException("Wrong startup parameter");
+                var dialog = new MessageDialog(ex.Message, NeeView.Properties.TextResources.GetString("BootErrorDialog.Title"));
+                dialog.SizeToContent = SizeToContent.WidthAndHeight;
+                dialog.ContentRendered += (s, e) => dialog.InvalidateVisual();
+                throw new OperationCanceledWithDialogException("Wrong startup parameter", dialog);
             }
 
             if (option.IsHelp)
@@ -164,8 +166,7 @@ namespace NeeView
                 var dialog = new MessageDialog(optionMap.GetCommandLineHelpText(), NeeView.Properties.TextResources.GetString("BootOptionDialog.Title"));
                 dialog.SizeToContent = SizeToContent.WidthAndHeight;
                 dialog.ContentRendered += (s, e) => dialog.InvalidateVisual();
-                dialog.ShowDialog();
-                throw new OperationCanceledException("Show command line help");
+                throw new OperationCanceledWithDialogException("Show command line help", dialog);
             }
 
             if (option.IsClearRegistry)
@@ -175,6 +176,22 @@ namespace NeeView
             }
 
             return option;
+        }
+    }
+
+
+    public class OperationCanceledWithDialogException : OperationCanceledException
+    {
+        public OperationCanceledWithDialogException(string? message, MessageDialog dialog) : base(message)
+        {
+            Dialog = dialog;
+        }
+
+        public MessageDialog Dialog { get; }
+
+        public void ShowDialog()
+        {
+            Dialog.ShowDialog();
         }
     }
 }
