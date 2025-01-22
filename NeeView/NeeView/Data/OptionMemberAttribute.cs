@@ -12,6 +12,7 @@ namespace NeeView.Data
         public string? Default;
         public bool HasParameter;
         public bool RequireParameter;
+        public bool IsVisible = true;
 
         public OptionMemberAttribute() { }
         public OptionMemberAttribute(string? shortName, string? longName)
@@ -30,6 +31,7 @@ namespace NeeView.Data
         public bool HasParameter => _attribute.HasParameter;
         public bool RequireParameter => _attribute.RequireParameter;
         public string? HelpText => ResourceService.GetString(_attribute.HelpText);
+        public bool IsVisible => _attribute.IsVisible;
 
         public string PropertyName => _info.Name;
 

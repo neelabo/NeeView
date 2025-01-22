@@ -25,16 +25,23 @@ namespace NeeView.Data
     public class OptionMap<T>
         where T : class, new()
     {
+        private readonly string _usage = "Usage: NeeView.exe [Options...] [File or Folder...]";
+
+        private readonly static string[] _samples =
+        {
+            "NeeView.exe -s E:\\Pictures",
+            "NeeView.exe -o \"E:\\Pictures?search=foobar\"",
+            "NeeView.exe --window=full",
+            "NeeView.exe --setting=\"C:\\MySetting.json\" --new-window=off",
+        };
+
         // options
         private readonly List<OptionMemberElement> _elements;
 
         // values
         private readonly OptionValuesElement? _values;
 
-        /// <summary>
-        /// constructor
-        /// </summary>
-        /// <param name="source"></param>
+
         public OptionMap()
         {
             var type = typeof(T);
@@ -59,7 +66,6 @@ namespace NeeView.Data
             }
         }
 
-        //
         public OptionMemberElement? GetElement(string key)
         {
             var word = key.TrimStart('-');
@@ -74,53 +80,96 @@ namespace NeeView.Data
             }
         }
 
-
         public string GetCommandLineHelpText()
         {
-            return "Usage: NeeView.exe NeeView.exe [Options...] [File or Folder...]\n\n"
-                + GetHelpText() + "\n"
-                + "Example:\n"
-                + "    NeeView.exe -s E:\\Pictures\n"
-                + "    NeeView.exe -o \"E:\\Pictures?search=foobar\"\n"
-                + "    NeeView.exe --window=full\n"
-                + "    NeeView.exe --setting=\"C:\\MySetting.json\" --new-window=off";
+            var sb = new StringBuilder();
+            sb.AppendLine("Usage: " + _usage);
+            sb.AppendLine();
+            foreach (var element in _elements.Where(e => e.IsVisible))
+            {
+                sb.AppendLine($"{CreateParameterKeyFormat(element)}\n                {element.HelpText}\n");
+            }
+            sb.AppendLine($"--\n                {Properties.TextResources.GetString("AppOption.Terminator")}");
+            sb.AppendLine();
+            sb.AppendLine("Examples:");
+            foreach (var sample in _samples)
+            {
+                sb.AppendLine($"    {sample}");
+            }
+            return sb.ToString();
         }
 
-        //
-        public string GetHelpText()
+#if DEBUG
+        public string GetCommandLineHelpMarkdown()
         {
-            string text = "";
-            foreach (var element in _elements)
+            var sb = new StringBuilder();
+            //sb.AppendLine("# NeeView Command Line Options");
+            sb.AppendLine("# " + Properties.TextResources.GetString("BootOptionDialog.Title"));
+            sb.AppendLine();
+
+            sb.AppendLine("    > " + _usage);
+            sb.AppendLine();
+
+            sb.AppendLine("## Options");
+            sb.AppendLine();
+            sb.AppendLine($"Name|Description");
+            sb.AppendLine($"--|--");
+            foreach (var element in _elements.Where(e => e.IsVisible))
             {
-                // key
-                var keys = new List<string?> { element.ShortName != null ? "-" + element.ShortName : null, element.LongName != null ? "--" + element.LongName : null };
-                var key = string.Join(", ", keys.Where(e => e != null));
+                sb.AppendLine(EscapeMarkdown(CreateParameterKeyFormat(element)) + "|" + element.HelpText);
+            }
+            sb.AppendLine($"--|{Properties.TextResources.GetString("AppOption.Terminator")}");
+            sb.AppendLine();
 
-                // key value
-                string keyValue = element.GetValuePrototpye();
-                if (!element.HasParameter)
-                {
-                    keyValue = "";
-                }
-                else if (element.Default == null)
-                {
-                    keyValue = $"=<{keyValue}>";
-                }
-                else
-                {
-                    keyValue = $"[={keyValue}]";
-                }
+            sb.AppendLine("## Examples");
+            sb.AppendLine();
+            foreach (var sample in _samples)
+            {
+                sb.AppendLine($"    > {sample}");
+                sb.AppendLine();
+            }
+            sb.AppendLine();
+            sb.AppendLine("## Other");
+            sb.AppendLine("");
+            //sb.AppendLine("`SHIFT` を押しながら起動すると新しいウィンドウで起動します。");
+            sb.AppendLine("Hold down `SHIFT` to start the program in a new window.");
+            sb.AppendLine("");
+            sb.AppendLine("これ、ここじゃないな。");
+            return sb.ToString();
+        }
 
-                text += $"{key}{keyValue}\n                {element.HelpText}\n";
+        private string EscapeMarkdown(string text)
+        {
+            var regex = new Regex(@"[|<>]");
+            return regex.Replace(text, m => "\\" + m.Value);
+        }
+
+#endif // DEBUG
+
+        private string CreateParameterKeyFormat(OptionMemberElement element)
+        {
+            // key
+            var keys = new List<string?> { element.ShortName != null ? "-" + element.ShortName : null, element.LongName != null ? "--" + element.LongName : null };
+            var key = string.Join(", ", keys.Where(e => e != null));
+
+            // key value
+            string keyValue = element.GetValuePrototpye();
+            if (!element.HasParameter)
+            {
+                keyValue = "";
+            }
+            else if (element.Default == null)
+            {
+                keyValue = $"=<{keyValue}>";
+            }
+            else
+            {
+                keyValue = $"[={keyValue}]";
             }
 
-            text += $"--\n                {Properties.TextResources.GetString("AppOption.Terminator")}";
-
-            return text;
+            return key + keyValue;
         }
 
-
-        //
         public T ParseArguments(string[] args)
         {
             bool isOptionTerminated = false;
@@ -190,7 +239,6 @@ namespace NeeView.Data
             return target;
         }
 
-        //
         private static List<string> GetKeys(string keys)
         {
             if (keys.StartsWith("--", StringComparison.Ordinal))
@@ -207,7 +255,6 @@ namespace NeeView.Data
             }
         }
 
-        //
         private void Mapping(T source, Dictionary<string, string?> options, List<string> values)
         {
             foreach (var item in options)

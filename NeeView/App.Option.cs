@@ -74,6 +74,11 @@ namespace NeeView
         [OptionMember(null, "clear-registry", Default = "true", HelpText = "@AppOption.ClearRegistry")]
         public bool IsClearRegistry { get; set; }
 
+#if DEBUG
+        [OptionMember(null, "debug", HasParameter = true, RequireParameter = true, IsVisible = false)]
+        public string? DebugCommand { get; set; }
+#endif
+
         [OptionValues]
         public List<string> Values { get; set; } = new List<string>();
 

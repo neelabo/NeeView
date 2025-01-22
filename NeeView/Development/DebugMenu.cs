@@ -77,6 +77,10 @@ namespace NeeView
             item.Click += MenuItemDevExportColorsXaml_Click;
             collection.Add(item);
 
+            item = new MenuItem() { Header = "Export embedded documents" };
+            item.Click += MenuItemDevExportEmbeddedDocuments_Click;
+            collection.Add(item);
+
             item = new MenuItem() { Header = "Stop RemoteServer" };
             item.Click += MenuItemDevStopRemoteServer_Click;
             collection.Add(item);
@@ -90,6 +94,13 @@ namespace NeeView
             collection.Add(item);
 
             return top;
+        }
+
+        // [開発用] 組み込みドキュメントを出力
+        private void MenuItemDevExportEmbeddedDocuments_Click(object sender, RoutedEventArgs e)
+        {
+            DebugCommand.ExportEmbeddedDocuments();
+            MessageBox.Show("Export done.");
         }
 
         // [開発用] RemoteServer停止
@@ -176,5 +187,6 @@ namespace NeeView
             ExternalProcess.OpenWithFileManager(path, true);
         }
     }
+
 #endif // DEBUG
 }

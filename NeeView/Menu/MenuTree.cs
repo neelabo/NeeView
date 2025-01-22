@@ -103,7 +103,7 @@ namespace NeeView
             set { Name = (value == DefaultLabel) ? null : value; RaisePropertyChanged(); RaisePropertyChanged(nameof(DispLabel)); }
         }
 
-        public string? DispLabel => Label?.Replace("_", "", StringComparison.Ordinal);
+        public string DispLabel => Label.Replace("_", "", StringComparison.Ordinal);
 
         public string DefaultLongLabel
         {

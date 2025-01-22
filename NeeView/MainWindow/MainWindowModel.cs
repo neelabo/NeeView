@@ -287,13 +287,16 @@ namespace NeeView
             {
                 var path = App.Current.Option.ScriptQuery.ToEntityPath().SimplePath;
                 if (!string.IsNullOrEmpty(path))
-                { 
+                {
                     ScriptManager.Current.Execute(this, path, null, null);
                 }
             }
 
             // Script: OnStartup
             CommandTable.Current.TryExecute(this, ScriptCommand.EventOnStartup, null, CommandOption.None);
+
+            // [開発用] デバッグアクションの実行
+            DebugCommand.Execute(App.Current.Option.DebugCommand);
         }
 
         public void ContentRendered()

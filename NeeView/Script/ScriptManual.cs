@@ -148,7 +148,7 @@ namespace NeeView
             return ResourceService.Replace(_exampleTemplate);
         }
 
-        private string CreateScriptManualText()
+        public string CreateScriptManualText()
         {
             var builder = new StringBuilder();
 

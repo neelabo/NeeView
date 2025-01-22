@@ -26,13 +26,28 @@ namespace NeeView.Properties
         public static TextResourceManager Resource { get; } = new(LanguageResource);
 
 
-        public static void Initialize(CultureInfo culture)
+        public static void Initialize(CultureInfo culture, bool force = false)
         {
-            if (_initialized) return;
+            if (_initialized && !force) return;
             _initialized = true;
 
-#if false
             // 開発用：各カルチャのテスト
+            //AllCultureLoadTest();
+
+            Resource.Load(culture);
+
+            // 開発用：テキストの重複チェック
+            //CheckDuplicateText();
+
+            Resource.Add(new AppFileSource(new Uri("/Languages/shared.restext", UriKind.Relative)));
+        }
+
+        /// <summary>
+        /// 開発用：全てのカルチャのテスト
+        /// </summary>
+        [Conditional("DEBUG")]
+        private static void AllCultureLoadTest()
+        {
             foreach (var c in LanguageResource.Cultures)
             {
                 System.Diagnostics.Debug.WriteLine($"Culture: {c}");
@@ -41,12 +56,14 @@ namespace NeeView.Properties
                 SearchOptionManual.OpenSearchOptionManual();
                 System.Threading.Thread.Sleep(2000);
             }
-#endif
+        }
 
-            Resource.Load(culture);
-
-#if false
-            // 開発用：テキストの重複チェック
+        /// <summary>
+        /// 開発用：テキストの重複チェック
+        /// </summary>
+        [Conditional("DEBUG")]
+        private static void CheckDuplicateText()
+        {
             var resolved = new List<string>();
             Debug.WriteLine("<ResourceText.Duplicate>");
             foreach (var item in Resource.Map)
@@ -64,9 +81,6 @@ namespace NeeView.Properties
                 }
             }
             Debug.WriteLine("</ResourceText.Duplicate>");
-#endif
-
-            Resource.Add(new AppFileSource(new Uri("/Languages/shared.restext", UriKind.Relative)));
         }
 
         /// <summary>

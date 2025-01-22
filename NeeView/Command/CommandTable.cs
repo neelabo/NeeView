@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 
 // TODO: コマンド引数にコマンドパラメータを渡せないだろうか。（現状メニュー呼び出しであることを示すタグが指定されることが有る)
 
@@ -573,22 +574,31 @@ namespace NeeView
 
             using (var writer = new System.IO.StreamWriter(fileName, false))
             {
-                writer.WriteLine(HtmlHelpUtility.CreateHeader("NeeView Command List"));
-                writer.WriteLine($"<body><h1>{Properties.TextResources.GetString("HelpCommandList.Title")}</h1>");
-                writer.WriteLine($"<p>{Properties.TextResources.GetString("HelpCommandList.Message")}</p>");
-                writer.WriteLine("<table class=\"table-slim table-topless\">");
-                writer.WriteLine($"<tr><th>{Properties.TextResources.GetString("Word.Group")}</th><th>{Properties.TextResources.GetString("Word.Command")}</th><th>{Properties.TextResources.GetString("Word.Shortcut")}</th><th>{Properties.TextResources.GetString("Word.Gesture")}</th><th>{Properties.TextResources.GetString("Word.Touch")}</th><th>{Properties.TextResources.GetString("Word.Summary")}</th></tr>");
-                foreach (var command in _elements.Values.OrderBy(e => e.Order))
-                {
-                    writer.WriteLine($"<tr><td>{command.Group}</td><td>{command.Text}</td><td>{command.ShortCutKey.GetDisplayString()}</td><td>{command.MouseGesture.GetDisplayString()}</td><td>{command.TouchGesture.GetDisplayString()}</td><td>{command.Remarks}</td></tr>");
-                }
-                writer.WriteLine("</table>");
-                writer.WriteLine("</body>");
-
-                writer.WriteLine(HtmlHelpUtility.CreateFooter());
+                writer.WriteLine(CreateCommandListHelp());
             }
 
             ExternalProcess.Start(fileName);
+        }
+
+        public string CreateCommandListHelp()
+        {
+            var sb = new StringBuilder();
+
+            sb.AppendLine(HtmlHelpUtility.CreateHeader("NeeView Command List"));
+            sb.AppendLine($"<body><h1>{Properties.TextResources.GetString("HelpCommandList.Title")}</h1>");
+            sb.AppendLine($"<p>{Properties.TextResources.GetString("HelpCommandList.Message")}</p>");
+            sb.AppendLine("<table class=\"table-slim table-topless\">");
+            sb.AppendLine($"<tr><th>{Properties.TextResources.GetString("Word.Group")}</th><th>{Properties.TextResources.GetString("Word.Command")}</th><th>{Properties.TextResources.GetString("Word.Shortcut")}</th><th>{Properties.TextResources.GetString("Word.Gesture")}</th><th>{Properties.TextResources.GetString("Word.Touch")}</th><th>{Properties.TextResources.GetString("Word.Summary")}</th></tr>");
+            foreach (var command in _elements.Values.OrderBy(e => e.Order))
+            {
+                sb.AppendLine($"<tr><td>{command.Group}</td><td>{command.Text}</td><td>{command.ShortCutKey.GetDisplayString()}</td><td>{command.MouseGesture.GetDisplayString()}</td><td>{command.TouchGesture.GetDisplayString()}</td><td>{command.Remarks}</td></tr>");
+            }
+            sb.AppendLine("</table>");
+            sb.AppendLine("</body>");
+
+            sb.AppendLine(HtmlHelpUtility.CreateFooter());
+
+            return sb.ToString();
         }
 
         #endregion
