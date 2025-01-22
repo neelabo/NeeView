@@ -1,5 +1,13 @@
 # Changelog
 
+## 42.6
+(2025-01-22)
+
+### Changed
+
+- 7z.dll 24.09
+- Language: Updated zh-Hans
+
 
 ## 42.5
 (2025-01-12)
