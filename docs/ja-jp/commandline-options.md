@@ -1,31 +1,37 @@
-# 起動オプション
+# NeeView 起動オプション
 
-> NeeView.exe [Options...] [File or Folder]
+    > Usage: NeeView.exe [Options...] [File or Folder...]
 
-|name|detail
-|----|------
-|-h, --help | ヘルプを表示します
-|-v, --version | バージョン情報を表示します
-|-x, --setting=<string> | 設定ファイル(UserSetting.xml)のパスを指定します
-|-b, --blank | 画像ファイルを開かずに起動します
-|-r, --reset-placement | ウィンドウ座標を初期化します
-|-n, --new-window[=on/off] | 新しいウィンドウで起動するかを指定します
-|-s, --slideshow[=on/off] | スライドショウを開始するかを指定します
-|-o, --folderlist=<string> | 指定された場所の本棚を開きます。"?search="を追加することで検索キーワードも指定できます
-|--window=<normal\|min\|max\|full> | 指定されたウィンドウ状態で起動します
-|--script=<string> | 指定されたスクリプトファイルを起動時に実行します
-|-- | オプションリストの終わりを示す。これ以降の引数はファイル名とみなされます
+## Options
 
-> [!NOTE]  
-> コマンドラインオプションは`設定`よりも優先されます。
+Name|Description
+--|--
+-h, --help|このヘルプを表示します
+-v, --version|バージョン情報を表示します
+-x, --setting=\<string\>|設定ファイル "UserSetting.json" のパスを指定します
+-b, --blank|画像ファイルを開かずに起動します
+-r, --reset-placement|ウィンドウ座標をリセットします
+-n, --new-window[=off\|on]|新しいウィンドウで起動するかを指定します
+-s, --slideshow[=off\|on]|スライドショウを開始するかを指定します
+-o, --folderlist=\<string\>|本棚の場所を指定します
+--window=\<normal\|min\|max\|full\>|指定されたウィンドウ状態で起動します
+--script=\<string\>|指定されたスクリプト ファイルを起動時に実行します。'script:\foobar.nvjs' と指定することでスクリプト フォルダーのファイルを指定できます。
+--clear-registry|NeeView 用のレジストリをクリアする
+--|オプション リストの終りを示す。これ以後の引数はファイル名とみなされます
 
-## 使用例
+## Examples
 
-`NeeView.exe -s "E:\Pictures"`  
-`NeeView.exe -o "E:\Pictures?search=foobar"`
-`NeeView.exe --window=full`  
-`NeeView.exe --setting="C:\Sample\CustomUserSetting.xml" --new-window=off`
+    > NeeView.exe -s E:\Pictures
 
-## その他
+    > NeeView.exe -o "E:\Pictures?search=foobar"
 
-* `SHIFT` を押しながら起動すると新しいウィンドウで起動します。
+    > NeeView.exe --window=full
+
+    > NeeView.exe --setting="C:\MySetting.json" --new-window=off
+
+
+## Other
+
+Hold down `SHIFT` to start the program in a new window.
+
+これ、ここじゃないな。

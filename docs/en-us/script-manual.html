@@ -1,0 +1,1626 @@
+---
+layout: default
+title: NeeView | NeeView Script Manual
+---
+
+<h1>NeeView Script Manual</h1>
+
+<h2>Overview</h2>
+<p>
+    Extend the command with a script. You can change the settings, execute multiple commands at once, or execute them as separate commands with changed command parameters.
+</p>
+<p>
+    Scripting is disabled by default. Set and enable on the Scripts page of Options.
+
+    <ul>
+        <li>The script grammar is JavaScript.</li>
+        <li><a href="https://github.com/sebastienros/jint">Jint</a> is used for the script engine.</li>
+        <li>The file extension is .nvjs.</li>
+        <li>The character code is UTF8. No BOM is recommended.</li>
+    </ul>
+</p>
+<p>
+    You can qualify the command with the doc comments at the top of the file. The keys are not case sensitive.
+
+    <table class="table-slim table-topless">
+        <tr><th>Key</th><th>Summary</th></tr>
+        <tr><td>&#64;args</td><td>Default arguments</td></tr>
+        <tr><td>&#64;description</td><td>Command description</td></tr>
+        <tr><td>&#64;mouseGesture</td><td>Default mouse gestures</td></tr>
+        <tr><td>&#64;name</td><td>Command name</td></tr>
+        <tr><td>&#64;shortCutKey</td><td>Default shortcuts</td></tr>
+        <tr><td>&#64;touchGesture</td><td>Default touch operation</td></tr>
+    </table>
+</p>
+
+<h2>Command script</h2>
+<p>
+    If the script file is placed in the script folder, it can be used as a command. One file is one command.
+
+    <ul>
+        <li>Shortcuts can be set in the "Command settings" of the Options like normal commands.</li>
+        <li>The file name becomes the command name.</li>
+    </ul>
+</p>
+
+<h2>Event script</h2>
+<p>
+    A specially named script file will be executed automatically.
+
+    <table class="table-slim">
+        <tr><td>OnStartup.nvjs</td><td>Executed when the application is launched.</td></tr>
+        <tr><td>OnBookLoaded.nvjs</td><td>Executes when the book is opened.</td></tr>
+        <tr><td>OnPageChanged.nvjs</td><td>Executes when the page view is changed.</td></tr>
+        <tr><td>OnWindowStateChanged.nvjs</td><td>Executed when the window state is changed.</td></tr>
+    </table>
+</p>
+
+<h2>Console</h2>
+<p>
+    A console for testing scripts. To open it, select "Options > Open console" from the menu.
+</p>
+
+<h4>Console-only command</h4>
+<p>
+    <table class="table-slim">
+        <tr><td>cls</td><td>Clear screen (Ctrl+L)</td></tr>
+        <tr><td>exit</td><td>Close console</td></tr>
+        <tr><td>help, ?</td><td>Open this script help</td></tr>
+    </table>
+</p><h1 class="sub">Script reference</h1><p>This section explains how to use NeeView-specific commands.</p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>include(string)</td><td>object</td><td>Load and execute the script.<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>path</td><td>string</td><td>Script path. Relative paths are relative to the current script location.</td></tr>
+</table></p>
+<h4>Returns</h4>
+<p><table class="table-none">
+<tr><td>object</td><td>Script execution result</td></tr>
+</table></p>
+<h4>e.g.</h4>
+<p><pre><code class="example">// Load and run Sample.nvjs
+include("Sample.nvjs")</code></pre></p>
+</details></td></tr>
+<tr><td>log(object)</td><td>void</td><td>Print a message to the console. It only works when you run the script from the console. For script testing.<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>log</td><td>object</td><td>Output message</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>sleep(int)</td><td>void</td><td>Suspends the script for the specified amount of time.<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>millisecond</td><td>int</td><td>Pause time (milliseconds)</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>system(string, string)</td><td>void</td><td>Run the external app.<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>filename</td><td>string</td><td>Executable path. If you specify a URL or file path, the associated app will be executed.</td></tr>
+<tr><td>args</td><td>string</td><td>App arguments (optional)</td></tr>
+</table></p>
+</details></td></tr>
+</table></p>
+<hr/>
+<h2 id="CommandHost">nv</h2>
+<p>Provides app-specific features.</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>Args</td><td>dictionary</td><td>r</td><td>Command arguments are stored in this array.</td></tr>
+<tr><td>Book</td><td><a href="#BookAccessor">BookAccessor</a></td><td>r</td><td>Current book accessor</td></tr>
+<tr><td>Bookmark</td><td><a href="#BookmarkPanelAccessor">BookmarkPanelAccessor</a></td><td>r</td><td>Bookmark panel accessor</td></tr>
+<tr><td>Bookshelf</td><td><a href="#BookshelfPanelAccessor">BookshelfPanelAccessor</a></td><td>r</td><td>Bookshelf panel accessor</td></tr>
+<tr><td>Command</td><td><a href="#CommandAccessor">CommandAccessor</a>[]</td><td>r</td><td>An associative array of command accessors. The commands are the same as those displayed under Options > Command Settings. For details, refer to <a href="#CommandList"/>Command list</a>.<details><h4>e.g.</h4>
+<p><pre><code class="example">// Execute "NextPage" command
+nv.Command["NextPage"].Execute()
+// As well
+nv.Command.NextPage.Execute()</code></pre></p>
+</details></td></tr>
+<tr><td>Config</td><td>dictionary</td><td>r</td><td>An associative array of application settings. Refers to and changes the set value. For the types of set values, refer to <a href="#ConfigList">Config list</a>.<details><h4>e.g.</h4>
+<p><pre><code class="example">// Change the theme color to dark
+nv.Config.Theme.ThemeType = "Dark"</code></pre></p>
+</details></td></tr>
+<tr><td>CurrentCommand</td><td><a href="#CommandAccessor">CommandAccessor</a></td><td>r</td><td>Currently running command</td></tr>
+<tr><td>DestinationFolderCollection</td><td><a href="#DestinationFolderCollectionAccessor">DestinationFolderCollectionAccessor</a></td><td>r</td><td>Destination folder list accessor</td></tr>
+<tr><td>Effect</td><td><a href="#EffectPanelAccessor">EffectPanelAccessor</a></td><td>r</td><td>Effects panel accessor</td></tr>
+<tr><td>Environment</td><td><a href="#EnvironmentAccessor">EnvironmentAccessor</a></td><td>r</td><td>Environment accessor</td></tr>
+<tr><td>ExternalAppCollection</td><td><a href="#ExternalAppCollectionAccessor">ExternalAppCollectionAccessor</a></td><td>r</td><td>External app list accessor</td></tr>
+<tr><td>History</td><td><a href="#HistoryPanelAccessor">HistoryPanelAccessor</a></td><td>r</td><td>History panel accessor</td></tr>
+<tr><td>Information</td><td><a href="#InformationPanelAccessor">InformationPanelAccessor</a></td><td>r</td><td>Information panel accessor</td></tr>
+<tr><td>Navigator</td><td><a href="#NavigatorPanelAccessor">NavigatorPanelAccessor</a></td><td>r</td><td>Navigator panel accessor</td></tr>
+<tr><td>PageList</td><td><a href="#PageListPanelAccessor">PageListPanelAccessor</a></td><td>r</td><td>PageList panel accessor</td></tr>
+<tr><td>Playlist</td><td><a href="#PlaylistPanelAccessor">PlaylistPanelAccessor</a></td><td>r</td><td>Playlist panel accessor</td></tr>
+<tr><td>ScriptPath</td><td>string</td><td>r</td><td>Path of currently running script file</td></tr>
+<tr><td>SusiePluginCollection</td><td><a href="#SusiePluginCollectionAccessor">SusiePluginCollectionAccessor</a></td><td>r</td><td>Susie plugin collection</td></tr>
+<tr><td>Values</td><td>dictionary</td><td>r</td><td>An associative array for storing values. The value saved in this object will be retained during app execution.<details><h4>e.g.</h4>
+<p><pre><code class="example">// Store value
+nv.Values["Test"] = "Hello!"
+// As well
+nv.Values.Test = "Hello!"</code></pre></p>
+</details></td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>CopyFile(string, string)</td><td>void</td><td>Copy a file or directory<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>source</td><td>string</td><td>Path of the copy source</td></tr>
+<tr><td>destination</td><td>string</td><td>Destination path</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>DeleteFile(string)</td><td>void</td><td>Delete a file or directory<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>path</td><td>string</td><td>Path to be deleted</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>MoveFile(string, string)</td><td>void</td><td>Move a file or directory<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>source</td><td>string</td><td>Path of the move source</td></tr>
+<tr><td>destination</td><td>string</td><td>Destination path</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>ShowDialog(string, string, int)</td><td>bool</td><td>Display the dialog.<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>title</td><td>string</td><td>Main text</td></tr>
+<tr><td>message</td><td>string</td><td>Message (optional)</td></tr>
+<tr><td>commands</td><td>int</td><td>0: OK / 1: OKCancel / 2: YesNo<br />Button types (optional)</td></tr>
+</table></p>
+<h4>Returns</h4>
+<p><table class="table-none">
+<tr><td>bool</td><td>Returns true if positive selection ("OK" or "Yes"), false otherwise.</td></tr>
+</table></p>
+<h4>e.g.</h4>
+<p><pre><code class="example">isYes = nv.ShowDialog("Is this a pen?", "I think it's a pen, really?", 2)
+if (isYes) {
+    nv.ShowDialog("Good.")
+}</code></pre></p>
+</details></td></tr>
+<tr><td>ShowInputDialog(string)</td><td>string</td><td>Display the input dialog.<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>title</td><td>string</td><td>Main text</td></tr>
+</table></p>
+<h4>Returns</h4>
+<p><table class="table-none">
+<tr><td>string</td><td>Input text. Null when canceled</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>ShowInputDialog(string, string)</td><td>string</td><td>Display the input dialog.<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>title</td><td>string</td><td>Main text</td></tr>
+<tr><td>text</td><td>string</td><td>Default text</td></tr>
+</table></p>
+<h4>Returns</h4>
+<p><table class="table-none">
+<tr><td>string</td><td>Input text. Null when canceled</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>ShowInputDialog(string, string, string)</td><td>string</td><td>Display the input dialog.<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>title</td><td>string</td><td>Main text</td></tr>
+<tr><td>message</td><td>string</td><td>Message</td></tr>
+<tr><td>text</td><td>string</td><td>Default text</td></tr>
+</table></p>
+<h4>Returns</h4>
+<p><table class="table-none">
+<tr><td>string</td><td>Input text. Null when canceled</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>ShowMessage(string)</td><td>void</td><td>Display a message on the screen.<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>message</td><td>string</td><td>Output message</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>ShowToast(string)</td><td>void</td><td>Display the message as a toast.<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>message</td><td>string</td><td>Output message</td></tr>
+</table></p>
+</details></td></tr>
+</table></p>
+<h2 id="BookAccessor">[Class] BookAccessor</h2>
+<p>Book accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>Config</td><td><a href="#BookConfigAccessor">BookConfigAccessor</a></td><td>r</td><td>Book config</td></tr>
+<tr><td>CreationTime</td><td>Date</td><td>r</td><td>Creation time</td></tr>
+<tr><td>IsBookmarked</td><td>bool</td><td>rw</td><td>Bookmarked or not</td></tr>
+<tr><td>IsMedia</td><td>bool</td><td>r</td><td>Whether the book is a video</td></tr>
+<tr><td>IsNew</td><td>bool</td><td>r</td><td>Whether the book is a newly opened book with no history</td></tr>
+<tr><td>LastWriteTime</td><td>Date</td><td>r</td><td>Last write time</td></tr>
+<tr><td>Pages</td><td><a href="#PageAccessor">PageAccessor</a>[]</td><td>r</td><td>Pages that make up the book</td></tr>
+<tr><td>Path</td><td>string</td><td>r</td><td>Book path. Null if no book is open</td></tr>
+<tr><td>Size</td><td>int</td><td>r</td><td>File size. For directory, -1.</td></tr>
+<tr><td>ViewPages</td><td><a href="#ViewPageAccessor">ViewPageAccessor</a>[]</td><td>r</td><td>Displaying pages</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>Wait()</td><td>void</td><td>Wait for the view pages to finish loading</td></tr>
+</table></p>
+<h2 id="BookConfigAccessor">[Class] BookConfigAccessor</h2>
+<p>Book config accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>AutoRotate</td><td>string (<a href="#AutoRotateType">AutoRotateType</a>)</td><td>rw</td><td>Automatic rotation</td></tr>
+<tr><td>BaseScale</td><td>double</td><td>rw</td><td>Base scale</td></tr>
+<tr><td>BookReadOrder</td><td>string (<a href="#PageReadOrder">PageReadOrder</a>)</td><td>rw</td><td>Left Open / Right Open</td></tr>
+<tr><td>IsRecursiveFolder</td><td>bool</td><td>rw</td><td>Load subfolders</td></tr>
+<tr><td>IsSupportedDividePage</td><td>bool</td><td>rw</td><td>Divide wide page</td></tr>
+<tr><td>IsSupportedSingleFirstPage</td><td>bool</td><td>rw</td><td>Show first page alone</td></tr>
+<tr><td>IsSupportedSingleLastPage</td><td>bool</td><td>rw</td><td>Show last page alone</td></tr>
+<tr><td>IsSupportedWidePage</td><td>bool</td><td>rw</td><td>Consider landscape pages as two pages</td></tr>
+<tr><td>SortMode</td><td>string (<a href="#PageSortMode">PageSortMode</a>)</td><td>rw</td><td>Sort order</td></tr>
+<tr><td>ViewPageSize</td><td>int</td><td>rw</td><td>Number of pages to display</td></tr>
+</table></p>
+<h2 id="BookmarkFolderNodeAccessor">[Class] BookmarkFolderNodeAccessor</h2>
+<p>Bookmark folder node accessor</p>
+<p>This class inherits from <a href="#NodeAccessor">NodeAccessor</a>.</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>Children</td><td><a href="#NodeAccessor">NodeAccessor</a>[]</td><td>r</td><td>Child nodes</td></tr>
+<tr><td>Index</td><td>int</td><td>r</td><td>Index number</td></tr>
+<tr><td>IsDisposed</td><td>bool</td><td>r</td><td>"true" if it is a destroyed node.</td></tr>
+<tr><td>IsExpanded</td><td>bool</td><td>rw</td><td>"true" if the node is in the expanded state</td></tr>
+<tr><td>Name</td><td>string</td><td>r</td><td>Node name</td></tr>
+<tr><td>Parent</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>r</td><td>Parent node</td></tr>
+<tr><td>Value</td><td><a href="#BookmarkFolderNodeSource">BookmarkFolderNodeSource</a></td><td>r</td><td>Properties of bookmark folder</td></tr>
+<tr><td>ValueType</td><td>string</td><td>r</td><td>Node value type</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>Add(dictionary)</td><td><a href="#BookmarkFolderNodeAccessor">BookmarkFolderNodeAccessor</a></td><td>Create and add a new bookmark folder<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>parameter</td><td>dictionary</td><td>New bookmark folder parameters (optional)<br />Parameter "Name" can be specified.</td></tr>
+</table></p>
+<h4>Returns</h4>
+<p><table class="table-none">
+<tr><td><a href="#BookmarkFolderNodeAccessor">BookmarkFolderNodeAccessor</a></td><td>New bookmark folder</td></tr>
+</table></p>
+<h4>e.g.</h4>
+<p><pre><code class="example">// Create a bookmark folder by name
+nv.Bookshelf.FolderTree.BookmarkNode.Add({Name:"AAA"})</code></pre></p>
+</details></td></tr>
+<tr><td>Insert(int, dictionary)</td><td><a href="#BookmarkFolderNodeAccessor">BookmarkFolderNodeAccessor</a></td><td>Create and insert a new bookmark folder<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>index</td><td>int</td><td>Invalid parameter<br />Note: This parameter is ignored because bookmark folders do not control their order.</td></tr>
+<tr><td>parameter</td><td>dictionary</td><td>New bookmark folder parameters (optional)<br />Parameter "Name" can be specified.</td></tr>
+</table></p>
+<h4>Returns</h4>
+<p><table class="table-none">
+<tr><td><a href="#BookmarkFolderNodeAccessor">BookmarkFolderNodeAccessor</a></td><td>New bookmark folder</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>Remove()</td><td>bool</td><td>Delete itself<details><h4>Returns</h4>
+<p><table class="table-none">
+<tr><td>bool</td><td>Returns "true" if deletion succeeds</td></tr>
+</table></p>
+</details></td></tr>
+</table></p>
+<h2 id="BookmarkFolderNodeSource">[Class] BookmarkFolderNodeSource</h2>
+<p>Properties of bookmark folder</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>Name</td><td>string</td><td>rw</td><td>Name</td></tr>
+<tr><td>Path</td><td>string</td><td>r</td><td>Path of bookmark folder</td></tr>
+</table></p>
+<h2 id="BookmarkFolderTreeAccessor">[Class] BookmarkFolderTreeAccessor</h2>
+<p>Bookmark folder tree accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>BookmarkNode</td><td><a href="#BookmarkFolderNodeAccessor">BookmarkFolderNodeAccessor</a></td><td>r</td><td>Root node of the bookmark folder tree</td></tr>
+<tr><td>SelectedItem</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>rw</td><td>Selected item</td></tr>
+</table></p>
+<h2 id="BookmarkItemAccessor">[Class] BookmarkItemAccessor</h2>
+<p>Bookmark item accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>CreationTime</td><td>Date</td><td>r</td><td>Creation time</td></tr>
+<tr><td>LastWriteTime</td><td>Date</td><td>r</td><td>Last write time</td></tr>
+<tr><td>Name</td><td>string</td><td>r</td><td>Name</td></tr>
+<tr><td>Path</td><td>string</td><td>r</td><td>Path</td></tr>
+<tr><td>Size</td><td>int</td><td>r</td><td>File size. For directory, -1.</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>Open()</td><td>void</td><td>Open book</td></tr>
+<tr><td>Open(bool)</td><td>void</td><td>Open book<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>isRecursive</td><td>bool</td><td>Load subfolders</td></tr>
+</table></p>
+</details></td></tr>
+</table></p>
+<h2 id="BookmarkPanelAccessor">[Class] BookmarkPanelAccessor</h2>
+<p>Bookmark panel accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>FolderOrder</td><td>string (<a href="#FolderOrder">FolderOrder</a>)</td><td>rw</td><td>List item order</td></tr>
+<tr><td>FolderTree</td><td><a href="#BookmarkFolderTreeAccessor">BookmarkFolderTreeAccessor</a></td><td>r</td><td>Folder tree in the Bookmark panel</td></tr>
+<tr><td>IsFloating</td><td>bool</td><td>r</td><td>Panel is floating</td></tr>
+<tr><td>IsSelected</td><td>bool</td><td>rw</td><td>Panel selected</td></tr>
+<tr><td>IsVisible</td><td>bool</td><td>r</td><td>Panel visibility</td></tr>
+<tr><td>Items</td><td><a href="#BookmarkItemAccessor">BookmarkItemAccessor</a>[]</td><td>r</td><td>List items</td></tr>
+<tr><td>Path</td><td>string</td><td>rw</td><td>Current bookmark folder path</td></tr>
+<tr><td>SearchWord</td><td>string</td><td>rw</td><td>Search box text</td></tr>
+<tr><td>SelectedItems</td><td><a href="#BookmarkItemAccessor">BookmarkItemAccessor</a>[]</td><td>rw</td><td>Selected items</td></tr>
+<tr><td>Style</td><td>string (<a href="#PanelListItemStyle">PanelListItemStyle</a>)</td><td>rw</td><td>List item style</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>Close()</td><td>void</td><td>Close panel</td></tr>
+<tr><td>MoveToParent()</td><td>void</td><td>Up</td></tr>
+<tr><td>NewFolder(string)</td><td>void</td><td>Create a new bookmark folder<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>name</td><td>string</td><td>Name</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>Open()</td><td>void</td><td>Open panel</td></tr>
+<tr><td>OpenDock()</td><td>void</td><td>Open panel in docking mode</td></tr>
+<tr><td>OpenFloat()</td><td>void</td><td>Open panel in floating mode</td></tr>
+</table></p>
+<h2 id="BookshelfFolderTreeAccessor">[Class] BookshelfFolderTreeAccessor</h2>
+<p>Bookshelf folder tree accessory</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>BookmarkNode</td><td><a href="#BookmarkFolderNodeAccessor">BookmarkFolderNodeAccessor</a></td><td>r</td><td>Root node of the bookmark folder tree</td></tr>
+<tr><td>DirectoryNode</td><td><a href="#DirectoryNodeAccessor">DirectoryNodeAccessor</a></td><td>r</td><td>Root node of the folder tree</td></tr>
+<tr><td>QuickAccessNode</td><td><a href="#QuickAccessFolderNodeAccessor">QuickAccessFolderNodeAccessor</a></td><td>r</td><td>Quick access root node</td></tr>
+<tr><td>SelectedItem</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>rw</td><td>Selected item</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>Expand(string)</td><td>void</td><td>Expand to the specified folder<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>path</td><td>string</td><td>Folder path</td></tr>
+</table></p>
+</details></td></tr>
+</table></p>
+<h2 id="BookshelfItemAccessor">[Class] BookshelfItemAccessor</h2>
+<p>Bookshelf item accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>CreationTime</td><td>Date</td><td>r</td><td>Creation time</td></tr>
+<tr><td>LastWriteTime</td><td>Date</td><td>r</td><td>Last write time</td></tr>
+<tr><td>Name</td><td>string</td><td>r</td><td>Name</td></tr>
+<tr><td>Path</td><td>string</td><td>r</td><td>Path</td></tr>
+<tr><td>Size</td><td>int</td><td>r</td><td>File size. For directory, -1.</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>Open()</td><td>void</td><td>Open book</td></tr>
+<tr><td>Open(bool)</td><td>void</td><td>Open book<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>isRecursive</td><td>bool</td><td>Load subfolders</td></tr>
+</table></p>
+</details></td></tr>
+</table></p>
+<h2 id="BookshelfPanelAccessor">[Class] BookshelfPanelAccessor</h2>
+<p>Bookshelf panel accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>FolderOrder</td><td>string (<a href="#FolderOrder">FolderOrder</a>)</td><td>rw</td><td>List item order</td></tr>
+<tr><td>FolderTree</td><td><a href="#BookshelfFolderTreeAccessor">BookshelfFolderTreeAccessor</a></td><td>r</td><td>Bookshelf folder tree</td></tr>
+<tr><td>IsFloating</td><td>bool</td><td>r</td><td>Panel is floating</td></tr>
+<tr><td>IsSelected</td><td>bool</td><td>rw</td><td>Panel selected</td></tr>
+<tr><td>IsVisible</td><td>bool</td><td>r</td><td>Panel visibility</td></tr>
+<tr><td>Items</td><td><a href="#BookshelfItemAccessor">BookshelfItemAccessor</a>[]</td><td>r</td><td>List items</td></tr>
+<tr><td>NextHistory</td><td>string[]</td><td>r</td><td>Later history on the bookshelf</td></tr>
+<tr><td>Path</td><td>string</td><td>rw</td><td>Current bookshelf path</td></tr>
+<tr><td>PreviousHistory</td><td>string[]</td><td>r</td><td>Previous history on bookshelf</td></tr>
+<tr><td>SearchWord</td><td>string</td><td>rw</td><td>Search box text</td></tr>
+<tr><td>SelectedItems</td><td><a href="#BookshelfItemAccessor">BookshelfItemAccessor</a>[]</td><td>rw</td><td>Selected items</td></tr>
+<tr><td>Style</td><td>string (<a href="#PanelListItemStyle">PanelListItemStyle</a>)</td><td>rw</td><td>List item style</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>Close()</td><td>void</td><td>Close panel</td></tr>
+<tr><td>MoveToNext()</td><td>void</td><td>Next</td></tr>
+<tr><td>MoveToParent()</td><td>void</td><td>Up</td></tr>
+<tr><td>MoveToPrevious()</td><td>void</td><td>Back</td></tr>
+<tr><td>Open()</td><td>void</td><td>Open panel</td></tr>
+<tr><td>OpenDock()</td><td>void</td><td>Open panel in docking mode</td></tr>
+<tr><td>OpenFloat()</td><td>void</td><td>Open panel in floating mode</td></tr>
+<tr><td>Sync()</td><td>void</td><td>Move to current book place</td></tr>
+<tr><td>Wait()</td><td>void</td><td>Wait for display to complete</td></tr>
+</table></p>
+<h2 id="CommandAccessor">[Class] CommandAccessor</h2>
+<p>Command accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>IsShowMessage</td><td>bool</td><td>rw</td><td>Display a message when executing a command</td></tr>
+<tr><td>MouseGesture</td><td>string</td><td>rw</td><td>Mouse gestures<details><h4>e.g.</h4>
+<p><pre><code class="example">// Set "↑←↓" to the mouse gesture of ViewRotateLeft command
+nv.Command.ViewRotateLeft.MouseGesture = "ULD"</code></pre></p>
+</details></td></tr>
+<tr><td>Name</td><td>string</td><td>r</td><td>Command name</td></tr>
+<tr><td>Parameter</td><td>dictionary</td><td>r</td><td>You can get and set command parameters. The settings are permanent. The properties differ for each command. For details, see the command list below.<details><h4>e.g.</h4>
+<p><pre><code class="example">// Change the rotation amount of "ViewRotateLeft" command to 45 degrees
+nv.Command.ViewRotateLeft.Parameter.Angle = 45</code></pre></p>
+</details></td></tr>
+<tr><td>ShortCutKey</td><td>string</td><td>rw</td><td>Shortcut<details><h4>e.g.</h4>
+<p><pre><code class="example">// Set "Ctrl+A" as shortcut for ViewRotateLeft command
+nv.Command.ViewRotateLeft.ShortCutKey = "Ctrl+A"</code></pre></p>
+</details></td></tr>
+<tr><td>TouchGesture</td><td>string</td><td>rw</td><td>Touch operation<details><h4>e.g.</h4>
+<p><pre><code class="example">// Set "TouchCenter" for touch operation of ViewRotateLeft command
+nv.Command.ViewRotateLeft.TouchGesture = "TouchCenter"</code></pre></p>
+</details></td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>Execute(object[])</td><td>bool</td><td>Execute the command.<br />Some commands allow you to specify arguments. These can be used for the purpose of omitting the user's selection by specifying the argument in the command that normally displays the dialog.<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>args</td><td>object[]</td><td>Command argument. The contents vary depending on the command. It is a variable length argument. (Optional)</td></tr>
+</table></p>
+<h4>Returns</h4>
+<p><table class="table-none">
+<tr><td>bool</td><td>Success or failure of command issuance. Commands may not be issued during loading. The success or failure of the command itself is not determined.</td></tr>
+</table></p>
+<h4>e.g.</h4>
+<p><pre><code class="example">// open C:\Foo\Bar.zip
+nv.Command.LoadAs.Execute("C:\\Foo\\Bar.zip")</code></pre></p>
+</details></td></tr>
+<tr><td>Patch(dictionary)</td><td><a href="#CommandAccessor">CommandAccessor</a></td><td>Temporarily change the command parameter.<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>patch</td><td>dictionary</td><td>Specify the command parameter to be overwritten temporarily in JSON format.</td></tr>
+</table></p>
+<h4>Returns</h4>
+<p><table class="table-none">
+<tr><td><a href="#CommandAccessor">CommandAccessor</a></td><td>Returns its own command accessors as is.</td></tr>
+</table></p>
+<h4>e.g.</h4>
+<p><pre><code class="example">// Rotate counterclockwise by specifying 5 degrees
+nv.Command.ViewRotateLeft.Patch({"Angle": 5}).Execute()</code></pre></p>
+</details></td></tr>
+</table></p>
+<h2 id="DestinationFolderAccessor">[Class] DestinationFolderAccessor</h2>
+<p>Destination folder accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>Name</td><td>string</td><td>rw</td><td>Name</td></tr>
+<tr><td>Path</td><td>string</td><td>rw</td><td>Path</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>Copy(string)</td><td>void</td><td>Copy to destination folder<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>path</td><td>string</td><td>File to copy</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>Copy(string[])</td><td>void</td><td>Copy to destination folder<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>paths</td><td>string[]</td><td>List of files to copy</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>CopyPage(<a href="#PageAccessor">PageAccessor</a>)</td><td>void</td><td>Copy to destination folder<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>page</td><td><a href="#PageAccessor">PageAccessor</a></td><td>Page to copy</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>CopyPage(<a href="#PageAccessor">PageAccessor</a>[])</td><td>void</td><td>Copy to destination folder<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>pages</td><td><a href="#PageAccessor">PageAccessor</a>[]</td><td>List of pages to copy</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>Move(string)</td><td>void</td><td>Move to destination folder<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>path</td><td>string</td><td>File to move</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>Move(string[])</td><td>void</td><td>Move to destination folder<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>paths</td><td>string[]</td><td>List of files to move</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>MovePage(<a href="#PageAccessor">PageAccessor</a>)</td><td>void</td><td>Move to destination folder<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>page</td><td><a href="#PageAccessor">PageAccessor</a></td><td>Page to move</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>MovePage(<a href="#PageAccessor">PageAccessor</a>[])</td><td>void</td><td>Move to destination folder<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>pages</td><td><a href="#PageAccessor">PageAccessor</a>[]</td><td>List of pages to move</td></tr>
+</table></p>
+</details></td></tr>
+</table></p>
+<h2 id="DestinationFolderCollectionAccessor">[Class] DestinationFolderCollectionAccessor</h2>
+<p>Destination folder list accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>Items</td><td><a href="#DestinationFolderAccessor">DestinationFolderAccessor</a>[]</td><td>r</td><td>Destination folders</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>CreateNew()</td><td><a href="#DestinationFolderAccessor">DestinationFolderAccessor</a></td><td>Create a new destination folder<details><h4>Returns</h4>
+<p><table class="table-none">
+<tr><td><a href="#DestinationFolderAccessor">DestinationFolderAccessor</a></td><td>New destination folder</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>Remove(<a href="#DestinationFolderAccessor">DestinationFolderAccessor</a>)</td><td>void</td><td>Delete destination folder<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>item</td><td><a href="#DestinationFolderAccessor">DestinationFolderAccessor</a></td><td>Destination folder to be deleted</td></tr>
+</table></p>
+</details></td></tr>
+</table></p>
+<h2 id="DirectoryNodeAccessor">[Class] DirectoryNodeAccessor</h2>
+<p>Folder node accessor</p>
+<p>This class inherits from <a href="#NodeAccessor">NodeAccessor</a>.</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>Children</td><td><a href="#NodeAccessor">NodeAccessor</a>[]</td><td>r</td><td>Child nodes</td></tr>
+<tr><td>Index</td><td>int</td><td>r</td><td>Index number</td></tr>
+<tr><td>IsDisposed</td><td>bool</td><td>r</td><td>"true" if it is a destroyed node.</td></tr>
+<tr><td>IsExpanded</td><td>bool</td><td>rw</td><td>"true" if the node is in the expanded state</td></tr>
+<tr><td>Name</td><td>string</td><td>r</td><td>Node name</td></tr>
+<tr><td>Parent</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>r</td><td>Parent node</td></tr>
+<tr><td>Value</td><td><a href="#DirectoryNodeSource">DirectoryNodeSource</a></td><td>r</td><td>Properties of folder node</td></tr>
+<tr><td>ValueType</td><td>string</td><td>r</td><td>Node value type</td></tr>
+</table></p>
+<h2 id="DirectoryNodeSource">[Class] DirectoryNodeSource</h2>
+<p>Properties of folder node</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>Name</td><td>string</td><td>r</td><td>Name</td></tr>
+<tr><td>Path</td><td>string</td><td>r</td><td>Path</td></tr>
+</table></p>
+<h2 id="EffectPanelAccessor">[Class] EffectPanelAccessor</h2>
+<p>Effects panel accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>IsFloating</td><td>bool</td><td>r</td><td>Panel is floating</td></tr>
+<tr><td>IsSelected</td><td>bool</td><td>rw</td><td>Panel selected</td></tr>
+<tr><td>IsVisible</td><td>bool</td><td>r</td><td>Panel visibility</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>Close()</td><td>void</td><td>Close panel</td></tr>
+<tr><td>Open()</td><td>void</td><td>Open panel</td></tr>
+<tr><td>OpenDock()</td><td>void</td><td>Open panel in docking mode</td></tr>
+<tr><td>OpenFloat()</td><td>void</td><td>Open panel in floating mode</td></tr>
+</table></p>
+<h2 id="EnvironmentAccessor">[Class] EnvironmentAccessor</h2>
+<p>Environment accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>DateVersion</td><td>string</td><td>r</td><td>Date version</td></tr>
+<tr><td>NeeViewPath</td><td>string</td><td>r</td><td>NeeView executable file path</td></tr>
+<tr><td>OSVersion</td><td>string</td><td>r</td><td>OS Version</td></tr>
+<tr><td>PackageType</td><td>string</td><td>r</td><td>Package type</td></tr>
+<tr><td>ProductVersion</td><td>string</td><td>r</td><td>Product version</td></tr>
+<tr><td>Revision</td><td>string</td><td>r</td><td>Git revision</td></tr>
+<tr><td>SelfContained</td><td>bool</td><td>r</td><td>Self-contained package; framework-dependent if false</td></tr>
+<tr><td>UserAgent</td><td>string</td><td>r</td><td>User agent</td></tr>
+<tr><td>UserSettingFilePath</td><td>string</td><td>r</td><td>Setting file path</td></tr>
+<tr><td>Version</td><td>string</td><td>r</td><td>Version</td></tr>
+</table></p>
+<h2 id="ExternalAppAccessor">[Class] ExternalAppAccessor</h2>
+<p>External app accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>ArchivePolicy</td><td>string (<a href="#ArchivePolicy">ArchivePolicy</a>)</td><td>rw</td><td>Compressed file processing policy</td></tr>
+<tr><td>Command</td><td>string</td><td>rw</td><td>External app path</td></tr>
+<tr><td>Name</td><td>string</td><td>rw</td><td>Display name</td></tr>
+<tr><td>Parameter</td><td>string</td><td>rw</td><td>External app parameters</td></tr>
+<tr><td>WorkingDirectory</td><td>string</td><td>rw</td><td>Working folder</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>Execute(<a href="#PageAccessor">PageAccessor</a>)</td><td>void</td><td>Run external app<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>page</td><td><a href="#PageAccessor">PageAccessor</a></td><td>Page to send</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>Execute(<a href="#PageAccessor">PageAccessor</a>[])</td><td>void</td><td>Run external app<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>pages</td><td><a href="#PageAccessor">PageAccessor</a>[]</td><td>List of pages to send</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>Execute(string)</td><td>void</td><td>Run external app<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>path</td><td>string</td><td>File to send</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>Execute(string[])</td><td>void</td><td>Run external app<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>paths</td><td>string[]</td><td>List of files to send</td></tr>
+</table></p>
+</details></td></tr>
+</table></p>
+<h2 id="ExternalAppCollectionAccessor">[Class] ExternalAppCollectionAccessor</h2>
+<p>External app list accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>Items</td><td><a href="#ExternalAppAccessor">ExternalAppAccessor</a>[]</td><td>r</td><td>External apps</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>CreateNew()</td><td><a href="#ExternalAppAccessor">ExternalAppAccessor</a></td><td>Create a new external app<details><h4>Returns</h4>
+<p><table class="table-none">
+<tr><td><a href="#ExternalAppAccessor">ExternalAppAccessor</a></td><td>New external app</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>Remove(<a href="#ExternalAppAccessor">ExternalAppAccessor</a>)</td><td>void</td><td>Delete external app<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>item</td><td><a href="#ExternalAppAccessor">ExternalAppAccessor</a></td><td>External app to be deleted</td></tr>
+</table></p>
+</details></td></tr>
+</table></p>
+<h2 id="HistoryItemAccessor">[Class] HistoryItemAccessor</h2>
+<p>History item accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>LastAccessTime</td><td>Date</td><td>r</td><td>Last access time</td></tr>
+<tr><td>Name</td><td>string</td><td>r</td><td>Item name</td></tr>
+<tr><td>Path</td><td>string</td><td>r</td><td>The path corresponding to the item</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>Open()</td><td>void</td><td>Open book</td></tr>
+</table></p>
+<h2 id="HistoryPanelAccessor">[Class] HistoryPanelAccessor</h2>
+<p>History panel accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>IsFloating</td><td>bool</td><td>r</td><td>Panel is floating</td></tr>
+<tr><td>IsSelected</td><td>bool</td><td>rw</td><td>Panel selected</td></tr>
+<tr><td>IsVisible</td><td>bool</td><td>r</td><td>Panel visibility</td></tr>
+<tr><td>Items</td><td><a href="#HistoryItemAccessor">HistoryItemAccessor</a>[]</td><td>r</td><td>List items</td></tr>
+<tr><td>SearchWord</td><td>string</td><td>rw</td><td>Search box text</td></tr>
+<tr><td>SelectedItems</td><td><a href="#HistoryItemAccessor">HistoryItemAccessor</a>[]</td><td>rw</td><td>Selected items</td></tr>
+<tr><td>Style</td><td>string (<a href="#PanelListItemStyle">PanelListItemStyle</a>)</td><td>rw</td><td>List item style</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>Close()</td><td>void</td><td>Close panel</td></tr>
+<tr><td>Open()</td><td>void</td><td>Open panel</td></tr>
+<tr><td>OpenDock()</td><td>void</td><td>Open panel in docking mode</td></tr>
+<tr><td>OpenFloat()</td><td>void</td><td>Open panel in floating mode</td></tr>
+</table></p>
+<h2 id="InformationPanelAccessor">[Class] InformationPanelAccessor</h2>
+<p>Information panel accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>IsFloating</td><td>bool</td><td>r</td><td>Panel is floating</td></tr>
+<tr><td>IsSelected</td><td>bool</td><td>rw</td><td>Panel selected</td></tr>
+<tr><td>IsVisible</td><td>bool</td><td>r</td><td>Panel visibility</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>Close()</td><td>void</td><td>Close panel</td></tr>
+<tr><td>Open()</td><td>void</td><td>Open panel</td></tr>
+<tr><td>OpenDock()</td><td>void</td><td>Open panel in docking mode</td></tr>
+<tr><td>OpenFloat()</td><td>void</td><td>Open panel in floating mode</td></tr>
+</table></p>
+<h2 id="MediaPlayerAccessor">[Class] MediaPlayerAccessor</h2>
+<p>Media Player Accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>AudioTrack</td><td><a href="#TrackCollectionAccessor">TrackCollectionAccessor</a></td><td>r</td><td>Audio Track Management. If it does not exist, null</td></tr>
+<tr><td>Duration</td><td>double</td><td>r</td><td>Media duration (seconds)</td></tr>
+<tr><td>IsMuted</td><td>bool</td><td>rw</td><td>Mute mode ON/OFF</td></tr>
+<tr><td>IsPlaying</td><td>bool</td><td>rw</td><td>Playback ON/OFF</td></tr>
+<tr><td>IsRepeat</td><td>bool</td><td>rw</td><td>Repeat mode ON/OFF</td></tr>
+<tr><td>Position</td><td>double</td><td>rw</td><td>Current position (0.0-1.0)</td></tr>
+<tr><td>Subtitle</td><td><a href="#TrackCollectionAccessor">TrackCollectionAccessor</a></td><td>r</td><td>Subtitle Track Management. If it does not exist, null</td></tr>
+<tr><td>Volume</td><td>double</td><td>rw</td><td>Volume (0.0-1.0)</td></tr>
+</table></p>
+<h2 id="NavigatorPanelAccessor">[Class] NavigatorPanelAccessor</h2>
+<p>Navigator panel accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>IsFloating</td><td>bool</td><td>r</td><td>Panel is floating</td></tr>
+<tr><td>IsSelected</td><td>bool</td><td>rw</td><td>Panel selected</td></tr>
+<tr><td>IsVisible</td><td>bool</td><td>r</td><td>Panel visibility</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>Close()</td><td>void</td><td>Close panel</td></tr>
+<tr><td>Open()</td><td>void</td><td>Open panel</td></tr>
+<tr><td>OpenDock()</td><td>void</td><td>Open panel in docking mode</td></tr>
+<tr><td>OpenFloat()</td><td>void</td><td>Open panel in floating mode</td></tr>
+</table></p>
+<h2 id="NodeAccessor">[Class] NodeAccessor</h2>
+<p>Node accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>Children</td><td><a href="#NodeAccessor">NodeAccessor</a>[]</td><td>r</td><td>Child nodes</td></tr>
+<tr><td>Index</td><td>int</td><td>r</td><td>Index number</td></tr>
+<tr><td>IsDisposed</td><td>bool</td><td>r</td><td>"true" if it is a destroyed node.</td></tr>
+<tr><td>IsExpanded</td><td>bool</td><td>rw</td><td>"true" if the node is in the expanded state</td></tr>
+<tr><td>Name</td><td>string</td><td>r</td><td>Node name</td></tr>
+<tr><td>Parent</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>r</td><td>Parent node</td></tr>
+<tr><td>Value</td><td>object</td><td>r</td><td>Node Value</td></tr>
+<tr><td>ValueType</td><td>string</td><td>r</td><td>Node value type</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>Add(dictionary)</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>Create and add a new item<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>parameter</td><td>dictionary</td><td>New item parameters (optional)<br />Specify parameters as an associative array. Refer to the description of the derived class for details, as it depends on the type of item to be created.</td></tr>
+</table></p>
+<h4>Returns</h4>
+<p><table class="table-none">
+<tr><td><a href="#NodeAccessor">NodeAccessor</a></td><td>New item</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>Insert(int, dictionary)</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>Create and insert a new item<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>index</td><td>int</td><td>Insertion position</td></tr>
+<tr><td>parameter</td><td>dictionary</td><td>New item parameters (optional)<br />Specify parameters as an associative array. Refer to the description of the derived class for details, as it depends on the type of item to be created.</td></tr>
+</table></p>
+<h4>Returns</h4>
+<p><table class="table-none">
+<tr><td><a href="#NodeAccessor">NodeAccessor</a></td><td>New item</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>MoveTo(int)</td><td>void</td><td>Change the index position<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>newIndex</td><td>int</td><td>New index number</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>Remove()</td><td>bool</td><td>Delete itself<details><h4>Returns</h4>
+<p><table class="table-none">
+<tr><td>bool</td><td>Returns "true" if deletion succeeds</td></tr>
+</table></p>
+</details></td></tr>
+</table></p>
+<h2 id="PageAccessor">[Class] PageAccessor</h2>
+<p>Page accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>CreationTime</td><td>Date</td><td>r</td><td>Creation time</td></tr>
+<tr><td>Index</td><td>int</td><td>r</td><td>Page index. Numbers begin with 0.</td></tr>
+<tr><td>IsBook</td><td>bool</td><td>r</td><td>Can open as a book</td></tr>
+<tr><td>LastWriteTime</td><td>Date</td><td>r</td><td>Last write time</td></tr>
+<tr><td>Path</td><td>string</td><td>r</td><td>Page path</td></tr>
+<tr><td>RawPath</td><td>string</td><td>r</td><td>Raw path</td></tr>
+<tr><td>Size</td><td>int</td><td>r</td><td>File size (Byte)</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>GetMetaValue(string)</td><td>string</td><td>Get page meta information<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>key</td><td>string</td><td>Meta information item name. See the search options help for more information.</td></tr>
+</table></p>
+<h4>Returns</h4>
+<p><table class="table-none">
+<tr><td>string</td><td>Meta information value</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>GetMetaValueMap()</td><td>dictionary</td><td>Get a list of page meta information<details><h4>Returns</h4>
+<p><table class="table-none">
+<tr><td>dictionary</td><td>Associative array of page meta information</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>Open()</td><td>void</td><td>Open page</td></tr>
+<tr><td>OpenAsBook()</td><td>void</td><td>Open as book</td></tr>
+</table></p>
+<h2 id="PageListPanelAccessor">[Class] PageListPanelAccessor</h2>
+<p>PageList panel accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>Format</td><td>string (<a href="#PageNameFormat">PageNameFormat</a>)</td><td>rw</td><td>Item name format</td></tr>
+<tr><td>IsFloating</td><td>bool</td><td>r</td><td>Panel is floating</td></tr>
+<tr><td>IsSelected</td><td>bool</td><td>rw</td><td>Panel selected</td></tr>
+<tr><td>IsVisible</td><td>bool</td><td>r</td><td>Panel visibility</td></tr>
+<tr><td>Items</td><td><a href="#PageAccessor">PageAccessor</a>[]</td><td>r</td><td>List items</td></tr>
+<tr><td>Path</td><td>string</td><td>r</td><td>Current book path</td></tr>
+<tr><td>SearchWord</td><td>string</td><td>rw</td><td>Search box text</td></tr>
+<tr><td>SelectedItems</td><td><a href="#PageAccessor">PageAccessor</a>[]</td><td>rw</td><td>Selected items</td></tr>
+<tr><td>SortMode</td><td>string (<a href="#PageSortMode">PageSortMode</a>)</td><td>rw</td><td>List item order</td></tr>
+<tr><td>Style</td><td>string (<a href="#PanelListItemStyle">PanelListItemStyle</a>)</td><td>rw</td><td>List item style</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>Close()</td><td>void</td><td>Close panel</td></tr>
+<tr><td>Open()</td><td>void</td><td>Open panel</td></tr>
+<tr><td>OpenDock()</td><td>void</td><td>Open panel in docking mode</td></tr>
+<tr><td>OpenFloat()</td><td>void</td><td>Open panel in floating mode</td></tr>
+</table></p>
+<h2 id="PlaylistItemAccessor">[Class] PlaylistItemAccessor</h2>
+<p>Playlist item accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>Name</td><td>string</td><td>r</td><td>Item name</td></tr>
+<tr><td>Path</td><td>string</td><td>r</td><td>The path corresponding to the item</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>Open()</td><td>void</td><td>Open item</td></tr>
+</table></p>
+<h2 id="PlaylistPanelAccessor">[Class] PlaylistPanelAccessor</h2>
+<p>Playlist panel accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>IsFloating</td><td>bool</td><td>r</td><td>Panel is floating</td></tr>
+<tr><td>IsSelected</td><td>bool</td><td>rw</td><td>Panel selected</td></tr>
+<tr><td>IsVisible</td><td>bool</td><td>r</td><td>Panel visibility</td></tr>
+<tr><td>Items</td><td><a href="#PlaylistItemAccessor">PlaylistItemAccessor</a>[]</td><td>r</td><td>List items</td></tr>
+<tr><td>Name</td><td>string</td><td>rw</td><td>Current playlist name</td></tr>
+<tr><td>Path</td><td>string</td><td>rw</td><td>Current playlist path</td></tr>
+<tr><td>SelectedItems</td><td><a href="#PlaylistItemAccessor">PlaylistItemAccessor</a>[]</td><td>rw</td><td>Selected items</td></tr>
+<tr><td>Style</td><td>string (<a href="#PanelListItemStyle">PanelListItemStyle</a>)</td><td>rw</td><td>List item style</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>Close()</td><td>void</td><td>Close panel</td></tr>
+<tr><td>Open()</td><td>void</td><td>Open panel</td></tr>
+<tr><td>OpenDock()</td><td>void</td><td>Open panel in docking mode</td></tr>
+<tr><td>OpenFloat()</td><td>void</td><td>Open panel in floating mode</td></tr>
+</table></p>
+<h2 id="QuickAccessFolderNodeAccessor">[Class] QuickAccessFolderNodeAccessor</h2>
+<p>Quick access folder accessor</p>
+<p>This class inherits from <a href="#NodeAccessor">NodeAccessor</a>.</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>Children</td><td><a href="#NodeAccessor">NodeAccessor</a>[]</td><td>r</td><td>Child nodes</td></tr>
+<tr><td>Index</td><td>int</td><td>r</td><td>Index number</td></tr>
+<tr><td>IsDisposed</td><td>bool</td><td>r</td><td>"true" if it is a destroyed node.</td></tr>
+<tr><td>IsExpanded</td><td>bool</td><td>rw</td><td>"true" if the node is in the expanded state</td></tr>
+<tr><td>Name</td><td>string</td><td>r</td><td>Node name</td></tr>
+<tr><td>Parent</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>r</td><td>Parent node</td></tr>
+<tr><td>Value</td><td><a href="#QuickAccessFolderNodeSource">QuickAccessFolderNodeSource</a></td><td>r</td><td>Properties of the quick access folder</td></tr>
+<tr><td>ValueType</td><td>string</td><td>r</td><td>Node value type</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>Add(dictionary)</td><td><a href="#QuickAccessNodeAccessor">QuickAccessNodeAccessor</a></td><td>Create and add new quick access<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>parameter</td><td>dictionary</td><td>New quick access parameters (optional)<br />Parameters "Name" and "Path" can be specified.</td></tr>
+</table></p>
+<h4>Returns</h4>
+<p><table class="table-none">
+<tr><td><a href="#QuickAccessNodeAccessor">QuickAccessNodeAccessor</a></td><td>New quick access</td></tr>
+</table></p>
+<h4>e.g.</h4>
+<p><pre><code class="example">// Create quick access by specifying only path
+nv.Bookshelf.FolderTree.QuickAccessNode.Add({Path:"C:\\FooBar"})</code></pre></p>
+</details></td></tr>
+<tr><td>Insert(int, dictionary)</td><td><a href="#QuickAccessNodeAccessor">QuickAccessNodeAccessor</a></td><td>Create and insert new quick access<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>index</td><td>int</td><td>Insertion position</td></tr>
+<tr><td>parameter</td><td>dictionary</td><td>New quick access parameters (optional)<br />Parameters "Name" and "Path" can be specified.</td></tr>
+</table></p>
+<h4>Returns</h4>
+<p><table class="table-none">
+<tr><td><a href="#QuickAccessNodeAccessor">QuickAccessNodeAccessor</a></td><td>New quick access</td></tr>
+</table></p>
+<h4>e.g.</h4>
+<p><pre><code class="example">// Create quick access with name and path
+nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"})</code></pre></p>
+</details></td></tr>
+</table></p>
+<h2 id="QuickAccessFolderNodeSource">[Class] QuickAccessFolderNodeSource</h2>
+<p>Properties of the quick access folder</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>Name</td><td>string</td><td>r</td><td>Name</td></tr>
+</table></p>
+<h2 id="QuickAccessNodeAccessor">[Class] QuickAccessNodeAccessor</h2>
+<p>Quick access node accessor</p>
+<p>This class inherits from <a href="#NodeAccessor">NodeAccessor</a>.</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>Index</td><td>int</td><td>r</td><td>Index number</td></tr>
+<tr><td>IsDisposed</td><td>bool</td><td>r</td><td>"true" if it is a destroyed node.</td></tr>
+<tr><td>Name</td><td>string</td><td>r</td><td>Node name</td></tr>
+<tr><td>Parent</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>r</td><td>Parent node</td></tr>
+<tr><td>Value</td><td><a href="#QuickAccessNodeSource">QuickAccessNodeSource</a></td><td>r</td><td>Properties of the quick access</td></tr>
+<tr><td>ValueType</td><td>string</td><td>r</td><td>Node value type</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>MoveTo(int)</td><td>void</td><td>Change the index position<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>newIndex</td><td>int</td><td>New index number</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>Remove()</td><td>bool</td><td>Delete itself<details><h4>Returns</h4>
+<p><table class="table-none">
+<tr><td>bool</td><td>Returns "true" if deletion succeeds</td></tr>
+</table></p>
+</details></td></tr>
+</table></p>
+<h2 id="QuickAccessNodeSource">[Class] QuickAccessNodeSource</h2>
+<p>Properties of the quick access</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>Name</td><td>string</td><td>rw</td><td>Name</td></tr>
+<tr><td>Path</td><td>string</td><td>rw</td><td>Quick access path</td></tr>
+</table></p>
+<h2 id="SusiePluginAccessor">[Class] SusiePluginAccessor</h2>
+<p>Susie plugin accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>ApiVersion</td><td>string</td><td>r</td><td>API version</td></tr>
+<tr><td>DetailText</td><td>string</td><td>r</td><td>Detailed text</td></tr>
+<tr><td>Extensions</td><td>string</td><td>rw</td><td>Extensions. Multiple extensions can be specified by semicolon, initialized by null.</td></tr>
+<tr><td>HasConfigDialog</td><td>bool</td><td>r</td><td>Configuration dialog exists</td></tr>
+<tr><td>IsCacheEnabled</td><td>bool</td><td>rw</td><td>Cache plugin</td></tr>
+<tr><td>IsEnabled</td><td>bool</td><td>rw</td><td>Enable</td></tr>
+<tr><td>IsPreExtract</td><td>bool</td><td>rw</td><td>Pre extract</td></tr>
+<tr><td>Name</td><td>string</td><td>r</td><td>Name</td></tr>
+<tr><td>Path</td><td>string</td><td>r</td><td>Path</td></tr>
+<tr><td>PluginType</td><td>string (<a href="#SusiePluginType">SusiePluginType</a>)</td><td>r</td><td>Susie plugin type</td></tr>
+<tr><td>PluginVersion</td><td>string</td><td>r</td><td>Plugin version</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>ShowConfigDialog()</td><td>void</td><td>Open the Configuration dialog</td></tr>
+</table></p>
+<h2 id="SusiePluginCollectionAccessor">[Class] SusiePluginCollectionAccessor</h2>
+<p>Susie plugin collection accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>AMPlugins</td><td><a href="#SusiePluginAccessor">SusiePluginAccessor</a>[]</td><td>r</td><td>Archive plugins</td></tr>
+<tr><td>INPlugins</td><td><a href="#SusiePluginAccessor">SusiePluginAccessor</a>[]</td><td>r</td><td>Image plugins</td></tr>
+</table></p>
+<h2 id="TrackCollectionAccessor">[Class] TrackCollectionAccessor</h2>
+<p>Media player track accessor</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>SelectedIndex</td><td>int</td><td>rw</td><td>Selected track number</td></tr>
+<tr><td>Tracks</td><td>string[]</td><td>r</td><td>Track list</td></tr>
+</table></p>
+<h2 id="ViewPageAccessor">[Class] ViewPageAccessor</h2>
+<p>ViewPage accessor</p>
+<p>This class inherits from <a href="#PageAccessor">PageAccessor</a>.</p>
+<h4>Properties</h4>
+<p><table class="table-slim">
+<tr><td>CreationTime</td><td>Date</td><td>r</td><td>Creation time</td></tr>
+<tr><td>Height</td><td>double</td><td>r</td><td>Page height</td></tr>
+<tr><td>Index</td><td>int</td><td>r</td><td>Page index. Numbers begin with 0.</td></tr>
+<tr><td>IsBook</td><td>bool</td><td>r</td><td>Can open as a book</td></tr>
+<tr><td>LastWriteTime</td><td>Date</td><td>r</td><td>Last write time</td></tr>
+<tr><td>Path</td><td>string</td><td>r</td><td>Page path</td></tr>
+<tr><td>Player</td><td><a href="#MediaPlayerAccessor">MediaPlayerAccessor</a></td><td>r</td><td>Media player. If not media, null</td></tr>
+<tr><td>RawPath</td><td>string</td><td>r</td><td>Raw path</td></tr>
+<tr><td>Size</td><td>int</td><td>r</td><td>File size (Byte)</td></tr>
+<tr><td>Width</td><td>double</td><td>r</td><td>Page width</td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table class="table-slim">
+<tr><td>GetMetaValue(string)</td><td>string</td><td>Get page meta information<details><h4>Parameters</h4>
+<p><table class="table-slim">
+<tr><td>key</td><td>string</td><td>Meta information item name. See the search options help for more information.</td></tr>
+</table></p>
+<h4>Returns</h4>
+<p><table class="table-none">
+<tr><td>string</td><td>Meta information value</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>GetMetaValueMap()</td><td>dictionary</td><td>Get a list of page meta information<details><h4>Returns</h4>
+<p><table class="table-none">
+<tr><td>dictionary</td><td>Associative array of page meta information</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>GetPageAccessor()</td><td><a href="#PageAccessor">PageAccessor</a></td><td>Get PageAccessor for this page<details><h4>Returns</h4>
+<p><table class="table-none">
+<tr><td><a href="#PageAccessor">PageAccessor</a></td><td>Page accessor</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>Open()</td><td>void</td><td>Open page</td></tr>
+<tr><td>OpenAsBook()</td><td>void</td><td>Open as book</td></tr>
+</table></p>
+<hr/>
+<h2 id="ArchivePolicy">[Enum] ArchivePolicy</h2>
+<p>Compressed file processing policy</p>
+<h4>Fields</h4>
+<p><table class="table-slim">
+<tr><td>None</td><td>Do not execute</td></tr>
+<tr><td>SendArchiveFile</td><td>Compressed file</td></tr>
+<tr><td>SendArchivePath</td><td>Compressed file + filename</td></tr>
+<tr><td>SendExtractFile</td><td>Temporary file</td></tr>
+</table></p>
+<h2 id="AutoRotateType">[Enum] AutoRotateType</h2>
+<p>Automatic rotation</p>
+<h4>Fields</h4>
+<p><table class="table-slim">
+<tr><td>None</td><td>Default</td></tr>
+<tr><td>Left</td><td>Auto left rotate</td></tr>
+<tr><td>Right</td><td>Auto right rotate</td></tr>
+<tr><td>ForcedLeft</td><td>Forced left rotate</td></tr>
+<tr><td>ForcedRight</td><td>Forced right rotate</td></tr>
+</table></p>
+<h2 id="FolderOrder">[Enum] FolderOrder</h2>
+<p>List item order</p>
+<h4>Fields</h4>
+<p><table class="table-slim">
+<tr><td>FileName</td><td>Name↑</td></tr>
+<tr><td>FileNameDescending</td><td>Name↓</td></tr>
+<tr><td>Path</td><td>Path↑</td></tr>
+<tr><td>PathDescending</td><td>Path↓</td></tr>
+<tr><td>FileType</td><td>Type↑</td></tr>
+<tr><td>FileTypeDescending</td><td>Type↓</td></tr>
+<tr><td>TimeStamp</td><td>Date↑</td></tr>
+<tr><td>TimeStampDescending</td><td>Date↓</td></tr>
+<tr><td>Size</td><td>Size↑</td></tr>
+<tr><td>SizeDescending</td><td>Size↓</td></tr>
+<tr><td>EntryTime</td><td>Entry↑</td></tr>
+<tr><td>EntryTimeDescending</td><td>Entry↓</td></tr>
+<tr><td>Random</td><td>Shuffle</td></tr>
+</table></p>
+<h2 id="PageNameFormat">[Enum] PageNameFormat</h2>
+<p>Item name format in PageList</p>
+<h4>Fields</h4>
+<p><table class="table-slim">
+<tr><td>Smart</td><td>Smart</td></tr>
+<tr><td>NameOnly</td><td>Name</td></tr>
+<tr><td>Raw</td><td>Raw</td></tr>
+</table></p>
+<h2 id="PageReadOrder">[Enum] PageReadOrder</h2>
+<p>Page read order</p>
+<h4>Fields</h4>
+<p><table class="table-slim">
+<tr><td>RightToLeft</td><td>Right to left</td></tr>
+<tr><td>LeftToRight</td><td>Left to right</td></tr>
+</table></p>
+<h2 id="PageSortMode">[Enum] PageSortMode</h2>
+<p>Page sort mode</p>
+<h4>Fields</h4>
+<p><table class="table-slim">
+<tr><td>FileName</td><td>Name↑</td></tr>
+<tr><td>FileNameDescending</td><td>Name↓</td></tr>
+<tr><td>TimeStamp</td><td>Date↑</td></tr>
+<tr><td>TimeStampDescending</td><td>Date↓</td></tr>
+<tr><td>Size</td><td>Size↑</td></tr>
+<tr><td>SizeDescending</td><td>Size↓</td></tr>
+<tr><td>Entry</td><td>Entry↑</td></tr>
+<tr><td>EntryDescending</td><td>Entry↓</td></tr>
+<tr><td>Random</td><td>Shuffle</td></tr>
+</table></p>
+<h2 id="PanelListItemStyle">[Enum] PanelListItemStyle</h2>
+<p>List item style</p>
+<h4>Fields</h4>
+<p><table class="table-slim">
+<tr><td>Normal</td><td>Text</td></tr>
+<tr><td>Content</td><td>Content</td></tr>
+<tr><td>Banner</td><td>Banner</td></tr>
+<tr><td>Thumbnail</td><td>Thumbnail</td></tr>
+</table></p>
+<h2 id="SusiePluginType">[Enum] SusiePluginType</h2>
+<p>Susie plugin type</p>
+<h4>Fields</h4>
+<p><table class="table-slim">
+<tr><td>None</td><td>None</td></tr>
+<tr><td>Image</td><td>Image</td></tr>
+<tr><td>Archive</td><td>Archive</td></tr>
+</table></p>
+<h1 class="sub" id="ConfigList">Config list</h1><table class="table-slim table-topless"><tr><th>Name</th><th>Type</th><th>Summary</th></tr><tr><td>nv.Config.Archive.Media.IsEnabled</td><td>bool</td><td>Open video as a book<br/></td></tr>
+<tr><td>nv.Config.Archive.Media.IsLibVlcEnabled</td><td>bool</td><td>Play videos using libVLC<br/>VLC media player is required. Many video formats are supported, and subtitles and audio channels can be selected.</td></tr>
+<tr><td>nv.Config.Archive.Media.IsMediaPageEnabled</td><td>bool</td><td>Open video as a page<br/></td></tr>
+<tr><td>nv.Config.Archive.Media.IsMuted</td><td>bool</td><td>Mute video<br/></td></tr>
+<tr><td>nv.Config.Archive.Media.IsRepeat</td><td>bool</td><td>Video repeat<br/></td></tr>
+<tr><td>nv.Config.Archive.Media.LibVlcPath</td><td>string</td><td>libVLC directory<br/>Directory where the 64-bit version of libvlc.dll resides. This is usually the VLC media player installation folder.</td></tr>
+<tr><td>nv.Config.Archive.Media.MediaStartDelaySeconds</td><td>double</td><td>Play start delay (sec)<br/>If 0 is specified, the contents may flicker.</td></tr>
+<tr><td>nv.Config.Archive.Media.PageSeconds</td><td>double</td><td>Change time in page movement (sec)<br/></td></tr>
+<tr><td>nv.Config.Archive.Media.SupportFileTypes</td><td>".ex1;.ex2;.ex3"</td><td>Video file extension<br/>Probably what you can play with Windows Media Player is playable.</td></tr>
+<tr><td>nv.Config.Archive.Media.Volume</td><td>double</td><td>Video volume<br/></td></tr>
+<tr><td>nv.Config.Archive.Pdf.IsEnabled</td><td>bool</td><td>Use PDF<br/></td></tr>
+<tr><td>nv.Config.Archive.Pdf.RenderSize</td><td>"width,height"</td><td>PDF page standard size<br/>Normally we will render according to the display size, but the lower limit will be this standard size. If it becomes smaller, it is reduced and displayed.</td></tr>
+<tr><td>nv.Config.Archive.Pdf.SupportFileTypes</td><td>".ex1;.ex2;.ex3"</td><td>PDF file extension<br/></td></tr>
+<tr><td>nv.Config.Archive.SevenZip.IsEnabled</td><td>bool</td><td>Use compressed file expansion with 7-Zip<br/></td></tr>
+<tr><td>nv.Config.Archive.SevenZip.SupportFileTypes</td><td>".ex1;.ex2;.ex3"</td><td>Compressed file extension<br/></td></tr>
+<tr><td>nv.Config.Archive.SevenZip.X64DllPath</td><td>string</td><td>Location of 7z.dll (64 bit)<br/>Set this if you want to use another 7z.dll. You need to reopen the application.</td></tr>
+<tr><td>nv.Config.Archive.SevenZip.X86DllPath</td><td>string</td><td>Location of 7z.dll (32bit)<br/>Set this if you want to use another 7z.dll. You need to reopen the application.</td></tr>
+<tr><td>nv.Config.Archive.Zip.Encoding</td><td><dl><dt>"Local"</dt><dd>Local</dd><dt>"UTF8"</dt><dd>UTF-8</dd><dt>"Auto"</dt><dd>Auto</dd></dl></td><td>Encoding for ZIP entry names<br/>For ZIP files without the UTF-8 flag set.</td></tr>
+<tr><td>nv.Config.Archive.Zip.IsEnabled</td><td>bool</td><td>Use ZIP compressed file expansion with standard function<br/></td></tr>
+<tr><td>nv.Config.Archive.Zip.IsFileWriteAccessEnabled</td><td>bool</td><td>ZIP file editable<br/>It will be possible to delete files in the ZIP. The "File management" setting must be enabled.</td></tr>
+<tr><td>nv.Config.Archive.Zip.SupportFileTypes</td><td>".ex1;.ex2;.ex3"</td><td>Compressed file extension<br/>Only ZIP format is supported.</td></tr>
+<tr><td>nv.Config.AutoHide.AutoHideConflictBottomMargin</td><td><dl><dt>"Allow"</dt><dd>Allow</dd><dt>"AllowPixel"</dt><dd>Allow one pixel</dd><dt>"Deny"</dt><dd>Deny</dd></dl></td><td>Automatic display judgment of slider on side panel<br/></td></tr>
+<tr><td>nv.Config.AutoHide.AutoHideConflictTopMargin</td><td><dl><dt>"Allow"</dt><dd>Allow</dd><dt>"AllowPixel"</dt><dd>Allow one pixel</dd><dt>"Deny"</dt><dd>Deny</dd></dl></td><td>Automatic display judgment of menu bar on side panel<br/></td></tr>
+<tr><td>nv.Config.AutoHide.AutoHideDelayTime</td><td>double</td><td>Time to hide auto-hide panel (sec)<br/></td></tr>
+<tr><td>nv.Config.AutoHide.AutoHideDelayVisibleTime</td><td>double</td><td>Time to display auto-hide panel (sec)<br/></td></tr>
+<tr><td>nv.Config.AutoHide.AutoHideFocusLockMode</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"LogicalFocusLock"</dt><dd>Panel</dd><dt>"LogicalTextBoxFocusLock"</dt><dd>TextBox</dd><dt>"FocusLock"</dt><dd>Window and Panel</dd><dt>"TextBoxFocusLock"</dt><dd>Window and TextBox</dd></dl></td><td>Auto-hide panel focus mode<br/>It is not hidden when it has focus.</td></tr>
+<tr><td>nv.Config.AutoHide.AutoHideHitTestHorizontalMargin</td><td>double</td><td>Width for panel automatic display judgment (pixel)<br/></td></tr>
+<tr><td>nv.Config.AutoHide.AutoHideHitTestVerticalMargin</td><td>double</td><td>Height for panel automatic display judgment (pixel)<br/></td></tr>
+<tr><td>nv.Config.AutoHide.IsAutoHideKeyDownDelay</td><td>bool</td><td>Auto-hide panel key input display continued<br/>Postpone the action to hide when key input.</td></tr>
+<tr><td>nv.Config.Background.BackgroundType</td><td><dl><dt>"Black"</dt><dd>Black background</dd><dt>"White"</dt><dd>White background</dd><dt>"Auto"</dt><dd>Image colored background</dd><dt>"Check"</dt><dd>White checkered background</dd><dt>"CheckDark"</dt><dd>Black checkered background</dd><dt>"Custom"</dt><dd>Custom Background</dd></dl></td><td>Background type<br/></td></tr>
+<tr><td>nv.Config.Background.CustomBackground.Color</td><td>"#AARRGGBB"</td><td>Custom background: Color<br/></td></tr>
+<tr><td>nv.Config.Background.CustomBackground.ImageFileName</td><td>string</td><td>Custom background: Image file<br/></td></tr>
+<tr><td>nv.Config.Background.CustomBackground.Type</td><td><dl><dt>"SolidColor"</dt><dd>Solid color</dd><dt>"ImageTile"</dt><dd>Image tile</dd><dt>"ImageFill"</dt><dd>Enlarge and display the image</dd><dt>"ImageUniform"</dt><dd>Fit image to window size</dd><dt>"ImageUniformToFill"</dt><dd>Extend the image to the full window</dd></dl></td><td>Custom background: Brush type<br/></td></tr>
+<tr><td>nv.Config.Background.IsPageBackgroundChecker</td><td>bool</td><td>Checkered background transparent image<br/>It will be a check pattern of "Transparent image background color".</td></tr>
+<tr><td>nv.Config.Background.PageBackgroundColor</td><td>"#AARRGGBB"</td><td>Transparent image background color<br/></td></tr>
+<tr><td>nv.Config.Book.ContentsSpace</td><td>double</td><td>Distance between pages in "Two pages" (pixels)<br/>Sets the gap between page and page. Negative values ​​mean overlapping. Because each page is scaled, it is rare that there will be no gap just at 0.</td></tr>
+<tr><td>nv.Config.Book.DividePageRate</td><td>double</td><td>Rate of divide page<br/>Division rate when "Divide wide page".</td></tr>
+<tr><td>nv.Config.Book.DummyPageColor</td><td>"#AARRGGBB"</td><td>Dummy page color<br/></td></tr>
+<tr><td>nv.Config.Book.Excludes</td><td>"str1;str2;str3"</td><td>Excluded folders<br/></td></tr>
+<tr><td>nv.Config.Book.FrameSpace</td><td>double</td><td>Distance between pages in "Panorama" (pixels)<br/>Sets the gap between page and page. Negative values ​​mean overlapping. Because each page is scaled, it is rare that there will be no gap just at 0.</td></tr>
+<tr><td>nv.Config.Book.IsAutoRecursive</td><td>bool</td><td>If the subfolder is independent, read it without checking<br/>Automatically loads subfolders if there are no pages and only one subfolder exists.</td></tr>
+<tr><td>nv.Config.Book.IsConfirmRecursive</td><td>bool</td><td>Ask if you want to load it when you only have a subfolder<br/>If there is no page that can be displayed when the book is opened, and a subfolder exists, a dialog is displayed asking whether to load the subfolder.</td></tr>
+<tr><td>nv.Config.Book.IsInsertDummyFirstPage</td><td>bool</td><td>Add a dummy page to the first page<br/></td></tr>
+<tr><td>nv.Config.Book.IsInsertDummyLastPage</td><td>bool</td><td>Add a dummy page to the last page<br/></td></tr>
+<tr><td>nv.Config.Book.IsInsertDummyPage</td><td>bool</td><td>Insert a dummy page for a double-page spread<br/>When there are not enough pages at the two-page display, add a dummy page to align the spread.</td></tr>
+<tr><td>nv.Config.Book.IsNotifyPageLoop</td><td>bool</td><td>Notify page loop<br/></td></tr>
+<tr><td>nv.Config.Book.IsPanorama</td><td>bool</td><td>Panorama<br/>Displays consecutive pages.</td></tr>
+<tr><td>nv.Config.Book.IsPrioritizeBookMove</td><td>bool</td><td>Book movement priority<br/></td></tr>
+<tr><td>nv.Config.Book.IsPrioritizePageMove</td><td>bool</td><td>Page movement priority<br/>Perform page movement without waiting for page display.</td></tr>
+<tr><td>nv.Config.Book.IsReadyToPageMove</td><td>bool</td><td>Ready to page move<br/>Switch display when page is ready. Not valid in "Panorama".</td></tr>
+<tr><td>nv.Config.Book.IsSortFileFirst</td><td>bool</td><td>Sort pages by file first<br/>Arrange files before folders.</td></tr>
+<tr><td>nv.Config.Book.IsStaticWidePage</td><td>bool</td><td>Static two pages<br/>The base page for the two pages display is determined by numbers only. Slider movement follows suit.</td></tr>
+<tr><td>nv.Config.Book.Orientation</td><td><dl><dt>"Horizontal"</dt><dd>Horizontal</dd><dt>"Vertical"</dt><dd>Vertical</dd></dl></td><td>Page layout orientation<br/></td></tr>
+<tr><td>nv.Config.Book.PageEndAction</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"NextBook"</dt><dd>Move to next book</dd><dt>"Loop"</dt><dd>Loop</dd><dt>"SeamlessLoop"</dt><dd>Seamless loop</dd><dt>"Dialog"</dt><dd>Select in dialog</dd></dl></td><td>Behavior when trying to move past the end of the page<br/></td></tr>
+<tr><td>nv.Config.Book.ResetPageWhenRandomSort</td><td>bool</td><td>Reset page when shuffle<br/></td></tr>
+<tr><td>nv.Config.Book.TerminalSound</td><td>string</td><td>Sound when not able to move<br/></td></tr>
+<tr><td>nv.Config.Book.WidePageStretch</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"UniformHeight"</dt><dd>Uniform height</dd><dt>"UniformWidth"</dt><dd>Uniform width</dd></dl></td><td>How to align sizes in "Two pages"<br/></td></tr>
+<tr><td>nv.Config.Book.WidePageVerticalAlignment</td><td><dl><dt>"Top"</dt><dd>Top</dd><dt>"Center"</dt><dd>Center</dd><dt>"Bottom"</dt><dd>Bottom</dd></dl></td><td>Vertial alignment in "Two pages"<br/></td></tr>
+<tr><td>nv.Config.Book.WideRatio</td><td>double</td><td>Aspect ratio for determining horizontally long image (horizontal / vertical)<br/>It is used in "Divide wide page".</td></tr>
+<tr><td>nv.Config.Bookmark.BookmarkFilePath</td><td>string</td><td>Bookmark: Bookmark file location<br/></td></tr>
+<tr><td>nv.Config.Bookmark.BookmarkFolderOrder</td><td><dl><dt>"FileName"</dt><dd>Name↑</dd><dt>"FileNameDescending"</dt><dd>Name↓</dd><dt>"Path"</dt><dd>Path↑</dd><dt>"PathDescending"</dt><dd>Path↓</dd><dt>"FileType"</dt><dd>Type↑</dd><dt>"FileTypeDescending"</dt><dd>Type↓</dd><dt>"TimeStamp"</dt><dd>Date↑</dd><dt>"TimeStampDescending"</dt><dd>Date↓</dd><dt>"Size"</dt><dd>Size↑</dd><dt>"SizeDescending"</dt><dd>Size↓</dd><dt>"EntryTime"</dt><dd>Entry↑</dd><dt>"EntryTimeDescending"</dt><dd>Entry↓</dd><dt>"Random"</dt><dd>Shuffle</dd></dl></td><td>Bookmark: Default order of bookmarks<br/></td></tr>
+<tr><td>nv.Config.Bookmark.FolderTreeLayout</td><td><dl><dt>"Top"</dt><dd>Place to the top</dd><dt>"Left"</dt><dd>Place to the left</dd></dl></td><td>Bookmark: Folder tree layout<br/></td></tr>
+<tr><td>nv.Config.Bookmark.IsFolderTreeVisible</td><td>bool</td><td>Bookmark: Display folder tree<br/></td></tr>
+<tr><td>nv.Config.Bookmark.IsSaveBookmark</td><td>bool</td><td>Bookmark: Save bookmark file<br/></td></tr>
+<tr><td>nv.Config.Bookmark.IsSearchIncludeSubdirectories</td><td>bool</td><td>Bookmark: Perform a search including subfolders<br/></td></tr>
+<tr><td>nv.Config.Bookmark.IsSyncBookshelfEnabled</td><td>bool</td><td>Bookmark: Sync bookshelf when book is opened<br/></td></tr>
+<tr><td>nv.Config.Bookmark.PanelListItemStyle</td><td><dl><dt>"Normal"</dt><dd>Text</dd><dt>"Content"</dt><dd>Content</dd><dt>"Banner"</dt><dd>Banner</dd><dt>"Thumbnail"</dt><dd>Thumbnail</dd></dl></td><td>Bookmark: List item style<br/></td></tr>
+<tr><td>nv.Config.BookSetting.AutoRotate</td><td><dl><dt>"None"</dt><dd>Default</dd><dt>"Left"</dt><dd>Auto left rotate</dd><dt>"Right"</dt><dd>Auto right rotate</dd><dt>"ForcedLeft"</dt><dd>Forced left rotate</dd><dt>"ForcedRight"</dt><dd>Forced right rotate</dd></dl></td><td>Automatic rotation<br/></td></tr>
+<tr><td>nv.Config.BookSetting.BaseScale</td><td>double</td><td>Base scale<br/></td></tr>
+<tr><td>nv.Config.BookSetting.BookReadOrder</td><td><dl><dt>"RightToLeft"</dt><dd>Right to left</dd><dt>"LeftToRight"</dt><dd>Left to right</dd></dl></td><td>Page read order<br/></td></tr>
+<tr><td>nv.Config.BookSetting.IsRecursiveFolder</td><td>bool</td><td>Load subfolders<br/>Since it searches everything under the folder to be opened, the load may be high depending on the location where it is opened.</td></tr>
+<tr><td>nv.Config.BookSetting.IsSupportedDividePage</td><td>bool</td><td>Divide wide page<br/></td></tr>
+<tr><td>nv.Config.BookSetting.IsSupportedSingleFirstPage</td><td>bool</td><td>Show first page alone<br/></td></tr>
+<tr><td>nv.Config.BookSetting.IsSupportedSingleLastPage</td><td>bool</td><td>Show last page alone<br/></td></tr>
+<tr><td>nv.Config.BookSetting.IsSupportedWidePage</td><td>bool</td><td>Consider landscape pages as two pages<br/></td></tr>
+<tr><td>nv.Config.BookSetting.PageMode</td><td><dl><dt>"SinglePage"</dt><dd>One page</dd><dt>"WidePage"</dt><dd>Two pages</dd></dl></td><td>Page Size Mode<br/></td></tr>
+<tr><td>nv.Config.BookSetting.SortMode</td><td><dl><dt>"FileName"</dt><dd>Name↑</dd><dt>"FileNameDescending"</dt><dd>Name↓</dd><dt>"TimeStamp"</dt><dd>Date↑</dd><dt>"TimeStampDescending"</dt><dd>Date↓</dd><dt>"Size"</dt><dd>Size↑</dd><dt>"SizeDescending"</dt><dd>Size↓</dd><dt>"Entry"</dt><dd>Entry↑</dd><dt>"EntryDescending"</dt><dd>Entry↓</dd><dt>"Random"</dt><dd>Shuffle</dd></dl></td><td>Page sort mode<br/></td></tr>
+<tr><td>nv.Config.BookSettingDefault.AutoRotate</td><td><dl><dt>"None"</dt><dd>Default</dd><dt>"Left"</dt><dd>Auto left rotate</dd><dt>"Right"</dt><dd>Auto right rotate</dd><dt>"ForcedLeft"</dt><dd>Forced left rotate</dd><dt>"ForcedRight"</dt><dd>Forced right rotate</dd></dl></td><td>Automatic rotation<br/></td></tr>
+<tr><td>nv.Config.BookSettingDefault.BaseScale</td><td>double</td><td>Base scale<br/></td></tr>
+<tr><td>nv.Config.BookSettingDefault.BookReadOrder</td><td><dl><dt>"RightToLeft"</dt><dd>Right to left</dd><dt>"LeftToRight"</dt><dd>Left to right</dd></dl></td><td>Page read order<br/></td></tr>
+<tr><td>nv.Config.BookSettingDefault.IsRecursiveFolder</td><td>bool</td><td>Load subfolders<br/>Since it searches everything under the folder to be opened, the load may be high depending on the location where it is opened.</td></tr>
+<tr><td>nv.Config.BookSettingDefault.IsSupportedDividePage</td><td>bool</td><td>Divide wide page<br/></td></tr>
+<tr><td>nv.Config.BookSettingDefault.IsSupportedSingleFirstPage</td><td>bool</td><td>Show first page alone<br/></td></tr>
+<tr><td>nv.Config.BookSettingDefault.IsSupportedSingleLastPage</td><td>bool</td><td>Show last page alone<br/></td></tr>
+<tr><td>nv.Config.BookSettingDefault.IsSupportedWidePage</td><td>bool</td><td>Consider landscape pages as two pages<br/></td></tr>
+<tr><td>nv.Config.BookSettingDefault.PageMode</td><td><dl><dt>"SinglePage"</dt><dd>One page</dd><dt>"WidePage"</dt><dd>Two pages</dd></dl></td><td>Page Size Mode<br/></td></tr>
+<tr><td>nv.Config.BookSettingDefault.SortMode</td><td><dl><dt>"FileName"</dt><dd>Name↑</dd><dt>"FileNameDescending"</dt><dd>Name↓</dd><dt>"TimeStamp"</dt><dd>Date↑</dd><dt>"TimeStampDescending"</dt><dd>Date↓</dd><dt>"Size"</dt><dd>Size↑</dd><dt>"SizeDescending"</dt><dd>Size↓</dd><dt>"Entry"</dt><dd>Entry↑</dd><dt>"EntryDescending"</dt><dd>Entry↓</dd><dt>"Random"</dt><dd>Shuffle</dd></dl></td><td>Page sort mode<br/></td></tr>
+<tr><td>nv.Config.BookSettingPolicy.AutoRotate</td><td><dl><dt>"Default"</dt><dd>Default</dd><dt>"Continue"</dt><dd>Continue</dd><dt>"RestoreOrDefault"</dt><dd>Restore, else default</dd><dt>"RestoreOrContinue"</dt><dd>Restore, else continue</dd></dl></td><td>Automatic rotation<br/></td></tr>
+<tr><td>nv.Config.BookSettingPolicy.BaseScale</td><td><dl><dt>"Default"</dt><dd>Default</dd><dt>"Continue"</dt><dd>Continue</dd><dt>"RestoreOrDefault"</dt><dd>Restore, else default</dd><dt>"RestoreOrContinue"</dt><dd>Restore, else continue</dd></dl></td><td>Base scale<br/></td></tr>
+<tr><td>nv.Config.BookSettingPolicy.BookReadOrder</td><td><dl><dt>"Default"</dt><dd>Default</dd><dt>"Continue"</dt><dd>Continue</dd><dt>"RestoreOrDefault"</dt><dd>Restore, else default</dd><dt>"RestoreOrContinue"</dt><dd>Restore, else continue</dd></dl></td><td>Setting policy of "Page read order" when opening a book<br/></td></tr>
+<tr><td>nv.Config.BookSettingPolicy.IsRecursiveFolder</td><td><dl><dt>"Default"</dt><dd>Default</dd><dt>"Continue"</dt><dd>Continue</dd><dt>"RestoreOrDefault"</dt><dd>Restore, else default</dd><dt>"RestoreOrContinue"</dt><dd>Restore, else continue</dd></dl></td><td>Setting policy of "Load subfolders" when opening a book<br/></td></tr>
+<tr><td>nv.Config.BookSettingPolicy.IsSupportedDividePage</td><td><dl><dt>"Default"</dt><dd>Default</dd><dt>"Continue"</dt><dd>Continue</dd><dt>"RestoreOrDefault"</dt><dd>Restore, else default</dd><dt>"RestoreOrContinue"</dt><dd>Restore, else continue</dd></dl></td><td>Setting policy of "Divide wide page" when opening a book<br/></td></tr>
+<tr><td>nv.Config.BookSettingPolicy.IsSupportedSingleFirstPage</td><td><dl><dt>"Default"</dt><dd>Default</dd><dt>"Continue"</dt><dd>Continue</dd><dt>"RestoreOrDefault"</dt><dd>Restore, else default</dd><dt>"RestoreOrContinue"</dt><dd>Restore, else continue</dd></dl></td><td>Setting policy of "Show first page alone" when opening a book<br/></td></tr>
+<tr><td>nv.Config.BookSettingPolicy.IsSupportedSingleLastPage</td><td><dl><dt>"Default"</dt><dd>Default</dd><dt>"Continue"</dt><dd>Continue</dd><dt>"RestoreOrDefault"</dt><dd>Restore, else default</dd><dt>"RestoreOrContinue"</dt><dd>Restore, else continue</dd></dl></td><td>Setting policy of "Show last page alone" when opening a book<br/></td></tr>
+<tr><td>nv.Config.BookSettingPolicy.IsSupportedWidePage</td><td><dl><dt>"Default"</dt><dd>Default</dd><dt>"Continue"</dt><dd>Continue</dd><dt>"RestoreOrDefault"</dt><dd>Restore, else default</dd><dt>"RestoreOrContinue"</dt><dd>Restore, else continue</dd></dl></td><td>Setting policy of "Consider landscape pages as two pages" when opening a book<br/></td></tr>
+<tr><td>nv.Config.BookSettingPolicy.Page</td><td><dl><dt>"Default"</dt><dd>Default</dd><dt>"RestoreOrDefault"</dt><dd>Restore, else default</dd><dt>"RestoreOrDefaultReset"</dt><dd>Restore, else default, clear last page</dd></dl></td><td>Setting policy of "Page position" when opening a book<br/></td></tr>
+<tr><td>nv.Config.BookSettingPolicy.PageMode</td><td><dl><dt>"Default"</dt><dd>Default</dd><dt>"Continue"</dt><dd>Continue</dd><dt>"RestoreOrDefault"</dt><dd>Restore, else default</dd><dt>"RestoreOrContinue"</dt><dd>Restore, else continue</dd></dl></td><td>Setting policy of "Page Size Mode" when opening a book<br/></td></tr>
+<tr><td>nv.Config.BookSettingPolicy.SortMode</td><td><dl><dt>"Default"</dt><dd>Default</dd><dt>"Continue"</dt><dd>Continue</dd><dt>"RestoreOrDefault"</dt><dd>Restore, else default</dd><dt>"RestoreOrContinue"</dt><dd>Restore, else continue</dd></dl></td><td>Setting policy of "Page sort mode" when opening a book<br/></td></tr>
+<tr><td>nv.Config.Bookshelf.DefaultFolderOrder</td><td><dl><dt>"FileName"</dt><dd>Name↑</dd><dt>"FileNameDescending"</dt><dd>Name↓</dd><dt>"Path"</dt><dd>Path↑</dd><dt>"PathDescending"</dt><dd>Path↓</dd><dt>"FileType"</dt><dd>Type↑</dd><dt>"FileTypeDescending"</dt><dd>Type↓</dd><dt>"TimeStamp"</dt><dd>Date↑</dd><dt>"TimeStampDescending"</dt><dd>Date↓</dd><dt>"Size"</dt><dd>Size↑</dd><dt>"SizeDescending"</dt><dd>Size↓</dd><dt>"EntryTime"</dt><dd>Entry↑</dd><dt>"EntryTimeDescending"</dt><dd>Entry↓</dd><dt>"Random"</dt><dd>Shuffle</dd></dl></td><td>Bookshelf: Standard default order<br/></td></tr>
+<tr><td>nv.Config.Bookshelf.ExcludePattern</td><td>string</td><td>Bookshelf: Filename pattern to exclude from display<br/>It is specified with .NET regular expression. Capital letters and lower case letters are not distinguished.</td></tr>
+<tr><td>nv.Config.Bookshelf.FolderTreeLayout</td><td><dl><dt>"Top"</dt><dd>Place to the top</dd><dt>"Left"</dt><dd>Place to the left</dd></dl></td><td>Bookshelf: Folder tree layout<br/></td></tr>
+<tr><td>nv.Config.Bookshelf.Home</td><td>string</td><td>Bookshelf: Home location<br/></td></tr>
+<tr><td>nv.Config.Bookshelf.IsCloseBookWhenMove</td><td>bool</td><td>Bookshelf: Close the book when changing the location<br/></td></tr>
+<tr><td>nv.Config.Bookshelf.IsCruise</td><td>bool</td><td>Bookshelf: Enable Folder Cruise<br/>Move the folder including the parent and child of the folder. It does not apply when the bookshelf is a search result.</td></tr>
+<tr><td>nv.Config.Bookshelf.IsFolderTreeVisible</td><td>bool</td><td>Bookshelf: Display folder tree<br/></td></tr>
+<tr><td>nv.Config.Bookshelf.IsInsertItem</td><td>bool</td><td>Bookshelf: Insert additional file at sort position<br/>The bookshelf reflects information in real time. If this setting is on, inserts the added file in the current sort order position. When turned off, it is added to the end of the list.</td></tr>
+<tr><td>nv.Config.Bookshelf.IsMultipleRarFilterEnabled</td><td>bool</td><td>Bookshelf: Filter RAR split files from display<br/>For an RAR split file called ".part[number].rar", only the file with the smallest number is displayed in the list.</td></tr>
+<tr><td>nv.Config.Bookshelf.IsOpenNextBookWhenRemove</td><td>bool</td><td>Bookshelf: After deleting the viewing book, open the next book<br/></td></tr>
+<tr><td>nv.Config.Bookshelf.IsOrderWithoutFileType</td><td>bool</td><td>Bookshelf: Sort without file type<br/></td></tr>
+<tr><td>nv.Config.Bookshelf.IsSearchIncludeSubdirectories</td><td>bool</td><td>Bookshelf: Perform a search including subfolders<br/></td></tr>
+<tr><td>nv.Config.Bookshelf.IsSyncFolderTree</td><td>bool</td><td>Bookshelf: Synchronize Folders tree with sync button<br/></td></tr>
+<tr><td>nv.Config.Bookshelf.IsVisibleBookmarkMark</td><td>bool</td><td>Bookshelf: Display bookmark symbols<br/>★ mark is displayed in the bookmarked book.</td></tr>
+<tr><td>nv.Config.Bookshelf.IsVisibleHistoryMark</td><td>bool</td><td>Bookshelf: Display history symbol<br/>A check mark is displayed in the book remaining in the history.</td></tr>
+<tr><td>nv.Config.Bookshelf.PanelListItemStyle</td><td><dl><dt>"Normal"</dt><dd>Text</dd><dt>"Content"</dt><dd>Content</dd><dt>"Banner"</dt><dd>Banner</dd><dt>"Thumbnail"</dt><dd>Thumbnail</dd></dl></td><td>Bookshelf: List item style<br/></td></tr>
+<tr><td>nv.Config.Bookshelf.PlaylistFolderOrder</td><td><dl><dt>"FileName"</dt><dd>Name↑</dd><dt>"FileNameDescending"</dt><dd>Name↓</dd><dt>"Path"</dt><dd>Path↑</dd><dt>"PathDescending"</dt><dd>Path↓</dd><dt>"FileType"</dt><dd>Type↑</dd><dt>"FileTypeDescending"</dt><dd>Type↓</dd><dt>"TimeStamp"</dt><dd>Date↑</dd><dt>"TimeStampDescending"</dt><dd>Date↓</dd><dt>"Size"</dt><dd>Size↑</dd><dt>"SizeDescending"</dt><dd>Size↓</dd><dt>"EntryTime"</dt><dd>Entry↑</dd><dt>"EntryTimeDescending"</dt><dd>Entry↓</dd><dt>"Random"</dt><dd>Shuffle</dd></dl></td><td>Bookshelf: Default order of playlists<br/></td></tr>
+<tr><td>nv.Config.Command.IsAccessKeyEnabled</td><td>bool</td><td>Allow access key<br/>When turned off, system operation with the Alt key is disabled, eliminating malfunctions with command shortcuts. However Alt+F4 is always active.</td></tr>
+<tr><td>nv.Config.Command.IsHorizontalWheelLimitedOnce</td><td>bool</td><td>Limit tilt wheel operation to one time<br/>Tilt wheel Executes one command with one operation. If you are using a stepless mouse, turn it off.</td></tr>
+<tr><td>nv.Config.Command.IsReversePageMove</td><td>bool</td><td>Swap movement direction of page movement command according to slider direction<br/>When the slider is from left to right, reverse the page moving direction. The setting of the command to work is set by "Enable operation swap by slider direction" of the command parameter.</td></tr>
+<tr><td>nv.Config.Command.IsReversePageMoveHorizontalWheel</td><td>bool</td><td>Replace when operating tilt wheel<br/>You can select correspondence only for tilt wheel operation.</td></tr>
+<tr><td>nv.Config.Command.IsReversePageMoveWheel</td><td>bool</td><td>Replace when operating wheel<br/>You can select correspondence only for wheel operation.</td></tr>
+<tr><td>nv.Config.Control.IsSelected</td><td>bool</td><td>Panel selected<br/></td></tr>
+<tr><td>nv.Config.Control.IsVisible</td><td>bool</td><td>Panel visibility<br/> (Read only)</td></tr>
+<tr><td>nv.Config.FilmStrip.ImageWidth</td><td>double</td><td>Page thumbnail size<br/></td></tr>
+<tr><td>nv.Config.FilmStrip.IsEnabled</td><td>bool</td><td>Show filmstrip<br/></td></tr>
+<tr><td>nv.Config.FilmStrip.IsHideFilmStrip</td><td>bool</td><td>Automatically hide filmstrip<br/></td></tr>
+<tr><td>nv.Config.FilmStrip.IsManipulationBoundaryFeedbackEnabled</td><td>bool</td><td>Touch scroll termination bound on filmstrip<br/></td></tr>
+<tr><td>nv.Config.FilmStrip.IsSelectedCenter</td><td>bool</td><td>Scroll so that the selected item appears in the center<br/></td></tr>
+<tr><td>nv.Config.FilmStrip.IsVisibleNumber</td><td>bool</td><td>Display page number<br/></td></tr>
+<tr><td>nv.Config.FilmStrip.IsVisiblePlaylistMark</td><td>bool</td><td>Display playlisted mark<br/></td></tr>
+<tr><td>nv.Config.FilmStrip.IsWheelMovePage</td><td>bool</td><td>Move pages by wheel operation<br/></td></tr>
+<tr><td>nv.Config.Fonts.FolderTreeFontScale</td><td>double</td><td>Folder tree font scale<br/></td></tr>
+<tr><td>nv.Config.Fonts.FontName</td><td>string</td><td>Font<br/></td></tr>
+<tr><td>nv.Config.Fonts.FontScale</td><td>double</td><td>Font scale<br/></td></tr>
+<tr><td>nv.Config.Fonts.IsClearTypeEnabled</td><td>bool</td><td>Enable ClearType<br/></td></tr>
+<tr><td>nv.Config.Fonts.MenuFontScale</td><td>double</td><td>Menu font scale<br/></td></tr>
+<tr><td>nv.Config.Fonts.PanelFontScale</td><td>double</td><td>List item font scale<br/></td></tr>
+<tr><td>nv.Config.History.HistoryEntryPageCount</td><td>int</td><td>Number of page operations to start history registration<br/>The history is recorded when the page is moved more than the set number of times or the last page is displayed.</td></tr>
+<tr><td>nv.Config.History.HistoryFilePath</td><td>string</td><td>History file location<br/></td></tr>
+<tr><td>nv.Config.History.IsAutoCleanupEnabled</td><td>bool</td><td>Automatically delete invalid history at startup<br/></td></tr>
+<tr><td>nv.Config.History.IsCurrentFolder</td><td>bool</td><td>Current folder only<br/>Shows the history of only the folders of the currently open book.</td></tr>
+<tr><td>nv.Config.History.IsForceUpdateHistory</td><td>bool</td><td>Even if you open a book from history, it updates the last browsing date<br/></td></tr>
+<tr><td>nv.Config.History.IsInnerArchiveHistoryEnabled</td><td>bool</td><td>Save recursive compressed file in history<br/></td></tr>
+<tr><td>nv.Config.History.IsKeepFolderStatus</td><td>bool</td><td>Save folder state<br/></td></tr>
+<tr><td>nv.Config.History.IsKeepSearchHistory</td><td>bool</td><td>Save search history<br/></td></tr>
+<tr><td>nv.Config.History.IsSaveHistory</td><td>bool</td><td>Save history file<br/></td></tr>
+<tr><td>nv.Config.History.IsUncHistoryEnabled</td><td>bool</td><td>Save UNC path in history<br/>Save the path on the network like "\\computer\~" in the history.</td></tr>
+<tr><td>nv.Config.History.LimitSize</td><td>int</td><td>Size limit<br/></td></tr>
+<tr><td>nv.Config.History.LimitSpan</td><td>System.TimeSpan</td><td>Retention period<br/></td></tr>
+<tr><td>nv.Config.History.PanelListItemStyle</td><td><dl><dt>"Normal"</dt><dd>Text</dd><dt>"Content"</dt><dd>Content</dd><dt>"Banner"</dt><dd>Banner</dd><dt>"Thumbnail"</dt><dd>Thumbnail</dd></dl></td><td>History item style<br/></td></tr>
+<tr><td>nv.Config.Image.IsMediaRepeat</td><td>bool</td><td>Video page repeat<br/></td></tr>
+<tr><td>nv.Config.Image.Standard.IsAllFileSupported</td><td>bool</td><td>A file whose extension is unknown is regarded as an image file<br/>This function works when "File type to be used as page" is "All files".</td></tr>
+<tr><td>nv.Config.Image.Standard.IsAnimatedGifEnabled</td><td>bool</td><td>Play animated GIF<br/>Perform animated GIF playback. Memory consumption problems may occur with long GIFs.</td></tr>
+<tr><td>nv.Config.Image.Standard.IsAnimatedPngEnabled</td><td>bool</td><td>Play animated PNG<br/>Perform animated PNG playback. Memory consumption problems may occur with long PNGs.</td></tr>
+<tr><td>nv.Config.Image.Standard.IsAspectRatioEnabled</td><td>bool</td><td>Apply image resolution information<br/>Display according to the dpi and aspect ratio set in the image file.</td></tr>
+<tr><td>nv.Config.Image.Standard.SupportFileTypes</td><td>".ex1;.ex2;.ex3"</td><td>Image file extensions<br/></td></tr>
+<tr><td>nv.Config.Image.Standard.UseWicInformation</td><td>bool</td><td>Use WIC information<br/>Obtains the image file extension from WIC. If off, only the default extension is available.</td></tr>
+<tr><td>nv.Config.Image.Svg.IsEnabled</td><td>bool</td><td>Enable SVG file<br/>Open an SVG file as a page.</td></tr>
+<tr><td>nv.Config.Image.Svg.SupportFileTypes</td><td>".ex1;.ex2;.ex3"</td><td>SVG file extensions<br/></td></tr>
+<tr><td>nv.Config.ImageCustomSize.ApplicabilityRate</td><td>double</td><td>Applicability rate<br/></td></tr>
+<tr><td>nv.Config.ImageCustomSize.AspectRatio</td><td><dl><dt>"None"</dt><dd>Free</dd><dt>"Origin"</dt><dd>Keep the original aspect ratio</dd><dt>"Ratio_1_1"</dt><dd>1:1</dd><dt>"Ratio_2_3"</dt><dd>2:3</dd><dt>"Ratio_4_3"</dt><dd>4:3</dd><dt>"Ratio_8_9"</dt><dd>8:9</dd><dt>"Ratio_16_9"</dt><dd>16:9</dd><dt>"HalfView"</dt><dd>Half view aspect ratio</dd><dt>"View"</dt><dd>View aspect ratio</dd></dl></td><td>Aspect ratio<br/></td></tr>
+<tr><td>nv.Config.ImageCustomSize.IsAlignLongSide</td><td>bool</td><td>Align long side<br/>Swap the vertical and horizontal as needed.</td></tr>
+<tr><td>nv.Config.ImageCustomSize.IsEnabled</td><td>bool</td><td>Enable custom image size<br/></td></tr>
+<tr><td>nv.Config.ImageCustomSize.Size</td><td>"width,height"</td><td>Custom image size<br/></td></tr>
+<tr><td>nv.Config.ImageDotKeep.IsEnabled</td><td>bool</td><td>Keep dot<br/></td></tr>
+<tr><td>nv.Config.ImageDotKeep.Threshold</td><td>double</td><td>Scale threshold for "Keep dot"<br/>It will be applied when it becomes larger than the set magnification.</td></tr>
+<tr><td>nv.Config.ImageEffect.BloomEffect.BaseIntensity</td><td>double</td><td>Bloom: Base intensity<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.BloomEffect.BaseSaturation</td><td>double</td><td>Bloom: Base saturation<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.BloomEffect.BloomIntensity</td><td>double</td><td>Bloom: Bloom intensity<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.BloomEffect.BloomSaturation</td><td>double</td><td>Bloom: Bloom saturation<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.BloomEffect.Threshold</td><td>double</td><td>Bloom: Threshold<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.BlurEffect.Radius</td><td>double</td><td>Blur: Radius<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.ColorSelectEffect.Curve</td><td>double</td><td>Color select: Curve<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.ColorSelectEffect.Hue</td><td>double</td><td>Color select: Hue<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.ColorSelectEffect.Range</td><td>double</td><td>Color select: Range<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.ColorToneEffect.DarkColor</td><td>"#AARRGGBB"</td><td>Color tone: Dark color<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.ColorToneEffect.Desaturation</td><td>double</td><td>Color tone: Desaturation<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.ColorToneEffect.LightColor</td><td>"#AARRGGBB"</td><td>Color tone: Light color<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.ColorToneEffect.ToneAmount</td><td>double</td><td>Color tone: Tone amount<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.EffectType</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Level"</dt><dd>Level</dd><dt>"Hsv"</dt><dd>HSV</dd><dt>"ColorSelect"</dt><dd>Color select</dd><dt>"Blur"</dt><dd>Blur</dd><dt>"Bloom"</dt><dd>Bloom</dd><dt>"Monochrome"</dt><dd>Monochrome</dd><dt>"ColorTone"</dt><dd>Color tone</dd><dt>"Sharpen"</dt><dd>Sharpen</dd><dt>"Embossed"</dt><dd>Embossed</dd><dt>"Pixelate"</dt><dd>Pixelate</dd><dt>"Magnify"</dt><dd>Magnify</dd><dt>"Ripple"</dt><dd>Ripple</dd><dt>"Swirl"</dt><dd>Swirl</dd></dl></td><td>Image effect type<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.EmbossedEffect.Amount</td><td>double</td><td>Embossed: Amount<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.EmbossedEffect.Color</td><td>"#AARRGGBB"</td><td>Embossed: Color<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.EmbossedEffect.Height</td><td>double</td><td>Embossed: Height<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.HsvEffect.Hue</td><td>double</td><td>HSV: Hue<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.HsvEffect.Saturation</td><td>double</td><td>HSV: Saturation<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.HsvEffect.Value</td><td>double</td><td>HSV: Brightness<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.IsEnabled</td><td>bool</td><td>Enable image effect<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.IsHsvMode</td><td>bool</td><td>Perform color setting with HSV<br/>Sets color parameters in HSV (Hue, Saturation, Brightness). Turning it off sets the color parameters in RGB.</td></tr>
+<tr><td>nv.Config.ImageEffect.LevelEffect.Black</td><td>double</td><td>Level: Black<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.LevelEffect.Center</td><td>double</td><td>Level: Center<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.LevelEffect.Maximum</td><td>double</td><td>Level: Max<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.LevelEffect.Minimum</td><td>double</td><td>Level: Min<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.LevelEffect.White</td><td>double</td><td>Level: White<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.MagnifyEffect.Amount</td><td>double</td><td>Magnify: Amount<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.MagnifyEffect.Center</td><td>"x,y"</td><td>Magnify: Center<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.MagnifyEffect.InnerRadius</td><td>double</td><td>Magnify: Inner radius<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.MagnifyEffect.OuterRadius</td><td>double</td><td>Magnify: Outer radius<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.MonochromeEffect.Color</td><td>"#AARRGGBB"</td><td>Monochrome: Color<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.PixelateEffect.Pixelation</td><td>double</td><td>Pixelate: Pixelation<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.RippleEffect.Center</td><td>"x,y"</td><td>Ripple: Center<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.RippleEffect.Frequency</td><td>double</td><td>Ripple: Frequency<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.RippleEffect.Magnitude</td><td>double</td><td>Ripple: Magnitude<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.RippleEffect.Phase</td><td>double</td><td>Ripple: Phase<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.SharpenEffect.Amount</td><td>double</td><td>Sharpen: Amount<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.SharpenEffect.Height</td><td>double</td><td>Sharpen: Height<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.SwirlEffect.Center</td><td>"x,y"</td><td>Swirl: Center<br/></td></tr>
+<tr><td>nv.Config.ImageEffect.SwirlEffect.TwistAmount</td><td>double</td><td>Swirl: Twist amount<br/></td></tr>
+<tr><td>nv.Config.ImageGrid.Color</td><td>"#AARRGGBB"</td><td>Color<br/></td></tr>
+<tr><td>nv.Config.ImageGrid.DivX</td><td>int</td><td>Column<br/></td></tr>
+<tr><td>nv.Config.ImageGrid.DivY</td><td>int</td><td>Row<br/></td></tr>
+<tr><td>nv.Config.ImageGrid.IsEnabled</td><td>bool</td><td>Show grid<br/></td></tr>
+<tr><td>nv.Config.ImageGrid.IsSquare</td><td>bool</td><td>Square<br/></td></tr>
+<tr><td>nv.Config.ImageGrid.Target</td><td><dl><dt>"Image"</dt><dd>Image</dd><dt>"Screen"</dt><dd>Screen</dd></dl></td><td>Target<br/></td></tr>
+<tr><td>nv.Config.ImageResizeFilter.IsEnabled</td><td>bool</td><td>Enable resize filter<br/></td></tr>
+<tr><td>nv.Config.ImageResizeFilter.IsUnsharpMaskEnabled</td><td>bool</td><td>Enable unsharp mask when resizing<br/></td></tr>
+<tr><td>nv.Config.ImageResizeFilter.ResizeInterpolation</td><td><dl><dt>"NearestNeighbor"</dt><dd>NearestNeighbor</dd><dt>"Average"</dt><dd>Average</dd><dt>"Linear"</dt><dd>Linear</dd><dt>"Quadratic"</dt><dd>Quadratic</dd><dt>"Hermite"</dt><dd>Hermite</dd><dt>"Mitchell"</dt><dd>Mitchell</dd><dt>"CatmullRom"</dt><dd>CatmullRom</dd><dt>"Cubic"</dt><dd>Cubic</dd><dt>"CubicSmoother"</dt><dd>CubicSmoother</dd><dt>"Lanczos"</dt><dd>Lanczos</dd><dt>"Spline36"</dt><dd>Spline36</dd></dl></td><td>Resize interpolation method<br/></td></tr>
+<tr><td>nv.Config.ImageResizeFilter.UnsharpMask.Amount</td><td>int</td><td>Unsharp mask: Amount<br/></td></tr>
+<tr><td>nv.Config.ImageResizeFilter.UnsharpMask.Radius</td><td>double</td><td>Unsharp mask: Radius<br/></td></tr>
+<tr><td>nv.Config.ImageResizeFilter.UnsharpMask.Threshold</td><td>int</td><td>Unsharp mask: Threshold<br/></td></tr>
+<tr><td>nv.Config.ImageTrim.Bottom</td><td>double</td><td>Bottom<br/></td></tr>
+<tr><td>nv.Config.ImageTrim.IsEnabled</td><td>bool</td><td>Enable trim<br/></td></tr>
+<tr><td>nv.Config.ImageTrim.Left</td><td>double</td><td>Left<br/></td></tr>
+<tr><td>nv.Config.ImageTrim.Right</td><td>double</td><td>Right<br/></td></tr>
+<tr><td>nv.Config.ImageTrim.Top</td><td>double</td><td>Top<br/></td></tr>
+<tr><td>nv.Config.Information.DateTimeFormat</td><td>string</td><td>Date time format<br/>Specifies the .NET custom datetime format string.</td></tr>
+<tr><td>nv.Config.Information.IsVisibleAdvancedPhoto</td><td>bool</td><td>View advanced photo section<br/></td></tr>
+<tr><td>nv.Config.Information.IsVisibleCamera</td><td>bool</td><td>View camera section<br/></td></tr>
+<tr><td>nv.Config.Information.IsVisibleDescription</td><td>bool</td><td>View description section<br/></td></tr>
+<tr><td>nv.Config.Information.IsVisibleExtras</td><td>bool</td><td>View extras section<br/></td></tr>
+<tr><td>nv.Config.Information.IsVisibleFile</td><td>bool</td><td>View file section<br/></td></tr>
+<tr><td>nv.Config.Information.IsVisibleGps</td><td>bool</td><td>View GPS section<br/></td></tr>
+<tr><td>nv.Config.Information.IsVisibleImage</td><td>bool</td><td>View image section<br/></td></tr>
+<tr><td>nv.Config.Information.IsVisibleOrigin</td><td>bool</td><td>View origin section<br/></td></tr>
+<tr><td>nv.Config.Information.MapProgramFormat</td><td>string</td><td>Map program<br/>$Lat: Latitude, $LatDeg: Latitude(DEG), $Lon: Longitude, $LonDeg: Longitude(DEG)</td></tr>
+<tr><td>nv.Config.Loupe.DefaultScale</td><td>double</td><td>Loupe standard magnification<br/></td></tr>
+<tr><td>nv.Config.Loupe.IsEscapeKeyEnabled</td><td>bool</td><td>Use the Esc key to release the loupe<br/></td></tr>
+<tr><td>nv.Config.Loupe.IsLoupeCenter</td><td>bool</td><td>Set the cursor position at the start of the loupe to the center of the screen<br/></td></tr>
+<tr><td>nv.Config.Loupe.IsResetByPageChanged</td><td>bool</td><td>Release the loupe after moving the page<br/></td></tr>
+<tr><td>nv.Config.Loupe.IsResetByRestart</td><td>bool</td><td>Start loupe at standard magnification<br/>When turned off, it retains the magnification of the last use of the loupe. The standard magnification can be set arbitrarily.</td></tr>
+<tr><td>nv.Config.Loupe.IsVisibleLoupeInfo</td><td>bool</td><td>Display the magnification of loupe<br/>When using the loupe, the magnification is displayed in the upper right.</td></tr>
+<tr><td>nv.Config.Loupe.IsWheelScalingEnabled</td><td>bool</td><td>Change the loupe magnification by operating the wheel when using the loupe<br/>Commands to which wheel operation is assigned are invalid.</td></tr>
+<tr><td>nv.Config.Loupe.MaximumScale</td><td>double</td><td>Loupe maximum magnification<br/></td></tr>
+<tr><td>nv.Config.Loupe.MinimumScale</td><td>double</td><td>Loupe minimum magnification<br/></td></tr>
+<tr><td>nv.Config.Loupe.ScaleStep</td><td>double</td><td>Loupe magnification change unit<br/></td></tr>
+<tr><td>nv.Config.Loupe.Speed</td><td>double</td><td>Loupe Speed<br/></td></tr>
+<tr><td>nv.Config.MainView.AlternativeContent</td><td><dl><dt>"Blank"</dt><dd>Blank</dd><dt>"PageList"</dt><dd>PageList</dd></dl></td><td>Alternative content for main view<br/>Content to display instead when the MainView window is displayed.</td></tr>
+<tr><td>nv.Config.MainView.IsAutoHide</td><td>bool</td><td>MainView window auto close<br/>Minimizes the MainView window when the book is closed.</td></tr>
+<tr><td>nv.Config.MainView.IsAutoShow</td><td>bool</td><td>MainView window auto show<br/>When the MainView window is minimized and the view pages are refreshed, the window is automatically restored.</td></tr>
+<tr><td>nv.Config.MainView.IsAutoStretch</td><td>bool</td><td>MainView window auto stretch<br/>Adjust the window size to the image size.</td></tr>
+<tr><td>nv.Config.MainView.IsFloating</td><td>bool</td><td>MainView floating<br/></td></tr>
+<tr><td>nv.Config.MainView.IsFloatingEndWhenClosed</td><td>bool</td><td>Deactivate the mode when the MainView window is closed<br/></td></tr>
+<tr><td>nv.Config.MainView.IsHideTitleBar</td><td>bool</td><td>Automatically hide MainView window title bar<br/></td></tr>
+<tr><td>nv.Config.MainView.IsTopmost</td><td>bool</td><td>MainView window is topmost<br/></td></tr>
+<tr><td>nv.Config.MenuBar.IsAddressBarEnabled</td><td>bool</td><td>Show address bar<br/></td></tr>
+<tr><td>nv.Config.MenuBar.IsHamburgerMenu</td><td>bool</td><td>Use the hamburger menu<br/>Instead of the menu bar, it displays an icon that brings together the menus.</td></tr>
+<tr><td>nv.Config.MenuBar.IsHideMenu</td><td>bool</td><td>Hide menu automatically<br/></td></tr>
+<tr><td>nv.Config.MenuBar.IsHideMenuInAutoHideMode</td><td>bool</td><td>Automatically hide the menu when it is auto-hide mode<br/></td></tr>
+<tr><td>nv.Config.MenuBar.IsVisible</td><td>bool</td><td>Menu visibility<br/> (Read only)</td></tr>
+<tr><td>nv.Config.Mouse.CursorHideReleaseDistance</td><td>double</td><td>Move distance to redisplay (pixel)<br/></td></tr>
+<tr><td>nv.Config.Mouse.CursorHideTime</td><td>double</td><td>Hide time (sec)<br/></td></tr>
+<tr><td>nv.Config.Mouse.GestureMinimumDistance</td><td>double</td><td>Mouse gesture stroke (pixel)<br/>By moving this distance, it is judged as a gesture stroke.</td></tr>
+<tr><td>nv.Config.Mouse.HoverScrollDuration</td><td>double</td><td>Hover scroll time (sec)<br/>The longer the time, the smoother the scroll.</td></tr>
+<tr><td>nv.Config.Mouse.InertiaSensitivity</td><td>double</td><td>Inertia sensitivity<br/></td></tr>
+<tr><td>nv.Config.Mouse.IsCursorHideEnabled</td><td>bool</td><td>Hide the cursor with no mouse operation<br/>Hide the cursor if the mouse is not operated for the set time.</td></tr>
+<tr><td>nv.Config.Mouse.IsCursorHideReleaseAction</td><td>bool</td><td>Redisplay with mouse button operation<br/></td></tr>
+<tr><td>nv.Config.Mouse.IsDragEnabled</td><td>bool</td><td>Use mouse drag<br/></td></tr>
+<tr><td>nv.Config.Mouse.IsGestureEnabled</td><td>bool</td><td>Use mouse gesture<br/></td></tr>
+<tr><td>nv.Config.Mouse.IsHoverScroll</td><td>bool</td><td>Hover scroll mode<br/></td></tr>
+<tr><td>nv.Config.Mouse.LongButtonDownMode</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Loupe"</dt><dd>Loupe</dd><dt>"AutoScroll"</dt><dd>Auto scroll</dd><dt>"Repeat"</dt><dd>Repeat input</dd></dl></td><td>Long press mode<br/></td></tr>
+<tr><td>nv.Config.Mouse.LongButtonDownTime</td><td>double</td><td>Long press decision time (sec)<br/>It is time to be judged to be long pressed.</td></tr>
+<tr><td>nv.Config.Mouse.LongButtonMask</td><td><dl><dt>"Left"</dt><dd>Left button</dd><dt>"Right"</dt><dd>Right button</dd><dt>"All"</dt><dd>All buttons</dd></dl></td><td>Long press button<br/></td></tr>
+<tr><td>nv.Config.Mouse.LongButtonRepeatTime</td><td>double</td><td>Repeat interval (sec)<br/>Repeat time with repeat input.</td></tr>
+<tr><td>nv.Config.Mouse.MinimumDragDistance</td><td>double</td><td>Drag starting distance (pixel)<br/>First moving distance to become a drag or gesture</td></tr>
+<tr><td>nv.Config.Navigator.IsVisibleControlBar</td><td>bool</td><td>Control bar in the navigator panel<br/></td></tr>
+<tr><td>nv.Config.Navigator.IsVisibleThumbnail</td><td>bool</td><td>Show thumbnail<br/></td></tr>
+<tr><td>nv.Config.Navigator.ThumbnailHeight</td><td>double</td><td>Thumbnail area height<br/></td></tr>
+<tr><td>nv.Config.Notice.BookNameShowMessageStyle</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Normal"</dt><dd>Visible</dd><dt>"Tiny"</dt><dd>Tiny</dd></dl></td><td>Show open book name<br/></td></tr>
+<tr><td>nv.Config.Notice.CommandShowMessageStyle</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Normal"</dt><dd>Visible</dd><dt>"Tiny"</dt><dd>Tiny</dd></dl></td><td>Show command execution message<br/></td></tr>
+<tr><td>nv.Config.Notice.GestureShowMessageStyle</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Normal"</dt><dd>Visible</dd><dt>"Tiny"</dt><dd>Tiny</dd></dl></td><td>Show gesture status<br/></td></tr>
+<tr><td>nv.Config.Notice.IsBusyMarkEnabled</td><td>bool</td><td>The image reading processing in progress mark is displayed on the upper left of the screen<br/></td></tr>
+<tr><td>nv.Config.Notice.IsEmptyMessageEnabled</td><td>bool</td><td>Show message when there are no pages in the book<br/></td></tr>
+<tr><td>nv.Config.Notice.IsOriginalScaleShowMessage</td><td>bool</td><td>Make the scale display of the view operation the original image size standard<br/>In case of 2 page display, we refer to the page with the smaller number.</td></tr>
+<tr><td>nv.Config.Notice.NoticeShowMessageStyle</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Normal"</dt><dd>Visible</dd><dt>"Tiny"</dt><dd>Tiny</dd></dl></td><td>General information<br/></td></tr>
+<tr><td>nv.Config.Notice.NowLoadingShowMessageStyle</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Normal"</dt><dd>Visible</dd><dt>"Tiny"</dt><dd>Tiny</dd></dl></td><td>Show Now Loading<br/></td></tr>
+<tr><td>nv.Config.Notice.ViewTransformShowMessageStyle</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Normal"</dt><dd>Visible</dd><dt>"Tiny"</dt><dd>Tiny</dd></dl></td><td>Show status change by drag operation<br/></td></tr>
+<tr><td>nv.Config.PageList.FocusMainView</td><td>bool</td><td>Focus to main view<br/>After selecting a page, move the focus to the main view.</td></tr>
+<tr><td>nv.Config.PageList.Format</td><td><dl><dt>"Smart"</dt><dd>Smart</dd><dt>"NameOnly"</dt><dd>Name</dd><dt>"Raw"</dt><dd>Raw</dd></dl></td><td>Page name display format of PageList<br/></td></tr>
+<tr><td>nv.Config.PageList.PanelListItemStyle</td><td><dl><dt>"Normal"</dt><dd>Text</dd><dt>"Content"</dt><dd>Content</dd><dt>"Banner"</dt><dd>Banner</dd><dt>"Thumbnail"</dt><dd>Thumbnail</dd></dl></td><td>PageList item style<br/></td></tr>
+<tr><td>nv.Config.PageList.ShowBookTitle</td><td>bool</td><td>Show book title<br/></td></tr>
+<tr><td>nv.Config.PageTitle.IsEnabled</td><td>bool</td><td>Show page title<br/>Appears when the cursor is over a slider or filmstrip.</td></tr>
+<tr><td>nv.Config.PageTitle.PageTitleFormat1</td><td>string</td><td>For 1 page<br/></td></tr>
+<tr><td>nv.Config.PageTitle.PageTitleFormat2</td><td>string</td><td>For 2 page<br/></td></tr>
+<tr><td>nv.Config.PageTitle.PageTitleFormatMedia</td><td>string</td><td>For video<br/></td></tr>
+<tr><td>nv.Config.PageViewRecorder.IsSavePageViewRecord</td><td>bool</td><td>Save page view records<br/></td></tr>
+<tr><td>nv.Config.PageViewRecorder.PageViewRecordFilePath</td><td>string</td><td>Page view recording path<br/></td></tr>
+<tr><td>nv.Config.Panels.BannerItemProfile.ImageShape</td><td><dl><dt>"Original"</dt><dd>Original</dd><dt>"Square"</dt><dd>Square</dd><dt>"BookShape"</dt><dd>Book shape</dd><dt>"Banner"</dt><dd>Banner</dd></dl></td><td>Banner style: Shape of Icon<br/></td></tr>
+<tr><td>nv.Config.Panels.BannerItemProfile.ImageWidth</td><td>int</td><td>Banner style: Icon size<br/>The width of the icon image. The aspect ratio depends on the shape of the icon. If the thumbnail image resolution is exceeded, the image will be grainy.</td></tr>
+<tr><td>nv.Config.Panels.BannerItemProfile.IsImagePopupEnabled</td><td>bool</td><td>Banner style: Icon popup<br/>When placing the cursor on the icon, a large image will be displayed in the popup.</td></tr>
+<tr><td>nv.Config.Panels.BannerItemProfile.IsTextVisible</td><td>bool</td><td>Banner style: Display the name<br/></td></tr>
+<tr><td>nv.Config.Panels.BannerItemProfile.IsTextWrapped</td><td>bool</td><td>Banner style: Wrap name<br/></td></tr>
+<tr><td>nv.Config.Panels.ContentItemProfile.ImageShape</td><td><dl><dt>"Original"</dt><dd>Original</dd><dt>"Square"</dt><dd>Square</dd><dt>"BookShape"</dt><dd>Book shape</dd><dt>"Banner"</dt><dd>Banner</dd></dl></td><td>Content style: Shape of Icon<br/></td></tr>
+<tr><td>nv.Config.Panels.ContentItemProfile.ImageWidth</td><td>int</td><td>Content style: Icon size<br/>The width of the icon image. The aspect ratio depends on the shape of the icon. If the thumbnail image resolution is exceeded, the image will be grainy.</td></tr>
+<tr><td>nv.Config.Panels.ContentItemProfile.IsImagePopupEnabled</td><td>bool</td><td>Content style: Icon popup<br/>When placing the cursor on the icon, a large image will be displayed in the popup.</td></tr>
+<tr><td>nv.Config.Panels.ContentItemProfile.IsTextVisible</td><td>bool</td><td>Content style: Display the name<br/></td></tr>
+<tr><td>nv.Config.Panels.ContentItemProfile.IsTextWrapped</td><td>bool</td><td>Content style: Wrap name<br/></td></tr>
+<tr><td>nv.Config.Panels.IsDecoratePlace</td><td>bool</td><td>Format path display of supplemental text<br/>Format as "AAA (C:\BBB\CCC)".</td></tr>
+<tr><td>nv.Config.Panels.IsHidePanel</td><td>bool</td><td>Hide side panels automatically<br/></td></tr>
+<tr><td>nv.Config.Panels.IsHidePanelInAutoHideMode</td><td>bool</td><td>Automatically hide the side panel when it is auto-hide mode<br/></td></tr>
+<tr><td>nv.Config.Panels.IsLeftRightKeyEnabled</td><td>bool</td><td>The left and right key input of the side panel is valid<br/>Activate left / right key operation on the side panel. In the bookshelf, move the folder hierarchically.</td></tr>
+<tr><td>nv.Config.Panels.IsLimitPanelWidth</td><td>bool</td><td>Limit panel width<br/>Limit the width of the panel to fit in the window</td></tr>
+<tr><td>nv.Config.Panels.IsManipulationBoundaryFeedbackEnabled</td><td>bool</td><td>Touch scroll termination bound on side panel<br/></td></tr>
+<tr><td>nv.Config.Panels.IsSideBarEnabled</td><td>bool</td><td>Show side bars<br/></td></tr>
+<tr><td>nv.Config.Panels.IsVisibleItemsCount</td><td>bool</td><td>Show number of items<br/></td></tr>
+<tr><td>nv.Config.Panels.MouseWheelSpeedRate</td><td>double</td><td>Mouse wheel scroll speed rate in thumbnail view<br/></td></tr>
+<tr><td>nv.Config.Panels.Opacity</td><td>double</td><td>Panel opacity<br/>It is effective in auto-hide mode.</td></tr>
+<tr><td>nv.Config.Panels.OpenWithDoubleClick</td><td>bool</td><td>Double click to open book<br/>Effective on bookshelf, bookmark panel, and history panel.</td></tr>
+<tr><td>nv.Config.Panels.ThumbnailItemProfile.ImageShape</td><td><dl><dt>"Original"</dt><dd>Original</dd><dt>"Square"</dt><dd>Square</dd><dt>"BookShape"</dt><dd>Book shape</dd><dt>"Banner"</dt><dd>Banner</dd></dl></td><td>Thumbnail style: Shape of Icon<br/></td></tr>
+<tr><td>nv.Config.Panels.ThumbnailItemProfile.ImageWidth</td><td>int</td><td>Thumbnail style: Icon size<br/>The width of the icon image. The aspect ratio depends on the shape of the icon. If the thumbnail image resolution is exceeded, the image will be grainy.</td></tr>
+<tr><td>nv.Config.Panels.ThumbnailItemProfile.IsImagePopupEnabled</td><td>bool</td><td>Thumbnail style: Icon popup<br/>When placing the cursor on the icon, a large image will be displayed in the popup.</td></tr>
+<tr><td>nv.Config.Panels.ThumbnailItemProfile.IsTextVisible</td><td>bool</td><td>Thumbnail style: Display the name<br/></td></tr>
+<tr><td>nv.Config.Panels.ThumbnailItemProfile.IsTextWrapped</td><td>bool</td><td>Thumbnail style: Wrap name<br/></td></tr>
+<tr><td>nv.Config.Performance.CacheMemorySize</td><td>int</td><td>Book cache memory size (MB)<br/>Once the page has been read, it is stored in memory to speed up redisplay. This value is a guideline, and memory may be used beyond this value. Note that too large a value can make the system unstable.</td></tr>
+<tr><td>nv.Config.Performance.IsLimitSourceSize</td><td>bool</td><td>Load image size limit<br/>Reduce the imported image with "Maximum image size" as the upper limit. It is setting for speed and memory saving. When this restriction is applied, "*" will be displayed in the size field of the information if it is the loaded image.</td></tr>
+<tr><td>nv.Config.Performance.IsLoadingPageVisible</td><td>bool</td><td>Display the current page until the next page loads<br/>You can save memory by turning it off.</td></tr>
+<tr><td>nv.Config.Performance.JobWorkerSize</td><td>int</td><td>Number of threads used for image loading<br/>The recommended value is 2 to 4</td></tr>
+<tr><td>nv.Config.Performance.MaximumSize</td><td>"width,height"</td><td>Maximum image size<br/>This is the maximum image size enlarged by the resize filter.</td></tr>
+<tr><td>nv.Config.Performance.PreExtractSolidSize</td><td>int</td><td>Memory size used to pre-decompress solid compressed files (MB)<br/>If not enough, extract to a temporary file.</td></tr>
+<tr><td>nv.Config.Performance.PreLoadSize</td><td>int</td><td>Read ahead page size<br/>Read ahead within the cache memory size.</td></tr>
+<tr><td>nv.Config.Playlist.CurrentPlaylist</td><td>string</td><td>Current playlist<br/></td></tr>
+<tr><td>nv.Config.Playlist.IsCurrentBookFilterEnabled</td><td>bool</td><td>Show only open book pages<br/></td></tr>
+<tr><td>nv.Config.Playlist.IsFirstIn</td><td>bool</td><td>Add to the top of the list<br/>This is the insertion position for additional commands. If it is turned off, it will be added at the end.</td></tr>
+<tr><td>nv.Config.Playlist.IsGroupBy</td><td>bool</td><td>Group and display by folder<br/></td></tr>
+<tr><td>nv.Config.Playlist.PanelListItemStyle</td><td><dl><dt>"Normal"</dt><dd>Text</dd><dt>"Content"</dt><dd>Content</dd><dt>"Banner"</dt><dd>Banner</dd><dt>"Thumbnail"</dt><dd>Thumbnail</dd></dl></td><td>List item style<br/></td></tr>
+<tr><td>nv.Config.Playlist.PlaylistFolder</td><td>string</td><td>Playlist file storage location<br/>Playlist files in this folder are managed.</td></tr>
+<tr><td>nv.Config.Script.ErrorLevel</td><td><dl><dt>"Info"</dt><dd>Lv1: Info</dd><dt>"Warning"</dt><dd>Lv2: Warning</dd><dt>"Error"</dt><dd>Lv3: Error</dd></dl></td><td>Obsolete member access error level<br/>This is a debug setting. Select the error handling of member access that can no longer be used due to version upgrade.</td></tr>
+<tr><td>nv.Config.Script.IsScriptFolderEnabled</td><td>bool</td><td>Use scripts<br/></td></tr>
+<tr><td>nv.Config.Script.IsSQLiteEnabled</td><td>bool</td><td>Enable SQLite API<br/>Enables access to the System.Data.SQLite namespace in .NET</td></tr>
+<tr><td>nv.Config.Script.OnBookLoadedWhenRenamed</td><td>bool</td><td>OnBookLoaded.nvjs is also called when a book is renamed<br/></td></tr>
+<tr><td>nv.Config.Script.ScriptFolder</td><td>string</td><td>Scripts folder<br/>Use the scripts in this folder.</td></tr>
+<tr><td>nv.Config.Slider.IsEnabled</td><td>bool</td><td>Show slider<br/></td></tr>
+<tr><td>nv.Config.Slider.IsHidePageSlider</td><td>bool</td><td>Hide slider automatically<br/></td></tr>
+<tr><td>nv.Config.Slider.IsHidePageSliderInAutoHideMode</td><td>bool</td><td>Automatically hide the slider when it is auto-hide mode<br/></td></tr>
+<tr><td>nv.Config.Slider.IsSliderLinkedFilmStrip</td><td>bool</td><td>Real time change with slider applies only to film strip<br/>Switch pages when decided.</td></tr>
+<tr><td>nv.Config.Slider.IsSyncPageMode</td><td>bool</td><td>Synchronize the amount of change to the number of displayed pages<br/></td></tr>
+<tr><td>nv.Config.Slider.IsVisible</td><td>bool</td><td>Slider visibility<br/> (Read only)</td></tr>
+<tr><td>nv.Config.Slider.IsVisiblePlaylistMark</td><td>bool</td><td>Display playlisted mark<br/></td></tr>
+<tr><td>nv.Config.Slider.Opacity</td><td>double</td><td>Slider opacity<br/>It is applied when "Hide slider automatically" is enabled.</td></tr>
+<tr><td>nv.Config.Slider.SliderDirection</td><td><dl><dt>"LeftToRight"</dt><dd>Left to right</dd><dt>"RightToLeft"</dt><dd>Right to left</dd><dt>"SyncBookReadDirection"</dt><dd>Depends on the book orientation</dd></dl></td><td>Slider Direction<br/></td></tr>
+<tr><td>nv.Config.Slider.SliderIndexLayout</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Left"</dt><dd>Left</dd><dt>"Right"</dt><dd>Right</dd></dl></td><td>Page number display position<br/></td></tr>
+<tr><td>nv.Config.Slider.Thickness</td><td>double</td><td>Slider thickness (pixel)<br/></td></tr>
+<tr><td>nv.Config.SlideShow.IsCancelSlideByMouseMove</td><td>bool</td><td>Reset display interval with mouse move<br/>When turned off, it is reset only by an explicit action, such as a click.</td></tr>
+<tr><td>nv.Config.SlideShow.IsSlideShowByLoop</td><td>bool</td><td>Loop play<br/>After playing to the last page, it will return to the first page.</td></tr>
+<tr><td>nv.Config.SlideShow.IsTimerVisible</td><td>bool</td><td>Show timer<br/></td></tr>
+<tr><td>nv.Config.SlideShow.SlideShowInterval</td><td>double</td><td>Display interval (sec)<br/></td></tr>
+<tr><td>nv.Config.StartUp.IsAutoPlaySlideShow</td><td>bool</td><td>Start playing slideshow<br/></td></tr>
+<tr><td>nv.Config.StartUp.IsMultiBootEnabled</td><td>bool</td><td>Allow multiple activations<br/></td></tr>
+<tr><td>nv.Config.StartUp.IsOpenLastBook</td><td>bool</td><td>Restore an open book<br/></td></tr>
+<tr><td>nv.Config.StartUp.IsOpenLastFolder</td><td>bool</td><td>Restore bookshelf location<br/>The location of the bookshelf if you do not open the book at startup.</td></tr>
+<tr><td>nv.Config.StartUp.IsRestoreFullScreen</td><td>bool</td><td>Restore full screen state<br/></td></tr>
+<tr><td>nv.Config.StartUp.IsRestoreSecondWindowPlacement</td><td>bool</td><td>Restore the second window coordinates<br/>Restores window coordinates even after duplicate launches. If turned off, the window will be displayed with the initial coordinates.</td></tr>
+<tr><td>nv.Config.StartUp.IsRestoreWindowPlacement</td><td>bool</td><td>Restore window coordinates<br/></td></tr>
+<tr><td>nv.Config.StartUp.IsSplashScreenEnabled</td><td>bool</td><td>Splash screen<br/></td></tr>
+<tr><td>nv.Config.Susie.IsEnabled</td><td>bool</td><td>Use Susie plugins<br/></td></tr>
+<tr><td>nv.Config.Susie.IsFirstOrderSusieArchive</td><td>bool</td><td>Prioritize Susie plugin in compressed file expansion<br/></td></tr>
+<tr><td>nv.Config.Susie.IsFirstOrderSusieImage</td><td>bool</td><td>Prioritize Susie plugin in image display<br/></td></tr>
+<tr><td>nv.Config.Susie.SusiePluginPath</td><td>string</td><td>Plugins folder<br/></td></tr>
+<tr><td>nv.Config.System.ArchiveCopyPolicy</td><td><dl><dt>"None"</dt><dd>Do not execute</dd><dt>"SendArchiveFile"</dt><dd>Compressed file</dd><dt>"SendArchivePath"</dt><dd>Compressed file + filename</dd><dt>"SendExtractFile"</dt><dd>Temporary file</dd></dl></td><td>For compressed files<br/></td></tr>
+<tr><td>nv.Config.System.ArchiveRecursiveMode</td><td><dl><dt>"CurrentDirectory"</dt><dd>Expand for each directory</dd><dt>"IncludeSubDirectories"</dt><dd>Expand by compressed file unit</dd><dt>"IncludeSubArchives"</dt><dd>Expand all</dd></dl></td><td>Compressed file handling<br/>Extended range when opening compressed file</td></tr>
+<tr><td>nv.Config.System.BookPageCollectMode</td><td><dl><dt>"Image"</dt><dd>Image files</dd><dt>"ImageAndBook"</dt><dd>Image files and folders</dd><dt>"All"</dt><dd>All files</dd></dl></td><td>File type to be used as page<br/>If you make a folder a page, you can open the folder from that page.</td></tr>
+<tr><td>nv.Config.System.DateTimeFormat</td><td>string</td><td>Date time format<br/></td></tr>
+<tr><td>nv.Config.System.DownloadPath</td><td>string</td><td>Download folder<br/>It is a storage place of the image dropped by the browser etc. If not specified, temporary folder is used.</td></tr>
+<tr><td>nv.Config.System.FileManager</td><td>string</td><td>File Manager<br/>If not set, use Explorer.</td></tr>
+<tr><td>nv.Config.System.FileManagerFileArgs</td><td>string</td><td>File Type Arguments<br/>Arguments for displaying file as selections in the parent folder in File Manager. $File is replaced by the file path.</td></tr>
+<tr><td>nv.Config.System.FileManagerFolderArgs</td><td>string</td><td>Folder Type Arguments<br/>Arguments for opening a folder in File Manager. $File is replaced by the file path.</td></tr>
+<tr><td>nv.Config.System.IsFileWriteAccessEnabled</td><td>bool</td><td>File management<br/>You will be able to delete and rename files.</td></tr>
+<tr><td>nv.Config.System.IsHiddenFileVisible</td><td>bool</td><td>Show hidden files<br/></td></tr>
+<tr><td>nv.Config.System.IsIgnoreImageDpi</td><td>bool</td><td>Dot-by-dot display of image<br/>When displaying at the original size, it matches the pixels of the display independently of the display scale of the display.</td></tr>
+<tr><td>nv.Config.System.IsIncrementalSearchEnabled</td><td>bool</td><td>Incremental search enabled<br/></td></tr>
+<tr><td>nv.Config.System.IsInputMethodEnabled</td><td>bool</td><td>Enable IME outside the text box<br/>* It is applied from the next startup. Always valid for text boxes.</td></tr>
+<tr><td>nv.Config.System.IsNaturalSortEnabled</td><td>bool</td><td>Use natural sort<br/>Makes sorting by name, such as numbers separated by periods, kanji numbers, etc. more natural. When off, same as Explorer.</td></tr>
+<tr><td>nv.Config.System.IsNetworkEnabled</td><td>bool</td><td>Allow network access<br/>When turned off, the version update confirmation from the "About" dialog is stopped and a confirmation dialog is displayed before connecting to the Internet with a web browser.</td></tr>
+<tr><td>nv.Config.System.IsOpenBookAtCurrentPlace</td><td>bool</td><td>Make the start position of the file selection dialog in "Open file" the location of the currently opened book<br/></td></tr>
+<tr><td>nv.Config.System.IsRemoveConfirmed</td><td>bool</td><td>Show confirmation dialog when deleting files<br/></td></tr>
+<tr><td>nv.Config.System.IsRemoveWantNukeWarning</td><td>bool</td><td>Show confirmation dialog when deleting files that don't fit in the Recycle Bin<br/></td></tr>
+<tr><td>nv.Config.System.IsSettingBackup</td><td>bool</td><td>Make a backup of the setting file<br/>Make a backup of the configuration file and load it instead if the normal configuration file can not be read. The file name is "UserSetting.json.bak". The update timing is when you close the options window and when you exit the application.</td></tr>
+<tr><td>nv.Config.System.IsSyncUserSetting</td><td>bool</td><td>Synchronize settings<br/>When multi-booting, all NeeView settings are updated when closing the options window.</td></tr>
+<tr><td>nv.Config.System.Language</td><td>string</td><td>Language<br/>* It is applied from the next startup.</td></tr>
+<tr><td>nv.Config.System.SearchHistorySize</td><td>int</td><td>Search history size<br/></td></tr>
+<tr><td>nv.Config.System.TemporaryDirectory</td><td>string</td><td>Temporary location<br/>It is used for pre-extraction and recursive compression files.</td></tr>
+<tr><td>nv.Config.System.TextCopyPolicy</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"CopyFilePath"</dt><dd>Temporary file path</dd><dt>"OriginalPath"</dt><dd>Original path</dd></dl></td><td>Text copy<br/>If "Original path" is set, the text for temporary files will be the pathname of the original file.</td></tr>
+<tr><td>nv.Config.System.TextEditor</td><td>string</td><td>Text editor<br/>If not set, use Notepad.</td></tr>
+<tr><td>nv.Config.System.WebBrowser</td><td>string</td><td>Web browser<br/>If not set, use default web browser.</td></tr>
+<tr><td>nv.Config.System.IsExplorerContextMenuEnabled</td><td>bool</td><td>Register in the Explorer context menu.<br/>Add "Open in NeeView" to the Explorer context menu. This feature uses the registry.</td></tr>
+<tr><td>nv.Config.Theme.CustomThemeFolder</td><td>string</td><td>Custom theme folder<br/></td></tr>
+<tr><td>nv.Config.Theme.ThemeType</td><td>string</td><td></td></tr>
+<tr><td>nv.Config.Thumbnail.CacheLimitSpan</td><td>System.TimeSpan</td><td>Thumbnail cache retention period<br/></td></tr>
+<tr><td>nv.Config.Thumbnail.Format</td><td><dl><dt>"Jpeg"</dt><dd>JPEG</dd><dt>"Png"</dt><dd>PNG</dd></dl></td><td>Thumbnail image format<br/>PNG is high quality, but the data size is larger than JPEG.</td></tr>
+<tr><td>nv.Config.Thumbnail.ImageWidth</td><td>int</td><td>Thumbnail image resolution<br/>The higher the value, the higher the resolution but the larger the data size.</td></tr>
+<tr><td>nv.Config.Thumbnail.IsCacheEnabled</td><td>bool</td><td>Use thumbnail cache<br/>Cache the book thumbnail.</td></tr>
+<tr><td>nv.Config.Thumbnail.Quality</td><td>int</td><td>Thumbnail quality<br/>Quality when the thumbnail image format is JPEG.</td></tr>
+<tr><td>nv.Config.Thumbnail.ThumbnailBookCapacity</td><td>int</td><td>Book Thumbnail Capacity<br/>The number of book thumbnails held in memory.</td></tr>
+<tr><td>nv.Config.Thumbnail.ThumbnailCacheFilePath</td><td>string</td><td>Thumbnail cache file location<br/></td></tr>
+<tr><td>nv.Config.Thumbnail.ThumbnailPageCapacity</td><td>int</td><td>Page Thumbnail Capacity<br/>The number of page thumbnails held in memory. When the book is closed everything is destroyed.</td></tr>
+<tr><td>nv.Config.Touch.DragAction</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Drag"</dt><dd>Touch view operation</dd><dt>"MouseDrag"</dt><dd>Mouse drag operation</dd><dt>"Gesture"</dt><dd>Gesture</dd><dt>"Loupe"</dt><dd>Loupe</dd></dl></td><td>Single touch drag operation<br/></td></tr>
+<tr><td>nv.Config.Touch.GestureMinimumDistance</td><td>double</td><td>Minimum movement distance for touch drag judgment (pixel)<br/>Dragging is judged to start for the first time by moving this distance.</td></tr>
+<tr><td>nv.Config.Touch.HoldAction</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Drag"</dt><dd>Touch view operation</dd><dt>"MouseDrag"</dt><dd>Mouse drag operation</dd><dt>"Gesture"</dt><dd>Gesture</dd><dt>"Loupe"</dt><dd>Loupe</dd></dl></td><td>Long press Touch drag operation<br/></td></tr>
+<tr><td>nv.Config.Touch.InertiaSensitivity</td><td>double</td><td>Inertia sensitivity<br/></td></tr>
+<tr><td>nv.Config.Touch.IsAngleEnabled</td><td>bool</td><td>Enable rotation operation with multi-touch<br/></td></tr>
+<tr><td>nv.Config.Touch.IsEnabled</td><td>bool</td><td>Use the touch function<br/>When turned off, it is recognized as a standard mouse operation.</td></tr>
+<tr><td>nv.Config.Touch.IsScaleEnabled</td><td>bool</td><td>Enable sizing operation with pinch in and pinch out<br/></td></tr>
+<tr><td>nv.Config.Touch.MinimumManipulationDistance</td><td>double</td><td>Touch operation pinch minimum change distance (pixel)<br/>This is the minimum operating distance at which rotation and enlargement / reduction by touch operation are effective.</td></tr>
+<tr><td>nv.Config.Touch.MinimumManipulationRadius</td><td>double</td><td>Touch operation pinch minimum determination distance (pixel)<br/>It is the distance between the minimum of 2 touches judged as rotation by touch operation, enlargement / reduction.</td></tr>
+<tr><td>nv.Config.View.AllowFileContentAutoRotate</td><td>bool</td><td></td></tr>
+<tr><td>nv.Config.View.AllowStretchScaleDown</td><td>bool</td><td>Allow scale down on stretch<br/></td></tr>
+<tr><td>nv.Config.View.AllowStretchScaleUp</td><td>bool</td><td>Allow scale up on stretch<br/></td></tr>
+<tr><td>nv.Config.View.AngleFrequency</td><td>double</td><td>Rotating Snap<br/></td></tr>
+<tr><td>nv.Config.View.FlipCenter</td><td><dl><dt>"View"</dt><dd>View center</dd><dt>"Target"</dt><dd>Image center</dd><dt>"Cursor"</dt><dd>Cursor position</dd></dl></td><td>Center of flip<br/></td></tr>
+<tr><td>nv.Config.View.IsBaseScaleEnabled</td><td>bool</td><td>Enable base scale<br/>Enable base scale.</td></tr>
+<tr><td>nv.Config.View.IsKeepAngle</td><td>bool</td><td>Maintain the angle even when changing pages<br/>This setting does not work when automatic rotation is enabled.</td></tr>
+<tr><td>nv.Config.View.IsKeepAngleBooks</td><td>bool</td><td>Maintain the angle even when changing books<br/>Works when "Maintain the angle even when changing pages" is enabled.</td></tr>
+<tr><td>nv.Config.View.IsKeepFlip</td><td>bool</td><td>Maintain reversal even when changing pages<br/></td></tr>
+<tr><td>nv.Config.View.IsKeepFlipBooks</td><td>bool</td><td>Maintain scaling even when changing books<br/></td></tr>
+<tr><td>nv.Config.View.IsKeepPageTransform</td><td>bool</td><td>Keep view transform<br/>Keep page-by-page rotation, scaling, and flip.</td></tr>
+<tr><td>nv.Config.View.IsKeepScale</td><td>bool</td><td>Maintain scaling even when changing pages<br/></td></tr>
+<tr><td>nv.Config.View.IsKeepScaleBooks</td><td>bool</td><td>Maintain reversal even when changing books<br/></td></tr>
+<tr><td>nv.Config.View.IsLimitMove</td><td>bool</td><td>Limit movement to within a window<br/></td></tr>
+<tr><td>nv.Config.View.IsRotateStretchEnabled</td><td>bool</td><td>Apply stretch to navigator rotation buttons<br/></td></tr>
+<tr><td>nv.Config.View.IsScaleStretchTracking</td><td>bool</td><td>Stretch tracking<br/>Adjusts the scale according to the stretch mode when rotating.</td></tr>
+<tr><td>nv.Config.View.MainViewMargin</td><td>double</td><td>Main view margin (pixel)<br/></td></tr>
+<tr><td>nv.Config.View.PageMoveDuration</td><td>double</td><td>Page move time (sec)<br/>Effective when "Panorama" is off.</td></tr>
+<tr><td>nv.Config.View.RotateCenter</td><td><dl><dt>"View"</dt><dd>View center</dd><dt>"Target"</dt><dd>Image center</dd><dt>"Cursor"</dt><dd>Cursor position</dd></dl></td><td>Center of rotation<br/></td></tr>
+<tr><td>nv.Config.View.ScaleCenter</td><td><dl><dt>"View"</dt><dd>View center</dd><dt>"Target"</dt><dd>Image center</dd><dt>"Cursor"</dt><dd>Cursor position</dd></dl></td><td>Center of scaling<br/></td></tr>
+<tr><td>nv.Config.View.ScrollDuration</td><td>double</td><td>Scroll time (sec)<br/></td></tr>
+<tr><td>nv.Config.View.StretchMode</td><td><dl><dt>"None"</dt><dd>Original size</dd><dt>"Uniform"</dt><dd>Fit to window size</dd><dt>"UniformToFill"</dt><dd>Extend it to fill the window</dd><dt>"UniformToSize"</dt><dd>Fit the area size to the window</dd><dt>"UniformToVertical"</dt><dd>Fit height to window</dd><dt>"UniformToHorizontal"</dt><dd>Fit width to window</dd></dl></td><td>Stretch mode<br/></td></tr>
+<tr><td>nv.Config.View.ValidStretchMode</td><td><dl><dt>"None"</dt><dd>Original size</dd><dt>"Uniform"</dt><dd>Fit to window size</dd><dt>"UniformToFill"</dt><dd>Extend it to fill the window</dd><dt>"UniformToSize"</dt><dd>Fit the area size to the window</dd><dt>"UniformToVertical"</dt><dd>Fit height to window</dd><dt>"UniformToHorizontal"</dt><dd>Fit width to window</dd></dl></td><td> (Read only)</td></tr>
+<tr><td>nv.Config.View.ViewHorizontalOrigin</td><td><dl><dt>"Center"</dt><dd>Center</dd><dt>"Left"</dt><dd>Left alignment</dd><dt>"Right"</dt><dd>Right alignment</dd><dt>"DirectionDependent"</dt><dd>Direction dependent</dd><dt>"CenterOrLeft"</dt><dd>Center. Left alignment if larger than display area</dd><dt>"CenterOrRight"</dt><dd>Center. Right alignment if larger than display area</dd><dt>"CenterOrDirectionDependent"</dt><dd>Center. Direction dependent if larger than display area</dd></dl></td><td>Horizontal alignment at start<br/></td></tr>
+<tr><td>nv.Config.View.ViewVerticalOrigin</td><td><dl><dt>"Center"</dt><dd>Center</dd><dt>"Top"</dt><dd>Top alignment</dd><dt>"Bottom"</dt><dd>Bottom alignment</dd><dt>"DirectionDependent"</dt><dd>Direction dependent</dd><dt>"CenterOrTop"</dt><dd>Center. Top alignment if larger than display area</dd><dt>"CenterOrBottom"</dt><dd>Center. Bottom alignment if larger than display area</dd><dt>"CenterOrDirectionDependent"</dt><dd>Center. Direction dependent if larger than display area</dd></dl></td><td>Vertical alignment at start<br/></td></tr>
+<tr><td>nv.Config.Window.IsAutoHideInFullScreen</td><td>bool</td><td>Apply auto-hide mode in full screen<br/></td></tr>
+<tr><td>nv.Config.Window.IsAutoHideInMaximized</td><td>bool</td><td>Apply auto-hide mode in maximized window<br/></td></tr>
+<tr><td>nv.Config.Window.IsAutoHideInNormal</td><td>bool</td><td>Apply auto-hide mode in normal window<br/></td></tr>
+<tr><td>nv.Config.Window.IsCaptionEmulateInFullScreen</td><td>bool</td><td>Title bar operation at full screen<br/>Accepts double-click and drag operations in the title bar during full screen.</td></tr>
+<tr><td>nv.Config.Window.IsRestoreAeroSnapPlacement</td><td>bool</td><td>Restore Aero Snap window placement<br/></td></tr>
+<tr><td>nv.Config.Window.IsTopmost</td><td>bool</td><td>Window topmost<br/></td></tr>
+<tr><td>nv.Config.Window.MouseActivateAndEat</td><td>bool</td><td>Disable mouse data when activating window with mouse<br/></td></tr>
+<tr><td>nv.Config.Window.State</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Normal"</dt><dd>Normal</dd><dt>"Minimized"</dt><dd>Minimized</dd><dt>"Maximized"</dt><dd>Maximized</dd><dt>"FullScreen"</dt><dd>Full screen</dd></dl></td><td>Window state<br/></td></tr>
+<tr><td>nv.Config.WindowTitle.WindowTitleFormat1</td><td>string</td><td>For 1 page<br/></td></tr>
+<tr><td>nv.Config.WindowTitle.WindowTitleFormat2</td><td>string</td><td>For 2 page<br/></td></tr>
+<tr><td>nv.Config.WindowTitle.WindowTitleFormatMedia</td><td>string</td><td>For video<br/></td></tr>
+</table><h1 class="sub" id="CommandList">Command list</h1><table class="table-slim table-topless"><tr><th>Group</th><th>Command</th><th>Command name</th><th>Argument</th><th>Command parameter</th><th>Summary</th></tr><tr><td>ファイル</td><td>ファイルを開く</td><td><b>LoadAs</b></td><td><dl><dt>path: string</dt><dd>File or folder path</dd></dl></td><td></td><td>圧縮ファイルか画像ファイルを選択して開きます。</td></tr><tr><td>ファイル</td><td>再読み込み</td><td><b>ReLoad</b></td><td></td><td></td><td>ブックを再読み込みします。</td></tr><tr><td>ファイル</td><td>閉じる</td><td><b>Unload</b></td><td></td><td></td><td>開いているブックを閉じます。</td></tr><tr><td>ファイル</td><td>外部アプリで開く (シンプル)</td><td><b>OpenExternalApp</b></td><td></td><td><dl><dt><b>Command</b>: string</dt><dd>Program. If not specified, launch the application associated with the extension.<dd/><dt><b>Parameter</b>: string</dt><dd>Parameters. $File will be replaced with the file path. $Uri is replaced with the URI escaped file path.<dd/><dt><b>WorkingDirectory</b>: string</dt><dd>Working directory.<dd/><dt><b>MultiPagePolicy</b>: enum</dt><dd>"Once": Run only one page / "All": Run all pages / "AllLeftToRight": Run all pages (Left to right)<br/>For 2 pages.<dd/><dt><b>ArchivePolicy</b>: enum</dt><dd>"None": Do not execute / "SendArchiveFile": Compressed file / "SendArchivePath": Compressed file + filename / "SendExtractFile": Temporary file<br/>Compressed file policy.<dd/></dl></td><td>表示されている画像を外部アプリで開きます。</td></tr><tr><td>ファイル</td><td>外部アプリで開く</td><td><b>OpenExternalAppAs</b></td><td></td><td><dl><dt><b>MultiPagePolicy</b>: enum</dt><dd>"Once": Run only one page / "All": Run all pages / "AllLeftToRight": Run all pages (Left to right)<br/>For 2 pages.<dd/><dt><b>Index</b>: int</dt><dd>Selected index. Directly executes the selection number.<dd/></dl></td><td>表示された画像を開く外部アプリケーションを選択します。</td></tr><tr><td>ファイル</td><td>エクスプローラーで開く</td><td><b>OpenExplorer</b></td><td></td><td></td><td>表示しているページのファイルをエクスプローラーで開きます。</td></tr><tr><td>ファイル</td><td>名前をつけてファイルに保存</td><td><b>ExportImageAs</b></td><td></td><td><dl><dt><b>ExportFolder</b>: string</dt><dd>Default output folder. Output folder at startup. During startup, it follows the changed storage location.<dd/><dt><b>QualityLevel</b>: int</dt><dd>JPEG quality. It is used only when conversion is required.<dd/></dl></td><td>画像をファイルに保存します。</td></tr><tr><td>ファイル</td><td>ファイルに保存</td><td><b>ExportImage</b></td><td></td><td><dl><dt><b>Mode</b>: enum</dt><dd>"Original": Save as original file / "View": Save view<br/>Output image type.<dd/><dt><b>HasBackground</b>: bool</dt><dd>Include background.<dd/><dt><b>IsOriginalSize</b>: bool</dt><dd>Output in original size.<dd/><dt><b>IsDotKeep</b>: bool</dt><dd>Keep dot.<dd/><dt><b>ExportFolder</b>: string</dt><dd>Output folder.<dd/><dt><b>FileNameMode</b>: enum</dt><dd>"Original": Original file name / "BookPageNumber": Book name + page number<br/>Output file name.<dd/><dt><b>FileFormat</b>: enum</dt><dd>"Png": PNG / "Jpeg": JPEG<br/>Output file format. Used when "Output image type" is "Save view".<dd/><dt><b>QualityLevel</b>: int</dt><dd>JPEG quality. It is used only when conversion is required.<dd/><dt><b>IsShowToast</b>: bool</dt><dd>Toast notification.<dd/></dl></td><td>画像をファイルに保存します。保存フォルダーはコマンド パラメーターで指定します。</td></tr><tr><td>ファイル</td><td>印刷</td><td><b>Print</b></td><td></td><td></td><td>画像を印刷します。</td></tr><tr><td>ファイル</td><td>ファイルを削除</td><td><b>DeleteFile</b></td><td></td><td></td><td>ファイルを削除します。圧縮ファイルの場合は削除できません。</td></tr><tr><td>ファイル</td><td>ブックを削除</td><td><b>DeleteBook</b></td><td></td><td></td><td>現在閲覧中のフォルダーまたは圧縮ファイルを削除します。</td></tr><tr><td>ファイル</td><td>ファイルをコピー</td><td><b>CopyFile</b></td><td></td><td><dl><dt><b>MultiPagePolicy</b>: enum</dt><dd>"Once": Run only one page / "All": Run all pages / "AllLeftToRight": Run all pages (Left to right)<br/>For 2 pages.<dd/></dl></td><td>ファイルをクリップボードにコピーします。</td></tr><tr><td>ファイル</td><td>画像をコピー</td><td><b>CopyImage</b></td><td></td><td></td><td>画像をクリップボードにコピーします。2 ページ表示の場合はメインとなるページのみコピーします。</td></tr><tr><td>ファイル</td><td>貼り付け</td><td><b>Paste</b></td><td></td><td></td><td>クリップボードのファイルや画像を貼り付けます。</td></tr><tr><td>ファイル</td><td>フォルダーにコピー</td><td><b>CopyToFolderAs</b></td><td></td><td><dl><dt><b>MultiPagePolicy</b>: enum</dt><dd>"Once": Run only one page / "All": Run all pages / "AllLeftToRight": Run all pages (Left to right)<br/>For 2 pages.<dd/><dt><b>Index</b>: int</dt><dd>Selected index. Directly executes the selection number.<dd/></dl></td><td>表示された画像をコピーするフォルダーを選択します。</td></tr><tr><td>ファイル</td><td>フォルダーに移動</td><td><b>MoveToFolderAs</b></td><td></td><td><dl><dt><b>MultiPagePolicy</b>: enum</dt><dd>"Once": Run only one page / "All": Run all pages / "AllLeftToRight": Run all pages (Left to right)<br/>For 2 pages.<dd/><dt><b>Index</b>: int</dt><dd>Selected index. Directly executes the selection number.<dd/></dl></td><td>表示された画像を移動するフォルダーを選択します。</td></tr><tr><td>ファイル</td><td>履歴を消去</td><td><b>ClearHistory</b></td><td></td><td></td><td>履歴を全て削除します。</td></tr><tr><td>ファイル</td><td>現在の場所の履歴削除</td><td><b>ClearHistoryInPlace</b></td><td></td><td></td><td>本棚の現在の場所にあるすべての履歴を削除します。</td></tr><tr><td>ファイル</td><td>無効な履歴を削除</td><td><b>RemoveUnlinkedHistory</b></td><td></td><td></td><td>存在しない履歴項目を削除します。</td></tr><tr><td>ストレッチ</td><td>ストレッチを切り替える</td><td><b>ToggleStretchMode</b></td><td></td><td><dl><dt><b>IsLoop</b>: bool</dt><dd>Loop setting / Loop.<dd/><dt><b>IsEnableNone</b>: bool</dt><dd>Switchable mode / Original size.<dd/><dt><b>IsEnableUniform</b>: bool</dt><dd>Switchable mode / Fit to window size.<dd/><dt><b>IsEnableUniformToFill</b>: bool</dt><dd>Switchable mode / Extend it to fill the window.<dd/><dt><b>IsEnableUniformToSize</b>: bool</dt><dd>Switchable mode / Fit the area size to the window.<dd/><dt><b>IsEnableUniformToVertical</b>: bool</dt><dd>Switchable mode / Fit height to window.<dd/><dt><b>IsEnableUniformToHorizontal</b>: bool</dt><dd>Switchable mode / Fit width to window.<dd/></dl></td><td>画像のストレッチを順番に切り替えます。</td></tr><tr><td>ストレッチ</td><td>ストレッチを切り替える (逆順)</td><td><b>ToggleStretchModeReverse</b></td><td></td><td><dl><p style="color:red">Parameters to share with "ToggleStretchMode"</p><dt><b>IsLoop</b>: bool</dt><dd>Loop setting / Loop.<dd/><dt><b>IsEnableNone</b>: bool</dt><dd>Switchable mode / Original size.<dd/><dt><b>IsEnableUniform</b>: bool</dt><dd>Switchable mode / Fit to window size.<dd/><dt><b>IsEnableUniformToFill</b>: bool</dt><dd>Switchable mode / Extend it to fill the window.<dd/><dt><b>IsEnableUniformToSize</b>: bool</dt><dd>Switchable mode / Fit the area size to the window.<dd/><dt><b>IsEnableUniformToVertical</b>: bool</dt><dd>Switchable mode / Fit height to window.<dd/><dt><b>IsEnableUniformToHorizontal</b>: bool</dt><dd>Switchable mode / Fit width to window.<dd/></dl></td><td>画像のストレッチを順番に切り替えます。(逆順)</td></tr><tr><td>ストレッチ</td><td>オリジナル サイズ</td><td><b>SetStretchModeNone</b></td><td></td><td></td><td>画像のサイズそのままで表示します。</td></tr><tr><td>ストレッチ</td><td>ウィンドウに合わせる</td><td><b>SetStretchModeUniform</b></td><td></td><td><dl><dt><b>IsToggle</b>: bool</dt><dd>Switching to original size. If the stretch mode is already specified, it will be the original size<dd/></dl></td><td>画像をウィンドウ サイズに合わせるよう拡大縮小します。</td></tr><tr><td>ストレッチ</td><td>ウィンドウいっぱいに広げる</td><td><b>SetStretchModeUniformToFill</b></td><td></td><td><dl><p style="color:red">Parameters to share with "SetStretchModeUniform"</p><dt><b>IsToggle</b>: bool</dt><dd>Switching to original size. If the stretch mode is already specified, it will be the original size<dd/></dl></td><td>縦横どちらかをウィンドウ サイズに合わせるように拡大縮小します。画像はウィンドウ サイズより大きくなります。</td></tr><tr><td>ストレッチ</td><td>面積をウィンドウに合わせる</td><td><b>SetStretchModeUniformToSize</b></td><td></td><td><dl><p style="color:red">Parameters to share with "SetStretchModeUniform"</p><dt><b>IsToggle</b>: bool</dt><dd>Switching to original size. If the stretch mode is already specified, it will be the original size<dd/></dl></td><td>ウィンドウの面積と等しくなるように画像を拡大縮小します。</td></tr><tr><td>ストレッチ</td><td>高さをウィンドウに合わせる</td><td><b>SetStretchModeUniformToVertical</b></td><td></td><td><dl><p style="color:red">Parameters to share with "SetStretchModeUniform"</p><dt><b>IsToggle</b>: bool</dt><dd>Switching to original size. If the stretch mode is already specified, it will be the original size<dd/></dl></td><td>ウィンドウの高さに画像の高さを合わせるように拡大縮小します。</td></tr><tr><td>ストレッチ</td><td>幅をウィンドウに合わせる</td><td><b>SetStretchModeUniformToHorizontal</b></td><td></td><td><dl><p style="color:red">Parameters to share with "SetStretchModeUniform"</p><dt><b>IsToggle</b>: bool</dt><dd>Switching to original size. If the stretch mode is already specified, it will be the original size<dd/></dl></td><td>ウィンドウの幅に画像の幅を合わせるように拡大縮小します。</td></tr><tr><td>ストレッチ</td><td>拡大を許可</td><td><b>ToggleStretchAllowScaleUp</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>ストレッチの適用で拡大を許可します。</td></tr><tr><td>ストレッチ</td><td>縮小を許可</td><td><b>ToggleStretchAllowScaleDown</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>ストレッチの適用で縮小を許可します。</td></tr><tr><td>ストレッチ</td><td>サイズ指定の有効/無効</td><td><b>ToggleCustomSize</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>オリジナルサイズに適用されるサイズ指定の有効/無効を切り替えます。</td></tr><tr><td>エフェクト</td><td>ドットのまま拡大有効/無効</td><td><b>ToggleNearestNeighbor</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>有効にすると拡大するときにドットのまま拡大します。無効の時にはスケール変換処理 (Fant) が行われます。</td></tr><tr><td>エフェクト</td><td>背景を切り替える</td><td><b>ToggleBackground</b></td><td></td><td></td><td>背景を順番に切り替えます。</td></tr><tr><td>エフェクト</td><td>背景を黒色にする</td><td><b>SetBackgroundBlack</b></td><td></td><td></td><td>背景を黒色にします。</td></tr><tr><td>エフェクト</td><td>背景を白色にする</td><td><b>SetBackgroundWhite</b></td><td></td><td></td><td>背景を白色にします。</td></tr><tr><td>エフェクト</td><td>背景を画像に合わせた色にする</td><td><b>SetBackgroundAuto</b></td><td></td><td></td><td>背景色を画像から設定します。具体的には画像の左上ピクセルの色が使用されます。</td></tr><tr><td>エフェクト</td><td>背景を白チェック模様にする</td><td><b>SetBackgroundCheck</b></td><td></td><td></td><td>背景を白チェック模様にします。</td></tr><tr><td>エフェクト</td><td>背景を黒チェック模様にする</td><td><b>SetBackgroundCheckDark</b></td><td></td><td></td><td>背景を黒チェック模様にします。</td></tr><tr><td>エフェクト</td><td>背景をカスタム背景にする</td><td><b>SetBackgroundCustom</b></td><td></td><td></td><td>背景をカスタム背景にします。</td></tr><tr><td>エフェクト</td><td>リサイズ フィルター有効/無効</td><td><b>ToggleResizeFilter</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>リサイズ フィルターの有効/無効を切り替えます。</td></tr><tr><td>エフェクト</td><td>グリッド有効/無効</td><td><b>ToggleGrid</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>グリッドの表示/非表示を切り替えます。</td></tr><tr><td>エフェクト</td><td>エフェクト有効/無効</td><td><b>ToggleEffect</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>エフェクトの有効/無効を切り替えます。</td></tr><tr><td>ウィンドウ</td><td>常に手前に表示の有効/無効</td><td><b>ToggleTopmost</b></td><td></td><td></td><td>ウィンドウを常に手前に表示します。</td></tr><tr><td>ウィンドウ</td><td>アドレス バー表示/非表示</td><td><b>ToggleVisibleAddressBar</b></td><td></td><td></td><td>アドレス バーの表示/非表示を切り替えます。</td></tr><tr><td>ウィンドウ</td><td>メニューを自動的に隠す有効/無効</td><td><b>ToggleHideMenu</b></td><td></td><td></td><td>メニューを非表示にします。マウス ポインターをウィンドウ上端に合わせることで表示されます。</td></tr><tr><td>ウィンドウ</td><td>サイド バー表示/非表示</td><td><b>ToggleVisibleSideBar</b></td><td></td><td></td><td>サイド バーの表示/非表示を切り替えます。</td></tr><tr><td>ウィンドウ</td><td>パネルを自動的に隠す有効/無効</td><td><b>ToggleHidePanel</b></td><td></td><td></td><td>左右のパネルを自動的に隠します。マウス ポインターをウィンドウ左端、右端に合わせることで表示されます。</td></tr><tr><td>ウィンドウ</td><td>スライダーの表示/非表示</td><td><b>ToggleVisiblePageSlider</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>スライダーの表示/非表示を切り替えます。</td></tr><tr><td>ウィンドウ</td><td>スライダーを自動的に隠す有効/無効</td><td><b>ToggleHidePageSlider</b></td><td></td><td></td><td>スライダーを非表示にします。マウス ポインターをウィンドウ下端に合わせることで表示されます。</td></tr><tr><td>ウィンドウ</td><td>フルスクリーン切り替え</td><td><b>ToggleFullScreen</b></td><td></td><td></td><td>フルスクリーン状態を切替ます。</td></tr><tr><td>ウィンドウ</td><td>フルスクリーンにする</td><td><b>SetFullScreen</b></td><td></td><td></td><td>フルスクリーンにします。</td></tr><tr><td>ウィンドウ</td><td>フルスクリーン解除</td><td><b>CancelFullScreen</b></td><td></td><td></td><td>フルスクリーンを解除します。</td></tr><tr><td>ウィンドウ</td><td>ウィンドウを最小化する</td><td><b>ToggleWindowMinimize</b></td><td></td><td></td><td>ウィンドウを最小化します。既に最小化されている場合は元のサイズに戻します。</td></tr><tr><td>ウィンドウ</td><td>ウィンドウを最大化する</td><td><b>ToggleWindowMaximize</b></td><td></td><td></td><td>ウィンドウを最大化します。既に最大化されている場合は元のサイズに戻します。</td></tr><tr><td>ウィンドウ</td><td>パネルを一時的に表示する</td><td><b>ShowHiddenPanels</b></td><td></td><td></td><td>自動非表示になっているパネルを一時的に表示します。なんらかの操作をすると解除されます。</td></tr><tr><td>ウィンドウ</td><td>前の NeeView に切り替える</td><td><b>FocusPrevApp</b></td><td></td><td></td><td>前の NeeView ウィンドウに切り替えます。</td></tr><tr><td>ウィンドウ</td><td>次の NeeView に切り替える</td><td><b>FocusNextApp</b></td><td></td><td></td><td>次の NeeView ウィンドウに切り替えます。</td></tr><tr><td>ウィンドウ</td><td>ウィンドウ サイズ調整</td><td><b>StretchWindow</b></td><td></td><td></td><td>メインビューのコンテンツ サイズにウィンドウを合わせます。</td></tr><tr><td>パネル</td><td>本棚の表示/非表示</td><td><b>ToggleVisibleBookshelf</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>本棚パネルの表示/非表示を切り替えます。</td></tr><tr><td>パネル</td><td>ページリスト パネルの表示/非表示</td><td><b>ToggleVisiblePageList</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>ページリスト パネルの表示/非表示を切り替えます。</td></tr><tr><td>パネル</td><td>ブックマーク パネル表示/非表示</td><td><b>ToggleVisibleBookmarkList</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>ブックマーク パネルの表示/非表示を切り替えます。</td></tr><tr><td>パネル</td><td>プレイリスト パネルの表示/非表示</td><td><b>ToggleVisiblePlaylist</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>プレイリスト パネルの表示/非表示を切り替えます。</td></tr><tr><td>パネル</td><td>履歴パネルの表示/非表示</td><td><b>ToggleVisibleHistoryList</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>履歴パネルの表示/非表示を切り替えます。</td></tr><tr><td>パネル</td><td>情報パネルの表示/非表示</td><td><b>ToggleVisibleFileInfo</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>情報パネルの表示/非表示を切り替えます。</td></tr><tr><td>パネル</td><td>ナビゲーターの表示/非表示</td><td><b>ToggleVisibleNavigator</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>ナビゲーター パネルの表示/非表示を切り替えます。</td></tr><tr><td>パネル</td><td>エフェクト パネルの表示/非表示</td><td><b>ToggleVisibleEffectInfo</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>エフェクト パネルの表示/非表示を切り替えます。</td></tr><tr><td>パネル</td><td>フォルダー ツリーの表示/非表示</td><td><b>ToggleVisibleFoldersTree</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>フォルダー ツリーの表示/非表示を切り替えます。本棚は表示状態になります。</td></tr><tr><td>パネル</td><td>本棚検索ボックスにフォーカスを移す</td><td><b>FocusFolderSearchBox</b></td><td></td><td></td><td>本棚検索ボックスにフォーカスを移します。本棚パネルは表示状態になります。</td></tr><tr><td>パネル</td><td>ブックマーク検索ボックスにフォーカスを移す</td><td><b>FocusBookmarkSearchBox</b></td><td></td><td></td><td>ブックマーク検索ボックスにフォーカスを移します。ブックマーク パネルは表示状態になります。</td></tr><tr><td>パネル</td><td>ページリスト検索ボックスにフォーカスを移す</td><td><b>FocusPageListSearchBox</b></td><td></td><td></td><td>ページリスト検索ボックスにフォーカスを移します。ページリスト パネルは表示状態になります。</td></tr><tr><td>パネル</td><td>履歴検索ボックスにフォーカスを移す</td><td><b>FocusHistorySearchBox</b></td><td></td><td></td><td>履歴検索ボックスにフォーカスを移します。履歴パネルは表示状態になります。</td></tr><tr><td>パネル</td><td>ブックマークの表示</td><td><b>FocusBookmarkList</b></td><td></td><td></td><td>本棚のブックマーク フォルダーを表示します。</td></tr><tr><td>パネル</td><td>メインビューにフォーカスを移す</td><td><b>FocusMainView</b></td><td></td><td><dl><dt><b>NeedClosePanels</b>: bool</dt><dd>Close all panels.<dd/></dl></td><td>メインビューにフォーカスを移します。</td></tr><tr><td>パネル</td><td>メインビュー ウィンドウ/解除</td><td><b>ToggleMainViewFloating</b></td><td></td><td></td><td>メインビューをウィンドウにします。</td></tr><tr><td>フィルムストリップ</td><td>フィルムストリップの表示/非表示</td><td><b>ToggleVisibleThumbnailList</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>フィルムストリップの表示/非表示を切り替えます。</td></tr><tr><td>フィルムストリップ</td><td>フィルムストリップを自動的に隠す有効/無効</td><td><b>ToggleHideThumbnailList</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>スライダーを使用している時だけフィルムストリップを表示するようにします。</td></tr><tr><td>ビュー操作</td><td>スライドショー再生/停止</td><td><b>ToggleSlideShow</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>スライドショーの再生/停止を切り替えます。</td></tr><tr><td>ビュー操作</td><td>ホバー スクロール有効/無効</td><td><b>ToggleHoverScroll</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>マウス ポインターの位置に応じてスクロールします。</td></tr><tr><td>ビュー操作</td><td>N字スクロール↑</td><td><b>ViewScrollNTypeUp</b></td><td></td><td><dl><dt><b>ScrollType</b>: enum</dt><dd>"NType": N-type scroll / "ZType": Z-type scroll / "Diagonal": Diagonal scroll<br/>Scroll type.<dd/><dt><b>Scroll</b>: double</dt><dd>Amount of movement. The ratio to the screen to scroll in one operation.<dd/><dt><b>LineBreakStopTime</b>: double</dt><dd>Line break stop (sec). This is the waiting time to prevent a line break immediately.<dd/><dt><b>PagesAsOne</b>: bool</dt><dd>In panorama mode, all pages are considered as one page.<dd/><dt><b>IsReverse</b>: bool</dt><dd>Enable operation swap by slider direction. Allows the operation replacement by changing the slider direction.<dd/></dl></td><td>縦横スクロールが可能な場合、N字を描くようにスクロールします。</td></tr><tr><td>ビュー操作</td><td>N字スクロール↓</td><td><b>ViewScrollNTypeDown</b></td><td></td><td><dl><p style="color:red">Parameters to share with "ViewScrollNTypeUp"</p><dt><b>ScrollType</b>: enum</dt><dd>"NType": N-type scroll / "ZType": Z-type scroll / "Diagonal": Diagonal scroll<br/>Scroll type.<dd/><dt><b>Scroll</b>: double</dt><dd>Amount of movement. The ratio to the screen to scroll in one operation.<dd/><dt><b>LineBreakStopTime</b>: double</dt><dd>Line break stop (sec). This is the waiting time to prevent a line break immediately.<dd/><dt><b>PagesAsOne</b>: bool</dt><dd>In panorama mode, all pages are considered as one page.<dd/><dt><b>IsReverse</b>: bool</dt><dd>Enable operation swap by slider direction. Allows the operation replacement by changing the slider direction.<dd/></dl></td><td>縦横スクロールが可能な場合、N字を描くようにスクロールします。</td></tr><tr><td>ビュー操作</td><td>スクロール↑</td><td><b>ViewScrollUp</b></td><td></td><td><dl><dt><b>Scroll</b>: double</dt><dd>Amount of movement. The ratio to the screen to scroll in one operation.<dd/><dt><b>AllowCrossScroll</b>: bool</dt><dd>Allow vertical scroll. If you can not scroll in the axial direction, sucrose in the direction perpendicular to the axis.<dd/></dl></td><td>画像を上方向にするロールさせます。縦スクロールできないときは横スクロールになります。</td></tr><tr><td>ビュー操作</td><td>スクロール↓</td><td><b>ViewScrollDown</b></td><td></td><td><dl><p style="color:red">Parameters to share with "ViewScrollUp"</p><dt><b>Scroll</b>: double</dt><dd>Amount of movement. The ratio to the screen to scroll in one operation.<dd/><dt><b>AllowCrossScroll</b>: bool</dt><dd>Allow vertical scroll. If you can not scroll in the axial direction, sucrose in the direction perpendicular to the axis.<dd/></dl></td><td>画像を下方向にするロールさせます。縦スクロールできないときは横スクロールになります。</td></tr><tr><td>ビュー操作</td><td>スクロール←</td><td><b>ViewScrollLeft</b></td><td></td><td><dl><p style="color:red">Parameters to share with "ViewScrollUp"</p><dt><b>Scroll</b>: double</dt><dd>Amount of movement. The ratio to the screen to scroll in one operation.<dd/><dt><b>AllowCrossScroll</b>: bool</dt><dd>Allow vertical scroll. If you can not scroll in the axial direction, sucrose in the direction perpendicular to the axis.<dd/></dl></td><td>画像を左方向にするロールさせます。横スクロールできないときは縦スクロールになります。</td></tr><tr><td>ビュー操作</td><td>スクロール→</td><td><b>ViewScrollRight</b></td><td></td><td><dl><p style="color:red">Parameters to share with "ViewScrollUp"</p><dt><b>Scroll</b>: double</dt><dd>Amount of movement. The ratio to the screen to scroll in one operation.<dd/><dt><b>AllowCrossScroll</b>: bool</dt><dd>Allow vertical scroll. If you can not scroll in the axial direction, sucrose in the direction perpendicular to the axis.<dd/></dl></td><td>画像を右方向にするロールさせます。横スクロールできないときは縦スクロールになります。</td></tr><tr><td>ビュー操作</td><td>拡大</td><td><b>ViewScaleUp</b></td><td></td><td><dl><dt><b>Scale</b>: double</dt><dd>Scale rate. It is the rate of change by one operation.<dd/><dt><b>IsSnapDefaultScale</b>: bool</dt><dd>100% snap. Make sure to zoom in and out by 100%.<dd/></dl></td><td>画像を拡大します。</td></tr><tr><td>ビュー操作</td><td>縮小</td><td><b>ViewScaleDown</b></td><td></td><td><dl><p style="color:red">Parameters to share with "ViewScaleUp"</p><dt><b>Scale</b>: double</dt><dd>Scale rate. It is the rate of change by one operation.<dd/><dt><b>IsSnapDefaultScale</b>: bool</dt><dd>100% snap. Make sure to zoom in and out by 100%.<dd/></dl></td><td>画像を縮小します。</td></tr><tr><td>ビュー操作</td><td>ストレッチ</td><td><b>ViewScaleStretch</b></td><td></td><td></td><td>スケールにストレッチを適用します。</td></tr><tr><td>ビュー操作</td><td>基底スケール拡大</td><td><b>ViewBaseScaleUp</b></td><td></td><td><dl><dt><b>Scale</b>: double</dt><dd>Scale rate. It is the rate of change by one operation.<dd/><dt><b>IsSnapDefaultScale</b>: bool</dt><dd>100% snap. Make sure to zoom in and out by 100%.<dd/></dl></td><td>基底スケールを拡大します。</td></tr><tr><td>ビュー操作</td><td>基底スケール縮小</td><td><b>ViewBaseScaleDown</b></td><td></td><td><dl><p style="color:red">Parameters to share with "ViewBaseScaleUp"</p><dt><b>Scale</b>: double</dt><dd>Scale rate. It is the rate of change by one operation.<dd/><dt><b>IsSnapDefaultScale</b>: bool</dt><dd>100% snap. Make sure to zoom in and out by 100%.<dd/></dl></td><td>基底スケールを縮小します。</td></tr><tr><td>ビュー操作</td><td>左回転</td><td><b>ViewRotateLeft</b></td><td></td><td><dl><dt><b>Angle</b>: int</dt><dd>Rotation angle. It is the angle of rotation in one operation. (0-180)<dd/><dt><b>IsStretch</b>: bool</dt><dd>Apply image stretch. Re-apply image stretch after rotation.<dd/></dl></td><td>画像を左回転させます。</td></tr><tr><td>ビュー操作</td><td>右回転</td><td><b>ViewRotateRight</b></td><td></td><td><dl><p style="color:red">Parameters to share with "ViewRotateLeft"</p><dt><b>Angle</b>: int</dt><dd>Rotation angle. It is the angle of rotation in one operation. (0-180)<dd/><dt><b>IsStretch</b>: bool</dt><dd>Apply image stretch. Re-apply image stretch after rotation.<dd/></dl></td><td>画像を右回転させます。</td></tr><tr><td>ビュー操作</td><td>自動左回転有効/無効</td><td><b>ToggleIsAutoRotateLeft</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>ページ表示時、縦長画像を 90 度左回転します。ウィンドウが縦長の場合、横長画像を 90 度回転します。</td></tr><tr><td>ビュー操作</td><td>自動右回転有効/無効</td><td><b>ToggleIsAutoRotateRight</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>ページ表示時、縦長画像を 90 度右回転します。ウィンドウが縦長の場合、横長画像を 90 度回転します。</td></tr><tr><td>ビュー操作</td><td>強制左回転有効/無効</td><td><b>ToggleIsAutoRotateForcedLeft</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>画像サイズにかかわらず 90 度左回転します。</td></tr><tr><td>ビュー操作</td><td>強制右回転有効/無効</td><td><b>ToggleIsAutoRotateForcedRight</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>画像サイズにかかわらず 90 度右回転します。</td></tr><tr><td>ビュー操作</td><td>左右反転</td><td><b>ToggleViewFlipHorizontal</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>画像を左右反転させます。</td></tr><tr><td>ビュー操作</td><td>左右反転有効</td><td><b>ViewFlipHorizontalOn</b></td><td></td><td></td><td>左右反転状態にします。</td></tr><tr><td>ビュー操作</td><td>左右反転解除</td><td><b>ViewFlipHorizontalOff</b></td><td></td><td></td><td>左右反転状態を解除します。</td></tr><tr><td>ビュー操作</td><td>上下反転</td><td><b>ToggleViewFlipVertical</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>画像を上下反転させます。</td></tr><tr><td>ビュー操作</td><td>上下反転有効</td><td><b>ViewFlipVerticalOn</b></td><td></td><td></td><td>上下反転状態にします。</td></tr><tr><td>ビュー操作</td><td>上下反転解除</td><td><b>ViewFlipVerticalOff</b></td><td></td><td></td><td>上下反転状態を解除します。</td></tr><tr><td>ビュー操作</td><td>ビュー リセット</td><td><b>ViewReset</b></td><td></td><td></td><td>ビュー操作での回転、拡縮、移動、反転をリセットします。</td></tr><tr><td>ビュー操作</td><td>ルーペ有効/無効</td><td><b>ToggleIsLoupe</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>ルーペの有効/無効を切り替えます。</td></tr><tr><td>ビュー操作</td><td>ルーペ有効</td><td><b>LoupeOn</b></td><td></td><td></td><td>ルーペ モードにします。</td></tr><tr><td>ビュー操作</td><td>ルーペ解除</td><td><b>LoupeOff</b></td><td></td><td></td><td>ルーペ モードを解除します。</td></tr><tr><td>ビュー操作</td><td>ルーペ倍率拡大</td><td><b>LoupeScaleUp</b></td><td></td><td></td><td>ルーペ倍率を拡大します。ルーペ使用時のみ機能します。</td></tr><tr><td>ビュー操作</td><td>ルーペ倍率縮小</td><td><b>LoupeScaleDown</b></td><td></td><td></td><td>ルーペ倍率を縮小します。ルーペ使用時のみ機能します。</td></tr><tr><td>ビュー操作</td><td>オート スクロール</td><td><b>AutoScrollOn</b></td><td></td><td></td><td>オート スクロール モードにします。</td></tr><tr><td>ページ移動</td><td>前のページに戻る</td><td><b>PrevPage</b></td><td></td><td><dl><dt><b>IsReverse</b>: bool</dt><dd>Enable operation swap by slider direction. Allows the operation replacement by changing the slider direction.<dd/></dl></td><td>ページ前方向に移動します。2 ページ表示の場合は 2 ページ分移動します。</td></tr><tr><td>ページ移動</td><td>次のページに進む</td><td><b>NextPage</b></td><td></td><td><dl><p style="color:red">Parameters to share with "PrevPage"</p><dt><b>IsReverse</b>: bool</dt><dd>Enable operation swap by slider direction. Allows the operation replacement by changing the slider direction.<dd/></dl></td><td>ページ次方向に移動します。2 ページ表示の場合は 2 ページ分移動します。</td></tr><tr><td>ページ移動</td><td>1 ページ戻る</td><td><b>PrevOnePage</b></td><td></td><td><dl><dt><b>IsReverse</b>: bool</dt><dd>Enable operation swap by slider direction. Allows the operation replacement by changing the slider direction.<dd/></dl></td><td>1 ページだけ前方向に移動します。</td></tr><tr><td>ページ移動</td><td>1 ページ進む</td><td><b>NextOnePage</b></td><td></td><td><dl><p style="color:red">Parameters to share with "PrevOnePage"</p><dt><b>IsReverse</b>: bool</dt><dd>Enable operation swap by slider direction. Allows the operation replacement by changing the slider direction.<dd/></dl></td><td>1 ページだけ次方向に移動します。</td></tr><tr><td>ページ移動</td><td>スクロール＋前のページに戻る</td><td><b>PrevScrollPage</b></td><td></td><td><dl><dt><b>ScrollType</b>: enum</dt><dd>"NType": N-type scroll / "ZType": Z-type scroll / "Diagonal": Diagonal scroll<br/>Scroll type.<dd/><dt><b>Scroll</b>: double</dt><dd>Amount of movement. The ratio to the screen to scroll in one operation.<dd/><dt><b>EndMargin</b>: double</dt><dd>Scroll end margin. If the scroll distance is less than this, line movement is prioritized.<dd/><dt><b>LineBreakStopTime</b>: double</dt><dd>Line break stop (sec). This is the waiting time to prevent a line break immediately.<dd/><dt><b>LineBreakStopMode</b>: enum</dt><dd>"Line": Line / "Page": Page<br/>Line break stop mode. Line by line or page by page.<dd/><dt><b>PagesAsOne</b>: bool</dt><dd>In panorama mode, all pages are considered as one page.<dd/><dt><b>IsReverse</b>: bool</dt><dd>Enable operation swap by slider direction. Allows the operation replacement by changing the slider direction.<dd/></dl></td><td>ページ前方向に画像をスクロールさせます。スクロールできない場合は前ページに移動します。ルーペ使用時はページ移動のみ行います。</td></tr><tr><td>ページ移動</td><td>スクロール＋次のページに進む</td><td><b>NextScrollPage</b></td><td></td><td><dl><p style="color:red">Parameters to share with "PrevScrollPage"</p><dt><b>ScrollType</b>: enum</dt><dd>"NType": N-type scroll / "ZType": Z-type scroll / "Diagonal": Diagonal scroll<br/>Scroll type.<dd/><dt><b>Scroll</b>: double</dt><dd>Amount of movement. The ratio to the screen to scroll in one operation.<dd/><dt><b>EndMargin</b>: double</dt><dd>Scroll end margin. If the scroll distance is less than this, line movement is prioritized.<dd/><dt><b>LineBreakStopTime</b>: double</dt><dd>Line break stop (sec). This is the waiting time to prevent a line break immediately.<dd/><dt><b>LineBreakStopMode</b>: enum</dt><dd>"Line": Line / "Page": Page<br/>Line break stop mode. Line by line or page by page.<dd/><dt><b>PagesAsOne</b>: bool</dt><dd>In panorama mode, all pages are considered as one page.<dd/><dt><b>IsReverse</b>: bool</dt><dd>Enable operation swap by slider direction. Allows the operation replacement by changing the slider direction.<dd/></dl></td><td>ページ次方向に画像をスクロールさせます。スクロールできない場合は次ページに移動します。ルーペ使用時はページ移動のみ行います。</td></tr><tr><td>ページ移動</td><td>指定ページに移動</td><td><b>JumpPage</b></td><td><dl><dt>number: int</dt><dd>Page number</dd></dl></td><td></td><td>ページ番号を指定して移動します。</td></tr><tr><td>ページ移動</td><td>ランダムなページに移動</td><td><b>JumpRandomPage</b></td><td></td><td></td><td>ランダムなページに移動します。</td></tr><tr><td>ページ移動</td><td>設定ページ数戻る</td><td><b>PrevSizePage</b></td><td></td><td><dl><dt><b>Size</b>: int</dt><dd>Number of moved pages.<dd/><dt><b>IsReverse</b>: bool</dt><dd>Enable operation swap by slider direction. Allows the operation replacement by changing the slider direction.<dd/></dl></td><td>設定されたページ数だけ前方向に移動します。</td></tr><tr><td>ページ移動</td><td>設定ページ数進む</td><td><b>NextSizePage</b></td><td></td><td><dl><p style="color:red">Parameters to share with "PrevSizePage"</p><dt><b>Size</b>: int</dt><dd>Number of moved pages.<dd/><dt><b>IsReverse</b>: bool</dt><dd>Enable operation swap by slider direction. Allows the operation replacement by changing the slider direction.<dd/></dl></td><td>設定されたページ数だけ次方向に移動します。</td></tr><tr><td>ページ移動</td><td>前のフォルダーに移動</td><td><b>PrevFolderPage</b></td><td></td><td><dl><dt><b>IsReverse</b>: bool</dt><dd>Enable operation swap by slider direction. Allows the operation replacement by changing the slider direction.<dd/></dl></td><td>ブック内の前のフォルダーの先頭ページに移動します。名前順の並びでのみ有効です。</td></tr><tr><td>ページ移動</td><td>次のフォルダーに移動</td><td><b>NextFolderPage</b></td><td></td><td><dl><p style="color:red">Parameters to share with "PrevFolderPage"</p><dt><b>IsReverse</b>: bool</dt><dd>Enable operation swap by slider direction. Allows the operation replacement by changing the slider direction.<dd/></dl></td><td>ブック内の次のフォルダーの先頭ページに移動します。名前順の並びでのみ有効です。</td></tr><tr><td>ページ移動</td><td>最初のページに移動</td><td><b>FirstPage</b></td><td></td><td><dl><dt><b>IsReverse</b>: bool</dt><dd>Enable operation swap by slider direction. Allows the operation replacement by changing the slider direction.<dd/></dl></td><td>先頭ページに移動します。</td></tr><tr><td>ページ移動</td><td>最後のページに移動</td><td><b>LastPage</b></td><td></td><td><dl><p style="color:red">Parameters to share with "FirstPage"</p><dt><b>IsReverse</b>: bool</dt><dd>Enable operation swap by slider direction. Allows the operation replacement by changing the slider direction.<dd/></dl></td><td>終端ページに移動します。</td></tr><tr><td>ページ移動</td><td>前の表示ページに戻る</td><td><b>PrevHistoryPage</b></td><td></td><td></td><td>前に開いていたページに移動します。</td></tr><tr><td>ページ移動</td><td>次の表示ページに進む</td><td><b>NextHistoryPage</b></td><td></td><td></td><td>次に開いていたページに移動します。</td></tr><tr><td>ブック移動</td><td>ブック固定/解除</td><td><b>ToggleBookLock</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>ブックの切り替えを禁止します。</td></tr><tr><td>ブック移動</td><td>前のブックに移動</td><td><b>PrevBook</b></td><td></td><td></td><td>本棚上での前のブックを読み込みます。</td></tr><tr><td>ブック移動</td><td>次のブックに移動</td><td><b>NextBook</b></td><td></td><td></td><td>本棚上での次のブックを読み込みます。</td></tr><tr><td>ブック移動</td><td>ランダムなブックに移動</td><td><b>RandomBook</b></td><td></td><td></td><td>本棚上でランダムなブックを読み込みます。</td></tr><tr><td>ブック移動</td><td>前の履歴に戻る</td><td><b>PrevHistory</b></td><td></td><td></td><td>前の古い履歴のブックを読み込みます。</td></tr><tr><td>ブック移動</td><td>次の履歴に進む</td><td><b>NextHistory</b></td><td></td><td></td><td>次の新しい履歴のブックを読み込みます。</td></tr><tr><td>ブック移動</td><td>前の表示ブックに戻る</td><td><b>PrevBookHistory</b></td><td></td><td></td><td>前に開いていたブックを開きます。</td></tr><tr><td>ブック移動</td><td>次の表示ブックに進む</td><td><b>NextBookHistory</b></td><td></td><td></td><td>次に開いていたブックを開きます。</td></tr><tr><td>ブック移動</td><td>親のブックを開く</td><td><b>MoveToParentBook</b></td><td></td><td></td><td>上の階層をブックとして開きます。</td></tr><tr><td>ブック移動</td><td>このブックを開く</td><td><b>MoveToChildBook</b></td><td></td><td></td><td>ページがブックであるとき、そのブックを開きます。</td></tr><tr><td>動画</td><td>動画再生/停止</td><td><b>ToggleMediaPlay</b></td><td></td><td></td><td>動画の再生と停止を切り替えます。</td></tr><tr><td>ブック列</td><td>ブックの並び順を切り替える</td><td><b>ToggleBookOrder</b></td><td></td><td></td><td>ブックの並び順を順番に切り替えます。</td></tr><tr><td>ブック列</td><td>ブック列はファイル名順昇順</td><td><b>SetBookOrderByFileNameA</b></td><td></td><td></td><td>ブックの並びを名前順 (昇順) にします。</td></tr><tr><td>ブック列</td><td>ブック列はファイル名順降順</td><td><b>SetBookOrderByFileNameD</b></td><td></td><td></td><td>ブックの並びを名前順 (降順) にします。</td></tr><tr><td>ブック列</td><td>ブック列はパス昇順</td><td><b>SetBookOrderByPathA</b></td><td></td><td></td><td>ブックの並びをパス順 (昇順) にします。</td></tr><tr><td>ブック列</td><td>ブック列はパス降順</td><td><b>SetBookOrderByPathD</b></td><td></td><td></td><td>ブックの並びをパス順 (降順) にします。</td></tr><tr><td>ブック列</td><td>ブック列は種類昇順</td><td><b>SetBookOrderByFileTypeA</b></td><td></td><td></td><td>ブックの並びをファイルの種類順 (昇順) にします。</td></tr><tr><td>ブック列</td><td>ブック列は種類降順</td><td><b>SetBookOrderByFileTypeD</b></td><td></td><td></td><td>ブックの並びをファイルの種類順 (降順) にします。</td></tr><tr><td>ブック列</td><td>ブック列は日付昇順</td><td><b>SetBookOrderByTimeStampA</b></td><td></td><td></td><td>ブックの並びを日付順 (昇順) にします。</td></tr><tr><td>ブック列</td><td>ブック列は日付降順</td><td><b>SetBookOrderByTimeStampD</b></td><td></td><td></td><td>ブックの並びを日付順 (降順) にします。</td></tr><tr><td>ブック列</td><td>ブック列は登録昇順</td><td><b>SetBookOrderByEntryTimeA</b></td><td></td><td></td><td>ブックの並びを登録順 (昇順) にします。</td></tr><tr><td>ブック列</td><td>ブック列は登録降順</td><td><b>SetBookOrderByEntryTimeD</b></td><td></td><td></td><td>ブックの並びを登録順 (降順) にします。</td></tr><tr><td>ブック列</td><td>ブック列はサイズ昇順</td><td><b>SetBookOrderBySizeA</b></td><td></td><td></td><td>ブックの並びをサイズ順 (昇順) にします。</td></tr><tr><td>ブック列</td><td>ブック列はサイズ降順</td><td><b>SetBookOrderBySizeD</b></td><td></td><td></td><td>ブックの並びをサイズ順 (降順) にします。</td></tr><tr><td>ブック列</td><td>ブック列はシャッフル</td><td><b>SetBookOrderByRandom</b></td><td></td><td></td><td>ブックの並びをシャッフルします。</td></tr><tr><td>ページ表示</td><td>ページモードを切り替える</td><td><b>TogglePageMode</b></td><td></td><td><dl><dt><b>IsLoop</b>: bool</dt><dd>Loop.<dd/></dl></td><td>ページモードを順番に切り替えます。</td></tr><tr><td>ページ表示</td><td>ページモードを切り替える (逆順)</td><td><b>TogglePageModeReverse</b></td><td></td><td><dl><p style="color:red">Parameters to share with "TogglePageMode"</p><dt><b>IsLoop</b>: bool</dt><dd>Loop.<dd/></dl></td><td>ページモードを順番に切り替えます。 (逆順)</td></tr><tr><td>ページ表示</td><td>1 ページ表示</td><td><b>SetPageModeOne</b></td><td></td><td></td><td>1 ページ表示にします。</td></tr><tr><td>ページ表示</td><td>2 ページ表示</td><td><b>SetPageModeTwo</b></td><td></td><td></td><td>2 ページ表示にします。</td></tr><tr><td>ページ表示</td><td>パノラマ</td><td><b>ToggleIsPanorama</b></td><td></td><td></td><td>連続したページを表示します。</td></tr><tr><td>ページ表示</td><td>ページの配置方向を切り替える</td><td><b>TogglePageOrientation</b></td><td></td><td></td><td>水平方向と垂直方向を切り替えます。</td></tr><tr><td>ページ表示</td><td>水平ページ配置</td><td><b>SetPageOrientationHorizontal</b></td><td></td><td></td><td>ページを水平に並べる</td></tr><tr><td>ページ表示</td><td>垂直ベージ配置</td><td><b>SetPageOrientationVertical</b></td><td></td><td></td><td>ページを垂直に並べる</td></tr><tr><td>ページ表示</td><td>右開き、左開きを切り替える</td><td><b>ToggleBookReadOrder</b></td><td></td><td></td><td>右開き、左開きを切り替えます。</td></tr><tr><td>ページ表示</td><td>右開き</td><td><b>SetBookReadOrderRight</b></td><td></td><td></td><td>読み進む方向を右開きにします。2 ページ表示のときに若いページが右になります。</td></tr><tr><td>ページ表示</td><td>左開き</td><td><b>SetBookReadOrderLeft</b></td><td></td><td></td><td>読み進む方向を左開きにします。2 ページ表示のときに若いページが左になります。</td></tr><tr><td>ページ表示</td><td>横長ページを分割する</td><td><b>ToggleIsSupportedDividePage</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>1 ページ表示時、横長ページを分割してページにします。</td></tr><tr><td>ページ表示</td><td>横長ページを 2 ページとみなす</td><td><b>ToggleIsSupportedWidePage</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>2 ページ表示時、横長の画像を 2 ページ分とみなして単独表示します。</td></tr><tr><td>ページ表示</td><td>最初のページを単独表示</td><td><b>ToggleIsSupportedSingleFirstPage</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>2 ページ表示でも最初のページは 1 ページ表示にします。</td></tr><tr><td>ページ表示</td><td>最後のページを単独表示</td><td><b>ToggleIsSupportedSingleLastPage</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>2 ページ表示でも最後のページは 1 ページ表示にします。</td></tr><tr><td>ページ表示</td><td>サブフォルダーを読み込む</td><td><b>ToggleIsRecursiveFolder</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>フォルダーから画像を読み込むときにサブフォルダーまたは圧縮ファイルも同時に読み込みます。</td></tr><tr><td>ページ表示</td><td>ページ設定をリセット</td><td><b>SetDefaultPageSetting</b></td><td></td><td></td><td>既定のページ設定に戻します。</td></tr><tr><td>ページ列</td><td>ページの並び順を切り替える</td><td><b>ToggleSortMode</b></td><td></td><td></td><td>ページの並び順を順番に切り替えます。</td></tr><tr><td>ページ列</td><td>ファイル名昇順</td><td><b>SetSortModeFileName</b></td><td></td><td></td><td>ページの並び順をファイル名昇順にします。</td></tr><tr><td>ページ列</td><td>ファイル名降順</td><td><b>SetSortModeFileNameDescending</b></td><td></td><td></td><td>ページの並び順をファイル名降順にします。</td></tr><tr><td>ページ列</td><td>ファイル日付昇順</td><td><b>SetSortModeTimeStamp</b></td><td></td><td></td><td>ページの並び順をファイル日付昇順にします。</td></tr><tr><td>ページ列</td><td>ファイル日付降順</td><td><b>SetSortModeTimeStampDescending</b></td><td></td><td></td><td>ページの並び順をファイル日付降順にします。</td></tr><tr><td>ページ列</td><td>ファイルサイズ昇順</td><td><b>SetSortModeSize</b></td><td></td><td></td><td>ページの並び順をファイル サイズ昇順にします。</td></tr><tr><td>ページ列</td><td>ファイルサイズ降順</td><td><b>SetSortModeSizeDescending</b></td><td></td><td></td><td>ページの並び順をファイル サイズ降順にします。</td></tr><tr><td>ページ列</td><td>ファイル登録昇順</td><td><b>SetSortModeEntry</b></td><td></td><td></td><td>ページの並び順を登録昇順にします。</td></tr><tr><td>ページ列</td><td>ファイル登録降順</td><td><b>SetSortModeEntryDescending</b></td><td></td><td></td><td>ページの並び順を登録降順にします。</td></tr><tr><td>ページ列</td><td>シャッフル</td><td><b>SetSortModeRandom</b></td><td></td><td></td><td>ページの並び順をシャッフルます。</td></tr><tr><td>ブックマーク</td><td>ブックマーク追加/削除</td><td><b>ToggleBookmark</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>現在開いているブックのブックマークを切り替えます。</td></tr><tr><td>プレイリスト</td><td>プレイリスト項目追加/削除</td><td><b>TogglePlaylistItem</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>現在のページをプレイリストに追加または削除します。</td></tr><tr><td>プレイリスト</td><td>前のプレイリスト項目に移動</td><td><b>PrevPlaylistItem</b></td><td></td><td></td><td>前のプレイリスト項目に移動します。</td></tr><tr><td>プレイリスト</td><td>次のプレイリスト項目に移動</td><td><b>NextPlaylistItem</b></td><td></td><td></td><td>次のプレイリスト項目に移動します。</td></tr><tr><td>プレイリスト</td><td>ブック内の前のプレイリスト項目に移動</td><td><b>PrevPlaylistItemInBook</b></td><td></td><td><dl><dt><b>IsLoop</b>: bool</dt><dd>Loop.<dd/><dt><b>IsIncludeTerminal</b>: bool</dt><dd>Include the first and last pages.<dd/></dl></td><td>現在のブック内で前のプレイリスト項目に移動します。</td></tr><tr><td>プレイリスト</td><td>ブック内の次のプレイリスト項目に移動</td><td><b>NextPlaylistItemInBook</b></td><td></td><td><dl><p style="color:red">Parameters to share with "PrevPlaylistItemInBook"</p><dt><b>IsLoop</b>: bool</dt><dd>Loop.<dd/><dt><b>IsIncludeTerminal</b>: bool</dt><dd>Include the first and last pages.<dd/></dl></td><td>現在のブック内で次のプレイリスト項目に移動します。</td></tr><tr><td>その他</td><td>設定ウィンドウを開く</td><td><b>OpenOptionsWindow</b></td><td></td><td></td><td>設定ウィンドウを開きます。</td></tr><tr><td>その他</td><td>設定ファイルの場所を開く</td><td><b>OpenSettingFilesFolder</b></td><td></td><td></td><td>設定ファイルが保存されているフォルダーを開きます。</td></tr><tr><td>その他</td><td>スクリプト フォルダーを開く</td><td><b>OpenScriptsFolder</b></td><td></td><td></td><td>スクリプト フォルダーをエクスプローラーで開きます。</td></tr><tr><td>その他</td><td>バージョン情報を表示する</td><td><b>OpenVersionWindow</b></td><td></td><td></td><td>バージョン情報を表示します。</td></tr><tr><td>その他</td><td>アプリを終了する</td><td><b>CloseApplication</b></td><td></td><td></td><td>このアプリケーションを終了させます。</td></tr><tr><td>その他</td><td>ファイル操作有効/無効</td><td><b>TogglePermitFile</b></td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td><td></td><td>ファイル操作系コマンドの有効/無効を切り替えます。</td></tr><tr><td>その他</td><td>コマンドのヘルプを表示する</td><td><b>HelpCommandList</b></td><td></td><td></td><td>全コマンドのヘルプをブラウザで表示します。</td></tr><tr><td>その他</td><td>スクリプトのヘルプを表示する</td><td><b>HelpScript</b></td><td></td><td></td><td>スクリプト マニュアルをブラウザで表示します。</td></tr><tr><td>その他</td><td>メイン メニューのヘルプを表示する</td><td><b>HelpMainMenu</b></td><td></td><td></td><td>メイン メニューのヘルプをブラウザで表示します。</td></tr><tr><td>その他</td><td>検索オプション ヘルプ</td><td><b>HelpSearchOption</b></td><td></td><td></td><td>検索オプションのヘルプをブラウザーで開きます。</td></tr><tr><td>その他</td><td>コンテキスト メニューを開く</td><td><b>OpenContextMenu</b></td><td></td><td></td><td>コンテキスト メニューを開きます。</td></tr><tr><td>その他</td><td>設定をエクスポート</td><td><b>ExportBackup</b></td><td></td><td><dl><dt><b>FileName</b>: string</dt><dd>Backup file path.<dd/></dl></td><td>設定、履歴、ブックマークのバックアップを作成します。サムネイル キャッシュはバックアップされません。</td></tr><tr><td>その他</td><td>設定をインポート</td><td><b>ImportBackup</b></td><td></td><td><dl><dt><b>FileName</b>: string</dt><dd>Backup file path.<dd/><dt><b>UserSetting</b>: enum</dt><dd>"Undefined": Undefined / "Skip": Skip / "Import": Import<br/>Settings.<dd/><dt><b>History</b>: enum</dt><dd>"Undefined": Undefined / "Skip": Skip / "Import": Import<br/>History.<dd/><dt><b>Bookmark</b>: enum</dt><dd>"Undefined": Undefined / "Skip": Skip / "Import": Import<br/>Bookmark.<dd/><dt><b>Playlists</b>: enum</dt><dd>"Undefined": Undefined / "Skip": Skip / "Import": Import<br/>Playlist.<dd/><dt><b>Themes</b>: enum</dt><dd>"Undefined": Undefined / "Skip": Skip / "Import": Import<br/>Custom themes.<dd/><dt><b>Scripts</b>: enum</dt><dd>"Undefined": Undefined / "Skip": Skip / "Import": Import<br/>Scripts.<dd/></dl></td><td>バックアップ ファイルから復元項目を選んで復元します。すべてのパラメーターが定義されている場合、ダイアログは表示されません。</td></tr><tr><td>その他</td><td>設定の再読み込み</td><td><b>ReloadSetting</b></td><td></td><td></td><td>設定を再読み込みします。</td></tr><tr><td>その他</td><td>設定の保存</td><td><b>SaveSetting</b></td><td></td><td></td><td>現在の設定の保存を実行します。</td></tr><tr><td>その他</td><td>タッチ エミュレート</td><td><b>TouchEmulate</b></td><td></td><td></td><td>マウス ポインター位置のタッチ コマンドを実行します。</td></tr><tr><td>その他</td><td>スクリプト コンソールを開く</td><td><b>OpenConsole</b></td><td></td><td></td><td>スクリプト用コンソールを開きます。</td></tr><tr><td>スクリプト</td><td>スクリプト中断</td><td><b>CancelScript</b></td><td></td><td></td><td>sleep 命令が存在する実行中のスクリプトを停止します。</td></tr></table><h1 class="sub" id="ObsoleteList">Breaking changes by version</h1><h4>Severity</h4><p><table class="table-slim"><tr><td>Error</td><td>This change is fatal and causes errors.</td></tr><tr><td>Warning</td><td>This effect is disabled and does not work.</td></tr><tr><td>Info</td><td>Compatible and works the same. Spelling errors corrected, etc.</td></tr></table></p><h2>Version 42.0</h2><table class="table-slim table-topless"><tr><th>Severity</th><th>Name</th><th>Category</th><th>Alternative</th></tr><tr><td/>Error<td/>HistoryItemAccessor.LastAccessTime<td/>Changed<td/>Type changed from string to Date.</tr><tr><td/>Error<td/>PageAccessor.LastWriteTime<td/>Changed<td/>Type changed from string to Date.</tr><tr><td/>Error<td/>PageAccessor.Path<td/>Changed<td/>The path is now the path of the page entity. In the case of a shortcut file, it is the path to its entity. See RawPath for paths in previous versions.</tr><tr><td/>Error<td/>ViewPageAccessor.LastWriteTime<td/>Changed<td/>Type changed from string to Date.</tr><tr><td/>Error<td/>ViewPageAccessor.Path<td/>Changed<td/>The path is now the path of the page entity. In the case of a shortcut file, it is the path to its entity. See RawPath for paths in previous versions.</tr><tr><td/>Warning<td/>nv.Command.CopyFile.Parameter.ArchivePolicy<td/>Obsolete<td/>nv.Config.System.ArchiveCopyPolicy</tr><tr><td/>Warning<td/>nv.Command.CopyFile.Parameter.TextCopyPolicy<td/>Obsolete<td/>nv.Config.System.TextCopyPolicy</tr><tr><td/>Warning<td/>nv.Config.View.ViewOrigin<td/>Obsolete<td/>nv.Config.View.ViewHorizontalOrigin, ViewVerticalOrigin</tr><tr><td/>Info<td/>nv.Config.Window.IsAutoHidInMaximized<td/>Obsolete<td/>nv.Config.Window.IsAutoHideInMaximized</tr></table><h2>Version 41.0</h2><table class="table-slim table-topless"><tr><th>Severity</th><th>Name</th><th>Category</th><th>Alternative</th></tr><tr><td/>Warning<td/>nv.Config.Performance.IsPreExtractToMemory<td/>Obsolete<td/>x</tr><tr><td/>Info<td/>nv.Config.AutoHide.AutoHideConfrictBottomMargin<td/>Obsolete<td/>nv.Config.AutoHide.AutoHideConflictBottomMargin</tr><tr><td/>Info<td/>nv.Config.AutoHide.AutoHideConfrictTopMargin<td/>Obsolete<td/>nv.Config.AutoHide.AutoHideConflictTopMargin</tr><tr><td/>Info<td/>nv.Config.System.IsHiddenFileVisibled<td/>Obsolete<td/>nv.Config.System.IsHiddenFileVisible</tr><tr><td/>Info<td/>nv.Config.System.IsOpenbookAtCurrentPlace<td/>Obsolete<td/>nv.Config.System.IsOpenBookAtCurrentPlace</tr></table><h2>Version 40.0</h2><table class="table-slim table-topless"><tr><th>Severity</th><th>Name</th><th>Category</th><th>Alternative</th></tr><tr><td/>Warning<td/>nv.Command.NextScrollPage.Parameter.ScrollDuration<td/>Obsolete<td/>nv.Config.View.ScrollDuration</tr><tr><td/>Warning<td/>nv.Command.PrevScrollPage.Parameter.ScrollDuration<td/>Obsolete<td/>nv.Config.View.ScrollDuration</tr><tr><td/>Warning<td/>nv.Command.ViewScrollDown.Parameter.ScrollDuration<td/>Obsolete<td/>nv.Config.View.ScrollDuration</tr><tr><td/>Warning<td/>nv.Command.ViewScrollLeft.Parameter.ScrollDuration<td/>Obsolete<td/>nv.Config.View.ScrollDuration</tr><tr><td/>Warning<td/>nv.Command.ViewScrollNTypeDown.Parameter.ScrollDuration<td/>Obsolete<td/>nv.Config.View.ScrollDuration</tr><tr><td/>Warning<td/>nv.Command.ViewScrollNTypeUp.Parameter.ScrollDuration<td/>Obsolete<td/>nv.Config.View.ScrollDuration</tr><tr><td/>Warning<td/>nv.Command.ViewScrollRight.Parameter.ScrollDuration<td/>Obsolete<td/>nv.Config.View.ScrollDuration</tr><tr><td/>Warning<td/>nv.Command.ViewScrollUp.Parameter.ScrollDuration<td/>Obsolete<td/>nv.Config.View.ScrollDuration</tr><tr><td/>Warning<td/>nv.Config.Book.BookPageSize<td/>Obsolete<td/>x</tr><tr><td/>Warning<td/>nv.Config.Book.IsMultiplePageMove<td/>Obsolete<td/>x</tr><tr><td/>Warning<td/>nv.Config.Bookshelf.IsIncrementalSearchEnabled<td/>Obsolete<td/>nv.Config.System.IsIncrementalSearchEnabled</tr><tr><td/>Warning<td/>nv.Config.Bookshelf.IsVisibleItemsCount<td/>Obsolete<td/>nv.Config.Panels.IsVisibleItemsCount</tr><tr><td/>Warning<td/>nv.Config.View.IsViewStartPositionCenter<td/>Obsolete<td/>nv.Config.View.ViewHorizontalOrigin,ViewVerticalOrigin</tr><tr><td/>Warning<td/>nv.Config.Window.MaximizeWindowGapWidth<td/>Obsolete<td/>x</tr><tr><td/>Info<td/>nv.Config.View.AutoRotate<td/>Obsolete<td/>nv.Config.BookSetting.AutoRotate</tr><tr><td/>Info<td/>nv.Config.View.BaseScale<td/>Obsolete<td/>nv.Config.BookSetting.BaseScale</tr><tr><td/>Info<td/>nv.Config.View.MainViewMergin<td/>Obsolete<td/>nv.Config.View.MainViewMargin</tr></table><h1 class="sub">Script examples</h1>
+
+Here are some example scripts. For other samples, refer to <a href="https://bitbucket.org/neelabo/neeview.scriptsamples/">NeeView Script Samples</a>.
+
+<h3>Execute "External app" command by temporarily changing the executable file and arguments</h3>
+<p>
+  <pre>OpenMsPaint.nvjs<code class="example">// @name MS Paint
+// @description Open the file in MS Paint.
+
+param = {
+    "Command": "mspaint.exe",
+    "Parameter": "\"$File\""
+}
+nv.Command.OpenExternalApp.Patch(param).Execute()
+</code></pre>
+</p>
+
+<h3>Open display page in new NeeView</h3>
+<p>
+  <pre>OpenNeeView.nvjs<code class="example">// @name Open in NeeView
+// @description Open the display page in a new NeeView.
+
+nv.Command.SaveSetting.Execute() // Perform a save to keep settings the same
+
+param = {
+    "Command": "$NeeView", // Special way of writing to indicate the path of NeeView itself
+    "Parameter": "-n \"$File\"",
+    "MultiPagePolicy": "Once",
+    "ArchivePolicy": "SendArchivePath"
+}
+nv.Command.OpenExternalApp.Patch(param).Execute()
+</code></pre>
+</p>
+
+<h3>ON / OFF of unsharp mask</h3>
+<p>
+ <pre>ToggleUnsharpMask.nvjs<code class="example">// @name Unsharp Mask ON/OFF
+// @description Unsharp Mask toggle. Displays a warning when the resize filter is not effective.
+
+if (nv.Config.ImageResizeFilter.IsEnabled) {
+    nv.Config.ImageResizeFilter.IsUnsharpMaskEnabled = !nv.Config.ImageResizeFilter.IsUnsharpMaskEnabled
+    if (nv.Config.ImageResizeFilter.IsUnsharpMaskEnabled) {
+        nv.ShowMessage("UnsharpMask ON")
+    }
+    else {
+        nv.ShowMessage("UnsharpMask OFF")
+    }
+}
+else {
+    nv.ShowMessage("ResizeFilter is not active")
+}
+</code></pre>
+</p>
+
+<h3>If the path of the newly opened book contains "English", open it to the left, otherwise open it to the right</h3>
+<p>
+  <pre>OnBookLoaded.nvjs<code class="example">// @name Book start action
+// @description Events when a book is opened
+
+if (nv.Book.IsNew) {
+    if (nv.Book.Path.match(/English/) != null) {
+        nv.Book.Config.BookReadOrder = "LeftToRight"
+    }
+    else {
+        nv.Book.Config.BookReadOrder = "RightToLeft"
+    }
+}
+</code></pre>
+</p>
+
+<h3>Change the way video files are manipulated</h3>
+<p>
+  <pre>OnBookLoaded.nvjs<code class="example">// @name Book start action
+// @description Events when a book is opened
+
+if (nv.Book.IsMedia) {
+    // Video: click to play/stop, double-click to toggle full screen
+    nv.Command.ToggleMediaPlay.ShortCutKey = "LeftClick"
+    nv.Command.Script_ToggleFullScreenAndMediaPlay.ShortCutKey = "LeftDoubleClick"
+    nv.Command.NextPage.ShortCutKey = "Left"
+}
+else {
+    // Normal: Standard setting
+    nv.Command.ToggleMediaPlay.ShortCutKey = null
+    nv.Command.Script_ToggleFullScreenAndMediaPlay.ShortCutKey = null
+    nv.Command.NextPage.ShortCutKey = "Left,LeftClick"
+}
+</code></pre>
+</p>
+<p>
+  <pre>ToggleFullScreenAndMediaPlay.nvjs<code class="example">// @name Full screen & video playback
+// @description Switch between full screen and video playback at the same time
+
+nv.Command.ToggleFullScreen.Execute()
+nv.Command.ToggleMediaPlay.Execute()
+</code></pre>
+</p>

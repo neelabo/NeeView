@@ -1,4 +1,4 @@
-# Theme File Specifications
+# Theme File Specifications v1.0.0
 
 Defines the control color scheme for the theme, in JSON format.
 

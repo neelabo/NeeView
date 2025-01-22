@@ -1,16 +1,16 @@
 theme: jekyll-theme-slate
 
-title: NeeView Guide
+title: NeeView
 
 defaults:
 - scope:
     path: 'en-us'
   values:
     language: en-US
-    description: NeeView is an image viewer that lets you browse images like a book
+    description: Image viewer that allows you to browse images in folders like a book
 - scope:
     path: 'ja-jp'
   values:
     language: ja-JP
-    description: NeeViewは、画像を本のように閲覧できる画像ビューアです
+    description: フォルダ内の画像を本のように閲覧できる画像ビューア
 

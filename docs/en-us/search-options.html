@@ -1,0 +1,156 @@
+---
+layout: default
+title: NeeView | NeeView search options
+---
+
+
+<h1>NeeView search options</h1>
+
+<h2>Search options</h2>
+<p>
+    <ul>
+        <li>If no search option is specified, it becomes AND-Standard search (same as specifying "/and /text /m2").</li>
+        <li>Search options affect only the immediately following search words.</li>
+        <li>Search options are not case sensitive.</li>
+    </ul>
+</p>
+
+<h3>Conjunction Options</h3>
+
+<table class="table-slim table-topless"><tr><th>Name</th><th>Description</th></tr><tr><td>/and</td><td>AND search (default)</td></tr><tr><td>/or</td><td>OR search</td></tr><tr><td>/not</td><td>NOT search</td></tr></table>
+
+<h3>Property Options</h3>
+
+<table class="table-slim table-topless"><tr><th>Name</th><th>Description</th><th>Supplement</th></tr><tr><td class="nowrap">/text</td><td>Text (default)</td><td>String. File or page name.</td></tr><tr><td class="nowrap">/date</td><td>Date and Time</td><td>DateTime. Date of last update. For history, last viewed date.</td></tr><tr><td class="nowrap">/size</td><td>Size</td><td>Numerals. File size</td></tr><tr><td class="nowrap">/bookmark</td><td>Bookmarked</td><td>Filter. Valid in the Bookshelf, History, and Bookmarks panels.</td></tr><tr><td class="nowrap">/history</td><td>History registered</td><td>Filter. Valid in the Bookshelf, History, and Bookmarks panels.</td></tr><tr><td class="nowrap">/playlist</td><td>Playlist registered</td><td>Filter. Valid in the PageList panel.</td></tr><tr><td class="nowrap">/title</td><td>Title</td><td>String. Page information. Valid in the PageList panel.</td></tr><tr><td class="nowrap">/subject</td><td>Subject</td><td>String. Page information. Valid in the PageList panel.</td></tr><tr><td class="nowrap">/rating</td><td>Rating</td><td>Numerals. Page information. Valid in the PageList panel.</td></tr><tr><td class="nowrap">/tags</td><td>Tags</td><td>String. Page information. Valid in the PageList panel.</td></tr><tr><td class="nowrap">/comments</td><td>Comments</td><td>String. Page information. Valid in the PageList panel.</td></tr><tr><td class="nowrap">/p.meta.[key]</td><td>Meta information</td><td>String. Page information. Valid in the PageList panel. See "Meta Information" section for details.</td></tr></table>
+
+<h3>Match Options</h3>
+
+<table class="table-slim table-topless"><tr><th>Name</th><th>Description</th><th>Supplement</th></tr><tr><td>/m0, /exact</td><td>ExactMatch</td><td>"Same as enclosing with double quotes"</td></tr><tr><td>/m1, /word</td><td>WordMatch</td><td>Since we identify words by kind of letters, accuracy is not very good.</td></tr><tr><td>/m2, /fuzzy</td><td>Standard (default)</td><td></td></tr><tr><td>/re</td><td>RegularExpression</td><td><a href="https://docs.microsoft.com/dotnet/standard/base-types/regular-expression-language-quick-reference">.NET Regular Expression</a></td></tr><tr><td>/ire</td><td>RegularExpression / IgnoreCase</td><td>Perform regular expression search without case sensitivity.</td></tr><tr><td>/since</td><td>DateTime / Since</td><td>After specified date</td></tr><tr><td>/until</td><td>DateTime / Until</td><td>Before specified date</td></tr><tr><td>/lt</td><td>Comparison operation / less than</td><td>Comparison operations work properly with sizes, dates, etc.</td></tr><tr><td>/le</td><td>Comparison operation / less than equal</td><td></td></tr><tr><td>/eq</td><td>Comparison operation / equal</td><td></td></tr><tr><td>/ne</td><td>Comparison operation / not equal</td><td></td></tr><tr><td>/ge</td><td>Comparison operation / grater than equal</td><td></td></tr><tr><td>/gt</td><td>Comparison operation / grater than</td><td></td></tr></table>
+
+<p>
+    In case of Standard search or WordMatch search, it becomes ambiguous search as follows.
+
+    <ul>
+        <li>(Japanese) Halfwidth and double-byte are not distinguished.</li>
+        <li>(Japanese) It does not distinguish between Hiragana and Katakana. In case of WordMatch search, we will distinguish.</li>
+        <li>We do not distinguish capital letters and lower case letters of alphanumeric characters.</li>
+        <li>Ignore the leading "0" for numbers. (Example: "2015-2-4" and "2015-02-04" are not distinguished)</li>
+        <li>UNICODE normalization (NFKC).</li>
+    </ul>
+</p>
+
+<h3>DateTime format</h3>
+
+<p>
+    Normally, it is specified in the form "2019-04-01". Because <a href="https://docs.microsoft.com/dotnet/standard/base-types/parsing-datetime">.NET date and time parsing</a> is used, you can specify other formats.
+</p>
+
+<p>
+    Note: The date designation "2019-04-01" is interpreted as "2019-04-01 00:00:00", so "/until 2019-04-01" does not include April 1.
+</p>
+
+<p>
+    You can also specify relative date and time in the format "-12day", "-6month" and "-1year". "/since -5day" means "within the past 5 days".
+</p>
+
+<h3>Numeric format</h3>
+
+<p>
+    Supports integers.
+</p>
+<p>
+    It also supports k, K, g, G, m, and M unit notations. Lowercase letters are multiplied by 1000, and uppercase letters are multiplied by 1024.
+</p>
+
+<hr/>
+<h2>Details</h2>
+
+The previous options are aliased and simplified. Detailed definitions are given here.
+
+<h3>Search unit</h3>
+
+The basic unit of search is the following set
+
+<blockquote>Conjunction option(/c.) | Property option(/p.) | Match option(/m.) | Keyword</blockquote>
+
+A string that does not begin with a "/" is a keyword, and this set is determined when it appears. Options not previously specified will use default values, and duplicate category options will be overwritten.
+
+<h3>Options</h3>
+
+Options are categorized by prefix character.
+
+<h4>Conjunction options (/c.)</h4>
+
+<table class="table-slim table-topless"><tr><th>Name</th><th>Description</th></tr><tr><td>/c.and</td><td>AND search (default)</td></tr><tr><td>/c.or</td><td>OR search</td></tr><tr><td>/c.not</td><td>NOT search</td></tr></table>
+
+<h4>Property Options (/p.)</h4>
+
+<table class="table-slim table-topless"><tr><th>Name</th><th>Description</th><th>Type</th></tr><tr><td class="nowrap">/p.text</td><td>Text (default)</td><td>String</td></tr><tr><td class="nowrap">/p.date</td><td>Date and Time</td><td>DateTime</td></tr><tr><td class="nowrap">/p.size</td><td>Size</td><td>Integer</td></tr><tr><td class="nowrap">/p.bookmark</td><td>Bookmarked</td><td>Boolean</td></tr><tr><td class="nowrap">/p.history</td><td>History registered</td><td>Boolean</td></tr><tr><td class="nowrap">/p.playlist</td><td>Playlist registered</td><td>Boolean</td></tr><tr><td class="nowrap">/p.rating</td><td>Meta Information: Rating</td><td>Integer</td></tr><tr><td class="nowrap">/p.meta.[key]</td><td>Meta Information. See "Meta Information" section for details.</td><td>String</td></tr></table>
+
+<h4>Match options (/m.)</h4>
+
+<table class="table-slim table-topless"><tr><th>Name</th><th>Description</th><th>Type</th></tr><tr><td>/m.exact</td><td>ExactMatch</td><td>String</td></tr><tr><td>/m.word</td><td>WordMatch</td><td>String</td></tr><tr><td>/m.fuzzy</td><td>FuzzyMatch (default)</td><td>String</td></tr><tr><td>/m.re</td><td>RegularExpression</td><td>String</td></tr><tr><td>/m.ire</td><td>RegularExpression / IgnoreCase</td><td>String</td></tr><tr><td>/m.lt</td><td>Comparison operation / less than</td><td>Type of property option</td></tr><tr><td>/m.le</td><td>Comparison operation / less than equal</td><td>Type of property option</td></tr><tr><td>/m.eq</td><td>Comparison operation / equal</td><td>Type of property option</td></tr><tr><td>/m.ne</td><td>Comparison operation / not equal</td><td>Type of property option</td></tr><tr><td>/m.ge</td><td>Comparison operation / grater than equal</td><td>Type of property option</td></tr><tr><td>/m.gt</td><td>Comparison operation / grater than</td><td>Type of property option</td></tr></table>
+
+<p>
+  The property and conforming options determine the type of value used for comparison, which is then converted to that type before the conformance check is performed.
+</p>
+
+<p>
+  The following example performs a date/time comparison as a DateTime type.
+  <blockquote>/p.date /m.lt</blockquote>
+</p>
+
+<p>
+  The following example compares the date and time as a string.
+  <blockquote>/p.date /m.fuzzy</blockquote>
+</p>
+
+<h3>Alias</h3>
+
+Options have aliases defined for ease of use, and in some cases are expanded into multiple options.
+
+<table class="table-slim table-topless"><tr><th>Alias</th><th>Decode</th></tr><tr class="nowrap"><td>/and</td><td>/c.and</td></tr><tr class="nowrap"><td>/or</td><td>/c.or</td></tr><tr class="nowrap"><td>/not</td><td>/c.not</td></tr><tr class="nowrap"><td>/text</td><td>/p.text</td></tr><tr class="nowrap"><td>/re</td><td>/m.re</td></tr><tr class="nowrap"><td>/ire</td><td>/m.ire</td></tr><tr class="nowrap"><td>/m0</td><td>/m.exact</td></tr><tr class="nowrap"><td>/exact</td><td>/m.exact</td></tr><tr class="nowrap"><td>/m1</td><td>/m.word</td></tr><tr class="nowrap"><td>/word</td><td>/m.word</td></tr><tr class="nowrap"><td>/m2</td><td>/m.fuzzy</td></tr><tr class="nowrap"><td>/fuzzy</td><td>/m.fuzzy</td></tr><tr class="nowrap"><td>/lt</td><td>/m.lt</td></tr><tr class="nowrap"><td>/le</td><td>/m.le</td></tr><tr class="nowrap"><td>/eq</td><td>/m.eq</td></tr><tr class="nowrap"><td>/ne</td><td>/m.ne</td></tr><tr class="nowrap"><td>/ge</td><td>/m.ge</td></tr><tr class="nowrap"><td>/gt</td><td>/m.gt</td></tr><tr class="nowrap"><td>/date</td><td>/p.date</td></tr><tr class="nowrap"><td>/since</td><td>/p.date /m.ge</td></tr><tr class="nowrap"><td>/until</td><td>/p.date /m.le</td></tr><tr class="nowrap"><td>/size</td><td>/p.size</td></tr><tr class="nowrap"><td>/bookmark</td><td>/p.bookmark /m.eq true</td></tr><tr class="nowrap"><td>/history</td><td>/p.history /m.eq true</td></tr><tr class="nowrap"><td>/playlist</td><td>/p.playlist /m.eq true</td></tr><tr class="nowrap"><td>/title</td><td>/p.meta.title</td></tr><tr class="nowrap"><td>/subject</td><td>/p.meta.subject</td></tr><tr class="nowrap"><td>/rating</td><td>/p.rating</td></tr><tr class="nowrap"><td>/tags</td><td>/p.meta.tags</td></tr><tr class="nowrap"><td>/comments</td><td>/p.meta.comments</td></tr></table>
+
+<h3>Meta Information</h3>
+
+<p>
+    Meta information is the information displayed in the "Information Panel".
+</p>
+    
+<p>
+    The meta information search is specified in the following format. Specify the name of the meta information item in [key]. The resulting value is a string equivalent to the one displayed.
+    <blockquote>/p.meta.[key]</blockquote>
+    It may take some time to get results when the number of pages is large because the files are read to retrieve meta information.
+</p>
+
+<p>
+    <table class="table-slim table-topless"><tr><th>[key]</th><th>Description</th></tr><tr><td>FileName</td><td>File name</td></tr><tr><td>FilePath</td><td>File path</td></tr><tr><td>CreationTime</td><td>Creation time</td></tr><tr><td>LastWriteTime</td><td>Last write time</td></tr><tr><td>FileSize</td><td>Size</td></tr><tr><td>ArchivePath</td><td>Archive path</td></tr><tr><td>Archiver</td><td>Archiver</td></tr><tr><td>Dimensions</td><td>Dimensions</td></tr><tr><td>HorizontalResolution</td><td>Horizontal resolution</td></tr><tr><td>VerticalResolution</td><td>Vertical resolution</td></tr><tr><td>BitDepth</td><td>Bit depth</td></tr><tr><td>Decoder</td><td>Decoder</td></tr><tr><td>Title</td><td>Title</td></tr><tr><td>Subject</td><td>Subject</td></tr><tr><td>Rating</td><td>Rating</td></tr><tr><td>Tags</td><td>Tags</td></tr><tr><td>Comments</td><td>Comments</td></tr><tr><td>Author</td><td>Author</td></tr><tr><td>DateTaken</td><td>Date taken</td></tr><tr><td>ApplicationName</td><td>Application name</td></tr><tr><td>DateAcquired</td><td>Date acquired</td></tr><tr><td>Copyright</td><td>Copyright</td></tr><tr><td>CameraMaker</td><td>Camera maker</td></tr><tr><td>CameraModel</td><td>Camera model</td></tr><tr><td>FNumber</td><td>FNumber</td></tr><tr><td>ExposureTime</td><td>Exposure time</td></tr><tr><td>ISOSpeed</td><td>ISO speed</td></tr><tr><td>ExposureBias</td><td>Exposure bias</td></tr><tr><td>FocalLength</td><td>Focal length</td></tr><tr><td>MaxAperture</td><td>Max aperture</td></tr><tr><td>MeteringMode</td><td>Metering mode</td></tr><tr><td>SubjectDistance</td><td>Subject distance</td></tr><tr><td>FlashMode</td><td>Flash mode</td></tr><tr><td>FlashEnergy</td><td>Flash energy</td></tr><tr><td>FocalLengthIn35mmFilm</td><td>Focal length in 35mm film</td></tr><tr><td>LensMaker</td><td>Lens maker</td></tr><tr><td>LensModel</td><td>Lens model</td></tr><tr><td>FlashMaker</td><td>Flash maker</td></tr><tr><td>FlashModel</td><td>Flash model</td></tr><tr><td>CameraSerialNumber</td><td>Camera serial number</td></tr><tr><td>Contrast</td><td>Contrast</td></tr><tr><td>Brightness</td><td>Brightness</td></tr><tr><td>LightSource</td><td>Light source</td></tr><tr><td>ExposureProgram</td><td>Exposure program</td></tr><tr><td>Saturation</td><td>Saturation</td></tr><tr><td>Sharpness</td><td>Sharpness</td></tr><tr><td>WhiteBalance</td><td>White balance</td></tr><tr><td>PhotometricInterpretation</td><td>Photometric interpretation</td></tr><tr><td>DigitalZoom</td><td>Digital zoom</td></tr><tr><td>Orientation</td><td>Orientation</td></tr><tr><td>EXIFVersion</td><td>EXIF version</td></tr><tr><td>GPSLatitude</td><td>Latitude</td></tr><tr><td>GPSLongitude</td><td>Longitude</td></tr><tr><td>GPSAltitude</td><td>Altitude</td></tr></table>
+    "Extras" key is a string with spaces removed from that item name.
+</p>
+
+<hr/>
+<h2>Examples</h2>
+
+AND-Standard search of "ABC", "DEF"
+<blockquote>ABC DEF</blockquote>
+
+RegularExpression search of "^ABC$"
+<blockquote>/re ^ABC$</blockquote>
+
+ExactMatch search for "ABC DEF"
+<blockquote>"ABC DEF"</blockquote>
+
+"DEF" NOT-WordMatch search for "ABC" Standard search results
+<blockquote>ABC /not /word DEF</blockquote>
+
+Search for files updated in April 2019
+<blockquote>/since 2019-04-01 /until 2019-05-01</blockquote>
+
+Search for files less than 10 MB in size
+<blockquote>/size /lt 10M</blockquote>
+
+AND-Standard search of "ABC" for bookmark search results
+<blockquote>/bookmark ABC</blockquote>
+
+Search for pages containing "smile" in "parameters" in "Extras"
+<blockquote>/p.meta.parameters smile</blockquote>
