@@ -23,7 +23,7 @@ namespace NeeView.Data
     }
 
 
-    public class OptionMemberElement
+    public class OptionMemberElement : IComparable<OptionMemberElement>
     {
         public string? LongName => _attribute.LongName;
         public string? ShortName => _attribute.ShortName;
@@ -50,7 +50,7 @@ namespace NeeView.Data
         /// ヘルプ用
         /// </summary>
         /// <returns></returns>
-        public string GetValuePrototpye()
+        public string GetValuePrototype()
         {
             if (_info.PropertyType.IsEnum)
             {
@@ -108,6 +108,31 @@ namespace NeeView.Data
                 default:
                     throw new NotSupportedException(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("OptionArgumentException.NotSupportType"), _info.PropertyType.Name));
             }
+        }
+
+        public int CompareTo(OptionMemberElement? other)
+        {
+            if (other == null)
+            {
+                return 1;
+            }
+            else if (ShortName is not null)
+            {
+                return other.ShortName is null ? -1 : string.Compare(ShortName, other.ShortName, StringComparison.Ordinal);
+            }
+            else if (other.ShortName is not null)
+            {
+                return 1;
+            }
+            else if (LongName is not null)
+            {
+                return other.LongName is null ? -1 : string.Compare(LongName, other.LongName, StringComparison.Ordinal);
+            }
+            else if (other.LongName is not null)
+            {
+                return 1;
+            }
+            return 0;
         }
     }
 }

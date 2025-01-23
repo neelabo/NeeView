@@ -295,8 +295,10 @@ namespace NeeView
             // Script: OnStartup
             CommandTable.Current.TryExecute(this, ScriptCommand.EventOnStartup, null, CommandOption.None);
 
+#if DEBUG
             // [開発用] デバッグアクションの実行
             DebugCommand.Execute(App.Current.Option.DebugCommand);
+#endif
         }
 
         public void ContentRendered()

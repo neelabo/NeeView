@@ -7,10 +7,10 @@ using System.Windows;
 
 namespace NeeView
 {
+#if DEBUG
     public static class DebugCommand
     {
         // [開発用] デバッグアクションの実行
-        [Conditional("DEBUG")]
         public static void Execute(string? command)
         {
             switch (command)
@@ -23,7 +23,6 @@ namespace NeeView
         }
 
         // [開発用] 組み込みドキュメントを出力
-        [Conditional("DEBUG")]
         public static void ExportEmbeddedDocuments()
         {
             try
@@ -56,4 +55,5 @@ namespace NeeView
         }
 
     }
+#endif
 }

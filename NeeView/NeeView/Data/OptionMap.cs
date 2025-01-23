@@ -25,7 +25,7 @@ namespace NeeView.Data
     public class OptionMap<T>
         where T : class, new()
     {
-        private readonly string _usage = "Usage: NeeView.exe [Options...] [File or Folder...]";
+        private readonly string _usage = "NeeView.exe [Options...] [File or Folder...]";
 
         private readonly static string[] _samples =
         {
@@ -64,6 +64,8 @@ namespace NeeView.Data
                     }
                 }
             }
+            
+            _elements.Sort();
         }
 
         public OptionMemberElement? GetElement(string key)
@@ -125,16 +127,17 @@ namespace NeeView.Data
             sb.AppendLine();
             foreach (var sample in _samples)
             {
-                sb.AppendLine($"    > {sample}");
+                sb.AppendLine($"`> {sample}`");
                 sb.AppendLine();
             }
+#if false
             sb.AppendLine();
             sb.AppendLine("## Other");
             sb.AppendLine("");
-            //sb.AppendLine("`SHIFT` を押しながら起動すると新しいウィンドウで起動します。");
+            sb.AppendLine("`SHIFT` を押しながら起動すると新しいウィンドウで起動します。");
             sb.AppendLine("Hold down `SHIFT` to start the program in a new window.");
             sb.AppendLine("");
-            sb.AppendLine("これ、ここじゃないな。");
+#endif
             return sb.ToString();
         }
 
@@ -153,7 +156,7 @@ namespace NeeView.Data
             var key = string.Join(", ", keys.Where(e => e != null));
 
             // key value
-            string keyValue = element.GetValuePrototpye();
+            string keyValue = element.GetValuePrototype();
             if (!element.HasParameter)
             {
                 keyValue = "";
@@ -286,6 +289,4 @@ namespace NeeView.Data
             _values?.SetValues(source, values);
         }
     }
-
-
 }
