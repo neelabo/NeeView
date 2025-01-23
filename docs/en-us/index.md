@@ -38,7 +38,7 @@ Powerful customization is available.
 - [Microsoft Store](https://www.microsoft.com/store/apps/9p24z53hc1jr)
 - [Vector](https://www.vector.co.jp/soft/winnt/art/se512262.html)
 
- ### Package Types
+### Package Types
 
 * [About ZIP Version](package-zip.md)
 * [About ZIP-fd Version](package-zip-fd.md)
@@ -56,10 +56,10 @@ Powerful customization is available.
  * [User's Guide](userguide.md)
  * [Commandline Options](commandline-options.md)
  * [Environment Variable](environment-value.md)
- * [Main Menu](main-menu.md)
- * [Search Options](search-options.md)
- * [Script Manual](script-manual.md)
- * [Command List](command-list.md)
+ * [Main Menu](main-menu.html)
+ * [Search Options](search-options.html)
+ * [Script Manual](script-manual.html)
+ * [Command List](command-list.html)
  * [Theme File Specifications](theme.md)
  * [Q&A](question-and-answer.md)
  * [Privacy Policy](privacy-policy.md)
