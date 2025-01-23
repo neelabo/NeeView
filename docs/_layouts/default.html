@@ -6,11 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,maximum-scale=2">
     <link rel="stylesheet" type="text/css" media="screen" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ '/favicon.ico' | relative_url }}">
     
     {% seo %}
     {% include head-custom.html %}
 
-    <link rel="shortcut icon" type="image/x-icon" href="{{ '/favicon.ico' | relative_url }}">
   </head>
 
   <body>
@@ -40,7 +40,8 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        {% include anchor_headings.html html=content anchorBody="#" %}
+        {% capture ex_content %}{% include anchor_headings.html html=content %}{% endcapture %}
+        {% include blockquote_alert.html html=content baseurl=site.baseurl %}
       </section>
     </div>
 

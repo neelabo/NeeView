@@ -20,7 +20,7 @@ Powerful customization is possible.
   * Image drop from web browser
   * Susie plugin support
 
-See [NeeView Site](https://neelabo.github.io/NeeView/en-us/) for details.
+See [NeeView Portal Site](https://neelabo.github.io/NeeView/en-us/) for details.
 
 # System Requirements
 

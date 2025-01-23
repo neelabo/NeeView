@@ -26,9 +26,9 @@ namespace NeeView.Properties
         public static TextResourceManager Resource { get; } = new(LanguageResource);
 
 
-        public static void Initialize(CultureInfo culture, bool force = false)
+        public static void Initialize(CultureInfo culture)
         {
-            if (_initialized && !force) return;
+            if (_initialized) return;
             _initialized = true;
 
             // 開発用：各カルチャのテスト

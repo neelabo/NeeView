@@ -1,14 +1,13 @@
-# NeeView
-
-Image Viewer. See [User's Guide](userguide.md) for usage.
-
 ## Screenshot
 
 ![NeeView39.jpg](../assets/images/neeview39.jpg)
 
+<!-- section: overview -->
+
 ## Description
 
-An image viewer that allows you to browse images in folders and compressed files like a book. Powerful customization is available.
+An image viewer that allows you to browse images in folders and compressed files like a book.
+Powerful customization is available.
 
 - Supported image format (bmp, jpg, gif, tiff, png, ico, WIC image)
 - Compressed file support (zip, rar, 7z, lzh, cbr, cbz, cb7, ...)
@@ -24,12 +23,14 @@ An image viewer that allows you to browse images in folders and compressed files
 - Full screen mode
 - Slide show
 - Susie plugin support
-- Multi-threaded, read-ahead support
 - Image drop from web browser
+- Command extension by scripts
 
 ## System Requirements
 
 * Windows 10 64bit or higher
+
+<!-- end_section: overview -->
 
 ## Download
 
@@ -37,21 +38,29 @@ An image viewer that allows you to browse images in folders and compressed files
 - [Microsoft Store](https://www.microsoft.com/store/apps/9p24z53hc1jr)
 - [Vector](https://www.vector.co.jp/soft/winnt/art/se512262.html)
 
-## Additional information
+ ### Package Types
+
+* [About ZIP Version](package-zip.md)
+* [About ZIP-fd Version](package-zip-fd.md)
+* [About Installer Version](package-installer.md)
+* [About Store App](package-storeapp.md)
+* [About Canary Version](package-canary.md)
+* [About Beta Version](package-beta.md)
+
+### Changelog
+
+ * [Changelog](changelog.md)
+
+## Documents
 
  * [User's Guide](userguide.md)
  * [Commandline Options](commandline-options.md)
  * [Environment Variable](environment-value.md)
+ * [Main Menu](main-menu.md)
+ * [Search Options](search-options.md)
+ * [Script Manual](script-manual.md)
+ * [Command List](command-list.md)
  * [Theme File Specifications](theme.md)
- * Package Types
-     * [About ZIP Version](package-zip.md)
-     * [About ZIP-fd Version](package-zip-fd.md)
-     * [About Installer Version](package-installer.md)
-     * [About Store App](package-storeapp.md)
-     * [About Canary Version](package-canary.md)
-     * [About Beta Version](package-beta.md)
- * [Change Log](changelog.md)
- * [Known Issues](known-problem.md)
  * [Q&A](question-and-answer.md)
  * [Privacy Policy](privacy-policy.md)
  * [Contact](contact.md)

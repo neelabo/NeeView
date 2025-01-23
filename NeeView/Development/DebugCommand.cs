@@ -27,26 +27,28 @@ namespace NeeView
         {
             try
             {
+                var culture = Properties.TextResources.Culture.Name.ToLower();
+                if (culture == "ja") culture = "ja-jp";
+                if (culture == "en") culture = "en-us";
+
                 var optionMap = new OptionMap<CommandLineOption>();
-                var cultures = new[] { "en-us", "ja-jp" };
-                foreach (var culture in cultures)
-                {
-                    Properties.TextResources.Initialize(new CultureInfo(culture), true);
-                    var markdown = optionMap.GetCommandLineHelpMarkdown();
-                    File.WriteAllText(Path.Combine(Environment.UserDataPath, $"CommandLineOptions.{culture}.md"), markdown);
+                var markdown = optionMap.GetCommandLineHelpMarkdown();
+                File.WriteAllText(Path.Combine(Environment.UserDataPath, $"CommandLineOptions.{culture}.md"), markdown);
 
-                    var scriptManual = new ScriptManual().CreateScriptManualText();
-                    File.WriteAllText(Path.Combine(Environment.UserDataPath, $"ScriptManual.{culture}.html"), scriptManual);
+                var scriptManual = new ScriptManual().CreateScriptManualText();
+                File.WriteAllText(Path.Combine(Environment.UserDataPath, $"ScriptManual.{culture}.html"), scriptManual);
 
-                    var searchOptionManual = SearchOptionManual.CreateSearchOptionManual();
-                    File.WriteAllText(Path.Combine(Environment.UserDataPath, $"SearchOptionManual.{culture}.html"), searchOptionManual);
+                var searchOptionManual = SearchOptionManual.CreateSearchOptionManual();
+                File.WriteAllText(Path.Combine(Environment.UserDataPath, $"SearchOptionManual.{culture}.html"), searchOptionManual);
 
-                    var mainMenu = MainMenuManual.CreateMainMenuManual();
-                    File.WriteAllText(Path.Combine(Environment.UserDataPath, $"MainMenu.{culture}.html"), mainMenu);
+                var mainMenu = MainMenuManual.CreateMainMenuManual();
+                File.WriteAllText(Path.Combine(Environment.UserDataPath, $"MainMenu.{culture}.html"), mainMenu);
 
-                    var commandList = CommandTable.Current.CreateCommandListHelp();
-                    File.WriteAllText(Path.Combine(Environment.UserDataPath, $"CommandList.{culture}.html"), commandList);
-                }
+                var memento = CommandTable.Current.CreateCommandCollectionMemento(false);
+                CommandTable.Current.RestoreCommandCollection(InputScheme.TypeA);
+                var commandList = CommandTable.Current.CreateCommandListHelp();
+                File.WriteAllText(Path.Combine(Environment.UserDataPath, $"CommandList.{culture}.html"), commandList);
+                CommandTable.Current.RestoreCommandCollection(memento);
             }
             catch (Exception ex)
             {

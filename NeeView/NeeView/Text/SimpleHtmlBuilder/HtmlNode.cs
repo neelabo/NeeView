@@ -8,9 +8,11 @@ namespace NeeView.Text.SimpleHtmlBuilder
 {
     public delegate string TextEvaluator(string text);
 
-    public class HtmlNode
+    public abstract class HtmlNode
     {
         public static TextEvaluator DefaultTextEvaluator { get; set; } = e => e;
+
+        public abstract StringBuilder AppendIndentLine(StringBuilder builder, int depth);
     }
 
     public class TagNode : HtmlNode
@@ -54,25 +56,33 @@ namespace NeeView.Text.SimpleHtmlBuilder
             return AddNode(new TextNode(textEvaluator(text)));
         }
 
-        public override string ToString()
+        public override StringBuilder AppendIndentLine(StringBuilder builder, int depth)
         {
-            var builder = new StringBuilder();
             var tagWithAttribute = _name + (_attributes is null ? "" : " " + string.Join(" ", _attributes));
             var tag = _name;
+            
+            var indent = new string(' ', depth * 2);
 
             if (_nodes is null)
             {
-                builder.Append(CultureInfo.InvariantCulture, $"<{tagWithAttribute}/>");
+                builder.AppendLine(CultureInfo.InvariantCulture, $"{indent}<{tagWithAttribute}/>");
             }
             else
             {
-                builder.Append(CultureInfo.InvariantCulture, $"<{tagWithAttribute}>");
+                builder.AppendLine(CultureInfo.InvariantCulture, $"{indent}<{tagWithAttribute}>");
                 foreach (var node in _nodes)
                 {
-                    builder.Append(node.ToString());
+                    node.AppendIndentLine(builder, depth + 1);
                 }
-                builder.Append(CultureInfo.InvariantCulture, $"</{tag}>");
+                builder.AppendLine(CultureInfo.InvariantCulture, $"{indent}</{tag}>");
             }
+            return builder;
+        }
+
+        public override string ToString()
+        {
+            var builder = new StringBuilder();
+            AppendIndentLine(builder, 0);
             return builder.ToString();
         }
     }
@@ -84,6 +94,13 @@ namespace NeeView.Text.SimpleHtmlBuilder
         public TextNode(string text)
         {
             _text = text;
+        }
+
+        public override StringBuilder AppendIndentLine(StringBuilder builder, int depth)
+        {
+            var indent = new string(' ', depth * 2);
+            builder.AppendLine(CultureInfo.InvariantCulture, $"{indent}{_text}");
+            return builder;
         }
 
         public override string ToString()

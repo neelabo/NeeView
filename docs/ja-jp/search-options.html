@@ -1,6 +1,5 @@
 ---
 layout: default
-title: NeeView | NeeView 検索オプション
 ---
 
 
@@ -17,15 +16,350 @@ title: NeeView | NeeView 検索オプション
 
 <h3>接続オプション</h3>
 
-<table class="table-slim table-topless"><tr><th>名前</th><th>説明</th></tr><tr><td>/and</td><td>AND 接続 (デフォルト)</td></tr><tr><td>/or</td><td>OR 接続</td></tr><tr><td>/not</td><td>NOT 接続</td></tr></table>
+<table class="table-slim table-topless">
+  <tr>
+    <th>
+      名前
+    </th>
+    <th>
+      説明
+    </th>
+  </tr>
+  <tr>
+    <td>
+      /and
+    </td>
+    <td>
+      AND 接続 (デフォルト)
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /or
+    </td>
+    <td>
+      OR 接続
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /not
+    </td>
+    <td>
+      NOT 接続
+    </td>
+  </tr>
+</table>
+
 
 <h3>項目オプション</h3>
 
-<table class="table-slim table-topless"><tr><th>名前</th><th>説明</th><th>補足</th></tr><tr><td class="nowrap">/text</td><td>テキスト (デフォルト)</td><td>文字列。ファイル名やページ名</td></tr><tr><td class="nowrap">/date</td><td>日時</td><td>日時。最終更新日。履歴の場合は最終閲覧日</td></tr><tr><td class="nowrap">/size</td><td>サイズ</td><td>数値。ファイル サイズ</td></tr><tr><td class="nowrap">/bookmark</td><td>ブックマーク登録済</td><td>フィルター。本棚、履歴、ブックマーク パネルで有効</td></tr><tr><td class="nowrap">/history</td><td>履歴登録済</td><td>フィルター。本棚、履歴、ブックマーク パネルで有効</td></tr><tr><td class="nowrap">/playlist</td><td>プレイリスト登録済</td><td>フィルター。ページリスト パネルで有効</td></tr><tr><td class="nowrap">/title</td><td>タイトル</td><td>文字列。ページ情報。ページリスト パネルで有効</td></tr><tr><td class="nowrap">/subject</td><td>件名</td><td>文字列。ページ情報。ページリスト パネルで有効</td></tr><tr><td class="nowrap">/rating</td><td>評価</td><td>数値。ページ情報。ページリスト パネルで有効</td></tr><tr><td class="nowrap">/tags</td><td>タグ</td><td>文字列。ページ情報。ページリスト パネルで有効</td></tr><tr><td class="nowrap">/comments</td><td>コメント</td><td>文字列。ページ情報。ページリスト パネルで有効</td></tr><tr><td class="nowrap">/p.meta.[key]</td><td>メタ情報</td><td>文字列。ページ情報。ページリスト パネルで有効。詳細は「メタ情報」セクションを参照</td></tr></table>
+<table class="table-slim table-topless">
+  <tr>
+    <th>
+      名前
+    </th>
+    <th>
+      説明
+    </th>
+    <th>
+      補足
+    </th>
+  </tr>
+  <tr>
+    <td class="nowrap">
+      /text
+    </td>
+    <td>
+      テキスト (デフォルト)
+    </td>
+    <td>
+      文字列。ファイル名やページ名
+    </td>
+  </tr>
+  <tr>
+    <td class="nowrap">
+      /date
+    </td>
+    <td>
+      日時
+    </td>
+    <td>
+      日時。最終更新日。履歴の場合は最終閲覧日
+    </td>
+  </tr>
+  <tr>
+    <td class="nowrap">
+      /size
+    </td>
+    <td>
+      サイズ
+    </td>
+    <td>
+      数値。ファイル サイズ
+    </td>
+  </tr>
+  <tr>
+    <td class="nowrap">
+      /bookmark
+    </td>
+    <td>
+      ブックマーク登録済
+    </td>
+    <td>
+      フィルター。本棚、履歴、ブックマーク パネルで有効
+    </td>
+  </tr>
+  <tr>
+    <td class="nowrap">
+      /history
+    </td>
+    <td>
+      履歴登録済
+    </td>
+    <td>
+      フィルター。本棚、履歴、ブックマーク パネルで有効
+    </td>
+  </tr>
+  <tr>
+    <td class="nowrap">
+      /playlist
+    </td>
+    <td>
+      プレイリスト登録済
+    </td>
+    <td>
+      フィルター。ページリスト パネルで有効
+    </td>
+  </tr>
+  <tr>
+    <td class="nowrap">
+      /title
+    </td>
+    <td>
+      タイトル
+    </td>
+    <td>
+      文字列。ページ情報。ページリスト パネルで有効
+    </td>
+  </tr>
+  <tr>
+    <td class="nowrap">
+      /subject
+    </td>
+    <td>
+      件名
+    </td>
+    <td>
+      文字列。ページ情報。ページリスト パネルで有効
+    </td>
+  </tr>
+  <tr>
+    <td class="nowrap">
+      /rating
+    </td>
+    <td>
+      評価
+    </td>
+    <td>
+      数値。ページ情報。ページリスト パネルで有効
+    </td>
+  </tr>
+  <tr>
+    <td class="nowrap">
+      /tags
+    </td>
+    <td>
+      タグ
+    </td>
+    <td>
+      文字列。ページ情報。ページリスト パネルで有効
+    </td>
+  </tr>
+  <tr>
+    <td class="nowrap">
+      /comments
+    </td>
+    <td>
+      コメント
+    </td>
+    <td>
+      文字列。ページ情報。ページリスト パネルで有効
+    </td>
+  </tr>
+  <tr>
+    <td class="nowrap">
+      /p.meta.[key]
+    </td>
+    <td>
+      メタ情報
+    </td>
+    <td>
+      文字列。ページ情報。ページリスト パネルで有効。詳細は「メタ情報」セクションを参照
+    </td>
+  </tr>
+</table>
+
 
 <h3>適合オプション</h3>
 
-<table class="table-slim table-topless"><tr><th>名前</th><th>説明</th><th>補足</th></tr><tr><td>/m0, /exact</td><td>完全一致</td><td>"ダブルクオートで囲むのと同じ"</td></tr><tr><td>/m1, /word</td><td>単語一致</td><td>文字の種類で単語を識別しているので精度はあまりよくない</td></tr><tr><td>/m2, /fuzzy</td><td>標準検索 (デフォルト)</td><td></td></tr><tr><td>/re</td><td>正規表現</td><td><a href="https://docs.microsoft.com/dotnet/standard/base-types/regular-expression-language-quick-reference">.NET の正規表現</a></td></tr><tr><td>/ire</td><td>正規表現・大文字小文字無効</td><td>大文字と小文字を区別しない正規表現検索を行う</td></tr><tr><td>/since</td><td>日時指定・以後</td><td>指定日時以後</td></tr><tr><td>/until</td><td>日時指定・以前</td><td>指定日時以前</td></tr><tr><td>/lt</td><td>比較演算・より小さい</td><td>比較演算はサイズや日付などで適切に機能する</td></tr><tr><td>/le</td><td>比較演算・以下</td><td></td></tr><tr><td>/eq</td><td>比較演算・等しい</td><td></td></tr><tr><td>/ne</td><td>比較演算・等しくない</td><td></td></tr><tr><td>/ge</td><td>比較演算・以上</td><td></td></tr><tr><td>/gt</td><td>比較演算・より大きい</td><td></td></tr></table>
+<table class="table-slim table-topless">
+  <tr>
+    <th>
+      名前
+    </th>
+    <th>
+      説明
+    </th>
+    <th>
+      補足
+    </th>
+  </tr>
+  <tr>
+    <td>
+      /m0, /exact
+    </td>
+    <td>
+      完全一致
+    </td>
+    <td>
+      "ダブルクオートで囲むのと同じ"
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /m1, /word
+    </td>
+    <td>
+      単語一致
+    </td>
+    <td>
+      文字の種類で単語を識別しているので精度はあまりよくない
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /m2, /fuzzy
+    </td>
+    <td>
+      標準検索 (デフォルト)
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /re
+    </td>
+    <td>
+      正規表現
+    </td>
+    <td>
+      <a href="https://docs.microsoft.com/dotnet/standard/base-types/regular-expression-language-quick-reference">.NET の正規表現</a>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /ire
+    </td>
+    <td>
+      正規表現・大文字小文字無効
+    </td>
+    <td>
+      大文字と小文字を区別しない正規表現検索を行う
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /since
+    </td>
+    <td>
+      日時指定・以後
+    </td>
+    <td>
+      指定日時以後
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /until
+    </td>
+    <td>
+      日時指定・以前
+    </td>
+    <td>
+      指定日時以前
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /lt
+    </td>
+    <td>
+      比較演算・より小さい
+    </td>
+    <td>
+      比較演算はサイズや日付などで適切に機能する
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /le
+    </td>
+    <td>
+      比較演算・以下
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /eq
+    </td>
+    <td>
+      比較演算・等しい
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /ne
+    </td>
+    <td>
+      比較演算・等しくない
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /ge
+    </td>
+    <td>
+      比較演算・以上
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /gt
+    </td>
+    <td>
+      比較演算・より大きい
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+</table>
+
 
 <p>
     標準検索または単語一致検索の場合、以下のような曖昧検索になります。
@@ -81,15 +415,284 @@ title: NeeView | NeeView 検索オプション
 
 <h4>接続オプション (/c.)</h4>
 
-<table class="table-slim table-topless"><tr><th>名前</th><th>説明</th></tr><tr><td>/c.and</td><td>AND 接続 (デフォルト)</td></tr><tr><td>/c.or</td><td>OR 接続</td></tr><tr><td>/c.not</td><td>NOT 接続</td></tr></table>
+<table class="table-slim table-topless">
+  <tr>
+    <th>
+      名前
+    </th>
+    <th>
+      説明
+    </th>
+  </tr>
+  <tr>
+    <td>
+      /c.and
+    </td>
+    <td>
+      AND 接続 (デフォルト)
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /c.or
+    </td>
+    <td>
+      OR 接続
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /c.not
+    </td>
+    <td>
+      NOT 接続
+    </td>
+  </tr>
+</table>
+
 
 <h4>項目オプション (/p.)</h4>
 
-<table class="table-slim table-topless"><tr><th>名前</th><th>説明</th><th>型</th></tr><tr><td class="nowrap">/p.text</td><td>テキスト (デフォルト)</td><td>String</td></tr><tr><td class="nowrap">/p.date</td><td>日時</td><td>DateTime</td></tr><tr><td class="nowrap">/p.size</td><td>サイズ</td><td>Integer</td></tr><tr><td class="nowrap">/p.bookmark</td><td>ブックマーク登録済</td><td>Boolean</td></tr><tr><td class="nowrap">/p.history</td><td>履歴登録済</td><td>Boolean</td></tr><tr><td class="nowrap">/p.playlist</td><td>プレイリスト登録済</td><td>Boolean</td></tr><tr><td class="nowrap">/p.rating</td><td>メタ情報：評価</td><td>Integer</td></tr><tr><td class="nowrap">/p.meta.[key]</td><td>メタ情報。詳細は「メタ情報」セクションを参照</td><td>String</td></tr></table>
+<table class="table-slim table-topless">
+  <tr>
+    <th>
+      名前
+    </th>
+    <th>
+      説明
+    </th>
+    <th>
+      型
+    </th>
+  </tr>
+  <tr>
+    <td class="nowrap">
+      /p.text
+    </td>
+    <td>
+      テキスト (デフォルト)
+    </td>
+    <td>
+      String
+    </td>
+  </tr>
+  <tr>
+    <td class="nowrap">
+      /p.date
+    </td>
+    <td>
+      日時
+    </td>
+    <td>
+      DateTime
+    </td>
+  </tr>
+  <tr>
+    <td class="nowrap">
+      /p.size
+    </td>
+    <td>
+      サイズ
+    </td>
+    <td>
+      Integer
+    </td>
+  </tr>
+  <tr>
+    <td class="nowrap">
+      /p.bookmark
+    </td>
+    <td>
+      ブックマーク登録済
+    </td>
+    <td>
+      Boolean
+    </td>
+  </tr>
+  <tr>
+    <td class="nowrap">
+      /p.history
+    </td>
+    <td>
+      履歴登録済
+    </td>
+    <td>
+      Boolean
+    </td>
+  </tr>
+  <tr>
+    <td class="nowrap">
+      /p.playlist
+    </td>
+    <td>
+      プレイリスト登録済
+    </td>
+    <td>
+      Boolean
+    </td>
+  </tr>
+  <tr>
+    <td class="nowrap">
+      /p.rating
+    </td>
+    <td>
+      メタ情報：評価
+    </td>
+    <td>
+      Integer
+    </td>
+  </tr>
+  <tr>
+    <td class="nowrap">
+      /p.meta.[key]
+    </td>
+    <td>
+      メタ情報。詳細は「メタ情報」セクションを参照
+    </td>
+    <td>
+      String
+    </td>
+  </tr>
+</table>
+
 
 <h4>適合オプション (/m.)</h4>
 
-<table class="table-slim table-topless"><tr><th>名前</th><th>説明</th><th>型</th></tr><tr><td>/m.exact</td><td>完全一致</td><td>String</td></tr><tr><td>/m.word</td><td>単語一致</td><td>String</td></tr><tr><td>/m.fuzzy</td><td>曖昧一致 (デフォルト)</td><td>String</td></tr><tr><td>/m.re</td><td>正規表現</td><td>String</td></tr><tr><td>/m.ire</td><td>正規表現・大文字小文字無効</td><td>String</td></tr><tr><td>/m.lt</td><td>比較演算・より小さい</td><td>項目オプションの型</td></tr><tr><td>/m.le</td><td>比較演算・以下</td><td>項目オプションの型</td></tr><tr><td>/m.eq</td><td>比較演算・等しい</td><td>項目オプションの型</td></tr><tr><td>/m.ne</td><td>比較演算・等しくない</td><td>項目オプションの型</td></tr><tr><td>/m.ge</td><td>比較演算・以上</td><td>項目オプションの型</td></tr><tr><td>/m.gt</td><td>比較演算・より大きい</td><td>項目オプションの型</td></tr></table>
+<table class="table-slim table-topless">
+  <tr>
+    <th>
+      名前
+    </th>
+    <th>
+      説明
+    </th>
+    <th>
+      型
+    </th>
+  </tr>
+  <tr>
+    <td>
+      /m.exact
+    </td>
+    <td>
+      完全一致
+    </td>
+    <td>
+      String
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /m.word
+    </td>
+    <td>
+      単語一致
+    </td>
+    <td>
+      String
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /m.fuzzy
+    </td>
+    <td>
+      曖昧一致 (デフォルト)
+    </td>
+    <td>
+      String
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /m.re
+    </td>
+    <td>
+      正規表現
+    </td>
+    <td>
+      String
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /m.ire
+    </td>
+    <td>
+      正規表現・大文字小文字無効
+    </td>
+    <td>
+      String
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /m.lt
+    </td>
+    <td>
+      比較演算・より小さい
+    </td>
+    <td>
+      項目オプションの型
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /m.le
+    </td>
+    <td>
+      比較演算・以下
+    </td>
+    <td>
+      項目オプションの型
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /m.eq
+    </td>
+    <td>
+      比較演算・等しい
+    </td>
+    <td>
+      項目オプションの型
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /m.ne
+    </td>
+    <td>
+      比較演算・等しくない
+    </td>
+    <td>
+      項目オプションの型
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /m.ge
+    </td>
+    <td>
+      比較演算・以上
+    </td>
+    <td>
+      項目オプションの型
+    </td>
+  </tr>
+  <tr>
+    <td>
+      /m.gt
+    </td>
+    <td>
+      比較演算・より大きい
+    </td>
+    <td>
+      項目オプションの型
+    </td>
+  </tr>
+</table>
+
 
 <p>
   項目オプションと適合オプションによって比較に使用する値の型が決まり、その型に変換してから適合チェックが行われます。
@@ -109,7 +712,257 @@ title: NeeView | NeeView 検索オプション
 
 オプションは使用しやすいようにエイリアスが定義されており、場合によっては複数のオプションに展開されます。
 
-<table class="table-slim table-topless"><tr><th>エイリアス</th><th>展開</th></tr><tr class="nowrap"><td>/and</td><td>/c.and</td></tr><tr class="nowrap"><td>/or</td><td>/c.or</td></tr><tr class="nowrap"><td>/not</td><td>/c.not</td></tr><tr class="nowrap"><td>/text</td><td>/p.text</td></tr><tr class="nowrap"><td>/re</td><td>/m.re</td></tr><tr class="nowrap"><td>/ire</td><td>/m.ire</td></tr><tr class="nowrap"><td>/m0</td><td>/m.exact</td></tr><tr class="nowrap"><td>/exact</td><td>/m.exact</td></tr><tr class="nowrap"><td>/m1</td><td>/m.word</td></tr><tr class="nowrap"><td>/word</td><td>/m.word</td></tr><tr class="nowrap"><td>/m2</td><td>/m.fuzzy</td></tr><tr class="nowrap"><td>/fuzzy</td><td>/m.fuzzy</td></tr><tr class="nowrap"><td>/lt</td><td>/m.lt</td></tr><tr class="nowrap"><td>/le</td><td>/m.le</td></tr><tr class="nowrap"><td>/eq</td><td>/m.eq</td></tr><tr class="nowrap"><td>/ne</td><td>/m.ne</td></tr><tr class="nowrap"><td>/ge</td><td>/m.ge</td></tr><tr class="nowrap"><td>/gt</td><td>/m.gt</td></tr><tr class="nowrap"><td>/date</td><td>/p.date</td></tr><tr class="nowrap"><td>/since</td><td>/p.date /m.ge</td></tr><tr class="nowrap"><td>/until</td><td>/p.date /m.le</td></tr><tr class="nowrap"><td>/size</td><td>/p.size</td></tr><tr class="nowrap"><td>/bookmark</td><td>/p.bookmark /m.eq true</td></tr><tr class="nowrap"><td>/history</td><td>/p.history /m.eq true</td></tr><tr class="nowrap"><td>/playlist</td><td>/p.playlist /m.eq true</td></tr><tr class="nowrap"><td>/title</td><td>/p.meta.title</td></tr><tr class="nowrap"><td>/subject</td><td>/p.meta.subject</td></tr><tr class="nowrap"><td>/rating</td><td>/p.rating</td></tr><tr class="nowrap"><td>/tags</td><td>/p.meta.tags</td></tr><tr class="nowrap"><td>/comments</td><td>/p.meta.comments</td></tr></table>
+<table class="table-slim table-topless">
+  <tr>
+    <th>
+      エイリアス
+    </th>
+    <th>
+      展開
+    </th>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /and
+    </td>
+    <td>
+      /c.and
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /or
+    </td>
+    <td>
+      /c.or
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /not
+    </td>
+    <td>
+      /c.not
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /text
+    </td>
+    <td>
+      /p.text
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /re
+    </td>
+    <td>
+      /m.re
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /ire
+    </td>
+    <td>
+      /m.ire
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /m0
+    </td>
+    <td>
+      /m.exact
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /exact
+    </td>
+    <td>
+      /m.exact
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /m1
+    </td>
+    <td>
+      /m.word
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /word
+    </td>
+    <td>
+      /m.word
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /m2
+    </td>
+    <td>
+      /m.fuzzy
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /fuzzy
+    </td>
+    <td>
+      /m.fuzzy
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /lt
+    </td>
+    <td>
+      /m.lt
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /le
+    </td>
+    <td>
+      /m.le
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /eq
+    </td>
+    <td>
+      /m.eq
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /ne
+    </td>
+    <td>
+      /m.ne
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /ge
+    </td>
+    <td>
+      /m.ge
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /gt
+    </td>
+    <td>
+      /m.gt
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /date
+    </td>
+    <td>
+      /p.date
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /since
+    </td>
+    <td>
+      /p.date /m.ge
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /until
+    </td>
+    <td>
+      /p.date /m.le
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /size
+    </td>
+    <td>
+      /p.size
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /bookmark
+    </td>
+    <td>
+      /p.bookmark /m.eq true
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /history
+    </td>
+    <td>
+      /p.history /m.eq true
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /playlist
+    </td>
+    <td>
+      /p.playlist /m.eq true
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /title
+    </td>
+    <td>
+      /p.meta.title
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /subject
+    </td>
+    <td>
+      /p.meta.subject
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /rating
+    </td>
+    <td>
+      /p.rating
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /tags
+    </td>
+    <td>
+      /p.meta.tags
+    </td>
+  </tr>
+  <tr class="nowrap">
+    <td>
+      /comments
+    </td>
+    <td>
+      /p.meta.comments
+    </td>
+  </tr>
+</table>
+
 
 <h3>メタ情報</h3>
 
@@ -124,7 +977,449 @@ title: NeeView | NeeView 検索オプション
 </p>
 
 <p>
-    <table class="table-slim table-topless"><tr><th>[key]</th><th>説明</th></tr><tr><td>FileName</td><td>ファイル名</td></tr><tr><td>FilePath</td><td>ファイル パス</td></tr><tr><td>CreationTime</td><td>作成日時</td></tr><tr><td>LastWriteTime</td><td>更新日時</td></tr><tr><td>FileSize</td><td>サイズ</td></tr><tr><td>ArchivePath</td><td>アーカイブ パス</td></tr><tr><td>Archiver</td><td>アーカイバー</td></tr><tr><td>Dimensions</td><td>大きさ</td></tr><tr><td>HorizontalResolution</td><td>水平方向の解像度</td></tr><tr><td>VerticalResolution</td><td>垂直方向の解像度</td></tr><tr><td>BitDepth</td><td>ビットの深さ</td></tr><tr><td>Decoder</td><td>デコーダー</td></tr><tr><td>Title</td><td>タイトル</td></tr><tr><td>Subject</td><td>件名</td></tr><tr><td>Rating</td><td>評価</td></tr><tr><td>Tags</td><td>タグ</td></tr><tr><td>Comments</td><td>コメント</td></tr><tr><td>Author</td><td>作成者</td></tr><tr><td>DateTaken</td><td>撮影日時</td></tr><tr><td>ApplicationName</td><td>プログラム名</td></tr><tr><td>DateAcquired</td><td>取得日時</td></tr><tr><td>Copyright</td><td>著作権</td></tr><tr><td>CameraMaker</td><td>カメラ メーカー</td></tr><tr><td>CameraModel</td><td>カメラ モデル</td></tr><tr><td>FNumber</td><td>絞り値</td></tr><tr><td>ExposureTime</td><td>露出時間</td></tr><tr><td>ISOSpeed</td><td>ISO 速度</td></tr><tr><td>ExposureBias</td><td>露出補正</td></tr><tr><td>FocalLength</td><td>焦点距離</td></tr><tr><td>MaxAperture</td><td>最大絞り</td></tr><tr><td>MeteringMode</td><td>測光モード</td></tr><tr><td>SubjectDistance</td><td>対象の距離</td></tr><tr><td>FlashMode</td><td>フラッシュ モード</td></tr><tr><td>FlashEnergy</td><td>フラッシュ エネルギー</td></tr><tr><td>FocalLengthIn35mmFilm</td><td>35mm 焦点距離</td></tr><tr><td>LensMaker</td><td>レンズ メーカー</td></tr><tr><td>LensModel</td><td>レンズ モデル</td></tr><tr><td>FlashMaker</td><td>フラッシュ メーカー</td></tr><tr><td>FlashModel</td><td>フラッシュ モデル</td></tr><tr><td>CameraSerialNumber</td><td>カメラ製造番号</td></tr><tr><td>Contrast</td><td>コントラスト</td></tr><tr><td>Brightness</td><td>明るさ</td></tr><tr><td>LightSource</td><td>光源</td></tr><tr><td>ExposureProgram</td><td>露出プログラム</td></tr><tr><td>Saturation</td><td>彩度</td></tr><tr><td>Sharpness</td><td>鮮明度</td></tr><tr><td>WhiteBalance</td><td>ホワイト バランス</td></tr><tr><td>PhotometricInterpretation</td><td>光度測定解釈</td></tr><tr><td>DigitalZoom</td><td>デジタル ズーム</td></tr><tr><td>Orientation</td><td>向き</td></tr><tr><td>EXIFVersion</td><td>EXIF バージョン</td></tr><tr><td>GPSLatitude</td><td>緯度</td></tr><tr><td>GPSLongitude</td><td>経度</td></tr><tr><td>GPSAltitude</td><td>高度</td></tr></table>
+    <table class="table-slim table-topless">
+  <tr>
+    <th>
+      [key]
+    </th>
+    <th>
+      説明
+    </th>
+  </tr>
+  <tr>
+    <td>
+      FileName
+    </td>
+    <td>
+      ファイル名
+    </td>
+  </tr>
+  <tr>
+    <td>
+      FilePath
+    </td>
+    <td>
+      ファイル パス
+    </td>
+  </tr>
+  <tr>
+    <td>
+      CreationTime
+    </td>
+    <td>
+      作成日時
+    </td>
+  </tr>
+  <tr>
+    <td>
+      LastWriteTime
+    </td>
+    <td>
+      更新日時
+    </td>
+  </tr>
+  <tr>
+    <td>
+      FileSize
+    </td>
+    <td>
+      サイズ
+    </td>
+  </tr>
+  <tr>
+    <td>
+      ArchivePath
+    </td>
+    <td>
+      アーカイブ パス
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Archiver
+    </td>
+    <td>
+      アーカイバー
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Dimensions
+    </td>
+    <td>
+      大きさ
+    </td>
+  </tr>
+  <tr>
+    <td>
+      HorizontalResolution
+    </td>
+    <td>
+      水平方向の解像度
+    </td>
+  </tr>
+  <tr>
+    <td>
+      VerticalResolution
+    </td>
+    <td>
+      垂直方向の解像度
+    </td>
+  </tr>
+  <tr>
+    <td>
+      BitDepth
+    </td>
+    <td>
+      ビットの深さ
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Decoder
+    </td>
+    <td>
+      デコーダー
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Title
+    </td>
+    <td>
+      タイトル
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Subject
+    </td>
+    <td>
+      件名
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Rating
+    </td>
+    <td>
+      評価
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Tags
+    </td>
+    <td>
+      タグ
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Comments
+    </td>
+    <td>
+      コメント
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Author
+    </td>
+    <td>
+      作成者
+    </td>
+  </tr>
+  <tr>
+    <td>
+      DateTaken
+    </td>
+    <td>
+      撮影日時
+    </td>
+  </tr>
+  <tr>
+    <td>
+      ApplicationName
+    </td>
+    <td>
+      プログラム名
+    </td>
+  </tr>
+  <tr>
+    <td>
+      DateAcquired
+    </td>
+    <td>
+      取得日時
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Copyright
+    </td>
+    <td>
+      著作権
+    </td>
+  </tr>
+  <tr>
+    <td>
+      CameraMaker
+    </td>
+    <td>
+      カメラ メーカー
+    </td>
+  </tr>
+  <tr>
+    <td>
+      CameraModel
+    </td>
+    <td>
+      カメラ モデル
+    </td>
+  </tr>
+  <tr>
+    <td>
+      FNumber
+    </td>
+    <td>
+      絞り値
+    </td>
+  </tr>
+  <tr>
+    <td>
+      ExposureTime
+    </td>
+    <td>
+      露出時間
+    </td>
+  </tr>
+  <tr>
+    <td>
+      ISOSpeed
+    </td>
+    <td>
+      ISO 速度
+    </td>
+  </tr>
+  <tr>
+    <td>
+      ExposureBias
+    </td>
+    <td>
+      露出補正
+    </td>
+  </tr>
+  <tr>
+    <td>
+      FocalLength
+    </td>
+    <td>
+      焦点距離
+    </td>
+  </tr>
+  <tr>
+    <td>
+      MaxAperture
+    </td>
+    <td>
+      最大絞り
+    </td>
+  </tr>
+  <tr>
+    <td>
+      MeteringMode
+    </td>
+    <td>
+      測光モード
+    </td>
+  </tr>
+  <tr>
+    <td>
+      SubjectDistance
+    </td>
+    <td>
+      対象の距離
+    </td>
+  </tr>
+  <tr>
+    <td>
+      FlashMode
+    </td>
+    <td>
+      フラッシュ モード
+    </td>
+  </tr>
+  <tr>
+    <td>
+      FlashEnergy
+    </td>
+    <td>
+      フラッシュ エネルギー
+    </td>
+  </tr>
+  <tr>
+    <td>
+      FocalLengthIn35mmFilm
+    </td>
+    <td>
+      35mm 焦点距離
+    </td>
+  </tr>
+  <tr>
+    <td>
+      LensMaker
+    </td>
+    <td>
+      レンズ メーカー
+    </td>
+  </tr>
+  <tr>
+    <td>
+      LensModel
+    </td>
+    <td>
+      レンズ モデル
+    </td>
+  </tr>
+  <tr>
+    <td>
+      FlashMaker
+    </td>
+    <td>
+      フラッシュ メーカー
+    </td>
+  </tr>
+  <tr>
+    <td>
+      FlashModel
+    </td>
+    <td>
+      フラッシュ モデル
+    </td>
+  </tr>
+  <tr>
+    <td>
+      CameraSerialNumber
+    </td>
+    <td>
+      カメラ製造番号
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Contrast
+    </td>
+    <td>
+      コントラスト
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Brightness
+    </td>
+    <td>
+      明るさ
+    </td>
+  </tr>
+  <tr>
+    <td>
+      LightSource
+    </td>
+    <td>
+      光源
+    </td>
+  </tr>
+  <tr>
+    <td>
+      ExposureProgram
+    </td>
+    <td>
+      露出プログラム
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Saturation
+    </td>
+    <td>
+      彩度
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Sharpness
+    </td>
+    <td>
+      鮮明度
+    </td>
+  </tr>
+  <tr>
+    <td>
+      WhiteBalance
+    </td>
+    <td>
+      ホワイト バランス
+    </td>
+  </tr>
+  <tr>
+    <td>
+      PhotometricInterpretation
+    </td>
+    <td>
+      光度測定解釈
+    </td>
+  </tr>
+  <tr>
+    <td>
+      DigitalZoom
+    </td>
+    <td>
+      デジタル ズーム
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Orientation
+    </td>
+    <td>
+      向き
+    </td>
+  </tr>
+  <tr>
+    <td>
+      EXIFVersion
+    </td>
+    <td>
+      EXIF バージョン
+    </td>
+  </tr>
+  <tr>
+    <td>
+      GPSLatitude
+    </td>
+    <td>
+      緯度
+    </td>
+  </tr>
+  <tr>
+    <td>
+      GPSLongitude
+    </td>
+    <td>
+      経度
+    </td>
+  </tr>
+  <tr>
+    <td>
+      GPSAltitude
+    </td>
+    <td>
+      高度
+    </td>
+  </tr>
+</table>
+
     「追加情報」のキーはその項目名から空白を削除した文字列になります。
 </p>
 

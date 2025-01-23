@@ -280,6 +280,41 @@ function Edit-Markdown{
     }
 }
 
+function Get-MarkdownSection {
+
+	[CmdletBinding()]
+    param (
+		[Parameter(Mandatory=$True, ValueFromPipeline=$True)]
+        [object[]]$Content,
+        [string]$Section
+    )
+    begin {
+        $phase = 0
+    }
+	process {
+		foreach ($line in $Content) {
+			if ($phase -eq 0) {
+				if ($line -match "<!--\s*section:\s*([^\s].+[^\s])\s*-->") {
+					$name = $Matches[1]
+					if ($name -eq $Section) {
+						$phase = 1
+					}
+                    else {
+                    }
+				}
+			}
+			elseif ($phase -eq 1) {
+				if ($line -match "<!--\s*end_section[^a-zA-Z0-9_]") {
+					$phase = 2
+				}
+				else {
+					Write-Output $line
+				}
+			}
+		}
+	}
+}
+
 # generate README.html
 function New-Readme {
 	param ([string]$packageDir, [string]$culture, [string]$target) 
@@ -301,14 +336,9 @@ function New-Readme {
 		$source += Get-Content "$readmeSource\package-beta.md" | Edit-Markdown -IncrementDepth | ForEach-Object { $_.replace("<custom-revision/>", $rev)}
 	}
 
-	$overviewContent = Get-Content "$readmeSource\overview.md" | Edit-Markdown -IncrementDepth
+	$overviewContent = Get-Content "$readmeSource\index.md" | Get-MarkdownSection -Section "overview"
 	$source += @("")
 	$source += $overviewContent
-
-	# $environmentContent = Get-Content "$readmeSource\environment.md"
-	# $environmentContent = $environmentContent -replace "<VERSION/>", $postfix
-	# $source += @("")
-	# $source += $environmentContent
 	
 	$source += @("")
 	if (($target -eq "Zip") -or ($target -eq "Beta")) {
@@ -322,6 +352,16 @@ function New-Readme {
 	}
 	elseif ($target -eq "Appx") {
 		$source += Get-Content "$readmeSource\package-storeapp.md" | Edit-Markdown -IncrementDepth
+	}
+
+	$source += @("")
+	if ($culture -eq "ja-jp") {
+		$source += @("## ポータル サイト")
+		$source += @("- [NeeView Portal Site](https://neelabo.github.io/NeeView/ja-jp)")
+	}
+	else {
+		$source += @("## Portal Site")
+		$source += @("- [NeeView Portal Site](https://neelabo.github.io/NeeView/en-us)")
 	}
 
 	$contactContent = Get-Content "$readmeSource\contact.md" | Edit-Markdown -IncrementDepth
@@ -349,7 +389,6 @@ function New-Readme {
 	else {
 		$changeLogContent = .\SelectChangelog.ps1 -Path "$readmeSource\changelog.md" -Culture $culture
 	}
-	# $changeLogContent = $changeLogContent -replace "<VERSION/>", $postfix
 	$source += @("")
 	$source += $changeLogContent
 

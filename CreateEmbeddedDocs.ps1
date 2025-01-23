@@ -17,7 +17,6 @@ function Get-HtmlSource {
 
     Write-Output "---"
     Write-Output "layout: default"
-    Write-Output "title: NeeView | $title"
     Write-Output "---"
     Write-Output ""
 
@@ -56,7 +55,8 @@ function Write-CultureDocs{
 $neeview = "NeeView\bin\x64\Debug\net8.0-windows"
 $neeview_profile = "$neeview\Profile"
 
-& "$neeview\NeeView.exe" --debug=export-docs
+& "$neeview\NeeView.exe" --debug=export-docs -l en -n
+& "$neeview\NeeView.exe" --debug=export-docs -l ja -n
 Read-Host "Enter key to next"
 
 Write-CultureDocs "en-us"

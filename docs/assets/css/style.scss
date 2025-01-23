@@ -85,6 +85,22 @@ p.alert.note {
     color: var(--alert-note-color);
 }
 
+p.alert.tip {
+    color: var(--alert-tip-color);
+}
+
+p.alert.important {
+    color: var(--alert-important-color);
+}
+
+p.alert.warning {
+    color: var(--alert-warning-color);
+}
+
+p.alert.caution {
+    color: var(--alert-caution-color);
+}
+
 .inner {
     max-width: 1012px;
 }

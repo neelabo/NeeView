@@ -1,17 +1,15 @@
-[Click here for NeeView user site](https://neelabo.github.io/NeeView/en-us/) / [NeeView ユーザー サイトはこちら](https://neelabo.github.io/NeeView/ja-jp/)
+#  NeeView
 
-----
+**[NeeView Portal Site](https://neelabo.github.io/NeeView)**
 
-# NeeView
-
-![App Icon](MakePackage/Appx/Resources/Assets/AppStoreLogo.scale-100.png) 
+## スクリーンショット
 
 ![Screenshot](docs/assets/images/neeview39.jpg)
 
-## 概要
+## 説明
 
  フォルダーや圧縮ファイルにある画像を本のように閲覧できる画像ビューアーです。  
- 強力かカスタマイズが可能です。
+ 強力なカスタマイズが可能です。
 
   * 標準対応画像フォーマット (bmp, jpg, gif, tiff, png, ico, WIC対応画像)
   * 圧縮ファイル対応 (zip, rar, 7z, lzh, cbr, cbz, cb7, ...)
@@ -29,11 +27,10 @@
   * マルチスレッド、先読み対応
   * Webブラウザからの画像ドロップ
   * Susieプラグイン対応
-
  
- ## 動作環境
+ ## システム要件
 
-  * Windows 10 (64bit)
+  * Windows 10 64bit 以降
 
   ## ダウンロード
 
@@ -43,7 +40,7 @@
 
 ## 開発環境
 
-* Windows 10 Pro 64bit
+* Windows 10 64bit
 * VisualStudio 2022
     - .Net デスクトップ開発
     - C++によるデスクトップ開発
