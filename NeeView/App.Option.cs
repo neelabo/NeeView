@@ -65,6 +65,9 @@ namespace NeeView
         [OptionMember("o", "folderlist", HasParameter = true, RequireParameter = true, HelpText = "@AppOption.FolderList")]
         public string? FolderList { get; set; }
 
+        [OptionMember("l", "language", HasParameter = true, RequireParameter = true, HelpText = "@AppOption.Language")]
+        public string? Language { get; set; }
+
         [OptionMember(null, "window", HasParameter = true, RequireParameter = true, HelpText = "@AppOption.WindowState")]
         public WindowStateOption? WindowState { get; set; }
 

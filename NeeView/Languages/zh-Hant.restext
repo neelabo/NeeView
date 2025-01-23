@@ -104,6 +104,7 @@ AppOption.IsNewWindow=指定是否要以新視窗方式啟動
 AppOption.IsResetPlacement=重設視窗座標
 AppOption.IsSlideShow=指定是否要以幻燈片放映方式啟動
 AppOption.IsVersion=顯示版本資訊
+AppOption.Language=
 AppOption.ScriptFile=
 AppOption.SettingFilename=指定設定檔案 "UserSetting.json" 的路徑
 AppOption.Terminator=指示選項列表的結尾。後續參數會被視為檔案名稱

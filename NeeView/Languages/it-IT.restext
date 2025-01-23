@@ -104,6 +104,7 @@ AppOption.IsNewWindow=Specifica se iniziare in una nuova finestra
 AppOption.IsResetPlacement=Ripristina coordinate finestra
 AppOption.IsSlideShow=Specifica se iniziare una presentazione
 AppOption.IsVersion=Mostra informazione versione
+AppOption.Language=
 AppOption.ScriptFile=
 AppOption.SettingFilename=Specifica il percorso del file impostazione "UserSetting.json"
 AppOption.Terminator=Indica la fine della lista opzioni. Argomenti successivi sono considerati nomi file.

@@ -184,7 +184,8 @@ namespace NeeView
             ShowSplashScreen(boot);
 
             // initialize before UserSetting
-            InitializeTextResource(boot.Language);
+            var language = _option.Language ?? boot.Language;
+            InitializeTextResource(language);
             InitializeHtmlNode();
             InitializeCommandTable();
 
@@ -193,7 +194,10 @@ namespace NeeView
             UserSettingTools.Restore(setting, replaceConfig:true);
 
             // fix language
-            Config.Current.System.Language = TextResources.Culture.Name;
+            if (_option.Language is null)
+            {
+                Config.Current.System.Language = TextResources.Culture.Name;
+            }
 
             DebugStamp("UserSettingLoaded");
 

@@ -104,6 +104,7 @@ AppOption.IsNewWindow=Specify whether to start in a new window
 AppOption.IsResetPlacement=Reset window coordinates
 AppOption.IsSlideShow=Specify whether to start a slideshow
 AppOption.IsVersion=Display version information
+AppOption.Language=Temporary Language (e.g., 'en-US')
 AppOption.ScriptFile=Executes the specified script file at startup. You can specify a file in the scripts folder by specifying 'script:\foobar.nvjs'.
 AppOption.SettingFilename=Specify the path of the setting file "UserSetting.json"
 AppOption.Terminator=Indicates the end of option list. Subsequent arguments are considered file names.

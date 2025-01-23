@@ -104,6 +104,7 @@ AppOption.IsNewWindow=新しいウィンドウで起動するかを指定しま�
 AppOption.IsResetPlacement=ウィンドウ座標をリセットします
 AppOption.IsSlideShow=スライドショウを開始するかを指定します
 AppOption.IsVersion=バージョン情報を表示します
+AppOption.Language=一時的な言語 (例：'en-US')
 AppOption.ScriptFile=指定されたスクリプト ファイルを起動時に実行します。'script:\foobar.nvjs' と指定することでスクリプト フォルダーのファイルを指定できます。
 AppOption.SettingFilename=設定ファイル "UserSetting.json" のパスを指定します
 AppOption.Terminator=オプション リストの終りを示す。これ以後の引数はファイル名とみなされます

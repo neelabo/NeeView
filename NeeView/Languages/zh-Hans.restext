@@ -104,6 +104,7 @@ AppOption.IsNewWindow=指定是否在新窗口中启动
 AppOption.IsResetPlacement=重置窗口坐标
 AppOption.IsSlideShow=指定是否启动幻灯片播放
 AppOption.IsVersion=显示版本信息
+AppOption.Language=
 AppOption.ScriptFile=启动时运行指定的脚本文件。可以通过指定 'script:\foobar.nvjs' 来指定脚本文件夹中的文件。
 AppOption.SettingFilename=指定设置文件 "UserSetting.json" 的路径
 AppOption.Terminator=确定选项列表结尾。在其之后的参数将被视为文件名。

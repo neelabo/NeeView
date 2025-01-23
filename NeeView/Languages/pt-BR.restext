@@ -104,6 +104,7 @@ AppOption.IsNewWindow=Especifique se deseja iniciar em uma nova janela
 AppOption.IsResetPlacement=Redefinir coordenadas da janela
 AppOption.IsSlideShow=Especifique se deseja iniciar uma apresentação de slides
 AppOption.IsVersion=Exibir informações da versão
+AppOption.Language=
 AppOption.ScriptFile=Executa o arquivo de script especificado na inicialização. Você pode especificar um arquivo na pasta de scripts especificando 'script:\foobar.nvjs'.
 AppOption.SettingFilename=Especifique o caminho do arquivo de configuração "UserSetting.json"
 AppOption.Terminator=Indica o fim da lista de opções. Os argumentos subsequentes são considerados nomes de arquivos.
