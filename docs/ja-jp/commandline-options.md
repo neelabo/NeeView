@@ -8,7 +8,7 @@ Name|Description
 --|--
 -b, --blank|画像ファイルを開かずに起動します
 -h, --help|このヘルプを表示します
--l, --language=\<string\>|@AppOption.Language
+-l, --language=\<string\>|一時的な言語 (例：'en-US')
 -n, --new-window[=off\|on]|新しいウィンドウで起動するかを指定します
 -o, --folderlist=\<string\>|本棚の場所を指定します
 -r, --reset-placement|ウィンドウ座標をリセットします

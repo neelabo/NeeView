@@ -1,0 +1,8 @@
+﻿// @name Hello, World!
+// @description HelloWorld script sample.
+// @shortCutKey Ctrl+Q
+// @mouseGesture LRLR
+// @touchGesture TouchCenter
+
+nv.ShowDialog("Hello, World!")
+

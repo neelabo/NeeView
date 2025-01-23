@@ -1,0 +1,7 @@
+// @name スライドショー減速
+// @description スライドを切り替える時間を１秒増やします
+
+nv.Config.SlideShow.SlideShowInterval += 1.0
+
+nv.ShowMessage( "Slideshow Interval = " + nv.Config.SlideShow.SlideShowInterval + " sec." )
+

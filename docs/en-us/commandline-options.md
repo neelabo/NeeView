@@ -8,7 +8,7 @@ Name|Description
 --|--
 -b, --blank|Start up without opening the image file
 -h, --help|This help is displayed
--l, --language=\<string\>|@AppOption.Language
+-l, --language=\<string\>|Temporary Language (e.g., 'en-US')
 -n, --new-window[=off\|on]|Specify whether to start in a new window
 -o, --folderlist=\<string\>|Specify the bookshelf location.
 -r, --reset-placement|Reset window coordinates

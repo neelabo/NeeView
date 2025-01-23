@@ -1,0 +1,8 @@
+﻿// @name Open with MS Paint
+// @description 実行ファイルのパスと引数フォーマットを指定して外部アプリコマンドを実行する。
+
+param = {
+    "Command": "mspaint.exe",
+    "Parameter": "\"$File\""
+}
+nv.Command.OpenExternalApp.Patch(param).Execute()

@@ -1,0 +1,11 @@
+﻿// @name Dump arguments
+
+for( var i=0; i<nv.Args.length; i++)
+{
+  log( nv.Args[i] );
+}
+
+if (nv.Args.length > 0)
+{
+    nv.ShowDialog("Argument[0]=" + nv.Args[0])
+}

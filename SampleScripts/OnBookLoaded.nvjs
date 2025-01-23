@@ -1,0 +1,52 @@
+// @name ブック開始処理
+// @description ブックを開いたときのイベント
+
+// 例：ブックのパスに"(A)"が含まれていたらすべてのコマンドのスクロール移動量20%、それ以外は60%にする
+if (nv.Book.Path.match(/\(A\)/) != null) {
+    nv.Command.ViewScrollUp.Parameter = 0.2
+    nv.Command.ViewScrollNTypeUp.Parameter = 0.2
+    nv.Command.NextScrollPage.Parameter.Scroll = 0.2
+}
+else {
+    nv.Command.ViewScrollUp.Parameter = 0.6
+    nv.Command.ViewScrollNTypeUp.Parameter = 0.6
+    nv.Command.NextScrollPage.Parameter.Scroll = 0.6
+}
+
+
+// 例：新しく開いたブックのパスに"English"が含まれていたら左開き、それ以外は右開きにする
+if (nv.Book.IsNew) {
+    if (nv.Book.Path.match(/English/) != null) {
+        nv.Book.Config.BookReadOrder = "LeftToRight"
+    }
+    else {
+        nv.Book.Config.BookReadOrder = "RightToLeft"
+    }
+}
+
+
+// 例：動画ファイルのときに操作方法を変更する
+if (nv.Book.IsMedia) {
+    // 動画：クリックで再生/停止、ダブルクリックでフルスクリーンの切り替え
+    nv.Command.ToggleMediaPlay.ShortCutKey = "LeftClick"
+    nv.Command.Script_ToggleFullScreenAndMediaPlay.ShortCutKey = "LeftDoubleClick"
+    nv.Command.NextPage.ShortCutKey = "Left"
+    // 動画：ホイール操作で音量変更
+    nv.Command.Script_MediaVolumeUp.ShortCutKey = "WheelUp"
+    nv.Command.Script_MediaVolumeDown.ShortCutKey = "WheelDown"
+    nv.Command.PrevScrollPage.ShortCutKey = null
+    nv.Command.NextScrollPage.ShortCutKey = null
+}
+else {
+    // 通常：標準設定
+    nv.Command.ToggleMediaPlay.ShortCutKey = null
+    nv.Command.Script_ToggleFullScreenAndMediaPlay.ShortCutKey = null
+    nv.Command.NextPage.ShortCutKey = "Left,LeftClick"
+    nv.Command.Script_MediaVolumeUp.ShortCutKey = null
+    nv.Command.Script_MediaVolumeDown.ShortCutKey = null
+    nv.Command.PrevScrollPage.ShortCutKey = "WheelUp"
+    nv.Command.NextScrollPage.ShortCutKey = "WheelDown"
+}
+
+
+

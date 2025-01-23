@@ -1,0 +1,8 @@
+    // @name 音量減少
+    // @description 動画の音量を小さくします
+    
+    nv.Config.Archive.Media.Volume -= 0.05
+    if (nv.Config.Archive.Media.Volume < 0.0)
+    {
+        nv.Config.Archive.Media.Volume = 0.0
+    }

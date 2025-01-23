@@ -1,0 +1,6 @@
+﻿// 設定を変更することをスクリプトコマンド化するサンプルです。
+//
+// @name 基底スケールON/OFF
+
+nv.Config.View.IsBaseScaleEnabled = !nv.Config.View.IsBaseScaleEnabled
+

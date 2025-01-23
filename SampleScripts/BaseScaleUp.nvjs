@@ -1,0 +1,7 @@
+// @name 基底スケール拡大
+// @description 基底スケールを大きくします
+
+if (nv.Config.View.IsBaseScaleEnabled)
+{
+    nv.Config.View.BaseScale += 0.1
+}

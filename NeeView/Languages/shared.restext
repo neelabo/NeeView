@@ -200,7 +200,7 @@ HistoryPanelAccessor.Style=@Panel.Style
 Homepage.DotNetDateTime=<a href="https://docs.microsoft.com/dotnet/standard/base-types/parsing-datetime">@Word.DotNetDateTime</a>
 Homepage.DotNetRegex=<a href="https://docs.microsoft.com/dotnet/standard/base-types/regular-expression-language-quick-reference">@Word.DotNetRegex</a>
 Homepage.Jint=<a href="https://github.com/sebastienros/jint">Jint</a>
-Homepage.ScriptSamples=<a href="https://bitbucket.org/neelabo/neeview.scriptsamples/">NeeView Script Samples</a>
+Homepage.ScriptSamples=<a href="https://github.com/neelabo/NeeView/tree/master/SampleScripts">NeeView Sample Scripts</a>
 HsvEffectUnit.Hue=@Word.Hue
 ImageGridConfig.Color=@Word.Color
 ImageTrimConfig.Bottom=@Word.Bottom

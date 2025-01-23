@@ -1,0 +1,8 @@
+    // @name 音量増加
+    // @description 動画の音量を大きくします
+    
+    nv.Config.Archive.Media.Volume += 0.05
+    if (nv.Config.Archive.Media.Volume > 1.0)
+    {
+        nv.Config.Archive.Media.Volume = 1.0
+    }

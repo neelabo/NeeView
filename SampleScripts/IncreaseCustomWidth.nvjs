@@ -1,0 +1,19 @@
+﻿// @name Increase custom width of images
+
+// 'delta' is the amount of change.
+// It can also be specified as an argument.
+var delta = 10
+if (nv.Args.length > 0)
+{
+    delta = Number(nv.Args[0])
+}
+
+// read current value
+var size = nv.Config.ImageCustomSize.Size.split(',')
+
+// new value
+var width = Number(size[0]) + delta
+var height = Number(size[1])
+
+// overwrite
+nv.Config.ImageCustomSize.Size = width + ',' + height

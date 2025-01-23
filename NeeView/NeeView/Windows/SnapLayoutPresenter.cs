@@ -13,7 +13,7 @@ namespace NeeView.Windows
     /// <summary>
     /// Windows11 の SnapLayout サポート
     /// </summary>
-    // from https://bitbucket.org/neelabo/neeview/issues/1183/windows-11
+    // from https://github.com/neelabo/NeeView/issues/1183
     // from https://stackoverflow.com/questions/69797178/support-windows-11-snap-layout-in-wpf-app
     public class SnapLayoutPresenter
     {

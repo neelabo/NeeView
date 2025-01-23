@@ -55,10 +55,13 @@ function Write-CultureDocs{
 $neeview = "NeeView\bin\x64\Debug\net8.0-windows"
 $neeview_profile = "$neeview\Profile"
 
-& "$neeview\NeeView.exe" --debug=export-docs -l en -n
-& "$neeview\NeeView.exe" --debug=export-docs -l ja -n
-Read-Host "Enter key to next"
+Write-Host "Create en-us Embedded Documents..."
+Start-Process -FilePath "$neeview\NeeView.exe" -Wait -WindowStyle Minimized -ArgumentList "--debug=export-docs -l en -n"
 
+Write-Host "Create ja-jp Embedded Documents..."
+Start-Process -FilePath "$neeview\NeeView.exe" -Wait -WindowStyle Minimized -ArgumentList "--debug=export-docs -l ja -n"
+
+Write-Host "Export for docs."
 Write-CultureDocs "en-us"
 Write-CultureDocs "ja-jp"
 

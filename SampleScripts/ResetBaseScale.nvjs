@@ -1,0 +1,3 @@
+﻿// @name 基底スケールをリセットする
+
+nv.Config.View.BaseScale = 1.0
