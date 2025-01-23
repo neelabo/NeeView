@@ -71,7 +71,7 @@
                         </TextBlock.Style>
                     </TextBlock>
                     <TextBlock HorizontalAlignment="Center" Margin="0,0,0,0">
-                        <Hyperlink NavigateUri="{Binding Checker.DownloadUri}" IsEnabled="{Binding Checker.IsExistNewVersion}">
+                        <Hyperlink NavigateUri="{Binding Checker.LatestVersionUrl}" IsEnabled="{Binding Checker.IsExistNewVersion}">
                             <TextBlock Text="{properties:TextBinding VersionWindow.Download}"/>
                         </Hyperlink>
                         <TextBlock.Style>

@@ -461,16 +461,6 @@ namespace NeeView
             }
         }
 
-        // [開発用] バージョンチェック用のパッケージ配布場所
-        public static string DistributionUrl
-        {
-            get
-            {
-                return _distributionUrl ??= AppSettings.Current.DistributionUrl ?? "https://bitbucket.org/neelabo/neeview/downloads";
-
-            }
-        }
-
         // [開発用] 出力用ログファイル名
         public static string LogFile
         {

@@ -91,14 +91,6 @@ namespace NeeView
         public string? CheckVersion { get; set; }
 
         /// <summary>
-        /// [開発用] バージョンチェック用のパッケージ置き場を指定
-        /// </summary>
-        /// <remarks>
-        /// e.g. https://neelabo.bitbucket.io/NeeViewUpdateCheck.html
-        /// </remarks>
-        public string? DistributionUrl { get; set; }
-
-        /// <summary>
         /// JSON保存データにデフォルト値を出力しないようにして軽量化する
         /// </summary>
         public bool TrimSaveData { get; set; } = true;
