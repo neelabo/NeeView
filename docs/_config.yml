@@ -1,13 +1,15 @@
 theme: jekyll-theme-slate
 
+repository: neelabo/NeeView
 title: NeeView
+description: Image viewer that allows you to browse images in folders like a book.
 
 defaults:
 - scope:
     path: 'en-us'
   values:
     language: en-US
-    description: Image viewer that allows you to browse images in folders like a book
+    description: Image viewer that allows you to browse images in folders like a book.
 - scope:
     path: 'ja-jp'
   values:

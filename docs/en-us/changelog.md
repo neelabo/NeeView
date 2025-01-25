@@ -3,7 +3,7 @@
 ## 42.6
 (2025-01-22)
 
-### Changed
+#### Changed
 
 - 7z.dll 24.09
 - Language: Updated zh-Hans
@@ -12,7 +12,7 @@
 ## 42.5
 (2025-01-12)
 
-### Fixed
+#### Fixed
 
 - Bookshelf: Fixed a bug that compressed files may disappear from the list when they are edited.
 
@@ -20,7 +20,7 @@
 ## 42.4
 (2024-12-23)
 
-### Fixed
+#### Fixed
 
 - System: Fixed a bug that caused multi-boot to fail under certain conditions.
 
@@ -28,11 +28,11 @@
 ## 42.3
 (2024-12-22)
 
-### Fixed
+#### Fixed
 
 - System: Fixed a bug that caused startup to fail with old language settings.
 
-### Changed
+#### Changed
 
 - Language: Updated zh-Hans.
 
@@ -40,7 +40,7 @@
 ## 42.2
 (2024-12-08)
 
-### Fixed
+#### Fixed
 
 - Bookshelf: Corrected a bug in file name case-only renaming.
 - PageList: Fixed a bug that the display was not updated when the file name was changed in the page list.
@@ -49,7 +49,7 @@
 - Pages: Width, Height set to 0 for archive pages and other pages with no size.
 - Script: Fixed a bug that ViewPageAccessor's Width and Height could not be obtained in videos.
 
-### Changed
+#### Changed
 
 - Language: Updated zh-Hans.
 
@@ -57,7 +57,7 @@
 ## 42.1
 (2024-12-01)
 
-### Fixed
+#### Fixed
 
 - System: Fixed a bug in version check.
 - Script: Fixed a bug about CreationTime. 
@@ -66,7 +66,7 @@
 ## 42.0
 (2024-11-24)
 
-### Added
+#### Added
 
 - System: Dialog and toast notification text can now be copied to the clipboard.
 - System: File manager can be configured to replace Explorer.  (Settings > General)
@@ -117,7 +117,7 @@
 - Script:  Added accessor nv.CurrentCommand for the currently executing command.
 - Script:  Add nv.ScriptPath, the path of the currently running script file.
 
-### Changed
+#### Changed
 
 - System: Window is now activated by dropping a file.
 - System: Activate at the start of the main window display.
@@ -138,7 +138,7 @@
 - Script: Change PageAccessor.Path to the entity path.
 - Script: Changed the type of date/time values, such as LastWriteTime, from string to Date.
 
-###  Fixed
+####  Fixed
 
 - System: Fixed a bug that multiple launch restrictions may not work.
 - System: Fixed a bug that history may not be merged when multiple startups are performed.
@@ -163,12 +163,12 @@
 ## 41.3
 (2024-07-14)
 
-### Changed
+#### Changed
 
 - .NET 8.0.7
 - 7z.dll ver 24.07
 
-### Fixed
+#### Fixed
 
 - Fixed a bug that sometimes caused an error when switching page filters.
 - Fixed a bug that caused a huge popup with a dummy icon in the page list.
@@ -178,11 +178,11 @@
 ## 41.2
 (2024-05-31)
 
-### Changed
+#### Changed
 
 - Update 7z.dll to ver 24.06
 
-### Fixed
+#### Fixed
 
 - Fixed a bug that the focus was not set correctly when switching lists in the thumbnail layout. 
 - Fixed a problem updating the search filter in the PageList.
@@ -191,11 +191,11 @@
 ## 41.1
 (2024-05-18)
 
-### Changed
+#### Changed
 
 - Update various libraries
 
-### Fixed
+#### Fixed
 
 - Fixed a bug that prevented seamless loops from working.
 - Fixed an issue where automatic background color setting is not reflected when a book is opened.
@@ -204,7 +204,7 @@
 ## 41.0
 (2024-05-10)
 
-### Added
+#### Added
 
 - Added Italian language.
 - Direct editing of language resources. (/Languages/*.restext) 
@@ -214,14 +214,14 @@
 - Add ability to switch display when page is ready. Suppresses temporary display on page switching. (Settings > Move > Ready to page move)
 - Added the ability to drop the bookshelf location icon and the information icon in the address bar to other apps
 
-### Changed
+#### Changed
 
 - ZIP version places DLL files in the Libraries folder.
 - The current view is maintained as much as possible when switching books.
 - Asynchronous pre-decompression of solid compressed archives
 - Various library updates
 
-### Fixed
+#### Fixed
 
 - Fixed a bug where the mouse button would sometimes enter long-press mode even when it was released.
 - Fixed a bug in file manipulation of network folder search results in the bookshelf.
@@ -239,7 +239,7 @@
 ## 40.8
 (2024-05-01)
 
-### Security
+#### Security
 
 - Updated to .NET 8.0.4. For more information on this vulnerability, please visit [.NET Blog](https://devblogs.microsoft.com/dotnet/april-2024-updates/).
 - Change explorer path to absolute path.
@@ -248,7 +248,7 @@
 ## 40.7
 (2024-02-10)
 
-### Fixed
+#### Fixed
 
 - Copy command parameters are now reflected in copying page lists, etc. only for text settings. Fixed the same when dragging.
 
@@ -256,12 +256,12 @@
 ## 40.6
 (2024-02-09)
 
-### Changed
+#### Changed
 
 - Language files pt-BR, zh-Hans updated.
 - "Play/Stop" command now works for video pages and animated images.
 
-### Fixed
+#### Fixed
 
 - Corrected timing of address bar button updates.
 - Fixed a bug that search history may not be saved.
@@ -278,12 +278,12 @@
 ## 40.5
 (2024-01-12)
 
-### New
+#### New
 
 - Added "Stretch Tracking" toggle button to the Scale section of the Navigator panel. This function corrects the scale according to the stretch mode for images that are rotated, etc.
 - Added "Stretch" command to apply stretching to scale.
 
-### Changed
+#### Changed
 
 - Changed the display start position setting to selective. Added "Direction dependent, top". (Settings > View operation > Display start position)
 - Script: nv.Config.View.IsViewStartPositionCenter is obsolete. Use nv.Config.View.ViewOrigin instead.
@@ -291,7 +291,7 @@
 - Switching is now performed when the same stretch mode is specified in the stretch mode specification command, so that the behavior is the same as before.
 - Changed scale calculation method for "Auto stretch window" to be more natural.
 
-### Fixed
+#### Fixed
 
 - Fixed a bug that the stretch mode was not applied to the stretch apply button in the navigator.
 - Fixed a bug that sometimes prevented alphabetic word searches.
@@ -305,11 +305,11 @@
 ## 40.4
 (2023-12-22)
 
-### New
+#### New
 
 - Added encoding setting for ZIP files when the UTF-8 flag is not set.
 
-### Fixed
+#### Fixed
 
 - ZIP files now load in UTF-8 when the UTF-8 flag is set.
 - Fixed a bug in which the file exclusion attribute differs between bookshelf and bookshelf search.
@@ -322,11 +322,11 @@
 ## 40.3
 (2023-12-16)
 
-### New
+#### New
 
 - Add "Added dummy page to the first/last page" settings.
 
-### Fixed
+#### Fixed
 
 - Fixed a bug that caused an error in copying.
 - Fixed a bug that "Start loupe at standard magnification" of loupe did not work.
@@ -341,11 +341,11 @@
 ## 40.2
 (2023-12-12)
 
-### New
+#### New
 
 - Added Portuguese (pt-BR)
 
-### Fixed
+#### Fixed
 
 - Fixed a bug that sometimes only one page is displayed even though the display mode is 2-page display mode.
 - Fixed a bug that film centering did not work immediately after the start of filmstrip display.
@@ -360,7 +360,7 @@
 ## 40.1
 (2023-12-06)
 
-### Fixed
+#### Fixed
 
 - Fixed a bug that data could not be read if the drag operation "Move (scale dependent)" parameter was specified in the previous version.
 - Fixed a bug that sometimes only one page is displayed even though the display mode is 2-page display mode.
@@ -371,19 +371,19 @@
 ## 40.0
 (2023-12-05)
 
-### Important
+#### Important
 
 - Windows 10, Windows 11, and 64-bit operating systems only; packages for Windows 7, Windows 8.1, and 32-bit operating systems are not provided after version 40.0.
 - It runs on .NET8. This framework is included as part of the application. There is no need to install it separately.
 - For environments that already have .NET8 installed, we have prepared a package "NeeView40-fd.zip" that does not include. .NET8 runtime for x86 must also be installed when using the Susie plugin.
 - The ZIP version cannot be overwritten and updated because the file structure has changed significantly. Please use Export/Import to migrate your data. The installer version can be updated as is.
 
-### User data storage location
+#### User data storage location
 
 - The user data storage location for the ZIP version has been consolidated into the "Profile" folder.
 - The default storage location for user data can be specified with the NEEVIEW_PROFILE environment variable.
 
-### Revamped page display code
+#### Revamped page display code
 
 The page display program has been reworked to accommodate the implementation of panorama mode. We have tried to match the previous behavior as much as possible, but there is a possibility that the behavior when changing the scale or rotation may have changed.
 
@@ -392,7 +392,7 @@ The page display program has been reworked to accommodate the implementation of 
 - Scroll time settings for various scroll commands are combined into one. (Settings > View operation > Scroll time)
 - Enabled to switch pages with scrolling animation. (Settings > View operation > Page move time)
 
-### MainView window
+#### MainView window
 
 The MainView window now functions as a new viewing mode, not just a windowed display.
 
@@ -404,14 +404,14 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 - Added "Auto stretch window" to the main view window. (MainView window > Title bar context menu)
 - Added a setting to the page list to move the focus to the main view when a page is selected. (PageList panel > Detail Menu)
 
-### Enhanced search 
+#### Enhanced search 
 
 - Search box added to various panels.
 - Added search option. You can now search by tags contained in bookmarks and images. See "Search options help" for details.
 - Individual deletion button of search history added.
 - Added search history size setting. (Settings > General)
 
-### Enhanced video play
+#### Enhanced video play
 
 - Added setting to use libVLC (VLC media player) for video play. (Settings > Video)
 - Added setting to display videos as pages. (Settings > Video)
@@ -419,17 +419,17 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 - Use AnimatedImage for GIF animation.
 - Supports PNG animation.
 
-### Base scale
+#### Base scale
 
 - Added base scale change command and mouse drag operation.
 - Base scale values are now stored in book units.
 
-### Auto rotate
+#### Auto rotate
 
 - Added forced left rotate and forced right rotate to Auto rotate.
 - Auto rotate settings are now saved per book.
 
-### Other
+#### Other
 
 - Many bug fixes.
 - App icon change.
@@ -466,7 +466,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 ## 39.5
 (2022-08-11)
 
-### Fixed
+#### Fixed
 
 - Restored the SQLite library to the previous one to reduce the error phenomenon when closing the application.
 - Fixed a bug that read-only shortcuts could not be processed.
@@ -477,10 +477,10 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 ## 39.4
 (2022-07-04)
 
-### New
+#### New
 - Supports Windows11 snap layouts
 
-### Fixed
+#### Fixed
 - Fixed a bug that the bookshelf exclusion filter does not work when adding files
 - Fixed a bug that caused the thumbnail operation to become very slow due to certain operations.
 - Fixed a bug that the coordinates of the image shift when returning from minimization to full screen.
@@ -499,7 +499,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 - Script: Fixed an issue with large arrays.
 - Correcting typographical errors.
 
-### Changed
+#### Changed
 - Libraries update.
 - Language file update (zh-TW).
 
@@ -507,11 +507,11 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 ## 39.3
 (2021-07-17)
 
-###  New
+####  New
 
 - Language: Supports 中文(中国)
 
-### Fixed
+#### Fixed
 
 - Fixed a bug that the taskbar is displayed when returning from minimization to full screen
 - Improved the problem that the taskbar is not displayed when the window is maximized when the taskbar is set to be hidden automatically.
@@ -521,7 +521,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 - Fixed a bug that shortcut keys are not displayed in the context menu of the folder tree
 - Fixed a bug that theme loading fails when the app is placed in the path containing "#"
 
-### Changed
+#### Changed
 
 - Added "Text copy" setting to "Copy file" command parameter. Select the type of text that will be copied to the clipboard.
 
@@ -529,7 +529,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 ## 39.2
 (2021-06-26)
 
-### Fixed
+#### Fixed
 
 - Fixed the main menu not to take focus.
 - Fixed a bug where the layout of the startup help dialog was broken.
@@ -539,7 +539,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 ## 39.1
 (2021-06-20)
 
-### Fixed
+#### Fixed
 
 - Fixed a bug that the scroll type changes to "Diagonal scroll" when the parameter of "Scroll + Prev" command is set.
 - Fixed a bug that could cause blurring when applying the resize filter.
@@ -547,11 +547,9 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 
 
 ## 39.0
-(2021-06-??)
+(2021-06-18)
 
-### Important
-
-#### Integrate Pagemark into Playlist
+#### Important: Integrate Pagemark into Playlist
 
 - Pagemark have been abolished. The previous pagemarks will be carried over as a playlist named "Pagemark".
 - A new playlist panel has been added.
@@ -559,7 +557,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 - The playlists managed in the Playlist panel are limited to those placed in a dedicated folder, but existing playlist files can still be used.
 - In the page mark, it was grouped by book, but in the playlist, it is grouped by folder or compressed file.
 
-#### Renewal of appearance
+#### Important: Renewal of appearance
 
 - Almost all UI controls have been tuned.
 - We increased the theme. The theme color setting in the menu section has been abolished. (Settings > Window > Theme)
@@ -567,12 +565,12 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 - Themes are now applied to the settings window as well.
 - The font settings have been totally revised. (Settings > Fonts)
 
-#### Information panel renewal
+#### Important: Information panel renewal
 
 - Changed to display a lot of EXIF information.
 - Enabled to switch the display information when displaying 2 pages.
 
-### New
+#### New
 
 - Language: Compatible with Chinese(Taiwan). (Thanks to the provider!)
 - Setting: Added settings for the web browser and text editor to be used. (Settings > General)
@@ -598,7 +596,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 - Script: Added nv.Environment
 - Develop: We have prepared a multilingual development environment. See [here](https://github.com/neelabo/NeeView/tree/master/NeeView/Languages) for more information.
 
-### Fixed
+#### Fixed
 
 - Setting: Fixed a bug that data is incorrect when using a semicolon in the extension setting.
 - Setting: Fixed a bug that the initialization button of the extension setting does not work.
@@ -615,7 +613,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 - Script: Fixed a bug that the Enter key input of ShowInputDialog affects the main window.
 - Script: Enabled to get the path with the default path setting.
 
-### Changed
+#### Changed
 
 - Setting: The file operation permission in the initial state has been turned off. (Menu > Option > File operation)
 - Network: When the network access permission setting is OFF, when connecting to the Internet with a Web browser, a confirmation dialog is displayed instead of being invalid.
@@ -637,7 +635,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 - PageSlider: Changed the playlist registration mark display design.
 - Script: Changed to create folders and samples when first opening the script folder.
 
-### Removed
+#### Removed
 
 - Command: Removed "Toggle title bar" command.
 - Panels: Supplemental text opacity setting is abolished. Can be set with a custom theme.
@@ -651,7 +649,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 ## 38.3
 (2021-01-29)
 
-### Fixed
+#### Fixed
 
 - Fixed a bug in PDF rendering resolution.
 - Fixed a bug related to window coordinate restoration when the taskbar is on the top or left.
@@ -662,7 +660,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 - Script console: Fixed a bug that the application terminates illegally with the exit command.
 - Script console: Fixed a bug that the application may terminate abnormally in the object display.
 
-### Changed
+#### Changed
 
 - "Stretch window" changed to work only when the window state is normal.
 - Script console: Changed to omit nested properties in object display.
@@ -671,7 +669,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 ## 38.2
 (2021-01-18)
 
-### Fixed
+#### Fixed
 
 - Fixed a bug that the DPI of the display may not be applied.
 - Fixed a bug that dots may be enlarged as they are when the scale is changed in the navigator.
@@ -685,7 +683,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 ## 38.1
 (2021-01-08)
 
-### Fixed
+#### Fixed
 
 - Fixed a bug related to the state of the window at startup.
 
@@ -693,7 +691,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 ## 38.0
 (2021-01-01)
 
-### New
+#### New
 
 - Docking side panel support. You can drag the panels to connect them.
 - Floating side panel support. Right-click the panel icon or panel title and execute "Floating" to make the panel a subwindow.
@@ -704,7 +702,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 - Added slider movement setting according to the number of displayed pages. (Options > Page slider > Synchronize the...)
 - Added ON / OFF setting for WIC information acquisition. (Options > File types > Use WIC information)
 
-### Fixed
+#### Fixed
 
 - Fixed an issue that caused an error when trying to open the print dialog on some printers.
 - Fixed a bug that may not start depending on the state of WIC.
@@ -722,7 +720,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 - Improved the problem that media without video such as MP3 may not be played.
 - Fixed shortcut key name.
 
-### Changed
+#### Changed
 
 - Transparent side panel grip.
 - Disable IME except for text boxes.
@@ -738,12 +736,12 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 - Changed "File Information" to "Information".
 - Various library updates.
 
-### Removed
+#### Removed
 
 - Abolished the setting "Do not cover the taskbar area at full screen". Substitute in auto-hide mode.
 - "Place page list on bookshelf" setting abolished. Substitute with a docking panel.
 
-### Script
+#### Script
 
 - Fixed: Fixed a bug that command parameter changes were not saved.
 - Fixed: Fixed a bug that the focus did not move with "nv.Command.ToggleVisible*.Execute(true)".
@@ -802,11 +800,11 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 ## 37.1
 (2020-06-08)
 
-### Changed
+#### Changed
 
 - When changing the stretch, the stretch is applied without changing the current angle.
 
-### Fixed
+#### Fixed
 
 - Fixed a bug that an incorrect setting file may be output depending on the combination of system region and language.
 - Fixed a bug that the file deletion confirmation setting did not work.
@@ -817,7 +815,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 ## 37.0 
 (2020-05-29) 
 
-### Important
+#### Important
 
 - Separated the packages into x86 and x64 versions
     - Usually use the x64 version. Use the x86 version only if your OS is 32-bit.
@@ -832,7 +830,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
     - Changed the structure of settings and changed the format to JSON. The existing XML format setting file can also be read, and automatically converted to JSON format.
     - Backward compatibility of configuration files will be maintained for about a year. In other words, the version around the summer of 2021 will not be able to read the old XML format. The same applies to the exported setting data.
 
-### New
+#### New
 
 - Faster booting: Booting will be faster than previous versions, including the ZIP version.
 - Navigator: Newly added navigator panel for image manipulation such as rotation and scale change.
@@ -887,7 +885,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 - Options: added the SVG extension. (Options> File types> SVG file extensions)
 - Options: "All enable / disable" button added to Susie plugin settings.
 
-### Changed
+#### Changed
 
 - Command: Change shortcut "Back", "Shift+Back" to page history operation command.
 - Command: Improve the behavior of N-type scroll of "Scroll + Prev" and "Scroll + Next" command. Equalized transfer rate.
@@ -918,7 +916,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 - Others: Various library updates.
 - Others: Minor layout correction.
 
-### Fixed
+#### Fixed
 
 - Fixed a bug that may crash when thumbnail image creation fails.
 - Fixed a bug that crashes when searching playlists. The playlist does not support search, so it was disabled.

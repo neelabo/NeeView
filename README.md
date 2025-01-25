@@ -1,8 +1,8 @@
 #  NeeView
 
+<!-- after 43.0
 **[NeeView Portal Site](https://neelabo.github.io/NeeView)**
-
-## スクリーンショット
+-->
 
 ![Screenshot](docs/assets/images/neeview39.jpg)
 
@@ -45,5 +45,18 @@
     - .Net デスクトップ開発
     - C++によるデスクトップ開発
 
+## 言語ファイルの開発について
 
+- [Development of Language Files](NeeView/Languages)
+
+## ブランチ戦略
+
+### master
+
+メイン開発ブランチです。基本的にプルリクエストはここで受け付けます。
+
+### version-XX
+
+各メジャーバージョンのブランチです。
+master ブランチで次のメジャーバージョンの開発が始まると、現在のメジャーバージョンの保守用としてブランチが作られます。
 

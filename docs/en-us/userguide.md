@@ -1,201 +1,193 @@
-> [!NOTE]  
-> English version is under construction.
+# User's Guide
 
-# NeeView ユーザーガイド
-(2019-07-13 更新)
+<div style="color: #888;"><time datetime="2025-01-25">2025-01-25</time></div>
 
+## Quick Start
 
-## クイックスタート
+Drag and drop image files or folders containing images to load images.  
+Use the left and right keys or the slider at the bottom of the screen to switch between images.
 
-画像ファイルや画像の入ったフォルダーをドラッグ＆ドロップすると画像が読み込まれます。  
-左右キーや画面下部のスライダーで画像を切り替えます。
+## Concept
 
+The sense of operation is such that folders and archive files are considered **book**, and images are considered **page** each.
+Folders and archive files are treated at the same level, and this unit is considered a **book**.  
 
-## コンセプト
+## Settings Window
 
-フォルダーや圧縮ファイルをブックとみなした操作感覚になっており、画像をそれぞれ `ページ` としています。
-フォルダーと圧縮ファイルの扱いは同レベルで、この単位をブックとみなします。  
+The menu “Options” > “Settings” opens the settings window.
 
+NeeView can be configured in a variety of ways, most of which are done here.
 
-## 設定ウィンドウ
+## Supported File Formats
 
-メニューの `オプション(O)` の `設定(O)...` で `設定ウィンドウ` が開きます。
+### Image File
 
-NeeViewは細かな設定が可能で、そのほとんどをここで行います。
+It supports standard formats, SVG, and WIC installed in Windows. Supported extensions can be found in the settings.
+For example, Windows 10 supports digital camera RAW images (.nef .cr2, etc.) by default.
+If the icon in the Explorer is a thumbnail image, it is approximately WIC-compatible.
 
+> [!TIP]  
+> Several WIC codecs can be installed from the Microsoft Store.
+> Try [HEIF Image Extensions](https://www.microsoft.com/store/apps/9pmmsr1cgpwg) for .heic, .heif images or [AV1 Video Extension](https://www.microsoft.com/store/apps/9mvzqvxjbq9v) for .avif images. 
 
-## 対応画像ファイルフォーマット
+### Archive File
 
-標準で以下のフォーマットに対応しています。
+Various compressed files and PDF files are supported. Supported file extensions can be checked in the settings.
+Recursive compressed files are also supported. Password-protected files are not supported.
 
-* .bmp
-* .jpg
-* .gif
-* .tiff
-* .png
-* .ico
-* .webp (Win10)
+## Video File
 
-WindowsにインストールされているWICに対応しています。
-例えば、Windows10であれば標準でデジタルカメラのRAW画像(.nef .cr2 など)に対応しています。
-エクスプローラーでアイコンがサムネイル画像表示になっているものがおおよそWIC対応されています。
+Videos that can be played on Windows Media Player are approximately supported. Supported extensions can be checked in the settings.
+If you have VLC Media Player installed, you can also use that function to play them.
 
-Windows10では、ストアから [HEIF画像拡張機能](https://www.microsoft.com/store/apps/9pmmsr1cgpwg) をインストールすれば、.heic,.heif画像も表示できるようになります。
+The video opens as a book, but can be set to open as a page like a GIF animation.
 
-Susieプラグインを使用することで対応フォーマットを増やすことができます。  
+## Theme
 
-> [!NOTE]  
-> `設定ウィンドウ` で設定することでアニメーションGIFを再生することも可能です。(標準ではOFFにしています)
+You can change the appearance of the window on the “Window” page of the settings.
 
+Custom themes can also be created. See [Theme File Specification](theme.md) for the format.
 
-## 対応圧縮ファイルフォーマット
+## Panels
 
-標準で以下のフォーマットに対応しています。
+Various information is displayed on the left and right sides of the screen.
 
-* .zip
-* .rar
-* .lzh
-* .7z
+The sidebar icon toggles the panel to be displayed.
 
-多重圧縮ファイルにも対応しています。  
+Panels are dockable. They can be connected by dragging sidebar icons or panel titles to other panels.
 
-Susie書庫プラグインを使用することで対応フォーマットを増やすことができます。  
+Panels can be made into independent windows. Right-click on the sidebar icon or the title of the panel and select “floating”.
 
-> [!NOTE]  
-> 圧縮ファイルの展開に `7z.dll` を使用していますが、標準では対応拡張子を制限しています。
-> .cab や .iso 等、他の拡張子を対応フォーマットに含めたい場合は `設定ウィンドウ` の `7-Zip` で設定します。
+### Bookshelf Panel
 
-> [!NOTE]  
-> 鍵付き圧縮ファイルには対応していません
+It is a filer. The folder or archive file selected here will be opened as a book.
 
+External drag & drop is also supported. Files can be moved by right button drag & drop only when “File management” is enabled.
 
-## 履歴機能
+### PageList Panel
 
-一度開いたブックの **ページ設定**(`ページ(P)`で設定される項目) と、最後に開いていたページ位置は履歴として保存され、次に同じブックを開いた時に復元されます。   
-本棚でフォルダーを開いた時に表示されるブック名のところに緑のチェックマーク :heavy_check_mark: が表示されている場合は履歴があることを示します。
+Here is a list of pages in the current book.
 
-履歴は `履歴`パネル で確認できます。
+### History Panel
 
+History of viewed books.
 
-## ブックマーク機能
+Books in the history are indicated by a green check mark in the book name on the bookshelf.
 
-ブックを `ブックマーク` として登録し、いつでも呼び出せるようにします。
-★マークがブックマークされている印となります。
+### Information Panel
 
-ブックマークは `ブックマーク`パネル で確認できます。
+Displays information on the current page.
 
+### Navigator Panel
 
-## ページマーク機能
+Manipulate the current display.
 
-ページを `ページマーク` として登録し、いつでも呼び出せるようにします。
-ページマークされていると、スライダーにマークが表示されます。
+The following operations are additionally displayed from the panel's “...” menu
+- Thumbnail: Displays a thumbnail of the entire page with a rectangular display area above it.
+- Control bar: Controls animations such as GIF animations and video pages.
 
-ページマークは `ページマーク`パネルで確認できます。
+### Effect Panel
 
+Process the current display.
 
-## コンテキストメニュー
+### Bookmark Panel
 
-標準では画像の上でアプリケーションキーを押すことでのみ開きますが、コマンド「コンテキストメニューを開く」にキーを割り当てることで別の操作で開くことができます。
-例えば右クリックに割り当てることで一般的なコンテキストメニュー操作になります。
+Register a book as a **bookmark** so that it can be recalled at any time.
 
-コンテキストメニューの項目は設定ウィンドウの `コンテキストメニュー設定` で編集可能です。
+When a book is bookmarked, ★ mark will appear in the book name on the bookshelf.
 
+### Playlist Panel
 
-## パネル
+Register the page in the **playlist** so that it can be recalled at any time.
+When a page is registered in the playlist, a mark will appear on the slider.
 
-画面左右に各種情報を表示する機能です。
-`表示(V)` もしくはサイドパネルのアイコンから表示を切り替えます。
+Playlists are saved as files (.nvpls). This file can be opened as a book.
+It can also be opened as a book by selecting “Open as book” from the panel's “...” menu.
 
-|name | detail
-|-----|-----
-|本棚|フォルダーのリストを表示し、画像表示するブックを選択します。フォルダーの場所を記憶したクイックアクセスやブックマークリストもここからアクセスできます。
-|ページリスト|閲覧中ブックのページ一覧を表示します。このパネルは特殊で、フォルダーリストの一部として表示されます (設定で独立パネル化可能)
-|履歴リスト|閲覧したブックの履歴を表示します
-|ブックマークリスト|ブックマークしたブックのリストを表示します
-|ページマークリスト|ページマークしたページのリストを表示します
-|ファイル情報|画像ファイルの情報を表示します
-|ナビゲーター|画像操作のコントロールを表示します
-|エフェクトパネル|画像加工に関する設定を表示します
 
+## Address Bar
 
-## アドレスバー
+It displays the location of the currently viewed book and provides several functions with buttons.
 
-現在閲覧中のブックの場所の表示と、いつくかの機能をボタンで提供しています。
+The buttons on the left side are for history back and forth and reloading, similar to a web browser.  
+The buttons on the right provide the ability to switch between some of the book's settings.
 
-左側のボタン類は履歴の前後、再読み込みで、WEBブラウザーと似た感じになっています。  
-右側のボタン類はブックのページ設定の一部の切り替え機能を提供しています。
 
+## Filmstrip
 
-## フィルムストリップ
+The function is toggled on and off in the menu View > Filmstrip.
 
-`表示(V)` > `フィルムストリップ` で機能の有効/無効を切り替えます。
+The filmstrip is a list of reduced images on each page, displayed above the slider and linked to the slider.
 
-フィルムストリップは各ページの縮小画像の一覧で、スライダーの上に表示され、スライダーと連動します。
 
+## MainView
 
-### コマンド
+This is the main area where the page is displayed.
 
-機能はほぼすべて「コマンド」という単位になっており、`設定ウィンドウ` の `コマンド設定` ですべてのコマンドの説明と現在のショートカットが確認、設定できます。
+A separate window can be created by selecting “View” > “MainView window” from the menu. 
 
-`スクリプト` ファイルを用意することでコマンドを拡張することができます。詳細はメニューからヘルプの `スクリプトヘルプ` を参照して下さい。
 
+### Mouse Drag
 
-## マウスドラッグ
+The displayed image can be moved or rotated by dragging with the left and middle mouse buttons.  
 
-マウス左ボタン、中ボタンでドラッグすることで表示画像の移動や回転ができます。  
+You can change the settings in the “Mouse operation" page of the settings.
 
-`設定ウィンドウ` の `マウス操作` で設定変更可能です。
 
+### Mouse Gesture
 
+Dragging with the right mouse button is a mouse gesture input.
 
-## マウスジェスチャー
+ Mouse gestures for commands can be configured from the "Edit commands” page of the Preferences.
 
-マウス右ボタンでドラッグすることでマウスジェスチャー入力となります。
 
- `設定ウィンドウ` の `コマンド設定` からコマンドに対応するマウスジェスチャーを設定可能です。
+### Loupe
 
+Press and hold the left mouse button for magnification.
 
-## ルーペ
+During this mode, the display magnification can be changed with the wheel.
+In addition, all other mouse operations are disabled.
 
-マウス左ボタン長押しすることでルーペ(拡大表示)になります。
+Detailed settings can be made in the “Loupe” page of the settings.
 
-このモード中はホイール操作で表示倍率を変更できます。
-また、他のマウス操作は全て無効になります。
 
+### Drag & drop support
 
-## ドラッグ＆ドロップ対応
+Accepts drag & drop from external applications.
 
-外部アプリからのドラッグ＆ドロップを受け付けます。
-確認しているのは次の種類です。
+The following types have been identified
 
-* エクスプローラーからのフォルダー、ファイルのドラッグ＆ドロップ
-* ウェブブラウザからのドラッグ＆ドロップ(Edge, Chrome, Firefox)
-
-ブラウザからのドロップでは自動でファイル名が付けられます。保存先は`設定ウィンドウ`の`外部連携全般`で設定可能です。
+* Drag and drop folders and files from Explorer
+* Drag and drop from web browser
 
 > [!NOTE]  
-> ブラウザにより挙動が変わることが有ります。  
+> The behavior may vary depending on the browser.  
+
+### Slideshow
+
+The images in the book are switched at a fixed time.  
+Toggle slideshow playback/stop in the menu View > Slideshow.
+
+Set the behavior in the “Slideshow” page of the settings.
+
+## Commands
+
+Almost all functions are organized into “commands,” and all command descriptions and current shortcuts can be viewed and set in the “Edit commands” page of the settings.
+
+Some commands allow individual parameters to be set.
+Commands can be duplicated from the context menu. This allows you to create commands with different parameters.
 
 > [!NOTE]
->  IEでは、IEの設定で保護モードを無効にしないと機能しません。
+> You can initialize the commands with presets from the “Reset” button in the lower right corner of the settings page, but please note that all previous command settings will be lost.
 
-本棚、ページリストから外部へのドラッグ＆ドロップにも対応しています。`ファイル操作許可`が有効な場合に限り右ボタンドラッグ＆ドロップによりファイルの移動が可能です。
+### Context Menu
 
+By default, it can only be opened by pressing the application key on the image, but it can be opened by another operation by assigning a key to the command “Open context menu”.
+For example, assigning it to right-click becomes a general context menu operation.
 
-## ２ページ表示
+Context menu items can be edited in the “Context menu” page of the settings.
 
-`ページ(P)` > `2ページ表示` で２ページ表示モードになります。
+### Script
 
-2ページ表示の場合、２つの画像で高い方に合わせるように片方の画像は拡大されます。「オリジナルサイズ」の場合はこの処理は行われず、それぞれ元のサイズで表示されます。
-
-コマンドによっては２ページ分の画像が表示されていても１ページに対してのみ効果を発揮するものが有ります。その場合は番号の若いページが対象となります。
-
-
-## スライドショー
-
-ブック内の画像を一定時間ごとに切り替えて表示します。  
-`表示(V)` > `スライドショー` でスライドショーの再生/停止を切り替えます。再生中はアプリアイコンが再生マーク(青い三角形)になります。
-
-`設定ウィンドウ` の `スライドショー` で動作を設定します。
-
-
+The command can be extended by preparing a script file.
+See [Script Manual](script-manual.html) for details.

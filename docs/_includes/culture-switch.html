@@ -4,14 +4,14 @@
 <script>
     function getCurrentCulture() {
         const path = location.pathname.split('/');
-        if (path.length < 3) return null;
-        const culture = path[2];
-        switch (culture) {
-            case "ja-jp":
-            case "en-us":
-                return culture;
-            default:
-                return null;
+        if (path.includes("ja-jp")) {
+            return "ja-jp";
+        }
+        else if (path.includes("en-us")) {
+            return "en-us";
+        }
+        else {
+            return null;
         }
     }
 
@@ -30,8 +30,9 @@
         }
 
         const path = location.pathname.split('/');
-        if (path.length < 3) return;
-        path[2] = nextCulture;
+        const index = path.indexOf(culture);
+        if (index < 0) return;
+        path[index] = nextCulture;
         const nextPath = path.join('/');
 
         const element = document.getElementById("culture_switch");
@@ -54,4 +55,5 @@
     }
 
     setCultureElement();
+
 </script>

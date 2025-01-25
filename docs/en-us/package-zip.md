@@ -2,8 +2,8 @@
 
 Portable package.  
 
-* No installation required, just extract the Zip and run `NeeView.exe`.  
-* User data such as configuration files are stored in the `Profile` folder.  
+* No installation required, just extract the Zip and run "NeeView.exe".  
+* User data such as configuration files are stored in the "Profile" folder.  
 * Uninstallation is simply a matter of deleting the file.
 
 > [!NOTE]  

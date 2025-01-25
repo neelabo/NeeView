@@ -1,114 +1,157 @@
-> [!NOTE]  
-> English version is under construction.
-
 # Q&A
 
-(2019-07-13)
+<style>
+  h3 { border-bottom: 1px dashed #CCC; }
+</style>
 
+> [!NOTE]  
+> Currently identified problems can be found at [Issues](https://github.com/neelabo/NeeView/issues).
+> Please post your requests and bugs here as issues.
+
+> [!NOTE]  
+> Questions about usage should be posted in the Q&A section of [Discussions](https://github.com/neelabo/NeeView/discussions).
  
-## Q. 起動が遅い
+### Q. Slow startup
 
-A. .NET Framework で作成しているため、ある程度のマシンスペックを必要とし、初回起動が遅い傾向があります。  
-  
+A. .NET, so the initial startup tends to be slow.  
  
-## Q. 起動しなくなってしまった
+### Q. I can't get it to start.
 
-A1. PCを再起動してからお試しください。  
-以前のプロセスがなんらかの原因で残っていると多重起動制御のために起動できなくなってしまうことがあるためです。タスクマネージャーでそのプロセスを終了させるか、PCを再起動することで解消されます。
+A1. Please restart your PC and try again. 
 
-A2. ユーザー設定ファイルを削除してからの起動を試してください。  
-ユーザー設定ファイル `UserSetting.json` を消してから起動すると初期設定で起動されます。
-Zip版では、ユーザ設定ファイルは実行ファイルと同じ場所にあります。
+This is because if the previous process remains for some reason, it may not be able to start due to multiple startup restrictions. This can be resolved by terminating the process in Task Manager or restarting the PC.
 
+A2. Try deleting the user settings file and then launching the application. 
 
-## Q. メモリの使用量を少なくしたい
+If you delete the user settings file “UserSetting.json” before starting the program, it will start with the default settings.
+In the ZIP version, the user settings file is located in the “Profile” folder.
 
-A. メモリを最も使用するのはメモリ上に展開される画像データなので、これを少なくする設定にします。設定は `設定ウィンドウ` の `メモリ＆パフォーマンス` にまとめられています。
+### Q. I want to start multiple applications at the same time.
 
+A1. Please turn ON “Allow multiple activations in the “Launch” page of the settings.
 
-## Q. 「次のブック」を選ぶ基準を変更したい
+A2. If you want to temporarily start more than one NeeView, hold down the SHIFT key to start a new NeeView.
 
-A. ブックの移動は本棚の並び順に依存しています。
+### Q. I want to use less memory.
 
-本棚で並び順を変更してお試しください。
-
-
-## Q. とても大きな画像を表示しようとすると「プログラムの実行を続行するための十分なメモリがありませんでした。」と表示され、画像表示できない
-
-A. .NETであつかえる最大画像サイズを超えている可能性があります。
-
-`設定ウィンドウ` の `ブック全般` > `最大画像サイズ` を 4096 x 4096 のように適当な値に設定し、さらに `読み込み画像サイズ制限` をONにしてメモリ上に展開する画像サイズを制限することで読み込めるようになる可能性があります。
+A. Since the most memory-intensive data is the image data that is extracted into memory, the settings should be set to reduce the amount of memory used. The settings are summarized in the “Memory & Performance” page.
 
 
-## Q. サブフォルダーもまとめてブックとして開きたい
+### Q. The menu items “Delete” and “Rename” are grayed out and cannot be executed.
 
-A. サブフォルダーを読み込む方法や設定は複数あります。
+A. Turn on the menu “Option” > “File management”.
 
-* 設定「ページ設定」の「サブフォルダーを読み込む」を設定する。
-  本を開いたときの動作を設定します。
+Since its main purpose is to be a viewer, file manipulation is initially disabled to prevent accidental file modification.
 
-* メニュー「ページ > サブフォルダーを読み込む」を選択する。
-  そのブックでのサブフォルダー読み込みをON/OFFします。
+### Q. I want to change the criteria for selecting Next Book.
 
-* 本棚での右クリックメニューで「サブフォルダーを読み込む」を選択する。
-  そのブックでのサブフォルダー読み込みをON/OFFします。
+A. Book movement depends on the order of the bookshelf.
 
-* 本棚の「…」メニューの「この場所ではサブフォルダーを読み込む」  
-  この設定をした場所にあるフォルダーは既定のページ設定にかかわらずサブフォルダーを読み込むようになります。
-
-* サブフォルダーが１つだけの場合に自動でサブフォルダーも読み込むかの設定は、設定「ブック > サブフォルダー」で設定します。
+Please try changing the order in the bookshelf.
 
 
-## Q. タッチ位置で前ページに戻る、次ページに進むを設定できますが、クリック位置でも同様の設定ができるようになりませんか？
+### Q. When I try to display a very large image, “There was not enough memory to continue program execution.” is displayed and the image cannot be displayed.
 
-A. 「タッチエミュレート」というコマンドがあります。コマンドリストの最後のほうにあります。
-このコマンドはタッチ操作をカーソル位置で実行するコマンドですので、このコマンドにクリック操作を設定することでご実現可能です。
+A. Set the “Maximum image size.”
 
+.NET may have exceeded the maximum image size allowed by .
 
-## Q. フルスクリーンから「Esc」などのショートカットキーで一気に終了させたい
-
-A. 「アプリを終了する」というコマンドがあります。このコマンドのショートカットにEscキーを割り当てることで実現可能です。
+It may be possible to set the “Maximum image size” in the “Memory & Performance” page of the Preferences to an appropriate value, such as 4096 x 4096, and turn on the “Load image size limit” setting to limit the size of the image that is expanded in memory.
 
 
-## Q. オリジナルサイズ表示ともとの表示設定への切り替えを１操作で行いたい
+### Q. I want to open all subfolders together as a book.
 
-A. 「コマンド設定」で「大きい場合ウィンドウサイズに合わせる」コマンドのパラメータ設定で「オリジナルサイズとの切り替え」というスイッチがあるのでこれをONにしてお試しください。この設定は各サイズ切り替えコマンド共通の設定で、オリジナルサイズとの切り替え動作になります。  
-別の方法として、「表示サイズを切り替える」コマンドのパラメータ設定で切り替えるモードを制限することで同じような動作になります。
+A. There are multiple ways to load subfolders and settings.
 
+* Set “Load subfolders” in the settings “Page settings".
+  Set the behavior when the book is opened.
 
- 
-## Q. コマンドにマウスの左右同時押しを設定しているが、反応が悪い
+* Select menu “Page” > “Load subfolders”.
+  Turn on/off loading subfolders in that book.
 
-A. 左右同時押しは以下の２つの入力のどちらかになります。
+* Select “Load subfolders” from the right-click menu on the bookshelf.
+  Turn on/off subfolder loading in that book.
 
-* LeftButton+RightClick「左ボタンを押しながら右クリック」
-* RightButton+LeftClick「右ボタンを押しながら左クリック」
+* In the bookshelf's “...” menu, “Load subfolders at this location.”  
+  Folders in locations with this setting will load subfolders regardless of the default page settings.
 
-同時押し後にどちらのボタンが先に離されるかでどちらになるかが決まります。同時押しの感覚ですとこのあたりがばらつくため反応しないことがあるのだと思われます。  
-対策としては、上記二つの入力を同じコマンドに割り当てることで反応が良くなると思いますのでお試しください。
-
-
-
-## Q. マウスホイール操作をコマンドに割り当てたい
-
-A. コマンド設定で「ショートカット設定」「マウス入力」の「ここでマウス入力」を選択肢、ホイール操作することで入力できます。
+* The setting of whether subfolders are automatically loaded when there is only one subfolder is set in “Subfolder” under “Page settings" page in the settings.
 
 
-## Q. 特定のZIPファイルが開けない
+### Q. I can set back to previous page and forward to next page by touch position, but can't I set the same by click position?
 
-A. 標準のZIP展開処理が対応していない可能性があります(Deflate64で圧縮されたZIP等)。`詳細設定`の `ZIP`>`標準機能によるZIP圧縮ファイル展開を使用する`をOFFにすることで7z.dllを使ってZIP展開を行うようになるため、これで開けるようになる可能性があります。
+A. There is a command called “Touch emulate.”
 
-
-## Q. UNICODE文字を使用しているファイルをSusieプラグインで開けない
-
-A. ファイルシステムに8.3形式のショートネームが保存されている必要があります。  
-保存されているか確認するには、コマンドラインで `dir /x` を実行してください。
-設定を変更するにはは管理者権限が必要です。 詳細は `fsutil` `8dot3name` をキーワードに検索してください。
-レジストリの変更等、OSのシステムを変更してしまうので、よくわからない場合は設定しないほうが安全です。
+Since this command executes the touch operation at the cursor position, it can be realized by setting the click operation to this command.
 
 
-## Q. 再生できない動画がある
+### Q. I want to exit at once from full screen with a shortcut key such as “Esc”.
 
-A. .NETの機能で再生しているため、それに依存しています。ご了承ください。  
-目安としては、 Windows Media Player で再生可能な動画がおおよそ対応動画となります。
+A. There is a command called “Quit application.” This can be accomplished by assigning the Esc key to the shortcut for this command.
+
+
+### Q. I want to switch between original size display and the other display setting with a single operation.
+
+A. In the parameter setting of the “Fit to window size” command in the “Command Settings” section, there is a switch called “Switch to original size.” This setting is common to all size switching commands, and it is used to switch with the original size.  
+
+
+### Q. Simultaneous left and right mouse presses are set for commands, but the response is subtle.
+
+A. Simultaneous left and right presses can be either of the following two inputs
+
+* LeftButton+RightClick "Left button down, right click.”
+* RightButton+LeftClick "Right button down, left click.”
+
+It depends on which button is released first after simultaneous presses. Because of the variation in this area, it is believed that simultaneous presses are not always responsive.  
+As a countermeasure, please try assigning the above two inputs to the same command, which will improve the response.
+
+
+### Q. I want to assign mouse wheel operation to a command.
+
+A. Similar to setting up shortcuts for mouse buttons, wheel operations can also be registered as shortcuts.
+
+> [!TIP]
+> Tilt wheel is also supported.
+
+### Q. Unable to open certain ZIP files
+
+A. Set up to extract a ZIP with 7z.dll.
+
+The standard ZIP decompression process may not be supported.
+
+Turning off “Use ZIP compressed file expansion with standard function” on the “ZIP” page of the settings will use 7z.dll to perform the ZIP decompression, which may allow you to open the file.
+
+
+### Q. Some videos cannot be played.
+
+A. Try VLC Media Player.
+
+The standard relies on the functionality of .NET to play it back.
+As a rule of thumb, videos that can be played on Windows Media Player are roughly compatible.
+
+If you have installed VLC Media Player, you can set its installation folder in the “libVLC directory” on the “Videos” page to play the same files using VLC's functions and supported formats accordingly.
+
+### Q. I want to display HEIF images.
+
+A. Install [HEIF Image Extensions](https://www.microsoft.com/store/apps/9pmmsr1cgpwg) from the Microsoft Store and try it.
+
+### Q. I want to display AVIF images.
+
+A. Install [AV1 Video Extension](https://www.microsoft.com/store/apps/9mvzqvxjbq9v) from the Microsoft Store and try it.
+
+### Q. App crashes when using Susie plugin.
+
+A. There are compatibility issues with Susie plug-ins. We recommend that you limit the plug-ins you use.
+
+* Some plug-ins don't work.
+* There is a plugin that crashes when trying to open an image in a compressed file.
+* Plug-in combinations may cause problems.
+
+### Q. Cannot open files with UNICODE characters with Susie plugin
+
+A. The file system must have the short name in 8.3 format stored.  
+
+To check if it has been saved, run “dir /x” on the command line.
+Administrative privileges are required to change settings. For more information, please search for the keywords “fsutil” and “8dot3name”.
+It is safer not to set this up if you are not familiar with it, as it will change the registry and other aspects of the OS system.
 

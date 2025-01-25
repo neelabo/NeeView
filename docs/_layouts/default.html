@@ -23,7 +23,7 @@
           {% endif %}
 
           <h1 id="project_title">{{ site.title | default: site.github.repository_name }}</h1>
-          <h2 id="project_tagline">{{ page.description | site.description | default: site.github.project_tagline }}</h2>
+          <h2 id="project_tagline">{{ page.description | default: site.description | default: site.github.project_tagline }}</h2>
 
           {% if site.show_downloads %}
             <section id="downloads">
@@ -36,12 +36,11 @@
         </header>
     </div>
 
-
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         {% capture ex_content %}{% include anchor_headings.html html=content %}{% endcapture %}
-        {% include blockquote_alert.html html=content baseurl=site.baseurl %}
+        {% include blockquote_alert.html html=content %}
       </section>
     </div>
 

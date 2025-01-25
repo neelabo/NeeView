@@ -2,8 +2,19 @@
 
      Culture.restext
 
-.restext is a language resource. `Culture` is the language code.   
+.restext is a language resource. **Culture** is the language code.   
 To add a new language resource, simply create and deploy this file.
+
+### How to test
+
+Use the ZIP version of NeeView.
+Place the .restext you created in the Languages folder and restart NeeView.
+You will be able to select it from “Language” in the settings.
+ 
+ ### Pull Request
+
+Once you have added or edited the .restext to this folder, please pull request it.
+
 
 # .restext format
 
@@ -13,24 +24,24 @@ The character encoding is UTF-8.
  * Key:Pattern=Text
 
 ## Key
-`Key` is a resource key.  
+**Key** is a resource key.  
 e.g., "BookAddressInfo.Bookmark=This is bookmark address."
 
 If not defined, fall back to en.restext.
 
 ## Text
-`Text` is the corresponding text.
+**Text** is the corresponding text.
 
 If empty, fall back to en.restext.
 
- `{0}` is replaced by the argument programmatically.  
+ **{0}** is replaced by the argument programmatically.  
 e.g., "BookAddressInfo.Page={0} pages"
 
-`@Key` specifies a key to be replaced by another resource.
+**@Key** specifies a key to be replaced by another resource.  
 e.g., "BookConfig.ContentsSpace=Distance between pages in "@PageMode.WidePage" (pixels)"
 
 ## Pattern (optional)
-`Pattern` is a regular expression to select a variation of the expression depending on the argument. Define it only if necessary.
+**Pattern** is a regular expression to select a variation of the expression depending on the argument. Define it only if necessary.
 For example, it is used when the expression changes in the plural.  
 e.g., "BookAddressInfo.Page:1={0} page"
 
@@ -42,12 +53,12 @@ Define only as much as you need.
 
 General key. Used to display shortcut.
 
-Prefix is `Key.` .  
+Prefix is "Key." .  
 See [.NET Key Enum](https://learn.microsoft.com/en-us/dotnet/api/system.windows.input.key) for available names.
 
 e.g., "Key.Enter=EINGABE"
 
-Set `_Uppercase` to `true` to make all uppercase.
+Set "_Uppercase" to "true" to make all uppercase.
 
 e.g., "Key._Uppercase=true"
 
@@ -55,22 +66,22 @@ e.g., "Key._Uppercase=true"
 
 Modifier key. Used to display shortcuts, etc.
 
-Prefix is `ModifierKeys.` .  
+Prefix is "ModifierKeys." .  
 The available names are as follows
 
 - Alt	
-- Control (default: `Ctrl`)
+- Control (default: "Ctrl")
 - Shift
 
 e.g., "ModifierKeys.Control=STRG"
 
-Set `_Uppercase` to `true` to make all uppercase.
+Set "_Uppercase" to "true" to make all uppercase.
 
 ### Mouse button
 
 Mouse button.
 
-Prefix is `MouseButton.` .  
+Prefix is "MouseButton." .  
 The available names are as follows
 
 - Left (default: 'LeftButton')
@@ -85,7 +96,7 @@ e.g., "MouseButton.Left=LinkeTaste"
 
 Mouse action.
 
-Prefix is `MouseAction.` .  
+Prefix is "MouseAction." .  
 The available names are as follows
 
 - LeftClick
@@ -109,13 +120,13 @@ e.g., "MouseAction.LeftClick=Linksklick"
 
 Used to display mouse gestures.
 
-Prefix is `MouseDirection.` .  
+Prefix is "MouseDirection." .  
 The available names are as follows
 
-- Up (default: `↑`)
-- Down (default: `↓`)
-- Left (default: `←`)
-- Right (default: `→`)
+- Up (default: "↑")
+- Down (default: "↓")
+- Left (default: "←")
+- Right (default: "→")
 - Click
 
 e.g., "MouseDirection.Click=Klick"
@@ -124,7 +135,7 @@ e.g., "MouseDirection.Click=Klick"
 
 Touch area.
 
-Prefix is `TouchArea.` .  
+Prefix is "TouchArea." .  
 The available names are as follows
 
 - TouchL1
@@ -141,4 +152,4 @@ Converts between language files (*.restext) and JSON. This is a utility tool, no
 
 See Get-Help for details.
 
-> \> Get-Help .\ConvertRestext.ps1
+    > Get-Help .\ConvertRestext.ps1

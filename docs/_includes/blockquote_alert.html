@@ -1,6 +1,5 @@
 {% capture _workspace %}
   {% assign nodes = include.html | split: '<blockquote>' %}
-  {% capture octicons %}{{ include.baseurl }}/assets/octicons{% endcapture %}
 
   {% capture edited_html %}{% endcapture %}
   {% assign is_head_node = true %}
@@ -21,23 +20,23 @@
 
     {% capture new_node %}<blockquote>{{ node }}{% endcapture %}
 
-    {% capture alert_note %}<blockquote class="alert note"><p class="alert note"><img src="{{ octicons }}/info.svg">Note</p><p>{% endcapture %}
+    {% capture alert_note %}<blockquote class="alert note"><p class="alert note">Note</p><p>{% endcapture %}
     {% assign new_node = new_node | replace_first: '<blockquote><p>[!NOTE]<br />', alert_note %}
     {% assign new_node = new_node | replace_first: '<blockquote><p>[!NOTE]', alert_note %}
 
-    {% capture alert_tip %}<blockquote class="alert tip"><p class="alert tip"><img src="{{ octicons }}/light-bulb.svg">Tip</p><p>{% endcapture %}
+    {% capture alert_tip %}<blockquote class="alert tip"><p class="alert tip">Tip</p><p>{% endcapture %}
     {% assign new_node = new_node | replace_first: '<blockquote><p>[!TIP]<br />', alert_tip %}
     {% assign new_node = new_node | replace_first: '<blockquote><p>[!TIP]', alert_tip %}
 
-    {% capture alert_important %}<blockquote class="alert important"><p class="alert important"><img src="{{ octicons }}/report.svg">Important</p><p>{% endcapture %}
+    {% capture alert_important %}<blockquote class="alert important"><p class="alert important">Important</p><p>{% endcapture %}
     {% assign new_node = new_node | replace_first: '<blockquote><p>[!IMPORTANT]<br />', alert_important %}
     {% assign new_node = new_node | replace_first: '<blockquote><p>[!IMPORTANT]', alert_important %}
 
-    {% capture alert_warning %}<blockquote class="alert warning"><p class="alert warning"><img src="{{ octicons }}/alert.svg">Warning</p><p>{% endcapture %}
+    {% capture alert_warning %}<blockquote class="alert warning"><p class="alert warning">Warning</p><p>{% endcapture %}
     {% assign new_node = new_node | replace_first: '<blockquote><p>[!WARNING]<br />', alert_warning %}
     {% assign new_node = new_node | replace_first: '<blockquote><p>[!WARNING]', alert_warning %}
 
-    {% capture alert_caution %}<blockquote class="alert caution"><p class="alert caution"><img src="{{ octicons }}/stop.svg">Caution</p><p>{% endcapture %}
+    {% capture alert_caution %}<blockquote class="alert caution"><p class="alert caution">Caution</p><p>{% endcapture %}
     {% assign new_node = new_node | replace_first: '<blockquote><p>[!CAUTION]<br />', alert_caution %}
     {% assign new_node = new_node | replace_first: '<blockquote><p>[!CAUTION]', alert_caution %}
     

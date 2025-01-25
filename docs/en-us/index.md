@@ -1,4 +1,6 @@
-## Screenshot
+---
+title: HOME
+---
 
 ![NeeView39.jpg](../assets/images/neeview39.jpg)
 
@@ -26,7 +28,7 @@ Powerful customization is available.
 - Image drop from web browser
 - Command extension by scripts
 
-## System Requirements
+### System Requirements
 
 * Windows 10 64bit or higher
 
@@ -38,7 +40,7 @@ Powerful customization is available.
 - [Microsoft Store](https://www.microsoft.com/store/apps/9p24z53hc1jr)
 - [Vector](https://www.vector.co.jp/soft/winnt/art/se512262.html)
 
-### Package Types
+#### Package Types
 
 * [About ZIP Version](package-zip.md)
 * [About ZIP-fd Version](package-zip-fd.md)
@@ -47,7 +49,7 @@ Powerful customization is available.
 * [About Canary Version](package-canary.md)
 * [About Beta Version](package-beta.md)
 
-### Changelog
+#### Changelog
 
  * [Changelog](changelog.md)
 

@@ -15,6 +15,40 @@ body:lang(ja) {
     font-family: Arial, sans-serif;
 }
 
+h2:lang(ja) {
+    margin-top: 40px;
+    font-size: 26px;
+    letter-spacing: inherit;
+}
+
+h3:lang(ja) {
+    margin-top: 30px;
+    font-size: 20px;
+    letter-spacing: inherit;
+}
+
+h4:lang(ja) {
+    margin-top: 30px;
+    font-size: 18px;
+    letter-spacing: inherit;
+}
+
+h5:lang(ja) {
+    margin-top: 20px;
+    font-size: 16px;
+    letter-spacing: inherit;
+}
+
+h6:lang(ja) {
+    margin-top: 20px;
+    font-size: 14px;
+    letter-spacing: inherit;
+}
+
+#project_tagline:lang(ja) {
+    margin-top: 10px
+}
+
 blockquote {
     color: #555;
     border-left: 3px solid #888;
@@ -71,38 +105,37 @@ blockquote.alert.caution {
 }
 
 p.alert {
-    display: flex;
-    margin: 10px 0 0 0;
     font-weight: bold;
-}
-
-p.alert img {
-    margin-right: 8px;
-    margin-bottom: 2px;
+    padding: 0px 0px 0px 24px;
 }
 
 p.alert.note {
     color: var(--alert-note-color);
+    background: url(../octicons/info.svg) no-repeat 0px center / 16px auto;
 }
 
 p.alert.tip {
     color: var(--alert-tip-color);
+    background: url(../octicons/light-bulb.svg) no-repeat 0px center / 16px auto;
 }
 
 p.alert.important {
     color: var(--alert-important-color);
+    background: url(../octicons/report.svg) no-repeat 0px center / 16px auto;
 }
 
 p.alert.warning {
     color: var(--alert-warning-color);
+    background: url(../octicons/alert.svg) no-repeat 0px center / 16px auto;
 }
 
 p.alert.caution {
     color: var(--alert-caution-color);
+    background: url(../octicons/stop.svg) no-repeat 0px center / 16px auto;
 }
 
 .inner {
-    max-width: 1012px;
+    max-width: 920px;
 }
 
 .nowrap {

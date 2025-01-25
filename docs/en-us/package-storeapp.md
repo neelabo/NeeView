@@ -8,13 +8,13 @@ Install from  [Microsoft Store](https://www.microsoft.com/store/apps/9p24z53hc1j
 * There is no setting for “Allow network access” in Settings. This is because updates are performed by the store function, but we have no control over it.
 * File extension associations will be made. There is no addition to the Explorer context menu.
 
-## How to start from the command line
+### How to start from the command line
 
-Starts with `NeeView.exe`. The complete path is not required. Parameters are the same as for the regular version.
+Starts with "NeeView.exe". The complete path is not required. Parameters are the same as for the regular version.
 
-## Protocol Activation
+### Protocol Activation
 
 Protocol activation is also possible.
-Currently, only the `neeview-open:` protocol is supported, and only the file path (without URI escaping) is valid as a parameter.
+Currently, only the "neeview-open:" protocol is supported, and only the file path (without URI escaping) is valid as a parameter.
 
     > neeview-open:E:\Pictures\Image001.jpg

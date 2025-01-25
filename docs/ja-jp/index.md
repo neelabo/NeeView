@@ -1,4 +1,6 @@
-## スクリーンショット
+---
+title: HOME
+---
 
 ![NeeView39.jpg](../assets/images/neeview39.jpg)
 
@@ -26,7 +28,7 @@
   * Webブラウザからの画像ドロップ
   * スクリプトによるコマンド拡張
 
-## システム要件
+### システム要件
 
   * Windows 10 64bit 以降
 
@@ -38,7 +40,7 @@
 - [Microsoft Store](https://www.microsoft.com/store/apps/9p24z53hc1jr)
 - [Vector](https://www.vector.co.jp/soft/winnt/art/se512262.html)
 
-### パッケージの種類
+#### パッケージの種類
 
 * [ZIP版について](package-zip.md)
 * [ZIP-fd版について](package-zip-fd.md)
@@ -47,9 +49,9 @@
 * [Canary版について](package-canary.md)
 * [Beta版について](package-beta.md)
 
-###  更新履歴
+#### 更新履歴
 
-- [更新履歴](changelog.md)
+* [更新履歴](changelog.md)
 
 ## ドキュメント
 

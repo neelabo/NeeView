@@ -1,4 +1,4 @@
-# Theme File Specifications v1.0.0
+# Theme File Specification v1.0.0
 
 Defines the control color scheme for the theme, in JSON format.
 
@@ -20,7 +20,7 @@ URL for this page. The application ignores this item.
 
 Inherits the definition. This setting is optional.
 
-If `themes://` is specified, it refers to the default theme file. If the file name is left as it is, it refers to a file in the same folder.
+If "themes://" is specified, it refers to the default theme file. If the file name is left as it is, it refers to a file in the same folder.
 
 This inheritance can be used to define only the portions of the code that need to be changed.
 
@@ -55,7 +55,7 @@ Format:
 
 #### Color
 
-Colors are specified in .NET color specification format: `#AARRGGBB`, `#RRGGBB`, `#ARGB`, `#RGB`, color string (e.g., `Red`).
+Colors are specified in .NET color specification format: "#AARRGGBB", "#RRGGBB", "#ARGB", "#RGB", color string (e.g., "Red").
 
 e.g., Window.Background is black
 
@@ -71,8 +71,8 @@ e.g., IconButton.Pressed.Border color is the same as Control.Accent
 
 #### Opacity
 
-Opacity is specified by `/[0.0-1.0]`.
-If omitted, it will be opaque, the same as specifying `/1.0`.
+Opacity is specified by "/[0.0-1.0]".
+If omitted, it will be opaque, the same as specifying "/1.0".
 
 e.g., Window.InactiveTitle is 50% translucent color of Window.
 
