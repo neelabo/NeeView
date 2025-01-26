@@ -396,7 +396,6 @@ layout: default
     また、k,K,g,G,m,M の単位表記に対応しています。小文字は 1000 倍、大文字は 1024 倍です。
 </p>
 
-<hr/>
 <h2>詳細</h2>
 
 これまでのオプションはエイリアスされた簡易なものです。詳細な定義をここで説明します。
@@ -405,7 +404,7 @@ layout: default
 
 検索の基本単位は次のセットになります。
 
-<blockquote>接続オプション(/c.) | 項目オプション(/p.) | 適合オプション(/m.) | キーワード</blockquote>
+<p><pre><code>接続オプション(/c.) | 項目オプション(/p.) | 適合オプション(/m.) | キーワード</code></pre></p>
 
 先頭が "/" で始まらない文字列がキーワードとなり、これが出現したときにこのセットが確定します。それまでに指定されていないオプションはデフォルト値が使用され、重複して指定されたカテゴリのオプションは上書きされます。
 
@@ -700,12 +699,12 @@ layout: default
 
 <p>
   次の例では、DateTime型として日時比較を行います。
-  <blockquote>/p.date /m.lt</blockquote>
+  <pre><code>/p.date /m.lt</code></pre>
 </p>
 
 <p>
   次の例では、日時を文字列にして比較を行います。
-  <blockquote>/p.date /m.fuzzy</blockquote>
+  <pre><code>/p.date /m.fuzzy</code></pre>
 </p>
 
 <h3>エイリアス</h3>
@@ -972,7 +971,9 @@ layout: default
     
 <p>
     メタ情報検索は次のフォーマットで指定します。[key] にメタ情報の項目名を指定します。得られる値は表示されているものと同等の文字列です。
-    <blockquote>/p.meta.[key]</blockquote>
+    <pre><code>/p.meta.[key]</code></pre>
+</p>
+<p>
     メタ情報を取得するためにファイルを読み込むため、ページ数が多い場合に結果が出るまで時間がかかる場合があります。
 </p>
 
@@ -1423,29 +1424,35 @@ layout: default
     「追加情報」のキーはその項目名から空白を削除した文字列になります。
 </p>
 
-<hr/>
 <h2>使用例</h2>
 
 "ABC","DEF" の AND 標準検索
-<blockquote>ABC DEF</blockquote>
+
+<p><pre><code>ABC DEF</code></pre></p>
 
 "^ABC$" の正規表現検索
-<blockquote>/re ^ABC$</blockquote>
+
+<p><pre><code>/re ^ABC$</code></pre></p>
 
 "ABC DEF" の完全一致検索
-<blockquote>"ABC DEF"</blockquote>
+
+<p><pre><code>"ABC DEF"</code></pre></p>
 
 "ABC" 標準検索結果に対する、"DEF" NOT 単語検索
-<blockquote>ABC /not /word DEF</blockquote>
+<p><pre><code>ABC /not /word DEF</code></pre></p>
 
 2019年4月に更新されたファイルの検索
-<blockquote>/since 2019-04-01 /until 2019-05-01</blockquote>
+
+<p><pre><code>/since 2019-04-01 /until 2019-05-01</code></pre></p>
 
 サイズ 10MB 未満のファイルの検索
-<blockquote>/size /lt 10M</blockquote>
+
+<p><pre><code>/size /lt 10M</code></pre></p>
 
 ブックマーク検索結果に対する、"ABC" の AND 標準検索
-<blockquote>/bookmark ABC</blockquote>
+
+<p><pre><code>/bookmark ABC</code></pre></p>
 
 「追加情報」の "parameters" に "smile" を含むページを検索する
-<blockquote>/p.meta.parameters smile</blockquote>
+
+<p><pre><code>/p.meta.parameters smile</code></pre></p>

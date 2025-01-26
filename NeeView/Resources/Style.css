@@ -52,6 +52,11 @@ code {
     font-family: Consolas, sans-serif;
 }
 
+pre code {
+    padding: 10px 20px;
+    border: 0px;
+}
+
 code.inline {
     background-color: #EEEEEE;
     font-family: Consolas, sans-serif;

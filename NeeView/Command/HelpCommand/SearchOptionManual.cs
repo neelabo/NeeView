@@ -69,7 +69,6 @@ namespace NeeView
                 @_SearchManual.S15.P2
             </p>
 
-            <hr/>
             <h2>@_SearchManual.S2</h2>
 
             @_SearchManual.S2.P1
@@ -78,7 +77,7 @@ namespace NeeView
 
             @_SearchManual.S21.P1
             
-            <blockquote>@_SearchManual.S21.P2</blockquote>
+            <p><pre><code>@_SearchManual.S21.P2</code></pre></p>
 
             @_SearchManual.S21.P3
 
@@ -104,12 +103,12 @@ namespace NeeView
 
             <p>
               @_SearchManual.S22.P3
-              <blockquote>/p.date /m.lt</blockquote>
+              <pre><code>/p.date /m.lt</code></pre>
             </p>
 
             <p>
               @_SearchManual.S22.P4
-              <blockquote>/p.date /m.fuzzy</blockquote>
+              <pre><code>/p.date /m.fuzzy</code></pre>
             </p>
 
             <h3>@_SearchManual.S23</h3>
@@ -126,7 +125,9 @@ namespace NeeView
                 
             <p>
                 @_SearchManual.S24.P2
-                <blockquote>/p.meta.[key]</blockquote>
+                <pre><code>/p.meta.[key]</code></pre>
+            </p>
+            <p>
                 @_SearchManual.S24.P3
             </p>
 
@@ -135,32 +136,38 @@ namespace NeeView
                 @_SearchManual.S24.P4
             </p>
 
-            <hr/>
             <h2>@_SearchManual.S3</h2>
 
             @_SearchManual.S3.P1
-            <blockquote>ABC DEF</blockquote>
+
+            <p><pre><code>ABC DEF</code></pre></p>
 
             @_SearchManual.S3.P2
-            <blockquote>/re ^ABC$</blockquote>
+
+            <p><pre><code>/re ^ABC$</code></pre></p>
 
             @_SearchManual.S3.P3
-            <blockquote>"ABC DEF"</blockquote>
+
+            <p><pre><code>"ABC DEF"</code></pre></p>
 
             @_SearchManual.S3.P4
-            <blockquote>ABC /not /word DEF</blockquote>
+            <p><pre><code>ABC /not /word DEF</code></pre></p>
 
             @_SearchManual.S3.P5
-            <blockquote>/since 2019-04-01 /until 2019-05-01</blockquote>
+
+            <p><pre><code>/since 2019-04-01 /until 2019-05-01</code></pre></p>
 
             @_SearchManual.S3.P6
-            <blockquote>/size /lt 10M</blockquote>
+
+            <p><pre><code>/size /lt 10M</code></pre></p>
 
             @_SearchManual.S3.P7
-            <blockquote>/bookmark ABC</blockquote>
+
+            <p><pre><code>/bookmark ABC</code></pre></p>
 
             @_SearchManual.S3.P8
-            <blockquote>/p.meta.parameters smile</blockquote>
+
+            <p><pre><code>/p.meta.parameters smile</code></pre></p>
             """;
 
 

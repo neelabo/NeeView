@@ -396,7 +396,6 @@ layout: default
     It also supports k, K, g, G, m, and M unit notations. Lowercase letters are multiplied by 1000, and uppercase letters are multiplied by 1024.
 </p>
 
-<hr/>
 <h2>Details</h2>
 
 The previous options are aliased and simplified. Detailed definitions are given here.
@@ -405,7 +404,7 @@ The previous options are aliased and simplified. Detailed definitions are given 
 
 The basic unit of search is the following set
 
-<blockquote>Conjunction option(/c.) | Property option(/p.) | Match option(/m.) | Keyword</blockquote>
+<p><pre><code>Conjunction option(/c.) | Property option(/p.) | Match option(/m.) | Keyword</code></pre></p>
 
 A string that does not begin with a "/" is a keyword, and this set is determined when it appears. Options not previously specified will use default values, and duplicate category options will be overwritten.
 
@@ -700,12 +699,12 @@ Options are categorized by prefix character.
 
 <p>
   The following example performs a date/time comparison as a DateTime type.
-  <blockquote>/p.date /m.lt</blockquote>
+  <pre><code>/p.date /m.lt</code></pre>
 </p>
 
 <p>
   The following example compares the date and time as a string.
-  <blockquote>/p.date /m.fuzzy</blockquote>
+  <pre><code>/p.date /m.fuzzy</code></pre>
 </p>
 
 <h3>Alias</h3>
@@ -972,7 +971,9 @@ Options have aliases defined for ease of use, and in some cases are expanded int
     
 <p>
     The meta information search is specified in the following format. Specify the name of the meta information item in [key]. The resulting value is a string equivalent to the one displayed.
-    <blockquote>/p.meta.[key]</blockquote>
+    <pre><code>/p.meta.[key]</code></pre>
+</p>
+<p>
     It may take some time to get results when the number of pages is large because the files are read to retrieve meta information.
 </p>
 
@@ -1423,29 +1424,35 @@ Options have aliases defined for ease of use, and in some cases are expanded int
     "Extras" key is a string with spaces removed from that item name.
 </p>
 
-<hr/>
 <h2>Examples</h2>
 
 AND-Standard search of "ABC", "DEF"
-<blockquote>ABC DEF</blockquote>
+
+<p><pre><code>ABC DEF</code></pre></p>
 
 RegularExpression search of "^ABC$"
-<blockquote>/re ^ABC$</blockquote>
+
+<p><pre><code>/re ^ABC$</code></pre></p>
 
 ExactMatch search for "ABC DEF"
-<blockquote>"ABC DEF"</blockquote>
+
+<p><pre><code>"ABC DEF"</code></pre></p>
 
 "DEF" NOT-WordMatch search for "ABC" Standard search results
-<blockquote>ABC /not /word DEF</blockquote>
+<p><pre><code>ABC /not /word DEF</code></pre></p>
 
 Search for files updated in April 2019
-<blockquote>/since 2019-04-01 /until 2019-05-01</blockquote>
+
+<p><pre><code>/since 2019-04-01 /until 2019-05-01</code></pre></p>
 
 Search for files less than 10 MB in size
-<blockquote>/size /lt 10M</blockquote>
+
+<p><pre><code>/size /lt 10M</code></pre></p>
 
 AND-Standard search of "ABC" for bookmark search results
-<blockquote>/bookmark ABC</blockquote>
+
+<p><pre><code>/bookmark ABC</code></pre></p>
 
 Search for pages containing "smile" in "parameters" in "Extras"
-<blockquote>/p.meta.parameters smile</blockquote>
+
+<p><pre><code>/p.meta.parameters smile</code></pre></p>
