@@ -73,7 +73,7 @@ namespace NeeView
 
             var title = name ?? $"[Enum] {type.Name}";
 
-            builder.Append(CultureInfo.InvariantCulture, $"<h2 id=\"{type.Name}\">{title}</h2>").AppendLine();
+            builder.Append(CultureInfo.InvariantCulture, $"<h3 id=\"{type.Name}\">{title}</h3>").AppendLine();
 
             var memberName = new DocumentMemberName(type);
             AppendSummary(memberName);
@@ -93,8 +93,8 @@ namespace NeeView
         /// <returns></returns>
         private HtmlReferenceBuilder AppendDictionary(Dictionary<string, string> dictionary, string? style = null)
         {
-            style = style ?? "table-slim";
-            builder.Append(CultureInfo.InvariantCulture, $"<p><table class=\"{style}\">").AppendLine();
+            var attributes = style is not null ? $" class=\"{style}\"" : "";
+            builder.Append(CultureInfo.InvariantCulture, $"<p><table{attributes}>").AppendLine();
             foreach (var member in dictionary)
             {
                 builder.Append(CultureInfo.InvariantCulture, $"<tr><td>{member.Key}</td><td>{member.Value}</td></tr>").AppendLine();
@@ -112,8 +112,7 @@ namespace NeeView
         /// <returns></returns>
         private HtmlReferenceBuilder AppendDataTable(DataTable dataTable, bool isHeader)
         {
-            var tableClass = "table-slim" + (isHeader ? " table-topless" : "");
-            builder.Append(CultureInfo.InvariantCulture, $"<p><table class=\"{tableClass}\">").AppendLine();
+            builder.Append(CultureInfo.InvariantCulture, $"<p><table>").AppendLine();
 
             if (isHeader)
             {
@@ -130,7 +129,8 @@ namespace NeeView
                 builder.Append("<tr>");
                 foreach (DataColumn col in dataTable.Columns)
                 {
-                    builder.Append(CultureInfo.InvariantCulture, $"<td>{row[col]}</td>");
+                    var attributes = (col.ColumnName == "summary") ? " class=\"td-middle\"" : "";
+                    builder.Append(CultureInfo.InvariantCulture, $"<td{attributes}>{row[col]}</td>");
                 }
                 builder.Append("</tr>").AppendLine();
             }
@@ -183,7 +183,7 @@ namespace NeeView
             var className = name ?? type.Name;
             var title = name ?? $"[Class] {type.Name}";
 
-            builder.Append(CultureInfo.InvariantCulture, $"<h2 id=\"{type.Name}\">{title}</h2>").AppendLine();
+            builder.Append(CultureInfo.InvariantCulture, $"<h3 id=\"{type.Name}\">{title}</h3>").AppendLine();
 
             var properties = type.GetProperties().Where(e => IsDocumentable(e)).OrderBy(e => e.Name);
             var methods = type.GetMethods().Where(e => IsDocumentable(e)).OrderBy(e => e.Name);
@@ -225,20 +225,6 @@ namespace NeeView
             return this;
         }
 
-        /// <summary>
-        /// 指定したクラスのメソッドたちをリファレンス化する
-        /// </summary>
-        public HtmlReferenceBuilder CreateMethods(Type type, string? prefix)
-        {
-            var methods = type.GetMethods().Where(e => IsDocumentable(e));
-            foreach (var method in methods)
-            {
-                AppendMethod(method, prefix);
-            }
-
-            return this;
-        }
-
         public HtmlReferenceBuilder CreateMethodTable(Type type, string? prefix)
         {
             var methods = type.GetMethods().Where(e => IsDocumentable(e));
@@ -247,42 +233,6 @@ namespace NeeView
                 Append($"<h4>{ResourceService.GetString("@Word.Methods")}</h4>").AppendLine();
                 AppendDataTable(MethodsToDataTable(methods), false);
             }
-            return this;
-        }
-
-        /// <summary>
-        /// メソッドのリファレンス化
-        /// </summary>
-        private HtmlReferenceBuilder AppendMethod(MethodInfo method, string? prefix)
-        {
-            var name = method.DeclaringType?.Name + "." + method.Name;
-
-            var documentable = method.GetCustomAttribute<DocumentableAttribute>();
-
-            var memberName = new DocumentMemberName(method);
-
-            var title = (string.IsNullOrEmpty(prefix) ? "" : prefix + ".") + (documentable?.Name ?? method.Name) + "(" + string.Join(", ", method.GetParameters().Select(e => e.Name)) + ")";
-            builder.Append(CultureInfo.InvariantCulture, $"<h3>{title}</h3>").AppendLine();
-
-            AppendSummary(memberName);
-
-            var parameters = method.GetParameters();
-            if (parameters.Length > 0)
-            {
-                builder.Append(CultureInfo.InvariantCulture, $"<h4>{ResourceService.GetString("@Word.Parameters")}</h4>").AppendLine();
-                AppendDataTable(ParametersToDataTable(method, parameters), false);
-            }
-
-            if (method.ReturnType != typeof(void))
-            {
-                builder.Append(CultureInfo.InvariantCulture, $"<h4>{ResourceService.GetString("@Word.Returns")}</h4>").AppendLine();
-                var typeString = TypeToString(method.ReturnType);
-                var summary = memberName.GetHtmlDocument(".Returns") ?? "";
-                AppendDictionary(new Dictionary<string, string> { [typeString] = summary }, "table-none");
-            }
-
-            AppendExample(name);
-
             return this;
         }
 
@@ -434,7 +384,7 @@ namespace NeeView
                 var typeString = TypeToString(returnTypeAttribute?.ReturnType ?? method.ReturnType) + (attribute?.DocumentType != null ? $" ({TypeToString(attribute.DocumentType)})" : "");
                 var memberName = new DocumentMemberName(method);
                 var summary = memberName.GetHtmlDocument(".Returns") ?? "";
-                builder.AppendDictionary(new Dictionary<string, string> { [typeString] = summary }, "table-none");
+                builder.AppendDictionary(new Dictionary<string, string> { [typeString] = summary });
             }
 
             builder.AppendExample(name);

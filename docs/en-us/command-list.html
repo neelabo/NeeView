@@ -1,209 +1,377 @@
 ---
 layout: default
+title: Command List
 ---
 
-<h1>NeeView Command List</h1>
-<p>Commands to which no operation is assigned can be used by setting with "Edit commands".</p>
-<table class="table-slim table-topless">
-<tr><th>Group</th><th>Command</th><th>Shortcut</th><th>Gesture</th><th>Touch</th><th>Summary</th></tr>
-<tr><td>File</td><td>Open file</td><td>Ctrl+O</td><td></td><td></td><td>Select and open the compressed file or image file.</td></tr>
-<tr><td>File</td><td>Reload</td><td></td><td>↑↓</td><td></td><td>Reload the book</td></tr>
-<tr><td>File</td><td>Close</td><td></td><td></td><td></td><td>Close the open workbook.</td></tr>
-<tr><td>File</td><td>External app (simple)</td><td></td><td></td><td></td><td>Open the displayed image with an external application.</td></tr>
-<tr><td>File</td><td>External app</td><td></td><td></td><td></td><td>Select an external application to open the displayed images.</td></tr>
-<tr><td>File</td><td>Open in explorer</td><td></td><td></td><td></td><td>Open the file of the page you are viewing in Explorer.</td></tr>
-<tr><td>File</td><td>Save as</td><td>Ctrl+S</td><td></td><td></td><td>Save the image to a file.</td></tr>
-<tr><td>File</td><td>Save</td><td>Ctrl+Shift+S</td><td></td><td></td><td>Save the image to a file. The storage folder is specified by a command parameter.</td></tr>
-<tr><td>File</td><td>Print</td><td>Ctrl+P</td><td></td><td></td><td>Print the image.</td></tr>
-<tr><td>File</td><td>Delete file</td><td>Delete</td><td></td><td></td><td>Delete the file. Compressed files can not be deleted.</td></tr>
-<tr><td>File</td><td>Delete book</td><td></td><td></td><td></td><td>Delete the currently viewed folder or compressed file.</td></tr>
-<tr><td>File</td><td>Copy file</td><td>Ctrl+C</td><td></td><td></td><td>Copy the file to the clipboard.</td></tr>
-<tr><td>File</td><td>Copy image</td><td>Ctrl+Shift+C</td><td></td><td></td><td>Copy the image to the clipboard. For 2 page display, copy only the main page.</td></tr>
-<tr><td>File</td><td>Paste</td><td>Ctrl+V</td><td></td><td></td><td>Paste clipboard files and images.</td></tr>
-<tr><td>File</td><td>Copy to folder</td><td></td><td></td><td></td><td>Select the folder where you want to copy the displayed images.</td></tr>
-<tr><td>File</td><td>Move to folder</td><td></td><td></td><td></td><td>Select the folder where you want to move the displayed images.</td></tr>
-<tr><td>File</td><td>Clear history</td><td></td><td></td><td></td><td>Delete all history.</td></tr>
-<tr><td>File</td><td>Delete history in place</td><td></td><td></td><td></td><td>Delete all history in the current location of the bookshelf.</td></tr>
-<tr><td>File</td><td>Delete invalid history items</td><td></td><td></td><td></td><td>Delete history items that do not exist.</td></tr>
-<tr><td>Stretch</td><td>Switch stretch</td><td>LeftButton+WheelDown</td><td></td><td></td><td>Switch the stretch in sequence.</td></tr>
-<tr><td>Stretch</td><td>Switch stretch (reverse)</td><td>LeftButton+WheelUp</td><td></td><td></td><td>Switch the stretch in sequence. (reverse)</td></tr>
-<tr><td>Stretch</td><td>Original size</td><td></td><td></td><td></td><td>Display the image as it is.</td></tr>
-<tr><td>Stretch</td><td>Fit to window size</td><td></td><td></td><td></td><td>Scales the image to fit the window size.</td></tr>
-<tr><td>Stretch</td><td>Extend it to fill the window</td><td></td><td></td><td></td><td>Scale up or down to fit the window size either vertically or horizontally. The image will be larger than the window size.</td></tr>
-<tr><td>Stretch</td><td>Fit the area size to the window</td><td></td><td></td><td></td><td>Scales the image so that it is equal to the area size of ​​the window.</td></tr>
-<tr><td>Stretch</td><td>Fit height to window</td><td></td><td></td><td></td><td>Scales to fit the height of the image to the height of the window.</td></tr>
-<tr><td>Stretch</td><td>Fit width to window</td><td></td><td></td><td></td><td>Scales to fit the width of the image to the width of the window.</td></tr>
-<tr><td>Stretch</td><td>Allow stretch scale up</td><td></td><td></td><td></td><td>Allow scale up on stretch.</td></tr>
-<tr><td>Stretch</td><td>Allow stretch scale down</td><td></td><td></td><td></td><td>Allow scale down on stretch.</td></tr>
-<tr><td>Stretch</td><td>Toggle custom size</td><td></td><td></td><td></td><td>Toggles enabling / disabling of size specification applied to original size.</td></tr>
-<tr><td>Effect</td><td>Toggle keep dot</td><td></td><td></td><td></td><td>Enlarges the image while maintaining the dots. When turned off, the scale conversion process (Fant) is performed.</td></tr>
-<tr><td>Effect</td><td>Switch background</td><td></td><td></td><td></td><td>Switch the background sequentially.</td></tr>
-<tr><td>Effect</td><td>Black background</td><td></td><td></td><td></td><td>Make the background black.</td></tr>
-<tr><td>Effect</td><td>White background</td><td></td><td></td><td></td><td>Make the background white.</td></tr>
-<tr><td>Effect</td><td>Image colored background</td><td></td><td></td><td></td><td>Set the background color from the image. Specifically, the color of the upper left pixel of the image is used.</td></tr>
-<tr><td>Effect</td><td>White checkered background</td><td></td><td></td><td></td><td>Make the background a white checkered pattern.</td></tr>
-<tr><td>Effect</td><td>Black checkered background</td><td></td><td></td><td></td><td>Make the background a black checkered pattern.</td></tr>
-<tr><td>Effect</td><td>Custom Background</td><td></td><td></td><td></td><td>Make the background a custom background.</td></tr>
-<tr><td>Effect</td><td>Toggle resize filter</td><td>Ctrl+R</td><td></td><td></td><td>Toggle resize filter ON / OFF.</td></tr>
-<tr><td>Effect</td><td>Grid</td><td></td><td></td><td></td><td>Toggle visible / hide of grid.</td></tr>
-<tr><td>Effect</td><td>Toggle effect</td><td>Ctrl+E</td><td></td><td></td><td>Toggle effect ON / OFF.</td></tr>
-<tr><td>Window</td><td>Toggle topmost</td><td></td><td></td><td></td><td>Always display the window in front.</td></tr>
-<tr><td>Window</td><td>Toggle address bar</td><td></td><td></td><td></td><td>Toggle visible / hide of the address bar.</td></tr>
-<tr><td>Window</td><td>Toggle auto hide menu</td><td></td><td></td><td></td><td>Hide the menu. It is displayed by moving the cursor to the upper end of the window.</td></tr>
-<tr><td>Window</td><td>Toggle side bars</td><td></td><td></td><td></td><td>Toggle visible / hide of side bars.</td></tr>
-<tr><td>Window</td><td>Toggle auto hide panels</td><td></td><td></td><td></td><td>Automatically hide the left and right panels. It is displayed by moving the cursor to the left and right edges of the window.</td></tr>
-<tr><td>Window</td><td>Toggle slider</td><td></td><td></td><td></td><td>Toggle visible / hide of the slider.</td></tr>
-<tr><td>Window</td><td>Toggle auto hide slider</td><td></td><td></td><td></td><td>Hide the slider. It is displayed by moving the cursor to the lower end of the window.</td></tr>
-<tr><td>Window</td><td>Toggle full screen</td><td>F11</td><td>↑</td><td></td><td>Switch the full screen state.</td></tr>
-<tr><td>Window</td><td>Full screen</td><td></td><td></td><td></td><td>Make it full screen.</td></tr>
-<tr><td>Window</td><td>Full screen OFF</td><td></td><td></td><td></td><td>Turn off full screen.</td></tr>
-<tr><td>Window</td><td>Minimize window</td><td></td><td></td><td></td><td>Minimize the window. If it has already been minimized, restore it to its original size.</td></tr>
-<tr><td>Window</td><td>Maximize window</td><td></td><td></td><td></td><td>Maximize the window. If it has already been maximized, restore it to its original size.</td></tr>
-<tr><td>Window</td><td>Show panels</td><td></td><td></td><td>TouchCenter</td><td>The panel which is hidden automatically is displayed once. It will be canceled by some operation.</td></tr>
-<tr><td>Window</td><td>Switch prev NeeView</td><td>Ctrl+Shift+Tab</td><td></td><td></td><td>Switch to previous NeeView window.</td></tr>
-<tr><td>Window</td><td>Switch next NeeView</td><td>Ctrl+Tab</td><td></td><td></td><td>Switch to next NeeView window.</td></tr>
-<tr><td>Window</td><td>Stretch window</td><td></td><td></td><td></td><td>Fit the window to the MainView content size.</td></tr>
-<tr><td>Panel</td><td>Toggle bookshelf</td><td>B</td><td></td><td></td><td>Toggle visible / hide of the bookshelf panel.</td></tr>
-<tr><td>Panel</td><td>Toggle PageList panel</td><td>P</td><td></td><td></td><td>Toggle visible / hide of the PageList panel.</td></tr>
-<tr><td>Panel</td><td>Toggle bookmark panel</td><td>D</td><td></td><td></td><td>Toggle visible / hide of the bookmark panel.</td></tr>
-<tr><td>Panel</td><td>Toggle playlist panel</td><td>M</td><td></td><td></td><td>Toggle visible / hide of the playlist panel.</td></tr>
-<tr><td>Panel</td><td>Toggle history panel</td><td>H</td><td></td><td></td><td>Toggle visible / hide of the history panel.</td></tr>
-<tr><td>Panel</td><td>Toggle information panel</td><td>I</td><td></td><td></td><td>Toggle visible / hide of the information panel.</td></tr>
-<tr><td>Panel</td><td>Toggle navigator</td><td>N</td><td></td><td></td><td>Toggle visible / hide of the navigator panel.</td></tr>
-<tr><td>Panel</td><td>Toggle effects panel</td><td>E</td><td></td><td></td><td>Toggle visible / hide of the effects panel.</td></tr>
-<tr><td>Panel</td><td>Toggle Folders tree</td><td></td><td></td><td></td><td>Toggle visible / hide of the Folders tree. The bookshelf is displayed.</td></tr>
-<tr><td>Panel</td><td>Focus on bookshelf search box</td><td></td><td></td><td></td><td>Focus on the bookshelf search box. The Bookshelf panel will be in the display state.</td></tr>
-<tr><td>Panel</td><td>Focus on bookmark search box</td><td></td><td></td><td></td><td>Focus on the bookmark search box. The Bookmark panel will be in the display state.</td></tr>
-<tr><td>Panel</td><td>Focus on PageList search box</td><td></td><td></td><td></td><td>Focus on the PageList search box. The PageList panel will be in the display state.</td></tr>
-<tr><td>Panel</td><td>Focus on history search box</td><td></td><td></td><td></td><td>Focus on the history search box. The History panel will be in the display state.</td></tr>
-<tr><td>Panel</td><td>Display bookmark list</td><td></td><td></td><td></td><td>Display bookmark folder of the bookshelf.</td></tr>
-<tr><td>Panel</td><td>Focus on main view</td><td></td><td></td><td></td><td>Move focus to the main view.</td></tr>
-<tr><td>Panel</td><td>Toggle MainView window</td><td>F12</td><td></td><td></td><td>Make the MainView a window.</td></tr>
-<tr><td>Filmstrip</td><td>Toggle filmstrip</td><td></td><td></td><td></td><td>Toggle visible / hide of the filmstrip.</td></tr>
-<tr><td>Filmstrip</td><td>Toggle auto hide filmstrip</td><td></td><td></td><td></td><td>Display the film strip only when using the slider.</td></tr>
-<tr><td>View operation</td><td>Toggle slideshow</td><td>F5</td><td></td><td></td><td>Toggle play / stop of the slideshow.</td></tr>
-<tr><td>View operation</td><td>Toggle hover scroll</td><td></td><td></td><td></td><td>Scrolls according to the position of the cursor.</td></tr>
-<tr><td>View operation</td><td>N-type scroll ↑</td><td></td><td></td><td></td><td>If you can scroll vertically and horizontally, scroll to draw N characters.</td></tr>
-<tr><td>View operation</td><td>N-type scroll ↓</td><td></td><td></td><td></td><td>If you can scroll vertically and horizontally, scroll to draw N characters.</td></tr>
-<tr><td>View operation</td><td>Scroll ↑</td><td></td><td></td><td></td><td>Roll the image upwards. When it is not possible to scroll vertically, side scrolling will occur.</td></tr>
-<tr><td>View operation</td><td>Scroll ↓</td><td></td><td></td><td></td><td>Roll the image downwards. When it is not possible to scroll vertically, side scrolling will occur.</td></tr>
-<tr><td>View operation</td><td>Scroll ←</td><td></td><td></td><td></td><td>Roll the image to the left. If horizontal scrolling is not possible, vertical scrolling will occur.</td></tr>
-<tr><td>View operation</td><td>Scroll →</td><td></td><td></td><td></td><td>Roll the image to the right. If horizontal scrolling is not possible, vertical scrolling will occur.</td></tr>
-<tr><td>View operation</td><td>Zoom in</td><td>RightButton+WheelUp</td><td></td><td></td><td>Enlarge the image.</td></tr>
-<tr><td>View operation</td><td>Zoom out</td><td>RightButton+WheelDown</td><td></td><td></td><td>Reduce the image.</td></tr>
-<tr><td>View operation</td><td>Stretch</td><td></td><td></td><td></td><td>Apply stretch to scale.</td></tr>
-<tr><td>View operation</td><td>Base scale zoom in</td><td></td><td></td><td></td><td>Enlarge the base scale.</td></tr>
-<tr><td>View operation</td><td>Base scale zoom out</td><td></td><td></td><td></td><td>Reduces the base scale.</td></tr>
-<tr><td>View operation</td><td>Left rotate</td><td></td><td></td><td></td><td>Rotate the image to the left.</td></tr>
-<tr><td>View operation</td><td>Right rotate</td><td></td><td></td><td></td><td>Rotate the image to the right.</td></tr>
-<tr><td>View operation</td><td>Toggle auto left rotation</td><td></td><td></td><td></td><td>When displaying the page, left rotate the portrait image 90 degrees. If the window is portrait, rotate horizontally long image by 90 degrees.</td></tr>
-<tr><td>View operation</td><td>Toggle auto right rotation</td><td></td><td></td><td></td><td>When displaying the page, right rotate the portrait image 90 degrees. If the window is portrait, rotate horizontally long image by 90 degrees.</td></tr>
-<tr><td>View operation</td><td>Toggle forced left rotation</td><td></td><td></td><td></td><td>Rotate 90 degrees to the left regardless of image size.</td></tr>
-<tr><td>View operation</td><td>Toggle forced right rotation</td><td></td><td></td><td></td><td>Rotate 90 degrees to the right regardless of image size.</td></tr>
-<tr><td>View operation</td><td>Flip horizontal</td><td></td><td></td><td></td><td>Flip the image left and right.</td></tr>
-<tr><td>View operation</td><td>Flip horizontal</td><td></td><td></td><td></td><td>Flip the image left and right.</td></tr>
-<tr><td>View operation</td><td>Flip horizontal OFF</td><td></td><td></td><td></td><td>Cancel flip.</td></tr>
-<tr><td>View operation</td><td>Flip vertical</td><td></td><td></td><td></td><td>Flip the image upside down.</td></tr>
-<tr><td>View operation</td><td>Flip vertical</td><td></td><td></td><td></td><td>Turn it upside down.</td></tr>
-<tr><td>View operation</td><td>Flip vertical OFF</td><td></td><td></td><td></td><td>Cancel flip.</td></tr>
-<tr><td>View operation</td><td>View reset</td><td></td><td></td><td></td><td>Reset rotation, scaling, movement, and flip by manipulating the view.</td></tr>
-<tr><td>View operation</td><td>Toggle loupe</td><td></td><td></td><td></td><td>Loupe ON / OFF.</td></tr>
-<tr><td>View operation</td><td>Loupe</td><td></td><td></td><td></td><td>Make the loupe mode.</td></tr>
-<tr><td>View operation</td><td>Loupe OFF</td><td></td><td></td><td></td><td>Release the loupe mode.</td></tr>
-<tr><td>View operation</td><td>Loupe zoom in</td><td></td><td></td><td></td><td>Expands the magnifying power of the loupe. It functions only when using a loupe.</td></tr>
-<tr><td>View operation</td><td>Loupe zoom out</td><td></td><td></td><td></td><td>Reduce the loupe magnification. It functions only when using a loupe.</td></tr>
-<tr><td>View operation</td><td>Auto scroll</td><td>MiddleClick</td><td></td><td></td><td>Change to auto scroll mode.</td></tr>
-<tr><td>Page move</td><td>Prev</td><td>Right,RightClick</td><td>→</td><td>TouchR1,TouchR2</td><td>Move to the previous page. If it is 2 pages display, it moves by 2 pages.</td></tr>
-<tr><td>Page move</td><td>Next</td><td>Left,LeftClick</td><td>←</td><td>TouchL1,TouchL2</td><td>Move to next page direction. If it is 2 page display, it moves by 2 pages.</td></tr>
-<tr><td>Page move</td><td>Prev One</td><td></td><td>←→</td><td></td><td>Move previous one page only.</td></tr>
-<tr><td>Page move</td><td>Next One</td><td></td><td>→←</td><td></td><td>Only one page will move in the next direction.</td></tr>
-<tr><td>Page move</td><td>Scroll + Prev</td><td>WheelUp</td><td></td><td></td><td>Scroll the image backward in the page. If it is not possible to scroll, it will move to the previous page. When using a loupe, only move pages.</td></tr>
-<tr><td>Page move</td><td>Scroll + Next</td><td>WheelDown</td><td></td><td></td><td>Page Scrolls the image in the next direction. If it is not possible to scroll, it will move to the next page. When using a loupe, only move pages.</td></tr>
-<tr><td>Page move</td><td>Jump page</td><td></td><td></td><td></td><td>Enter the page number and move.</td></tr>
-<tr><td>Page move</td><td>Random page</td><td></td><td></td><td></td><td>Jump to a random page.</td></tr>
-<tr><td>Page move</td><td>Prev x pages</td><td></td><td></td><td></td><td>Move previous by a set number of pages.</td></tr>
-<tr><td>Page move</td><td>Next x pages</td><td></td><td></td><td></td><td>Move to the next direction by the set number of pages.</td></tr>
-<tr><td>Page move</td><td>Prev folder</td><td></td><td></td><td></td><td>Move to the first page of the previous folder of the book. Valid only in name order.</td></tr>
-<tr><td>Page move</td><td>Next folder</td><td></td><td></td><td></td><td>Move to the first page of the next folder of the book. Valid only in name order.</td></tr>
-<tr><td>Page move</td><td>First page</td><td>Ctrl+Right</td><td>↑→</td><td></td><td>Move to the first page.</td></tr>
-<tr><td>Page move</td><td>Last page</td><td>Ctrl+Left</td><td>↑←</td><td></td><td>Move to the last page.</td></tr>
-<tr><td>Page move</td><td>Go back view page</td><td>Backspace</td><td></td><td></td><td>Move to previous view page.</td></tr>
-<tr><td>Page move</td><td>Go next view page</td><td>Shift+Backspace</td><td></td><td></td><td>Move to next view page.</td></tr>
-<tr><td>Book move</td><td>Toggle book lock</td><td></td><td></td><td></td><td>Prohibits book switching.</td></tr>
-<tr><td>Book move</td><td>Prev Book</td><td>Up</td><td>←↑</td><td></td><td>Open previous book on the bookshelf.</td></tr>
-<tr><td>Book move</td><td>Next Book</td><td>Down</td><td>←↓</td><td></td><td>Open next book on the bookshelf.</td></tr>
-<tr><td>Book move</td><td>Random Book</td><td></td><td></td><td></td><td>Load the random book on the bookshelf.</td></tr>
-<tr><td>Book move</td><td>Prev History</td><td></td><td></td><td></td><td>Open previous book on the history panel.</td></tr>
-<tr><td>Book move</td><td>Next History</td><td></td><td></td><td></td><td>Open next book on the history panel.</td></tr>
-<tr><td>Book move</td><td>Go back</td><td>Alt+Left</td><td></td><td></td><td>Open previous book in history.</td></tr>
-<tr><td>Book move</td><td>Go next</td><td>Alt+Right</td><td></td><td></td><td>Open next book in history.</td></tr>
-<tr><td>Book move</td><td>Go to parent</td><td>Alt+Up</td><td></td><td></td><td>Open the upper hierarchy as a book.</td></tr>
-<tr><td>Book move</td><td>Go to child</td><td>Alt+Down</td><td></td><td></td><td>If possible, open the page as a book.</td></tr>
-<tr><td>Video</td><td>Play/Stop</td><td></td><td></td><td></td><td>Toggle between playing and stopping the movie.</td></tr>
-<tr><td>Book order</td><td>Switch book order</td><td></td><td></td><td></td><td>Switch the order of books in sequence.</td></tr>
-<tr><td>Book order</td><td>Book Name Ascending</td><td></td><td></td><td></td><td>Set the order of books in ascending order by name.</td></tr>
-<tr><td>Book order</td><td>Book Name Descending</td><td></td><td></td><td></td><td>Set the order of books in descending order by name.</td></tr>
-<tr><td>Book order</td><td>Book Path Ascending</td><td></td><td></td><td></td><td>Set the order of books in ascending order by full path.</td></tr>
-<tr><td>Book order</td><td>Book Path Descending</td><td></td><td></td><td></td><td>Set the order of books in descending order by full path.</td></tr>
-<tr><td>Book order</td><td>Book FileType Ascending</td><td></td><td></td><td></td><td>Set the order of books in ascending order by file type.</td></tr>
-<tr><td>Book order</td><td>Book FileType Descending</td><td></td><td></td><td></td><td>Set the order of books in descending order by file type.</td></tr>
-<tr><td>Book order</td><td>Book Date Ascending</td><td></td><td></td><td></td><td>Set the order of books in ascending order by date.</td></tr>
-<tr><td>Book order</td><td>Book Date Descending</td><td></td><td></td><td></td><td>Set the order of books in descending order by date.</td></tr>
-<tr><td>Book order</td><td>Book EntryTime Ascending</td><td></td><td></td><td></td><td>Set the order of books in ascending order by entry time.</td></tr>
-<tr><td>Book order</td><td>Book EntryTime Descending</td><td></td><td></td><td></td><td>Set the order of books in descending order by entry time.</td></tr>
-<tr><td>Book order</td><td>Book Size Ascending</td><td></td><td></td><td></td><td>Set the order of books in ascending order by size.</td></tr>
-<tr><td>Book order</td><td>Book Size Descending</td><td></td><td></td><td></td><td>Set the order of books in descending order by size.</td></tr>
-<tr><td>Book order</td><td>Book Shuffle</td><td></td><td></td><td></td><td>Set the order of books randomly.</td></tr>
-<tr><td>Page setting</td><td>Toggle page mode</td><td></td><td></td><td></td><td>Toggle page mode in sequance</td></tr>
-<tr><td>Page setting</td><td>Toggle page mode (reverse)</td><td></td><td></td><td></td><td>Toggle page mode in sequence (reverse)</td></tr>
-<tr><td>Page setting</td><td>One page</td><td>Ctrl+1</td><td>→↑</td><td></td><td>Make it 1 page display.</td></tr>
-<tr><td>Page setting</td><td>Two pages</td><td>Ctrl+2</td><td>→↓</td><td></td><td>It makes 2 page display.</td></tr>
-<tr><td>Page setting</td><td>Panorama</td><td></td><td></td><td></td><td>Displays consecutive pages.</td></tr>
-<tr><td>Page setting</td><td>Toggle pages orientation</td><td></td><td></td><td></td><td>Switch between horizontal and vertical orientation.</td></tr>
-<tr><td>Page setting</td><td>Horizontal page layout</td><td></td><td></td><td></td><td>Align pages horizontally</td></tr>
-<tr><td>Page setting</td><td>Vertical page layout</td><td></td><td></td><td></td><td>Align pages vertically</td></tr>
-<tr><td>Page setting</td><td>Book orientation</td><td></td><td></td><td></td><td>Toggle right and left open.</td></tr>
-<tr><td>Page setting</td><td>Right to left</td><td></td><td></td><td></td><td>Right forward from right to left. Previous page is on the right when 2 pages are displayed.</td></tr>
-<tr><td>Page setting</td><td>Left to right</td><td></td><td></td><td></td><td>Left forward from left to right. Previous page is on the left when 2 pages are displayed.</td></tr>
-<tr><td>Page setting</td><td>Divide wide page</td><td></td><td></td><td></td><td>When one page is displayed, divide the landscape page into pages.</td></tr>
-<tr><td>Page setting</td><td>Consider landscape pages as two pages</td><td></td><td></td><td></td><td>When two pages are displayed, the horizontally long image is regarded as two pages and is displayed independently.</td></tr>
-<tr><td>Page setting</td><td>Show first page alone</td><td></td><td></td><td></td><td>Even on 2 page display, the first page is displayed as 1 page.</td></tr>
-<tr><td>Page setting</td><td>Show last page alone</td><td></td><td></td><td></td><td>Even on 2 page display, the last page is displayed on 1 page.</td></tr>
-<tr><td>Page setting</td><td>Load subfolders</td><td></td><td></td><td></td><td>When loading images from folders, subfolders or compressed files are also loaded at the same time.</td></tr>
-<tr><td>Page setting</td><td>Reset page setting</td><td></td><td></td><td></td><td>Restore the default page setting.</td></tr>
-<tr><td>Page order</td><td>Switch pages order</td><td></td><td></td><td></td><td>Switch the order of the pages in sequence.</td></tr>
-<tr><td>Page order</td><td>Name Ascending</td><td></td><td></td><td></td><td>Sort the order of the pages in ascending order by filename.</td></tr>
-<tr><td>Page order</td><td>Name Descending</td><td></td><td></td><td></td><td>Sort the order of the pages in descending order by file name.</td></tr>
-<tr><td>Page order</td><td>Date Ascending</td><td></td><td></td><td></td><td>Sort the order of pages by file date ascending order.</td></tr>
-<tr><td>Page order</td><td>Date Descending</td><td></td><td></td><td></td><td>Sort the order of pages by file date descending order.</td></tr>
-<tr><td>Page order</td><td>Size Ascending</td><td></td><td></td><td></td><td>Set the order of pages in ascending order by file size.</td></tr>
-<tr><td>Page order</td><td>Size Descending</td><td></td><td></td><td></td><td>Set the order of pages in descending order by file size.</td></tr>
-<tr><td>Page order</td><td>Entry Ascending</td><td></td><td></td><td></td><td>Set the order of pages in ascending order by entry.</td></tr>
-<tr><td>Page order</td><td>Entry Descending</td><td></td><td></td><td></td><td>Set the order of pages in descending order by entry.</td></tr>
-<tr><td>Page order</td><td>Shuffle</td><td></td><td></td><td></td><td>Shuffle the order of pages.</td></tr>
-<tr><td>Bookmark</td><td>Toggle bookmark</td><td>Ctrl+D</td><td></td><td></td><td>Toggle bookmark for currently open book.</td></tr>
-<tr><td>Playlist</td><td>Toggle playlist item</td><td>Ctrl+M</td><td></td><td></td><td>Add or delete the current page to the playlist.</td></tr>
-<tr><td>Playlist</td><td>Prev playlist item</td><td></td><td></td><td></td><td>Go to the previous page mark.</td></tr>
-<tr><td>Playlist</td><td>Next playlist item</td><td></td><td></td><td></td><td>Go to the next page mark.</td></tr>
-<tr><td>Playlist</td><td>Prev playlist item in book</td><td></td><td></td><td></td><td>Move to the previous page mark in the current book.</td></tr>
-<tr><td>Playlist</td><td>Next playlist item in book</td><td></td><td></td><td></td><td>Move to the next page mark in the current book.</td></tr>
-<tr><td>Other</td><td>Open settings window</td><td></td><td></td><td></td><td>Open the settings window.</td></tr>
-<tr><td>Other</td><td>Open setting folder</td><td></td><td></td><td></td><td>Open the folder where the configuration file setting file is saved.</td></tr>
-<tr><td>Other</td><td>Open scripts folder</td><td></td><td></td><td></td><td>Open the scripts folder with Explorer.</td></tr>
-<tr><td>Other</td><td>Display version information</td><td></td><td></td><td></td><td>Display version information.</td></tr>
-<tr><td>Other</td><td>Quit application</td><td></td><td></td><td></td><td>Quit this application.</td></tr>
-<tr><td>Other</td><td>Toggle file management</td><td></td><td></td><td></td><td>Toggle enable / disable of file management command.</td></tr>
-<tr><td>Other</td><td>Command help</td><td></td><td></td><td></td><td>Displays help of all commands in the browser.</td></tr>
-<tr><td>Other</td><td>Script Help</td><td></td><td></td><td></td><td>Displays the script manual in the browser.</td></tr>
-<tr><td>Other</td><td>Main menu help</td><td></td><td></td><td></td><td>Display the main menu help on the browser.</td></tr>
-<tr><td>Other</td><td>Search options help</td><td></td><td></td><td></td><td>Display the search options help on the browser.</td></tr>
-<tr><td>Other</td><td>Open context menu</td><td></td><td></td><td></td><td>Open the context menu.</td></tr>
-<tr><td>Other</td><td>Export settings</td><td></td><td></td><td></td><td>Create backups of settings, history, bookmarks. The thumbnail cache is not backed up.</td></tr>
-<tr><td>Other</td><td>Import settings</td><td></td><td></td><td></td><td>Select the restored item from the backup file and restore it. If all parameters are defined, the dialog will not be displayed.</td></tr>
-<tr><td>Other</td><td>Reload settings</td><td></td><td></td><td></td><td>Reload the settings.</td></tr>
-<tr><td>Other</td><td>Save settings</td><td></td><td></td><td></td><td>Performs saving the current settings.</td></tr>
-<tr><td>Other</td><td>Touch emulate</td><td></td><td></td><td></td><td>Execute the touch command at the cursor position.</td></tr>
-<tr><td>Other</td><td>Open script console</td><td></td><td></td><td></td><td>Open the script console.</td></tr>
-<tr><td>Script</td><td>Cancel script</td><td></td><td></td><td></td><td>Stops a running script that has a "sleep" instruction.</td></tr>
+<h1>Command List</h1>
+<p>The key setting for this listing is preset TypeA.</p>
+<h3>File</h3>
+<table>
+<tr>
+<th class="td-middle">Command</th>
+<th class="nowrap">Shortcut</th>
+<th class="nowrap">Gesture</th>
+<th class="nowrap">Touch</th>
+<th class="td-middle">Summary</th>
+</tr>
+<tr><td>Open file</td><td>Ctrl+O</td><td></td><td></td><td>Select and open the compressed file or image file.</td></tr>
+<tr><td>Reload</td><td></td><td>↑↓</td><td></td><td>Reload the book</td></tr>
+<tr><td>Close</td><td></td><td></td><td></td><td>Close the open workbook.</td></tr>
+<tr><td>External app (simple)</td><td></td><td></td><td></td><td>Open the displayed image with an external application.</td></tr>
+<tr><td>External app</td><td></td><td></td><td></td><td>Select an external application to open the displayed images.</td></tr>
+<tr><td>Open in explorer</td><td></td><td></td><td></td><td>Open the file of the page you are viewing in Explorer.</td></tr>
+<tr><td>Save as</td><td>Ctrl+S</td><td></td><td></td><td>Save the image to a file.</td></tr>
+<tr><td>Save</td><td>Ctrl+Shift+S</td><td></td><td></td><td>Save the image to a file. The storage folder is specified by a command parameter.</td></tr>
+<tr><td>Print</td><td>Ctrl+P</td><td></td><td></td><td>Print the image.</td></tr>
+<tr><td>Delete file</td><td>Delete</td><td></td><td></td><td>Delete the file. Compressed files can not be deleted.</td></tr>
+<tr><td>Delete book</td><td></td><td></td><td></td><td>Delete the currently viewed folder or compressed file.</td></tr>
+<tr><td>Copy file</td><td>Ctrl+C</td><td></td><td></td><td>Copy the file to the clipboard.</td></tr>
+<tr><td>Copy image</td><td>Ctrl+Shift+C</td><td></td><td></td><td>Copy the image to the clipboard. For 2 page display, copy only the main page.</td></tr>
+<tr><td>Paste</td><td>Ctrl+V</td><td></td><td></td><td>Paste clipboard files and images.</td></tr>
+<tr><td>Copy to folder</td><td></td><td></td><td></td><td>Select the folder where you want to copy the displayed images.</td></tr>
+<tr><td>Move to folder</td><td></td><td></td><td></td><td>Select the folder where you want to move the displayed images.</td></tr>
+<tr><td>Clear history</td><td></td><td></td><td></td><td>Delete all history.</td></tr>
+<tr><td>Delete history in place</td><td></td><td></td><td></td><td>Delete all history in the current location of the bookshelf.</td></tr>
+<tr><td>Delete invalid history items</td><td></td><td></td><td></td><td>Delete history items that do not exist.</td></tr>
+</table>
+<h3>Stretch</h3>
+<table>
+<tr>
+<th class="td-middle">Command</th>
+<th class="nowrap">Shortcut</th>
+<th class="nowrap">Gesture</th>
+<th class="nowrap">Touch</th>
+<th class="td-middle">Summary</th>
+</tr>
+<tr><td>Switch stretch</td><td>LeftButton+WheelDown</td><td></td><td></td><td>Switch the stretch in sequence.</td></tr>
+<tr><td>Switch stretch (reverse)</td><td>LeftButton+WheelUp</td><td></td><td></td><td>Switch the stretch in sequence. (reverse)</td></tr>
+<tr><td>Original size</td><td></td><td></td><td></td><td>Display the image as it is.</td></tr>
+<tr><td>Fit to window size</td><td></td><td></td><td></td><td>Scales the image to fit the window size.</td></tr>
+<tr><td>Extend it to fill the window</td><td></td><td></td><td></td><td>Scale up or down to fit the window size either vertically or horizontally. The image will be larger than the window size.</td></tr>
+<tr><td>Fit the area size to the window</td><td></td><td></td><td></td><td>Scales the image so that it is equal to the area size of ​​the window.</td></tr>
+<tr><td>Fit height to window</td><td></td><td></td><td></td><td>Scales to fit the height of the image to the height of the window.</td></tr>
+<tr><td>Fit width to window</td><td></td><td></td><td></td><td>Scales to fit the width of the image to the width of the window.</td></tr>
+<tr><td>Allow stretch scale up</td><td></td><td></td><td></td><td>Allow scale up on stretch.</td></tr>
+<tr><td>Allow stretch scale down</td><td></td><td></td><td></td><td>Allow scale down on stretch.</td></tr>
+<tr><td>Toggle custom size</td><td></td><td></td><td></td><td>Toggles enabling / disabling of size specification applied to original size.</td></tr>
+</table>
+<h3>Effect</h3>
+<table>
+<tr>
+<th class="td-middle">Command</th>
+<th class="nowrap">Shortcut</th>
+<th class="nowrap">Gesture</th>
+<th class="nowrap">Touch</th>
+<th class="td-middle">Summary</th>
+</tr>
+<tr><td>Toggle keep dot</td><td></td><td></td><td></td><td>Enlarges the image while maintaining the dots. When turned off, the scale conversion process (Fant) is performed.</td></tr>
+<tr><td>Switch background</td><td></td><td></td><td></td><td>Switch the background sequentially.</td></tr>
+<tr><td>Black background</td><td></td><td></td><td></td><td>Make the background black.</td></tr>
+<tr><td>White background</td><td></td><td></td><td></td><td>Make the background white.</td></tr>
+<tr><td>Image colored background</td><td></td><td></td><td></td><td>Set the background color from the image. Specifically, the color of the upper left pixel of the image is used.</td></tr>
+<tr><td>White checkered background</td><td></td><td></td><td></td><td>Make the background a white checkered pattern.</td></tr>
+<tr><td>Black checkered background</td><td></td><td></td><td></td><td>Make the background a black checkered pattern.</td></tr>
+<tr><td>Custom Background</td><td></td><td></td><td></td><td>Make the background a custom background.</td></tr>
+<tr><td>Toggle resize filter</td><td>Ctrl+R</td><td></td><td></td><td>Toggle resize filter ON / OFF.</td></tr>
+<tr><td>Grid</td><td></td><td></td><td></td><td>Toggle visible / hide of grid.</td></tr>
+<tr><td>Toggle effect</td><td>Ctrl+E</td><td></td><td></td><td>Toggle effect ON / OFF.</td></tr>
+</table>
+<h3>Window</h3>
+<table>
+<tr>
+<th class="td-middle">Command</th>
+<th class="nowrap">Shortcut</th>
+<th class="nowrap">Gesture</th>
+<th class="nowrap">Touch</th>
+<th class="td-middle">Summary</th>
+</tr>
+<tr><td>Toggle topmost</td><td></td><td></td><td></td><td>Always display the window in front.</td></tr>
+<tr><td>Toggle address bar</td><td></td><td></td><td></td><td>Toggle visible / hide of the address bar.</td></tr>
+<tr><td>Toggle auto hide menu</td><td></td><td></td><td></td><td>Hide the menu. It is displayed by moving the cursor to the upper end of the window.</td></tr>
+<tr><td>Toggle side bars</td><td></td><td></td><td></td><td>Toggle visible / hide of side bars.</td></tr>
+<tr><td>Toggle auto hide panels</td><td></td><td></td><td></td><td>Automatically hide the left and right panels. It is displayed by moving the cursor to the left and right edges of the window.</td></tr>
+<tr><td>Toggle slider</td><td></td><td></td><td></td><td>Toggle visible / hide of the slider.</td></tr>
+<tr><td>Toggle auto hide slider</td><td></td><td></td><td></td><td>Hide the slider. It is displayed by moving the cursor to the lower end of the window.</td></tr>
+<tr><td>Toggle full screen</td><td>F11</td><td>↑</td><td></td><td>Switch the full screen state.</td></tr>
+<tr><td>Full screen</td><td></td><td></td><td></td><td>Make it full screen.</td></tr>
+<tr><td>Full screen OFF</td><td></td><td></td><td></td><td>Turn off full screen.</td></tr>
+<tr><td>Minimize window</td><td></td><td></td><td></td><td>Minimize the window. If it has already been minimized, restore it to its original size.</td></tr>
+<tr><td>Maximize window</td><td></td><td></td><td></td><td>Maximize the window. If it has already been maximized, restore it to its original size.</td></tr>
+<tr><td>Show panels</td><td></td><td></td><td>TouchCenter</td><td>The panel which is hidden automatically is displayed once. It will be canceled by some operation.</td></tr>
+<tr><td>Switch prev NeeView</td><td>Ctrl+Shift+Tab</td><td></td><td></td><td>Switch to previous NeeView window.</td></tr>
+<tr><td>Switch next NeeView</td><td>Ctrl+Tab</td><td></td><td></td><td>Switch to next NeeView window.</td></tr>
+<tr><td>Stretch window</td><td></td><td></td><td></td><td>Fit the window to the MainView content size.</td></tr>
+</table>
+<h3>Panel</h3>
+<table>
+<tr>
+<th class="td-middle">Command</th>
+<th class="nowrap">Shortcut</th>
+<th class="nowrap">Gesture</th>
+<th class="nowrap">Touch</th>
+<th class="td-middle">Summary</th>
+</tr>
+<tr><td>Toggle bookshelf</td><td>B</td><td></td><td></td><td>Toggle visible / hide of the bookshelf panel.</td></tr>
+<tr><td>Toggle PageList panel</td><td>P</td><td></td><td></td><td>Toggle visible / hide of the PageList panel.</td></tr>
+<tr><td>Toggle bookmark panel</td><td>D</td><td></td><td></td><td>Toggle visible / hide of the bookmark panel.</td></tr>
+<tr><td>Toggle playlist panel</td><td>M</td><td></td><td></td><td>Toggle visible / hide of the playlist panel.</td></tr>
+<tr><td>Toggle history panel</td><td>H</td><td></td><td></td><td>Toggle visible / hide of the history panel.</td></tr>
+<tr><td>Toggle information panel</td><td>I</td><td></td><td></td><td>Toggle visible / hide of the information panel.</td></tr>
+<tr><td>Toggle navigator</td><td>N</td><td></td><td></td><td>Toggle visible / hide of the navigator panel.</td></tr>
+<tr><td>Toggle effects panel</td><td>E</td><td></td><td></td><td>Toggle visible / hide of the effects panel.</td></tr>
+<tr><td>Toggle Folders tree</td><td></td><td></td><td></td><td>Toggle visible / hide of the Folders tree. The bookshelf is displayed.</td></tr>
+<tr><td>Focus on bookshelf search box</td><td></td><td></td><td></td><td>Focus on the bookshelf search box. The Bookshelf panel will be in the display state.</td></tr>
+<tr><td>Focus on bookmark search box</td><td></td><td></td><td></td><td>Focus on the bookmark search box. The Bookmark panel will be in the display state.</td></tr>
+<tr><td>Focus on PageList search box</td><td></td><td></td><td></td><td>Focus on the PageList search box. The PageList panel will be in the display state.</td></tr>
+<tr><td>Focus on history search box</td><td></td><td></td><td></td><td>Focus on the history search box. The History panel will be in the display state.</td></tr>
+<tr><td>Display bookmark list</td><td></td><td></td><td></td><td>Display bookmark folder of the bookshelf.</td></tr>
+<tr><td>Focus on main view</td><td></td><td></td><td></td><td>Move focus to the main view.</td></tr>
+<tr><td>Toggle MainView window</td><td>F12</td><td></td><td></td><td>Make the MainView a window.</td></tr>
+</table>
+<h3>Filmstrip</h3>
+<table>
+<tr>
+<th class="td-middle">Command</th>
+<th class="nowrap">Shortcut</th>
+<th class="nowrap">Gesture</th>
+<th class="nowrap">Touch</th>
+<th class="td-middle">Summary</th>
+</tr>
+<tr><td>Toggle filmstrip</td><td></td><td></td><td></td><td>Toggle visible / hide of the filmstrip.</td></tr>
+<tr><td>Toggle auto hide filmstrip</td><td></td><td></td><td></td><td>Display the film strip only when using the slider.</td></tr>
+</table>
+<h3>View operation</h3>
+<table>
+<tr>
+<th class="td-middle">Command</th>
+<th class="nowrap">Shortcut</th>
+<th class="nowrap">Gesture</th>
+<th class="nowrap">Touch</th>
+<th class="td-middle">Summary</th>
+</tr>
+<tr><td>Toggle slideshow</td><td>F5</td><td></td><td></td><td>Toggle play / stop of the slideshow.</td></tr>
+<tr><td>Toggle hover scroll</td><td></td><td></td><td></td><td>Scrolls according to the position of the cursor.</td></tr>
+<tr><td>N-type scroll ↑</td><td></td><td></td><td></td><td>If you can scroll vertically and horizontally, scroll to draw N characters.</td></tr>
+<tr><td>N-type scroll ↓</td><td></td><td></td><td></td><td>If you can scroll vertically and horizontally, scroll to draw N characters.</td></tr>
+<tr><td>Scroll ↑</td><td></td><td></td><td></td><td>Roll the image upwards. When it is not possible to scroll vertically, side scrolling will occur.</td></tr>
+<tr><td>Scroll ↓</td><td></td><td></td><td></td><td>Roll the image downwards. When it is not possible to scroll vertically, side scrolling will occur.</td></tr>
+<tr><td>Scroll ←</td><td></td><td></td><td></td><td>Roll the image to the left. If horizontal scrolling is not possible, vertical scrolling will occur.</td></tr>
+<tr><td>Scroll →</td><td></td><td></td><td></td><td>Roll the image to the right. If horizontal scrolling is not possible, vertical scrolling will occur.</td></tr>
+<tr><td>Zoom in</td><td>RightButton+WheelUp</td><td></td><td></td><td>Enlarge the image.</td></tr>
+<tr><td>Zoom out</td><td>RightButton+WheelDown</td><td></td><td></td><td>Reduce the image.</td></tr>
+<tr><td>Stretch</td><td></td><td></td><td></td><td>Apply stretch to scale.</td></tr>
+<tr><td>Base scale zoom in</td><td></td><td></td><td></td><td>Enlarge the base scale.</td></tr>
+<tr><td>Base scale zoom out</td><td></td><td></td><td></td><td>Reduces the base scale.</td></tr>
+<tr><td>Left rotate</td><td></td><td></td><td></td><td>Rotate the image to the left.</td></tr>
+<tr><td>Right rotate</td><td></td><td></td><td></td><td>Rotate the image to the right.</td></tr>
+<tr><td>Toggle auto left rotation</td><td></td><td></td><td></td><td>When displaying the page, left rotate the portrait image 90 degrees. If the window is portrait, rotate horizontally long image by 90 degrees.</td></tr>
+<tr><td>Toggle auto right rotation</td><td></td><td></td><td></td><td>When displaying the page, right rotate the portrait image 90 degrees. If the window is portrait, rotate horizontally long image by 90 degrees.</td></tr>
+<tr><td>Toggle forced left rotation</td><td></td><td></td><td></td><td>Rotate 90 degrees to the left regardless of image size.</td></tr>
+<tr><td>Toggle forced right rotation</td><td></td><td></td><td></td><td>Rotate 90 degrees to the right regardless of image size.</td></tr>
+<tr><td>Flip horizontal</td><td></td><td></td><td></td><td>Flip the image left and right.</td></tr>
+<tr><td>Flip horizontal</td><td></td><td></td><td></td><td>Flip the image left and right.</td></tr>
+<tr><td>Flip horizontal OFF</td><td></td><td></td><td></td><td>Cancel flip.</td></tr>
+<tr><td>Flip vertical</td><td></td><td></td><td></td><td>Flip the image upside down.</td></tr>
+<tr><td>Flip vertical</td><td></td><td></td><td></td><td>Turn it upside down.</td></tr>
+<tr><td>Flip vertical OFF</td><td></td><td></td><td></td><td>Cancel flip.</td></tr>
+<tr><td>View reset</td><td></td><td></td><td></td><td>Reset rotation, scaling, movement, and flip by manipulating the view.</td></tr>
+<tr><td>Toggle loupe</td><td></td><td></td><td></td><td>Loupe ON / OFF.</td></tr>
+<tr><td>Loupe</td><td></td><td></td><td></td><td>Make the loupe mode.</td></tr>
+<tr><td>Loupe OFF</td><td></td><td></td><td></td><td>Release the loupe mode.</td></tr>
+<tr><td>Loupe zoom in</td><td></td><td></td><td></td><td>Expands the magnifying power of the loupe. It functions only when using a loupe.</td></tr>
+<tr><td>Loupe zoom out</td><td></td><td></td><td></td><td>Reduce the loupe magnification. It functions only when using a loupe.</td></tr>
+<tr><td>Auto scroll</td><td>MiddleClick</td><td></td><td></td><td>Change to auto scroll mode.</td></tr>
+</table>
+<h3>Page move</h3>
+<table>
+<tr>
+<th class="td-middle">Command</th>
+<th class="nowrap">Shortcut</th>
+<th class="nowrap">Gesture</th>
+<th class="nowrap">Touch</th>
+<th class="td-middle">Summary</th>
+</tr>
+<tr><td>Prev</td><td>Right,RightClick</td><td>→</td><td>TouchR1,TouchR2</td><td>Move to the previous page. If it is 2 pages display, it moves by 2 pages.</td></tr>
+<tr><td>Next</td><td>Left,LeftClick</td><td>←</td><td>TouchL1,TouchL2</td><td>Move to next page direction. If it is 2 page display, it moves by 2 pages.</td></tr>
+<tr><td>Prev One</td><td></td><td>←→</td><td></td><td>Move previous one page only.</td></tr>
+<tr><td>Next One</td><td></td><td>→←</td><td></td><td>Only one page will move in the next direction.</td></tr>
+<tr><td>Scroll + Prev</td><td>WheelUp</td><td></td><td></td><td>Scroll the image backward in the page. If it is not possible to scroll, it will move to the previous page. When using a loupe, only move pages.</td></tr>
+<tr><td>Scroll + Next</td><td>WheelDown</td><td></td><td></td><td>Page Scrolls the image in the next direction. If it is not possible to scroll, it will move to the next page. When using a loupe, only move pages.</td></tr>
+<tr><td>Jump page</td><td></td><td></td><td></td><td>Enter the page number and move.</td></tr>
+<tr><td>Random page</td><td></td><td></td><td></td><td>Jump to a random page.</td></tr>
+<tr><td>Prev x pages</td><td></td><td></td><td></td><td>Move previous by a set number of pages.</td></tr>
+<tr><td>Next x pages</td><td></td><td></td><td></td><td>Move to the next direction by the set number of pages.</td></tr>
+<tr><td>Prev folder</td><td></td><td></td><td></td><td>Move to the first page of the previous folder of the book. Valid only in name order.</td></tr>
+<tr><td>Next folder</td><td></td><td></td><td></td><td>Move to the first page of the next folder of the book. Valid only in name order.</td></tr>
+<tr><td>First page</td><td>Ctrl+Right</td><td>↑→</td><td></td><td>Move to the first page.</td></tr>
+<tr><td>Last page</td><td>Ctrl+Left</td><td>↑←</td><td></td><td>Move to the last page.</td></tr>
+<tr><td>Go back view page</td><td>Backspace</td><td></td><td></td><td>Move to previous view page.</td></tr>
+<tr><td>Go next view page</td><td>Shift+Backspace</td><td></td><td></td><td>Move to next view page.</td></tr>
+</table>
+<h3>Book move</h3>
+<table>
+<tr>
+<th class="td-middle">Command</th>
+<th class="nowrap">Shortcut</th>
+<th class="nowrap">Gesture</th>
+<th class="nowrap">Touch</th>
+<th class="td-middle">Summary</th>
+</tr>
+<tr><td>Toggle book lock</td><td></td><td></td><td></td><td>Prohibits book switching.</td></tr>
+<tr><td>Prev Book</td><td>Up</td><td>←↑</td><td></td><td>Open previous book on the bookshelf.</td></tr>
+<tr><td>Next Book</td><td>Down</td><td>←↓</td><td></td><td>Open next book on the bookshelf.</td></tr>
+<tr><td>Random Book</td><td></td><td></td><td></td><td>Load the random book on the bookshelf.</td></tr>
+<tr><td>Prev History</td><td></td><td></td><td></td><td>Open previous book on the history panel.</td></tr>
+<tr><td>Next History</td><td></td><td></td><td></td><td>Open next book on the history panel.</td></tr>
+<tr><td>Go back</td><td>Alt+Left</td><td></td><td></td><td>Open previous book in history.</td></tr>
+<tr><td>Go next</td><td>Alt+Right</td><td></td><td></td><td>Open next book in history.</td></tr>
+<tr><td>Go to parent</td><td>Alt+Up</td><td></td><td></td><td>Open the upper hierarchy as a book.</td></tr>
+<tr><td>Go to child</td><td>Alt+Down</td><td></td><td></td><td>If possible, open the page as a book.</td></tr>
+</table>
+<h3>Video</h3>
+<table>
+<tr>
+<th class="td-middle">Command</th>
+<th class="nowrap">Shortcut</th>
+<th class="nowrap">Gesture</th>
+<th class="nowrap">Touch</th>
+<th class="td-middle">Summary</th>
+</tr>
+<tr><td>Play/Stop</td><td></td><td></td><td></td><td>Toggle between playing and stopping the movie.</td></tr>
+</table>
+<h3>Book order</h3>
+<table>
+<tr>
+<th class="td-middle">Command</th>
+<th class="nowrap">Shortcut</th>
+<th class="nowrap">Gesture</th>
+<th class="nowrap">Touch</th>
+<th class="td-middle">Summary</th>
+</tr>
+<tr><td>Switch book order</td><td></td><td></td><td></td><td>Switch the order of books in sequence.</td></tr>
+<tr><td>Book Name Ascending</td><td></td><td></td><td></td><td>Set the order of books in ascending order by name.</td></tr>
+<tr><td>Book Name Descending</td><td></td><td></td><td></td><td>Set the order of books in descending order by name.</td></tr>
+<tr><td>Book Path Ascending</td><td></td><td></td><td></td><td>Set the order of books in ascending order by full path.</td></tr>
+<tr><td>Book Path Descending</td><td></td><td></td><td></td><td>Set the order of books in descending order by full path.</td></tr>
+<tr><td>Book FileType Ascending</td><td></td><td></td><td></td><td>Set the order of books in ascending order by file type.</td></tr>
+<tr><td>Book FileType Descending</td><td></td><td></td><td></td><td>Set the order of books in descending order by file type.</td></tr>
+<tr><td>Book Date Ascending</td><td></td><td></td><td></td><td>Set the order of books in ascending order by date.</td></tr>
+<tr><td>Book Date Descending</td><td></td><td></td><td></td><td>Set the order of books in descending order by date.</td></tr>
+<tr><td>Book EntryTime Ascending</td><td></td><td></td><td></td><td>Set the order of books in ascending order by entry time.</td></tr>
+<tr><td>Book EntryTime Descending</td><td></td><td></td><td></td><td>Set the order of books in descending order by entry time.</td></tr>
+<tr><td>Book Size Ascending</td><td></td><td></td><td></td><td>Set the order of books in ascending order by size.</td></tr>
+<tr><td>Book Size Descending</td><td></td><td></td><td></td><td>Set the order of books in descending order by size.</td></tr>
+<tr><td>Book Shuffle</td><td></td><td></td><td></td><td>Set the order of books randomly.</td></tr>
+</table>
+<h3>Page setting</h3>
+<table>
+<tr>
+<th class="td-middle">Command</th>
+<th class="nowrap">Shortcut</th>
+<th class="nowrap">Gesture</th>
+<th class="nowrap">Touch</th>
+<th class="td-middle">Summary</th>
+</tr>
+<tr><td>Toggle page mode</td><td></td><td></td><td></td><td>Toggle page mode in sequance</td></tr>
+<tr><td>Toggle page mode (reverse)</td><td></td><td></td><td></td><td>Toggle page mode in sequence (reverse)</td></tr>
+<tr><td>One page</td><td>Ctrl+1</td><td>→↑</td><td></td><td>Make it 1 page display.</td></tr>
+<tr><td>Two pages</td><td>Ctrl+2</td><td>→↓</td><td></td><td>It makes 2 page display.</td></tr>
+<tr><td>Panorama</td><td></td><td></td><td></td><td>Displays consecutive pages.</td></tr>
+<tr><td>Toggle pages orientation</td><td></td><td></td><td></td><td>Switch between horizontal and vertical orientation.</td></tr>
+<tr><td>Horizontal page layout</td><td></td><td></td><td></td><td>Align pages horizontally</td></tr>
+<tr><td>Vertical page layout</td><td></td><td></td><td></td><td>Align pages vertically</td></tr>
+<tr><td>Book orientation</td><td></td><td></td><td></td><td>Toggle right and left open.</td></tr>
+<tr><td>Right to left</td><td></td><td></td><td></td><td>Right forward from right to left. Previous page is on the right when 2 pages are displayed.</td></tr>
+<tr><td>Left to right</td><td></td><td></td><td></td><td>Left forward from left to right. Previous page is on the left when 2 pages are displayed.</td></tr>
+<tr><td>Divide wide page</td><td></td><td></td><td></td><td>When one page is displayed, divide the landscape page into pages.</td></tr>
+<tr><td>Consider landscape pages as two pages</td><td></td><td></td><td></td><td>When two pages are displayed, the horizontally long image is regarded as two pages and is displayed independently.</td></tr>
+<tr><td>Show first page alone</td><td></td><td></td><td></td><td>Even on 2 page display, the first page is displayed as 1 page.</td></tr>
+<tr><td>Show last page alone</td><td></td><td></td><td></td><td>Even on 2 page display, the last page is displayed on 1 page.</td></tr>
+<tr><td>Load subfolders</td><td></td><td></td><td></td><td>When loading images from folders, subfolders or compressed files are also loaded at the same time.</td></tr>
+<tr><td>Reset page setting</td><td></td><td></td><td></td><td>Restore the default page setting.</td></tr>
+</table>
+<h3>Page order</h3>
+<table>
+<tr>
+<th class="td-middle">Command</th>
+<th class="nowrap">Shortcut</th>
+<th class="nowrap">Gesture</th>
+<th class="nowrap">Touch</th>
+<th class="td-middle">Summary</th>
+</tr>
+<tr><td>Switch pages order</td><td></td><td></td><td></td><td>Switch the order of the pages in sequence.</td></tr>
+<tr><td>Name Ascending</td><td></td><td></td><td></td><td>Sort the order of the pages in ascending order by filename.</td></tr>
+<tr><td>Name Descending</td><td></td><td></td><td></td><td>Sort the order of the pages in descending order by file name.</td></tr>
+<tr><td>Date Ascending</td><td></td><td></td><td></td><td>Sort the order of pages by file date ascending order.</td></tr>
+<tr><td>Date Descending</td><td></td><td></td><td></td><td>Sort the order of pages by file date descending order.</td></tr>
+<tr><td>Size Ascending</td><td></td><td></td><td></td><td>Set the order of pages in ascending order by file size.</td></tr>
+<tr><td>Size Descending</td><td></td><td></td><td></td><td>Set the order of pages in descending order by file size.</td></tr>
+<tr><td>Entry Ascending</td><td></td><td></td><td></td><td>Set the order of pages in ascending order by entry.</td></tr>
+<tr><td>Entry Descending</td><td></td><td></td><td></td><td>Set the order of pages in descending order by entry.</td></tr>
+<tr><td>Shuffle</td><td></td><td></td><td></td><td>Shuffle the order of pages.</td></tr>
+</table>
+<h3>Bookmark</h3>
+<table>
+<tr>
+<th class="td-middle">Command</th>
+<th class="nowrap">Shortcut</th>
+<th class="nowrap">Gesture</th>
+<th class="nowrap">Touch</th>
+<th class="td-middle">Summary</th>
+</tr>
+<tr><td>Toggle bookmark</td><td>Ctrl+D</td><td></td><td></td><td>Toggle bookmark for currently open book.</td></tr>
+</table>
+<h3>Playlist</h3>
+<table>
+<tr>
+<th class="td-middle">Command</th>
+<th class="nowrap">Shortcut</th>
+<th class="nowrap">Gesture</th>
+<th class="nowrap">Touch</th>
+<th class="td-middle">Summary</th>
+</tr>
+<tr><td>Toggle playlist item</td><td>Ctrl+M</td><td></td><td></td><td>Add or delete the current page to the playlist.</td></tr>
+<tr><td>Prev playlist item</td><td></td><td></td><td></td><td>Go to the previous page mark.</td></tr>
+<tr><td>Next playlist item</td><td></td><td></td><td></td><td>Go to the next page mark.</td></tr>
+<tr><td>Prev playlist item in book</td><td></td><td></td><td></td><td>Move to the previous page mark in the current book.</td></tr>
+<tr><td>Next playlist item in book</td><td></td><td></td><td></td><td>Move to the next page mark in the current book.</td></tr>
+</table>
+<h3>Script</h3>
+<table>
+<tr>
+<th class="td-middle">Command</th>
+<th class="nowrap">Shortcut</th>
+<th class="nowrap">Gesture</th>
+<th class="nowrap">Touch</th>
+<th class="td-middle">Summary</th>
+</tr>
+<tr><td>Cancel script</td><td></td><td></td><td></td><td>Stops a running script that has a "sleep" instruction.</td></tr>
+</table>
+<h3>Other</h3>
+<table>
+<tr>
+<th class="td-middle">Command</th>
+<th class="nowrap">Shortcut</th>
+<th class="nowrap">Gesture</th>
+<th class="nowrap">Touch</th>
+<th class="td-middle">Summary</th>
+</tr>
+<tr><td>Open settings window</td><td></td><td></td><td></td><td>Open the settings window.</td></tr>
+<tr><td>Open setting folder</td><td></td><td></td><td></td><td>Open the folder where the configuration file setting file is saved.</td></tr>
+<tr><td>Open scripts folder</td><td></td><td></td><td></td><td>Open the scripts folder with Explorer.</td></tr>
+<tr><td>Display version information</td><td></td><td></td><td></td><td>Display version information.</td></tr>
+<tr><td>Quit application</td><td></td><td></td><td></td><td>Quit this application.</td></tr>
+<tr><td>Toggle file management</td><td></td><td></td><td></td><td>Toggle enable / disable of file management command.</td></tr>
+<tr><td>Command help</td><td></td><td></td><td></td><td>Displays help of all commands in the browser.</td></tr>
+<tr><td>Script Help</td><td></td><td></td><td></td><td>Displays the script manual in the browser.</td></tr>
+<tr><td>Main menu help</td><td></td><td></td><td></td><td>Display the main menu help on the browser.</td></tr>
+<tr><td>Search options help</td><td></td><td></td><td></td><td>Display the search options help on the browser.</td></tr>
+<tr><td>Open context menu</td><td></td><td></td><td></td><td>Open the context menu.</td></tr>
+<tr><td>Export settings</td><td></td><td></td><td></td><td>Create backups of settings, history, bookmarks. The thumbnail cache is not backed up.</td></tr>
+<tr><td>Import settings</td><td></td><td></td><td></td><td>Select the restored item from the backup file and restore it. If all parameters are defined, the dialog will not be displayed.</td></tr>
+<tr><td>Reload settings</td><td></td><td></td><td></td><td>Reload the settings.</td></tr>
+<tr><td>Save settings</td><td></td><td></td><td></td><td>Performs saving the current settings.</td></tr>
+<tr><td>Touch emulate</td><td></td><td></td><td></td><td>Execute the touch command at the cursor position.</td></tr>
+<tr><td>Open script console</td><td></td><td></td><td></td><td>Open the script console.</td></tr>
 </table>
 

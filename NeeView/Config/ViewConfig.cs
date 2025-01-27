@@ -157,6 +157,7 @@ namespace NeeView
 
         // 有効なスケールモード
         // StretchMode.None のトグルに使用する
+        [PropertyMapIgnore]
         public PageStretchMode ValidStretchMode => _validStretchMode;
 
         // スケールモード・拡大許可

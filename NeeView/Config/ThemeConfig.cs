@@ -8,7 +8,7 @@ namespace NeeView
 {
     public class ThemeConfig : BindableBase
     {
-        private TheneSource _themeType = new(NeeView.ThemeType.Dark);
+        private ThemeSource _themeType = new(NeeView.ThemeType.Dark);
 
         [JsonInclude, JsonPropertyName(nameof(CustomThemeFolder))]
         public string? _customThemeFolder;
@@ -16,7 +16,7 @@ namespace NeeView
 
         // テーマ
         [PropertyMapIgnore]
-        public TheneSource ThemeType
+        public ThemeSource ThemeType
         {
             get { return _themeType; }
             set { SetProperty(ref _themeType, value); }
@@ -25,11 +25,12 @@ namespace NeeView
         // テーマ (スクリプトアクセス用)
         [JsonIgnore]
         [ObjectMergeIgnore]
+        [PropertyMember]
         [PropertyMapName(nameof(ThemeType))]
         public string ThemeString
         {
             get { return ThemeType.ToString(); }
-            set { ThemeType = TheneSource.Parse(value); }
+            set { ThemeType = ThemeSource.Parse(value); }
         }
 
         // カスタムテーマの保存場所
@@ -49,7 +50,7 @@ namespace NeeView
         public string? PanelColor
         {
             get { return null; }
-            set { ThemeType = new TheneSource(value == "Light" ? NeeView.ThemeType.Light : NeeView.ThemeType.Dark); }
+            set { ThemeType = new ThemeSource(value == "Light" ? NeeView.ThemeType.Light : NeeView.ThemeType.Dark); }
         }
 
         [Obsolete("no used"), Alternative(null, 39)] // ver.39

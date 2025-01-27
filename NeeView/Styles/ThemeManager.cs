@@ -73,7 +73,7 @@ namespace NeeView
             {
                 if (SetProperty(ref _selectedItem, value))
                 {
-                    Config.Current.Theme.ThemeType = TheneSource.Parse(_selectedItem);
+                    Config.Current.Theme.ThemeType = ThemeSource.Parse(_selectedItem);
                 }
             }
         }
@@ -95,7 +95,7 @@ namespace NeeView
             return map;
         }
 
-        public static List<TheneSource> CollectCustomThemes()
+        public static List<ThemeSource> CollectCustomThemes()
         {
             if (!string.IsNullOrEmpty(Config.Current.Theme.CustomThemeFolder))
             {
@@ -104,7 +104,7 @@ namespace NeeView
                     var directory = new DirectoryInfo(Config.Current.Theme.CustomThemeFolder);
                     if (directory.Exists)
                     {
-                        return directory.GetFiles("*.json").Select(e => new TheneSource(ThemeType.Custom, e.Name)).ToList();
+                        return directory.GetFiles("*.json").Select(e => new ThemeSource(ThemeType.Custom, e.Name)).ToList();
                     }
                 }
                 catch (Exception ex)
@@ -113,7 +113,7 @@ namespace NeeView
                 }
             }
 
-            return new List<TheneSource>();
+            return new List<ThemeSource>();
         }
 
 
@@ -156,7 +156,7 @@ namespace NeeView
         }
 
 
-        private ThemeProfile GeThemeProfile(TheneSource theneId)
+        private ThemeProfile GeThemeProfile(ThemeSource theneId)
         {
             try
             {
@@ -170,7 +170,7 @@ namespace NeeView
 
                 if (theneId.Type is ThemeType.Custom)
                 {
-                    return GeThemeProfile(new TheneSource(ThemeType.Dark));
+                    return GeThemeProfile(new ThemeSource(ThemeType.Dark));
                 }
                 else
                 {
@@ -179,7 +179,7 @@ namespace NeeView
             }
         }
 
-        private ThemeProfile LoadThemeProfile(TheneSource themeId)
+        private ThemeProfile LoadThemeProfile(ThemeSource themeId)
         {
             switch (themeId.Type)
             {
@@ -201,14 +201,14 @@ namespace NeeView
                 case ThemeType.System:
                     if (SystemVisualParameters.Current.IsHighContrast)
                     {
-                        return LoadThemeProfile(new TheneSource(ThemeType.HighContrast));
+                        return LoadThemeProfile(new ThemeSource(ThemeType.HighContrast));
                     }
                     else if (Windows10Tools.IsWindows10_OrGreater())
                     {
                         ThemeProfile themeProfile = SystemVisualParameters.Current.Theme switch
                         {
-                            SystemThemeType.Dark => LoadThemeProfile(new TheneSource(ThemeType.Dark)),
-                            SystemThemeType.Light => LoadThemeProfile(new TheneSource(ThemeType.Light)),
+                            SystemThemeType.Dark => LoadThemeProfile(new ThemeSource(ThemeType.Dark)),
+                            SystemThemeType.Light => LoadThemeProfile(new ThemeSource(ThemeType.Light)),
                             _ => throw new NotSupportedException(),
                         };
                         themeProfile.Colors["Control.Accent"] = new ThemeColor(SystemVisualParameters.Current.AccentColor, 1.0);
@@ -216,7 +216,7 @@ namespace NeeView
                     }
                     else
                     {
-                        return LoadThemeProfile(new TheneSource(ThemeType.Dark));
+                        return LoadThemeProfile(new ThemeSource(ThemeType.Dark));
                     }
 
                 case ThemeType.Custom:
@@ -236,7 +236,7 @@ namespace NeeView
                             ToastService.Current.Show(new Toast(ex.Message, Properties.TextResources.GetString("ThemeErrorDialog.Title"), ToastIcon.Error));
                         }
                     }
-                    return LoadThemeProfile(new TheneSource(ThemeType.Dark));
+                    return LoadThemeProfile(new ThemeSource(ThemeType.Dark));
 
                 default:
                     throw new NotSupportedException();

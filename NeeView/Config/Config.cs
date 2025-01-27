@@ -61,8 +61,10 @@ namespace NeeView
 
         public BackgroundConfig Background { get; set; } = new BackgroundConfig();
 
+        [PropertyMapLabel("@SettingPage.WindowTitle")]
         public WindowTitleConfig WindowTitle { get; set; } = new WindowTitleConfig();
 
+        [PropertyMapLabel("@SettingPage.PageTitle")]
         public PageTitleConfig PageTitle { get; set; } = new PageTitleConfig();
 
         public AutoHideConfig AutoHide { get; set; } = new AutoHideConfig();
@@ -71,6 +73,7 @@ namespace NeeView
 
         public MenuBarConfig MenuBar { get; set; } = new MenuBarConfig();
 
+        [PropertyMapLabel("@SettingPage.Slider")]
         public SliderConfig Slider { get; set; } = new SliderConfig();
 
         public FilmStripConfig FilmStrip { get; set; } = new FilmStripConfig();
@@ -82,6 +85,7 @@ namespace NeeView
         [PropertyMapLabel("@Word.Bookshelf")]
         public BookshelfConfig Bookshelf { get; set; } = new BookshelfConfig();
 
+        [PropertyMapLabel("@Information.Title")]
         public InformationConfig Information { get; set; } = new InformationConfig();
 
         public NavigatorConfig Navigator { get; set; } = new NavigatorConfig();
@@ -90,6 +94,7 @@ namespace NeeView
 
         public ThumbnailConfig Thumbnail { get; set; } = new ThumbnailConfig();
 
+        [PropertyMapLabel("@SettingPage.Slideshow")]
         public SlideShowConfig SlideShow { get; set; } = new SlideShowConfig();
 
         public EffectConfig Effect { get; set; } = new EffectConfig();
@@ -98,12 +103,15 @@ namespace NeeView
 
         public ImageEffectConfig ImageEffect { get; set; } = new ImageEffectConfig();
 
+        [PropertyMapLabel("@Effect.CustomSize")]
         public ImageCustomSizeConfig ImageCustomSize { get; set; } = new ImageCustomSizeConfig();
 
+        [PropertyMapLabel("@Effect.Trim")]
         public ImageTrimConfig ImageTrim { get; set; } = new ImageTrimConfig();
 
         public ImageDotKeepConfig ImageDotKeep { get; set; } = new ImageDotKeepConfig();
 
+        [PropertyMapLabel("@Effect.Grid")]
         public ImageGridConfig ImageGrid { get; set; } = new ImageGridConfig();
 
         public ImageResizeFilterConfig ImageResizeFilter { get; set; } = new ImageResizeFilterConfig();

@@ -15,7 +15,19 @@ namespace NeeView
         private static readonly string _manualTemplate = """
             <h1>@_ScriptManual.Title</h1>
 
-            <h2>@_ScriptManual.S1</h2>
+            <ul>
+                <li><a href="#s1">@_ScriptManual.S1</a></li>
+                <li><a href="#s2">@_ScriptManual.S2</a></li>
+                <li><a href="#s3">@_ScriptManual.S3</a></li>
+                <li><a href="#s4">@_ScriptManual.S4</a></li>
+                <li><a href="#s5">@_ScriptManual.S5</a></li>
+                <li><a href="#ConfigList">@_ScriptManual.S6</a></li>
+                <li><a href="#CommandList">@_ScriptManual.S7</a></li>
+                <li><a href="#ObsoleteList">@_ScriptManual.S8</a></li>
+                <li><a href="#s9">@_ScriptManual.S9</a></li>
+            </ul>
+
+            <h2 id="s1">@_ScriptManual.S1</h2>
             <p>
                 @_ScriptManual.S1.P1
             </p>
@@ -32,7 +44,7 @@ namespace NeeView
             <p>
                 @_ScriptManual.S1.P3
 
-                <table class="table-slim table-topless">
+                <table>
                     <tr><th>@_ScriptManual.S1.P3.T00</th><th>@_ScriptManual.S1.P3.T01</th></tr>
                     <tr><td>&#64;args</td><td>@_ScriptManual.S1.P3.T61</td></tr>
                     <tr><td>&#64;description</td><td>@_ScriptManual.S1.P3.T21</td></tr>
@@ -43,7 +55,7 @@ namespace NeeView
                 </table>
             </p>
 
-            <h2>@_ScriptManual.S2</h2>
+            <h2 id="s2">@_ScriptManual.S2</h2>
             <p>
                 @_ScriptManual.S2.P1
 
@@ -53,11 +65,11 @@ namespace NeeView
                 </ul>
             </p>
 
-            <h2>@_ScriptManual.S3</h2>
+            <h2 id="s3">@_ScriptManual.S3</h2>
             <p>
                 @_ScriptManual.S3.P1
 
-                <table class="table-slim">
+                <table>
                     <tr><td>OnStartup.nvjs</td><td>@ScriptOnStartupCommand.Remarks</td></tr>
                     <tr><td>OnBookLoaded.nvjs</td><td>@ScriptOnBookLoadedCommand.Remarks</td></tr>
                     <tr><td>OnPageChanged.nvjs</td><td>@ScriptOnPageChangedCommand.Remarks</td></tr>
@@ -65,14 +77,14 @@ namespace NeeView
                 </table>
             </p>
 
-            <h2>@_ScriptManual.S4</h2>
+            <h2 id="s4">@_ScriptManual.S4</h2>
             <p>
                 @_ScriptManual.S4.P1
             </p>
 
             <h4>@_ScriptManual.S4.T</h4>
             <p>
-                <table class="table-slim">
+                <table>
                     <tr><td>cls</td><td>@_ScriptManual.S4.T.T01</td></tr>
                     <tr><td>exit</td><td>@_ScriptManual.S4.T.T11</td></tr>
                     <tr><td>help, ?</td><td>@_ScriptManual.S4.T.T21</td></tr>
@@ -81,36 +93,42 @@ namespace NeeView
             """;
 
         private static readonly string _exampleTemplate = """
-            <h1 class="sub">@_ScriptManual.S9</h1>
+            <h2 id="s9" class="sub">@_ScriptManual.S9</h2>
 
             @_ScriptManual.S9.P1
 
             <h3>@_ScriptManual.S91</h3>
             <p>
-              <pre>OpenMsPaint.nvjs<code class="example">@[/Resources/Scripts/OpenMsPaint.nvjs]</code></pre>
+              OpenMsPaint.nvjs
+              <pre><code class="example">@[/Resources/Scripts/OpenMsPaint.nvjs]</code></pre>
             </p>
 
             <h3>@_ScriptManual.S92</h3>
             <p>
-              <pre>OpenNeeView.nvjs<code class="example">@[/Resources/Scripts/OpenNeeView.nvjs]</code></pre>
+              OpenNeeView.nvjs
+              <pre><code class="example">@[/Resources/Scripts/OpenNeeView.nvjs]</code></pre>
             </p>
 
             <h3>@_ScriptManual.S93</h3>
             <p>
-             <pre>ToggleUnsharpMask.nvjs<code class="example">@[/Resources/Scripts/ToggleUnsharpMask.nvjs]</code></pre>
+              ToggleUnsharpMask.nvjs
+              <pre><code class="example">@[/Resources/Scripts/ToggleUnsharpMask.nvjs]</code></pre>
             </p>
 
             <h3>@_ScriptManual.S94</h3>
             <p>
-              <pre>OnBookLoaded.nvjs<code class="example">@[/Resources/Scripts/OnBookLoaded.ReadOrder.nvjs]</code></pre>
+              OnBookLoaded.nvjs
+              <pre><code class="example">@[/Resources/Scripts/OnBookLoaded.ReadOrder.nvjs]</code></pre>
             </p>
 
             <h3>@_ScriptManual.S95</h3>
             <p>
-              <pre>OnBookLoaded.nvjs<code class="example">@[/Resources/Scripts/OnBookLoaded.Media.nvjs]</code></pre>
+              OnBookLoaded.nvjs
+              <pre><code class="example">@[/Resources/Scripts/OnBookLoaded.Media.nvjs]</code></pre>
             </p>
             <p>
-              <pre>ToggleFullScreenAndMediaPlay.nvjs<code class="example">@[/Resources/Scripts/ToggleFullScreenAndMediaPlay.nvjs]</code></pre>
+              ToggleFullScreenAndMediaPlay.nvjs
+              <pre><code class="example">@[/Resources/Scripts/ToggleFullScreenAndMediaPlay.nvjs]</code></pre>
             </p>
             """;
 
@@ -152,10 +170,10 @@ namespace NeeView
         {
             var builder = new StringBuilder();
 
-            builder.Append(HtmlHelpUtility.CreateHeader(ResourceService.GetString("@_ScriptManual.Title")));
-            builder.Append($"<body>");
+            builder.AppendLine(HtmlHelpUtility.CreateHeader(ResourceService.GetString("@_ScriptManual.Title")));
+            builder.AppendLine($"<body>");
 
-            builder.Append(GetScriptManualText());
+            builder.AppendLine(GetScriptManualText());
 
             AppendScriptReference(builder);
 
@@ -165,33 +183,29 @@ namespace NeeView
 
             AppendObsoleteList(builder);
 
-            builder.Append(GetScriptExampleText());
+            builder.AppendLine(GetScriptExampleText());
 
-            builder.Append("</body>");
-            builder.Append(HtmlHelpUtility.CreateFooter());
+            builder.AppendLine("</body>");
+            builder.AppendLine(HtmlHelpUtility.CreateFooter());
 
             return builder.ToString();
         }
 
         private static StringBuilder AppendScriptReference(StringBuilder builder)
         {
-            builder.Append(CultureInfo.InvariantCulture, $"<h1 class=\"sub\">{ResourceService.GetString("@_ScriptManual.S5")}</h1>");
-            builder.Append(CultureInfo.InvariantCulture, $"<p>{ResourceService.GetString("@_ScriptManual.S5.P1")}</p>").AppendLine();
+            builder.AppendLine(CultureInfo.InvariantCulture, $"<h2 id=\"s5\">{ResourceService.GetString("@_ScriptManual.S5")}</h2>");
+            builder.AppendLine(CultureInfo.InvariantCulture, $"<p>{ResourceService.GetString("@_ScriptManual.S5.P1")}</p>");
 
             var htmlBuilder = new HtmlReferenceBuilder(builder);
 
             htmlBuilder.CreateMethodTable(typeof(JavaScriptEngine), null);
 
-            htmlBuilder.Append($"<hr/>").AppendLine();
-
-            htmlBuilder.Append(typeof(CommandHost), "nv");
+            htmlBuilder.Append(typeof(CommandHost), "[Root Instance] nv");
 
             foreach (var classType in _typeCollection.Where(e => !e.IsEnum).OrderBy(e => e.Name))
             {
                 htmlBuilder.Append(classType);
             }
-
-            htmlBuilder.Append($"<hr/>").AppendLine();
 
             foreach (var enumType in _typeCollection.Where(e => e.IsEnum).OrderBy(e => e.Name))
             {
@@ -203,11 +217,15 @@ namespace NeeView
 
         private static StringBuilder AppendConfigList(StringBuilder builder)
         {
-            builder.Append(CultureInfo.InvariantCulture, $"<h1 class=\"sub\" id=\"ConfigList\">{ResourceService.GetString("@_ScriptManual.S6")}</h1>");
-            builder.Append("<table class=\"table-slim table-topless\">");
-            builder.Append(CultureInfo.InvariantCulture, $"<tr><th>{Properties.TextResources.GetString("Word.Name")}</th><th>{Properties.TextResources.GetString("Word.Type")}</th><th>{Properties.TextResources.GetString("Word.Summary")}</th></tr>");
-            builder.Append(new ConfigMap(null).Map.CreateHelpHtml("nv.Config"));
-            builder.Append("</table>");
+            builder.AppendLine(CultureInfo.InvariantCulture, $"<h2 id=\"ConfigList\">{ResourceService.GetString("@_ScriptManual.S6")}</h2>");
+            builder.AppendLine("<table>");
+            builder.AppendLine("<tr>");
+            builder.AppendLine(CultureInfo.InvariantCulture, $"<th class=\"nowrap\">{Properties.TextResources.GetString("Word.Name")}</th>");
+            builder.AppendLine(CultureInfo.InvariantCulture, $"<th class=\"td-middle\">{Properties.TextResources.GetString("Word.Type")}</th>");
+            builder.AppendLine(CultureInfo.InvariantCulture, $"<th class=\"td-middle\">{Properties.TextResources.GetString("Word.Summary")}</th>");
+            builder.AppendLine("</tr>");
+            builder.AppendLine(new ConfigMap(null).Map.CreateHelpHtml("nv.Config"));
+            builder.AppendLine("</table>");
             return builder;
         }
 
@@ -215,80 +233,96 @@ namespace NeeView
         {
             var executeMethodArgTypes = new Type[] { typeof(object), typeof(CommandContext) };
 
-            builder.Append(CultureInfo.InvariantCulture, $"<h1 class=\"sub\" id=\"CommandList\">{ResourceService.GetString("@_ScriptManual.S7")}</h1>");
-            builder.Append("<table class=\"table-slim table-topless\">");
-            builder.Append(CultureInfo.InvariantCulture, $"<tr><th>{Properties.TextResources.GetString("Word.Group")}</th><th>{Properties.TextResources.GetString("Word.Command")}</th><th>{Properties.TextResources.GetString("Word.CommandName")}</th><th>{Properties.TextResources.GetString("Word.Argument")}</th><th>{Properties.TextResources.GetString("Word.CommandParameter")}</th><th>{Properties.TextResources.GetString("Word.Summary")}</th></tr>");
-            foreach (var command in CommandTable.Current.Values.OrderBy(e => e.Order))
+            builder.AppendLine(CultureInfo.InvariantCulture, $"<h2 id=\"CommandList\">{ResourceService.GetString("@_ScriptManual.S7")}</h2>");
+
+            foreach (var group in CommandTable.Current.Values.GroupBy(e => e.Group))
             {
-                string argument = "";
+                builder.AppendLine($"<h3>{group.Key}</h3>");
+                builder.AppendLine("<table>");
+                builder.AppendLine("<tr>");
+                builder.AppendLine(CultureInfo.InvariantCulture, $"<th>{Properties.TextResources.GetString("Word.CommandName")}</th>");
+                builder.AppendLine(CultureInfo.InvariantCulture, $"<th class=\"td-middle\">{Properties.TextResources.GetString("Word.Argument")}</th>");
+                builder.AppendLine(CultureInfo.InvariantCulture, $"<th class=\"td-middle\">{Properties.TextResources.GetString("Word.CommandParameter")}</th>");
+                builder.AppendLine(CultureInfo.InvariantCulture, $"<th class=\"td-middle\">{Properties.TextResources.GetString("Word.Summary")}</th></tr>");
+                builder.AppendLine("</tr>");
+
+                foreach (var command in group.OrderBy(e => e.Order))
                 {
-                    var type = command.GetType();
-                    var info = type.GetMethod(nameof(command.Execute), executeMethodArgTypes) ?? throw new InvalidOperationException();
-                    var attribute = (MethodArgumentAttribute?)Attribute.GetCustomAttributes(info, typeof(MethodArgumentAttribute)).FirstOrDefault();
-                    if (attribute != null)
+                    string argument = "";
                     {
-                        var tokens = MethodArgumentAttributeExtensions.GetMethodNote(info, attribute)?.Split('|');
-                        int index = 0;
-                        argument += "<dl>";
-                        while (tokens is not null && index < tokens.Length)
+                        var type = command.GetType();
+                        var info = type.GetMethod(nameof(command.Execute), executeMethodArgTypes) ?? throw new InvalidOperationException();
+                        var attribute = (MethodArgumentAttribute?)Attribute.GetCustomAttributes(info, typeof(MethodArgumentAttribute)).FirstOrDefault();
+                        if (attribute != null)
                         {
-                            var dt = tokens.ElementAtOrDefault(index++);
-                            var dd = tokens.ElementAtOrDefault(index++);
-                            argument += $"<dt>{dt}</dt><dd>{dd}</dd>";
-                        }
-                        argument += "</dl>";
-                    }
-                }
-
-                string properties = "";
-                if (command.Parameter != null)
-                {
-                    var type = command.Parameter.GetType();
-                    var title = "";
-
-                    if (command.Share != null)
-                    {
-                        properties = "<p style=\"color:red\">" + string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("CommandParameter.Share"), command.Share.Name) + "</p>";
-                    }
-
-                    foreach (PropertyInfo info in type.GetProperties())
-                    {
-                        var attribute = (PropertyMemberAttribute?)Attribute.GetCustomAttributes(info, typeof(PropertyMemberAttribute)).FirstOrDefault();
-                        if (attribute != null && attribute.IsVisible)
-                        {
-                            var titleString = PropertyMemberAttributeExtensions.GetPropertyTitle(info, attribute);
-                            if (titleString != null)
+                            var tokens = MethodArgumentAttributeExtensions.GetMethodNote(info, attribute)?.Split('|');
+                            int index = 0;
+                            argument += "<dl>";
+                            while (tokens is not null && index < tokens.Length)
                             {
-                                title = titleString + " / ";
+                                var dt = tokens.ElementAtOrDefault(index++);
+                                var dd = tokens.ElementAtOrDefault(index++);
+                                argument += $"<dt>{dt}</dt><dd>{dd}</dd>";
                             }
-
-                            var enums = "";
-                            if (info.PropertyType.IsEnum)
-                            {
-                                enums = string.Join(" / ", info.PropertyType.VisibleAliasNameDictionary().Select(e => $"\"{e.Key}\": {e.Value}")) + "<br/>";
-                            }
-
-                            var propertyName = PropertyMemberAttributeExtensions.GetPropertyName(info, attribute).TrimEnd(Properties.TextResources.GetString("Word.Period").ToArray()) + Properties.TextResources.GetString("Word.Period");
-                            var text = title + propertyName;
-
-                            var propertyTips = PropertyMemberAttributeExtensions.GetPropertyTips(info, attribute);
-                            if (propertyTips != null)
-                            {
-                                text = text + " " + propertyTips;
-                            }
-
-                            properties = properties + $"<dt><b>{info.Name}</b>: {info.PropertyType.ToManualString()}</dt><dd>{enums + text}<dd/>";
+                            argument += "</dl>";
                         }
                     }
-                    if (!string.IsNullOrEmpty(properties))
-                    {
-                        properties = "<dl>" + properties + "</dl>";
-                    }
-                }
 
-                builder.Append(CultureInfo.InvariantCulture, $"<tr><td>{command.Group}</td><td>{command.Text}</td><td><b>{command.Name}</b></td><td>{argument}</td><td>{properties}</td><td>{command.Remarks}</td></tr>");
+                    string properties = "";
+                    if (command.Parameter != null)
+                    {
+                        var type = command.Parameter.GetType();
+                        var title = "";
+
+                        if (command.Share != null)
+                        {
+                            properties = "<p style=\"color:red\">" + string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("CommandParameter.Share"), command.Share.Name) + "</p>";
+                        }
+
+                        foreach (PropertyInfo info in type.GetProperties())
+                        {
+                            var attribute = (PropertyMemberAttribute?)Attribute.GetCustomAttributes(info, typeof(PropertyMemberAttribute)).FirstOrDefault();
+                            if (attribute != null && attribute.IsVisible)
+                            {
+                                var titleString = PropertyMemberAttributeExtensions.GetPropertyTitle(info, attribute);
+                                if (titleString != null)
+                                {
+                                    title = titleString + " / ";
+                                }
+
+                                var enums = "";
+                                if (info.PropertyType.IsEnum)
+                                {
+                                    enums = string.Join(" / ", info.PropertyType.VisibleAliasNameDictionary().Select(e => $"\"{e.Key}\": {e.Value}")) + "<br/>";
+                                }
+
+                                var propertyName = PropertyMemberAttributeExtensions.GetPropertyName(info, attribute).TrimEnd(Properties.TextResources.GetString("Word.Period").ToArray()) + Properties.TextResources.GetString("Word.Period");
+                                var text = title + propertyName;
+
+                                var propertyTips = PropertyMemberAttributeExtensions.GetPropertyTips(info, attribute);
+                                if (propertyTips != null)
+                                {
+                                    text = text + " " + propertyTips;
+                                }
+
+                                properties = properties + $"<dt><b>{info.Name}</b>: {info.PropertyType.ToManualString()}</dt><dd>{enums + text}<dd/>";
+                            }
+                        }
+                        if (!string.IsNullOrEmpty(properties))
+                        {
+                            properties = "<dl>" + properties + "</dl>";
+                        }
+                    }
+
+                    builder.AppendLine("<tr>");
+                    builder.AppendLine(CultureInfo.InvariantCulture, $"<td class=\"nowrap\">{command.Name}</td>");
+                    builder.AppendLine(CultureInfo.InvariantCulture, $"</td><td>{argument}</td>");
+                    builder.AppendLine(CultureInfo.InvariantCulture, $"<td>{properties}</td>");
+                    builder.AppendLine(CultureInfo.InvariantCulture, $"<td><b>{command.Text}</b><p class=\"remarks\">{command.Remarks}</p></td>");
+                    builder.AppendLine("</tr>");
+                }
+                builder.AppendLine("</table>");
             }
-            builder.Append("</table>");
 
             return builder;
         }
@@ -296,12 +330,12 @@ namespace NeeView
 
         private static StringBuilder AppendObsoleteList(StringBuilder builder)
         {
-            builder.Append(CultureInfo.InvariantCulture, $"<h1 class=\"sub\" id=\"ObsoleteList\">{ResourceService.GetString("@_ScriptManual.S8")}</h1>");
+            builder.AppendLine(CultureInfo.InvariantCulture, $"<h2 id=\"ObsoleteList\">{ResourceService.GetString("@_ScriptManual.S8")}</h2>");
 
             // Obsolete levels
-            builder.Append(ResourceService.Replace($"<h4>@Word.Severity</h4>"));
+            builder.AppendLine(ResourceService.Replace($"<h4>@Word.Severity</h4>"));
             var obsoleteLevels = new TagNode("p")
-                .AddNode(new TagNode("table", "table-slim")
+                .AddNode(new TagNode("table")
                     .AddNode(new TagNode("tr")
                         .AddNode(new TagNode("td").AddText($"{ScriptErrorLevel.Error}"))
                         .AddNode(new TagNode("td").AddText($"@ScriptErrorLevel.Error.Severity")))
@@ -312,7 +346,7 @@ namespace NeeView
                         .AddNode(new TagNode("td").AddText($"{ScriptErrorLevel.Info}"))
                         .AddNode(new TagNode("td").AddText($"@ScriptErrorLevel.Info.Severity")))
                 );
-            builder.Append(obsoleteLevels.ToString());
+            builder.AppendLine(obsoleteLevels.ToIndentString());
 
             var commandHost = new CommandHost();
             var root = ScriptNodeTreeBuilder.Create(commandHost, "nv");
@@ -333,24 +367,25 @@ namespace NeeView
             // ver.40 and later
             foreach (var group in groups.Where(e => e.Key >= 40).OrderByDescending(e => e.Key))
             {
-                builder.Append(CultureInfo.InvariantCulture, $"<h2>Version {group.Key}.0</h2>");
+                builder.Append(CultureInfo.InvariantCulture, $"<h3>Version {group.Key}.0</h3>");
 
-                var table = new TagNode("table", "table-slim table-topless")
+                var table = new TagNode("table")
                     .AddNode(new TagNode("tr")
                         .AddNode(new TagNode("th").AddText($"@Word.Severity"))
                         .AddNode(new TagNode("th").AddText($"@Word.Name"))
-                        .AddNode(new TagNode("th").AddText($"@Word.Category"))
-                        .AddNode(new TagNode("th").AddText($"@Word.Alternative")));
+                        .AddNode(new TagNode("th", "nowrap").AddText($"@Word.Category"))
+                        .AddNode(new TagNode("th", "td-middle").AddText($"@Word.Alternative")));
 
                 foreach (var item in group.OrderByDescending(e => e.ErrorLevel).ThenBy(e => e.Name))
                 {
                     table.AddNode(new TagNode("tr")
-                        .AddNode(new TagNode("td")).AddText(item.ErrorLevel.ToString())
-                        .AddNode(new TagNode("td")).AddText(item.Name)
-                        .AddNode(new TagNode("td")).AddText(item.HasObsolete ? "@Word.Obsolete" : "@Word.Changed")
-                        .AddNode(new TagNode("td")).AddText(item.AlternativeMessage));
+                        .AddNode(new TagNode("td").AddText(item.ErrorLevel.ToString()))
+                        .AddNode(new TagNode("td").AddText(item.Name))
+                        .AddNode(new TagNode("td", "nowrap").AddText(item.HasObsolete ? "@Word.Obsolete" : "@Word.Changed"))
+                        .AddNode(new TagNode("td").AddText(item.AlternativeMessage)));
                 }
-                builder.Append(table.ToString());
+
+                builder.AppendLine(table.ToIndentString());
             }
 
             return builder;

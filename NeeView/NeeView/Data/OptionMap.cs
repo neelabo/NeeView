@@ -105,45 +105,39 @@ namespace NeeView.Data
         public string GetCommandLineHelpMarkdown()
         {
             var sb = new StringBuilder();
-            //sb.AppendLine("# NeeView Command Line Options");
             sb.AppendLine("# " + Properties.TextResources.GetString("BootOptionDialog.Title"));
             sb.AppendLine();
 
+            sb.AppendLine("### Usage");
+            sb.AppendLine();
             sb.AppendLine("    > " + _usage);
             sb.AppendLine();
 
-            sb.AppendLine("## Options");
+            sb.AppendLine("### Options");
             sb.AppendLine();
-            sb.AppendLine($"Name|Description");
+            sb.AppendLine($"Option|Description");
             sb.AppendLine($"--|--");
             foreach (var element in _elements.Where(e => e.IsVisible))
             {
                 sb.AppendLine(EscapeMarkdown(CreateParameterKeyFormat(element)) + "|" + element.HelpText);
             }
-            sb.AppendLine($"--|{Properties.TextResources.GetString("AppOption.Terminator")}");
+            sb.AppendLine($"\\-\\-|{Properties.TextResources.GetString("AppOption.Terminator")}");
             sb.AppendLine();
 
-            sb.AppendLine("## Examples");
+            sb.AppendLine("### Examples");
             sb.AppendLine();
             foreach (var sample in _samples)
             {
                 sb.AppendLine($"`> {sample}`");
                 sb.AppendLine();
             }
-#if false
-            sb.AppendLine();
-            sb.AppendLine("## Other");
-            sb.AppendLine("");
-            sb.AppendLine("`SHIFT` を押しながら起動すると新しいウィンドウで起動します。");
-            sb.AppendLine("Hold down `SHIFT` to start the program in a new window.");
-            sb.AppendLine("");
-#endif
+
             return sb.ToString();
         }
 
         private string EscapeMarkdown(string text)
         {
-            var regex = new Regex(@"[|<>]");
+            var regex = new Regex(@"[|<>-]");
             return regex.Replace(text, m => "\\" + m.Value);
         }
 

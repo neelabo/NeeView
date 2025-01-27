@@ -13,7 +13,7 @@ namespace NeeView
         private static readonly string _template = """
             <h1>@_SearchManual.Title</h1>
 
-            <h2>@_SearchManual.S1</h2>
+            <!--<h2>@_SearchManual.S1</h2>-->
             <p>
                 <ul>
                     <li>@_SearchManual.S1.P1.I1</li>
@@ -218,7 +218,7 @@ namespace NeeView
         {
             var options = new string[] { "/and", "/or", "/not" };
 
-            var node = new TagNode("table", "table-slim table-topless");
+            var node = new TagNode("table");
 
             node.AddNode(new TagNode("tr")
                 .AddNode(new TagNode("th").AddText("@Word.Name"))
@@ -235,7 +235,7 @@ namespace NeeView
                     .AddNode(new TagNode("td").AddText(key)));
             }
 
-            return node.ToString();
+            return node.ToIndentString();
         }
 
         // Alias: Property Options
@@ -243,7 +243,7 @@ namespace NeeView
         {
             var options = new string[] { "/text", "/date", "/size", "/bookmark", "/history", "/playlist", "/title", "/subject", "/rating", "/tags", "/comments" };
 
-            var node = new TagNode("table", "table-slim table-topless");
+            var node = new TagNode("table");
 
             node.AddNode(new TagNode("tr")
                 .AddNode(new TagNode("th").AddText("@Word.Name"))
@@ -267,7 +267,7 @@ namespace NeeView
                 .AddNode(new TagNode("td").AddText("@SearchOp.Alias.Property.Meta"))
                 .AddNode(new TagNode("td").AddText("@SearchOp.Alias.Property.Meta.Remarks")));
 
-            return node.ToString();
+            return node.ToIndentString();
         }
 
         // Alias: Match Options
@@ -275,7 +275,7 @@ namespace NeeView
         {
             string[][] options = [["/m0", "/exact"], ["/m1", "/word"], ["/m2", "/fuzzy"], ["/re"], ["/ire"], ["/since"], ["/until"], ["/lt"], ["/le"], ["/eq"], ["/ne"], ["/ge"], ["/gt"]];
 
-            var node = new TagNode("table", "table-slim table-topless");
+            var node = new TagNode("table");
 
             node.AddNode(new TagNode("tr")
                 .AddNode(new TagNode("th").AddText("@Word.Name"))
@@ -294,7 +294,7 @@ namespace NeeView
                     .AddNode(new TagNode("td").AddText(key + ".Remarks", ResourceService.ReplaceEmpty)));
             }
 
-            return node.ToString();
+            return node.ToIndentString();
         }
 
         // Conjunction Options (Detail)
@@ -303,7 +303,7 @@ namespace NeeView
             var options = searchContext.KeyOptions.Where(e => e.Key.StartsWith("/c.", StringComparison.Ordinal));
             //var options = new string[] { "/and", "/or", "/not" };
 
-            var node = new TagNode("table", "table-slim table-topless");
+            var node = new TagNode("table");
 
             node.AddNode(new TagNode("tr")
                 .AddNode(new TagNode("th").AddText("@Word.Name"))
@@ -317,7 +317,7 @@ namespace NeeView
                     .AddNode(new TagNode("td").AddText(key)));
             }
 
-            return node.ToString();
+            return node.ToIndentString();
         }
 
         // Property Options (Detail)
@@ -325,7 +325,7 @@ namespace NeeView
         {
             var options = searchContext.KeyOptions.Where(e => e.Value is PropertySearchKeyOption && e.Key != "/p.meta");
 
-            var node = new TagNode("table", "table-slim table-topless");
+            var node = new TagNode("table");
 
             node.AddNode(new TagNode("tr")
                 .AddNode(new TagNode("th").AddText("@Word.Name"))
@@ -349,7 +349,7 @@ namespace NeeView
                 .AddNode(new TagNode("td").AddText("@SearchOp.Property.Meta"))
                 .AddNode(new TagNode("td").AddText(GetTypeString(typeof(string)))));
 
-            return node.ToString();
+            return node.ToIndentString();
         }
 
         private static string GetTypeString(Type type)
@@ -366,7 +366,7 @@ namespace NeeView
         {
             var options = searchContext.KeyOptions.Where(e => e.Value is FilterSearchKeyOption);
 
-            var node = new TagNode("table", "table-slim table-topless");
+            var node = new TagNode("table");
 
             node.AddNode(new TagNode("tr")
                 .AddNode(new TagNode("th").AddText("@Word.Name"))
@@ -384,7 +384,7 @@ namespace NeeView
                     .AddNode(new TagNode("td").AddText(profile.IsValiant ? "@SearchOp.ValiantType" : "String")));
             }
 
-            return node.ToString();
+            return node.ToIndentString();
         }
 
         // Alias Options
@@ -392,7 +392,7 @@ namespace NeeView
         {
             var options = searchContext.KeyAlias;
 
-            var node = new TagNode("table", "table-slim table-topless");
+            var node = new TagNode("table");
 
             node.AddNode(new TagNode("tr")
                 .AddNode(new TagNode("th").AddText("@Word.Alias"))
@@ -405,13 +405,12 @@ namespace NeeView
                     .AddNode(new TagNode("td").AddText(string.Join(" ", option.Value))));
             }
 
-            return node.ToString();
+            return node.ToIndentString();
         }
 
         private static string CreateMetaTableString()
         {
-            var node = new TagNode("table")
-                .AddAttribute("class", "table-slim table-topless");
+            var node = new TagNode("table");
 
             node.AddNode(new TagNode("tr")
                 .AddNode(new TagNode("th").AddText("[key]"))
@@ -424,7 +423,7 @@ namespace NeeView
                     .AddNode(new TagNode("td").AddText("@InformationKey." + key)));
             }
 
-            return node.ToString();
+            return node.ToIndentString();
         }
     }
 

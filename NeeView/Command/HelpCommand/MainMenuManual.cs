@@ -39,7 +39,7 @@ namespace NeeView
             {
                 node.AddNode(new TagNode("h3").AddText(group.DispLabel));
 
-                var table = new TagNode("table", "table-slim");
+                var table = new TagNode("table");
                 if (group.Children is null) throw new InvalidOperationException("group.Children must not be null");
                 foreach (var item in group.GetTable(0))
                 {
@@ -50,7 +50,7 @@ namespace NeeView
                 node.AddNode(table);
             }
 
-            sb.AppendLine(node.ToString());
+            sb.AppendLine(node.ToIndentString());
             sb.AppendLine(HtmlHelpUtility.CreateFooter());
 
             return sb.ToString();

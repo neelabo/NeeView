@@ -1,209 +1,377 @@
 ---
 layout: default
+title: コマンド一覧
 ---
 
-<h1>NeeView コマンド一覧</h1>
-<p>操作が割り当てられていないコマンドは「コマンド設定」で設定することで使用可能です。</p>
-<table class="table-slim table-topless">
-<tr><th>グループ</th><th>コマンド</th><th>ショートカット</th><th>ジェスチャー</th><th>タッチ</th><th>概要</th></tr>
-<tr><td>ファイル</td><td>ファイルを開く</td><td>Ctrl+O</td><td></td><td></td><td>圧縮ファイルか画像ファイルを選択して開きます。</td></tr>
-<tr><td>ファイル</td><td>再読み込み</td><td></td><td>↑↓</td><td></td><td>ブックを再読み込みします。</td></tr>
-<tr><td>ファイル</td><td>閉じる</td><td></td><td></td><td></td><td>開いているブックを閉じます。</td></tr>
-<tr><td>ファイル</td><td>外部アプリで開く (シンプル)</td><td></td><td></td><td></td><td>表示されている画像を外部アプリで開きます。</td></tr>
-<tr><td>ファイル</td><td>外部アプリで開く</td><td></td><td></td><td></td><td>表示された画像を開く外部アプリケーションを選択します。</td></tr>
-<tr><td>ファイル</td><td>エクスプローラーで開く</td><td></td><td></td><td></td><td>表示しているページのファイルをエクスプローラーで開きます。</td></tr>
-<tr><td>ファイル</td><td>名前をつけてファイルに保存</td><td>Ctrl+S</td><td></td><td></td><td>画像をファイルに保存します。</td></tr>
-<tr><td>ファイル</td><td>ファイルに保存</td><td>Ctrl+Shift+S</td><td></td><td></td><td>画像をファイルに保存します。保存フォルダーはコマンド パラメーターで指定します。</td></tr>
-<tr><td>ファイル</td><td>印刷</td><td>Ctrl+P</td><td></td><td></td><td>画像を印刷します。</td></tr>
-<tr><td>ファイル</td><td>ファイルを削除</td><td>Delete</td><td></td><td></td><td>ファイルを削除します。圧縮ファイルの場合は削除できません。</td></tr>
-<tr><td>ファイル</td><td>ブックを削除</td><td></td><td></td><td></td><td>現在閲覧中のフォルダーまたは圧縮ファイルを削除します。</td></tr>
-<tr><td>ファイル</td><td>ファイルをコピー</td><td>Ctrl+C</td><td></td><td></td><td>ファイルをクリップボードにコピーします。</td></tr>
-<tr><td>ファイル</td><td>画像をコピー</td><td>Ctrl+Shift+C</td><td></td><td></td><td>画像をクリップボードにコピーします。2 ページ表示の場合はメインとなるページのみコピーします。</td></tr>
-<tr><td>ファイル</td><td>貼り付け</td><td>Ctrl+V</td><td></td><td></td><td>クリップボードのファイルや画像を貼り付けます。</td></tr>
-<tr><td>ファイル</td><td>フォルダーにコピー</td><td></td><td></td><td></td><td>表示された画像をコピーするフォルダーを選択します。</td></tr>
-<tr><td>ファイル</td><td>フォルダーに移動</td><td></td><td></td><td></td><td>表示された画像を移動するフォルダーを選択します。</td></tr>
-<tr><td>ファイル</td><td>履歴を消去</td><td></td><td></td><td></td><td>履歴を全て削除します。</td></tr>
-<tr><td>ファイル</td><td>現在の場所の履歴削除</td><td></td><td></td><td></td><td>本棚の現在の場所にあるすべての履歴を削除します。</td></tr>
-<tr><td>ファイル</td><td>無効な履歴を削除</td><td></td><td></td><td></td><td>存在しない履歴項目を削除します。</td></tr>
-<tr><td>ストレッチ</td><td>ストレッチを切り替える</td><td>LeftButton+WheelDown</td><td></td><td></td><td>画像のストレッチを順番に切り替えます。</td></tr>
-<tr><td>ストレッチ</td><td>ストレッチを切り替える (逆順)</td><td>LeftButton+WheelUp</td><td></td><td></td><td>画像のストレッチを順番に切り替えます。(逆順)</td></tr>
-<tr><td>ストレッチ</td><td>オリジナル サイズ</td><td></td><td></td><td></td><td>画像のサイズそのままで表示します。</td></tr>
-<tr><td>ストレッチ</td><td>ウィンドウに合わせる</td><td></td><td></td><td></td><td>画像をウィンドウ サイズに合わせるよう拡大縮小します。</td></tr>
-<tr><td>ストレッチ</td><td>ウィンドウいっぱいに広げる</td><td></td><td></td><td></td><td>縦横どちらかをウィンドウ サイズに合わせるように拡大縮小します。画像はウィンドウ サイズより大きくなります。</td></tr>
-<tr><td>ストレッチ</td><td>面積をウィンドウに合わせる</td><td></td><td></td><td></td><td>ウィンドウの面積と等しくなるように画像を拡大縮小します。</td></tr>
-<tr><td>ストレッチ</td><td>高さをウィンドウに合わせる</td><td></td><td></td><td></td><td>ウィンドウの高さに画像の高さを合わせるように拡大縮小します。</td></tr>
-<tr><td>ストレッチ</td><td>幅をウィンドウに合わせる</td><td></td><td></td><td></td><td>ウィンドウの幅に画像の幅を合わせるように拡大縮小します。</td></tr>
-<tr><td>ストレッチ</td><td>拡大を許可</td><td></td><td></td><td></td><td>ストレッチの適用で拡大を許可します。</td></tr>
-<tr><td>ストレッチ</td><td>縮小を許可</td><td></td><td></td><td></td><td>ストレッチの適用で縮小を許可します。</td></tr>
-<tr><td>ストレッチ</td><td>サイズ指定の有効/無効</td><td></td><td></td><td></td><td>オリジナルサイズに適用されるサイズ指定の有効/無効を切り替えます。</td></tr>
-<tr><td>エフェクト</td><td>ドットのまま拡大有効/無効</td><td></td><td></td><td></td><td>有効にすると拡大するときにドットのまま拡大します。無効の時にはスケール変換処理 (Fant) が行われます。</td></tr>
-<tr><td>エフェクト</td><td>背景を切り替える</td><td></td><td></td><td></td><td>背景を順番に切り替えます。</td></tr>
-<tr><td>エフェクト</td><td>背景を黒色にする</td><td></td><td></td><td></td><td>背景を黒色にします。</td></tr>
-<tr><td>エフェクト</td><td>背景を白色にする</td><td></td><td></td><td></td><td>背景を白色にします。</td></tr>
-<tr><td>エフェクト</td><td>背景を画像に合わせた色にする</td><td></td><td></td><td></td><td>背景色を画像から設定します。具体的には画像の左上ピクセルの色が使用されます。</td></tr>
-<tr><td>エフェクト</td><td>背景を白チェック模様にする</td><td></td><td></td><td></td><td>背景を白チェック模様にします。</td></tr>
-<tr><td>エフェクト</td><td>背景を黒チェック模様にする</td><td></td><td></td><td></td><td>背景を黒チェック模様にします。</td></tr>
-<tr><td>エフェクト</td><td>背景をカスタム背景にする</td><td></td><td></td><td></td><td>背景をカスタム背景にします。</td></tr>
-<tr><td>エフェクト</td><td>リサイズ フィルター有効/無効</td><td>Ctrl+R</td><td></td><td></td><td>リサイズ フィルターの有効/無効を切り替えます。</td></tr>
-<tr><td>エフェクト</td><td>グリッド有効/無効</td><td></td><td></td><td></td><td>グリッドの表示/非表示を切り替えます。</td></tr>
-<tr><td>エフェクト</td><td>エフェクト有効/無効</td><td>Ctrl+E</td><td></td><td></td><td>エフェクトの有効/無効を切り替えます。</td></tr>
-<tr><td>ウィンドウ</td><td>常に手前に表示の有効/無効</td><td></td><td></td><td></td><td>ウィンドウを常に手前に表示します。</td></tr>
-<tr><td>ウィンドウ</td><td>アドレス バー表示/非表示</td><td></td><td></td><td></td><td>アドレス バーの表示/非表示を切り替えます。</td></tr>
-<tr><td>ウィンドウ</td><td>メニューを自動的に隠す有効/無効</td><td></td><td></td><td></td><td>メニューを非表示にします。マウス ポインターをウィンドウ上端に合わせることで表示されます。</td></tr>
-<tr><td>ウィンドウ</td><td>サイド バー表示/非表示</td><td></td><td></td><td></td><td>サイド バーの表示/非表示を切り替えます。</td></tr>
-<tr><td>ウィンドウ</td><td>パネルを自動的に隠す有効/無効</td><td></td><td></td><td></td><td>左右のパネルを自動的に隠します。マウス ポインターをウィンドウ左端、右端に合わせることで表示されます。</td></tr>
-<tr><td>ウィンドウ</td><td>スライダーの表示/非表示</td><td></td><td></td><td></td><td>スライダーの表示/非表示を切り替えます。</td></tr>
-<tr><td>ウィンドウ</td><td>スライダーを自動的に隠す有効/無効</td><td></td><td></td><td></td><td>スライダーを非表示にします。マウス ポインターをウィンドウ下端に合わせることで表示されます。</td></tr>
-<tr><td>ウィンドウ</td><td>フルスクリーン切り替え</td><td>F11</td><td>↑</td><td></td><td>フルスクリーン状態を切替ます。</td></tr>
-<tr><td>ウィンドウ</td><td>フルスクリーンにする</td><td></td><td></td><td></td><td>フルスクリーンにします。</td></tr>
-<tr><td>ウィンドウ</td><td>フルスクリーン解除</td><td></td><td></td><td></td><td>フルスクリーンを解除します。</td></tr>
-<tr><td>ウィンドウ</td><td>ウィンドウを最小化する</td><td></td><td></td><td></td><td>ウィンドウを最小化します。既に最小化されている場合は元のサイズに戻します。</td></tr>
-<tr><td>ウィンドウ</td><td>ウィンドウを最大化する</td><td></td><td></td><td></td><td>ウィンドウを最大化します。既に最大化されている場合は元のサイズに戻します。</td></tr>
-<tr><td>ウィンドウ</td><td>パネルを一時的に表示する</td><td></td><td></td><td>TouchCenter</td><td>自動非表示になっているパネルを一時的に表示します。なんらかの操作をすると解除されます。</td></tr>
-<tr><td>ウィンドウ</td><td>前の NeeView に切り替える</td><td>Ctrl+Shift+Tab</td><td></td><td></td><td>前の NeeView ウィンドウに切り替えます。</td></tr>
-<tr><td>ウィンドウ</td><td>次の NeeView に切り替える</td><td>Ctrl+Tab</td><td></td><td></td><td>次の NeeView ウィンドウに切り替えます。</td></tr>
-<tr><td>ウィンドウ</td><td>ウィンドウ サイズ調整</td><td></td><td></td><td></td><td>メインビューのコンテンツ サイズにウィンドウを合わせます。</td></tr>
-<tr><td>パネル</td><td>本棚の表示/非表示</td><td>B</td><td></td><td></td><td>本棚パネルの表示/非表示を切り替えます。</td></tr>
-<tr><td>パネル</td><td>ページリスト パネルの表示/非表示</td><td>P</td><td></td><td></td><td>ページリスト パネルの表示/非表示を切り替えます。</td></tr>
-<tr><td>パネル</td><td>ブックマーク パネル表示/非表示</td><td>D</td><td></td><td></td><td>ブックマーク パネルの表示/非表示を切り替えます。</td></tr>
-<tr><td>パネル</td><td>プレイリスト パネルの表示/非表示</td><td>M</td><td></td><td></td><td>プレイリスト パネルの表示/非表示を切り替えます。</td></tr>
-<tr><td>パネル</td><td>履歴パネルの表示/非表示</td><td>H</td><td></td><td></td><td>履歴パネルの表示/非表示を切り替えます。</td></tr>
-<tr><td>パネル</td><td>情報パネルの表示/非表示</td><td>I</td><td></td><td></td><td>情報パネルの表示/非表示を切り替えます。</td></tr>
-<tr><td>パネル</td><td>ナビゲーターの表示/非表示</td><td>N</td><td></td><td></td><td>ナビゲーター パネルの表示/非表示を切り替えます。</td></tr>
-<tr><td>パネル</td><td>エフェクト パネルの表示/非表示</td><td>E</td><td></td><td></td><td>エフェクト パネルの表示/非表示を切り替えます。</td></tr>
-<tr><td>パネル</td><td>フォルダー ツリーの表示/非表示</td><td></td><td></td><td></td><td>フォルダー ツリーの表示/非表示を切り替えます。本棚は表示状態になります。</td></tr>
-<tr><td>パネル</td><td>本棚検索ボックスにフォーカスを移す</td><td></td><td></td><td></td><td>本棚検索ボックスにフォーカスを移します。本棚パネルは表示状態になります。</td></tr>
-<tr><td>パネル</td><td>ブックマーク検索ボックスにフォーカスを移す</td><td></td><td></td><td></td><td>ブックマーク検索ボックスにフォーカスを移します。ブックマーク パネルは表示状態になります。</td></tr>
-<tr><td>パネル</td><td>ページリスト検索ボックスにフォーカスを移す</td><td></td><td></td><td></td><td>ページリスト検索ボックスにフォーカスを移します。ページリスト パネルは表示状態になります。</td></tr>
-<tr><td>パネル</td><td>履歴検索ボックスにフォーカスを移す</td><td></td><td></td><td></td><td>履歴検索ボックスにフォーカスを移します。履歴パネルは表示状態になります。</td></tr>
-<tr><td>パネル</td><td>ブックマークの表示</td><td></td><td></td><td></td><td>本棚のブックマーク フォルダーを表示します。</td></tr>
-<tr><td>パネル</td><td>メインビューにフォーカスを移す</td><td></td><td></td><td></td><td>メインビューにフォーカスを移します。</td></tr>
-<tr><td>パネル</td><td>メインビュー ウィンドウ/解除</td><td>F12</td><td></td><td></td><td>メインビューをウィンドウにします。</td></tr>
-<tr><td>フィルムストリップ</td><td>フィルムストリップの表示/非表示</td><td></td><td></td><td></td><td>フィルムストリップの表示/非表示を切り替えます。</td></tr>
-<tr><td>フィルムストリップ</td><td>フィルムストリップを自動的に隠す有効/無効</td><td></td><td></td><td></td><td>スライダーを使用している時だけフィルムストリップを表示するようにします。</td></tr>
-<tr><td>ビュー操作</td><td>スライドショー再生/停止</td><td>F5</td><td></td><td></td><td>スライドショーの再生/停止を切り替えます。</td></tr>
-<tr><td>ビュー操作</td><td>ホバー スクロール有効/無効</td><td></td><td></td><td></td><td>マウス ポインターの位置に応じてスクロールします。</td></tr>
-<tr><td>ビュー操作</td><td>N字スクロール↑</td><td></td><td></td><td></td><td>縦横スクロールが可能な場合、N字を描くようにスクロールします。</td></tr>
-<tr><td>ビュー操作</td><td>N字スクロール↓</td><td></td><td></td><td></td><td>縦横スクロールが可能な場合、N字を描くようにスクロールします。</td></tr>
-<tr><td>ビュー操作</td><td>スクロール↑</td><td></td><td></td><td></td><td>画像を上方向にするロールさせます。縦スクロールできないときは横スクロールになります。</td></tr>
-<tr><td>ビュー操作</td><td>スクロール↓</td><td></td><td></td><td></td><td>画像を下方向にするロールさせます。縦スクロールできないときは横スクロールになります。</td></tr>
-<tr><td>ビュー操作</td><td>スクロール←</td><td></td><td></td><td></td><td>画像を左方向にするロールさせます。横スクロールできないときは縦スクロールになります。</td></tr>
-<tr><td>ビュー操作</td><td>スクロール→</td><td></td><td></td><td></td><td>画像を右方向にするロールさせます。横スクロールできないときは縦スクロールになります。</td></tr>
-<tr><td>ビュー操作</td><td>拡大</td><td>RightButton+WheelUp</td><td></td><td></td><td>画像を拡大します。</td></tr>
-<tr><td>ビュー操作</td><td>縮小</td><td>RightButton+WheelDown</td><td></td><td></td><td>画像を縮小します。</td></tr>
-<tr><td>ビュー操作</td><td>ストレッチ</td><td></td><td></td><td></td><td>スケールにストレッチを適用します。</td></tr>
-<tr><td>ビュー操作</td><td>基底スケール拡大</td><td></td><td></td><td></td><td>基底スケールを拡大します。</td></tr>
-<tr><td>ビュー操作</td><td>基底スケール縮小</td><td></td><td></td><td></td><td>基底スケールを縮小します。</td></tr>
-<tr><td>ビュー操作</td><td>左回転</td><td></td><td></td><td></td><td>画像を左回転させます。</td></tr>
-<tr><td>ビュー操作</td><td>右回転</td><td></td><td></td><td></td><td>画像を右回転させます。</td></tr>
-<tr><td>ビュー操作</td><td>自動左回転有効/無効</td><td></td><td></td><td></td><td>ページ表示時、縦長画像を 90 度左回転します。ウィンドウが縦長の場合、横長画像を 90 度回転します。</td></tr>
-<tr><td>ビュー操作</td><td>自動右回転有効/無効</td><td></td><td></td><td></td><td>ページ表示時、縦長画像を 90 度右回転します。ウィンドウが縦長の場合、横長画像を 90 度回転します。</td></tr>
-<tr><td>ビュー操作</td><td>強制左回転有効/無効</td><td></td><td></td><td></td><td>画像サイズにかかわらず 90 度左回転します。</td></tr>
-<tr><td>ビュー操作</td><td>強制右回転有効/無効</td><td></td><td></td><td></td><td>画像サイズにかかわらず 90 度右回転します。</td></tr>
-<tr><td>ビュー操作</td><td>左右反転</td><td></td><td></td><td></td><td>画像を左右反転させます。</td></tr>
-<tr><td>ビュー操作</td><td>左右反転有効</td><td></td><td></td><td></td><td>左右反転状態にします。</td></tr>
-<tr><td>ビュー操作</td><td>左右反転解除</td><td></td><td></td><td></td><td>左右反転状態を解除します。</td></tr>
-<tr><td>ビュー操作</td><td>上下反転</td><td></td><td></td><td></td><td>画像を上下反転させます。</td></tr>
-<tr><td>ビュー操作</td><td>上下反転有効</td><td></td><td></td><td></td><td>上下反転状態にします。</td></tr>
-<tr><td>ビュー操作</td><td>上下反転解除</td><td></td><td></td><td></td><td>上下反転状態を解除します。</td></tr>
-<tr><td>ビュー操作</td><td>ビュー リセット</td><td></td><td></td><td></td><td>ビュー操作での回転、拡縮、移動、反転をリセットします。</td></tr>
-<tr><td>ビュー操作</td><td>ルーペ有効/無効</td><td></td><td></td><td></td><td>ルーペの有効/無効を切り替えます。</td></tr>
-<tr><td>ビュー操作</td><td>ルーペ有効</td><td></td><td></td><td></td><td>ルーペ モードにします。</td></tr>
-<tr><td>ビュー操作</td><td>ルーペ解除</td><td></td><td></td><td></td><td>ルーペ モードを解除します。</td></tr>
-<tr><td>ビュー操作</td><td>ルーペ倍率拡大</td><td></td><td></td><td></td><td>ルーペ倍率を拡大します。ルーペ使用時のみ機能します。</td></tr>
-<tr><td>ビュー操作</td><td>ルーペ倍率縮小</td><td></td><td></td><td></td><td>ルーペ倍率を縮小します。ルーペ使用時のみ機能します。</td></tr>
-<tr><td>ビュー操作</td><td>オート スクロール</td><td>MiddleClick</td><td></td><td></td><td>オート スクロール モードにします。</td></tr>
-<tr><td>ページ移動</td><td>前のページに戻る</td><td>Right,RightClick</td><td>→</td><td>TouchR1,TouchR2</td><td>ページ前方向に移動します。2 ページ表示の場合は 2 ページ分移動します。</td></tr>
-<tr><td>ページ移動</td><td>次のページに進む</td><td>Left,LeftClick</td><td>←</td><td>TouchL1,TouchL2</td><td>ページ次方向に移動します。2 ページ表示の場合は 2 ページ分移動します。</td></tr>
-<tr><td>ページ移動</td><td>1 ページ戻る</td><td></td><td>←→</td><td></td><td>1 ページだけ前方向に移動します。</td></tr>
-<tr><td>ページ移動</td><td>1 ページ進む</td><td></td><td>→←</td><td></td><td>1 ページだけ次方向に移動します。</td></tr>
-<tr><td>ページ移動</td><td>スクロール＋前のページに戻る</td><td>WheelUp</td><td></td><td></td><td>ページ前方向に画像をスクロールさせます。スクロールできない場合は前ページに移動します。ルーペ使用時はページ移動のみ行います。</td></tr>
-<tr><td>ページ移動</td><td>スクロール＋次のページに進む</td><td>WheelDown</td><td></td><td></td><td>ページ次方向に画像をスクロールさせます。スクロールできない場合は次ページに移動します。ルーペ使用時はページ移動のみ行います。</td></tr>
-<tr><td>ページ移動</td><td>指定ページに移動</td><td></td><td></td><td></td><td>ページ番号を指定して移動します。</td></tr>
-<tr><td>ページ移動</td><td>ランダムなページに移動</td><td></td><td></td><td></td><td>ランダムなページに移動します。</td></tr>
-<tr><td>ページ移動</td><td>設定ページ数戻る</td><td></td><td></td><td></td><td>設定されたページ数だけ前方向に移動します。</td></tr>
-<tr><td>ページ移動</td><td>設定ページ数進む</td><td></td><td></td><td></td><td>設定されたページ数だけ次方向に移動します。</td></tr>
-<tr><td>ページ移動</td><td>前のフォルダーに移動</td><td></td><td></td><td></td><td>ブック内の前のフォルダーの先頭ページに移動します。名前順の並びでのみ有効です。</td></tr>
-<tr><td>ページ移動</td><td>次のフォルダーに移動</td><td></td><td></td><td></td><td>ブック内の次のフォルダーの先頭ページに移動します。名前順の並びでのみ有効です。</td></tr>
-<tr><td>ページ移動</td><td>最初のページに移動</td><td>Ctrl+Right</td><td>↑→</td><td></td><td>先頭ページに移動します。</td></tr>
-<tr><td>ページ移動</td><td>最後のページに移動</td><td>Ctrl+Left</td><td>↑←</td><td></td><td>終端ページに移動します。</td></tr>
-<tr><td>ページ移動</td><td>前の表示ページに戻る</td><td>Backspace</td><td></td><td></td><td>前に開いていたページに移動します。</td></tr>
-<tr><td>ページ移動</td><td>次の表示ページに進む</td><td>Shift+Backspace</td><td></td><td></td><td>次に開いていたページに移動します。</td></tr>
-<tr><td>ブック移動</td><td>ブック固定/解除</td><td></td><td></td><td></td><td>ブックの切り替えを禁止します。</td></tr>
-<tr><td>ブック移動</td><td>前のブックに移動</td><td>Up</td><td>←↑</td><td></td><td>本棚上での前のブックを読み込みます。</td></tr>
-<tr><td>ブック移動</td><td>次のブックに移動</td><td>Down</td><td>←↓</td><td></td><td>本棚上での次のブックを読み込みます。</td></tr>
-<tr><td>ブック移動</td><td>ランダムなブックに移動</td><td></td><td></td><td></td><td>本棚上でランダムなブックを読み込みます。</td></tr>
-<tr><td>ブック移動</td><td>前の履歴に戻る</td><td></td><td></td><td></td><td>前の古い履歴のブックを読み込みます。</td></tr>
-<tr><td>ブック移動</td><td>次の履歴に進む</td><td></td><td></td><td></td><td>次の新しい履歴のブックを読み込みます。</td></tr>
-<tr><td>ブック移動</td><td>前の表示ブックに戻る</td><td>Alt+Left</td><td></td><td></td><td>前に開いていたブックを開きます。</td></tr>
-<tr><td>ブック移動</td><td>次の表示ブックに進む</td><td>Alt+Right</td><td></td><td></td><td>次に開いていたブックを開きます。</td></tr>
-<tr><td>ブック移動</td><td>親のブックを開く</td><td>Alt+Up</td><td></td><td></td><td>上の階層をブックとして開きます。</td></tr>
-<tr><td>ブック移動</td><td>このブックを開く</td><td>Alt+Down</td><td></td><td></td><td>ページがブックであるとき、そのブックを開きます。</td></tr>
-<tr><td>動画</td><td>動画再生/停止</td><td></td><td></td><td></td><td>動画の再生と停止を切り替えます。</td></tr>
-<tr><td>ブック列</td><td>ブックの並び順を切り替える</td><td></td><td></td><td></td><td>ブックの並び順を順番に切り替えます。</td></tr>
-<tr><td>ブック列</td><td>ブック列はファイル名順昇順</td><td></td><td></td><td></td><td>ブックの並びを名前順 (昇順) にします。</td></tr>
-<tr><td>ブック列</td><td>ブック列はファイル名順降順</td><td></td><td></td><td></td><td>ブックの並びを名前順 (降順) にします。</td></tr>
-<tr><td>ブック列</td><td>ブック列はパス昇順</td><td></td><td></td><td></td><td>ブックの並びをパス順 (昇順) にします。</td></tr>
-<tr><td>ブック列</td><td>ブック列はパス降順</td><td></td><td></td><td></td><td>ブックの並びをパス順 (降順) にします。</td></tr>
-<tr><td>ブック列</td><td>ブック列は種類昇順</td><td></td><td></td><td></td><td>ブックの並びをファイルの種類順 (昇順) にします。</td></tr>
-<tr><td>ブック列</td><td>ブック列は種類降順</td><td></td><td></td><td></td><td>ブックの並びをファイルの種類順 (降順) にします。</td></tr>
-<tr><td>ブック列</td><td>ブック列は日付昇順</td><td></td><td></td><td></td><td>ブックの並びを日付順 (昇順) にします。</td></tr>
-<tr><td>ブック列</td><td>ブック列は日付降順</td><td></td><td></td><td></td><td>ブックの並びを日付順 (降順) にします。</td></tr>
-<tr><td>ブック列</td><td>ブック列は登録昇順</td><td></td><td></td><td></td><td>ブックの並びを登録順 (昇順) にします。</td></tr>
-<tr><td>ブック列</td><td>ブック列は登録降順</td><td></td><td></td><td></td><td>ブックの並びを登録順 (降順) にします。</td></tr>
-<tr><td>ブック列</td><td>ブック列はサイズ昇順</td><td></td><td></td><td></td><td>ブックの並びをサイズ順 (昇順) にします。</td></tr>
-<tr><td>ブック列</td><td>ブック列はサイズ降順</td><td></td><td></td><td></td><td>ブックの並びをサイズ順 (降順) にします。</td></tr>
-<tr><td>ブック列</td><td>ブック列はシャッフル</td><td></td><td></td><td></td><td>ブックの並びをシャッフルします。</td></tr>
-<tr><td>ページ表示</td><td>ページモードを切り替える</td><td></td><td></td><td></td><td>ページモードを順番に切り替えます。</td></tr>
-<tr><td>ページ表示</td><td>ページモードを切り替える (逆順)</td><td></td><td></td><td></td><td>ページモードを順番に切り替えます。 (逆順)</td></tr>
-<tr><td>ページ表示</td><td>1 ページ表示</td><td>Ctrl+1</td><td>→↑</td><td></td><td>1 ページ表示にします。</td></tr>
-<tr><td>ページ表示</td><td>2 ページ表示</td><td>Ctrl+2</td><td>→↓</td><td></td><td>2 ページ表示にします。</td></tr>
-<tr><td>ページ表示</td><td>パノラマ</td><td></td><td></td><td></td><td>連続したページを表示します。</td></tr>
-<tr><td>ページ表示</td><td>ページの配置方向を切り替える</td><td></td><td></td><td></td><td>水平方向と垂直方向を切り替えます。</td></tr>
-<tr><td>ページ表示</td><td>水平ページ配置</td><td></td><td></td><td></td><td>ページを水平に並べる</td></tr>
-<tr><td>ページ表示</td><td>垂直ベージ配置</td><td></td><td></td><td></td><td>ページを垂直に並べる</td></tr>
-<tr><td>ページ表示</td><td>右開き、左開きを切り替える</td><td></td><td></td><td></td><td>右開き、左開きを切り替えます。</td></tr>
-<tr><td>ページ表示</td><td>右開き</td><td></td><td></td><td></td><td>読み進む方向を右開きにします。2 ページ表示のときに若いページが右になります。</td></tr>
-<tr><td>ページ表示</td><td>左開き</td><td></td><td></td><td></td><td>読み進む方向を左開きにします。2 ページ表示のときに若いページが左になります。</td></tr>
-<tr><td>ページ表示</td><td>横長ページを分割する</td><td></td><td></td><td></td><td>1 ページ表示時、横長ページを分割してページにします。</td></tr>
-<tr><td>ページ表示</td><td>横長ページを 2 ページとみなす</td><td></td><td></td><td></td><td>2 ページ表示時、横長の画像を 2 ページ分とみなして単独表示します。</td></tr>
-<tr><td>ページ表示</td><td>最初のページを単独表示</td><td></td><td></td><td></td><td>2 ページ表示でも最初のページは 1 ページ表示にします。</td></tr>
-<tr><td>ページ表示</td><td>最後のページを単独表示</td><td></td><td></td><td></td><td>2 ページ表示でも最後のページは 1 ページ表示にします。</td></tr>
-<tr><td>ページ表示</td><td>サブフォルダーを読み込む</td><td></td><td></td><td></td><td>フォルダーから画像を読み込むときにサブフォルダーまたは圧縮ファイルも同時に読み込みます。</td></tr>
-<tr><td>ページ表示</td><td>ページ設定をリセット</td><td></td><td></td><td></td><td>既定のページ設定に戻します。</td></tr>
-<tr><td>ページ列</td><td>ページの並び順を切り替える</td><td></td><td></td><td></td><td>ページの並び順を順番に切り替えます。</td></tr>
-<tr><td>ページ列</td><td>ファイル名昇順</td><td></td><td></td><td></td><td>ページの並び順をファイル名昇順にします。</td></tr>
-<tr><td>ページ列</td><td>ファイル名降順</td><td></td><td></td><td></td><td>ページの並び順をファイル名降順にします。</td></tr>
-<tr><td>ページ列</td><td>ファイル日付昇順</td><td></td><td></td><td></td><td>ページの並び順をファイル日付昇順にします。</td></tr>
-<tr><td>ページ列</td><td>ファイル日付降順</td><td></td><td></td><td></td><td>ページの並び順をファイル日付降順にします。</td></tr>
-<tr><td>ページ列</td><td>ファイルサイズ昇順</td><td></td><td></td><td></td><td>ページの並び順をファイル サイズ昇順にします。</td></tr>
-<tr><td>ページ列</td><td>ファイルサイズ降順</td><td></td><td></td><td></td><td>ページの並び順をファイル サイズ降順にします。</td></tr>
-<tr><td>ページ列</td><td>ファイル登録昇順</td><td></td><td></td><td></td><td>ページの並び順を登録昇順にします。</td></tr>
-<tr><td>ページ列</td><td>ファイル登録降順</td><td></td><td></td><td></td><td>ページの並び順を登録降順にします。</td></tr>
-<tr><td>ページ列</td><td>シャッフル</td><td></td><td></td><td></td><td>ページの並び順をシャッフルます。</td></tr>
-<tr><td>ブックマーク</td><td>ブックマーク追加/削除</td><td>Ctrl+D</td><td></td><td></td><td>現在開いているブックのブックマークを切り替えます。</td></tr>
-<tr><td>プレイリスト</td><td>プレイリスト項目追加/削除</td><td>Ctrl+M</td><td></td><td></td><td>現在のページをプレイリストに追加または削除します。</td></tr>
-<tr><td>プレイリスト</td><td>前のプレイリスト項目に移動</td><td></td><td></td><td></td><td>前のプレイリスト項目に移動します。</td></tr>
-<tr><td>プレイリスト</td><td>次のプレイリスト項目に移動</td><td></td><td></td><td></td><td>次のプレイリスト項目に移動します。</td></tr>
-<tr><td>プレイリスト</td><td>ブック内の前のプレイリスト項目に移動</td><td></td><td></td><td></td><td>現在のブック内で前のプレイリスト項目に移動します。</td></tr>
-<tr><td>プレイリスト</td><td>ブック内の次のプレイリスト項目に移動</td><td></td><td></td><td></td><td>現在のブック内で次のプレイリスト項目に移動します。</td></tr>
-<tr><td>その他</td><td>設定ウィンドウを開く</td><td></td><td></td><td></td><td>設定ウィンドウを開きます。</td></tr>
-<tr><td>その他</td><td>設定ファイルの場所を開く</td><td></td><td></td><td></td><td>設定ファイルが保存されているフォルダーを開きます。</td></tr>
-<tr><td>その他</td><td>スクリプト フォルダーを開く</td><td></td><td></td><td></td><td>スクリプト フォルダーをエクスプローラーで開きます。</td></tr>
-<tr><td>その他</td><td>バージョン情報を表示する</td><td></td><td></td><td></td><td>バージョン情報を表示します。</td></tr>
-<tr><td>その他</td><td>アプリを終了する</td><td></td><td></td><td></td><td>このアプリケーションを終了させます。</td></tr>
-<tr><td>その他</td><td>ファイル操作有効/無効</td><td></td><td></td><td></td><td>ファイル操作系コマンドの有効/無効を切り替えます。</td></tr>
-<tr><td>その他</td><td>コマンドのヘルプを表示する</td><td></td><td></td><td></td><td>全コマンドのヘルプをブラウザで表示します。</td></tr>
-<tr><td>その他</td><td>スクリプトのヘルプを表示する</td><td></td><td></td><td></td><td>スクリプト マニュアルをブラウザで表示します。</td></tr>
-<tr><td>その他</td><td>メイン メニューのヘルプを表示する</td><td></td><td></td><td></td><td>メイン メニューのヘルプをブラウザで表示します。</td></tr>
-<tr><td>その他</td><td>検索オプション ヘルプ</td><td></td><td></td><td></td><td>検索オプションのヘルプをブラウザーで開きます。</td></tr>
-<tr><td>その他</td><td>コンテキスト メニューを開く</td><td></td><td></td><td></td><td>コンテキスト メニューを開きます。</td></tr>
-<tr><td>その他</td><td>設定をエクスポート</td><td></td><td></td><td></td><td>設定、履歴、ブックマークのバックアップを作成します。サムネイル キャッシュはバックアップされません。</td></tr>
-<tr><td>その他</td><td>設定をインポート</td><td></td><td></td><td></td><td>バックアップ ファイルから復元項目を選んで復元します。すべてのパラメーターが定義されている場合、ダイアログは表示されません。</td></tr>
-<tr><td>その他</td><td>設定の再読み込み</td><td></td><td></td><td></td><td>設定を再読み込みします。</td></tr>
-<tr><td>その他</td><td>設定の保存</td><td></td><td></td><td></td><td>現在の設定の保存を実行します。</td></tr>
-<tr><td>その他</td><td>タッチ エミュレート</td><td></td><td></td><td></td><td>マウス ポインター位置のタッチ コマンドを実行します。</td></tr>
-<tr><td>その他</td><td>スクリプト コンソールを開く</td><td></td><td></td><td></td><td>スクリプト用コンソールを開きます。</td></tr>
-<tr><td>スクリプト</td><td>スクリプト中断</td><td></td><td></td><td></td><td>sleep 命令が存在する実行中のスクリプトを停止します。</td></tr>
+<h1>コマンド一覧</h1>
+<p>このリストのキー設定はプリセット TypeA です。</p>
+<h3>ファイル</h3>
+<table>
+<tr>
+<th class="td-middle">コマンド</th>
+<th class="nowrap">ショートカット</th>
+<th class="nowrap">ジェスチャー</th>
+<th class="nowrap">タッチ</th>
+<th class="td-middle">概要</th>
+</tr>
+<tr><td>ファイルを開く</td><td>Ctrl+O</td><td></td><td></td><td>圧縮ファイルか画像ファイルを選択して開きます。</td></tr>
+<tr><td>再読み込み</td><td></td><td>↑↓</td><td></td><td>ブックを再読み込みします。</td></tr>
+<tr><td>閉じる</td><td></td><td></td><td></td><td>開いているブックを閉じます。</td></tr>
+<tr><td>外部アプリで開く (シンプル)</td><td></td><td></td><td></td><td>表示されている画像を外部アプリで開きます。</td></tr>
+<tr><td>外部アプリで開く</td><td></td><td></td><td></td><td>表示された画像を開く外部アプリケーションを選択します。</td></tr>
+<tr><td>エクスプローラーで開く</td><td></td><td></td><td></td><td>表示しているページのファイルをエクスプローラーで開きます。</td></tr>
+<tr><td>名前をつけてファイルに保存</td><td>Ctrl+S</td><td></td><td></td><td>画像をファイルに保存します。</td></tr>
+<tr><td>ファイルに保存</td><td>Ctrl+Shift+S</td><td></td><td></td><td>画像をファイルに保存します。保存フォルダーはコマンド パラメーターで指定します。</td></tr>
+<tr><td>印刷</td><td>Ctrl+P</td><td></td><td></td><td>画像を印刷します。</td></tr>
+<tr><td>ファイルを削除</td><td>Delete</td><td></td><td></td><td>ファイルを削除します。圧縮ファイルの場合は削除できません。</td></tr>
+<tr><td>ブックを削除</td><td></td><td></td><td></td><td>現在閲覧中のフォルダーまたは圧縮ファイルを削除します。</td></tr>
+<tr><td>ファイルをコピー</td><td>Ctrl+C</td><td></td><td></td><td>ファイルをクリップボードにコピーします。</td></tr>
+<tr><td>画像をコピー</td><td>Ctrl+Shift+C</td><td></td><td></td><td>画像をクリップボードにコピーします。2 ページ表示の場合はメインとなるページのみコピーします。</td></tr>
+<tr><td>貼り付け</td><td>Ctrl+V</td><td></td><td></td><td>クリップボードのファイルや画像を貼り付けます。</td></tr>
+<tr><td>フォルダーにコピー</td><td></td><td></td><td></td><td>表示された画像をコピーするフォルダーを選択します。</td></tr>
+<tr><td>フォルダーに移動</td><td></td><td></td><td></td><td>表示された画像を移動するフォルダーを選択します。</td></tr>
+<tr><td>履歴を消去</td><td></td><td></td><td></td><td>履歴を全て削除します。</td></tr>
+<tr><td>現在の場所の履歴削除</td><td></td><td></td><td></td><td>本棚の現在の場所にあるすべての履歴を削除します。</td></tr>
+<tr><td>無効な履歴を削除</td><td></td><td></td><td></td><td>存在しない履歴項目を削除します。</td></tr>
+</table>
+<h3>ストレッチ</h3>
+<table>
+<tr>
+<th class="td-middle">コマンド</th>
+<th class="nowrap">ショートカット</th>
+<th class="nowrap">ジェスチャー</th>
+<th class="nowrap">タッチ</th>
+<th class="td-middle">概要</th>
+</tr>
+<tr><td>ストレッチを切り替える</td><td>LeftButton+WheelDown</td><td></td><td></td><td>画像のストレッチを順番に切り替えます。</td></tr>
+<tr><td>ストレッチを切り替える (逆順)</td><td>LeftButton+WheelUp</td><td></td><td></td><td>画像のストレッチを順番に切り替えます。(逆順)</td></tr>
+<tr><td>オリジナル サイズ</td><td></td><td></td><td></td><td>画像のサイズそのままで表示します。</td></tr>
+<tr><td>ウィンドウに合わせる</td><td></td><td></td><td></td><td>画像をウィンドウ サイズに合わせるよう拡大縮小します。</td></tr>
+<tr><td>ウィンドウいっぱいに広げる</td><td></td><td></td><td></td><td>縦横どちらかをウィンドウ サイズに合わせるように拡大縮小します。画像はウィンドウ サイズより大きくなります。</td></tr>
+<tr><td>面積をウィンドウに合わせる</td><td></td><td></td><td></td><td>ウィンドウの面積と等しくなるように画像を拡大縮小します。</td></tr>
+<tr><td>高さをウィンドウに合わせる</td><td></td><td></td><td></td><td>ウィンドウの高さに画像の高さを合わせるように拡大縮小します。</td></tr>
+<tr><td>幅をウィンドウに合わせる</td><td></td><td></td><td></td><td>ウィンドウの幅に画像の幅を合わせるように拡大縮小します。</td></tr>
+<tr><td>拡大を許可</td><td></td><td></td><td></td><td>ストレッチの適用で拡大を許可します。</td></tr>
+<tr><td>縮小を許可</td><td></td><td></td><td></td><td>ストレッチの適用で縮小を許可します。</td></tr>
+<tr><td>サイズ指定の有効/無効</td><td></td><td></td><td></td><td>オリジナルサイズに適用されるサイズ指定の有効/無効を切り替えます。</td></tr>
+</table>
+<h3>エフェクト</h3>
+<table>
+<tr>
+<th class="td-middle">コマンド</th>
+<th class="nowrap">ショートカット</th>
+<th class="nowrap">ジェスチャー</th>
+<th class="nowrap">タッチ</th>
+<th class="td-middle">概要</th>
+</tr>
+<tr><td>ドットのまま拡大有効/無効</td><td></td><td></td><td></td><td>有効にすると拡大するときにドットのまま拡大します。無効の時にはスケール変換処理 (Fant) が行われます。</td></tr>
+<tr><td>背景を切り替える</td><td></td><td></td><td></td><td>背景を順番に切り替えます。</td></tr>
+<tr><td>背景を黒色にする</td><td></td><td></td><td></td><td>背景を黒色にします。</td></tr>
+<tr><td>背景を白色にする</td><td></td><td></td><td></td><td>背景を白色にします。</td></tr>
+<tr><td>背景を画像に合わせた色にする</td><td></td><td></td><td></td><td>背景色を画像から設定します。具体的には画像の左上ピクセルの色が使用されます。</td></tr>
+<tr><td>背景を白チェック模様にする</td><td></td><td></td><td></td><td>背景を白チェック模様にします。</td></tr>
+<tr><td>背景を黒チェック模様にする</td><td></td><td></td><td></td><td>背景を黒チェック模様にします。</td></tr>
+<tr><td>背景をカスタム背景にする</td><td></td><td></td><td></td><td>背景をカスタム背景にします。</td></tr>
+<tr><td>リサイズ フィルター有効/無効</td><td>Ctrl+R</td><td></td><td></td><td>リサイズ フィルターの有効/無効を切り替えます。</td></tr>
+<tr><td>グリッド有効/無効</td><td></td><td></td><td></td><td>グリッドの表示/非表示を切り替えます。</td></tr>
+<tr><td>エフェクト有効/無効</td><td>Ctrl+E</td><td></td><td></td><td>エフェクトの有効/無効を切り替えます。</td></tr>
+</table>
+<h3>ウィンドウ</h3>
+<table>
+<tr>
+<th class="td-middle">コマンド</th>
+<th class="nowrap">ショートカット</th>
+<th class="nowrap">ジェスチャー</th>
+<th class="nowrap">タッチ</th>
+<th class="td-middle">概要</th>
+</tr>
+<tr><td>常に手前に表示の有効/無効</td><td></td><td></td><td></td><td>ウィンドウを常に手前に表示します。</td></tr>
+<tr><td>アドレス バー表示/非表示</td><td></td><td></td><td></td><td>アドレス バーの表示/非表示を切り替えます。</td></tr>
+<tr><td>メニューを自動的に隠す有効/無効</td><td></td><td></td><td></td><td>メニューを非表示にします。マウス ポインターをウィンドウ上端に合わせることで表示されます。</td></tr>
+<tr><td>サイド バー表示/非表示</td><td></td><td></td><td></td><td>サイド バーの表示/非表示を切り替えます。</td></tr>
+<tr><td>パネルを自動的に隠す有効/無効</td><td></td><td></td><td></td><td>左右のパネルを自動的に隠します。マウス ポインターをウィンドウ左端、右端に合わせることで表示されます。</td></tr>
+<tr><td>スライダーの表示/非表示</td><td></td><td></td><td></td><td>スライダーの表示/非表示を切り替えます。</td></tr>
+<tr><td>スライダーを自動的に隠す有効/無効</td><td></td><td></td><td></td><td>スライダーを非表示にします。マウス ポインターをウィンドウ下端に合わせることで表示されます。</td></tr>
+<tr><td>フルスクリーン切り替え</td><td>F11</td><td>↑</td><td></td><td>フルスクリーン状態を切替ます。</td></tr>
+<tr><td>フルスクリーンにする</td><td></td><td></td><td></td><td>フルスクリーンにします。</td></tr>
+<tr><td>フルスクリーン解除</td><td></td><td></td><td></td><td>フルスクリーンを解除します。</td></tr>
+<tr><td>ウィンドウを最小化する</td><td></td><td></td><td></td><td>ウィンドウを最小化します。既に最小化されている場合は元のサイズに戻します。</td></tr>
+<tr><td>ウィンドウを最大化する</td><td></td><td></td><td></td><td>ウィンドウを最大化します。既に最大化されている場合は元のサイズに戻します。</td></tr>
+<tr><td>パネルを一時的に表示する</td><td></td><td></td><td>TouchCenter</td><td>自動非表示になっているパネルを一時的に表示します。なんらかの操作をすると解除されます。</td></tr>
+<tr><td>前の NeeView に切り替える</td><td>Ctrl+Shift+Tab</td><td></td><td></td><td>前の NeeView ウィンドウに切り替えます。</td></tr>
+<tr><td>次の NeeView に切り替える</td><td>Ctrl+Tab</td><td></td><td></td><td>次の NeeView ウィンドウに切り替えます。</td></tr>
+<tr><td>ウィンドウ サイズ調整</td><td></td><td></td><td></td><td>メインビューのコンテンツ サイズにウィンドウを合わせます。</td></tr>
+</table>
+<h3>パネル</h3>
+<table>
+<tr>
+<th class="td-middle">コマンド</th>
+<th class="nowrap">ショートカット</th>
+<th class="nowrap">ジェスチャー</th>
+<th class="nowrap">タッチ</th>
+<th class="td-middle">概要</th>
+</tr>
+<tr><td>本棚の表示/非表示</td><td>B</td><td></td><td></td><td>本棚パネルの表示/非表示を切り替えます。</td></tr>
+<tr><td>ページリスト パネルの表示/非表示</td><td>P</td><td></td><td></td><td>ページリスト パネルの表示/非表示を切り替えます。</td></tr>
+<tr><td>ブックマーク パネル表示/非表示</td><td>D</td><td></td><td></td><td>ブックマーク パネルの表示/非表示を切り替えます。</td></tr>
+<tr><td>プレイリスト パネルの表示/非表示</td><td>M</td><td></td><td></td><td>プレイリスト パネルの表示/非表示を切り替えます。</td></tr>
+<tr><td>履歴パネルの表示/非表示</td><td>H</td><td></td><td></td><td>履歴パネルの表示/非表示を切り替えます。</td></tr>
+<tr><td>情報パネルの表示/非表示</td><td>I</td><td></td><td></td><td>情報パネルの表示/非表示を切り替えます。</td></tr>
+<tr><td>ナビゲーターの表示/非表示</td><td>N</td><td></td><td></td><td>ナビゲーター パネルの表示/非表示を切り替えます。</td></tr>
+<tr><td>エフェクト パネルの表示/非表示</td><td>E</td><td></td><td></td><td>エフェクト パネルの表示/非表示を切り替えます。</td></tr>
+<tr><td>フォルダー ツリーの表示/非表示</td><td></td><td></td><td></td><td>フォルダー ツリーの表示/非表示を切り替えます。本棚は表示状態になります。</td></tr>
+<tr><td>本棚検索ボックスにフォーカスを移す</td><td></td><td></td><td></td><td>本棚検索ボックスにフォーカスを移します。本棚パネルは表示状態になります。</td></tr>
+<tr><td>ブックマーク検索ボックスにフォーカスを移す</td><td></td><td></td><td></td><td>ブックマーク検索ボックスにフォーカスを移します。ブックマーク パネルは表示状態になります。</td></tr>
+<tr><td>ページリスト検索ボックスにフォーカスを移す</td><td></td><td></td><td></td><td>ページリスト検索ボックスにフォーカスを移します。ページリスト パネルは表示状態になります。</td></tr>
+<tr><td>履歴検索ボックスにフォーカスを移す</td><td></td><td></td><td></td><td>履歴検索ボックスにフォーカスを移します。履歴パネルは表示状態になります。</td></tr>
+<tr><td>ブックマークの表示</td><td></td><td></td><td></td><td>本棚のブックマーク フォルダーを表示します。</td></tr>
+<tr><td>メインビューにフォーカスを移す</td><td></td><td></td><td></td><td>メインビューにフォーカスを移します。</td></tr>
+<tr><td>メインビュー ウィンドウ/解除</td><td>F12</td><td></td><td></td><td>メインビューをウィンドウにします。</td></tr>
+</table>
+<h3>フィルムストリップ</h3>
+<table>
+<tr>
+<th class="td-middle">コマンド</th>
+<th class="nowrap">ショートカット</th>
+<th class="nowrap">ジェスチャー</th>
+<th class="nowrap">タッチ</th>
+<th class="td-middle">概要</th>
+</tr>
+<tr><td>フィルムストリップの表示/非表示</td><td></td><td></td><td></td><td>フィルムストリップの表示/非表示を切り替えます。</td></tr>
+<tr><td>フィルムストリップを自動的に隠す有効/無効</td><td></td><td></td><td></td><td>スライダーを使用している時だけフィルムストリップを表示するようにします。</td></tr>
+</table>
+<h3>ビュー操作</h3>
+<table>
+<tr>
+<th class="td-middle">コマンド</th>
+<th class="nowrap">ショートカット</th>
+<th class="nowrap">ジェスチャー</th>
+<th class="nowrap">タッチ</th>
+<th class="td-middle">概要</th>
+</tr>
+<tr><td>スライドショー再生/停止</td><td>F5</td><td></td><td></td><td>スライドショーの再生/停止を切り替えます。</td></tr>
+<tr><td>ホバー スクロール有効/無効</td><td></td><td></td><td></td><td>マウス ポインターの位置に応じてスクロールします。</td></tr>
+<tr><td>N字スクロール↑</td><td></td><td></td><td></td><td>縦横スクロールが可能な場合、N字を描くようにスクロールします。</td></tr>
+<tr><td>N字スクロール↓</td><td></td><td></td><td></td><td>縦横スクロールが可能な場合、N字を描くようにスクロールします。</td></tr>
+<tr><td>スクロール↑</td><td></td><td></td><td></td><td>画像を上方向にするロールさせます。縦スクロールできないときは横スクロールになります。</td></tr>
+<tr><td>スクロール↓</td><td></td><td></td><td></td><td>画像を下方向にするロールさせます。縦スクロールできないときは横スクロールになります。</td></tr>
+<tr><td>スクロール←</td><td></td><td></td><td></td><td>画像を左方向にするロールさせます。横スクロールできないときは縦スクロールになります。</td></tr>
+<tr><td>スクロール→</td><td></td><td></td><td></td><td>画像を右方向にするロールさせます。横スクロールできないときは縦スクロールになります。</td></tr>
+<tr><td>拡大</td><td>RightButton+WheelUp</td><td></td><td></td><td>画像を拡大します。</td></tr>
+<tr><td>縮小</td><td>RightButton+WheelDown</td><td></td><td></td><td>画像を縮小します。</td></tr>
+<tr><td>ストレッチ</td><td></td><td></td><td></td><td>スケールにストレッチを適用します。</td></tr>
+<tr><td>基底スケール拡大</td><td></td><td></td><td></td><td>基底スケールを拡大します。</td></tr>
+<tr><td>基底スケール縮小</td><td></td><td></td><td></td><td>基底スケールを縮小します。</td></tr>
+<tr><td>左回転</td><td></td><td></td><td></td><td>画像を左回転させます。</td></tr>
+<tr><td>右回転</td><td></td><td></td><td></td><td>画像を右回転させます。</td></tr>
+<tr><td>自動左回転有効/無効</td><td></td><td></td><td></td><td>ページ表示時、縦長画像を 90 度左回転します。ウィンドウが縦長の場合、横長画像を 90 度回転します。</td></tr>
+<tr><td>自動右回転有効/無効</td><td></td><td></td><td></td><td>ページ表示時、縦長画像を 90 度右回転します。ウィンドウが縦長の場合、横長画像を 90 度回転します。</td></tr>
+<tr><td>強制左回転有効/無効</td><td></td><td></td><td></td><td>画像サイズにかかわらず 90 度左回転します。</td></tr>
+<tr><td>強制右回転有効/無効</td><td></td><td></td><td></td><td>画像サイズにかかわらず 90 度右回転します。</td></tr>
+<tr><td>左右反転</td><td></td><td></td><td></td><td>画像を左右反転させます。</td></tr>
+<tr><td>左右反転有効</td><td></td><td></td><td></td><td>左右反転状態にします。</td></tr>
+<tr><td>左右反転解除</td><td></td><td></td><td></td><td>左右反転状態を解除します。</td></tr>
+<tr><td>上下反転</td><td></td><td></td><td></td><td>画像を上下反転させます。</td></tr>
+<tr><td>上下反転有効</td><td></td><td></td><td></td><td>上下反転状態にします。</td></tr>
+<tr><td>上下反転解除</td><td></td><td></td><td></td><td>上下反転状態を解除します。</td></tr>
+<tr><td>ビュー リセット</td><td></td><td></td><td></td><td>ビュー操作での回転、拡縮、移動、反転をリセットします。</td></tr>
+<tr><td>ルーペ有効/無効</td><td></td><td></td><td></td><td>ルーペの有効/無効を切り替えます。</td></tr>
+<tr><td>ルーペ有効</td><td></td><td></td><td></td><td>ルーペ モードにします。</td></tr>
+<tr><td>ルーペ解除</td><td></td><td></td><td></td><td>ルーペ モードを解除します。</td></tr>
+<tr><td>ルーペ倍率拡大</td><td></td><td></td><td></td><td>ルーペ倍率を拡大します。ルーペ使用時のみ機能します。</td></tr>
+<tr><td>ルーペ倍率縮小</td><td></td><td></td><td></td><td>ルーペ倍率を縮小します。ルーペ使用時のみ機能します。</td></tr>
+<tr><td>オート スクロール</td><td>MiddleClick</td><td></td><td></td><td>オート スクロール モードにします。</td></tr>
+</table>
+<h3>ページ移動</h3>
+<table>
+<tr>
+<th class="td-middle">コマンド</th>
+<th class="nowrap">ショートカット</th>
+<th class="nowrap">ジェスチャー</th>
+<th class="nowrap">タッチ</th>
+<th class="td-middle">概要</th>
+</tr>
+<tr><td>前のページに戻る</td><td>Right,RightClick</td><td>→</td><td>TouchR1,TouchR2</td><td>ページ前方向に移動します。2 ページ表示の場合は 2 ページ分移動します。</td></tr>
+<tr><td>次のページに進む</td><td>Left,LeftClick</td><td>←</td><td>TouchL1,TouchL2</td><td>ページ次方向に移動します。2 ページ表示の場合は 2 ページ分移動します。</td></tr>
+<tr><td>1 ページ戻る</td><td></td><td>←→</td><td></td><td>1 ページだけ前方向に移動します。</td></tr>
+<tr><td>1 ページ進む</td><td></td><td>→←</td><td></td><td>1 ページだけ次方向に移動します。</td></tr>
+<tr><td>スクロール＋前のページに戻る</td><td>WheelUp</td><td></td><td></td><td>ページ前方向に画像をスクロールさせます。スクロールできない場合は前ページに移動します。ルーペ使用時はページ移動のみ行います。</td></tr>
+<tr><td>スクロール＋次のページに進む</td><td>WheelDown</td><td></td><td></td><td>ページ次方向に画像をスクロールさせます。スクロールできない場合は次ページに移動します。ルーペ使用時はページ移動のみ行います。</td></tr>
+<tr><td>指定ページに移動</td><td></td><td></td><td></td><td>ページ番号を指定して移動します。</td></tr>
+<tr><td>ランダムなページに移動</td><td></td><td></td><td></td><td>ランダムなページに移動します。</td></tr>
+<tr><td>設定ページ数戻る</td><td></td><td></td><td></td><td>設定されたページ数だけ前方向に移動します。</td></tr>
+<tr><td>設定ページ数進む</td><td></td><td></td><td></td><td>設定されたページ数だけ次方向に移動します。</td></tr>
+<tr><td>前のフォルダーに移動</td><td></td><td></td><td></td><td>ブック内の前のフォルダーの先頭ページに移動します。名前順の並びでのみ有効です。</td></tr>
+<tr><td>次のフォルダーに移動</td><td></td><td></td><td></td><td>ブック内の次のフォルダーの先頭ページに移動します。名前順の並びでのみ有効です。</td></tr>
+<tr><td>最初のページに移動</td><td>Ctrl+Right</td><td>↑→</td><td></td><td>先頭ページに移動します。</td></tr>
+<tr><td>最後のページに移動</td><td>Ctrl+Left</td><td>↑←</td><td></td><td>終端ページに移動します。</td></tr>
+<tr><td>前の表示ページに戻る</td><td>Backspace</td><td></td><td></td><td>前に開いていたページに移動します。</td></tr>
+<tr><td>次の表示ページに進む</td><td>Shift+Backspace</td><td></td><td></td><td>次に開いていたページに移動します。</td></tr>
+</table>
+<h3>ブック移動</h3>
+<table>
+<tr>
+<th class="td-middle">コマンド</th>
+<th class="nowrap">ショートカット</th>
+<th class="nowrap">ジェスチャー</th>
+<th class="nowrap">タッチ</th>
+<th class="td-middle">概要</th>
+</tr>
+<tr><td>ブック固定/解除</td><td></td><td></td><td></td><td>ブックの切り替えを禁止します。</td></tr>
+<tr><td>前のブックに移動</td><td>Up</td><td>←↑</td><td></td><td>本棚上での前のブックを読み込みます。</td></tr>
+<tr><td>次のブックに移動</td><td>Down</td><td>←↓</td><td></td><td>本棚上での次のブックを読み込みます。</td></tr>
+<tr><td>ランダムなブックに移動</td><td></td><td></td><td></td><td>本棚上でランダムなブックを読み込みます。</td></tr>
+<tr><td>前の履歴に戻る</td><td></td><td></td><td></td><td>前の古い履歴のブックを読み込みます。</td></tr>
+<tr><td>次の履歴に進む</td><td></td><td></td><td></td><td>次の新しい履歴のブックを読み込みます。</td></tr>
+<tr><td>前の表示ブックに戻る</td><td>Alt+Left</td><td></td><td></td><td>前に開いていたブックを開きます。</td></tr>
+<tr><td>次の表示ブックに進む</td><td>Alt+Right</td><td></td><td></td><td>次に開いていたブックを開きます。</td></tr>
+<tr><td>親のブックを開く</td><td>Alt+Up</td><td></td><td></td><td>上の階層をブックとして開きます。</td></tr>
+<tr><td>このブックを開く</td><td>Alt+Down</td><td></td><td></td><td>ページがブックであるとき、そのブックを開きます。</td></tr>
+</table>
+<h3>動画</h3>
+<table>
+<tr>
+<th class="td-middle">コマンド</th>
+<th class="nowrap">ショートカット</th>
+<th class="nowrap">ジェスチャー</th>
+<th class="nowrap">タッチ</th>
+<th class="td-middle">概要</th>
+</tr>
+<tr><td>動画再生/停止</td><td></td><td></td><td></td><td>動画の再生と停止を切り替えます。</td></tr>
+</table>
+<h3>ブック列</h3>
+<table>
+<tr>
+<th class="td-middle">コマンド</th>
+<th class="nowrap">ショートカット</th>
+<th class="nowrap">ジェスチャー</th>
+<th class="nowrap">タッチ</th>
+<th class="td-middle">概要</th>
+</tr>
+<tr><td>ブックの並び順を切り替える</td><td></td><td></td><td></td><td>ブックの並び順を順番に切り替えます。</td></tr>
+<tr><td>ブック列はファイル名順昇順</td><td></td><td></td><td></td><td>ブックの並びを名前順 (昇順) にします。</td></tr>
+<tr><td>ブック列はファイル名順降順</td><td></td><td></td><td></td><td>ブックの並びを名前順 (降順) にします。</td></tr>
+<tr><td>ブック列はパス昇順</td><td></td><td></td><td></td><td>ブックの並びをパス順 (昇順) にします。</td></tr>
+<tr><td>ブック列はパス降順</td><td></td><td></td><td></td><td>ブックの並びをパス順 (降順) にします。</td></tr>
+<tr><td>ブック列は種類昇順</td><td></td><td></td><td></td><td>ブックの並びをファイルの種類順 (昇順) にします。</td></tr>
+<tr><td>ブック列は種類降順</td><td></td><td></td><td></td><td>ブックの並びをファイルの種類順 (降順) にします。</td></tr>
+<tr><td>ブック列は日付昇順</td><td></td><td></td><td></td><td>ブックの並びを日付順 (昇順) にします。</td></tr>
+<tr><td>ブック列は日付降順</td><td></td><td></td><td></td><td>ブックの並びを日付順 (降順) にします。</td></tr>
+<tr><td>ブック列は登録昇順</td><td></td><td></td><td></td><td>ブックの並びを登録順 (昇順) にします。</td></tr>
+<tr><td>ブック列は登録降順</td><td></td><td></td><td></td><td>ブックの並びを登録順 (降順) にします。</td></tr>
+<tr><td>ブック列はサイズ昇順</td><td></td><td></td><td></td><td>ブックの並びをサイズ順 (昇順) にします。</td></tr>
+<tr><td>ブック列はサイズ降順</td><td></td><td></td><td></td><td>ブックの並びをサイズ順 (降順) にします。</td></tr>
+<tr><td>ブック列はシャッフル</td><td></td><td></td><td></td><td>ブックの並びをシャッフルします。</td></tr>
+</table>
+<h3>ページ表示</h3>
+<table>
+<tr>
+<th class="td-middle">コマンド</th>
+<th class="nowrap">ショートカット</th>
+<th class="nowrap">ジェスチャー</th>
+<th class="nowrap">タッチ</th>
+<th class="td-middle">概要</th>
+</tr>
+<tr><td>ページモードを切り替える</td><td></td><td></td><td></td><td>ページモードを順番に切り替えます。</td></tr>
+<tr><td>ページモードを切り替える (逆順)</td><td></td><td></td><td></td><td>ページモードを順番に切り替えます。 (逆順)</td></tr>
+<tr><td>1 ページ表示</td><td>Ctrl+1</td><td>→↑</td><td></td><td>1 ページ表示にします。</td></tr>
+<tr><td>2 ページ表示</td><td>Ctrl+2</td><td>→↓</td><td></td><td>2 ページ表示にします。</td></tr>
+<tr><td>パノラマ</td><td></td><td></td><td></td><td>連続したページを表示します。</td></tr>
+<tr><td>ページの配置方向を切り替える</td><td></td><td></td><td></td><td>水平方向と垂直方向を切り替えます。</td></tr>
+<tr><td>水平ページ配置</td><td></td><td></td><td></td><td>ページを水平に並べる</td></tr>
+<tr><td>垂直ベージ配置</td><td></td><td></td><td></td><td>ページを垂直に並べる</td></tr>
+<tr><td>右開き、左開きを切り替える</td><td></td><td></td><td></td><td>右開き、左開きを切り替えます。</td></tr>
+<tr><td>右開き</td><td></td><td></td><td></td><td>読み進む方向を右開きにします。2 ページ表示のときに若いページが右になります。</td></tr>
+<tr><td>左開き</td><td></td><td></td><td></td><td>読み進む方向を左開きにします。2 ページ表示のときに若いページが左になります。</td></tr>
+<tr><td>横長ページを分割する</td><td></td><td></td><td></td><td>1 ページ表示時、横長ページを分割してページにします。</td></tr>
+<tr><td>横長ページを 2 ページとみなす</td><td></td><td></td><td></td><td>2 ページ表示時、横長の画像を 2 ページ分とみなして単独表示します。</td></tr>
+<tr><td>最初のページを単独表示</td><td></td><td></td><td></td><td>2 ページ表示でも最初のページは 1 ページ表示にします。</td></tr>
+<tr><td>最後のページを単独表示</td><td></td><td></td><td></td><td>2 ページ表示でも最後のページは 1 ページ表示にします。</td></tr>
+<tr><td>サブフォルダーを読み込む</td><td></td><td></td><td></td><td>フォルダーから画像を読み込むときにサブフォルダーまたは圧縮ファイルも同時に読み込みます。</td></tr>
+<tr><td>ページ設定をリセット</td><td></td><td></td><td></td><td>既定のページ設定に戻します。</td></tr>
+</table>
+<h3>ページ列</h3>
+<table>
+<tr>
+<th class="td-middle">コマンド</th>
+<th class="nowrap">ショートカット</th>
+<th class="nowrap">ジェスチャー</th>
+<th class="nowrap">タッチ</th>
+<th class="td-middle">概要</th>
+</tr>
+<tr><td>ページの並び順を切り替える</td><td></td><td></td><td></td><td>ページの並び順を順番に切り替えます。</td></tr>
+<tr><td>ファイル名昇順</td><td></td><td></td><td></td><td>ページの並び順をファイル名昇順にします。</td></tr>
+<tr><td>ファイル名降順</td><td></td><td></td><td></td><td>ページの並び順をファイル名降順にします。</td></tr>
+<tr><td>ファイル日付昇順</td><td></td><td></td><td></td><td>ページの並び順をファイル日付昇順にします。</td></tr>
+<tr><td>ファイル日付降順</td><td></td><td></td><td></td><td>ページの並び順をファイル日付降順にします。</td></tr>
+<tr><td>ファイルサイズ昇順</td><td></td><td></td><td></td><td>ページの並び順をファイル サイズ昇順にします。</td></tr>
+<tr><td>ファイルサイズ降順</td><td></td><td></td><td></td><td>ページの並び順をファイル サイズ降順にします。</td></tr>
+<tr><td>ファイル登録昇順</td><td></td><td></td><td></td><td>ページの並び順を登録昇順にします。</td></tr>
+<tr><td>ファイル登録降順</td><td></td><td></td><td></td><td>ページの並び順を登録降順にします。</td></tr>
+<tr><td>シャッフル</td><td></td><td></td><td></td><td>ページの並び順をシャッフルます。</td></tr>
+</table>
+<h3>ブックマーク</h3>
+<table>
+<tr>
+<th class="td-middle">コマンド</th>
+<th class="nowrap">ショートカット</th>
+<th class="nowrap">ジェスチャー</th>
+<th class="nowrap">タッチ</th>
+<th class="td-middle">概要</th>
+</tr>
+<tr><td>ブックマーク追加/削除</td><td>Ctrl+D</td><td></td><td></td><td>現在開いているブックのブックマークを切り替えます。</td></tr>
+</table>
+<h3>プレイリスト</h3>
+<table>
+<tr>
+<th class="td-middle">コマンド</th>
+<th class="nowrap">ショートカット</th>
+<th class="nowrap">ジェスチャー</th>
+<th class="nowrap">タッチ</th>
+<th class="td-middle">概要</th>
+</tr>
+<tr><td>プレイリスト項目追加/削除</td><td>Ctrl+M</td><td></td><td></td><td>現在のページをプレイリストに追加または削除します。</td></tr>
+<tr><td>前のプレイリスト項目に移動</td><td></td><td></td><td></td><td>前のプレイリスト項目に移動します。</td></tr>
+<tr><td>次のプレイリスト項目に移動</td><td></td><td></td><td></td><td>次のプレイリスト項目に移動します。</td></tr>
+<tr><td>ブック内の前のプレイリスト項目に移動</td><td></td><td></td><td></td><td>現在のブック内で前のプレイリスト項目に移動します。</td></tr>
+<tr><td>ブック内の次のプレイリスト項目に移動</td><td></td><td></td><td></td><td>現在のブック内で次のプレイリスト項目に移動します。</td></tr>
+</table>
+<h3>スクリプト</h3>
+<table>
+<tr>
+<th class="td-middle">コマンド</th>
+<th class="nowrap">ショートカット</th>
+<th class="nowrap">ジェスチャー</th>
+<th class="nowrap">タッチ</th>
+<th class="td-middle">概要</th>
+</tr>
+<tr><td>スクリプト中断</td><td></td><td></td><td></td><td>sleep 命令が存在する実行中のスクリプトを停止します。</td></tr>
+</table>
+<h3>その他</h3>
+<table>
+<tr>
+<th class="td-middle">コマンド</th>
+<th class="nowrap">ショートカット</th>
+<th class="nowrap">ジェスチャー</th>
+<th class="nowrap">タッチ</th>
+<th class="td-middle">概要</th>
+</tr>
+<tr><td>設定ウィンドウを開く</td><td></td><td></td><td></td><td>設定ウィンドウを開きます。</td></tr>
+<tr><td>設定ファイルの場所を開く</td><td></td><td></td><td></td><td>設定ファイルが保存されているフォルダーを開きます。</td></tr>
+<tr><td>スクリプト フォルダーを開く</td><td></td><td></td><td></td><td>スクリプト フォルダーをエクスプローラーで開きます。</td></tr>
+<tr><td>バージョン情報を表示する</td><td></td><td></td><td></td><td>バージョン情報を表示します。</td></tr>
+<tr><td>アプリを終了する</td><td></td><td></td><td></td><td>このアプリケーションを終了させます。</td></tr>
+<tr><td>ファイル操作有効/無効</td><td></td><td></td><td></td><td>ファイル操作系コマンドの有効/無効を切り替えます。</td></tr>
+<tr><td>コマンドのヘルプを表示する</td><td></td><td></td><td></td><td>全コマンドのヘルプをブラウザで表示します。</td></tr>
+<tr><td>スクリプトのヘルプを表示する</td><td></td><td></td><td></td><td>スクリプト マニュアルをブラウザで表示します。</td></tr>
+<tr><td>メイン メニューのヘルプを表示する</td><td></td><td></td><td></td><td>メイン メニューのヘルプをブラウザで表示します。</td></tr>
+<tr><td>検索オプション ヘルプ</td><td></td><td></td><td></td><td>検索オプションのヘルプをブラウザーで開きます。</td></tr>
+<tr><td>コンテキスト メニューを開く</td><td></td><td></td><td></td><td>コンテキスト メニューを開きます。</td></tr>
+<tr><td>設定をエクスポート</td><td></td><td></td><td></td><td>設定、履歴、ブックマークのバックアップを作成します。サムネイル キャッシュはバックアップされません。</td></tr>
+<tr><td>設定をインポート</td><td></td><td></td><td></td><td>バックアップ ファイルから復元項目を選んで復元します。すべてのパラメーターが定義されている場合、ダイアログは表示されません。</td></tr>
+<tr><td>設定の再読み込み</td><td></td><td></td><td></td><td>設定を再読み込みします。</td></tr>
+<tr><td>設定の保存</td><td></td><td></td><td></td><td>現在の設定の保存を実行します。</td></tr>
+<tr><td>タッチ エミュレート</td><td></td><td></td><td></td><td>マウス ポインター位置のタッチ コマンドを実行します。</td></tr>
+<tr><td>スクリプト コンソールを開く</td><td></td><td></td><td></td><td>スクリプト用コンソールを開きます。</td></tr>
 </table>
 

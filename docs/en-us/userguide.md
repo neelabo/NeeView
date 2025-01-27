@@ -1,7 +1,5 @@
 # User's Guide
 
-<div style="color: #888;"><time datetime="2025-01-25">2025-01-25</time></div>
-
 ## Quick Start
 
 Drag and drop image files or folders containing images to load images.  

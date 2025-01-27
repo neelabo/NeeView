@@ -15,11 +15,6 @@ h1 {
     padding-bottom: 10px;
 }
 
-h1.sub
-{
-    margin-top: 60px;
-}
-
 h2 {
     color: #444444;
     margin-top: 40px;
@@ -78,58 +73,39 @@ hr {
     margin: 50px 0px;
 }
 
-.table-normal {
-    width: 100%;
-    margin: 20px 0 30px;
-    border-top: 1px solid #CCC;
-    border-left: 1px solid #CCC;
-    border-spacing: 0;
-}
-
-.table-normal th {
-    background: #EEE;
-}
-
-.table-normal th, .table-normal td {
-    font-size: 14px;
-    font-family: Consolas;
-    border-bottom: 1px solid #CCC;
-    border-right: 1px solid #CCC;
-    padding: 7px;
-}
-
-.table-none {
+table {
+    border: 0px;
     border-collapse: collapse;
     margin: 20px 0 30px;
 }
 
-.table-none td, .table-none th {
+td,
+th {
+    border: 0px;
     text-align: left;
     padding: 10px 20px;
 }
 
-.table-slim {
-    border-collapse: collapse;
-    margin: 20px 0 30px;
-}
-
-.table-slim tr {
+td {
+    border-top: 1px solid #CCC;
     border-bottom: 1px solid #CCC;
 }
 
-.table-slim tr:nth-child(1) {
-    border-top: 1px solid #CCC;
-}
-
-.table-slim td, .table-slim th {
-    text-align: left;
-    padding: 10px 20px;
-}
-
-.table-topless tr:nth-child(1) {
-    border-top: 0px;
+th {
+    color: initial;
+    background: none;
+    font-weight: bold;
 }
 
 .nowrap {
     white-space: nowrap;
+}
+
+.td-middle {
+    min-width: 300px;
+}
+
+.remarks {
+    margin-top: 5px;
+    margin-bottom: 5px;
 }

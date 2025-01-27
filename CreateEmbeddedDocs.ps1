@@ -1,55 +1,139 @@
-
-
-function Get-HtmlSource {
+function Get-JekyllSource {
+    [CmdletBinding()]
     param (
-        [parameter(mandatory = $true)][string]$Path
+        [Parameter(Mandatory = $True, ValueFromPipeline = $True)]
+        [object[]]$Content,
+        [string]$Title
     )
 
-    $html = Get-Content $Path
+    begin {
+        $phase = 0
 
-    $title = [System.IO.Path]::GetFileName($Path)
-    foreach ($line in $html) {
-        if ($line -match "<h1>(.+)</h1>") {
-            $title = $Matches[1]
-            break
-        }
+        Write-Output "---"
+        Write-Output "layout: default"
+        Write-Output "title: $Title"
+        Write-Output "---"
+        Write-Output ""
     }
 
-    Write-Output "---"
-    Write-Output "layout: default"
-    Write-Output "---"
-    Write-Output ""
-
-    $phase = 0
-    foreach ($line in $html) {
-        if ($phase -eq 0) {
-            if ($line -match "<body>(.*)$") {
-                Write-Output $Matches[1]
-                $phase ++
+    process {
+        foreach ($line in $Content) {
+            if ($phase -eq 0) {
+                if ($line -match "<body>(.*)$") {
+                    Write-Output $Matches[1]
+                    $phase ++
+                }
             }
-        }
-        elseif ($phase -eq 1) {
-            if ($line -match "^(.*)</body>") {
-                Write-Output $Matches[1]
-                $phase ++
-            }
-            else {
-                Write-Output $line
+            elseif ($phase -eq 1) {
+                if ($line -match "^(.*)</body>") {
+                    Write-Output $Matches[1]
+                    $phase ++
+                }
+                else {
+                    Write-Output $line
+                }
             }
         }
     }
 }
 
+function Get-Title {
+    param (
+        $Content
+    )
 
-function Write-CultureDocs{
+    foreach ($line in $Content) {
+        if ($line -match "<h1>\s*(.+)\s*</h1>") {
+            return $Matches[1]
+        }
+    }
+    return "no title"
+}
+
+function Get-TrimmedNeeViewHeading {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $True, ValueFromPipeline = $True)]
+        [object[]]$Content
+    )
+
+    process {
+        $regex = "<h1>\s*(NeeView\s*)?(.+)</h1>"
+        foreach ($line in $Content) {
+            if ($line -match $regex) {
+                $title = $Matches[2].Trim()
+                $title = $title.Substring(0, 1).ToUpper() + $title.Substring(1)
+                $line -replace $regex, "<h1>$title</h1>"
+            }
+            else {
+                $line
+            }
+        }
+    }
+}
+
+function Get-FixedCommandList {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $True, ValueFromPipeline = $True)]
+        [object[]]$Content,
+        [string]$Culture
+    )
+
+    begin {
+        $phase = 0
+    }
+
+    process {
+        foreach ($line in $Content) {
+            if ($phase -eq 0) {
+                if ($line -match "^<!-- section:\s*([^\s]+)\s*-->") {
+                    $section = $Matches[1]
+                    if ($section -eq "note") {
+                        $phase = 1
+                        if ($Culture -eq "ja-jp") {
+                            Write-Output "<p>このリストのキー設定はプリセット TypeA です。</p>"
+                        }
+                        else {
+                            Write-Output "<p>The key setting for this listing is preset TypeA.</p>"
+                        }
+                        continue
+                    }
+                }
+            }
+            elseif ($phase -eq 1) {
+                if ($line -match "^<!-- section_end:\s*([^\s]+)\s*-->") {
+                    $phase = 2
+                }
+                continue
+            }
+            Write-Output $line
+        }
+    }
+}
+
+function Write-CultureDocs {
     param ([string]$culture)
     
+    $output = "docs\$culture"
+
     Copy-Item "$neeview_profile\CommandLineOptions.$culture.md" "docs\$culture\commandline-options.md"
-    
-    Get-HtmlSource "$neeview_profile\CommandList.$culture.html" > "docs\$culture\command-list.html"
-    Get-HtmlSource "$neeview_profile\MainMenu.$culture.html" > "docs\$culture\main-menu.html"
-    Get-HtmlSource "$neeview_profile\ScriptManual.$culture.html" > "docs\$culture\script-manual.html"
-    Get-HtmlSource "$neeview_profile\SearchOptionManual.$culture.html" > "docs\$culture\search-options.html"
+
+    $content = Get-Content "$neeview_profile\CommandList.$culture.html" | Get-TrimmedNeeViewHeading | Get-FixedCommandList -Culture $culture
+    $title = Get-Title $content
+    $content | Get-JekyllSource -Title $title > "$output\command-list.html"
+
+    $content = Get-Content "$neeview_profile\MainMenu.$culture.html" | Get-TrimmedNeeViewHeading
+    $title = Get-Title $content
+    $content | Get-JekyllSource -Title $title > "$output\main-menu.html"
+
+    $content = Get-Content "$neeview_profile\ScriptManual.$culture.html" | Get-TrimmedNeeViewHeading
+    $title = Get-Title $content
+    $content | Get-JekyllSource -Title $title > "$output\script-manual.html"
+
+    $content = Get-Content "$neeview_profile\SearchOptionManual.$culture.html" | Get-TrimmedNeeViewHeading
+    $title = Get-Title $content
+    $content | Get-JekyllSource -Title $title > "$output\search-options.html"
 }
 
 $neeview = "NeeView\bin\x64\Debug\net8.0-windows"

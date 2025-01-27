@@ -440,6 +440,7 @@ SusiePluginList.Up=@Word.ToUp
 SwirlEffectUnit.Center=@Word.Center
 SystemConfig.Language=@Word.Language
 TextCopyPolicy.None=@Word.None
+ThemeConfig.ThemeString=@ThemeConfig.ThemeType
 ThemeErrorDialog.FolderIsNotSet=@Message.FolderIsNotSet
 ToggleFullScreenCommand.Menu=@Word.FullScreen
 ToggleIsAutoRotateCommand=@Word.AutoRotate

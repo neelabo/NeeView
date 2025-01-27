@@ -298,6 +298,10 @@ namespace NeeView
 
                 new AutoScrollOnCommand(),
 
+                // script
+                new CancelScriptCommand(),
+
+                // other
                 new OpenOptionsWindowCommand(),
                 new OpenSettingFilesFolderCommand(),
                 new OpenScriptsFolderCommand(),
@@ -323,9 +327,7 @@ namespace NeeView
 
                 new StretchWindowCommand(),
 
-                new OpenConsoleCommand(),
-
-                new CancelScriptCommand()
+                new OpenConsoleCommand()
             };
 
             // command list order
@@ -586,16 +588,30 @@ namespace NeeView
 
             sb.AppendLine(HtmlHelpUtility.CreateHeader("NeeView Command List"));
             sb.AppendLine($"<body><h1>{Properties.TextResources.GetString("HelpCommandList.Title")}</h1>");
-            sb.AppendLine($"<p>{Properties.TextResources.GetString("HelpCommandList.Message")}</p>");
-            sb.AppendLine("<table class=\"table-slim table-topless\">");
-            sb.AppendLine($"<tr><th>{Properties.TextResources.GetString("Word.Group")}</th><th>{Properties.TextResources.GetString("Word.Command")}</th><th>{Properties.TextResources.GetString("Word.Shortcut")}</th><th>{Properties.TextResources.GetString("Word.Gesture")}</th><th>{Properties.TextResources.GetString("Word.Touch")}</th><th>{Properties.TextResources.GetString("Word.Summary")}</th></tr>");
-            foreach (var command in _elements.Values.OrderBy(e => e.Order))
-            {
-                sb.AppendLine($"<tr><td>{command.Group}</td><td>{command.Text}</td><td>{command.ShortCutKey.GetDisplayString()}</td><td>{command.MouseGesture.GetDisplayString()}</td><td>{command.TouchGesture.GetDisplayString()}</td><td>{command.Remarks}</td></tr>");
-            }
-            sb.AppendLine("</table>");
-            sb.AppendLine("</body>");
 
+            sb.AppendLine("<!-- section: note -->");
+            sb.AppendLine($"<p>{Properties.TextResources.GetString("HelpCommandList.Message")}</p>");
+            sb.AppendLine("<!-- section_end: note-->");
+
+            foreach (var group in _elements.Values.GroupBy(e => e.Group))
+            {
+                sb.AppendLine($"<h3>{group.Key}</h3>");
+                sb.AppendLine("<table>");
+                sb.AppendLine("<tr>");
+                sb.AppendLine($"<th class=\"td-middle\">{Properties.TextResources.GetString("Word.Command")}</th>");
+                sb.AppendLine($"<th class=\"nowrap\">{Properties.TextResources.GetString("Word.Shortcut")}</th>");
+                sb.AppendLine($"<th class=\"nowrap\">{Properties.TextResources.GetString("Word.Gesture")}</th>");
+                sb.AppendLine($"<th class=\"nowrap\">{Properties.TextResources.GetString("Word.Touch")}</th>");
+                sb.AppendLine($"<th class=\"td-middle\">{Properties.TextResources.GetString("Word.Summary")}</th>");
+                sb.AppendLine("</tr>");
+                foreach (var command in group.OrderBy(e => e.Order))
+                {
+                    sb.AppendLine($"<tr><td>{command.Text}</td><td>{command.ShortCutKey.GetDisplayString()}</td><td>{command.MouseGesture.GetDisplayString()}</td><td>{command.TouchGesture.GetDisplayString()}</td><td>{command.Remarks}</td></tr>");
+                }
+                sb.AppendLine("</table>");
+            }
+
+            sb.AppendLine("</body>");
             sb.AppendLine(HtmlHelpUtility.CreateFooter());
 
             return sb.ToString();

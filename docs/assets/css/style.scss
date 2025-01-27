@@ -11,8 +11,16 @@
     --alert-caution-color: #cf222e;
 }
 
+body {
+    background: #f2f2f2;
+}
+
 body:lang(ja) {
     font-family: Arial, sans-serif;
+}
+
+b {
+    font-weight: bold;
 }
 
 h2:lang(ja) {
@@ -140,6 +148,26 @@ p.alert.caution {
 
 .nowrap {
     white-space: nowrap;
+}
+
+.td-middle {
+    min-width: 300px;
+}
+
+.remarks {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#project_title,
+#project_tagline {
+    margin: 10px 0;
+    font-family: 'Lucida Grande', 'Calibri', Helvetica, Arial, sans-serif;
+    letter-spacing: -1px;
+}
+
+#project_tagline {
+    padding-bottom: 10px;
 }
 
 #culture_switch {

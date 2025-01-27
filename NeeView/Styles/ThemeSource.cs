@@ -7,9 +7,9 @@ namespace NeeView
 {
     [ObjectMergeReferenceCopy]
     [JsonConverter(typeof(JsonThemeSourceConverter))]
-    public class TheneSource
+    public class ThemeSource
     {
-        public TheneSource(ThemeType themeType)
+        public ThemeSource(ThemeType themeType)
         {
             if (themeType == ThemeType.Custom) throw new ArgumentException($"{nameof(themeType)} must not be {nameof(ThemeType.Custom)}.");
 
@@ -17,7 +17,7 @@ namespace NeeView
             FileName = null;
         }
 
-        public TheneSource(ThemeType themeType, string? fileName)
+        public ThemeSource(ThemeType themeType, string? fileName)
         {
             if (themeType == ThemeType.Custom && string.IsNullOrWhiteSpace(fileName))
                 throw new ArgumentException($"{ThemeType.Custom} requires {nameof(fileName)}.");
@@ -50,11 +50,11 @@ namespace NeeView
             return Type.ToString() + (FileName != null ? ("." + FileName) : "");
         }
 
-        public static TheneSource Parse(string? s)
+        public static ThemeSource Parse(string? s)
         {
             if (string.IsNullOrEmpty(s))
             {
-                return new TheneSource(ThemeType.Dark);
+                return new ThemeSource(ThemeType.Dark);
             }
 
             var tokens = s.Split(new char[] { '.' }, 2);
@@ -66,21 +66,21 @@ namespace NeeView
                 themeType = ThemeType.Dark;
             }
 
-            var themeSource = new TheneSource(themeType, fileName);
+            var themeSource = new ThemeSource(themeType, fileName);
             return themeSource;
         }
     }
 
 
 
-    public sealed class JsonThemeSourceConverter : JsonConverter<TheneSource>
+    public sealed class JsonThemeSourceConverter : JsonConverter<ThemeSource>
     {
-        public override TheneSource? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override ThemeSource? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return TheneSource.Parse(reader.GetString());
+            return ThemeSource.Parse(reader.GetString());
         }
 
-        public override void Write(Utf8JsonWriter writer, TheneSource value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, ThemeSource value, JsonSerializerOptions options)
         {
             writer.WriteStringValue(value.ToString());
         }

@@ -63,11 +63,18 @@ namespace NeeView
 
             var readOnly = (PropertyInfo.GetCustomAttribute<PropertyMapReadOnlyAttribute>() != null || !PropertyInfo.CanWrite) ? " (" + ResourceService.GetString("@Word.ReadOnly") + ")" : "";
 
+            var description = "";
             var attribute = PropertyInfo.GetCustomAttribute<PropertyMemberAttribute>();
-            var description = attribute != null
-                    ? PropertyMemberAttributeExtensions.GetPropertyName(PropertyInfo, attribute) + "<br/>" + PropertyMemberAttributeExtensions.GetPropertyTips(PropertyInfo, attribute)
-                    : "";
-            description = _prefix + new Regex("[\r\n]+").Replace(description, "<br/>") + readOnly;
+            if (attribute is not null)
+            {
+                var name = "<b>" + _prefix + PropertyMemberAttributeExtensions.GetPropertyName(PropertyInfo, attribute) + readOnly + "</b>";
+                var tips = PropertyMemberAttributeExtensions.GetPropertyTips(PropertyInfo, attribute);
+                description = name;
+                if (!string.IsNullOrEmpty(tips))
+                {
+                    description += "<p class=\"remarks\">" + PropertyMemberAttributeExtensions.GetPropertyTips(PropertyInfo, attribute) + "</p>";
+                }
+            }
 
             return (typeString, description);
         }
