@@ -11,7 +11,7 @@ body:
       label: Version
       description: >
         NeeView version.
-      placeholder: "42.6"
+      placeholder: "e.g., 42.6"
     validations:
       required: true
 
@@ -36,5 +36,5 @@ body:
     attributes:
       label: Error Log
       description: >
-        If an **ErrorLog.txt** file exists, paste its contents here.
+        If an ErrorLog.txt file exists, paste its contents here.
   
