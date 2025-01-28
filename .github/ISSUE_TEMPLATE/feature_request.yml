@@ -1,0 +1,14 @@
+name: Feature Request
+description: Suggest an idea for NeeView
+title: "ENH: "
+
+body:
+
+  - type: textarea
+    id: feature
+    attributes:
+      label: Feature Description
+      description: >
+        Please explain what features you want and what problems you want to solve.
+    validations:
+      required: true

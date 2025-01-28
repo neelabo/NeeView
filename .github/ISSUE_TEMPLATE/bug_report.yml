@@ -1,0 +1,40 @@
+name: Bug Report
+description: Report a problem with NeeView
+title: "BUG: "
+labels: [bug]
+
+body:
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: >
+        NeeView version.
+      placeholder: "42.6"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Description
+      description: >
+        Please describe the problem in detail. 
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce the problem
+      description: >
+        If you know how to reproduce the problem, please describe it here.
+
+  - type: textarea
+    id: errorlog
+    attributes:
+      label: Error Log
+      description: >
+        If an **ErrorLog.txt** file exists, paste its contents here.
+  
