@@ -237,8 +237,9 @@ Thumbs.db
 launchSettings.json
 /.vscode
 
-docs/.jekyll-metadata
-docs/Gemfile*
-docs/_site
-docs/sample.md
-docs/_RunDocker.ps1
+/docs/.jekyll-metadata
+/docs/Gemfile*
+/docs/_site
+/docs/sample.md
+/docs/_RunDocker.ps1
+/docs/_CreateRedirect.ps1

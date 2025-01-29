@@ -1,0 +1,14 @@
+<head>
+    <title>NeeView</title>
+    <script>
+        const language = window.navigator.language || window.navigator.userLanguage || window.navigator.browserLanguage;
+        location.href = (language.startsWith('ja') ? 'ja-jp' : 'en-us') + '/{{ page.pathname }}' + location.hash;
+    </script>
+</head>
+
+<body style="margin: 50px 10px; text-align: center;">
+    <h1>{{ page.pathname }} | NeeView</h1>
+    <div>
+        <a href="{{ site.baseurl }}/en-us/{{ page.pathname }}">English</a> / <a href="{{ site.baseurl }}/ja-jp/{{ page.pathname }}">日本語</a>
+    </div>
+</body>

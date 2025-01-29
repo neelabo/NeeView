@@ -1,62 +1,68 @@
 #  NeeView
 
-<!-- after 43.0
-**[NeeView Portal Site](https://neelabo.github.io/NeeView)**
--->
+**[NeeView Portal Site (English/日本語)](https://neelabo.github.io/NeeView)**
 
+### Screenshot
 ![Screenshot](docs/assets/images/neeview39.jpg)
 
-## 説明
+## Description
 
- フォルダーや圧縮ファイルにある画像を本のように閲覧できる画像ビューアーです。  
- 強力なカスタマイズが可能です。
+An image viewer that allows you to browse images in folders and compressed files like a book.
+Powerful customization is available.
 
-  * 標準対応画像フォーマット (bmp, jpg, gif, tiff, png, ico, WIC対応画像)
-  * 圧縮ファイル対応 (zip, rar, 7z, lzh, cbr, cbz, cb7, ...)
-  * PDF対応
-  * 動画再生対応
-  * 多重圧縮ファイル対応
-  * タッチ操作対応
-  * マウスジェスチャー対応
-  * キーカスタマイズ、ジェスチャ設定可能
-  * ドラッグによる移動、回転、拡縮
-  * ルーペモード
-  * 見開き表示モード
-  * フルスクリーンモード
-  * スライドショー機能
-  * マルチスレッド、先読み対応
-  * Webブラウザからの画像ドロップ
-  * Susieプラグイン対応
- 
- ## システム要件
+- Supported image format (bmp, jpg, gif, tiff, png, ico, WIC images)
+- Compressed file support (zip, rar, 7z, lzh, cbr, cbz, cb7, ...)
+- Recursive compressed file support
+- PDF support
+- Video play support
+- Touch operation supported
+- Mouse gesture supported
+- Key customization, gesture setting
+- Movement, rotation, scaling by dragging
+- Loupe mode
+- Facing mode
+- Full screen mode
+- Slide show
+- Susie plugin support
+- Image drop from web browser
+- Command extension by scripts
 
-  * Windows 10 64bit 以降
+### System Requirements
 
-  ## ダウンロード
+* Windows 10 64bit or higher
+
+## Download
 
 - [GitHub Releases](https://github.com/neelabo/NeeView/releases)
 - [Microsoft Store](https://www.microsoft.com/store/apps/9p24z53hc1jr)
 - [Vector](https://www.vector.co.jp/soft/winnt/art/se512262.html)
 
-## 開発環境
+## Development Environment
 
 * Windows 10 64bit
 * VisualStudio 2022
-    - .Net デスクトップ開発
-    - C++によるデスクトップ開発
+    -  .NET Desktop Development
+    - Desktop development in C++
 
-## 言語ファイルの開発について
+## Development of Language Files
 
 - [Development of Language Files](NeeView/Languages)
 
-## ブランチ戦略
+## Branching Strategy
 
 ### master
 
-メイン開発ブランチです。基本的にプルリクエストはここで受け付けます。
+This is the main development branch. Basically, pull requests are accepted here.
 
 ### version-XX
 
-各メジャーバージョンのブランチです。
-master ブランチで次のメジャーバージョンの開発が始まると、現在のメジャーバージョンの保守用としてブランチが作られます。
+Branches of each major version.
+When development of the next major version begins on the master branch, a branch is created to maintain the current major version.
 
+## Versioning Strategy
+
+Update the major version with any feature additions or changes.
+
+If there are no changes in functionality, such as bug fixes, the minor version will be updated.
+
+The build version is automatically assigned the number of commits up to that revision. It is internal and not public.
