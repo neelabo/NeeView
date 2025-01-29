@@ -21,7 +21,7 @@ namespace NeeView.UnitTest
 
 
         [Fact(Timeout = 1000)]
-        public async void JobCancelTest()
+        public async Task JobCancelTest()
         {
             var sw = Stopwatch.StartNew();
             var job = new SampleJob();
@@ -41,7 +41,7 @@ namespace NeeView.UnitTest
         }
 
         [Fact(Timeout = 1000)]
-        public async void JobDisposeTest()
+        public async Task JobDisposeTest()
         {
             var sw = Stopwatch.StartNew();
             var job = new SampleJob();
@@ -61,7 +61,7 @@ namespace NeeView.UnitTest
         }
 
         [Fact]
-        public async void JobEngineTest()
+        public async Task JobEngineTest()
         {
             var engine = new SingleJobEngine("Test");
             engine.StartEngine();
@@ -83,7 +83,7 @@ namespace NeeView.UnitTest
         }
 
         [Fact]
-        public async void JobEngineCancelTest()
+        public async Task JobEngineCancelTest()
         {
             var engine = new SingleJobEngine("Test");
             engine.StartEngine();

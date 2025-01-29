@@ -22,7 +22,7 @@ namespace NeeView.UnitTest
         }
 
         [Fact(Timeout = 2000)]
-        public async void EventFlagTest()
+        public async Task EventFlagTest()
         {
             var cancellationTokenSource = new CancellationTokenSource();
 
