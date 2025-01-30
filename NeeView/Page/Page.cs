@@ -18,6 +18,7 @@ namespace NeeView
         private readonly PageContent _content;
         private bool _isVisible;
         private bool _isMarked;
+        private bool _isDeleted;
         private bool _disposedValue;
 
         public Page(PageContent content) : this(content, "", content.ArchiveEntry.EntryFullName)
@@ -153,8 +154,11 @@ namespace NeeView
         /// <summary>
         /// 削除済フラグ
         /// </summary>
-        public bool IsDeleted => ArchiveEntry.IsDeleted;
-
+        public bool IsDeleted
+        {
+            get { return _isDeleted | ArchiveEntry.IsDeleted; }
+            set { _isDeleted = value; }
+        }
 
         #region Thumbnail
 

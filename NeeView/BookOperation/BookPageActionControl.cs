@@ -63,9 +63,21 @@ namespace NeeView
                 }
             }
 
-            // ページ表示を停止
+            // ページ削除予約
+            pages.ForEach(e => e.IsDeleted = true);
+
+            // 次の現在位置を取得
+            var next = _book.Pages.GetValidPage(_book.CurrentPage);
+
+            // ブックからページを削除
+            _book.Pages.Remove(pages);
+
+            // ビューのページ表示を停止
             _bookControl.DisposeViewContent(pages);
             await Task.Delay(16);
+
+            // 次のページ位置に移動
+            _box.MoveTo(new PagePosition(next?.Index ?? 0, 0), ComponentModel.LinkedListDirection.Next);
 
             try
             {
@@ -76,6 +88,7 @@ namespace NeeView
                 new MessageDialog($"{Properties.TextResources.GetString("Word.Cause")}: {ex.Message}", Properties.TextResources.GetString("FileDeleteErrorDialog.Title")).ShowDialog();
             }
 
+            // TODO: 削除に成功したあとで必要ならば行うようにする
             _bookControl.ReLoad();
         }
 
