@@ -118,6 +118,35 @@ namespace NeeView
         {
             return archive.Entries.Where(e => LoosePath.NormalizeSeparator(e.FullName).StartsWith(entryPrefix, StringComparison.Ordinal)).ToList();
         }
+
+        /// <summary>
+        /// ZipArchiveEntryIdent によるエントリ取得
+        /// </summary>
+        /// <param name="archive"></param>
+        /// <param name="ident"></param>
+        /// <returns></returns>
+        public static ZipArchiveEntry? FindEntry(this System.IO.Compression.ZipArchive archive, ZipArchiveEntryIdent ident)
+        {
+            var findEntry = archive.GetEntry(ident.FullName);
+            if (findEntry is null) return null;
+
+            // 同名エントリの可能性があるのでサイズと日時で検証する。それも同じエントリは存在しうるがそれは未定義の動作とする
+            if (findEntry.FullName == ident.FullName && findEntry.Length == ident.Length && findEntry.LastWriteTime == ident.LastWriteTime)
+            {
+                return findEntry;
+            }
+            else
+            {
+                foreach (var entry in archive.Entries)
+                {
+                    if (entry.FullName == ident.FullName && entry.Length == ident.Length && entry.LastWriteTime == ident.LastWriteTime)
+                    {
+                        return entry;
+                    }
+                }
+                return null;
+            }
+        }
     }
 
     public static class ZipArchiveEntryExtensions

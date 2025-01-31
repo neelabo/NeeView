@@ -58,6 +58,11 @@
                             <Setter TargetName="PART_CaptionBar" Property="IsMinimizeEnabled" Value="False" />
                             <Setter TargetName="PART_CaptionBar" Property="IsMaximizeEnabled" Value="False" />
                         </Trigger>
+                        <Trigger Property="WindowStyle" Value="None">
+                            <Setter TargetName="PART_CaptionBar" Property="IsMinimizeEnabled" Value="False" />
+                            <Setter TargetName="PART_CaptionBar" Property="IsMaximizeEnabled" Value="False" />
+                            <Setter TargetName="PART_CaptionBar" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
                         <Trigger Property="ShowInTaskbar" Value="False">
                             <Setter TargetName="PART_CaptionBar" Property="IsMinimizeEnabled" Value="False" />
                         </Trigger>

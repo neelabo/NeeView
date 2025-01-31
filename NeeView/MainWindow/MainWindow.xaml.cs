@@ -607,6 +607,12 @@ namespace NeeView
             if (_vm.IsClosing) return;
             _vm.IsClosing = true;
 
+            // ブック読み込み要求無効化
+            BookHub.Current.IsEnabled = false;
+
+            // 非同期処理の完了を待つ
+            WorkingProgressWatcher.Current.WaitWithDialog(this);
+
             // レンダリングイベント購読停止
             CompositionTarget.Rendering -= OnRendering;
 

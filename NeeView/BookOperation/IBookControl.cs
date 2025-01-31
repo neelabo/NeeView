@@ -12,6 +12,7 @@ namespace NeeView
         bool IsBusy { get; }
         PageSortModeClass PageSortModeClass { get; }
         bool IsBookmark { get; }
+        string? Path { get; }
 
         void DisposeViewContent(IEnumerable<Page> pages);
         bool CanDeleteBook();

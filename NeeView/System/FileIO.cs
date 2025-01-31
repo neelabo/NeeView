@@ -329,26 +329,18 @@ namespace NeeView
         /// <summary>
         /// ファイル削除
         /// </summary>
-        public static async Task<bool> DeleteAsync(string path)
+        public static async Task DeleteAsync(string path)
         {
-            return await DeleteAsync(new List<string>() { path });
+            await DeleteAsync(new List<string>() { path });
         }
 
         /// <summary>
         /// ファイル削除
         /// </summary>
-        public static async Task<bool> DeleteAsync(IEnumerable<string> paths)
+        public static async Task DeleteAsync(IEnumerable<string> paths)
         {
-            try
-            {
-                await CloseBookAsync(paths);
-                ShellFileOperation.Delete(WindowTools.GetWindowHandle(), paths, Config.Current.System.IsRemoveWantNukeWarning);
-                return true;
-            }
-            catch (OperationCanceledException)
-            {
-                return false;
-            }
+            await CloseBookAsync(paths);
+            ShellFileOperation.Delete(WindowTools.GetWindowHandle(), paths, Config.Current.System.IsRemoveWantNukeWarning);
         }
 
         #endregion Delete

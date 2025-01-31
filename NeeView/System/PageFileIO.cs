@@ -36,15 +36,20 @@ namespace NeeView
         {
             if (!pages.Any()) return false;
 
+            bool anyFileModified = false;
+
             foreach (var group in pages.Select(e => e.ArchiveEntry).GroupBy(e => e.Archive))
             {
                 var archiver = group.Key;
                 archiver.ClearEntryCache();
-                var isSuccess = await archiver.DeleteAsync(group.ToList());
-                if (!isSuccess) return false;
+                var result = await archiver.DeleteAsync(group.ToList());
+                if (result == DeleteResult.Success && archiver is not FolderArchive)
+                {
+                    anyFileModified = true;
+                }
             }
 
-            return true;
+            return anyFileModified;
         }
     }
 }

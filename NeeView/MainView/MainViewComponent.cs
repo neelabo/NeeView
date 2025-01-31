@@ -5,6 +5,7 @@ using NeeLaboratory.Generators;
 using NeeView.PageFrames;
 using NeeView.Threading;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -15,7 +16,8 @@ using System.Windows.Input;
 
 namespace NeeView
 {
-    public partial class MainViewComponent : IDisposable
+    [NotifyPropertyChanged]
+    public partial class MainViewComponent : INotifyPropertyChanged, IDisposable
     {
         private static MainViewComponent? _current;
         public static MainViewComponent Current => _current ?? throw new InvalidOperationException();
@@ -27,6 +29,8 @@ namespace NeeView
         private readonly DisposableCollection _disposables = new();
         private readonly IntervalDelayAction _delayAction = new();
         private readonly Locker _activeLocker = new();
+        private readonly Locker _processLocker = new();
+        private bool _isProcessing;
 
         public static void Initialize()
         {
@@ -68,8 +72,12 @@ namespace NeeView
             _mainView.DataContext = new MainViewViewModel(this);
 
             _activeLocker.LockCountChanged += ActiveLocker_LockCountChanged;
+            _processLocker.LockCountChanged += ProcessLocker_LockCountChanged;
         }
 
+
+        [Subscribable]
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// コンテキストメニューを開く要求イベント
@@ -112,6 +120,12 @@ namespace NeeView
 
         public bool IsLoupeMode => ViewLoupeControl.GetLoupeMode();
 
+        public bool IsProcessing
+        {
+            get { return _isProcessing; }
+            set { SetProperty(ref _isProcessing, value); }
+        }
+
 
         public Window GetWindow()
         {
@@ -143,9 +157,19 @@ namespace NeeView
             return _activeLocker.Lock();
         }
 
+        public Locker.Key LockProcessing()
+        {
+            return _processLocker.Lock();
+        }
+
         private void ActiveLocker_LockCountChanged(object? sender, LockCountChangedEventArgs e)
         {
             _mainView.ActiveMarker.IsActive = e.LockCount > 0;
+        }
+
+        private void ProcessLocker_LockCountChanged(object? sender, LockCountChangedEventArgs e)
+        {
+            IsProcessing = e.LockCount > 0;
         }
 
         private void PageFrameBoxPresenter_ViewContentChanged(object? sender, FrameViewContentChangedEventArgs e)

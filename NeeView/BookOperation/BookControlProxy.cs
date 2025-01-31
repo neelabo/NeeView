@@ -18,6 +18,7 @@ namespace NeeView
 
         public PageSortModeClass PageSortModeClass => _source?.PageSortModeClass ?? PageSortModeClass.Full;
 
+        public string? Path => _source?.Path;
 
 
         protected virtual void Dispose(bool disposing)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeLaboratory.Linq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
@@ -91,7 +92,7 @@ namespace NeeView
                         {
                             IsValid = true,
                             Id = id,
-                            Instance = null,
+                            Instance = new ZipArchiveEntryIdent(entry),
                             RawEntryName = entry.FullName,
                             Length = entry.Length,
                             CreationTime = default,
@@ -107,6 +108,12 @@ namespace NeeView
                             archiveEntry.Length = -1;
                             directories.Add(archiveEntry);
                         }
+                    }
+
+                    // 削除予約エントリを除外
+                    if (ZipArchiveWriterManager.Current.Contains(Path))
+                    {
+                        list = list.Where(e => !ZipArchiveWriterManager.Current.Contains(Path, e.Instance as ZipArchiveEntryIdent)).ToList();
                     }
 
                     // ディレクトリエントリを追加
@@ -203,12 +210,16 @@ namespace NeeView
         /// <summary>
         /// delete entries
         /// </summary>
+        /// <remarks>
+        /// ZIPエントリを削除するタスク処理。
+        /// すでにタスクが動作しているときは削除要求をそのタスクに追加する。
+        /// </remarks>
         /// <exception cref="ArgumentException">Not registered with this archiver.</exception>
-        public override async Task<bool> DeleteAsync(List<ArchiveEntry> entries)
+        public override async Task<DeleteResult> DeleteAsync(List<ArchiveEntry> entries)
         {
             if (!IsRoot) throw new ArgumentException("The archive is not a file.");
             if (entries.Any(e => e.Archive != this)) throw new ArgumentException("There are elements not registered with this archiver.", nameof(entries));
-            if (!entries.Any()) return false;
+            if (!entries.Any()) return DeleteResult.Success;
 
             var removes = entries;
             var directories = entries.Where(e => e.IsDirectory);
@@ -220,40 +231,17 @@ namespace NeeView
             }
             Debug.Assert(removes.All(e => e.Id >= 0));
 
-            return await Task.Run(() =>
+            removes.ForEach(e => e.IsDeleted = true);
+            var idents = removes.Select(e => e.Instance as ZipArchiveEntryIdent).WhereNotNull().ToList();
+            var task = ZipArchiveWriterManager.Current.CreateDeleteTask(Path, _encoding, idents);
+            if (task is not null)
             {
-                var tempFilename = FileIO.CreateUniquePath(Path + ".temp");
-                try
-                {
-                    // NOTE: コピーしたファイルに対して操作と置き換えを行いアーカイブ破壊の可能性を最小限に抑える
-                    File.Copy(Path, tempFilename);
-                    using (var archive = ZipFile.Open(tempFilename, ZipArchiveMode.Update, _encoding))
-                    {
-                        ClearEntryCache();
-                        var map = removes.Select(e => (Entry: e, ZipArchiveEntry: GetTargetEntry(archive, e))).ToList();
-                        foreach (var item in map)
-                        {
-                            item.ZipArchiveEntry?.Delete();
-                            item.Entry.IsDeleted = true;
-                        }
-                    }
-                    File.Replace(tempFilename, Path, null);
-                    return true;
-                }
-                finally
-                {
-                    if (File.Exists(tempFilename))
-                    {
-                        File.Delete(tempFilename);
-                    }
-                }
-            });
-
-            static ZipArchiveEntry? GetTargetEntry(System.IO.Compression.ZipArchive archive, ArchiveEntry entry)
+                await task;
+                return DeleteResult.Success;
+            }
+            else
             {
-                var zipArchiveEntry = archive.Entries[entry.Id];
-                ZipArchiveEntryHelper.RepairEntryName(zipArchiveEntry);
-                return IsValidEntry(entry, zipArchiveEntry) ? zipArchiveEntry : null;
+                return DeleteResult.Ordered;
             }
         }
 

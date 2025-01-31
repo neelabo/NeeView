@@ -185,17 +185,18 @@ namespace NeeView
         /// delete entries
         /// </summary>
         /// <exception cref="ArgumentException">Not registered with this archiver.</exception>
-        public override async Task<bool> DeleteAsync(List<ArchiveEntry> entries)
+        public override async Task<DeleteResult> DeleteAsync(List<ArchiveEntry> entries)
         {
             if (entries.Any(e => e.Archive != this)) throw new ArgumentException("There are elements not registered with this archiver.", nameof(entries));
 
             var paths = entries.Select(e => e.EntityPath).WhereNotNull().ToList();
-            if (!paths.Any()) return false;
+            if (!paths.Any()) return DeleteResult.Success;
 
             ClearEntryCache();
             try
             {
-                return await FileIO.DeleteAsync(paths);
+                await FileIO.DeleteAsync(paths);
+                return DeleteResult.Success;
             }
             finally
             {

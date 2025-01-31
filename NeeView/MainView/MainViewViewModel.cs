@@ -43,6 +43,9 @@ namespace NeeView
             //_viewComponent.ContentRebuild.AddPropertyChanged(nameof(ContentRebuild.IsBusy),
             //    (s, e) => UpdateBusyVisibility());
 
+            _viewComponent.SubscribePropertyChanged(nameof(MainViewComponent.IsProcessing),
+                (s, e) => RaisePropertyChanged(nameof(IsProcessing)));
+
             BookOperation.Current.BookControl.AddPropertyChanged(nameof(IBookControl.IsBusy),
                 (s, e) => UpdateBusyVisibility());
 
@@ -90,6 +93,8 @@ namespace NeeView
             get { return _selectedPage; }
             set { SetProperty(ref _selectedPage, value); }
         }
+
+        public bool IsProcessing => _viewComponent.IsProcessing;
 
 
         private void Presenter_ViewChanged(object? sender, PropertyChangedEventArgs e)

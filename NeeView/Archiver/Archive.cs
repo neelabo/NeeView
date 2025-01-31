@@ -468,7 +468,7 @@ namespace NeeView
         /// <summary>
         /// delete
         /// </summary>
-        public async Task<bool> DeleteAsync(ArchiveEntry entry)
+        public async Task<DeleteResult> DeleteAsync(ArchiveEntry entry)
         {
             return await DeleteAsync(new List<ArchiveEntry>() { entry });
         }
@@ -476,9 +476,9 @@ namespace NeeView
         /// <summary>
         /// delete entries
         /// </summary>
-        public virtual async Task<bool> DeleteAsync(List<ArchiveEntry> entries)
+        public virtual async Task<DeleteResult> DeleteAsync(List<ArchiveEntry> entries)
         {
-            return await Task.FromResult(false);
+            return await Task.FromResult(DeleteResult.Failed);
         }
 
         /// <summary>
@@ -522,5 +522,11 @@ namespace NeeView
         }
     }
 
+    public enum DeleteResult
+    {
+        Failed = -1,
+        Success = 0,
+        Ordered = 1,
+    }
 }
 

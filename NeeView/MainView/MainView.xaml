@@ -52,7 +52,7 @@
         <local:SimpleProgressBar x:Name="SlideShowTimer" VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="4"
                                  Foreground="{DynamicResource Control.Accent}" 
                                  Visibility="Collapsed"/>
-        
+
         <!-- Now Loading -->
         <local:NowLoadingView x:Name="NowLoadingView" />
 
@@ -63,7 +63,14 @@
         <Grid Margin="{Binding ElementName=MainViewCanvas, Path=Margin}">
             <Rectangle Fill="{StaticResource Signal.Busy}" Width="5" Height="5" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5" Visibility="{Binding BusyVisibility}" />
         </Grid>
-        
+
+        <!-- Processing -->
+        <TextBlock Text="{properties:TextBinding Word.Processing}"
+                   Foreground="{DynamicResource Notification.Foreground}" Background="{DynamicResource Notification.Background}"
+                   HorizontalAlignment="Left" VerticalAlignment="Top"
+                   Margin="{Binding ElementName=MainViewCanvas, Path=Margin}" Padding="20,10"
+                   Visibility="{Binding IsProcessing, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
         <!-- CommandMenu -->
         <Grid x:Name="CommandMenuGrid">
             <Grid.ContextMenu>

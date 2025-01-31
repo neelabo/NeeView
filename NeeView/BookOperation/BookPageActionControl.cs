@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿//#define LOCAL_DEBUG
+
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using System.Linq;
 using System.Threading;
 using NeeView.PageFrames;
 using NeeLaboratory.Linq;
+using System.Diagnostics;
 
 namespace NeeView
 {
@@ -81,15 +84,31 @@ namespace NeeView
 
             try
             {
-                await PageFileIO.DeletePageAsync(pages);
+                var anyFileModified = await PageFileIO.DeletePageAsync(pages);
+                if (anyFileModified)
+                {
+                    if (_book.Path == _bookControl.Path)
+                    {
+                        Trace("DeleteFileAsync: Reload");
+                        _bookControl.ReLoad();
+                    }
+                    else
+                    {
+                        Trace("DeleteFileAsync: Book Changed");
+                    }
+                }
+                else
+                {
+                    Trace("DeleteFileAsync: NoReload");
+                }
+            }
+            catch (OperationCanceledException)
+            {
             }
             catch (Exception ex)
             {
                 new MessageDialog($"{Properties.TextResources.GetString("Word.Cause")}: {ex.Message}", Properties.TextResources.GetString("FileDeleteErrorDialog.Title")).ShowDialog();
             }
-
-            // TODO: 削除に成功したあとで必要ならば行うようにする
-            _bookControl.ReLoad();
         }
 
         #endregion ページ削除
@@ -295,5 +314,12 @@ namespace NeeView
         }
 
         #endregion ページ出力
+
+
+        [Conditional("LOCAL_DEBUG")]
+        private void Trace(string s)
+        {
+            Debug.WriteLine($"{this.GetType().Name}: {s}");
+        }
     }
 }

@@ -50,6 +50,10 @@ namespace NeeView
             {
                 return await ArchiveEntry.DeleteEntriesAsync(entries);
             }
+            catch (OperationCanceledException)
+            {
+                return false;
+            }
             catch (Exception ex)
             {
                 new MessageDialog($"{Properties.TextResources.GetString("Word.Cause")}: {ex.Message}", Properties.TextResources.GetString("FileDeleteErrorDialog.Title")).ShowDialog();

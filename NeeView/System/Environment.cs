@@ -33,7 +33,6 @@ namespace NeeView
         private static Encoding? _encoding;
         private static string? _neeviewProfile;
         private static FormatVersion? _checkVersion;
-        private static string? _distributionUrl;
 
         // TODO: static でなくてよい
         static Environment()
@@ -43,8 +42,8 @@ namespace NeeView
 
             ProcessId = System.Environment.ProcessId;
 
-            AssemblyLocation = System.Environment.ProcessPath ?? throw new InvalidOperationException("Cannot get this AsemblyLocatation");
-            AssemblyFolder = Path.GetDirectoryName(AssemblyLocation) ?? throw new InvalidOperationException("Cannot get this AsemblyFolder");
+            AssemblyLocation = System.Environment.ProcessPath ?? throw new InvalidOperationException("Cannot get this AssemblyLocation");
+            AssemblyFolder = Path.GetDirectoryName(AssemblyLocation) ?? throw new InvalidOperationException("Cannot get this AssemblyFolder");
 
             var assembly = Assembly.GetExecutingAssembly();
             ValidateProductInfo(assembly);

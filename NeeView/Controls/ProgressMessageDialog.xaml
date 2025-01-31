@@ -1,0 +1,26 @@
+﻿<Window x:Class="NeeView.ProgressMessageDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NeeView"
+        xmlns:properties="clr-namespace:NeeView.Properties"
+        mc:Ignorable="d"
+        Style="{StaticResource ChromeDialogStyle}" 
+        UseLayoutRounding="True"
+        WindowStyle="None"
+        ShowInTaskbar="False"
+        Title="ProgressMessageDialog" SizeToContent="Height" Width="600" ResizeMode="NoResize">
+    <Grid>
+        <DockPanel Margin="30,20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Button x:Name="CancelButton" DockPanel.Dock="Bottom" Style="{StaticResource NVDialogButton}" HorizontalAlignment="Right" Margin="0,20,0,0" Content="{properties:TextBinding Word.Cancel}" Click="CancelButton_Click" />
+            <DockPanel Margin="0,20,0,0" >
+                <local:ProgressRing DockPanel.Dock="Left" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock x:Name="CaptionTextBlock" TextWrapping="Wrap" Text="{Binding Caption}" FontSize="{DynamicResource SystemFontSizeHuge}" Margin="0,5" VerticalAlignment="Center" />
+                    <TextBlock x:Name="MessageTextBlock" TextWrapping="Wrap" Text="{Binding Message}" Margin="0,5" />
+                </StackPanel>
+            </DockPanel>
+        </DockPanel>
+    </Grid>
+</Window>

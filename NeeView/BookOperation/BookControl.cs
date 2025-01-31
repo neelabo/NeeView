@@ -33,6 +33,7 @@ namespace NeeView
         
         public PageSortModeClass PageSortModeClass => _book.PageSortModeClass;
 
+        public string? Path => _book.Path;
 
         protected virtual void Dispose(bool disposing)
         {

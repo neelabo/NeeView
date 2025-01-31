@@ -358,7 +358,7 @@ namespace NeeView
         /// <summary>
         /// delete
         /// </summary>
-        public async Task<bool> DeleteAsync()
+        public async Task<DeleteResult> DeleteAsync()
         {
             return await ArchiveEntry.DeleteAsync();
         }

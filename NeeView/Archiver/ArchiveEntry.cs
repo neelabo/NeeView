@@ -446,7 +446,7 @@ namespace NeeView
         /// <summary>
         /// delete
         /// </summary>
-        public async Task<bool> DeleteAsync()
+        public async Task<DeleteResult> DeleteAsync()
         {
             return await Archive.DeleteAsync(this);
         }
@@ -462,8 +462,8 @@ namespace NeeView
             {
                 var archiver = group.Key;
                 archiver.ClearEntryCache();
-                var isSuccess = await archiver.DeleteAsync(group.ToList());
-                if (!isSuccess) return false;
+                var result = await archiver.DeleteAsync(group.ToList());
+                if (result < 0) return false;
             }
 
             return true;
