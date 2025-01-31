@@ -12,7 +12,7 @@ namespace NeeLaboratory.IO
             using (FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read, share))
             {
                 result = new byte[stream.Length];
-                stream.Read(result, 0, (int)stream.Length);
+                stream.SafeRead(result, 0, (int)stream.Length);
             }
             return result;
         }
@@ -23,7 +23,7 @@ namespace NeeLaboratory.IO
             using (FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read, share))
             {
                 result = new byte[stream.Length];
-                await stream.ReadAsync(result.AsMemory(0, (int)stream.Length));
+                await stream.SafeReadAsync(result, 0, (int)stream.Length);
             }
             return result;
         }

@@ -627,7 +627,7 @@ namespace NeeView.Susie.Server
             var buff = new byte[2048];
             using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
-                fs.Read(buff, 0, 2048);
+                _ = fs.Read(buff, 0, 2048);
             }
             return buff;
         }

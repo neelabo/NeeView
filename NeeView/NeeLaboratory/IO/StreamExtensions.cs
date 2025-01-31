@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System;
 using System.Diagnostics;
 
-namespace NeeView
+namespace NeeLaboratory.IO
 {
     public static class StreamExtensions
     {
@@ -30,7 +30,7 @@ namespace NeeView
         /// <param name="stream">source stream</param>
         /// <param name="start">copy start stream position</param>
         /// <param name="length">copy length</param>
-        /// <param name="token">cancellatino token</param>
+        /// <param name="token">cancellation token</param>
         /// <returns></returns>
         public static async Task<byte[]> ToArrayAsync(this Stream stream, int start, int length, CancellationToken token)
         {
@@ -52,21 +52,36 @@ namespace NeeView
         {
             return new ReadOnlySpan<byte>(stream.ToArray(start, length));
         }
-    }
 
-    public static class MemoryStreamExtensions
-    {
         /// <summary>
-        /// stream to byte span (MemoryStream)
+        /// 読み込みサイズを保証する Read()
         /// </summary>
-        /// <param name="stream">source stream</param>
-        /// <returns></returns>
-        public static ReadOnlySpan<byte> ToSpan(this MemoryStream stream)
+        public static int SafeRead(this Stream stream, byte[] array, int offset, int length)
         {
-            return new ReadOnlySpan<byte>(stream.GetBuffer(), 0, (int)stream.Length);
+            int totalRead = 0;
+            while (totalRead < length)
+            {
+                int bytesRead = stream.Read(array, offset + totalRead, length - totalRead);
+                if (bytesRead == 0) break;
+                totalRead += bytesRead;
+            }
+            return totalRead;
+        }
+
+        /// <summary>
+        /// 読み込みサイズを保証する ReadAsync()
+        /// </summary>
+        public static async Task<int> SafeReadAsync(this Stream stream, byte[] array, int offset, int length, CancellationToken token = default)
+        {
+            int totalRead = 0;
+            while (totalRead < length)
+            {
+                int bytesRead = await stream.ReadAsync(array, offset + totalRead, length - totalRead);
+                if (bytesRead == 0) break;
+                totalRead += bytesRead;
+            }
+            return totalRead;
         }
 
     }
-
-
 }

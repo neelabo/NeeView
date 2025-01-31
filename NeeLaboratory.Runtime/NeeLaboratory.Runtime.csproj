@@ -3,7 +3,7 @@
   <Import Project="..\NeeView.props" />
 
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net9.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 

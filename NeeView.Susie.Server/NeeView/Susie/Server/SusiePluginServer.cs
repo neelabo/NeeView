@@ -74,7 +74,7 @@ namespace NeeView.Susie.Server
                 buff = new byte[4096];
                 using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
                 {
-                    fs.Read(buff, 0, 2048);
+                    _ = fs.Read(buff, 0, 2048);
                 }
             }
 
@@ -92,7 +92,7 @@ namespace NeeView.Susie.Server
                 buff = new byte[4096];
                 using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
                 {
-                    fs.Read(buff, 0, 2048);
+                    _ = fs.Read(buff, 0, 2048);
                 }
             }
 

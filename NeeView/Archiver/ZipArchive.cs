@@ -48,7 +48,7 @@ namespace NeeView
             var pos = stream.Position;
 
             byte[] signature = new byte[4];
-            stream.Read(signature, 0, 4);
+            _ = stream.Read(signature, 0, 4);
             stream.Seek(pos, SeekOrigin.Begin);
 
             return (BitConverter.ToString(signature, 0) == "50-4B-03-04");

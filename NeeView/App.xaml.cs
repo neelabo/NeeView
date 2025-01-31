@@ -467,7 +467,7 @@ namespace NeeView
             // 開発中は直接プロジェクトを参照する
             if (Environment.IsDevPackage)
             {
-                filename = Path.GetFullPath(Path.Combine(Environment.AssemblyFolder, @"..\..\..\..\..\NeeView.Terminator\bin", Environment.PlatformName, Environment.ConfigType, @"net8.0\NeeView.Terminator.exe"));
+                filename = Path.GetFullPath(Path.Combine(Environment.AssemblyFolder, @"..\..\..\..\..\NeeView.Terminator\bin", Environment.PlatformName, Environment.ConfigType, @"net9.0\NeeView.Terminator.exe"));
             }
 
             // 5秒後にこのプロセスが残っていたら強制終了させる監視プロセスを発行

@@ -31,7 +31,7 @@ namespace NeeView
         {
             stream.Seek(0, SeekOrigin.Begin);
             var signature = new byte[6].AsSpan();
-            stream.Read(signature);
+            _ = stream.Read(signature);
             if (signature.SequenceEqual(_gif89aSignature)) return true;
             if (signature.SequenceEqual(_gif87aSignature)) return true;
             return false;
@@ -41,7 +41,7 @@ namespace NeeView
         {
             stream.Seek(0, SeekOrigin.Begin);
             var signature = new byte[8].AsSpan();
-            stream.Read(signature);
+            _ = stream.Read(signature);
             return signature.SequenceEqual(_pngSignature);
         }
 

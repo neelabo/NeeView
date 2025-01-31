@@ -4,10 +4,9 @@
   
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net9.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <UseWindowsForms>true</UseWindowsForms>
     <ApplicationManifest>App.manifest</ApplicationManifest>
     <ApplicationIcon>Resources\App.ico</ApplicationIcon>
     <Platforms>AnyCPU;x64;x86</Platforms>

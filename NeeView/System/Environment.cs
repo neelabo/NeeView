@@ -47,12 +47,6 @@ namespace NeeView
 
             var assembly = Assembly.GetExecutingAssembly();
             ValidateProductInfo(assembly);
-
-            // Windows7では標準でTLS1.1,TLS1.2に対応していないので対応させる。バージョンチェック通信用。
-            if (Windows7Tools.IsWindows7)
-            {
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-            }
         }
 
 

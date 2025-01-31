@@ -8,13 +8,13 @@ namespace NeeView
 {
     public class ArcSegmentShape : Canvas
     {
-        private Path _path = new();
-        private PathFigure _pathFigure = new();
-        private ArcSegment _arcSegment = new();
+        private readonly Path _path = new();
+        private readonly PathFigure _pathFigure = new();
+        private readonly ArcSegment _arcSegment = new();
         private double _startAngle = 0.0;
         private double _angle = 180.0;
-        private double _centerX;
-        private double _centerY;
+        private double _centerX = 0.0;
+        private double _centerY = 0.0;
         private double _radius = 16.0;
         private Point _startPoint;
         private Point _endPoint;
