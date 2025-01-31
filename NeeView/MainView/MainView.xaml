@@ -65,11 +65,10 @@
         </Grid>
 
         <!-- Processing -->
-        <TextBlock Text="{properties:TextBinding Word.Processing}"
-                   Foreground="{DynamicResource Notification.Foreground}" Background="{DynamicResource Notification.Background}"
-                   HorizontalAlignment="Left" VerticalAlignment="Top"
-                   Margin="{Binding ElementName=MainViewCanvas, Path=Margin}" Padding="20,10"
-                   Visibility="{Binding IsProcessing, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        <local:ProgressRing Width="16" Height="16"
+                            HorizontalAlignment="Left" VerticalAlignment="Top"
+                            Margin="{Binding ElementName=MainViewCanvas, Path=Margin}"
+                            Visibility="{Binding IsProcessing, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
         <!-- CommandMenu -->
         <Grid x:Name="CommandMenuGrid">

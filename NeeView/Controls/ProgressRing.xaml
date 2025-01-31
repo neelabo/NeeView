@@ -6,17 +6,14 @@
              xmlns:local="clr-namespace:NeeView"
              mc:Ignorable="d" 
              Foreground="{DynamicResource Control.Accent}"
-             d:DesignHeight="200" d:DesignWidth="200">
-
-    <Grid x:Name="Root" Width="50" Height="50">
-        <Canvas HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Path x:Name="ProgressRingMark" Stroke="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Path=Foreground}" StrokeThickness="4"
-                Data="M 16,0 a 16,16 0 1 1 -16,-16" >
-                <Path.RenderTransform>
-                    <RotateTransform x:Name="ProgressRingMarkAngle" Angle="0"/>
-                </Path.RenderTransform>
-            </Path>
-        </Canvas>
+             Width="36" Height="36"
+             d:DesignHeight="128" d:DesignWidth="128">
+    <Grid x:Name="Root">
+        <local:ArcSegmentShape x:Name="Arc" Radius="16"  HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Stroke="{Binding RelativeSource={RelativeSource AncestorType={x:Type local:ProgressRing}}, Path=Foreground}" >
+            <Canvas.RenderTransform>
+                <RotateTransform x:Name="ArcRotate" Angle="0"/>
+            </Canvas.RenderTransform>
+        </local:ArcSegmentShape>
     </Grid>
-
 </UserControl>
