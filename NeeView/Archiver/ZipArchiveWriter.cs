@@ -126,7 +126,25 @@ namespace NeeView
 
                     token.ThrowIfCancellationRequested();
                     Trace($"Replace file: {_path}");
-                    File.Replace(tempFilename, _path, null);
+
+                    // 元のファイルへ差し替え。
+                    // 元ファイルアクセス中は置き換えできないのでリトライさせる
+                    int retryCount = 0;
+                    while (true)
+                    {
+                        try
+                        {
+                            File.Replace(tempFilename, _path, null);
+                            break;
+                        }
+                        catch
+                        {
+                            retryCount++;
+                            if (retryCount >= 5) throw;
+                            Trace($"Retry: {_path}");
+                            await Task.Delay(1000, token);
+                        }
+                    }
 
                     lock (_lock)
                     {

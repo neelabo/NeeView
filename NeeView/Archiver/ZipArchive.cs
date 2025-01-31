@@ -231,6 +231,7 @@ namespace NeeView
             }
             Debug.Assert(removes.All(e => e.Id >= 0));
 
+            ClearEntryCache();
             removes.ForEach(e => e.IsDeleted = true);
             var idents = removes.Select(e => e.Instance as ZipArchiveEntryIdent).WhereNotNull().ToList();
             var task = ZipArchiveWriterManager.Current.CreateDeleteTask(Path, _encoding, idents);

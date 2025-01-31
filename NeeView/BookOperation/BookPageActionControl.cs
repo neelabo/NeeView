@@ -87,27 +87,25 @@ namespace NeeView
                 var anyFileModified = await PageFileIO.DeletePageAsync(pages);
                 if (anyFileModified)
                 {
-                    if (_book.Path == _bookControl.Path)
-                    {
-                        Trace("DeleteFileAsync: Reload");
-                        _bookControl.ReLoad();
-                    }
-                    else
-                    {
-                        Trace("DeleteFileAsync: Book Changed");
-                    }
-                }
-                else
-                {
-                    Trace("DeleteFileAsync: NoReload");
+                    ReloadBook();
                 }
             }
             catch (OperationCanceledException)
             {
+                ReloadBook();
             }
             catch (Exception ex)
             {
                 new MessageDialog($"{Properties.TextResources.GetString("Word.Cause")}: {ex.Message}", Properties.TextResources.GetString("FileDeleteErrorDialog.Title")).ShowDialog();
+                ReloadBook();
+            }
+        }
+
+        private void ReloadBook()
+        {
+            if (_book.Path == _bookControl.Path)
+            {
+                _bookControl.ReLoad();
             }
         }
 
