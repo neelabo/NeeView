@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-// TODO: 書庫内書庫 ストリームによる多重展開が可能？
-
 namespace NeeView
 {
     public class ZipArchiveExtractor : ArchiveExtractor
@@ -43,7 +41,7 @@ namespace NeeView
             if (entry.IsDirectory) throw new ApplicationException("This entry is directory: " + entry.EntryName);
             if (entry.Id < 0) throw new ApplicationException("Cannot open this entry: " + entry.EntryName);
 
-            var rawEntry = _rawArchive.Entries[entry.Id].Hotfix();
+            var rawEntry = _rawArchive.Entries[entry.Id];
             Debug.Assert(ZipArchive.IsValidEntry(entry, rawEntry));
             rawEntry.Export(exportFileName, isOverwrite);
 

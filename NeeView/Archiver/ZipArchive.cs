@@ -86,7 +86,6 @@ namespace NeeView
                         token.ThrowIfCancellationRequested();
 
                         var entry = archiver.Entries[id];
-                        ZipArchiveEntryHelper.RepairEntryName(entry);
 
                         var archiveEntry = new ArchiveEntry(this)
                         {
@@ -137,7 +136,7 @@ namespace NeeView
             using (var archiver = ZipFile.Open(Path, ZipArchiveMode.Read, _encoding))
             {
                 ZipArchiveEntry archiveEntry = archiver.Entries[entry.Id];
-                ZipArchiveEntryHelper.RepairEntryName(archiveEntry);
+
                 if (!IsValidEntry(entry, archiveEntry)) throw new ValidationException(Properties.TextResources.GetString("InconsistencyException.Message"));
 
                 using (var stream = archiveEntry.Open())

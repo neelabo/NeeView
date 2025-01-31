@@ -94,8 +94,6 @@ namespace NeeView
                         token.ThrowIfCancellationRequested();
                         using (var archive = ZipFile.Open(tempFilename, ZipArchiveMode.Update, _encoding))
                         {
-                            archive.Hotfix();
-
                             while (true)
                             {
                                 ZipArchiveEntryIdent ident;
