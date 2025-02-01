@@ -10,7 +10,7 @@ namespace NeeView.Collections.Generic
     public class ObjectPool<T> where T : new()
     {
         private readonly Queue<T> _pool = new();
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
         
         // デバッグ用
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0052:読み取られていないプライベート メンバーを削除", Justification = "<保留中>")]

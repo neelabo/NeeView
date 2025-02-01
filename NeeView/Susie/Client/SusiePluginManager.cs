@@ -31,7 +31,7 @@ namespace NeeView
         private List<SusiePluginInfo> _unauthorizedPlugins;
         private ObservableCollection<SusiePluginInfo> _INPlugins;
         private ObservableCollection<SusiePluginInfo> _AMPlugins;
-        private static object _lock = new();
+        private static System.Threading.Lock _lock = new();
 
         private SusiePluginManager()
         {

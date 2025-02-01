@@ -21,7 +21,7 @@ namespace NeeLaboratory.ComponentModel
             public void Dispose() => LatestValue.Reset(this);
         }
 
-        private readonly object _lock = new object();
+        private readonly System.Threading.Lock _lock = new();
         private Operation? _operation;
 
         public T? Value => _operation?.Value;

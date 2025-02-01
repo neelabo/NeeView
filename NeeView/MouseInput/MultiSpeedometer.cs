@@ -14,7 +14,7 @@ namespace NeeView
     public class MultiSpeedometer : ISpeedometer
     {
         private readonly Dictionary<int, Speedometer> _map = new();
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
         public MultiSpeedometer()
         {

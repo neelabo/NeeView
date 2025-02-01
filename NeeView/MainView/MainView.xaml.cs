@@ -317,7 +317,7 @@ namespace NeeView
 
         #region SizeChanged
 
-        private readonly object _windowSizeChangedLock = new();
+        private readonly System.Threading.Lock _windowSizeChangedLock = new();
         private bool _isResizeLocked;
 
         public void SetResizeLock(bool locked)

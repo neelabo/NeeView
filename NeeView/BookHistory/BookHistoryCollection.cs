@@ -25,7 +25,7 @@ namespace NeeView
 
 
         private Dictionary<string, FolderParameter.Memento> _folders = new();
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
 
         private BookHistoryCollection()
@@ -47,7 +47,7 @@ namespace NeeView
 
 
         // 履歴コレクションロック
-        public object ItemsLock => _lock;
+        public System.Threading.Lock ItemsLock => _lock;
 
         // 履歴コレクション
         public LinkedDicionary<string, BookHistory> Items { get; set; } = new LinkedDicionary<string, BookHistory>();

@@ -14,7 +14,7 @@ namespace NeeView
     public class Speedometer : ISpeedometer
     {
         private readonly RingList<PointRecord> _points;
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
         public Speedometer()
         {

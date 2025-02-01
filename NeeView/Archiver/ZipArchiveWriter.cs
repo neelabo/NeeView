@@ -18,7 +18,7 @@ namespace NeeView
         private readonly string _path;
         private readonly Encoding? _encoding;
         private readonly List<ZipArchiveEntryIdent> _idents = new();
-        private object _lock;
+        private readonly System.Threading.Lock _lock;
         private Task? _task;
         private CancellationTokenSource _tokenSource = new();
 

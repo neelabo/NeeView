@@ -62,7 +62,7 @@ namespace NeeView
 
         private List<Page> _viewPages = new();
         private List<ViewContent> _viewContents = new();
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
         private ViewPageChangedEventArgs? _viewPageChangedEventArgs;
         private bool _disposedValue;
 

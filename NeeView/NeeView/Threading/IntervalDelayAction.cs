@@ -12,7 +12,7 @@ namespace NeeView.Threading
         private Action? _action;
         private bool _disposedValue;
         private readonly DispatcherTimer _timer;
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
         private int _timestamp;
 
 

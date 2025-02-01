@@ -13,7 +13,7 @@ namespace NeeView.PageFrames
     /// </summary>
     public class PageFrameBoxDelayMove : IDisposable
     {
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
         private readonly PageFrameBox _box;
         private readonly BookPageLoader _loader;
         private readonly PageLoading _pageLoading;

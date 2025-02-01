@@ -34,7 +34,7 @@ namespace NeeView
         private DateTime _viewedBookDateTime;
         private string? _viewedBookAddress;
         private string? _viewedBookName;
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
         private bool _disposedValue;
         private readonly DisposableCollection _disposables = new();
 

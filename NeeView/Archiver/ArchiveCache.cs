@@ -13,7 +13,7 @@ namespace NeeView
     public class ArchiveCache : IDisposable
     {
         private readonly Dictionary<string, WeakReference<Archive>> _caches = new();
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
 
         public List<IDisposable> CollectDisposable()

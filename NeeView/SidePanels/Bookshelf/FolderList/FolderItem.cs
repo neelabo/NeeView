@@ -426,7 +426,7 @@ namespace NeeView
     public class FileFolderItem : FolderItem, IDisposable
     {
         private Page? _archivePage;
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
 
         public FileFolderItem(bool isOverlayEnabled) : base(isOverlayEnabled)

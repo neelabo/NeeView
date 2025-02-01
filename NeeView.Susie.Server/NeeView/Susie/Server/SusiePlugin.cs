@@ -16,7 +16,7 @@ namespace NeeView.Susie.Server
     /// </summary>
     public class SusiePlugin : IDisposable
     {
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
         private SusiePluginApi? _module;
         private bool _isCacheEnabled = true;
         private FileExtensionCollection? _userExtensions;
@@ -27,9 +27,6 @@ namespace NeeView.Susie.Server
             FileName = fileName;
         }
 
-
-        // 一連の処理をロックするときに使用
-        public object GlobalLock = new();
 
         // 有効/無効
         public bool IsEnabled { get; set; } = true;

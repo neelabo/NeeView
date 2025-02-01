@@ -20,7 +20,7 @@ namespace NeeView
 
 
         // lock object
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
         /// <summary>
         /// キャンセルされたが処理中のインスタンス群

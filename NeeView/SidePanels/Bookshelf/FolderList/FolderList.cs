@@ -91,7 +91,7 @@ namespace NeeView
         private FolderCollection? _folderCollection;
         private FolderItem? _selectedItem;
 
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
         private double _areaWidth = double.PositiveInfinity;
         private double _areaHeight = double.PositiveInfinity;

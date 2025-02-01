@@ -42,7 +42,7 @@ namespace NeeView
         public CommandLineOption Option => _option ?? throw new InvalidOperationException("_option must not be null");
 
         // システムロック
-        public object Lock { get; } = new object();
+        public System.Threading.Lock Lock { get; } = new();
 
         // 起動日時
         public DateTime StartTime { get; private set; }

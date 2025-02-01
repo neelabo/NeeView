@@ -17,7 +17,7 @@ namespace NeeView
         private ImageContentControl? _imageControl;
         private bool _disposedValue;
         private BitmapScalingMode? _scalingMode;
-        private readonly object _lock = new object();
+        private readonly System.Threading.Lock _lock = new();
 
         public ImageViewContentStrategy(ViewContent viewContent)
         {

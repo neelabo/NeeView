@@ -37,7 +37,7 @@ namespace NeeView
         private readonly List<Page> _viewPages = new();
         private readonly List<Page> _aheadPages = new();
 
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
         private bool _isEnabled = true;
         private BookLoadContext _loadContext = new();

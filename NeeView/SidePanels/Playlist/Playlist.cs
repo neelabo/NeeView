@@ -22,7 +22,7 @@ namespace NeeView
         private ObservableCollection<PlaylistItem> _items = new();
         private MultiMap<string, PlaylistItem> _itemsMap = new();
         private string _playlistPath;
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
         private bool _isDirty;
         private bool _isEditable;
         private bool _isNew;

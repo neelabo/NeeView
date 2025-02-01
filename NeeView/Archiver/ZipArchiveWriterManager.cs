@@ -15,14 +15,14 @@ namespace NeeView
 
 
         private Dictionary<string, ZipArchiveWriter> _archives = new();
-        private object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
 
         private ZipArchiveWriterManager()
         {
         }
 
-        public object GetLockObject()
+        public System.Threading.Lock GetLockObject()
         {
             return _lock;
         }

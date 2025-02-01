@@ -11,7 +11,7 @@ namespace NeeLaboratory.Threading
         private volatile int _currentCount;
         private bool _disposed;
         private readonly ManualResetEventSlim _event;
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
         public BusyLockEvent()
         {

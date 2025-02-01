@@ -16,7 +16,7 @@ namespace NeeView
 
         private const int Lifetime = 1000;
         private readonly Dictionary<Thumbnail, int> _map = new();
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
         public void Add(Thumbnail thumbnail)
         {

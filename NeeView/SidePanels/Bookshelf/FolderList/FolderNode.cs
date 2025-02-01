@@ -17,7 +17,7 @@ namespace NeeView
     {
         // Fields
 
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
         private bool _isParentValid;
         private FolderCollection? _collection;

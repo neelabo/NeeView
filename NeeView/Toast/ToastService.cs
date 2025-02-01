@@ -16,7 +16,7 @@ namespace NeeView
         private readonly DispatcherTimer _timer;
         private DateTime _timeLimit;
         private readonly Dictionary<string, Toast> _slotMap = new();
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
 
         public ToastService()

@@ -48,7 +48,7 @@ namespace NeeView
         }
 
 
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
         private int _lockCount;
 
         public event EventHandler<LockCountChangedEventArgs>? LockCountChanged;

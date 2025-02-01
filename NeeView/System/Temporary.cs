@@ -22,7 +22,7 @@ namespace NeeView
         private int _count = 0;
 
         // 排他制御用オブジェクト
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
 
         private Temporary()

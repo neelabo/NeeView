@@ -15,7 +15,7 @@ namespace NeeView
 
         private readonly Dictionary<string, TempFile> _caches = new();
 
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
 
         /// <summary>

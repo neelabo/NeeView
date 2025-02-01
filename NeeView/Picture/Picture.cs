@@ -27,7 +27,7 @@ namespace NeeView
         /// <summary>
         /// ロックオブジェクト
         /// </summary>
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
 
         public Picture(IPictureSource source)

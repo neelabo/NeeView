@@ -16,7 +16,7 @@ namespace NeeLaboratory.Threading.Jobs
         record JobDelayUnit(IJob Job, int Timestamp);
 
         private readonly Timer _timer;
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
         private List<JobDelayUnit> _items = new();
         private bool _disposedValue = false;
 

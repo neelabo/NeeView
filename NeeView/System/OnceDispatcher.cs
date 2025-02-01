@@ -13,7 +13,7 @@ namespace NeeView
     public class OnceDispatcher : IDisposable
     {
         private readonly Dictionary<object, DispatcherOperation> _map = new();
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
         private bool _disposedValue;
 
 

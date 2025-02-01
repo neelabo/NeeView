@@ -8,7 +8,7 @@ namespace NeeView
     public class ViewSourceMap : INotifyCollectionChanged, IDisposable
     {
         private readonly Dictionary<ViewSourceKey, ViewSource> _map = new();
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
         private readonly BookMemoryService _bookMemoryService;
         private bool _disposedValue;
 

@@ -10,7 +10,7 @@ namespace NeeView
 {
     public class SvgPageContent : PageContent
     {
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
 
         public SvgPageContent(ArchiveEntry archiveEntry, BookMemoryService? bookMemoryService) : base(archiveEntry, bookMemoryService)

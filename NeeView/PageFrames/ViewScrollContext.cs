@@ -10,7 +10,7 @@ namespace NeeView.PageFrames
     public class ViewScrollContext
     {
         private readonly Dictionary<IScrollable, int> _map = new();
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
         public ViewScrollContext()
         {

@@ -86,7 +86,7 @@ namespace NeeView
         /// <summary>
         /// 排他ロックオブジェクト
         /// </summary>
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
 
         /// <summary>

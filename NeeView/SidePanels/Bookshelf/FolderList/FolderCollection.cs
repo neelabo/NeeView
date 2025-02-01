@@ -38,7 +38,7 @@ namespace NeeView
         private ObservableCollection<FolderItem> _items = _itemsEmpty;
         protected FolderItemFactory _folderItemFactory;
         protected bool _isOverlayEnabled;
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
 
         protected FolderCollection(QueryPath path, bool isOverlayEnabled)

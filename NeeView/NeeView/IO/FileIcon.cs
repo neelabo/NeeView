@@ -33,7 +33,7 @@ namespace NeeView.IO
         };
 
 
-        private static readonly object _lock = new();
+        private static readonly System.Threading.Lock _lock = new();
 
 
         public static List<BitmapSource> CreateIconCollection(string filename, FileIconType iconType, bool allowJumbo)

@@ -48,7 +48,7 @@ namespace NeeView
         private bool _disposedValue = false;
         private readonly DelayAction _delayResume = new();
         private MediaPlayerPauseBit _pauseBits;
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
         private bool _isPlaying;
 
 

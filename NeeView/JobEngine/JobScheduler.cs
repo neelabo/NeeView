@@ -32,7 +32,7 @@ namespace NeeView
 
 
         // TODO: Lockオブジェクトはプライベートにしたい
-        public object Lock { get; } = new object();
+        public System.Threading.Lock Lock { get; } = new();
 
 
         public List<JobSource> Queue

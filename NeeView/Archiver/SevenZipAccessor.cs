@@ -42,7 +42,7 @@ namespace NeeView
 
         private readonly string _fileName;
         private SevenZipExtractor? _extractor;
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
 
         public SevenZipAccessor(string fileName)

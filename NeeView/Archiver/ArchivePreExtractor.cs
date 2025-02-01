@@ -20,7 +20,7 @@ namespace NeeView
         private CancellationTokenSource _cancellationTokenSource = new();
         private ArchivePreExtractState _state;
         private TempDirectory? _extractDirectory;
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
         private bool _disposedValue;
 
 

@@ -27,11 +27,11 @@ namespace NeeView
 
 
         private ThumbnailCacheConnection? _connection;
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
         private Dictionary<string, ThumbnailCacheItem> _saveQueue;
         private Dictionary<string, ThumbnailCacheHeader> _updateQueue;
         private readonly DelayAction _delaySaveQueue;
-        private readonly object _lockSaveQueue = new();
+        private readonly System.Threading.Lock _lockSaveQueue = new();
         private bool _isEnabled = true;
 
 

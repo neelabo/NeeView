@@ -14,7 +14,7 @@ namespace NeeView.Threading
     /// </summary>
     public class DelayAction : IDisposable
     {
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
         private readonly DispatcherTimer _timer;
         private readonly Action? _defaultAction;
         private readonly TimeSpan _defaultDelay = TimeSpan.FromMilliseconds(1000);

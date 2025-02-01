@@ -17,7 +17,7 @@ namespace NeeView
         public static WorkingProgressWatcher Current { get; }
 
         private readonly List<ICancelableObject> _items = new();
-        private object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
 
         private WorkingProgressWatcher()

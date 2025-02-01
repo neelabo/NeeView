@@ -43,7 +43,7 @@ namespace NeeView
         /// <summary>
         /// 排他制御ロック
         /// </summary>
-        private object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
         /// <summary>
         /// サムネイルデータ

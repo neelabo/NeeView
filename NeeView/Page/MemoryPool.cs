@@ -16,7 +16,7 @@ namespace NeeView
 
         private readonly LinkedDicionary<IMemoryElement, MemoryUnit> _collection = new();
         private bool _disposedValue;
-        private readonly object _lock = new();
+        private readonly System.Threading.Lock _lock = new();
 
 
         public long TotalSize { get; private set; }
