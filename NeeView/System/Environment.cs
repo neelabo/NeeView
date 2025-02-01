@@ -129,11 +129,11 @@ namespace NeeView
                 }
                 else if (IsCanaryPackage)
                 {
-                    return $"Canary {DateVersion} / Rev. {Revision}";
+                    return ApplicationVersion + $"-Canary{DateVersion} / Rev. {Revision}";
                 }
                 else if (IsBetaPackage)
                 {
-                    return ApplicationVersion + $"-Beta {DateVersion} / Rev. {Revision}";
+                    return ApplicationVersion + $"-Beta{DateVersion} / Rev. {Revision}";
                 }
                 else
                 {
@@ -155,11 +155,11 @@ namespace NeeView
                 }
                 else if (IsCanaryPackage)
                 {
-                    return $"Canary {DateVersion}";
+                    return ApplicationVersion + $"-Canary{DateVersion}";
                 }
                 else if (IsBetaPackage)
                 {
-                    return ApplicationVersion + $"-Beta {DateVersion}";
+                    return ApplicationVersion + $"-Beta{DateVersion}";
                 }
                 else
                 {

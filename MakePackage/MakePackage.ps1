@@ -87,7 +87,7 @@ function Get-GitLog() {
 	$descrive = Invoke-Expression "git tag" | Where-Object { $_ -match "^\d+\.\d+$" } | Select-Object -Last 1
 	$date = Invoke-Expression 'git log -1 --pretty=format:"%ad" --date=iso'
 	$result = Invoke-Expression "git log $descrive..head --encoding=Shift_JIS --pretty=format:`"%s`""
-	$result = $result | Where-Object { -not ($_ -match '^Merged |^chore:|^docs:|^-|^\.\.') } 
+	$result = $result | Where-Object { -not ($_ -match '^Merge  |^chore:|^docs:|^refactor:| ^-|^\.\.') } 
 	$result = $result | ForEach-Object { $_ -replace "#(\d+)", "[#`$1]($issuesUrl/`$1)" }
 
 	return "[${branch}] $descrive to head", $date, $result
@@ -188,9 +188,9 @@ function Build-Project($platform, $outputDir, $options) {
 	)
 
 	switch ($Target) {
-		"Dev" { $defaultOptions += "-p:VersionSuffix=dev-${dateVersion}"; break; }
-		"Canary" { $defaultOptions += "-p:VersionSuffix=canary-${dateVersion}"; break; }
-		"Beta" { $defaultOptions += "-p:VersionSuffix=beta-${dateVersion}"; break; }
+		"Dev" { $defaultOptions += "-p:VersionSuffix=dev${dateVersion}"; break; }
+		"Canary" { $defaultOptions += "-p:VersionSuffix=canary${dateVersion}"; break; }
+		"Beta" { $defaultOptions += "-p:VersionSuffix=beta${dateVersion}"; break; }
 	}
 
 	& dotnet publish $project $defaultOptions $options -o Publish\$outputDir
@@ -323,7 +323,10 @@ function New-Readme {
 
 	$postfix = $appVersion
 	if ($target -eq "Canary") {
-		$postfix = "Canary ${dateVersion}"
+		$postfix = "$appVersion-Canary${dateVersion}"
+	}
+	elseif ($target -eq "Beta") {
+		$postfix = "$appVersion-Beta${dateVersion}"
 	}
 
 	$source = @()
@@ -880,10 +883,10 @@ function Update-Version {
 	
 	Write-Host "`n`[Update NeeView Version] ...`n" -fore Cyan
 	$versionSuffix = switch ( $Target ) {
-		"Dev" { 'dev' }
-		"Canary" { 'canary' }
-		"Beta" { 'beta' }
-		default { '' }
+		"Dev" { "dev$dateVersion" }
+		"Canary" { "canary$dateVersion" }
+		"Beta" { "beta$dateVersion" }
+		default { "" }
 	}
 	..\CreateVersionProps.ps1 -suffix $versionSuffix
 }
@@ -908,12 +911,12 @@ $build_x64 = $false
 $build_x64_fd = $false
 
 # versions
+$revision = (& git rev-parse --short HEAD).ToString()
+$dateVersion = (Get-Date).ToString("MMdd") + $versionPostfix
 Update-Version
 $version = Get-Version $versionProps
 $appVersion = Get-AppVersion $version
 $assemblyVersion = "$version.0"
-$revision = (& git rev-parse --short HEAD).ToString()
-$dateVersion = (Get-Date).ToString("MMdd") + $versionPostfix
 
 $publishDir = "Publish"
 $publishDir_x64 = "$publishDir\$product-x64"

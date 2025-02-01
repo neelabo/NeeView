@@ -37,13 +37,13 @@ namespace NeeView
             {
                 this.Watermark.Background = new SolidColorBrush(Color.FromRgb(0xF3, 0xBC, 0x2D));
                 this.WatermarkText.Foreground = new SolidColorBrush(Color.FromRgb(0x20, 0x20, 0x20));
-                this.WatermarkText.Text = "Canary " + Environment.DateVersion;
+                this.WatermarkText.Text = "Canary" + Environment.DateVersion;
             }
             else if (Environment.IsBetaPackage)
             {
                 this.Watermark.Background = new SolidColorBrush(Color.FromRgb(0x2E, 0x69, 0xD1));
                 this.WatermarkText.Foreground = Brushes.White;
-                this.WatermarkText.Text = "Beta " + Environment.DateVersion;
+                this.WatermarkText.Text = "Beta" + Environment.DateVersion;
             }
             else
             {
