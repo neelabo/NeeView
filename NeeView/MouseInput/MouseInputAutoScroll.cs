@@ -138,10 +138,11 @@ namespace NeeView
         {
             _end = e.GetPosition(_context.Sender);
 
-            const double min = 1.0;
+            var sensitivity = Config.Current.Mouse.AutoScrollSensitivity;
+            double min = sensitivity;
             const double max = 16.0;
             const double scale = 0.02;
-            var delta = (_end - _start) * scale;
+            var delta = (_end - _start) * scale * sensitivity;
             _velocity = new Vector(LimitScalarValue(delta.X, min, max), LimitScalarValue(delta.Y, min, max));
 
             SetCursor(GetScrollCursor(_velocity));

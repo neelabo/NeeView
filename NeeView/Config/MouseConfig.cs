@@ -23,6 +23,7 @@ namespace NeeView
         private bool _isHoverScroll;
         private double _hoverScrollDuration = 0.5;
         private double _inertiaSensitivity = 0.5;
+        private double _autoScrollSensitivity = 1.0;
 
 
         // マウスジェスチャー有効
@@ -134,6 +135,13 @@ namespace NeeView
         {
             get { return _inertiaSensitivity; }
             set { SetProperty(ref _inertiaSensitivity, value); }
+        }
+
+        [PropertyRange(0.0, 2.0, TickFrequency = 0.1, IsEditable = true, HasDecimalPoint = true)]
+        public double AutoScrollSensitivity
+        {
+            get { return _autoScrollSensitivity; }
+            set { SetProperty(ref _autoScrollSensitivity, value); }
         }
     }
 
