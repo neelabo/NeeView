@@ -2,9 +2,13 @@
 {
     public interface IMemoryElement
     {
-        int Index { get; }
-        bool IsMemoryLocked { get; }
-        long GetMemorySize();
+        // メモリ保持者
+        IMemoryOwner Owner { get; }
+
+        // メモリサイズ
+        long MemorySize { get; }
+        
+        // メモリ解放
         void Unload();
     }
 

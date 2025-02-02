@@ -12,7 +12,7 @@ using NeeLaboratory.Threading;
 namespace NeeView
 {
     [NotifyPropertyChanged]
-    public abstract partial class PageContent : IDataSource, IMemoryElement, INotifyPropertyChanged, IDisposable
+    public abstract partial class PageContent : IDataSource, IMemoryOwner, IMemoryElement, INotifyPropertyChanged, IDisposable
     {
         public static Size DefaultSize { get; } = new(480, 640);
 
@@ -47,6 +47,10 @@ namespace NeeView
         public event EventHandler? SizeChanged;
 
 
+        public IMemoryOwner Owner => this;
+
+        public long MemorySize => DataSize;
+        
         public int Index { get; set; }
 
         /// <summary>
@@ -232,20 +236,13 @@ namespace NeeView
 
             PageDataSource = CreatePageDataSource(source, PictureInfo ?? source.PictureInfo);
 
-            if (GetMemorySize() > 0)
+            if (MemorySize > 0)
             {
                 _bookMemoryService?.AddPageContent(this);
             }
 
             ContentChanged?.Invoke(this, EventArgs.Empty);
         }
-
-        public long GetMemorySize()
-        {
-            return DataSize;
-        }
-
-
     }
 
 }

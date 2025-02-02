@@ -1,6 +1,5 @@
 ﻿//#define LOCAL_DEBUG
 
-using NeeView.Collections.Generic;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,15 +8,52 @@ using System.Linq;
 
 namespace NeeView
 {
-
     public class MemoryPool : IDisposable
     {
-        private record MemoryUnit(IMemoryElement Key, long Size) : IHasKey<IMemoryElement>;
+        private class MemoryUnit : IMemoryElement
+        {
+            public MemoryUnit(IMemoryOwner owner)
+            {
+                Owner = owner;
+            }
 
-        private readonly LinkedDicionary<IMemoryElement, MemoryUnit> _collection = new();
+            public List<IMemoryElement> Elements { get; } = new();
+            public long Size { get; private set; }
+            public IMemoryOwner Owner { get; }
+            public long MemorySize => Size;
+
+            public bool Contains(IMemoryElement element)
+            {
+                return Elements.Contains(element);
+            }
+
+            public void Add(IMemoryElement element)
+            {
+                Debug.Assert(element.Owner == Owner);
+                Debug.Assert(!Elements.Contains(element));
+                Elements.Add(element);
+                Size += element.MemorySize;
+            }
+
+            public void Unload()
+            {
+                foreach (var element in Elements)
+                {
+                    element.Unload();
+                }
+            }
+        }
+
+
+        private readonly Dictionary<IMemoryOwner, MemoryUnit> _collection = new();
         private bool _disposedValue;
         private readonly System.Threading.Lock _lock = new();
+        private readonly string _name;
 
+        public MemoryPool(string name)
+        {
+            _name = name;
+        }
 
         public long TotalSize { get; private set; }
 
@@ -43,74 +79,115 @@ namespace NeeView
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// MemoryElement を追加する
+        /// </summary>
+        /// <param name="element"></param>
         public void Add(IMemoryElement element)
         {
             lock (_lock)
             {
                 if (_disposedValue) return;
 
-                //Debug.WriteLine($"MemoryPool.Add: {element.Index}: {element.GetMemorySize()} Byte");
-                Debug.Assert(element.GetMemorySize() > 0);
+                Debug.Assert(element.MemorySize > 0);
 
-                var unit = _collection.Remove(element);
-                if (unit is not null)
+                if (!_collection.TryGetValue(element.Owner, out var unit))
                 {
-                    TotalSize -= unit.Size;
+                    unit = new MemoryUnit(element.Owner);
+                    _collection.Add(unit.Owner, unit);
                 }
 
-                unit = new MemoryUnit(element, element.GetMemorySize());
-                _collection.AddLast(element, unit);
-                TotalSize += unit.Size;
+                if (unit.Contains(element)) return;
+
+                unit.Add(element);
+                TotalSize += element.MemorySize;
+
                 AssertTotalSize();
+
+                Trace($"Add: [{element.Owner}] TotalSize {TotalSize / 1024:N0} KB (+{element.MemorySize / 1024:N0} KB)");
             }
         }
 
-
-        public void Cleanup(long limitSize)
+        /// <summary>
+        /// 指定サイズに収まるようにメモリを削除する
+        /// </summary>
+        /// <param name="limitSize"></param>
+        public void Cleanup(long limitSize, IComparer<IMemoryOwner> comparer)
         {
             lock (_lock)
             {
                 if (_disposedValue) return;
 
-                int removeCount = 0;
+                Trace($"Cleanup: TotalSize {TotalSize / 1024:N0} KB to {limitSize / 1024:N0} KB");
+                if (limitSize >= TotalSize) return;
 
+                // 削除可能順にソート
+                var units = _collection.Values.OrderByDescending(e => e.Owner, comparer).ToList();
+                Trace($"Sorted: " + string.Join(", ", units.Select(e => e.Owner.Index.ToString())));
+
+                int index = 0;
                 while (limitSize < TotalSize)
                 {
                     // 古いものから削除を試みる。ロックされていたらそこで終了
-                    var node = _collection.First;
-                    if (node is null) break;
+                    if (index >= units.Count) break;
 
-                    if (node.Value.Key.IsMemoryLocked)
+                    var unit = units[index];
+
+                    if (unit.Owner.IsMemoryLocked)
                     {
                         break;
                     }
                     else
                     {
-                        Remove(node);
-                        removeCount++;
+                        Remove(unit);
+                        index++;
                     }
                 }
 
                 // [DEV]
-                if (removeCount > 0)
+                if (index > 0)
                 {
                     AssertTotalSize();
                 }
             }
         }
 
-        private void Remove(LinkedListNode<MemoryUnit> node)
+        /// <summary>
+        /// メモリ全開放
+        /// </summary>
+        public void Cleanup()
         {
             lock (_lock)
             {
                 if (_disposedValue) return;
 
-                _collection.Remove(node);
-                TotalSize -= node.Value.Size;
+                foreach (var unit in _collection.Values)
+                {
+                    if (!unit.Owner.IsMemoryLocked)
+                    {
+                        Remove(unit);
+                    }
+                }
+
+                AssertTotalSize();
+            }
+        }
+
+        /// <summary>
+        /// メモリを削除する
+        /// </summary>
+        private void Remove(MemoryUnit unit)
+        {
+            lock (_lock)
+            {
+                if (_disposedValue) return;
+
+                _collection.Remove(unit.Owner);
+                TotalSize -= unit.Size;
                 AssertTotalSize();
 
-                node.Value.Key.Unload();
-                Trace($"Remove: {node.Value.Key.Index}");
+                unit.Unload();
+                Trace($"Remove: [{unit.Owner}] TotalSize {TotalSize / 1024:N0} KB (-{unit.Size / 1024:N0} KB)");
             }
         }
 
@@ -119,7 +196,7 @@ namespace NeeView
         {
             lock (_lock)
             {
-                var totalSize = _collection.Select(e => e.Size).Sum();
+                var totalSize = _collection.Select(e => e.Value.Size).Sum();
                 Debug.Assert(totalSize == TotalSize);
             }
         }
@@ -127,7 +204,7 @@ namespace NeeView
         [Conditional("LOCAL_DEBUG")]
         private void Trace(string s, params object[] args)
         {
-            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
+            Debug.WriteLine($"{this.GetType().Name}.{_name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
         }
     }
 

@@ -72,13 +72,8 @@ namespace NeeView
         public bool IsLoaded => Data is not null || IsFailed;
         public bool IsFailed => ErrorMessage is not null;
 
-        public int Index => _pageContent.Index;
-
-        // TODO: PageContent に IMemoryElement を継承？
-        public virtual bool IsMemoryLocked => (_pageContent as IMemoryElement)?.IsMemoryLocked ?? false;
-
-        public long GetMemorySize() => DataSize;
-
+        public IMemoryOwner Owner => _pageContent;
+        public long MemorySize => DataSize;
 
         public ImageSource? ImageSource => (Data as ImageSource) ?? (Data as IHasImageSource)?.ImageSource;
 

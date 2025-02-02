@@ -20,8 +20,6 @@
             <Button DockPanel.Dock="Right" x:Name="RefreshButton"  Content="Refresh" Padding="20,10" Click="RefreshButton_Click"/>
             <Button DockPanel.Dock="Right" x:Name="ClearButton"  Content="Clear" Padding="20,10" Click="ClearButton_Click"/>
             <TextBlock Text="{Binding Book.Source.BookMemoryService.TotalSize, Converter={StaticResource ByteSizeToFormatString}}"/>
-            <TextBlock Text="{Binding Book.Source.BookMemoryService.ContentSize, Converter={StaticResource ByteSizeToFormatString}, StringFormat=(C\={0}\, }" Margin="5,0,0,0"/>
-            <TextBlock Text="{Binding Book.Source.BookMemoryService.ViewSize, Converter={StaticResource ByteSizeToFormatString}, StringFormat=V\={0})}" />
             <TextBlock Text="/" Margin="5,0"/>
             <TextBlock Text="{Binding Book.Source.BookMemoryService.LimitSize, Converter={StaticResource ByteSizeToFormatString}}"/>
             <TextBlock Text="KB" Margin="5,0"/>

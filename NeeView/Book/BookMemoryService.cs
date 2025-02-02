@@ -2,6 +2,8 @@
 
 using NeeLaboratory.ComponentModel;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 
@@ -12,24 +14,18 @@ namespace NeeView
     /// </summary>
     public class BookMemoryService : BindableBase, IBookMemoryService, IDisposable
     {
-        private readonly MemoryPool _contentPool = new();
-        private readonly MemoryPool _pictureSourcePool = new();
+        private readonly MemoryPool _contentPool = new("BookMemory");
         private bool _disposedValue;
-
-        public static long LimitSize => (long)Config.Current.Performance.CacheMemorySize * 1024 * 1024;
-
-        public long TotalSize => _contentPool.TotalSize + _pictureSourcePool.TotalSize;
-
-        public long ContentSize => _contentPool.TotalSize;
-        public long ViewSize => _pictureSourcePool.TotalSize;
-
-        public bool IsFull => TotalSize >= LimitSize;
-
 
         public BookMemoryService()
         {
         }
 
+        public static long LimitSize => (long)Config.Current.Performance.CacheMemorySize * 1024 * 1024;
+
+        public long TotalSize => _contentPool.TotalSize;
+
+        public bool IsFull => TotalSize >= LimitSize;
 
         protected virtual void Dispose(bool disposing)
         {
@@ -38,7 +34,6 @@ namespace NeeView
                 if (disposing)
                 {
                     _contentPool.Dispose();
-                    _pictureSourcePool.Dispose();
                 }
                 _disposedValue = true;
             }
@@ -55,7 +50,7 @@ namespace NeeView
             if (_disposedValue) return;
 
             _contentPool.Add(content);
-            Trace($"AddPageContent: {TotalSize / 1024 / 1024} MB");
+            Trace($"AddPageContent: {TotalSize / 1024 / 1024} MB (+{content.MemorySize / 1024:N0} KB)");
             RaisePropertyChanged("");
         }
 
@@ -63,22 +58,80 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
-            _pictureSourcePool.Add(pictureSource);
-            Trace($"AddPictureSource: {TotalSize / 1024 / 1024} MB");
+            _contentPool.Add(pictureSource);
+            Trace($"AddPictureSource: {TotalSize / 1024 / 1024} MB (+{pictureSource.MemorySize / 1024:N0} KB)");
             RaisePropertyChanged("");
         }
 
-        public void Cleanup()
+        public void Cleanup(int origin, int direction)
         {
             if (_disposedValue) return;
 
-            _contentPool.Cleanup(LimitSize - _pictureSourcePool.TotalSize);
-            if (IsFull)
-            {
-                Trace($"Cleanup.PictureSource");
-                _pictureSourcePool.Cleanup(LimitSize / 2);
-            }
+            _contentPool.Cleanup(LimitSize, new PageDistanceComparer(origin, direction));
+
             RaisePropertyChanged("");
+        }
+
+        // 削除優先順位用のコンペア
+        private class PageDistanceComparer : IComparer<IMemoryOwner>
+        {
+            private readonly int _origin;
+            private readonly int _direction;
+
+            public PageDistanceComparer(int origin, int direction)
+            {
+                _origin = origin;
+                _direction = direction;
+            }
+
+            public int Compare(IMemoryOwner? x, IMemoryOwner? y)
+            {
+                if (x == y) return 0;
+                if (x == null) return -1;
+                if (y == null) return 1;
+
+                var distanceX = (x.Index - _origin) * _direction;
+                var distanceY = (y.Index - _origin) * _direction;
+
+                if (x.IsMemoryLocked)
+                {
+                    if (y.IsMemoryLocked)
+                    {
+                        return Math.Abs(distanceX) - Math.Abs(distanceY);
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+                else if (y.IsMemoryLocked)
+                {
+                    return 1;
+                }
+                
+                if (distanceX >= 0)
+                {
+                    if (distanceY >= 0)
+                    {
+                        return distanceX - distanceY;
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+                else
+                {
+                    if (distanceY >= 0)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        return distanceY - distanceX;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -88,8 +141,7 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
-            _contentPool.Cleanup(0);
-            _pictureSourcePool.Cleanup(0);
+            _contentPool.Cleanup();
             RaisePropertyChanged("");
         }
 

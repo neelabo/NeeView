@@ -168,7 +168,7 @@ namespace NeeView
 
             var operation = _latestContext.CompareSet(context);
             if (operation is null) return;
-            
+
             lock (_lock)
             {
                 Trace($"LoadAsync: {context}");
@@ -195,14 +195,23 @@ namespace NeeView
                 await LoadMainAsync(range, direction, linkedTokenSource.Token);
                 Trace($"LoadMainAsync done.");
 
-                // 先読み 次方向
-                var count = await LoadAheadAsync(range.Next(direction), direction, limit, linkedTokenSource.Token);
+                // 先読み：次１ページ
+                var next = await LoadAheadAsync(range.Next(direction), direction, 1, linkedTokenSource.Token);
+                var nextCount = next.Count;
 
-                // 先読み 前方向
-                var rest = limit - count;
+                // 先読み：前１ページ
+                var prev = await LoadAheadAsync(range.Next(-direction), -direction, 1, linkedTokenSource.Token);
+                var prevCount = prev.Count;
+
+                // 先読み：次ページ残り
+                next = await LoadAheadAsync(next.Position, direction, limit - nextCount, linkedTokenSource.Token);
+                nextCount += next.Count;
+
+                // 先読み：前ページ残り
+                var rest = limit - (next.Count + prevCount);
                 if (0 < rest)
                 {
-                    var pages = await LoadAheadAsync(range.Next(-direction), -direction, rest, linkedTokenSource.Token);
+                    await LoadAheadAsync(prev.Position, -direction, rest, linkedTokenSource.Token);
                 }
             }
             catch (OperationCanceledException)
@@ -293,7 +302,7 @@ namespace NeeView
         /// <param name="direction">先読み方向</param>
         /// <param name="limit">先読みページ数上限</param>
         /// <param name="token">キャンセルトークン</param>
-        private async Task<int> LoadAheadAsync(PagePosition position, int direction, int limit, CancellationToken token)
+        private async Task<(int Count, PagePosition Position)> LoadAheadAsync(PagePosition position, int direction, int limit, CancellationToken token)
         {
             var count = 0;
             var pos = position;
@@ -307,67 +316,77 @@ namespace NeeView
             {
                 pos = pos + 1;
             }
-            if (!_bookContext.ContainsIndex(pos.Index)) return 0;
+            if (!_bookContext.ContainsIndex(pos.Index)) return (0, position);
             Debug.Assert((pos.Part == 0 && direction == 1) || (pos.Part == 1 && direction == -1));
 
             while (count < limit)
             {
-                NVDebug.AssertMTA();
-                token.ThrowIfCancellationRequested();
-
-                // メモリ許容チェック
-                _bookMemoryService.Cleanup();
-                if (_bookMemoryService.IsFull)
-                {
-                    Debug.WriteLine($"BookPageLoader: Memory full.");
-                    break;
-                }
-
-                // つぎのフレーム作成
-                var frame = _frameFactory.CreatePageFrame(pos, direction);
+                var frame = await LoadAheadCoreAsync(pos, direction, token);
                 if (frame is null) break;
-
-                // ページ読み込み
-                var pages = frame.Elements.Select(e => e.Page).ToList();
-
-                lock (_lock)
-                {
-                    token.ThrowIfCancellationRequested();
-                    foreach (var page in pages)
-                    {
-                        _aheadPages.Add(page);
-                        page.State = PageContentState.Ahead;
-                    }
-                }
-
-                var contents = pages.Cast<IPageContentLoader>().ToList();
-                //foreach (var page in pages)
-                //{
-                //    Debug.WriteLine($"BookPageLoader.LoadAheadAsync[{Thread.CurrentThread.ManagedThreadId}]: Job.{page}");
-                //}
-                _jobAheadClient.Order(contents);
-                await _jobAheadClient.WaitAsync(contents, -1, token);
-
-                // フレーム確定
-                frame = _frameFactory.CreatePageFrame(pos, direction);
-                if (frame is null) break;
-
-                // ViewSourceを作成
-                foreach (var element in frame.Elements)
-                {
-                    token.ThrowIfCancellationRequested();
-                    var viewSource = _viewSourceMap.Get(element.Page, element.PagePart, element.PageDataSource);
-                    var viewContentSize = ViewContentSizeFactory.Create(element, _elementScaleFactory.Create(frame));
-                    var pictureSize = viewContentSize.GetPictureSize();
-                    await viewSource.LoadAsync(pictureSize, token);
-                }
 
                 count += frame.Elements.Count;
                 pos = frame.FrameRange.Next(direction);
             }
 
-            return count;
+            return (count, pos);
         }
+
+        public async Task<PageFrame?> LoadAheadCoreAsync(PagePosition pos, int direction, CancellationToken token)
+        {
+            NVDebug.AssertMTA();
+            token.ThrowIfCancellationRequested();
+
+            // メモリ許容チェック
+            _bookMemoryService.Cleanup(pos.Index, direction);
+            if (_bookMemoryService.IsFull)
+            {
+                Debug.WriteLine($"BookPageLoader: Memory full.");
+                return null;
+            }
+
+            // つぎのフレーム作成
+            var frame = _frameFactory.CreatePageFrame(pos, direction);
+            if (frame is null) return null;
+
+            // ページ読み込み
+            var pages = frame.Elements.Select(e => e.Page).ToList();
+
+            lock (_lock)
+            {
+                token.ThrowIfCancellationRequested();
+                foreach (var page in pages)
+                {
+                    _aheadPages.Add(page);
+                    page.State = PageContentState.Ahead;
+                }
+            }
+
+            var contents = pages.Cast<IPageContentLoader>().ToList();
+            //foreach (var page in pages)
+            //{
+            //    Debug.WriteLine($"BookPageLoader.LoadAheadAsync[{Thread.CurrentThread.ManagedThreadId}]: Job.{page}");
+            //}
+            _jobAheadClient.Order(contents);
+            await _jobAheadClient.WaitAsync(contents, -1, token);
+
+            // フレーム確定
+            frame = _frameFactory.CreatePageFrame(pos, direction);
+            if (frame is null) return null;
+
+            // ViewSourceを作成
+            foreach (var element in frame.Elements)
+            {
+                token.ThrowIfCancellationRequested();
+                var viewSource = _viewSourceMap.Get(element.Page, element.PagePart, element.PageDataSource);
+                var viewContentSize = ViewContentSizeFactory.Create(element, _elementScaleFactory.Create(frame));
+                var pictureSize = viewContentSize.GetPictureSize();
+                await viewSource.LoadAsync(pictureSize, token);
+            }
+        
+            // 先読み完了したフレームを返す
+            return frame;
+        }
+
 
         [Conditional("LOCAL_DEBUG")]
         private void Trace(string s)
