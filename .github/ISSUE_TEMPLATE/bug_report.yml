@@ -37,4 +37,4 @@ body:
       label: Error Log
       description: >
         If an ErrorLog.txt file exists, paste its contents here.
-  
+      render: text
