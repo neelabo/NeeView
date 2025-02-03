@@ -50,12 +50,22 @@ namespace NeeView
         private MediaPlayerPauseBit _pauseBits;
         private readonly System.Threading.Lock _lock = new();
         private bool _isPlaying;
-
+        private readonly RateCollection? _rates;
 
         public MediaPlayerOperator(IMediaPlayer player)
         {
             _player = player;
             //_player.ScrubbingEnabled = true;
+
+            if (_player.RateEnabled)
+            {
+                _rates = new RateCollection();
+                _rates.Selected = _player.Rate;
+                _rates.SubscribePropertyChanged(nameof(_rates.Selected), (s, e) =>
+                {
+                    _player.Rate = _rates.Selected > 0.0 ? _rates.Selected : 1.0;
+                });
+            }
 
             _player.MediaOpened += Player_MediaOpened;
             _player.MediaEnded += Player_MediaEnded;
@@ -153,9 +163,6 @@ namespace NeeView
                 }
             }
         }
-
-
-
 
         // [0..1]
         public double Volume
@@ -277,6 +284,11 @@ namespace NeeView
         public TrackCollection? SubtitleTracks
         {
             get => _player.Subtitles;
+        }
+
+        public RateCollection? Rates
+        {
+            get => _rates;
         }
 
 

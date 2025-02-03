@@ -17,6 +17,8 @@ namespace NeeView
         double Position { get; set; }
         bool ScrubbingEnabled { get; }
         double Volume { get; set; }
+        bool RateEnabled { get; }
+        double Rate { get; set; }
         TrackCollection? AudioTracks { get; }
         TrackCollection? Subtitles { get; }
         bool CanControlTracks { get; }

@@ -4,7 +4,7 @@ using System.ComponentModel;
 namespace NeeView
 {
     /// <summary>
-    /// 動画ページのりピートフラグのみ動画設定を使用する動画コントロール情報
+    /// 動画ページのリピートフラグのみ動画設定を使用する動画コントロール情報
     /// </summary>
     [NotifyPropertyChanged]
     public partial class PageMediaContext : IMediaContext

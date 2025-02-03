@@ -174,6 +174,18 @@ namespace NeeView
             }
         }
 
+        public bool RateEnabled => _player.RateEnabled;
+
+        public double Rate
+        {
+            get => _player.Rate;
+            set
+            {
+                if (_disposedValue) return;
+                _player.Rate = value;
+            }
+        }
+
         public bool IsRepeat
         {
             get => _mediaContext.IsRepeat;

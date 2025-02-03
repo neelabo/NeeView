@@ -140,6 +140,14 @@ namespace NeeView
             set { }
         }
 
+        public bool RateEnabled => false;
+
+        public double Rate
+        {
+            get { return 1.0; }
+            set { }
+        }
+
         public bool CanControlTracks => false;
         public TrackCollection? AudioTracks => null;
         public TrackCollection? Subtitles => null;

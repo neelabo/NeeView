@@ -120,6 +120,18 @@ namespace NeeView
             }
         }
 
+        public bool RateEnabled => true;
+
+        public double Rate
+        {
+            get { return _player.SpeedRatio; }
+            set
+            {
+                if (_disposedValue) return;
+                _player.SpeedRatio = value;
+            }
+        }
+
         public bool ScrubbingEnabled
         {
             get { return _player.ScrubbingEnabled; }

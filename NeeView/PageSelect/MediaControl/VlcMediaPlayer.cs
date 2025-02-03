@@ -224,7 +224,6 @@ namespace NeeView
             }
         }
 
-
         public Duration Duration
         {
             get { return _duration; }
@@ -234,7 +233,6 @@ namespace NeeView
                 SetProperty(ref _duration, value);
             }
         }
-
 
         public double Position
         {
@@ -280,6 +278,29 @@ namespace NeeView
                     if (_player.Audio.Volume != newVolume)
                     {
                         _player.Audio.Volume = newVolume;
+                    }
+                });
+            }
+        }
+
+        public bool RateEnabled => true;
+
+        public double Rate
+        {
+            get
+            {
+                if (_disposedValue) return 1.0;
+                return (double)_player.Rate;
+            }
+            set
+            {
+                if (_disposedValue) return;
+                var newRate = (float)value;
+                Task.Run(() =>
+                {
+                    if (0.01 < Math.Abs(_player.Rate - newRate))
+                    {
+                        _player.Rate = newRate;
                     }
                 });
             }

@@ -1,6 +1,7 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Windows.Input;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -42,7 +43,7 @@ namespace NeeView
                 {
                     AttachOperator(value);
                     RaisePropertyChanged();
-                    IsMoreMenuEnabled = _operator?.CanControlTracks == true;
+                    IsMoreMenuEnabled = _operator?.CanControlTracks == true || _operator?.Rates is not null;
                 }
             }
         }
@@ -52,7 +53,7 @@ namespace NeeView
             get { return _isMoreMenuEnabled; }
             set { SetProperty(ref _isMoreMenuEnabled, value); }
         }
-      
+
         public bool IsPlaying => _operator?.IsPlaying ?? false;
 
 
@@ -220,7 +221,8 @@ namespace NeeView
         {
             private readonly MediaControlViewModel _vm;
             private readonly ContextMenu _menu = new();
-            private readonly MatchingToBooleanConverter<TrackItem> _matchingConverter = new ();
+            private readonly MatchingToBooleanConverter<TrackItem> _matchingTrackItemConverter = new();
+            private readonly MatchingToBooleanConverter<double> _matchingDoubleConverter = new();
 
             public MediaPlayerMoreMenuDescription(MediaControlViewModel vm)
             {
@@ -239,32 +241,57 @@ namespace NeeView
 
                 if (_vm.Operator is null) return menu;
 
-                var audios = _vm.Operator.AudioTracks;
-                if (audios is not null)
+                if (_vm.Operator.CanControlTracks)
                 {
-                    foreach (var track in audios.Tracks)
+                    // audio tracks
+                    var audios = _vm.Operator.AudioTracks;
+                    if (audios is not null)
                     {
-                        menu.Items.Add(CreateTrackMenuItem(track, audios));
+                        foreach (var track in audios.Tracks)
+                        {
+                            menu.Items.Add(CreateTrackMenuItem(track, audios));
+                        }
                     }
-                }
-                else
-                {
-                    menu.Items.Add(new MenuItem() { Header = Properties.TextResources.GetString("MediaControl.MoreMenu.NoAudio"), IsEnabled = false });
+                    else
+                    {
+                        menu.Items.Add(new MenuItem() { Header = Properties.TextResources.GetString("MediaControl.MoreMenu.NoAudio"), IsEnabled = false });
+                    }
+
+                    menu.Items.Add(new Separator());
+
+                    // subtitle tracks
+                    var subtitles = _vm.Operator.SubtitleTracks;
+                    if (subtitles is not null)
+                    {
+                        foreach (var track in subtitles.Tracks)
+                        {
+                            menu.Items.Add(CreateTrackMenuItem(track, subtitles));
+                        }
+                    }
+                    else
+                    {
+                        menu.Items.Add(new MenuItem() { Header = Properties.TextResources.GetString("MediaControl.MoreMenu.NoSubtitle"), IsEnabled = false });
+                    }
+
+                    menu.Items.Add(new Separator());
                 }
 
-                menu.Items.Add(new Separator());
-
-                var subtitles = _vm.Operator.SubtitleTracks;
-                if (subtitles is not null)
+                // speed rates
+                var rates = _vm.Operator.Rates;
+                if (rates is not null)
                 {
-                    foreach (var track in subtitles.Tracks)
+                    var parent = new MenuItem() { Header = Properties.TextResources.GetString("MediaControl.Speed"), InputGestureText = RateCollection.GetDisplayString(rates.Selected, false) };
+                    menu.Items.Add(parent);
+                    foreach (var rate in rates.Rates)
                     {
-                        menu.Items.Add(CreateTrackMenuItem(track, subtitles));
+                        parent.Items.Add(CreateRateMenuItem(rate, rates));
                     }
                 }
-                else
+
+                // trim separator
+                if (menu.Items.Count > 0 && menu.Items[menu.Items.Count - 1] is Separator)
                 {
-                    menu.Items.Add(new MenuItem() { Header = Properties.TextResources.GetString("MediaControl.MoreMenu.NoSubtitle"), IsEnabled = false });
+                    menu.Items.RemoveAt(menu.Items.Count - 1);
                 }
 
                 return menu;
@@ -279,7 +306,7 @@ namespace NeeView
                 menuItem.SetBinding(MenuItem.IsCheckedProperty, new Binding(nameof(tracks.Selected))
                 {
                     Source = tracks,
-                    Converter = _matchingConverter,
+                    Converter = _matchingTrackItemConverter,
                     ConverterParameter = track,
                 });
 
@@ -287,24 +314,39 @@ namespace NeeView
 
                 return menuItem;
             }
+
+            private MenuItem CreateRateMenuItem(double rate, RateCollection rates)
+            {
+                var menuItem = new MenuItem()
+                {
+                    Header = RateCollection.GetDisplayString(rate, true)
+                };
+                menuItem.SetBinding(MenuItem.IsCheckedProperty, new Binding(nameof(rates.Selected))
+                {
+                    Source = rates,
+                    Converter = _matchingDoubleConverter,
+                    ConverterParameter = rate,
+                });
+
+                menuItem.Click += (s, e) => { rates.Selected = rate; };
+
+                return menuItem;
+            }
+
+            #endregion MoreMenu
         }
-
-        #endregion MoreMenu
-
     }
 
 
-
     public class MatchingToBooleanConverter<T> : IValueConverter
-        where T : class
     {
         public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var selectedItem = value as T;
-            var selfItem = parameter as T;
-
-            var result = selectedItem is not null && selectedItem == selfItem;
-            return result;
+            if (value is T v1 && parameter is T v2)
+            {
+                return EqualityComparer<T>.Default.Equals(v1, v2);
+            }
+            return false;
         }
 
         public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -312,7 +354,5 @@ namespace NeeView
             throw new NotImplementedException();
         }
     }
-
-
 
 }
