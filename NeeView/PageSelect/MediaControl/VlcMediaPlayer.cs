@@ -1,4 +1,11 @@
-﻿//#define DUMP_VLC_EVENT
+﻿// 開発用：VLCイベント出力
+//#define VLC_DUMP_EVEMT
+
+// プレイヤー単位のオーディオOFFをトラックで管理する
+//#define VLC_AUDIOENABLE_TRACK
+
+// プレイヤー単位のオーディオOFFをミュートで管理する
+#define VLC_AUDIOENABLE_MUTE
 
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
@@ -66,13 +73,24 @@ namespace NeeView
             var libDirectory = new DirectoryInfo(Config.Current.Archive.Media.LibVlcPath);
             if (!libDirectory.Exists) throw new DirectoryNotFoundException($"The directory containing libvlc.dll does not exist: {libDirectory.FullName}");
             _source = new VlcVideoSourceProvider(Application.Current.Dispatcher);
-            _source.CreatePlayer(libDirectory);
+
+            // dll version check
+            var versionInfo = FileVersionInfo.GetVersionInfo(Path.Combine(libDirectory.FullName, "libvlc.dll"));
+            if (versionInfo.FileMajorPart != 3) throw new NotSupportedException($"Not yet compatible with libvlc.dll version {versionInfo.FileVersion}. Only valid for version 3.x.");
+
+            var options = new List<string>();
+#if VLC_AUDIOENABLE_MUTE
+            // hotfix for libvlc 3.x issue
+            // https://code.videolan.org/videolan/vlc/-/issues/28194
+            options.Add("--aout=directsound");
+#endif
+            _source.CreatePlayer(libDirectory, options.ToArray());
             _player = _source.MediaPlayer;
 
             AttachPlayer();
 
 
-#if DUMP_VLC_EVENT
+#if VLC_DUMP_EVEMT
             _player.MediaChanged += (s, e) => Trace($"MediaChanged: {e.NewMedia}");
             _player.Opening += (s, e) => Trace($"Opening: ");
             _player.Buffering += (s, e) => Trace($"Buffering: {e.NewCache}");
@@ -162,7 +180,7 @@ namespace NeeView
                 if (_disposedValue) return;
                 if (SetProperty(ref _isAudioEnabled, value))
                 {
-                    UpdateAudioTrackActivity();
+                    UpdateAudioEnable();
                 }
             }
         }
@@ -499,7 +517,7 @@ namespace NeeView
             UpdatePlayed();
             UpdateMuted();
             UpdateTrackInfo();
-            UpdateAudioTrackActivity();
+            UpdateAudioEnable();
 
             ScrubbingEnabled = _player.IsSeekable;
 
@@ -554,18 +572,33 @@ namespace NeeView
         }
 
 
-        private void UpdateAudioTrackActivity()
+        private void UpdateAudioEnable()
         {
-            if (_audioTracks is null) return;
+            if (_disposedValue) return;
 
-            _audioTracks.IsEnabled = _isAudioEnabled;
+#if VLC_AUDIOENABLE_TRACK
+            if (_audioTracks is not null)
+            {
+                _audioTracks.IsEnabled = _isAudioEnabled;
+            }
+#endif
+#if VLC_AUDIOENABLE_MUTE
+            UpdateMuted();
+#endif
         }
 
         private void UpdateMuted()
         {
             if (_disposedValue) return;
 
-            Task.Run(() => { _player.Audio.IsMute = _isMuted; });
+            Task.Run(() =>
+            {
+                var isMute = _isMuted;
+#if VLC_AUDIOENABLE_MUTE
+                isMute = isMute || !_isAudioEnabled;
+#endif
+                _player.Audio.IsMute = isMute;
+            });
         }
 
         private void UpdateRepeat()
