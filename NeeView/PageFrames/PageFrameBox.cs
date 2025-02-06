@@ -586,7 +586,7 @@ namespace NeeView.PageFrames
                 case nameof(Context.IsSupportedWidePage):
                 case nameof(Context.WidePageStretch):
                 case nameof(Context.WidePageVerticalAlignment):
-                    UpdateContainers(PageFrameDirtyLevel.Replace, TransformMask.None, true, true);
+                    UpdateContainers(PageFrameDirtyLevel.Heavy, TransformMask.None, true, true);
                     break;
 
                 case nameof(Context.StretchMode):
@@ -610,7 +610,7 @@ namespace NeeView.PageFrames
                 case nameof(Context.FramePageSize):
                 case nameof(Context.IsPanorama):
                     MoveToFixPosition();
-                    UpdateContainers(PageFrameDirtyLevel.Replace, TransformMask.Point, true, true);
+                    UpdateContainers(PageFrameDirtyLevel.Heavy, TransformMask.Point, true, true);
                     break;
 
                 case nameof(Context.IsLoopPage):

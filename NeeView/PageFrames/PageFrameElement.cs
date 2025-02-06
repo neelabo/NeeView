@@ -128,7 +128,7 @@ namespace NeeView.PageFrames
             return other is not null
                 && Page == other.Page
                 && PageRange.Equals(other.PageRange)
-                && Direction == other.Direction;
+                && (PageRange.PartSize == 2 ||Direction == other.Direction);
         }
 
 
