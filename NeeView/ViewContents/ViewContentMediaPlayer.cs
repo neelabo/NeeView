@@ -20,6 +20,11 @@ namespace NeeView
         private readonly int _elementIndex;
         private bool _disposedValue;
         private readonly DisposableCollection _disposables = new();
+        private bool _isScrubbing;
+        private MediaPlayerPauseBit _pauseBits;
+        private readonly System.Threading.Lock _lock = new();
+        private bool _isPlaying;
+
 
         public ViewContentMediaPlayer(IMediaContext mediaContext, IMediaPlayer player, PageFrameActivity activity, int elementIndex)
         {
@@ -64,8 +69,13 @@ namespace NeeView
             _disposables.Add(_player.SubscribePropertyChanged(nameof(IMediaPlayer.Subtitles),
                 (s, e) => RaisePropertyChanged(nameof(Subtitles))));
 
+            _disposables.Add(_player.SubscribePropertyChanged(nameof(IMediaPlayer.Rate),
+                (s, e) => RaisePropertyChanged(nameof(Rate))));
+
             _disposables.Add(_activity.SubscribePropertyChanged(
                 (s, e) => Update()));
+
+            _isPlaying = true;
 
             Update();
         }
@@ -99,6 +109,8 @@ namespace NeeView
         public event PropertyChangedEventHandler? PropertyChanged;
 
 
+        public bool IsActive { get; set; }
+
         public bool IsEnabled
         {
             get => _player.IsEnabled;
@@ -123,11 +135,47 @@ namespace NeeView
 
         public bool HasVideo => _player.HasVideo;
 
-        public bool IsPlaying => _player.IsPlaying;
+        public bool IsPlaying
+        {
+            get { return _isPlaying; }
+            set
+            {
+                if (_disposedValue) return;
+                if (SetProperty(ref _isPlaying, value))
+                {
+                    UpdatePlaying();
+                }
+            }
+        }
 
         public bool ScrubbingEnabled
         {
             get => _player.ScrubbingEnabled;
+        }
+
+        public bool IsScrubbing
+        {
+            get { return _isScrubbing; }
+            set
+            {
+                if (_disposedValue) return;
+                if (_isScrubbing != value)
+                {
+                    _isScrubbing = value;
+                    if (IsActive)
+                    {
+                        if (_isScrubbing)
+                        {
+                            SetPauseFlag(MediaPlayerPauseBit.Scrubbing);
+                        }
+                        else
+                        {
+                            ResetPauseFlag(MediaPlayerPauseBit.Scrubbing);
+                        }
+                    }
+                    RaisePropertyChanged();
+                }
+            }
         }
 
         public Duration Duration => _player.Duration;
@@ -242,6 +290,46 @@ namespace NeeView
             _player.IsAudioEnabled = _activity.IsSelected && _elementIndex == 0;
         }
 
+        public void SetPauseFlag(MediaPlayerPauseBit bit)
+        {
+            lock (_lock)
+            {
+                _pauseBits |= bit;
+            }
+            UpdatePlaying();
+        }
+
+        public void ResetPauseFlag(MediaPlayerPauseBit bit)
+        {
+            lock (_lock)
+            {
+                _pauseBits &= ~bit;
+            }
+            UpdatePlaying();
+        }
+
+        /// <summary>
+        /// 再生状態更新
+        /// </summary>
+        private void UpdatePlaying()
+        {
+            if (_isPlaying && _pauseBits == MediaPlayerPauseBit.None)
+            {
+                _player.Play();
+            }
+            else
+            {
+                _player.Pause();
+            }
+        }
     }
 
+
+    [Flags]
+    public enum MediaPlayerPauseBit
+    {
+        None = 0,
+        Scrubbing = (1 << 0),
+        SetPosition = (1 << 1),
+    }
 }

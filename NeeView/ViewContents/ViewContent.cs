@@ -26,7 +26,7 @@ using System.Globalization;
 namespace NeeView
 {
 
-    public partial class ViewContent : ContentControl, IDisposable, IHasImageSource, IHasMediaPlayer, IHasScalingMode
+    public partial class ViewContent : ContentControl, IDisposable, IHasImageSource, IHasViewContentMediaPlayer, IHasScalingMode
     {
         private bool _initialized;
         private readonly PageFrameContext _context;
@@ -87,7 +87,7 @@ namespace NeeView
         public ViewContentState State { get; private set; }
         public PageBackgroundSource BackgroundSource => _backgroundSource;
 
-        public IMediaPlayer? Player => (_strategy as IHasMediaPlayer)?.Player;
+        public ViewContentMediaPlayer? Player => (_strategy as IHasViewContentMediaPlayer)?.Player;
         public ImageSource? ImageSource => (_strategy as IHasImageSource)?.ImageSource;
         public BitmapScalingMode? ScalingMode
         {

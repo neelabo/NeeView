@@ -314,13 +314,14 @@ namespace NeeView
             {
                 if (_disposedValue) return;
                 var newRate = (float)value;
-                Task.Run(() =>
+                if (0.01f < Math.Abs(_player.Rate - newRate))
                 {
-                    if (0.01 < Math.Abs(_player.Rate - newRate))
+                    Task.Run(() =>
                     {
                         _player.Rate = newRate;
-                    }
-                });
+                        RaisePropertyChanged();
+                    });
+                }
             }
         }
 

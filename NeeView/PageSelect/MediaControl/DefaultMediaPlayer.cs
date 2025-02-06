@@ -128,7 +128,11 @@ namespace NeeView
             set
             {
                 if (_disposedValue) return;
-                _player.SpeedRatio = value;
+                if (_player.SpeedRatio != value)
+                {
+                    _player.SpeedRatio = value;
+                    RaisePropertyChanged();
+                }
             }
         }
 

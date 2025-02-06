@@ -37,15 +37,13 @@ namespace NeeView
         {
         }
 
-        public MediaPlayerChanged(IMediaPlayer player, bool isLastStart)
+        public MediaPlayerChanged(ViewContentMediaPlayer player, bool isLastStart)
         {
             MediaPlayer = player;
-            //Uri = uri;
             IsLastStart = isLastStart;
         }
 
-        public IMediaPlayer? MediaPlayer { get; set; }
-        //public Uri? Uri { get; set; }
+        public ViewContentMediaPlayer? MediaPlayer { get; set; }
         public bool IsLastStart { get; set; }
         public bool IsValid => MediaPlayer != null;
         public bool IsMainMediaPlayer { get; init; }

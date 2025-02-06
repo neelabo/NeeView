@@ -155,7 +155,7 @@ namespace NeeView
             // # ここで？
             _viewComponent.PageFrameBoxPresenter.SubscribeViewContentChanged((s, e) =>
             {
-                var viewContent = e.ViewContents.FirstOrDefault() as IHasMediaPlayer;
+                var viewContent = e.ViewContents.FirstOrDefault() as IHasViewContentMediaPlayer;
                 //this.MediaControlView.SetSource(viewContent);
                 var player = viewContent?.Player;
                 if (player is not null && MainViewComponent.Current.PageFrameBoxPresenter.IsMedia)
@@ -802,9 +802,9 @@ namespace NeeView
             _isDirtyThumbnailListLayout = false;
 
             bool isPageSliderDock = !MainWindowModel.Current.CanHidePageSlider;
-            bool isThimbnailListDock = !Config.Current.FilmStrip.IsHideFilmStrip && isPageSliderDock;
+            bool isThumbnailListDock = !Config.Current.FilmStrip.IsHideFilmStrip && isPageSliderDock;
 
-            if (isThimbnailListDock)
+            if (isThumbnailListDock)
             {
                 this.LayerThumbnailListSocket.Content = null;
                 this.DockThumbnailListSocket.Content = this.ThumbnailListArea;

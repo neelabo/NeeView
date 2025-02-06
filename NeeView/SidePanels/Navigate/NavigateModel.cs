@@ -61,7 +61,7 @@ namespace NeeView
         {
             if (e.Action < ViewContentChangedAction.ContentLoading) return;
 
-            var viewContent = e.ViewContents.FirstOrDefault() as IHasMediaPlayer;
+            var viewContent = e.ViewContents.FirstOrDefault() as IHasViewContentMediaPlayer;
             var player = viewContent?.Player;
             if (player is not null && !MainViewComponent.Current.PageFrameBoxPresenter.IsMedia)
             {

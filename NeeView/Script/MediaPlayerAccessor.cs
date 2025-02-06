@@ -2,9 +2,9 @@
 {
     public record class MediaPlayerAccessor
     {
-        private readonly IMediaPlayer _player;
+        private readonly ViewContentMediaPlayer _player;
 
-        public MediaPlayerAccessor(IMediaPlayer player)
+        public MediaPlayerAccessor(ViewContentMediaPlayer player)
         {
             _player = player;
         }
@@ -62,23 +62,13 @@
         public bool IsPlaying
         {
             get => _player.IsPlaying;
-            set => AppDispatcher.Invoke(() =>
-            {
-                if (value)
-                {
-                    _player.Play();
-                }
-                else
-                {
-                    _player.Pause();
-                }
-            });
+            set => AppDispatcher.Invoke(() => _player.IsPlaying = value);
         }
 
         [WordNodeMember]
         public double Rate
         {
-            get => _player.Rate;
+            get => AppDispatcher.Invoke(() => _player.Rate);
             set => AppDispatcher.Invoke(() => _player.Rate = value);
         }
     }

@@ -1,6 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
-using NeeLaboratory.Threading.Jobs;
 using NeeView.PageFrames;
 using System;
 using System.Collections.Generic;
@@ -173,7 +172,7 @@ namespace NeeView
             _control.MoveTo(sender, page.Index);
         }
 
-#endregion
+        #endregion
 
         #region BookCommand : メディア操作
 
@@ -182,7 +181,7 @@ namespace NeeView
         /// </summary>
         /// <param name="page"></param>
         /// <returns></returns>
-        public IMediaPlayer? GetMediaPlayer(Page page)
+        public ViewContentMediaPlayer? GetMediaPlayer(Page page)
         {
             return _presenter.ViewContents.FirstOrDefault(e => e.Page == page)?.Player;
         }

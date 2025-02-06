@@ -43,7 +43,7 @@ namespace NeeView
                 {
                     AttachOperator(value);
                     RaisePropertyChanged();
-                    IsMoreMenuEnabled = _operator?.CanControlTracks == true || _operator?.Rates is not null;
+                    IsMoreMenuEnabled = _operator?.CanControlTracks == true || _operator?.RateEnabled == true;
                 }
             }
         }
@@ -277,14 +277,13 @@ namespace NeeView
                 }
 
                 // speed rates
-                var rates = _vm.Operator.Rates;
-                if (rates is not null)
+                if (_vm.Operator.RateEnabled)
                 {
-                    var parent = new MenuItem() { Header = Properties.TextResources.GetString("MediaControl.Speed"), InputGestureText = RateCollection.GetDisplayString(rates.Selected, false) };
+                    var parent = new MenuItem() { Header = Properties.TextResources.GetString("MediaControl.Speed"), InputGestureText = MediaRateTools.GetDisplayString(_vm.Operator.Rate, false) };
                     menu.Items.Add(parent);
-                    foreach (var rate in rates.Rates)
+                    foreach (var rate in MediaRateTools.Rates)
                     {
-                        parent.Items.Add(CreateRateMenuItem(rate, rates));
+                        parent.Items.Add(CreateRateMenuItem(rate, _vm.Operator));
                     }
                 }
 
@@ -315,25 +314,20 @@ namespace NeeView
                 return menuItem;
             }
 
-            private MenuItem CreateRateMenuItem(double rate, RateCollection rates)
+            private MenuItem CreateRateMenuItem(double rate, MediaPlayerOperator player)
             {
                 var menuItem = new MenuItem()
                 {
-                    Header = RateCollection.GetDisplayString(rate, true)
+                    Header = MediaRateTools.GetDisplayString(rate, true),
+                    IsChecked = Math.Abs(rate - player.Rate) < 0.01
                 };
-                menuItem.SetBinding(MenuItem.IsCheckedProperty, new Binding(nameof(rates.Selected))
-                {
-                    Source = rates,
-                    Converter = _matchingDoubleConverter,
-                    ConverterParameter = rate,
-                });
 
-                menuItem.Click += (s, e) => { rates.Selected = rate; };
-
+                menuItem.Click += (s, e) => player.Rate = rate;
                 return menuItem;
             }
 
             #endregion MoreMenu
+
         }
     }
 

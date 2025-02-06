@@ -4,28 +4,9 @@ using System.ComponentModel;
 
 namespace NeeView
 {
-    [NotifyPropertyChanged]
-    public partial class RateCollection : INotifyPropertyChanged
+    public static class MediaRateTools
     {
-        public List<double> _items = [2.0, 1.75, 1.5, 1.25, 1.0, 0.75, 0.5, 0.25];
-        private double _selected = 1.0;
-
-        public RateCollection()
-        {
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        public List<double> Rates => _items;
-
-        public double Selected
-        {
-            get { return _selected; }
-            set
-            {
-                SetProperty(ref _selected, value);
-            }
-        }
+        public static List<double> Rates { get; } = [2.0, 1.75, 1.5, 1.25, 1.0, 0.75, 0.5, 0.25];
 
         public static string GetDisplayString(double rate, bool list)
         {

@@ -58,7 +58,7 @@ namespace NeeView
             var mainContent = content.ViewContents.FirstOrDefault();
 
             // アニメーション停止
-            var medias = contents.Select(e => (e as IHasMediaPlayer)?.Player).WhereNotNull().Select(e => new MediaStorage(e, e.IsEnabled)).ToList();
+            var medias = contents.Select(e => (e as IHasViewContentMediaPlayer)?.Player).WhereNotNull().Select(e => new MediaStorage(e, e.IsEnabled)).ToList();
             foreach(var media in medias)
             {
                 media.Player.IsEnabled = false;

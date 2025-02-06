@@ -14,7 +14,7 @@ namespace NeeView
     }
 
 
-    public class MediaViewContentStrategy : IDisposable, IViewContentStrategy, IHasImageSource, IHasMediaPlayer, IHasScalingMode
+    public class MediaViewContentStrategy : IDisposable, IViewContentStrategy, IHasImageSource, IHasViewContentMediaPlayer, IHasScalingMode
     {
         private readonly ViewContent _viewContent;
 
@@ -42,7 +42,7 @@ namespace NeeView
 
         public ImageSource? ImageSource => _imageSource;
 
-        public IMediaPlayer Player => _mediaPlayer;
+        public ViewContentMediaPlayer Player => _mediaPlayer;
 
 
         public BitmapScalingMode? ScalingMode
