@@ -6,6 +6,7 @@ namespace NeeView
 {
     public interface IMediaPlayer : INotifyPropertyChanged, IDisposable
     {
+        bool IsDisposed { get; }
         bool HasAudio { get; }
         bool HasVideo { get; }
         bool IsEnabled { get; set; }

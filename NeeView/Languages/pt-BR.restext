@@ -2397,6 +2397,7 @@ Word.DefaultApp=Aplicativo padrão
 Word.Degree=graus
 Word.Delete=Excluir
 Word.Description=Descrição
+Word.DisposedInstance=
 Word.DotNetDateTime=Análise de data e hora do .NET
 Word.DotNetRegex=Expressão Regular .NET
 Word.Down=Descer

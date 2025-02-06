@@ -10,6 +10,9 @@
         }
 
         [WordNodeMember]
+        public bool IsDisposed => _player.IsDisposed;
+
+        [WordNodeMember]
         public double Duration
         {
             get => AppDispatcher.Invoke(() => _player.Duration.HasTimeSpan ? _player.Duration.TimeSpan.TotalSeconds : 0.0);
@@ -70,6 +73,13 @@
                     _player.Pause();
                 }
             });
+        }
+
+        [WordNodeMember]
+        public double Rate
+        {
+            get => _player.Rate;
+            set => AppDispatcher.Invoke(() => _player.Rate = value);
         }
     }
 }

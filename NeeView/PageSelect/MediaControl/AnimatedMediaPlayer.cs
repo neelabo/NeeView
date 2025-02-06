@@ -152,6 +152,8 @@ namespace NeeView
         public TrackCollection? AudioTracks => null;
         public TrackCollection? Subtitles => null;
 
+        public bool IsDisposed => _disposedValue;
+
 
         protected virtual void Dispose(bool disposing)
         {

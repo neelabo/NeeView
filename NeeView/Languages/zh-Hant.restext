@@ -2388,6 +2388,7 @@ Word.DefaultApp=預設應用程式
 Word.Degree=度
 Word.Delete=刪除
 Word.Description=描述
+Word.DisposedInstance=
 Word.DotNetDateTime=.NET的日期時間轉換
 Word.DotNetRegex=.NET的正則表達式
 Word.Down=下

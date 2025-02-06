@@ -64,7 +64,7 @@ namespace NeeView
         {
             get
             {
-                return BookOperation.Current.ViewPages.Select(e => new ViewPageAccessor(e, BookOperation.Current.GetMediaPlayer(e))).ToArray();
+                return BookOperation.Current.ViewPages.Select(e => new ViewPageAccessor(e)).ToArray();
             }
         }
 

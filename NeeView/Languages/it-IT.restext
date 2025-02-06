@@ -2403,6 +2403,7 @@ Word.DefaultApp=App di default
 Word.Degree=grado
 Word.Delete=Elimina
 Word.Description=Descrizione
+Word.DisposedInstance=
 Word.DotNetDateTime=Analizzare la data e l'ora in .NET
 Word.DotNetRegex=.NET Regular Expression
 Word.Down=Giù

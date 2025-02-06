@@ -2397,6 +2397,7 @@ Word.DefaultApp=Default app
 Word.Degree=degree
 Word.Delete=Delete
 Word.Description=Description
+Word.DisposedInstance=Disposed instance
 Word.DotNetDateTime=.NET date and time parsing
 Word.DotNetRegex=.NET Regular Expression
 Word.Down=Down

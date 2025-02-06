@@ -353,6 +353,9 @@ namespace NeeView
             }
         }
 
+        public bool IsDisposed => _disposedValue;
+
+
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposedValue)

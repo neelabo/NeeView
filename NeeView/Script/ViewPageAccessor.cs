@@ -3,11 +3,8 @@
     [DocumentableBaseClass(typeof(PageAccessor))]
     public record class ViewPageAccessor : PageAccessor
     {
-        private readonly IMediaPlayer? _mediaPlayer;
-
-        public ViewPageAccessor(Page page, IMediaPlayer? mediaPlayer) : base(page)
+        public ViewPageAccessor(Page page) : base(page)
         {
-            _mediaPlayer = mediaPlayer;
         }
 
         [WordNodeMember]
@@ -17,7 +14,14 @@
         public double Height => this.Source.GetContentPictureInfo()?.OriginalSize.Height ?? 0.0;
 
         [WordNodeMember]
-        public MediaPlayerAccessor? Player => _mediaPlayer is not null ? new MediaPlayerAccessor(_mediaPlayer) : null;
+        public MediaPlayerAccessor? Player
+        {
+            get
+            {
+                var player = BookOperation.Current.GetMediaPlayer(Source);
+                return player is not null ? new MediaPlayerAccessor(player) : null;
+            }
+        }
 
 
         [WordNodeMember]

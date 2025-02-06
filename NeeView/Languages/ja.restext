@@ -2388,6 +2388,7 @@ Word.DefaultApp=既定のアプリ
 Word.Degree=度
 Word.Delete=削除
 Word.Description=説明
+Word.DisposedInstance=破棄されたインスタンス
 Word.DotNetDateTime=.NET の日時変換
 Word.DotNetRegex=.NET の正規表現
 Word.Down=下

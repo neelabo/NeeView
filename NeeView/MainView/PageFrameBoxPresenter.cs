@@ -432,12 +432,13 @@ namespace NeeView
             ViewContentChanged?.Invoke(this, e);
 
             if (e.State < ViewContentState.Loaded) return;
-
+            
+            _viewContents = new List<ViewContent>(e.ViewContents);
+            
             var pages = e.ViewContents.Select(e => e.Page).Distinct().ToList();
             if (_viewPages.SequenceEqual(pages)) return;
-            
+
             _viewPages = pages;
-            _viewContents = new List<ViewContent>(e.ViewContents);
 
             RaiseViewPageChanged(new ViewPageChangedEventArgs(_viewPages));
         }
