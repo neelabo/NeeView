@@ -86,8 +86,8 @@ else {
 
 # タグ名生成
 if ($package.Name -match "^[^\d]+(.+)\.zip$") {
-    $release_name = $Matches[1]
-    $tag_name = $release_name.ToLower()
+    $release_name = "NeeView " + $Matches[1]
+    $tag_name = $Matches[1].ToLower()
 }
 else {
     throw "Cannot get tag name"

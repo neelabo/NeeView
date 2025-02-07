@@ -82,25 +82,37 @@ function Get-AppVersion($version) {
 }
 
 # get git log
-function Get-GitLog() {
+function Get-GitLog {
+    param (
+        [string]$IssuesUrl
+    )
+
 	$branch = Invoke-Expression "git rev-parse --abbrev-ref HEAD"
 	$descrive = Invoke-Expression "git tag" | Where-Object { $_ -match "^\d+\.\d+$" } | Select-Object -Last 1
 	$date = Invoke-Expression 'git log -1 --pretty=format:"%ad" --date=iso'
-	$result = Invoke-Expression "git log $descrive..head --encoding=Shift_JIS --pretty=format:`"%s`""
-	$result = $result | Where-Object { -not ($_ -match '^Merge  |^chore:|^docs:|^refactor:| ^-|^\.\.') } 
-	$result = $result | ForEach-Object { $_ -replace "#(\d+)", "[#`$1]($issuesUrl/`$1)" }
+	$result = Invoke-Expression "git log $descrive..head --encoding=$([Console]::OutputEncoding.WebName) --pretty=format:`"%s`""
+	$result = $result | Where-Object { -not ($_ -match '^Merge |^chore:|^docs:|^refactor:|^-|^\.\.') } 
+    #$result = $result | Select-Object -Unique
+    if ($IssuesUrl -ne "") {
+        $result = $result | ForEach-Object { $_ -replace "#(\d+)", "[#`$1]($IssuesUrl/`$1)" }
+    }
 
 	return "[${branch}] $descrive to head", $date, $result
 }
 
 # get git log (markdown)
-function Get-GitLogMarkdown($title) {
-	$result = Get-GitLog
+function Get-GitLogMarkdown {
+    param (
+        [string]$Title,
+        [string]$IssuesUrl
+    )
+
+	$result = Get-GitLog $IssuesUrl
 	$header = $result[0]
 	$date = $result[1]
 	$logs = $result[2]
 
-	"## $title"
+	"## $Title"
 	"### $header"
 	"Rev. $revision / $date"
 	""
@@ -387,7 +399,7 @@ function New-Readme {
 	$source += $thirdPartyLicenseContent
 
 	if ($target -eq "Canary") {
-		$changeLogContent = Get-GitLogMarkdown "$product $postfix - Changelog"
+		$changeLogContent = Get-GitLogMarkdown -Title "$product $postfix - Changelog"  -IssuesUrl $issuesUrl
 	}
 	else {
 		$changeLogContent = .\SelectChangelog.ps1 -Path "$readmeSource\changelog.md" -Culture $culture
