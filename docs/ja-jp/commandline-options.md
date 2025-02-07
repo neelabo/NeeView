@@ -16,7 +16,6 @@ Option|Description
 \-s, \-\-slideshow[=off\|on]|スライドショウを開始するかを指定します
 \-v, \-\-version|バージョン情報を表示します
 \-x, \-\-setting=\<string\>|設定ファイル "UserSetting.json" のパスを指定します
-\-\-clear\-registry|NeeView 用のレジストリをクリアする
 \-\-script=\<string\>|指定されたスクリプト ファイルを起動時に実行します。'script:\foobar.nvjs' と指定することでスクリプト フォルダーのファイルを指定できます。
 \-\-window=\<normal\|min\|max\|full\>|指定されたウィンドウ状態で起動します
 \-\-|オプション リストの終りを示す。これ以後の引数はファイル名とみなされます
