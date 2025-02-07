@@ -187,6 +187,7 @@ namespace NeeView.PageFrames
         public FrameworkElement ViewElement => _contentCanvas;
         public TransformGroup ViewTransform => _viewTransform;
         public TransformGroup CalcTransform => _calcTransform;
+        public BaseScaleTransform BaseScaleTransform => _baseScaleTransform;
 
         public bool IsStaticFrame => _context.IsStaticFrame;
 

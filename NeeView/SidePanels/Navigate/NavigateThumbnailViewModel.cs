@@ -228,25 +228,27 @@ namespace NeeView
             var transformContext = _presenter.CreateContentDragTransformContext(false);
             if (transformContext is null) return;
 
+            var baseScale = 1.0;
             var frameAngle = 0.0;
             var pageFrameContent = transformContext.GetPageFrameContent();
             if (pageFrameContent is not null)
             {
+                baseScale = pageFrameContent.BaseScaleTransform.Scale;
                 frameAngle = pageFrameContent.PageFrame.Angle;
             }
 
-            LookAt(transformContext.Transform, frameAngle, new Point(x, y));
+            LookAt(transformContext.Transform, baseScale, frameAngle, new Point(x, y));
         }
 
-        private void LookAt(ITransformControl transform, double frameAngle, Point point)
+        private void LookAt(ITransformControl transform, double scale, double angle, Point point)
         {
             var transformGroup = new TransformGroup();
-            var scaleX = transform.Scale * (transform.IsFlipHorizontal ? -1.0 : 1.0);
-            var scaleY = transform.Scale * (transform.IsFlipVertical ? -1.0 : 1.0);
+            var scaleX = scale * transform.Scale * (transform.IsFlipHorizontal ? -1.0 : 1.0);
+            var scaleY = scale * transform.Scale * (transform.IsFlipVertical ? -1.0 : 1.0);
             transformGroup.Children.Add(new ScaleTransform(scaleX, scaleY));
             transformGroup.Children.Add(new RotateTransform(transform.Angle));
 
-            transformGroup.Children.Add(new RotateTransform(frameAngle));
+            transformGroup.Children.Add(new RotateTransform(angle));
 
             var pos = transformGroup.Transform(point);
             transform.SetPoint(pos, TimeSpan.Zero);
