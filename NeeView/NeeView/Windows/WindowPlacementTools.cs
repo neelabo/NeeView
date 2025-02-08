@@ -1,9 +1,12 @@
-﻿// from http://grabacr.net/archives/1585
+﻿//#define LOCAL_DEBUG
+
+// from http://grabacr.net/archives/1585
 using NeeView.Interop;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -21,10 +24,8 @@ namespace NeeView.Windows
             var hwnd = new WindowInteropHelper(window).Handle;
             if (hwnd == IntPtr.Zero) throw new InvalidOperationException();
 
-            if (window is not IDpiScaleProvider dpiProvider) throw new ArgumentException($"need window has IDpiProvider.");
-
             NativeMethods.GetWindowPlacement(hwnd, out WINDOWPLACEMENT raw);
-            ////Debug.WriteLine($"WindowPlacement.Store: Native.WindowPlacement: {raw}");
+            Trace($"Store: Native.WindowPlacement: {raw}");
 
             if (withAeroSnap)
             {
@@ -43,13 +44,14 @@ namespace NeeView.Windows
                 }
             }
 
-            // DPI補正
-            var dpi = dpiProvider.GetDpiScale();
+            // NOTE: Window 生成時の SetWindowPlacement() でWindowサイズにのみDPI補正が適用されるようなので、サイズは論理サイズで保存する
+            var dpi = window.GetDpiScale();
             raw.normalPosition.Width = (int)(raw.normalPosition.Width / dpi.DpiScaleX);
             raw.normalPosition.Height = (int)(raw.normalPosition.Height / dpi.DpiScaleY);
-            ////Debug.WriteLine($"WindowPlacement.Restore: WIDTH: {raw.normalPosition.Width}, DPI: {dpi.DpiScaleX}");
 
-            return ConvertToWindowPlacement(raw);
+            var placement = ConvertToWindowPlacement(raw);
+            Trace($"Store: Placement={placement}");
+            return placement;
         }
 
         // from http://oldworldgarage.web.fc2.com/programing/tip0006_RestoreWindow.html
@@ -102,21 +104,16 @@ namespace NeeView.Windows
         public static void RestoreWindowPlacement(Window window, WindowPlacement placement)
         {
             if (placement == null || !placement.IsValid()) return;
-
-            if (window is not IDpiScaleProvider dpiProvider) throw new ArgumentException($"need window has IDpiProvider.");
+            Trace($"Restore: Placement={placement}");
 
             var hwnd = new WindowInteropHelper(window).Handle;
             var raw = ConvertToNativeWindowPlacement(placement);
-
-            // DPI補正
-            var dpi = dpiProvider.GetDpiScale();
-            raw.normalPosition.Width = (int)(raw.normalPosition.Width * dpi.DpiScaleX + 0.5);
-            raw.normalPosition.Height = (int)(raw.normalPosition.Height * dpi.DpiScaleY + 0.5);
-            ////Debug.WriteLine($"WindowPlacement.Restore: WIDTH: {raw.normalPosition.Width}, DPI: {dpi.DpiScaleX}");
-
+            raw.ShowCmd = ShowWindowCommands.SW_HIDE; // 設定のみ
             NativeMethods.SetWindowPlacement(hwnd, ref raw);
-        }
 
+            // WindowState を設定
+            window.WindowState = placement.WindowState;
+        }
 
         private static WindowPlacement ConvertToWindowPlacement(WINDOWPLACEMENT raw)
         {
@@ -159,6 +156,12 @@ namespace NeeView.Windows
                 WindowState.Maximized => ShowWindowCommands.SW_SHOWMAXIMIZED,
                 _ => ShowWindowCommands.SW_SHOWNORMAL,
             };
+        }
+
+        [Conditional("LOCAL_DEBUG")]
+        private static void Trace(string format, params object[] args)
+        {
+            Debug.WriteLine($"{nameof(WindowPlacementTools)}: {string.Format(CultureInfo.InvariantCulture, format, args)}");
         }
     }
 

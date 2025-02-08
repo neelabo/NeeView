@@ -1,5 +1,9 @@
 ﻿//#define LOCAL_DEBUG
 
+// Window.BorderThickness を使った最大化ウィンドウサイズ調整を行う。
+// 未定義のときは Windows イベントレベルでクライアント領域サイズ調整を行う。
+#define USE_WINDOW_BORDER
+
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -20,6 +24,7 @@ namespace NeeView.Windows
         private readonly Window _window;
         private readonly WindowChrome _windowChrome;
         private readonly Thickness _resizeBorderThickness;
+        private Thickness _windowBorderThickness;
 
         public WindowChromePatch(Window window, WindowChrome windowChrome)
         {
@@ -43,8 +48,37 @@ namespace NeeView.Windows
 
         private void Window_StateChanged(object? sender, EventArgs e)
         {
+            UpdateWindowBorder();
+
             // NOTE: タブレットモードでのフルスクリーン時に画面端のカーソル座標が取得できなくなる現象の対策として ResizeBorderThickness を 0 にする。
             _windowChrome.ResizeBorderThickness = _window.WindowState == WindowState.Maximized ? new Thickness(0) : _resizeBorderThickness;
+        }
+
+        private void UpdateWindowBorder()
+        {
+            if (_window.WindowState == WindowState.Maximized)
+            {
+                var dpiScale = _window.GetDpiScale();
+                Trace($"Window.BorderThickness(raw): {_windowBorderThickness}");
+                Trace($"Window.DpiScale: {dpiScale.DpiScaleX}, {dpiScale.DpiScaleY}");
+                if ((dpiScale.DpiScaleX != 1.0 || dpiScale.DpiScaleY != 1.0) && dpiScale.DpiScaleX > 0.0 && dpiScale.DpiScaleY > 0.0)
+                {
+                    var left = _windowBorderThickness.Left / dpiScale.DpiScaleX;
+                    var top = _windowBorderThickness.Top / dpiScale.DpiScaleY;
+                    var right = _windowBorderThickness.Right / dpiScale.DpiScaleX;
+                    var bottom = _windowBorderThickness.Bottom / dpiScale.DpiScaleY;
+                    _window.BorderThickness = new Thickness(left, top, right, bottom);
+                }
+                else
+                {
+                    _window.BorderThickness = _windowBorderThickness;
+                }
+            }
+            else
+            {
+                _window.BorderThickness = default;
+            }
+            Trace($"Window.BorderThickness: {_window.BorderThickness}");
         }
 
         private bool AddHook()
@@ -135,6 +169,10 @@ namespace NeeView.Windows
                 return IntPtr.Zero;
             }
 
+#if USE_WINDOW_BORDER
+            SetWindowBorder(nonClientCalcSize.rgrc[0], workArea);
+            return IntPtr.Zero;
+#else
             nonClientCalcSize.rgrc[0] = workArea;
             nonClientCalcSize.rgrc[1] = workArea;
             nonClientCalcSize.rgrc[2] = workArea;
@@ -142,6 +180,22 @@ namespace NeeView.Windows
 
             handled = true;
             return (IntPtr)(WindowValidRects.WVR_ALIGNTOP | WindowValidRects.WVR_ALIGNLEFT | WindowValidRects.WVR_VALIDRECTS);
+#endif
+        }
+
+        /// <summary>
+        /// 最大化 Window のボーダーサイズ指定
+        /// </summary>
+        /// <param name="clientSize"></param>
+        /// <param name="screenSize"></param>
+        private void SetWindowBorder(RECT clientSize, RECT screenSize)
+        {
+            var left = Math.Max(screenSize.left - clientSize.left, 0.0);
+            var top = Math.Max(screenSize.top - clientSize.top, 0.0);
+            var right = Math.Max(clientSize.right - screenSize.right, 0.0);
+            var bottom = Math.Max(clientSize.bottom - screenSize.bottom, 0.0);
+            _windowBorderThickness = new Thickness(left, top, right, bottom);
+            AppDispatcher.BeginInvoke(() => UpdateWindowBorder());
         }
 
         /// <summary>
