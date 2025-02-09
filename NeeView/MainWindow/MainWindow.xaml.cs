@@ -440,8 +440,6 @@ namespace NeeView
 
             MessageDialog.OwnerWindow = this;
 
-            App.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
-
             _dpiProvider.SetDipScale(VisualTreeHelper.GetDpi(this));
 
             MainViewManager.Current.Update(false);

@@ -85,6 +85,8 @@ namespace NeeView
 
             var bootLock = BootProcessLock.Lock();
 
+            this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
             try
             {
                 // [開発用] ログ出力設定
@@ -122,6 +124,8 @@ namespace NeeView
             }
 
             Trace.WriteLine($"App.Initialized: {Stopwatch.ElapsedMilliseconds}ms");
+
+            this.ShutdownMode = ShutdownMode.OnMainWindowClose;
 
             // メインウィンドウ起動
             var mainWindow = new MainWindow();
