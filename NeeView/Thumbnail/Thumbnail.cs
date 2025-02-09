@@ -67,16 +67,36 @@ namespace NeeView
         public Thumbnail(ArchiveEntry entry)
         {
             // NOTE: シンボリックリンクはターゲットのファイル情報を使う
-            var linkTarget = entry.ResolveLinkTarget();
-
-            var path = linkTarget?.FullName ?? entry.TargetPath;
-
             // NOTE: ディレクトリは更新日をサイズとする
-            var length = entry.IsDirectory
-                ? (linkTarget?.LastWriteTime ?? entry.LastWriteTime).ToBinary()
-                : (linkTarget as FileInfo)?.Length ?? entry.Length;
 
-            _header = new ThumbnailCacheHeader(path, length, null, Config.Current.Thumbnail.GetThumbnailImageGenerateHash());
+            try
+            {
+                var linkTarget = entry.ResolveLinkTarget();
+                if (linkTarget is not null)
+                {
+                    if (linkTarget.Exists)
+                    {
+                        var path = linkTarget.FullName;
+                        var length = linkTarget.Attributes.HasFlag(FileAttributes.Directory) ? linkTarget.LastWriteTime.ToBinary() : (linkTarget as FileInfo)?.Length ?? 0;
+                        _header = new ThumbnailCacheHeader(path, length, null, Config.Current.Thumbnail.GetThumbnailImageGenerateHash());
+                    }
+                    else
+                    {
+                        _header = ThumbnailCacheHeader.None;
+                    }
+                }
+                else
+                {
+                    var path = entry.TargetPath;
+                    var length = entry.IsDirectory ? entry.LastWriteTime.ToBinary() : entry.Length;
+                    _header = new ThumbnailCacheHeader(path, length, null, Config.Current.Thumbnail.GetThumbnailImageGenerateHash());
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                _header = ThumbnailCacheHeader.None;
+            }
         }
 
 
@@ -254,7 +274,6 @@ namespace NeeView
                 return;
             }
 #endif
-
             var image = await ThumbnailCache.Current.LoadAsync(_header, token);
             Trace($"Initialize: from cache={_header.Key}: {(image == null ? "Miss" : "Hit!")}");
             Image = image;

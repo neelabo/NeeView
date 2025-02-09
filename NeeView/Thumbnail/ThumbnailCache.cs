@@ -195,6 +195,7 @@ namespace NeeView
         {
             if (_disposedValue) return null;
             if (!IsEnabled) return null;
+            if (!header.IsValid()) return null;
 
             var connection = Open();
             var record = connection != null ? await connection.LoadAsync(header, token) : null;
@@ -229,6 +230,7 @@ namespace NeeView
         {
             if (_disposedValue) return;
             if (!IsEnabled) return;
+            if (!header.IsValid()) return;
 
             lock (_lockSaveQueue)
             {

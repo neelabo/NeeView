@@ -7,12 +7,15 @@ namespace NeeView
     /// </summary>
     public class ThumbnailCacheHeader
     {
-        public ThumbnailCacheHeader(string name, long length, string? appendix, int generateHasn)
+        public static ThumbnailCacheHeader None { get; } = new("", 0, null, 0);
+
+
+        public ThumbnailCacheHeader(string name, long length, string? appendix, int generateHash)
         {
             Key = appendix != null ? name + ":" + appendix : name;
             Size = length;
             AccessTime = DateTime.Now;
-            GenerateHash = generateHasn;
+            GenerateHash = generateHash;
         }
 
         /// <summary>
@@ -34,5 +37,14 @@ namespace NeeView
         /// サムネイル画像生成パラメータ一致チェック用ハッシュ
         /// </summary>
         public int GenerateHash { get; private set; }
+
+        /// <summary>
+        /// 有効判定
+        /// </summary>
+        /// <returns></returns>
+        public bool IsValid()
+        {
+            return !string.IsNullOrEmpty(Key);
+        }
     }
 }
