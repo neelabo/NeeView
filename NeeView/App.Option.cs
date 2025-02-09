@@ -195,6 +195,11 @@ namespace NeeView
             Dialog = dialog;
         }
 
+        public OperationCanceledWithDialogException(string? message, MessageDialog dialog, Exception innerException) : base(message, innerException)
+        {
+            Dialog = dialog;
+        }
+
         public MessageDialog Dialog { get; }
 
         public void ShowDialog()

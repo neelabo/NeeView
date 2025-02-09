@@ -83,7 +83,8 @@ namespace NeeView
             Trace.WriteLine($"Trace: Start ({nowTime})");
 #endif
 
-            var bootLock = BootProcessLock.Lock();
+            // 起動処理排他ロック取得。時間内 (30sec) に獲得できなければアプリ終了
+            var bootLock = await BootProcessLockAsync(30 * 1000);
 
             this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
@@ -137,6 +138,24 @@ namespace NeeView
             MessageDialog.IsShowInTaskBar = false;
         }
 
+        /// <summary>
+        /// 排他起動処理用のロック取得
+        /// </summary>
+        /// <param name="timeout">タイムアウト時間(ms)</param>
+        /// <returns></returns>
+        /// <exception cref="TimeoutException"></exception>
+        private static async Task<IDisposable> BootProcessLockAsync(int timeout)
+        {
+            try
+            {
+                return await BootProcessLock.LockAsync(timeout);
+            }
+            catch (TimeoutException ex)
+            {
+                var message = $"NeeView is terminated because it could not be started within {(int)(timeout / 1000)} seconds. Check Task Manager and terminate any other NeeView.exe processes that are still running.";
+                throw new TimeoutException(message, ex);
+            }
+        }
 
         /// <summary> 
         /// 初期化 
@@ -195,7 +214,7 @@ namespace NeeView
 
             // ensure UserSetting
             setting ??= CreateUserSetting(settingResource);
-            UserSettingTools.Restore(setting, replaceConfig:true);
+            UserSettingTools.Restore(setting, replaceConfig: true);
 
             // fix language
             if (_option.Language is null)
