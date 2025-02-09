@@ -129,6 +129,7 @@ namespace NeeView
                 Length = info is FileInfo fileInfo ? fileInfo.Length : -1,
                 CreationTime = info.CreationTime,
                 LastWriteTime = info.LastWriteTime,
+                HasReparsePoint = info.Attributes.HasFlag(FileAttributes.ReparsePoint)
             };
 
             return entry;

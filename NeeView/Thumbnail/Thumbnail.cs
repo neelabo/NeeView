@@ -66,9 +66,17 @@ namespace NeeView
 
         public Thumbnail(ArchiveEntry entry)
         {
+            // NOTE: シンボリックリンクはターゲットのファイル情報を使う
+            var linkTarget = entry.ResolveLinkTarget();
+
+            var path = linkTarget?.FullName ?? entry.TargetPath;
+
             // NOTE: ディレクトリは更新日をサイズとする
-            var length = entry.IsDirectory ? entry.LastWriteTime.ToBinary() : entry.Length;
-            _header = new ThumbnailCacheHeader(entry.TargetPath, length, null, Config.Current.Thumbnail.GetThumbnailImageGenerateHash());
+            var length = entry.IsDirectory
+                ? (linkTarget?.LastWriteTime ?? entry.LastWriteTime).ToBinary()
+                : (linkTarget as FileInfo)?.Length ?? entry.Length;
+
+            _header = new ThumbnailCacheHeader(path, length, null, Config.Current.Thumbnail.GetThumbnailImageGenerateHash());
         }
 
 

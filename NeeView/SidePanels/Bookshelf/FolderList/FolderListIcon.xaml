@@ -55,7 +55,7 @@
             <Grid Width="18" Height="18" Margin="2,0,0,0" Visibility="{Binding IsDirectory, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Image Source="{StaticResource fic_folder}" Width="18" Height="18"/>
             </Grid>
-            <Grid Width="18" Height="18" Margin="2,0,0,0" Visibility="{Binding IsShortcut, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid Width="18" Height="18" Margin="2,0,0,0" Visibility="{Binding IsLink, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Image Source="{StaticResource fic_arrow_forward_24px}" Width="10" Height="10" Margin="0,2,4,2"/>
             </Grid>
             <Grid Width="18" Height="18" Margin="2,0,0,2" Visibility="{Binding IsPlaylist, Converter={StaticResource BooleanToVisibilityConverter}}">

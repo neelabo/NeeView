@@ -134,7 +134,7 @@ namespace NeeView
         {
             if (e == null || !e.Exists) return null;
 
-            return new FileFolderItem(_isOverlayEnabled)
+            var item = new FileFolderItem(_isOverlayEnabled)
             {
                 Type = FolderItemType.Directory,
                 Place = _place,
@@ -146,6 +146,13 @@ namespace NeeView
                 Attributes = FolderItemAttribute.Directory,
                 IsReady = true
             };
+
+            if (e.Attributes.HasFlag(FileAttributes.ReparsePoint))
+            {
+                item.Attributes |= FolderItemAttribute.ReparsePoint;
+            }
+
+            return item;
         }
 
 
@@ -186,6 +193,11 @@ namespace NeeView
                     item.Type = FolderItemType.Playlist;
                     item.Attributes = FolderItemAttribute.Playlist;
                     item.Length = -1;
+                }
+
+                if (e.Attributes.HasFlag(FileAttributes.ReparsePoint))
+                {
+                    item.Attributes |= FolderItemAttribute.ReparsePoint;
                 }
 
                 return item;

@@ -29,6 +29,7 @@ namespace NeeView
         ReadOnly = (1 << 8),
         Playlist = (1 << 9),
         PlaylistMember = (1 << 10),
+        ReparsePoint = (1 << 11),
     }
 
     /// <summary>
@@ -109,6 +110,7 @@ namespace NeeView
         public bool IsDirectory => (Attributes & FolderItemAttribute.Directory) == FolderItemAttribute.Directory;
         public bool IsShortcut => (Attributes & FolderItemAttribute.Shortcut) == FolderItemAttribute.Shortcut;
         public bool IsPlaylist => (Attributes & FolderItemAttribute.Playlist) == FolderItemAttribute.Playlist;
+        public bool IsLink => (Attributes & (FolderItemAttribute.ReparsePoint | FolderItemAttribute.Shortcut)) != FolderItemAttribute.None;
 
         // 種類。ソート用
         public FolderItemType Type { get; set; }

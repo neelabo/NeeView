@@ -220,6 +220,25 @@ namespace NeeView
         /// </remarks>
         public virtual ArchiveEntry TargetArchiveEntry => this;
 
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    _preExtractMemoryKey?.Dispose();
+                }
+                _disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
         /// <summary>
         /// エントリ名の正規化
         /// </summary>
@@ -559,24 +578,18 @@ namespace NeeView
             }
         }
 
-        protected virtual void Dispose(bool disposing)
+        /// <summary>
+        /// シンボリックリンクを解決したファイル情報を返す
+        /// </summary>
+        /// <remarks>
+        /// ファイルシステム限定
+        /// </remarks>
+        /// <returns></returns>
+        public virtual FileSystemInfo? ResolveLinkTarget()
         {
-            if (!_disposedValue)
-            {
-                if (disposing)
-                {
-                    _preExtractMemoryKey?.Dispose();
-                }
-                _disposedValue = true;
-            }
+            return null;
         }
 
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
     }
-
 }
 
