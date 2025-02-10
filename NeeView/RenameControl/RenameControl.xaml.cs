@@ -22,11 +22,10 @@ namespace NeeView
     {
         private static readonly char[] _invalidChars = System.IO.Path.GetInvalidFileNameChars();
         private readonly RenameManager _manager;
-        private int _keyCount;
         private bool _closed;
         private bool _isInvalidFileNameChars;
         private bool _isInvalidSeparatorChars;
-        private bool _isSeleftFileNameBody;
+        private bool _isSelectFileNameBody;
         private bool _isHideExtension;
         private readonly string _oldValue;
         private string _extension = "";
@@ -82,10 +81,10 @@ namespace NeeView
         }
 
         // 拡張子を除いた部分を選択
-        public bool IsSeleftFileNameBody
+        public bool IsSelectFileNameBody
         {
-            get { return _isSeleftFileNameBody && !_isHideExtension; }
-            set { SetProperty(ref _isSeleftFileNameBody, value); }
+            get { return _isSelectFileNameBody && !_isHideExtension; }
+            set { SetProperty(ref _isSelectFileNameBody, value); }
         }
 
         // 拡張子を非表示
@@ -239,7 +238,7 @@ namespace NeeView
         private void RenameTextBox_Loaded(object? sender, RoutedEventArgs e)
         {
             // 拡張子以外を選択状態にする
-            string name = this.IsSeleftFileNameBody ? LoosePath.GetFileNameWithoutExtension(Text) : Text;
+            string name = this.IsSelectFileNameBody ? LoosePath.GetFileNameWithoutExtension(Text) : Text;
             this.RenameTextBox.Select(0, name.Length);
 
             // 表示とともにフォーカスする
@@ -252,12 +251,6 @@ namespace NeeView
 
         private void RenameTextBox_PreviewKeyDown(object? sender, KeyEventArgs e)
         {
-            // 最初の方向入力に限りカーソル位置を固定する
-            if (_keyCount == 0 && (e.Key == Key.Up || e.Key == Key.Down || e.Key == Key.Left || e.Key == Key.Right))
-            {
-                this.RenameTextBox.Select(this.RenameTextBox.SelectionStart + this.RenameTextBox.SelectionLength, 0);
-                _keyCount++;
-            }
         }
 
         private async void RenameTextBox_KeyDown(object? sender, KeyEventArgs e)

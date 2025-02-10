@@ -23,7 +23,7 @@ namespace NeeView
             if (item.IsFileSystem())
             {
                 this.IsInvalidFileNameChars = true;
-                this.IsSeleftFileNameBody = !item.IsDirectory;
+                this.IsSelectFileNameBody = !item.IsDirectory;
                 this.IsHideExtension = item.IsHideExtension();
             }
             else if (item.Attributes.HasFlag(FolderItemAttribute.Bookmark | FolderItemAttribute.Directory))

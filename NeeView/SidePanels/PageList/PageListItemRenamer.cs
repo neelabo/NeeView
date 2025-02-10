@@ -35,7 +35,7 @@ namespace NeeView
         {
             if (item.ArchiveEntry.IsFileSystem)
             {
-                this.IsSeleftFileNameBody = !item.ArchiveEntry.IsDirectory;
+                this.IsSelectFileNameBody = !item.ArchiveEntry.IsDirectory;
                 this.IsInvalidFileNameChars = true;
                 _isFileSystem = true;
             }
