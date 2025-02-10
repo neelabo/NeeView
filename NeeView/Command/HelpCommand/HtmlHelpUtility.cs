@@ -5,8 +5,11 @@ using System.Windows.Resources;
 
 namespace NeeView
 {
-    public static class HtmlHelpUtility
+    public static partial class HtmlHelpUtility
     {
+        [GeneratedRegex(@"\s+")]
+        private static partial Regex _spaceRegex { get; }
+
         /// <summary>
         /// ヘルプ用HTMLヘッダ生成
         /// </summary>
@@ -20,7 +23,7 @@ namespace NeeView
             using (var sr = new StreamReader(info.Stream))
             {
                 stylesheet = sr.ReadToEnd();
-                stylesheet = new Regex(@"\s+").Replace(stylesheet, " ");
+                stylesheet = _spaceRegex.Replace(stylesheet, " ");
             }
 
             string s = "<!DOCTYPE html>\n" +
@@ -40,6 +43,7 @@ namespace NeeView
         {
             return @"</html>";
         }
+
     }
 }
 

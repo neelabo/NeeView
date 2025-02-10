@@ -18,7 +18,7 @@ namespace NeeView
     /// <summary>
     /// フォルダーエントリコレクション
     /// </summary>
-    public class FolderEntryCollection : FolderCollection, IDisposable
+    public partial class FolderEntryCollection : FolderCollection, IDisposable
     {
         private FileSystemWatcher? _fileSystemWatcher;
         private readonly FolderCollectionEngine? _engine;
@@ -132,10 +132,11 @@ namespace NeeView
 
 
         // 分割アーカイブフィルタ用
-        private class MultipleArchive
+        private partial class MultipleArchive
         {
             // .partXX.rar のみ対応
-            private static readonly Regex _regex = new(@"^(.+)\.part(\d+)\.rar$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+            [GeneratedRegex(@"^(.+)\.part(\d+)\.rar$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+            private static partial Regex _regex { get; }
 
             public FolderItem FolderItem { get; set; }
             public string? Key { get; set; }

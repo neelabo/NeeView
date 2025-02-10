@@ -24,6 +24,14 @@ namespace NeeView
     /// </summary>
     public static partial class FileIO
     {
+        [GeneratedRegex(@"^(CON|PRN|AUX|NUL|COM[0-9]|LPT[0-9])(\.|$)", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+        private static partial Regex _unavailableFileNameRegex { get; }
+
+        [GeneratedRegex(@"^(.+)\((\d+)\)$")]
+        private static partial Regex _fileNumberRegex { get; }
+
+
+
         [GeneratedRegex(@"[/\\]")]
         private static partial Regex _separateRegex { get; }
 
@@ -164,8 +172,7 @@ namespace NeeView
             var extension = isFile ? Path.GetExtension(path) : "";
             int count = 1;
 
-            var regex = new Regex(@"^(.+)\((\d+)\)$");
-            var match = regex.Match(filename);
+            var match = _fileNumberRegex.Match(filename);
             if (match.Success)
             {
                 filename = match.Groups[1].Value.Trim();
@@ -463,7 +470,7 @@ namespace NeeView
             }
 
             // ファイル名に使用できない
-            var match = new Regex(@"^(CON|PRN|AUX|NUL|COM[0-9]|LPT[0-9])(\.|$)", RegexOptions.IgnoreCase).Match(newName);
+            var match = _unavailableFileNameRegex.Match(newName);
             if (match.Success)
             {
                 if (showConfirmDialog)

@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace NeeView
 {
-    public class ScriptCommandSource
+    public partial class ScriptCommandSource
     {
         public const string Extension = ".nvjs";
         public const string OnStartupFilename = "OnStartup";
@@ -12,8 +12,11 @@ namespace NeeView
         public const string OnPageChangedFilename = "OnPageChanged";
         public const string OnWindowStateChangedFilename = "OnWindowStateChanged";
 
-        private static readonly Regex _regexCommentLine = new(@"^\s*/{2,}");
-        private static readonly Regex _regexDocComment = new(@"^\s*/{2,}\s*(@\w+)\s+(.+)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        [GeneratedRegex(@"^\s*/{2,}")]
+        private static partial Regex _regexCommentLine { get; }
+
+        [GeneratedRegex(@"^\s*/{2,}\s*(@\w+)\s+(.+)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+        private static partial Regex _regexDocComment { get; }
 
 
         public ScriptCommandSource(string path)

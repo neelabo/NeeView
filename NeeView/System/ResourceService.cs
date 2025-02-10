@@ -11,20 +11,19 @@ using System.Windows.Input;
 
 namespace NeeView
 {
-    internal static class ResourceService
+    internal static partial class ResourceService
     {
-        [StringSyntax(StringSyntaxAttribute.Regex)]
-        public const string KeyRegexPattern = @"[a-zA-Z0-9_\.\-#]+[a-zA-Z0-9]";
+        /// <summary>
+        /// リソースキーのパターン
+        /// </summary>
+        [GeneratedRegex(@"@\[([^\]]+)\]")]
+        private static partial Regex _resourceKeyRegex { get; }
 
         /// <summary>
         /// テキストキーのパターン
         /// </summary>
-        private static readonly Regex _regexKey = new("@" + KeyRegexPattern);
-
-        /// <summary>
-        /// リソース参照のパターン
-        /// </summary>
-        private static readonly Regex _regexResKey = new Regex(@"@\[([^\]]+)\]");
+        [GeneratedRegex(@"@[a-zA-Z0-9_\.\-#]+[a-zA-Z0-9]")]
+        private static partial Regex _keyRegex { get; }
 
         /// <summary>
         /// @で始まる文字列はリソースキーとしてその値を返す。
@@ -107,7 +106,7 @@ namespace NeeView
             // limit is 5 depth
             if (depth >= 5) return s;
 
-            return ReplaceEmbeddedText(_regexKey.Replace(s, ReplaceMatchEvaluator));
+            return ReplaceEmbeddedText(_keyRegex.Replace(s, ReplaceMatchEvaluator));
 
             string ReplaceMatchEvaluator(Match m)
             {
@@ -121,7 +120,7 @@ namespace NeeView
         /// </summary>
         public static string ReplaceEmbeddedText(string s)
         {
-            return _regexResKey.Replace(s, FileNameToTextMatchEvaluator);
+            return _resourceKeyRegex.Replace(s, FileNameToTextMatchEvaluator);
         }
 
         private static string FileNameToTextMatchEvaluator(Match match)

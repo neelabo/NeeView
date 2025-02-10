@@ -3,14 +3,13 @@ using System.Text.RegularExpressions;
 
 namespace NeeView.Text
 {
-    public static class HtmlString
+    public static partial class HtmlString
     {
         /// <summary>
         ///  imgタグ用正規表現
         /// </summary>
-        private static readonly Regex _imageTagRegex = new(
-            @"<img(?:\s+[^>]*\s+|\s+)src\s*=\s*(?:(?<quot>[""'])(?<url>.*?)\k<quot>|(?<url>[^\s>]+))[^>]*>",
-            RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        [GeneratedRegex(@"<img(?:\s+[^>]*\s+|\s+)src\s*=\s*(?:(?<quot>[""'])(?<url>.*?)\k<quot>|(?<url>[^\s>]+))[^>]*>", RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.CultureInvariant)]
+        private static partial Regex _imageTagRegex { get; }
 
         /// <summary>
         /// imgタグ抜き出し

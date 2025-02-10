@@ -6,8 +6,11 @@ using System.Windows.Data;
 
 namespace NeeView.Windows.Controls
 {
-    public class SafeIntegerValueConverter : IValueConverter
+    public partial class SafeIntegerValueConverter : IValueConverter
     {
+        [GeneratedRegex(@"[+-]?\d+")]
+        private static partial Regex _intRegex { get; }
+
         public virtual object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return value;
@@ -27,8 +30,7 @@ namespace NeeView.Windows.Controls
                 return result;
             }
 
-            var regex = new Regex(@"[+-]?\d+");
-            var match = regex.Match(s);
+            var match = _intRegex.Match(s);
             if (match.Success)
             {
                 return int.Parse(match.Value, CultureInfo.InvariantCulture);

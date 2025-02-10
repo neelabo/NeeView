@@ -11,10 +11,13 @@ namespace NeeView
         public string? WorkingDirectory { get; set; }
     }
 
-    public static class ExternalProcess
+    public static partial class ExternalProcess
     {
-        private static readonly Regex _httpPrefix = new(@"^\s*http[s]?:", RegexOptions.IgnoreCase);
-        private static readonly Regex _htmlPostfix = new(@"\.htm[l]?$", RegexOptions.IgnoreCase);
+        [GeneratedRegex(@"^\s*http[s]?:", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+        private static partial Regex _httpPrefix { get; }
+
+        [GeneratedRegex(@"\.htm[l]?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+        private static partial Regex _htmlPostfix { get; }
 
         public static void Start(string filename, string? args = null, ExternalProcessOptions? options = null)
         {

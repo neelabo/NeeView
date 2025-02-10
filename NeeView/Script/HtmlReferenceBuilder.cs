@@ -12,8 +12,11 @@ using System.Text.RegularExpressions;
 
 namespace NeeView
 {
-    public class HtmlReferenceBuilder
+    public partial class HtmlReferenceBuilder
     {
+        [GeneratedRegex(@"[\r\n]+")]
+        private static partial Regex _newLineRegex { get; }
+
         private readonly StringBuilder builder;
 
         public HtmlReferenceBuilder() : this(new StringBuilder())
@@ -404,8 +407,7 @@ namespace NeeView
         {
             if (src is null) return null;
 
-            var regex = new Regex(@"[\r\n]+");
-            return regex.Replace(src, "<br />");
+            return _newLineRegex.Replace(src, "<br />");
         }
 
         /// <summary>

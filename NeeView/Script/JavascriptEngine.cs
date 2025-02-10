@@ -9,8 +9,11 @@ using Jint;
 
 namespace NeeView
 {
-    public class JavaScriptEngine : IHasScriptPath
+    public partial class JavaScriptEngine : IHasScriptPath
     {
+        [GeneratedRegex(@"^Line\s*(\d+):(.+)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+        private static partial Regex _scriptLineRegex { get; }
+
         private readonly Jint.Engine _engine;
         private readonly CommandHost _commandHost;
         private CancellationToken _cancellationToken;
@@ -212,8 +215,7 @@ namespace NeeView
             int line = -1;
             string message = s.Trim();
 
-            var regex = new Regex(@"^Line\s*(\d+):(.+)$", RegexOptions.IgnoreCase);
-            var match = regex.Match(s);
+            var match = _scriptLineRegex.Match(s);
             if (match.Success)
             {
                 line = int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);

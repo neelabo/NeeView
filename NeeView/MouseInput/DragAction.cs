@@ -3,15 +3,17 @@ using System.Text.RegularExpressions;
 
 namespace NeeView
 {
-    public abstract class DragAction
+    public abstract partial class DragAction
     {
-        public delegate DragActionControl CreateDragAction(DragTransformContext context, DragAction? source);
+        [GeneratedRegex(@"DragAction$")]
+        private static partial Regex _termDragActionRegex { get; }
 
-        private static readonly Regex _trimCommand = new(@"DragAction$", RegexOptions.Compiled);
+
+        public delegate DragActionControl CreateDragAction(DragTransformContext context, DragAction? source);
 
         public DragAction()
         {
-            Name = _trimCommand.Replace(GetType().Name, "");
+            Name = _termDragActionRegex.Replace(GetType().Name, "");
         }
 
         public DragAction(string name)

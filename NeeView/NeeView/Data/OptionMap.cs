@@ -22,9 +22,12 @@ namespace NeeView.Data
     /// <summary>
     /// 
     /// </summary>
-    public class OptionMap<T>
+    public partial class OptionMap<T>
         where T : class, new()
     {
+        [GeneratedRegex(@"[|<>-]")]
+        private static partial Regex _escapeMarkdownRegex { get; }
+
         private readonly string _usage = "NeeView.exe [Options...] [File or Folder...]";
 
         private readonly static string[] _samples =
@@ -137,8 +140,7 @@ namespace NeeView.Data
 
         private string EscapeMarkdown(string text)
         {
-            var regex = new Regex(@"[|<>-]");
-            return regex.Replace(text, m => "\\" + m.Value);
+            return _escapeMarkdownRegex.Replace(text, m => "\\" + m.Value);
         }
 
 #endif // DEBUG

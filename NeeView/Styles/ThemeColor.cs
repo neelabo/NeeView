@@ -18,9 +18,10 @@ namespace NeeView
 
     [TypeConverter(typeof(ThemeColorTypeConverter))]
     [JsonConverter(typeof(ThemeColorJsonConverter))]
-    public class ThemeColor
+    public partial class ThemeColor
     {
-        private static readonly Regex _linkTokenRegex = new(@"^\w+(\.\w+)+$", RegexOptions.Compiled);
+        [GeneratedRegex(@"^\w+(\.\w+)+$")]
+        private static partial Regex _linkTokenRegex { get; }
 
         public ThemeColor()
         {

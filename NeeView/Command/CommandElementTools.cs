@@ -3,9 +3,10 @@ using System.Text.RegularExpressions;
 
 namespace NeeView
 {
-    public static class CommandElementTools
+    public static partial class CommandElementTools
     {
-        private static readonly Regex _trimCommand = new(@"Command$", RegexOptions.Compiled);
+        [GeneratedRegex(@"Command$")]
+        private static partial Regex _termCommandRegex { get; }
 
         /// <summary>
         /// コマンド名をクラスタイプから生成
@@ -25,7 +26,7 @@ namespace NeeView
         /// <returns></returns>
         public static string CreateCommandName(Type type)
         {
-            return _trimCommand.Replace(type.Name, "");
+            return _termCommandRegex.Replace(type.Name, "");
         }
     }
 }
