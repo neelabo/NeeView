@@ -36,30 +36,6 @@ namespace NeeView
         static BookHub() => Current = new BookHub();
         public static BookHub Current { get; }
 
-        #region NormalizePathName
-
-        // パス名の正規化
-        private static string GetNormalizePathName(string source)
-        {
-            // 区切り文字修正
-            source = new System.Text.RegularExpressions.Regex(@"[/\\]").Replace(source, "\\").TrimEnd('\\');
-
-            // ドライブレター修正
-            source = new System.Text.RegularExpressions.Regex(@"^[a-z]:").Replace(source, m => m.Value.ToUpperInvariant());
-            source = new System.Text.RegularExpressions.Regex(@":$").Replace(source, ":\\");
-
-            var longPath = new StringBuilder(1024);
-            if (0 == NativeMethods.GetLongPathName(source, longPath, longPath.Capacity))
-            {
-                return source;
-            }
-
-            string dist = longPath.ToString();
-            return longPath.ToString();
-        }
-
-        #endregion
-
         private Toast? _bookHubToast;
         private bool _isLoading;
         private bool _isBookLocked;
@@ -238,18 +214,10 @@ namespace NeeView
 
             if (!this.IsEnabled) return null;
 
-            var query = new QueryPath(path);
+            var query = new QueryPath(path).Normalize();
             var sourcePath = query.SimpleQuery;
-            if (FileShortcut.IsShortcut(query.SimplePath) && (System.IO.File.Exists(query.SimplePath) || System.IO.Directory.Exists(query.SimplePath)))
-            {
-                var shortcut = new FileShortcut(query.SimplePath);
-                if (shortcut.TryGetTargetPath(out var target))
-                {
-                    query = new QueryPath(target, query.Search);
-                }
-            }
 
-            query = new QueryPath(GetNormalizePathName(query.SimplePath), query.Search);
+            query = query.ResolvePath();
 
             // Legacy:
             if (query.SimplePath.StartsWith("pagemark:", StringComparison.Ordinal) == true)
@@ -386,7 +354,7 @@ namespace NeeView
             }
         }
 
-        #endregion Requests
+#endregion Requests
 
         #region BookHubCommand.Load
 

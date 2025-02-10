@@ -22,8 +22,18 @@ namespace NeeView
     /// <summary>
     /// File I/O
     /// </summary>
-    public static class FileIO
+    public static partial class FileIO
     {
+        [GeneratedRegex(@"[/\\]")]
+        private static partial Regex _separateRegex { get; }
+
+        [GeneratedRegex(@"^[a-z]:")]
+        private static partial Regex _lowerDriveLetterRegex { get; }
+
+        [GeneratedRegex(@":$")]
+        private static partial Regex _colonTerminalRegex { get; }
+
+
         /// <summary>
         /// ファイルかディレクトリの存在チェック
         /// </summary>
@@ -74,6 +84,66 @@ namespace NeeView
                     throw new IOException($"File already exists: {path}");
                 }
             }
+        }
+
+        /// <summary>
+        /// パス名の正規化
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static string GetNormalizedPath(string? source)
+        {
+            if (source == null) return "";
+
+            // 区切り文字修正
+            source = _separateRegex.Replace(source, "\\").TrimEnd('\\');
+
+            // ドライブレター修正
+            source = _lowerDriveLetterRegex.Replace(source, m => m.Value.ToUpperInvariant());
+            source = _colonTerminalRegex.Replace(source, ":\\");
+
+            // フルパス
+            source = Path.GetFullPath(source);
+
+            if (FileIO.ExistsPath(source))
+            {
+                // 大文字・小文字をファイルシステム情報にあわせる
+                return GetLongPathName(source);
+            }
+            else
+            {
+                // アーカイブパスの可能性あり。有効なパス部分のみ正規化
+                var path = "";
+                var parts = LoosePath.Split(source);
+                foreach (var part in parts)
+                {
+                    path = LoosePath.Combine(path, part);
+                    if (File.Exists(path))
+                    {
+                        path = GetLongPathName(path);
+                        path = LoosePath.Combine(path, source[path.Length..]);
+                        break;
+                    }
+                }
+                return path;
+            }
+        }
+
+        /// <summary>
+        /// ロングパス名を取得して大文字・小文字をファイルシステム情報にあわせる
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        private static string GetLongPathName(string source)
+        {
+            if (string.IsNullOrEmpty(source)) return "";
+
+            var longPath = new StringBuilder(1024); // 上限は1024文字
+            if (0 == NativeMethods.GetLongPathName(source, longPath, longPath.Capacity))
+            {
+                return source;
+            }
+            return longPath.ToString();
         }
 
         /// <summary>

@@ -28,7 +28,7 @@ namespace NeeView
         public string? Path
         {
             get { return _model.Place?.SimplePath; }
-            set { AppDispatcher.Invoke(() => _model.RequestPlace(new QueryPath(value), null, FolderSetPlaceOption.UpdateHistory)); }
+            set { AppDispatcher.Invoke(() => _model.RequestPlace(new QueryPath(value).Normalize(), null, FolderSetPlaceOption.UpdateHistory)); }
         }
 
         [WordNodeMember]

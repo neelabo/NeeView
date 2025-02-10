@@ -285,7 +285,7 @@ namespace NeeView
             // 起動時スクリプトの実行
             if (App.Current.Option.ScriptQuery is not null)
             {
-                var path = App.Current.Option.ScriptQuery.ToEntityPath().SimplePath;
+                var path = App.Current.Option.ScriptQuery.ResolvePath().SimplePath;
                 if (!string.IsNullOrEmpty(path))
                 {
                     ScriptManager.Current.Execute(this, path, null, null);

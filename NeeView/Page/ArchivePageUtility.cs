@@ -56,7 +56,7 @@ namespace NeeView
             if (!entry.IsTemporary) return entry;
 
             var query = new QueryPath(entry.SystemPath);
-            query = query.ToEntityPath();
+            query = query.ResolvePath();
             try
             {
                 return await ArchiveEntryUtility.CreateAsync(query.SimplePath, token);

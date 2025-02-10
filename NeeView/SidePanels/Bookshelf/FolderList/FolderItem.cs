@@ -155,7 +155,7 @@ namespace NeeView
                 if (_targetPath != value)
                 {
                     _targetPath = value;
-                    _entityPath = _targetPath.ToEntityPath();
+                    _entityPath = _targetPath.ResolvePath();
                     RaisePropertyChanged();
                 }
             }

@@ -590,7 +590,7 @@ namespace NeeView
                 return;
             }
 
-            path = path.ToEntityPath();
+            path = path.ResolvePath();
 
             using var busyLock = _busyLockEvent.CreateBusyLock();
 

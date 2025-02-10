@@ -114,13 +114,17 @@ namespace NeeView
     [Serializable]
     public sealed partial class QueryPath : IEquatable<QueryPath>
     {
-
         [GeneratedRegex(@"^\\*([a-zA-Z]):(.*)$")]
-        private static partial Regex _driveRegex();
+        private static partial Regex _driveRegex { get; }
 
         public static QueryPath Empty { get; } = new QueryPath(QueryScheme.Root);
 
         static readonly string _querySearch = "?search=";
+
+        private QueryScheme _scheme;
+        private string? _path;
+        private string? _search;
+
 
         public QueryPath(string? source)
         {
@@ -159,21 +163,18 @@ namespace NeeView
             _path = null;
         }
 
-        private QueryScheme _scheme;
         public QueryScheme Scheme
         {
             get { return _scheme; }
             private set { _scheme = value; }
         }
 
-        private string? _path;
         public string? Path
         {
             get { return _path; }
             private set { _path = value; }
         }
 
-        private string? _search;
         public string? Search
         {
             get { return _search; }
@@ -259,7 +260,7 @@ namespace NeeView
             if (scheme == QueryScheme.File)
             {
                 // fix drive name
-                var match = _driveRegex().Match(s);
+                var match = _driveRegex.Match(s);
                 if (match.Success)
                 {
                     s = match.Groups[1].Value.ToUpperInvariant() + ':' + match.Groups[2].Value;
@@ -392,40 +393,52 @@ namespace NeeView
 
 
         #endregion IEquatable Support
-    }
 
-
-    public static class QueryPathExtensions
-    {
         /// <summary>
-        /// 実体のパスに変換する
+        /// 正規化
+        /// </summary>
+        /// <returns></returns>
+        public QueryPath Normalize()
+        {
+            if (Scheme == QueryScheme.File)
+            {
+                return new QueryPath(QueryScheme.File, FileIO.GetNormalizedPath(SimplePath), Search);
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// ショートカットの解決
         /// </summary>
         /// <remarks>
         /// ショートカットならば実体のパスに変換する。
         /// スクリプトスキームならばファイルパスに変換する。
         /// 他のスキームは非対応
         /// </remarks>
-        public static QueryPath ToEntityPath(this QueryPath source)
+        /// <returns></returns>
+        public QueryPath ResolvePath()
         {
-            if (source.Path is null) return source;
-
-            if (source.Scheme == QueryScheme.File)
+            if (Scheme == QueryScheme.File)
             {
-                if (FileShortcut.IsShortcut(source.SimplePath))
+                var path = SimplePath;
+                if (FileShortcut.IsShortcut(path) && File.Exists(path))
                 {
-                    var shortcut = new FileShortcut(source.SimplePath);
-                    if (shortcut.IsValid)
+                    var shortcut = new FileShortcut(path);
+                    if (shortcut.TryGetTargetPath(out var target))
                     {
-                        return new QueryPath(shortcut.TargetPath);
+                        path = FileIO.GetNormalizedPath(target);
                     }
+                    return new QueryPath(QueryScheme.File, path, Search);
                 }
             }
-            else if (source.Scheme == QueryScheme.Script)
+            else if (Scheme == QueryScheme.Script)
             {
-                return ToEntityPath(new QueryPath(QueryScheme.File, Path.Combine(Config.Current.Script.ScriptFolder, source.Path)));
+                var path = LoosePath.Combine(Config.Current.Script.ScriptFolder, Path);
+                var query = new QueryPath(QueryScheme.File, FileIO.GetNormalizedPath(path), Search);
+                return query.ResolvePath();
             }
-
-            return source;
+            return this;
         }
+
     }
 }
