@@ -15,15 +15,33 @@ namespace NeeView.Windows
         public ListBoxExtended()
         {
             SelectionMode = SelectionMode.Extended;
-
-            this.IsKeyboardFocusWithinChanged += ListBoxExtended_IsKeyboardFocusWithinChanged;
         }
+
 
         public event EventHandler<MouseButtonEventArgs>? PreviewMouseUpWithSelectionChanged;
 
-        private void ListBoxExtended_IsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
+
+        protected override void OnIsKeyboardFocusWithinChanged(DependencyPropertyChangedEventArgs e)
         {
+            base.OnIsKeyboardFocusWithinChanged(e);
+
             AppDispatcher.BeginInvoke(() => FocusSelectedItem(false));
+        }
+
+        protected override void OnTextInput(TextCompositionEventArgs e)
+        {
+            if (IsTextSearchEnabled)
+            {
+                // SHIFTキーが押されているときに問題があるので、シングル選択モードに設定する
+                var current = this.SelectionMode;
+                this.SelectionMode = SelectionMode.Single;
+                base.OnTextInput(e);
+                this.SelectionMode = current;
+            }
+            else
+            {
+                base.OnTextInput(e);
+            }
         }
 
         public void FocusSelectedItem(bool force)

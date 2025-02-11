@@ -240,6 +240,11 @@ namespace NeeView
         {
             if (_vm is null) return;
 
+            if (this.ListBox.IsTextSearchEnabled)
+            {
+                KeyExGesture.AllowSingleKey = false;
+            }
+
             var item = ((sender as ListBoxItem)?.Content as BookHistory);
             if (item?.Path is null) return;
 

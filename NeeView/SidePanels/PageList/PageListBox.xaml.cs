@@ -292,6 +292,11 @@ namespace NeeView
         // リストのキ入力
         private void PageList_KeyDown(object? sender, KeyEventArgs e)
         {
+            if (this.ListBox.IsTextSearchEnabled)
+            {
+                KeyExGesture.AllowSingleKey = false;
+            }
+
             var page = this.ListBox.SelectedItem as Page;
 
             if (Keyboard.Modifiers == ModifierKeys.Alt)

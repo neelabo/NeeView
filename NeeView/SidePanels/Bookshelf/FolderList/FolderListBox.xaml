@@ -179,7 +179,7 @@
     </UserControl.Resources>
 
     <Grid x:Name="Root">
-        
+
         <nw:ListBoxExtended x:Name="ListBox" Focusable="True"
                 MinHeight="0"
                 FontSize="{DynamicResource PanelFontSize}"
@@ -194,6 +194,7 @@
                 IsVisibleChanged="FolderList_IsVisibleChanged"
                 PreviewKeyDown="FolderList_PreviewKeyDown"
                 KeyDown="FolderList_KeyDown"
+                IsTextSearchEnabled="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsTextSearchEnabled}"
                 UseLayoutRounding="True"
                 AllowDrop="True"
                 PreviewDragEnter="FolderList_PreviewDragEnter"
@@ -236,7 +237,6 @@
                     </Style.Triggers>
                 </Style>
             </ListBox.Style>
-
         </nw:ListBoxExtended>
         
         <local:BusyFadeView x:Name="BusyFade" Target="{Binding ElementName=ListBox}" Opacity="0"/>

@@ -68,7 +68,7 @@ namespace NeeView
 
         public override string? ToString()
         {
-            return string.IsNullOrEmpty(Path) ? base.ToString() : Path;
+            return Name;
         }
 
         public Page GetPage()
@@ -86,7 +86,7 @@ namespace NeeView
 
         public SearchValue GetValue(SearchPropertyProfile profile, string? parameter, CancellationToken token)
         {
-            switch(profile.Name)
+            switch (profile.Name)
             {
                 case "text":
                     return new StringSearchValue(Name);

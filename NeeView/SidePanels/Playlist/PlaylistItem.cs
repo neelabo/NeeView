@@ -151,7 +151,7 @@ namespace NeeView
 
         public override string? ToString()
         {
-            return Name ?? base.ToString();
+            return Name;
         }
 
         public string GetRenameText()

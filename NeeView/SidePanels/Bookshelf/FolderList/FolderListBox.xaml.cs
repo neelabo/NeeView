@@ -904,6 +904,11 @@ namespace NeeView
 
         private void FolderList_KeyDown(object? sender, KeyEventArgs e)
         {
+            if (this.ListBox.IsTextSearchEnabled)
+            {
+                KeyExGesture.AllowSingleKey = false;
+            }
+
             bool isLRKeyEnabled = _vm.IsLRKeyEnabled();
             if (isLRKeyEnabled && e.Key == Key.Left) // ←
             {

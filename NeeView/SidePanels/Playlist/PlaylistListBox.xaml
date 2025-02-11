@@ -228,7 +228,8 @@
                     Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                     ItemsSource="{Binding CollectionViewSource.View, NotifyOnTargetUpdated=True}" SelectedItem="{Binding SelectedItem}" TargetUpdated="PlaylistListBox_TargetUpdated"
                     KeyDown="PlaylistListBox_KeyDown" SelectionChanged="PlaylistListBox_SelectionChanged" IsVisibleChanged="PlaylistListBox_IsVisibleChanged" AllowDrop="{Binding IsEditable}"
-                    PreviewDragEnter="FolderList_PreviewDragEnter" PreviewDragOver="FolderList_PreviewDragOver" Drop="FolderList_Drop">
+                    PreviewDragEnter="FolderList_PreviewDragEnter" PreviewDragOver="FolderList_PreviewDragOver" Drop="FolderList_Drop"
+                    IsTextSearchEnabled="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsTextSearchEnabled}">
 
                 <ListBox.Style>
                     <Style TargetType="ListBox" BasedOn="{StaticResource NVListBox}">

@@ -23,6 +23,7 @@ namespace NeeView
         private double _rightPanelWidth = 300.0;
         private bool _isLimitPanelWidth;
         private bool _isVisibleItemsCount = true;
+        private bool _isTextSearchEnabled;
 
 
         /// <summary>
@@ -135,6 +136,12 @@ namespace NeeView
             set { SetProperty(ref _isVisibleItemsCount, value); }
         }
 
+        [PropertyMember]
+        public bool IsTextSearchEnabled
+        {
+            get { return _isTextSearchEnabled; }
+            set { SetProperty(ref _isTextSearchEnabled, value); }
+        }
 
         [PropertyMapLabel("@Word.StyleContent")]
         public PanelListItemProfile ContentItemProfile { get; set; } = PanelListItemProfile.DefaultContentItemProfile.Clone();

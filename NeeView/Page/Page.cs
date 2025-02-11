@@ -250,10 +250,10 @@ namespace NeeView
             ContentChanged?.Invoke(this, EventArgs.Empty);
         }
 
-
-        public override string ToString()
+        public override string? ToString()
         {
-            return $"Page:{Index}, {EntryFullName}";
+            //return $"Page:{Index}, {EntryFullName}";
+            return GetDispName(Config.Current.PageList.Format);
         }
 
         public Page? GetPage()

@@ -117,7 +117,7 @@ namespace NeeView
         private void Control_PreviewKeyDown(object? sender, KeyEventArgs e)
         {
             // 単キーのショートカットを有効にする。
-            // TextBoxなどのイベント処理でこのフラグをfalseにすることで短キーのショートカットを無効にして入力を優先させる
+            // TextBox などの KeyDown イベントでこのフラグを false にすることで単キーのショートカットを無効にして入力を優先させる
             KeyExGesture.AllowSingleKey = true;
 
             // 一部 IMEKey のっとり

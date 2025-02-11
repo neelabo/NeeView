@@ -372,7 +372,8 @@ namespace NeeView
 
         public override string? ToString()
         {
-            return $"FolderItem: {Name}, Place={Place}, TargetPath={TargetPath}";
+            // return $"FolderItem: {Name}, Place={Place}, TargetPath={TargetPath}";
+            return DispName;
         }
 
         public string GetRenameText()

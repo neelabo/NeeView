@@ -592,6 +592,11 @@ namespace NeeView
         // リストのキ入力
         private void PlaylistListBox_KeyDown(object? sender, KeyEventArgs e)
         {
+            if (this.ListBox.IsTextSearchEnabled)
+            {
+                KeyExGesture.AllowSingleKey = false;
+            }
+
             // このパネルで使用するキーのイベントを止める
             if (Keyboard.Modifiers == ModifierKeys.None)
             {
