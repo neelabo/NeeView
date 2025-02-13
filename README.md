@@ -3,7 +3,7 @@
 **[NeeView Portal Site (English/日本語)](https://neelabo.github.io/NeeView)**
 
 ### Screenshot
-![Screenshot](docs/assets/images/neeview39.jpg)
+![Screenshot](docs/assets/images/NeeView42.en-us.jpg)
 
 ## Description
 
