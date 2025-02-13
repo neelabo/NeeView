@@ -59,18 +59,18 @@ namespace NeeView
     /// </summary>
     public class BookHubCommandLoad : BookHubCommand
     {
-        private readonly BookHubCommandLoadArgs _param;
+        private readonly BookHubCommandLoadArgs _args;
 
-        public string Path => _param.Path;
+        public string Path => _args.Path;
 
-        public BookHubCommandLoad(BookHub bookHub, BookHubCommandLoadArgs param) : base(bookHub)
+        public BookHubCommandLoad(BookHub bookHub, BookHubCommandLoadArgs args) : base(bookHub)
         {
-            _param = param;
+            _args = args;
         }
 
         protected override async Task ExecuteAsync(CancellationToken token)
         {
-            await _bookHub.LoadAsync(_param, token);
+            await _bookHub.LoadAsync(_args, token);
         }
     }
 
@@ -90,11 +90,11 @@ namespace NeeView
     /// </summary>
     public class BookHubCommandUnload : BookHubCommand
     {
-        private readonly BookHubCommandUnloadArgs _param;
+        private readonly BookHubCommandUnloadArgs _args;
 
-        public BookHubCommandUnload(BookHub bookHub, BookHubCommandUnloadArgs param) : base(bookHub)
+        public BookHubCommandUnload(BookHub bookHub, BookHubCommandUnloadArgs args) : base(bookHub)
         {
-            _param = param;
+            _args = args;
 
             // キャンセル不可
             this.CanBeCanceled = false;
@@ -102,10 +102,10 @@ namespace NeeView
 
         protected override async Task ExecuteAsync(CancellationToken token)
         {
-            _bookHub.Unload(_param);
+            _bookHub.Unload(_args);
 
-            // ブックを閉じたときの移動履歴を表示するためにnullを履歴に登録
-            BookHubHistory.Current.Add(_param.Sender, null);
+            // ブックを閉じたときの移動履歴を表示するために null を履歴に登録
+            BookHubHistory.Current.Add(_args.Sender, null);
 
             await Task.CompletedTask;
         }

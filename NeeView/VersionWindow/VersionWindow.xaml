@@ -54,7 +54,7 @@
                     <Image DockPanel.Dock="Left" Margin="40,0"  Width="64" Height="64" Source="{Binding Icon}" UseLayoutRounding="True" VerticalAlignment="Center"/>
                     <StackPanel DockPanel.Dock="Top" Margin="0,0,10,0" VerticalAlignment="Center">
                         <TextBlock Text="{Binding ApplicationName}" FontSize="{DynamicResource SystemFontSizeHuge}" FontFamily="Trebuchet MS"/>
-                        <TextBlock Text="{Binding DispVersion}" />
+                        <TextBlock Text="{Binding DisplayVersion}" />
                     </StackPanel>
                 </DockPanel>
                 <StackPanel HorizontalAlignment="Center" Visibility="{Binding IsCheckerEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,5,0,0" >

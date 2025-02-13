@@ -85,17 +85,17 @@ namespace NeeView
             var oldies = _commandBindings.Keys
                 .ToList();
 
-            var newers = CommandTable.Current.Keys
+            var newbies = CommandTable.Current.Keys
                 .ToList();
 
-            foreach (var name in oldies.Except(newers))
+            foreach (var name in oldies.Except(newbies))
             {
                 var binding = _commandBindings[name];
                 _commandBindings.Remove(name);
                 _element.CommandBindings.Remove(binding);
             }
 
-            foreach (var name in newers.Except(oldies))
+            foreach (var name in newbies.Except(oldies))
             {
                 var binding = CreateCommandBinding(name);
                 _commandBindings.Add(name, binding);

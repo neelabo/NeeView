@@ -44,7 +44,7 @@
         <HierarchicalDataTemplate x:Key="treeViewTemplate" ItemsSource="{Binding Path=Children}">
             <Grid>
                 <Separator Style="{StaticResource TreeViewItemSeparatorStyle}"/>
-                <TextBlock Text="{Binding Path=DispLabel}" Style="{StaticResource TreeViewItemStyle}" ToolTip="{Binding DefaultLongLabel}"/>
+                <TextBlock Text="{Binding Path=DisplayLabel}" Style="{StaticResource TreeViewItemStyle}" ToolTip="{Binding DefaultLongLabel}"/>
             </Grid>
         </HierarchicalDataTemplate>
 

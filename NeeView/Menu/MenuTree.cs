@@ -100,10 +100,10 @@ namespace NeeView
         public string Label
         {
             get { return string.IsNullOrEmpty(Name) ? DefaultLabel : Name; }
-            set { Name = (value == DefaultLabel) ? null : value; RaisePropertyChanged(); RaisePropertyChanged(nameof(DispLabel)); }
+            set { Name = (value == DefaultLabel) ? null : value; RaisePropertyChanged(); RaisePropertyChanged(nameof(DisplayLabel)); }
         }
 
-        public string DispLabel => Label.Replace("_", "", StringComparison.Ordinal);
+        public string DisplayLabel => Label.Replace("_", "", StringComparison.Ordinal);
 
         public string DefaultLongLabel
         {

@@ -527,7 +527,7 @@ namespace NeeView
         {
             if (values[0] is Page page && values[1] is PageNameFormat format)
             {
-                return page.GetDispName(format);
+                return page.GetDisplayName(format);
             }
             return null;
         }
@@ -547,7 +547,7 @@ namespace NeeView
                 if (page.LastWriteTime == default && page.Length == 0) return null;
 
                 var timeString = page.LastWriteTime.ToFormatString();
-                var sizeString = FileSizeToStringConverter.ByteToDispString(page.Length);
+                var sizeString = FileSizeToStringConverter.ByteToDisplayString(page.Length);
                 return timeString + (string.IsNullOrEmpty(sizeString) ? "" : "   " + sizeString);
             }
 

@@ -253,7 +253,7 @@ namespace NeeView
         public override string? ToString()
         {
             //return $"Page:{Index}, {EntryFullName}";
-            return GetDispName(Config.Current.PageList.Format);
+            return GetDisplayName(Config.Current.PageList.Format);
         }
 
         public Page? GetPage()
@@ -266,7 +266,7 @@ namespace NeeView
             switch (profile.Name)
             {
                 case "text":
-                    return new StringSearchValue(GetDispName(Config.Current.PageList.Format));
+                    return new StringSearchValue(GetDisplayName(Config.Current.PageList.Format));
                 case "date":
                     return new DateTimeSearchValue(LastWriteTime);
                 case "size":
@@ -282,7 +282,7 @@ namespace NeeView
             }
         }
 
-        public string GetDispName(PageNameFormat format)
+        public string GetDisplayName(PageNameFormat format)
         {
             return format switch
             {

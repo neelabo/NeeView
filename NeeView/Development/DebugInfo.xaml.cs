@@ -173,7 +173,7 @@ namespace NeeView
     }
 
 
-    public class PointToDispStringConverter : IValueConverter
+    public class PointToDisplayStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

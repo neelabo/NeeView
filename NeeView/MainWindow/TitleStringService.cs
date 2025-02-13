@@ -77,7 +77,7 @@ namespace NeeView
 
             // book
             var book = BookHub.Current.GetCurrentBook();
-            string bookName = LoosePath.GetDispName(book?.Path);
+            string bookName = LoosePath.GetDisplayName(book?.Path);
             _replaceString.Set("$Book", bookName);
 
             // page

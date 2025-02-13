@@ -199,7 +199,7 @@
 
                 </StackPanel>
 
-                <TextBlock Margin="15,0" DockPanel.Dock="Left" VerticalAlignment="Center" Text="{Binding Operator.DispTime}" Foreground="{DynamicResource BottomBar.Foreground}">
+                <TextBlock Margin="15,0" DockPanel.Dock="Left" VerticalAlignment="Center" Text="{Binding Operator.DisplayTime}" Foreground="{DynamicResource BottomBar.Foreground}">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
                             <EventSetter Event="MouseLeftButtonDown" Handler="TimeTextBlock_MouseLeftButtonDown" />

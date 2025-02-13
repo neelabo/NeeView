@@ -101,7 +101,7 @@ namespace NeeView
 
         public override bool Equals(object? obj)
         {
-            return obj is PagePosition equtable && Equals(equtable);
+            return obj is PagePosition other && Equals(other);
         }
 
         public override int GetHashCode()

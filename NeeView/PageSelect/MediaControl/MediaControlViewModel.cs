@@ -162,7 +162,7 @@ namespace NeeView
                 return;
             }
 
-            _operator.IsTimeLeftDisp = !_operator.IsTimeLeftDisp;
+            _operator.IsTimeLeftDisplay = !_operator.IsTimeLeftDisplay;
         }
 
         public void MouseWheel(object? sender, MouseWheelEventArgs e)

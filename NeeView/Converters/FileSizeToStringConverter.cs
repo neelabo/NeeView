@@ -15,10 +15,10 @@ namespace NeeView
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var length = (long)value;
-            return ByteToDispString(length);
+            return ByteToDisplayString(length);
         }
 
-        public static string ByteToDispString(long length)
+        public static string ByteToDisplayString(long length)
         {
             if (length < 0)
             {

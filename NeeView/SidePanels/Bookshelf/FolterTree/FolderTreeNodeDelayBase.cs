@@ -73,7 +73,7 @@ namespace NeeView
     public class DummyNode : FolderTreeNodeBase
     {
         public override string Name { get => ""; set { } }
-        public override string DispName { get => ""; set { } }
+        public override string DisplayName { get => ""; set { } }
 
         public override IImageSourceCollection? Icon => null;
     }

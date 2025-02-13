@@ -115,7 +115,7 @@
                         <local:PanelListContentImage Thumbnail="{Binding ArchivePage.Thumbnail}" />
                         <Image DockPanel.Dock="Right" Style="{StaticResource FolderIconStyle}" />
                         <StackPanel VerticalAlignment="Center">
-                            <TextBlock x:Name="Place" Style="{StaticResource NoteTextStyle}" Text="{Binding DispPlace}"
+                            <TextBlock x:Name="Place" Style="{StaticResource NoteTextStyle}" Text="{Binding DisplayPlace}"
                                     Visibility="{Binding ElementName=ListBox, Path=DataContext.IsGroupBy, Converter={StaticResource BooleanToVisibilityInverseConverter}}" />
                             <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource ContentNameStyle}" />
                         </StackPanel>

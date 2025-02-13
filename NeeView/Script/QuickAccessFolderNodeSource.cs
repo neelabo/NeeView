@@ -10,7 +10,7 @@
         }
 
         [WordNodeMember(AltName = "@Word.Name")]
-        public string Name => _node.DispName;
+        public string Name => _node.DisplayName;
     }
 
 }

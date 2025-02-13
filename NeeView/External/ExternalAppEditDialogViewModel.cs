@@ -21,7 +21,7 @@ namespace NeeView
 
         public string? Name
         {
-            get => _model.Name ?? _model.DispName;
+            get => _model.Name ?? _model.DisplayName;
             set
             {
                 value = string.IsNullOrWhiteSpace(value) ? null : value;
@@ -43,7 +43,7 @@ namespace NeeView
 
                     if (_model.Name == null)
                     {
-                        _model.Name = _model.DispName;
+                        _model.Name = _model.DisplayName;
                         RaisePropertyChanged(nameof(Name));
                     }
                 }

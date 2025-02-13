@@ -78,7 +78,7 @@ namespace NeeView.Setting
         /// 表示ページ。
         /// コンテンツがない場合、子のページを返す
         /// </summary>
-        public SettingPage? DispPage
+        public SettingPage? DisplayPage
         {
             get { return (this.Items != null) ? this : this.Children?.FirstOrDefault(); }
         }

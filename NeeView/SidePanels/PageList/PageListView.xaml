@@ -64,7 +64,7 @@
                 <DockPanel>
                     <TextBlock DockPanel.Dock="Right" Text="{Binding Model.ValidCount, StringFormat={}{0}}" Foreground="{DynamicResource Panel.Foreground}" Margin="5,0"
                         Visibility="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsVisibleItemsCount, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                    <nwc:LeftTrimmingTextBlock TextSource="{Binding Model.PlaceDispString}" ToolTip="{Binding Model.PlaceDispString}" VerticalAlignment="Center"
+                    <nwc:LeftTrimmingTextBlock TextSource="{Binding Model.PlaceDisplayString}" ToolTip="{Binding Model.PlaceDisplayString}" VerticalAlignment="Center"
                         Visibility="{Binding PageListConfig.ShowBookTitle, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 </DockPanel>
             </Border>

@@ -96,7 +96,7 @@ namespace NeeView
         private void UpdateFileSize()
         {
             if (ArchiveEntry is null) return;
-            this.FileSizeTextBlock.Text = FileSizeToStringConverter.ByteToDispString(ArchiveEntry.Length);
+            this.FileSizeTextBlock.Text = FileSizeToStringConverter.ByteToDisplayString(ArchiveEntry.Length);
         }
     }
 }

@@ -52,8 +52,8 @@ namespace NeeView
             _vm = new NowLoadingViewModel(this.Source);
             this.Root.DataContext = _vm;
 
-            _vm.AddPropertyChanged(nameof(_vm.IsDispNowLoading),
-                (s, e) => DisplayNowLoading(_vm.IsDispNowLoading));
+            _vm.AddPropertyChanged(nameof(_vm.IsDisplayNowLoading),
+                (s, e) => DisplayNowLoading(_vm.IsDisplayNowLoading));
         }
 
 

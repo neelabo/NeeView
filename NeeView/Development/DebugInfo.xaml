@@ -11,7 +11,7 @@
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <local:PointToDispStringConverter x:Key="PointToDispStringConverter"/>
+        <local:PointToDisplayStringConverter x:Key="PointToDisplayStringConverter"/>
     </UserControl.Resources>
 
     <DockPanel x:Name="Root" >

@@ -109,7 +109,7 @@ namespace NeeView
         }
 
 
-        public string ToDispString()
+        public string ToDisplayString()
         {
             if (Min.Part == 0)
             {

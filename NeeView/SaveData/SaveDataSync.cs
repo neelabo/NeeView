@@ -29,11 +29,11 @@ namespace NeeView
             _delaySaveBookmark = new DelayAction(() => SaveBookmark(true, true), TimeSpan.FromSeconds(0.5));
             _delaySaveHistory = new IntervalAction(() => SaveHistory(true), TimeSpan.FromMinutes(5.0));
 
-            RemoteCommandService.Current.AddReciever("LoadUserSetting", LoadUserSetting);
-            RemoteCommandService.Current.AddReciever("LoadHistory", LoadHistory);
-            RemoteCommandService.Current.AddReciever("LoadBookmark", LoadBookmark);
-            RemoteCommandService.Current.AddReciever("LoadPlaylist", LoadPlaylist);
-            RemoteCommandService.Current.AddReciever("RenamePlaylist", RenamePlaylist);
+            RemoteCommandService.Current.AddReceiver("LoadUserSetting", LoadUserSetting);
+            RemoteCommandService.Current.AddReceiver("LoadHistory", LoadHistory);
+            RemoteCommandService.Current.AddReceiver("LoadBookmark", LoadBookmark);
+            RemoteCommandService.Current.AddReceiver("LoadPlaylist", LoadPlaylist);
+            RemoteCommandService.Current.AddReceiver("RenamePlaylist", RenamePlaylist);
         }
 
 

@@ -16,7 +16,7 @@ namespace NeeView.IO
             [DriveType.Ram] = Properties.TextResources.GetString("Word.RamDrive"),
         };
 
-        public static string ToDispString(this DriveType driveType)
+        public static string ToDisplayString(this DriveType driveType)
         {
             return _driveTypeNames[driveType];
         }

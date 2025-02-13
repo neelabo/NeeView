@@ -129,7 +129,7 @@ namespace NeeView
         /// <summary>
         /// フォルダーの場所(表示用)
         /// </summary>
-        public string PlaceDispString => Place.DispPath;
+        public string PlaceDisplayString => Place.DisplayPath;
 
         /// <summary>
         /// フォルダーの場所(クエリー添付)

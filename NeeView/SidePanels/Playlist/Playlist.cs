@@ -731,7 +731,7 @@ namespace NeeView
             if (!playlist.IsEditable) return;
 
             var newItems = playlist.Add(items.Select(e => e.Path).ToArray());
-            if (newItems is null) throw new InvalidOperationException("Playlist.Add must be successed");
+            if (newItems is null) throw new InvalidOperationException("Playlist.Add must be succeed");
 
             var map = items.Where(e => e.IsNameChanged).ToDictionary(e => e.Path, e => e);
             foreach (var item in newItems)

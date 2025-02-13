@@ -45,7 +45,7 @@ namespace NeeView
             var items = Config.Current.System.ExternalAppCollection;
             if (items.Count <= index) return ResourceService.GetString("@Word.Undefined");
 
-            return Config.Current.System.ExternalAppCollection[index].DispName;
+            return Config.Current.System.ExternalAppCollection[index].DisplayName;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

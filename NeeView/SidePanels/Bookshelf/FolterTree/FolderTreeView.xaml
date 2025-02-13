@@ -90,7 +90,7 @@
                                 </MultiBinding>
                             </Image.Source> 
                         </Image>
-                        <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource NodeTextBlockStyle}" Text="{Binding DispName}"/>
+                        <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource NodeTextBlockStyle}" Text="{Binding DisplayName}"/>
                     </DockPanel>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>

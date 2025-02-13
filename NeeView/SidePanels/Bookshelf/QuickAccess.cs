@@ -64,7 +64,7 @@ namespace NeeView
             {
                 var query = new QueryPath(_path);
 
-                var name = query.DispName;
+                var name = query.DisplayName;
                 if (PlaylistArchive.IsSupportExtension(name))
                 {
                     name = LoosePath.GetFileNameWithoutExtension(name);

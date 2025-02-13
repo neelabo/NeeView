@@ -14,7 +14,7 @@
 
         public override bool CanExecute(object? sender, CommandContext e)
         {
-            return !NowLoading.Current.IsDispNowLoading;
+            return !NowLoading.Current.IsDisplayNowLoading;
         }
 
         public override void Execute(object? sender, CommandContext e)

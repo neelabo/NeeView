@@ -11,7 +11,7 @@
     <Grid>
         <Grid.Resources>
             
-            <nv:MouseGestureToDispTextConverter x:Key="MouseGestureToDispTextConverter"/>
+            <nv:MouseGestureToDisplayTextConverter x:Key="MouseGestureToDisplayTextConverter"/>
 
         </Grid.Resources>
         
@@ -36,7 +36,7 @@
                     </Image>
 
                     <TextBox x:Name="GestureText" Margin="2" IsReadOnly="True" FontFamily="Meiryo" VerticalAlignment="Center" IsTabStop="False"
-                         Text="{Binding GestureToken.Gesture, Converter={StaticResource MouseGestureToDispTextConverter}}"/>
+                         Text="{Binding GestureToken.Gesture, Converter={StaticResource MouseGestureToDisplayTextConverter}}"/>
                 </DockPanel>
 
             </DockPanel>
@@ -44,7 +44,7 @@
                 <TextBlock Text="{properties:TextBinding MouseGestureControl.Old}"  VerticalAlignment="Center" MinWidth="90"/>
                 <Grid Width="12" Margin="0,0,2,2"/>
                 <TextBox DockPanel.Dock="Bottom" x:Name="OldGestureText" Margin="2" FontFamily="Meiryo" VerticalAlignment="Center" IsReadOnly="True" IsHitTestVisible="False" BorderBrush="Transparent" IsTabStop="False"
-                           Text="{Binding OriginalGesture, Converter={StaticResource MouseGestureToDispTextConverter}}" />
+                           Text="{Binding OriginalGesture, Converter={StaticResource MouseGestureToDisplayTextConverter}}" />
             </DockPanel>
 
             <Grid DockPanel.Dock="Top">

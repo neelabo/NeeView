@@ -35,7 +35,7 @@ namespace NeeView
                 (s, e) => UpdateFilter(true));
 
             Config.Current.Panels.AddPropertyChanged(nameof(PanelsConfig.IsDecoratePlace),
-                (s, e) => UpdateDispPlace());
+                (s, e) => UpdateDisplayPlace());
 
             Config.Current.Playlist.AddPropertyChanged(nameof(PlaylistConfig.IsFirstIn),
                 (s, e) => UpdateIsFirstIn());
@@ -162,13 +162,13 @@ namespace NeeView
             }
         }
 
-        private void UpdateDispPlace()
+        private void UpdateDisplayPlace()
         {
             if (_items is null) return;
 
             foreach (var item in _items)
             {
-                item.UpdateDispPlace();
+                item.UpdateDisplayPlace();
             }
 
             UpdateGroupBy();
@@ -181,7 +181,7 @@ namespace NeeView
             this.CollectionViewSource.GroupDescriptions.Clear();
             if (Config.Current.Playlist.IsGroupBy)
             {
-                this.CollectionViewSource.GroupDescriptions.Add(new PropertyGroupDescription(nameof(PlaylistItem.DispPlace)));
+                this.CollectionViewSource.GroupDescriptions.Add(new PropertyGroupDescription(nameof(PlaylistItem.DisplayPlace)));
             }
         }
 

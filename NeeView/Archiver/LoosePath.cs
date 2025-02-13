@@ -226,7 +226,7 @@ namespace NeeView
         }
 
         // 表示用のファイル名生成
-        public static string GetDispName(string? s)
+        public static string GetDisplayName(string? s)
         {
             if (string.IsNullOrEmpty(s))
             {

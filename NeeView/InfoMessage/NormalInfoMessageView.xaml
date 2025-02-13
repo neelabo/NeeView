@@ -11,7 +11,7 @@
     <Grid x:Name="Root" Visibility="{Binding VM.Visibility}">
         <b:Interaction.Triggers>
             <b:PropertyChangedTrigger Binding="{Binding VM.ChangeCount, Mode=OneWay}" >
-                <local:AutoFadeTriggerAction DispTime="{Binding VM.DispTime}" />
+                <local:AutoFadeTriggerAction DisplayTime="{Binding VM.DisplayTime}" />
             </b:PropertyChangedTrigger>
         </b:Interaction.Triggers>
 

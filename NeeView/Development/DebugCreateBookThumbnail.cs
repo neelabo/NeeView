@@ -27,7 +27,7 @@ namespace NeeView
                 if (items is null) throw new InvalidOperationException();
                 foreach (var item in items)
                 {
-                    Debug.WriteLine($"{item.GetFolderCollectionPath()?.DispName}...");
+                    Debug.WriteLine($"{item.GetFolderCollectionPath()?.DisplayName}...");
                     DebugTimer.CheckRestart();
                     item.ThumbnailLoaded += Item_ThumbnailLoaded;
                     mres.Reset();

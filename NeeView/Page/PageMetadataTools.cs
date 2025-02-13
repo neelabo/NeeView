@@ -28,7 +28,7 @@ namespace NeeView
             var value = GetValue(page, name, token);
             if (value is null) return "";
 
-            return MetadataValueTools.ToDispString(value) ?? "";
+            return MetadataValueTools.ToDisplayString(value) ?? "";
         }
 
         public static Dictionary<string, string> GetValueStringMap(Page page, CancellationToken token)
@@ -39,7 +39,7 @@ namespace NeeView
             var dic2 = pictureInfo?.Metadata?.ExtraMap.ToDictionary(e => e.Key, e => e.Value) ?? new();
 
             var merged = dic1.Concat(dic2.Where(pair => !dic1.ContainsKey(pair.Key)))
-                .ToDictionary(pair => pair.Key, pair => MetadataValueTools.ToDispString(pair.Value) ?? "");
+                .ToDictionary(pair => pair.Key, pair => MetadataValueTools.ToDisplayString(pair.Value) ?? "");
 
             return merged;
         }

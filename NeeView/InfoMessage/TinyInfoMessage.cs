@@ -21,9 +21,9 @@ namespace NeeView
 
 
         /// <summary>
-        /// DispTime property. (sec)
+        /// DisplayTime property. (sec)
         /// </summary>
-        public double DispTime
+        public double DisplayTime
         {
             get { return _dispTime; }
             set { if (_dispTime != value) { _dispTime = value; RaisePropertyChanged(); } }

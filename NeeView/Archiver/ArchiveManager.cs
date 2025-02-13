@@ -407,7 +407,7 @@ namespace NeeView
 
         /// <summary>
         /// アーカイブパスからファイルシステムに実在するアーカイブファイルのパスを取得
-        /// ex: C:\hoge.zip\sub\test.txt -> C:\hoge.zip
+        /// ex: C:\foo.zip\sub\test.txt -> C:\foo.zip
         /// </summary>
         /// <param name="path">アーカイブパス</param>
         /// <returns>実在するアーカイブファイルのパス。見つからなかった場合は null</returns>

@@ -24,7 +24,7 @@ namespace NeeView
 
         public override string Name { get => BookmarkSource.Value.Name ?? ""; set { } }
 
-        public override string DispName { get => Name; set { } }
+        public override string DisplayName { get => Name; set { } }
 
         public override IImageSourceCollection Icon => FileIconCollection.Current.CreateDefaultFolderIcon();
 

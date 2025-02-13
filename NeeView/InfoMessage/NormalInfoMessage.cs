@@ -20,9 +20,9 @@ namespace NeeView
         private BookMementoType _BookMementoIcon;
 
         /// <summary>
-        /// DispTime property. (sec)
+        /// DisplayTime property. (sec)
         /// </summary>
-        public double DispTime
+        public double DisplayTime
         {
             get { return _dispTime; }
             set { if (_dispTime != value) { _dispTime = value; RaisePropertyChanged(); } }
@@ -48,7 +48,7 @@ namespace NeeView
         public void SetMessage(string message, double dispTime = 1.0, BookMementoType bookmarkType = BookMementoType.None)
         {
             this.BookMementoIcon = bookmarkType;
-            this.DispTime = dispTime;
+            this.DisplayTime = dispTime;
             this.Message = message;
         }
     }

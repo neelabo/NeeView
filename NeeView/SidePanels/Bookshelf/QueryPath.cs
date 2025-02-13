@@ -208,9 +208,9 @@ namespace NeeView
 
         public string FileName => LoosePath.GetFileName(_path);
 
-        public string DispName => (_path == null) ? _scheme.ToAliasName() : FileName;
+        public string DisplayName => (_path == null) ? _scheme.ToAliasName() : FileName;
 
-        public string DispPath => (_path == null) ? _scheme.ToAliasName() : SimplePath;
+        public string DisplayPath => (_path == null) ? _scheme.ToAliasName() : SimplePath;
 
 
         private static string? TakeQuerySearch(string? source, out string? searchWord)

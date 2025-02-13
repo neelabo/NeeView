@@ -19,20 +19,20 @@ namespace NeeView
 
         // 表示名
         [JsonIgnore]
-        public string DispName => _name ?? (string.IsNullOrWhiteSpace(_command) ? Properties.TextResources.GetString("Word.DefaultApp") : LoosePath.GetFileNameWithoutExtension(_command));
+        public string DisplayName => _name ?? (string.IsNullOrWhiteSpace(_command) ? Properties.TextResources.GetString("Word.DefaultApp") : LoosePath.GetFileNameWithoutExtension(_command));
 
         // 名前
         public string? Name
         {
             get { return _name; }
-            set { if (SetProperty(ref _name, value)) RaisePropertyChanged(nameof(DispName)); }
+            set { if (SetProperty(ref _name, value)) RaisePropertyChanged(nameof(DisplayName)); }
         }
 
         // コマンド
         public string? Command
         {
             get { return _command; }
-            set { if (SetProperty(ref _command, value?.Trim())) RaisePropertyChanged(nameof(DispName)); }
+            set { if (SetProperty(ref _command, value?.Trim())) RaisePropertyChanged(nameof(DisplayName)); }
         }
 
         // コマンドパラメータ

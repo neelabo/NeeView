@@ -13,7 +13,7 @@ namespace NeeView
     /// </summary>
     public static class EntrySort
     {
-        // TODO: 入力されたentriesを変更しないようにする
+        // TODO: 入力された entries を変更しないようにする
         /// <summary>
         /// ソート実行
         /// </summary>

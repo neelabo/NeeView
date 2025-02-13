@@ -29,12 +29,12 @@ namespace NeeView
                 if (SetProperty(ref _name, value))
                 {
                     Source = _name;
-                    RaisePropertyChanged(nameof(DispName));
+                    RaisePropertyChanged(nameof(DisplayName));
                 }
             }
         }
 
-        public override string DispName { get => Name; set { } }
+        public override string DisplayName { get => Name; set { } }
 
         public override IImageSourceCollection Icon => FileIconCollection.Current.CreateFileIcon(Path, IO.FileIconType.Directory,  false, false);
 

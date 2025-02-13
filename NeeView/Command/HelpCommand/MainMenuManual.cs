@@ -37,14 +37,14 @@ namespace NeeView
             if (menuTree.Children is null) throw new InvalidOperationException("menuTree.Children must not be null");
             foreach (var group in menuTree.Children)
             {
-                node.AddNode(new TagNode("h3").AddText(group.DispLabel));
+                node.AddNode(new TagNode("h3").AddText(group.DisplayLabel));
 
                 var table = new TagNode("table");
                 if (group.Children is null) throw new InvalidOperationException("group.Children must not be null");
                 foreach (var item in group.GetTable(0))
                 {
                     table.AddNode(new TagNode("tr")
-                        .AddNode(new TagNode("td").AddText(item.Element.DispLabel))
+                        .AddNode(new TagNode("td").AddText(item.Element.DisplayLabel))
                         .AddNode(new TagNode("td").AddText(item.Element.Note)));
                 }
                 node.AddNode(table);

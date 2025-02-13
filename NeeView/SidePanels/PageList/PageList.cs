@@ -85,7 +85,7 @@ namespace NeeView
         /// <summary>
         /// サイドパネルでの場所表示用
         /// </summary>
-        public string PlaceDispString
+        public string PlaceDisplayString
         {
             get { return LoosePath.GetFileName(BookOperation.Current.Address); }
         }
@@ -242,7 +242,7 @@ namespace NeeView
             var pages = BookOperation.Current.Control.Pages;
             Items = new ObservableCollection<Page>(pages);
 
-            RaisePropertyChanged(nameof(PlaceDispString));
+            RaisePropertyChanged(nameof(PlaceDisplayString));
 
             PageSortModeClass = _book != null ? _book.PageSortModeClass : PageSortModeClass.Full;
             PageSortMode = PageSortModeClass.ValidatePageSortMode(Config.Current.BookSetting.SortMode);

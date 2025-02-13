@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace NeeView
 {
-    public delegate void RemoteCommandReciever(RemoteCommand command);
+    public delegate void RemoteCommandReceiver(RemoteCommand command);
 
     /// <summary>
     /// RemoteCommandの送受信を管理
@@ -24,13 +24,13 @@ namespace NeeView
         private readonly RemoteCommandServer _server;
         private readonly RemoteCommandClient _client;
 
-        private readonly Dictionary<string, RemoteCommandReciever> _recievers = new();
+        private readonly Dictionary<string, RemoteCommandReceiver> _receivers = new();
 
 
         public RemoteCommandService()
         {
             _server = new RemoteCommandServer();
-            _server.Called += Reciever;
+            _server.Called += Receiver;
             _server.Start();
 
             _client = new RemoteCommandClient(Environment.SolutionName);
@@ -46,31 +46,31 @@ namespace NeeView
             _server.Stop();
         }
 
-        public void AddReciever(string ID, RemoteCommandReciever reciever)
+        public void AddReceiver(string ID, RemoteCommandReceiver receiver)
         {
             if (_disposedValue) return;
 
-            _recievers.Add(ID, reciever);
+            _receivers.Add(ID, receiver);
         }
 
-        public void RemoveReciever(string ID)
+        public void RemoveReceiver(string ID)
         {
             if (_disposedValue) return;
 
-            _recievers.Remove(ID);
+            _receivers.Remove(ID);
         }
 
-        private void Reciever(object? sender, RemoteCommandEventArgs e)
+        private void Receiver(object? sender, RemoteCommandEventArgs e)
         {
             if (_disposedValue) return;
 
-            if (_recievers.TryGetValue(e.Command.Id, out RemoteCommandReciever? reciever))
+            if (_receivers.TryGetValue(e.Command.Id, out RemoteCommandReceiver? receiver))
             {
                 AppDispatcher.BeginInvoke(() =>
                 {
                     try
                     {
-                        reciever(e.Command);
+                        receiver(e.Command);
                     }
                     catch (Exception ex)
                     {

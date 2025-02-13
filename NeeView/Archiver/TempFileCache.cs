@@ -22,7 +22,7 @@ namespace NeeView
         /// TempFileをキャッシュから取得。
         /// </summary>
         /// <param name="key">Ident</param>
-        /// <returns>キャッシュに存在しない場合はnull</returns>
+        /// <returns>キャッシュに存在しない場合は null</returns>
         public TempFile? Get(string key)
         {
             lock (_lock)

@@ -16,15 +16,15 @@ namespace NeeView
         {
             _model = model;
 
-            _model.SubscribePropertyChanged(nameof(_model.IsDispNowLoading),
-                (_, _) => AppDispatcher.Invoke(() => RaisePropertyChanged(nameof(IsDispNowLoading))));
+            _model.SubscribePropertyChanged(nameof(_model.IsDisplayNowLoading),
+                (_, _) => AppDispatcher.Invoke(() => RaisePropertyChanged(nameof(IsDisplayNowLoading))));
         }
 
 
-        public bool IsDispNowLoading
+        public bool IsDisplayNowLoading
         {
-            get => _model.IsDispNowLoading;
-            set => _model.IsDispNowLoading = value;
+            get => _model.IsDisplayNowLoading;
+            set => _model.IsDisplayNowLoading = value;
         }
     }
 

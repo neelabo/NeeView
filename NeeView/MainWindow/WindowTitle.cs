@@ -40,7 +40,7 @@ namespace NeeView
             _titleString = new TitleString(_titleStringService);
             _titleString.AddPropertyChanged(nameof(TitleString.Title), TitleString_TitleChanged);
 
-            _defaultWindowTitle = $"{Environment.ApplicationName} {Environment.DispVersion}";
+            _defaultWindowTitle = $"{Environment.ApplicationName} {Environment.DisplayVersion}";
 
             _presenter.ViewContentChanged += (s, e) =>
             {

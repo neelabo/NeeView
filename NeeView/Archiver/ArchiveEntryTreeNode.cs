@@ -41,9 +41,9 @@ namespace NeeView
             yield return this;
             foreach (var child in Children)
             {
-                foreach (var subChid in child)
+                foreach (var subChild in child)
                 {
-                    yield return subChid;
+                    yield return subChild;
                 }
             }
         }

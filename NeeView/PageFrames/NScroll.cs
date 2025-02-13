@@ -13,7 +13,7 @@ namespace NeeView.PageFrames
     /// </summary>
     public class NScroll
     {
-        private const double _nscrollCountThreshold = 0.9;
+        private const double _scrollCountThreshold = 0.9;
 
         private PageFrameContext _context;
         private Rect _contentRect;
@@ -66,43 +66,43 @@ namespace NeeView.PageFrames
 
 
         // N字スクロール：スクロール距離を計算
-        private Vector GetNScrollDelta(int direction, int bookReadDirection, NScrollType scrollType, double rate, double endMergin)
+        private Vector GetNScrollDelta(int direction, int bookReadDirection, NScrollType scrollType, double rate, double endMargin)
         {
             var area = new DragArea(_viewRect, _contentRect);
 
             return scrollType switch
             {
-                NScrollType.NType => GetNTypeScrollDelta(area, direction, bookReadDirection, rate, endMergin),
-                NScrollType.ZType => GetZTypeScrollDelta(area, direction, bookReadDirection, rate, endMergin),
-                _ => GetDiagonalScrollDelta(area, direction, bookReadDirection, rate, endMergin),
+                NScrollType.NType => GetNTypeScrollDelta(area, direction, bookReadDirection, rate, endMargin),
+                NScrollType.ZType => GetZTypeScrollDelta(area, direction, bookReadDirection, rate, endMargin),
+                _ => GetDiagonalScrollDelta(area, direction, bookReadDirection, rate, endMargin),
             };
         }
 
-        private Vector GetNTypeScrollDelta(DragArea area, int direction, int bookReadDirection, double rate, double endMergin)
+        private Vector GetNTypeScrollDelta(DragArea area, int direction, int bookReadDirection, double rate, double endMargin)
         {
-            var delta = SnapZero(GetNScrollVertical(area, direction, bookReadDirection, rate), endMergin);
+            var delta = SnapZero(GetNScrollVertical(area, direction, bookReadDirection, rate), endMargin);
             if (delta.Y == 0.0)
             {
-                delta = SnapZero(GetNScrollNewLineVertical(area, direction, bookReadDirection, rate), endMergin);
+                delta = SnapZero(GetNScrollNewLineVertical(area, direction, bookReadDirection, rate), endMargin);
             }
             return delta;
         }
 
-        private Vector GetZTypeScrollDelta(DragArea area, int direction, int bookReadDirection, double rate, double endMergin)
+        private Vector GetZTypeScrollDelta(DragArea area, int direction, int bookReadDirection, double rate, double endMargin)
         {
-            var delta = SnapZero(GetNScrollHorizontal(area, direction, bookReadDirection, rate), endMergin);
+            var delta = SnapZero(GetNScrollHorizontal(area, direction, bookReadDirection, rate), endMargin);
             if (delta.X == 0.0)
             {
-                delta = SnapZero(GetNScrollNewLineHorizontal(area, direction, bookReadDirection, rate), endMergin);
+                delta = SnapZero(GetNScrollNewLineHorizontal(area, direction, bookReadDirection, rate), endMargin);
             }
             return delta;
         }
 
-        private static Vector GetDiagonalScrollDelta(DragArea area, int direction, int bookReadDirection, double rate, double endMergin)
+        private static Vector GetDiagonalScrollDelta(DragArea area, int direction, int bookReadDirection, double rate, double endMargin)
         {
             var deltaX = GetNScrollHorizontal(area, direction, bookReadDirection, rate);
             var deltaY = GetNScrollVertical(area, direction, bookReadDirection, rate);
-            return SnapZero(new Vector(deltaX.X, deltaY.Y), endMergin);
+            return SnapZero(new Vector(deltaX.X, deltaY.Y), endMargin);
         }
 
         private static Vector GetNScrollHorizontal(DragArea area, int direction, int bookReadDirection, double rate)
@@ -208,14 +208,14 @@ namespace NeeView.PageFrames
             return -margin < value && value < margin ? 0.0 : value;
         }
 
-        private static Vector SnapZero(Vector v, double mergin)
+        private static Vector SnapZero(Vector v, double margin)
         {
             if (v.IsZero())
             {
                 return v;
             }
 
-            if (v.LengthSquared < mergin * mergin)
+            if (v.LengthSquared < margin * margin)
             {
                 return new Vector();
             }
@@ -230,7 +230,7 @@ namespace NeeView.PageFrames
             if (area.Over.Top < 0.0)
             {
                 double dy = Math.Abs(area.Over.Top);
-                var n = (int)(dy / (area.ViewRect.Height * rate) + _nscrollCountThreshold);
+                var n = (int)(dy / (area.ViewRect.Height * rate) + _scrollCountThreshold);
                 if (n > 1)
                 {
                     dy = Math.Min(dy / n, dy);
@@ -249,7 +249,7 @@ namespace NeeView.PageFrames
             if (area.Over.Bottom > 0.0)
             {
                 double dy = Math.Abs(area.Over.Bottom);
-                var n = (int)(dy / (area.ViewRect.Height * rate) + _nscrollCountThreshold);
+                var n = (int)(dy / (area.ViewRect.Height * rate) + _scrollCountThreshold);
                 if (n > 1)
                 {
                     dy = Math.Min(dy / n, dy);
@@ -292,7 +292,7 @@ namespace NeeView.PageFrames
             if (area.Over.Left < 0.0)
             {
                 double dx = Math.Abs(area.Over.Left);
-                var n = (int)(dx / (area.ViewRect.Width * rate) + _nscrollCountThreshold);
+                var n = (int)(dx / (area.ViewRect.Width * rate) + _scrollCountThreshold);
                 if (n > 1)
                 {
                     dx = Math.Min(dx / n, dx);
@@ -311,7 +311,7 @@ namespace NeeView.PageFrames
             if (area.Over.Right > 0.0)
             {
                 double dx = Math.Abs(area.Over.Right);
-                var n = (int)(dx / (area.ViewRect.Width * rate) + _nscrollCountThreshold);
+                var n = (int)(dx / (area.ViewRect.Width * rate) + _scrollCountThreshold);
                 if (n > 1)
                 {
                     dx = Math.Min(dx / n, dx);

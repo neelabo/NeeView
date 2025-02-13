@@ -14,7 +14,7 @@ namespace NeeView
         internal FolderItem Source => _source;
 
         [WordNodeMember]
-        public string? Name => _source.DispName;
+        public string? Name => _source.DisplayName;
 
         [WordNodeMember]
         public string Path => _source.TargetPath.SimplePath;

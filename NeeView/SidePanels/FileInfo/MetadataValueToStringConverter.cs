@@ -9,7 +9,7 @@ namespace NeeView
     {
         public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return MetadataValueTools.ToDispString(value);
+            return MetadataValueTools.ToDisplayString(value);
 
 #if false
             if (value is null) return null;
@@ -32,7 +32,7 @@ namespace NeeView
 
     public static class MetadataValueTools
     {
-        public static string? ToDispString(object? value)
+        public static string? ToDisplayString(object? value)
         {
             if (value is null) return null;
 

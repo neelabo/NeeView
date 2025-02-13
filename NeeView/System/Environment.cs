@@ -119,7 +119,7 @@ namespace NeeView
         /// <summary>
         /// 表示用バージョン
         /// </summary>
-        public static string DispVersion
+        public static string DisplayVersion
         {
             get
             {
@@ -145,7 +145,7 @@ namespace NeeView
         /// <summary>
         /// 表示用バージョン (ショート)
         /// </summary>
-        public static string DispVersionShort
+        public static string DisplayVersionShort
         {
             get
             {

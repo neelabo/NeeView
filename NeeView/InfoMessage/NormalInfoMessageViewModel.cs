@@ -34,10 +34,10 @@ namespace NeeView
                     RaisePropertyChanged(nameof(HistoryIconVisibility));
                 });
 
-            _model.AddPropertyChanged(nameof(NormalInfoMessage.DispTime),
+            _model.AddPropertyChanged(nameof(NormalInfoMessage.DisplayTime),
                 (s, e) =>
                 {
-                    RaisePropertyChanged(nameof(DispTime));
+                    RaisePropertyChanged(nameof(DisplayTime));
                 });
         }
 
@@ -53,7 +53,7 @@ namespace NeeView
 
         public string? Message => _model.Model.Message;
 
-        public TimeSpan DispTime => TimeSpan.FromSeconds(_model.Model.DispTime);
+        public TimeSpan DisplayTime => TimeSpan.FromSeconds(_model.Model.DisplayTime);
 
         public Visibility Visibility => string.IsNullOrEmpty(_model.Model.Message) ? Visibility.Collapsed : Visibility.Visible;
 

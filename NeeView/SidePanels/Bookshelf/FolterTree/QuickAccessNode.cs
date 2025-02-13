@@ -18,7 +18,7 @@ namespace NeeView
 
         public override string Name { get => QuickAccessSource.Name; set { } }
 
-        public override string DispName { get => Name; set { } }
+        public override string DisplayName { get => Name; set { } }
 
         public string Path { get => QuickAccessSource.Path; }
 
@@ -45,7 +45,7 @@ namespace NeeView
 
             QuickAccessSource.Name = name;
             RaisePropertyChanged(nameof(Name));
-            RaisePropertyChanged(nameof(DispName));
+            RaisePropertyChanged(nameof(DisplayName));
             return true;
         }
 

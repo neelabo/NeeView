@@ -10,15 +10,15 @@ namespace NeeView
     /// </summary>
     public class AutoFadeTriggerAction : TriggerAction<FrameworkElement>
     {
-        public TimeSpan DispTime
+        public TimeSpan DisplayTime
         {
-            get { return (TimeSpan)GetValue(DispTimeProperty); }
-            set { SetValue(DispTimeProperty, value); }
+            get { return (TimeSpan)GetValue(DisplayTimeProperty); }
+            set { SetValue(DisplayTimeProperty, value); }
         }
 
         // Using a DependencyProperty as the backing store for StartTime.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty DispTimeProperty =
-            DependencyProperty.Register("DispTime", typeof(TimeSpan), typeof(AutoFadeTriggerAction), new PropertyMetadata(TimeSpan.FromSeconds(1.0)));
+        public static readonly DependencyProperty DisplayTimeProperty =
+            DependencyProperty.Register("DisplayTime", typeof(TimeSpan), typeof(AutoFadeTriggerAction), new PropertyMetadata(TimeSpan.FromSeconds(1.0)));
 
 
         public Duration FadeTime
@@ -35,7 +35,7 @@ namespace NeeView
         //
         protected override void Invoke(object parameter)
         {
-            AutoFade(AssociatedObject, DispTime, FadeTime);
+            AutoFade(AssociatedObject, DisplayTime, FadeTime);
         }
 
 

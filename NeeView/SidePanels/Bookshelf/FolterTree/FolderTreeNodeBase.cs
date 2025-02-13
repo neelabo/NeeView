@@ -76,7 +76,7 @@ namespace NeeView
 
         public abstract string Name { get; set; }
 
-        public abstract string DispName { get; set; }
+        public abstract string DisplayName { get; set; }
 
         public abstract IImageSourceCollection? Icon { get; }
 
@@ -277,7 +277,7 @@ namespace NeeView
             if (node != null)
             {
                 node.RaisePropertyChanged(nameof(Name));
-                node.RaisePropertyChanged(nameof(DispName));
+                node.RaisePropertyChanged(nameof(DisplayName));
                 Sort(node);
             }
         }
@@ -350,7 +350,7 @@ namespace NeeView
 
         public override string ToString()
         {
-            return DispName;
+            return DisplayName;
         }
     }
 

@@ -27,7 +27,7 @@ namespace NeeView
         public string DriveName => Name + '\\';
 
         private string _dispName = "";
-        public override string DispName
+        public override string DisplayName
         {
             get { return _dispName; }
             set { SetProperty(ref _dispName, value); }
@@ -70,8 +70,8 @@ namespace NeeView
 
             await Task.Run(() =>
             {
-                var volumeLabel = _driveInfo.DriveType.ToDispString();
-                DispName = string.Format(CultureInfo.InvariantCulture, "{0} ({1})", volumeLabel, Name);
+                var volumeLabel = _driveInfo.DriveType.ToDisplayString();
+                DisplayName = string.Format(CultureInfo.InvariantCulture, "{0} ({1})", volumeLabel, Name);
 
                 // NOTE: ドライブによってはこのプロパティの取得に時間がかかる
                 IsReady = _driveInfo.IsReady;
@@ -80,8 +80,8 @@ namespace NeeView
                 {
                     if (_driveInfo.IsReady)
                     {
-                        volumeLabel = string.IsNullOrEmpty(_driveInfo.VolumeLabel) ? _driveInfo.DriveType.ToDispString() : _driveInfo.VolumeLabel;
-                        DispName = string.Format(CultureInfo.InvariantCulture, "{0} ({1})", volumeLabel, Name);
+                        volumeLabel = string.IsNullOrEmpty(_driveInfo.VolumeLabel) ? _driveInfo.DriveType.ToDisplayString() : _driveInfo.VolumeLabel;
+                        DisplayName = string.Format(CultureInfo.InvariantCulture, "{0} ({1})", volumeLabel, Name);
                     }
                 }
                 catch (Exception ex)

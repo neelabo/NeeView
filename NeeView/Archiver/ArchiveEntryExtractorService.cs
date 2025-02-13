@@ -32,7 +32,7 @@ namespace NeeView
         /// <summary>
         /// 指定したキーの削除
         /// </summary>
-        /// <returns>削除されたオブジェクトを返す。ない場合はnull</returns>
+        /// <returns>削除されたオブジェクトを返す。ない場合は null</returns>
         private ArchiveEntryExtractor? Remove(string key)
         {
             lock (_lock)
@@ -102,7 +102,7 @@ namespace NeeView
             }
             catch (OperationCanceledException)
             {
-                //Debug.WriteLine($"EXT: {entry.Ident} Add to Reserver");
+                //Debug.WriteLine($"EXT: {entry.Ident} Add to reservoir");
                 if (extractor != null)
                 {
                     this.Add(entry.Ident, extractor);

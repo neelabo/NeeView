@@ -11,7 +11,7 @@ namespace NeeView
         {
             if (value is string path)
             {
-                return LoosePath.GetDispName(path);
+                return LoosePath.GetDisplayName(path);
             }
             else
             {

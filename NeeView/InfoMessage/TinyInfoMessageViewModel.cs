@@ -36,7 +36,7 @@ namespace NeeView
 
 
         //
-        public TimeSpan DispTime => TimeSpan.FromSeconds(_model.DispTime);
+        public TimeSpan DisplayTime => TimeSpan.FromSeconds(_model.DisplayTime);
 
         //
         public Visibility Visibility => string.IsNullOrEmpty(_model.Message) ? Visibility.Collapsed : Visibility.Visible;
@@ -57,10 +57,10 @@ namespace NeeView
                     RaisePropertyChanged(nameof(Visibility));
                 });
 
-            _model.AddPropertyChanged(nameof(_model.DispTime),
+            _model.AddPropertyChanged(nameof(_model.DisplayTime),
                 (s, e) =>
                 {
-                    RaisePropertyChanged(nameof(DispTime));
+                    RaisePropertyChanged(nameof(DisplayTime));
                 });
         }
     }

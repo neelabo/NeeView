@@ -34,7 +34,7 @@
                         </Style.Triggers>
                     </Style>
                 </Border.Style>
-                <TextBlock x:Name="TextBlock" TextAlignment="Center" VerticalAlignment="Center" Padding="8,0" Text="{Binding DispText}" />
+                <TextBlock x:Name="TextBlock" TextAlignment="Center" VerticalAlignment="Center" Padding="8,0" Text="{Binding DisplayText}" />
             </Border>
             <TextBox x:Name="TextBox"  TextAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Stretch"
                  Foreground="{DynamicResource TextBox.Foreground}" Background="{DynamicResource TextBox.Background}"

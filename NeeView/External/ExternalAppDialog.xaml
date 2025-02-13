@@ -46,7 +46,7 @@
                     <GridViewColumn Header="{properties:TextBinding Word.Name}" Width="150">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding DispName}" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="{Binding DisplayName}" TextTrimming="CharacterEllipsis" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>

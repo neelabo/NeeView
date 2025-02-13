@@ -10,7 +10,7 @@
 
         public override bool CanExecute(object? sender, CommandContext e)
         {
-            return !NowLoading.Current.IsDispNowLoading && PlaylistPresenter.Current?.PlaylistListBox?.CanMoveNext() == true;
+            return !NowLoading.Current.IsDisplayNowLoading && PlaylistPresenter.Current?.PlaylistListBox?.CanMoveNext() == true;
         }
 
         public override void Execute(object? sender, CommandContext e)

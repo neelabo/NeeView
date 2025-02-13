@@ -38,7 +38,7 @@ namespace NeeView
 
         private readonly ViewContentMediaPlayer _player;
         private readonly DispatcherTimer _timer;
-        private bool _isTimeLeftDisp;
+        private bool _isTimeLeftDisplay;
         private Duration _duration;
         private TimeSpan _durationTimeSpan = TimeSpan.FromMilliseconds(1.0);
         private double _position;
@@ -157,7 +157,7 @@ namespace NeeView
                 {
                     _player.Position = _position;
                     RaisePropertyChanged(nameof(Position));
-                    RaisePropertyChanged(nameof(DispTime));
+                    RaisePropertyChanged(nameof(DisplayTime));
                 }
             }
         }
@@ -173,22 +173,22 @@ namespace NeeView
             }
         }
 
-        public bool IsTimeLeftDisp
+        public bool IsTimeLeftDisplay
         {
-            get { return _isTimeLeftDisp; }
+            get { return _isTimeLeftDisplay; }
             set
             {
                 if (_disposedValue) return;
-                if (_isTimeLeftDisp != value)
+                if (_isTimeLeftDisplay != value)
                 {
-                    _isTimeLeftDisp = value;
+                    _isTimeLeftDisplay = value;
                     RaisePropertyChanged();
-                    RaisePropertyChanged(nameof(DispTime));
+                    RaisePropertyChanged(nameof(DisplayTime));
                 }
             }
         }
 
-        public string? DispTime
+        public string? DisplayTime
         {
             get
             {
@@ -200,7 +200,7 @@ namespace NeeView
 
                 var totalString = total.GetHours() > 0 ? $"{total.GetHours()}:{total.Minutes:00}:{total.Seconds:00}" : $"{total.Minutes}:{total.Seconds:00}";
 
-                var nowString = _isTimeLeftDisp
+                var nowString = _isTimeLeftDisplay
                     ? left.GetHours() > 0 ? $"-{left.GetHours()}:{left.Minutes:00}:{left.Seconds:00}" : $"-{left.Minutes}:{left.Seconds:00}"
                     : now.GetHours() > 0 ? $"{now.GetHours()}:{now.Minutes:00}:{now.Seconds:00}" : $"{now.Minutes}:{now.Seconds:00}";
 
@@ -306,7 +306,7 @@ namespace NeeView
         {
             _position = _player.Position;
             RaisePropertyChanged(nameof(Position));
-            RaisePropertyChanged(nameof(DispTime));
+            RaisePropertyChanged(nameof(DisplayTime));
         }
 
         private void Player_MediaFailed(object? sender, ExceptionEventArgs e)

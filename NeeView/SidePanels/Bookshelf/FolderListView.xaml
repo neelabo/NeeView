@@ -72,7 +72,7 @@
                 <Setter Property="HeaderTemplate">
                     <Setter.Value>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Path=Value.DispName}" />
+                            <TextBlock Text="{Binding Path=Value.DisplayName}" />
                         </DataTemplate>
                     </Setter.Value>
                 </Setter>
@@ -109,7 +109,7 @@
                                         ToolTip="{properties:TextBinding Bookshelf.SubFolder.ToolTip}"
                                         Visibility="{Binding FolderCollection, Converter={StaticResource FolderCollectionToFolderRecursiveVisibilityConverter}}" />
                                 <Border Margin="5,0">
-                                    <nwc:LeftTrimmingTextBlock TextSource="{Binding FolderCollection.PlaceDispString}" ToolTip="{Binding FolderCollection.PlaceDispString}" VerticalAlignment="Center" />
+                                    <nwc:LeftTrimmingTextBlock TextSource="{Binding FolderCollection.PlaceDisplayString}" ToolTip="{Binding FolderCollection.PlaceDisplayString}" VerticalAlignment="Center" />
                                 </Border>
 
                             </DockPanel>

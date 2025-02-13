@@ -130,14 +130,14 @@ namespace NeeView
             {
                 if (SetProperty(ref _name, value))
                 {
-                    RaisePropertyChanged(nameof(DispName));
+                    RaisePropertyChanged(nameof(DisplayName));
                     RaisePropertyChanged(nameof(Detail));
                 }
             }
         }
 
         // 表示名
-        public string? DispName
+        public string? DisplayName
         {
             get { return _dispName ?? (IsHideExtension() ? System.IO.Path.GetFileNameWithoutExtension(_name) : _name); }
             set { SetProperty(ref _dispName, value); }
@@ -373,7 +373,7 @@ namespace NeeView
         public override string? ToString()
         {
             // return $"FolderItem: {Name}, Place={Place}, TargetPath={TargetPath}";
-            return DispName;
+            return DisplayName;
         }
 
         public string GetRenameText()
@@ -542,7 +542,7 @@ namespace NeeView
                 FolderOrder.Path or FolderOrder.PathDescending
                     => SidePanelProfile.GetDecoratePlaceName(LoosePath.GetDirectoryName(TargetPath.SimplePath)),
                 _
-                    => GetLastWriteTimeString() + (Length > 0 ? FileSizeToStringConverter.ByteToDispString(Length) : ""),
+                    => GetLastWriteTimeString() + (Length > 0 ? FileSizeToStringConverter.ByteToDisplayString(Length) : ""),
             };
         }
     }

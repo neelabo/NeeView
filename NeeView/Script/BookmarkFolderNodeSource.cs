@@ -14,7 +14,7 @@ namespace NeeView
         [WordNodeMember(AltName = "@Word.Name")]
         public string Name
         {
-            get { return _node.DispName; }
+            get { return _node.DisplayName; }
             set { AppDispatcher.Invoke(() => _node.Rename(value)); }
         }
 

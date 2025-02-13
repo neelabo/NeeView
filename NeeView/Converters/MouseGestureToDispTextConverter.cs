@@ -6,7 +6,7 @@ namespace NeeView
 {
     // ジェスチャー表示用コンバータ
     [ValueConversion(typeof(string), typeof(string))]
-    public class MouseGestureToDispTextConverter : IValueConverter
+    public class MouseGestureToDisplayTextConverter : IValueConverter
     {
         public object? Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {

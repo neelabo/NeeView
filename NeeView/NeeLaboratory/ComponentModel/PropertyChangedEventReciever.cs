@@ -9,16 +9,16 @@ namespace NeeLaboratory.ComponentModel
     /// <remarks>
     /// 未テスト
     /// </remarks>
-    public class PropertyChangedEventReciever
+    public class PropertyChangedEventReceiver
     {
         private Dictionary<string, PropertyChangedEventHandler> _map = new();
 
-        public void AddListner(string propertyName, PropertyChangedEventHandler handler)
+        public void AddListener(string propertyName, PropertyChangedEventHandler handler)
         {
             _map.Add(propertyName, handler);
         }
 
-        public void RemoveListner(string propertyName)
+        public void RemoveListener(string propertyName)
         {
             _map.Remove(propertyName);
         }

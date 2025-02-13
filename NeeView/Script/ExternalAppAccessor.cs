@@ -20,7 +20,7 @@ namespace NeeView
         [WordNodeMember]
         public string Name
         {
-            get { return _externalApp.DispName; }
+            get { return _externalApp.DisplayName; }
             set { AppDispatcher.Invoke(() => _externalApp.Name = value); }
         }
 

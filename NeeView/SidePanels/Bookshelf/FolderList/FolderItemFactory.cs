@@ -31,7 +31,7 @@ namespace NeeView
                 Place = _place,
                 Name = ".",
                 TargetPath = _place.ReplacePath(LoosePath.Combine(_place.Path, ".")),
-                DispName = Properties.TextResources.GetString("Notice.NoFiles"),
+                DisplayName = Properties.TextResources.GetString("Notice.NoFiles"),
                 Attributes = FolderItemAttribute.Empty,
             };
         }
@@ -107,7 +107,7 @@ namespace NeeView
                 Place = _place,
                 Name = e.Name,
                 TargetPath = new QueryPath(e.Name),
-                DispName = string.Format(CultureInfo.InvariantCulture, "{0} ({1})", e.DriveType.ToDispString(), e.Name.TrimEnd('\\')),
+                DisplayName = string.Format(CultureInfo.InvariantCulture, "{0} ({1})", e.DriveType.ToDisplayString(), e.Name.TrimEnd('\\')),
                 Attributes = FolderItemAttribute.Directory | FolderItemAttribute.Drive,
                 IsReady = DriveReadyMap.IsDriveReady(e.Name),
             };
@@ -120,8 +120,8 @@ namespace NeeView
 
                 item.IsReady = isReady;
 
-                var driveName = isReady && !string.IsNullOrWhiteSpace(e.VolumeLabel) ? e.VolumeLabel : e.DriveType.ToDispString();
-                item.DispName = string.Format(CultureInfo.InvariantCulture, "{0} ({1})", driveName, e.Name.TrimEnd('\\'));
+                var driveName = isReady && !string.IsNullOrWhiteSpace(e.VolumeLabel) ? e.VolumeLabel : e.DriveType.ToDisplayString();
+                item.DisplayName = string.Format(CultureInfo.InvariantCulture, "{0} ({1})", driveName, e.Name.TrimEnd('\\'));
             });
 
             return item;

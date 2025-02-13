@@ -23,7 +23,7 @@ namespace NeeView
 
         public override string Name { get => QueryScheme.File.ToSchemeString(); set { } }
 
-        public override string DispName { get => "PC"; set { } }
+        public override string DisplayName { get => "PC"; set { } }
 
         public override IImageSourceCollection Icon { get; }
 

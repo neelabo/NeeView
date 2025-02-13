@@ -92,7 +92,7 @@ namespace NeeView
         }
 
 
-        public string? DispText
+        public string? DisplayText
         {
             get { return _dispText; }
             set { if (_dispText != value) { _dispText = value; RaisePropertyChanged(); } }
@@ -129,7 +129,7 @@ namespace NeeView
 
         private void UpdateValue()
         {
-            this.DispText = $"{Value + 1} / {Maximum + 1}";
+            this.DisplayText = $"{Value + 1} / {Maximum + 1}";
         }
 
 

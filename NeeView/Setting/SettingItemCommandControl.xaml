@@ -23,7 +23,7 @@
             </DrawingImage>
 
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-            <nv:MouseGestureToDispTextConverter x:Key="MouseGestureToDispTextConverter" />
+            <nv:MouseGestureToDisplayTextConverter x:Key="MouseGestureToDisplayTextConverter" />
 
         </Grid.Resources>
 

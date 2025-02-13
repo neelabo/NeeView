@@ -22,7 +22,7 @@
         <local:BrushAlphaToVisibilityConverter x:Key="BrushAlphaToVisibilityConverter" />
 
         <Style x:Key="NameStyleBase" TargetType="TextBlock" >
-            <Setter Property="Text" Value="{Binding DispName}"/>
+            <Setter Property="Text" Value="{Binding DisplayName}"/>
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>

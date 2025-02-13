@@ -28,7 +28,7 @@
                 <Setter Property="HeaderTemplate">
                     <Setter.Value>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Path=Value.DispName}" />
+                            <TextBlock Text="{Binding Path=Value.DisplayName}" />
                         </DataTemplate>
                     </Setter.Value>
                 </Setter>

@@ -13,28 +13,28 @@ namespace NeeView
         private NowLoading()
         {
             PageFrameBoxPresenter.Current.Loading +=
-                (s, e) => IsDispNowLoading = e.Path != null;
+                (s, e) => IsDisplayNowLoading = e.Path != null;
         }
 
         /// <summary>
-        /// IsDispNowLoading property.
+        /// IsDisplayNowLoading property.
         /// </summary>
-        public bool IsDispNowLoading
+        public bool IsDisplayNowLoading
         {
-            get { return _IsDispNowLoading; }
-            set { if (_IsDispNowLoading != value) { _IsDispNowLoading = value; RaisePropertyChanged(); } }
+            get { return _IsDisplayNowLoading; }
+            set { if (_IsDisplayNowLoading != value) { _IsDisplayNowLoading = value; RaisePropertyChanged(); } }
         }
 
-        private bool _IsDispNowLoading;
+        private bool _IsDisplayNowLoading;
 
         public void SetLoading(string message)
         {
-            IsDispNowLoading = true;
+            IsDisplayNowLoading = true;
         }
 
         public void ResetLoading()
         {
-            IsDispNowLoading = false;
+            IsDisplayNowLoading = false;
         }
     }
 

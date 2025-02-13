@@ -18,7 +18,7 @@
         [WordNodeMember(AltName = "@Word.Name")]
         public string Name
         {
-            get { return _node.DispName; }
+            get { return _node.DisplayName; }
         }
     }
 }

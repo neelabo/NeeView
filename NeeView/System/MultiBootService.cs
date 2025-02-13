@@ -23,7 +23,7 @@ namespace NeeView
             _currentProcess = Process.GetCurrentProcess();
             _serverProcess = GetServerProcess(_currentProcess);
 
-            RemoteCommandService.Current.AddReciever("LoadAs", LoadAs);
+            RemoteCommandService.Current.AddReceiver("LoadAs", LoadAs);
         }
 
         /// <summary>

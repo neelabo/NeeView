@@ -76,7 +76,7 @@ namespace NeeView
             }
         }
 
-        public string DispPlace
+        public string DisplayPlace
         {
             get { return SidePanelProfile.GetDecoratePlaceName(Place); }
         }
@@ -119,9 +119,9 @@ namespace NeeView
             BookThumbnailPool.Current.Add(thumbnail);
         }
 
-        public void UpdateDispPlace()
+        public void UpdateDisplayPlace()
         {
-            RaisePropertyChanged(nameof(DispPlace));
+            RaisePropertyChanged(nameof(DisplayPlace));
         }
 
         public Page GetPage()

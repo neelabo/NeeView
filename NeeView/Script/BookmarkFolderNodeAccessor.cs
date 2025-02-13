@@ -22,7 +22,7 @@ namespace NeeView
         public override object? Value => _value;
 
 
-        protected override string GetName() => _node.DispName;
+        protected override string GetName() => _node.DisplayName;
 
         [ReturnType(typeof(BookmarkFolderNodeAccessor))]
         public override NodeAccessor Add(IDictionary<string, object?>? parameter)

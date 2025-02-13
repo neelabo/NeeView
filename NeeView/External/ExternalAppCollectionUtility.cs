@@ -36,7 +36,7 @@ namespace NeeView
                 for (int i = 0; i < Config.Current.System.ExternalAppCollection.Count; ++i)
                 {
                     var externalApp = Config.Current.System.ExternalAppCollection[i];
-                    var header = MenuItemTools.IntegerToAccessKey(i + 1) + " " + MenuItemTools.EscapeMenuItemString(externalApp.DispName);
+                    var header = MenuItemTools.IntegerToAccessKey(i + 1) + " " + MenuItemTools.EscapeMenuItemString(externalApp.DisplayName);
                     var parameter = parameterFactory.CreateParameter(externalApp);
                     items.Add(new MenuItem() { Header = header, ToolTip = externalApp.Command, Command = command, CommandParameter = parameter });
                 }
