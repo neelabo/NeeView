@@ -1,6 +1,5 @@
 name: Bug Report
 description: Report a problem with NeeView
-title: "BUG: "
 labels: [bug]
 
 body:
@@ -12,8 +11,6 @@ body:
       description: >
         NeeView version.
       placeholder: "e.g., 42.6"
-    validations:
-      required: true
 
   - type: textarea
     id: problem
