@@ -9,7 +9,7 @@ namespace NeeView
         private readonly List<object> _collection;
         private readonly int _selectedIndex;
 
-        public TreeViewTextSearchCollection(INavigateControl treeView, IEnumerable<ITreeViewItemData> roots)
+        public TreeViewTextSearchCollection(INavigateControl treeView, IEnumerable<ITreeViewNode> roots)
         {
             _treeView = treeView;
             _collection = new List<object>(roots.SelectMany(e => e.Walk()));

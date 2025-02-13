@@ -328,13 +328,18 @@ namespace NeeView
             if (!_vm.IsValid) return;
             if (_vm.Model is null) return;
 
+            if (!this.TreeView.IsVisible)
+            {
+                return;
+            }
+
             var selectedItem = _vm.Model.SelectedItem;
             if (selectedItem == null)
             {
                 return;
             }
 
-            var container = ScrollIntoView(selectedItem);
+            var container = this.TreeView.ScrollIntoView(selectedItem);
             if (container is not null && isFocus)
             {
                 container.Focus();
@@ -344,6 +349,7 @@ namespace NeeView
             _vm.Model.SelectedItem = selectedItem;
         }
 
+#if false
         private ItemsControl? ScrollIntoView(FolderTreeNodeBase item)
         {
             if (item == null)
@@ -451,6 +457,7 @@ namespace NeeView
                 return subContainer;
             }
         }
+#endif
 
         private void ViewModel_SelectedItemChanged(object? sender, EventArgs e)
         {
@@ -1020,7 +1027,7 @@ namespace NeeView
         {
             if (item is not FolderTreeNodeBase itemData) return;
 
-            ScrollIntoView(itemData);
+            this.TreeView.ScrollIntoView(itemData);
             itemData.IsSelected = true;
         }
 

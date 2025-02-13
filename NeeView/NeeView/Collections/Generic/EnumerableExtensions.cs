@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -60,7 +61,14 @@ namespace NeeView.Collections.Generic
         ///<returns>The index of the first matching item, or -1 if the item was not found.</returns>
         public static int IndexOf<T>(this IEnumerable<T> items, T item)
         {
-            return items.FindIndex(i => EqualityComparer<T>.Default.Equals(item, i));
+            if (items is IList collection)
+            {
+                return collection.IndexOf(item);
+            }
+            else
+            {
+                return items.FindIndex(i => EqualityComparer<T>.Default.Equals(item, i));
+            }
         }
 
         /// <summary>

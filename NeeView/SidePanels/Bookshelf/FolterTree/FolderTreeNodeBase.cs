@@ -14,11 +14,12 @@ namespace NeeView
     /// <summary>
     /// TreeViewNode基底.
     /// </summary>
-    public abstract class FolderTreeNodeBase : BindableBase, IRenameable, IDisposable, ITreeViewItemData
+    public abstract class FolderTreeNodeBase : BindableBase, IRenameable, IDisposable, ITreeViewNode
     {
         private bool _isDisposed;
         private bool _isSelected;
         private bool _isExpanded;
+        private FolderTreeNodeBase? _parent;
         protected ObservableCollection<FolderTreeNodeBase>? _children;
 
 
@@ -81,7 +82,6 @@ namespace NeeView
 
         public object? Source { get; protected set; }
 
-        private FolderTreeNodeBase? _parent;
         public FolderTreeNodeBase? Parent
         {
             get { return _parent; }
@@ -122,30 +122,18 @@ namespace NeeView
             }
         }
 
-        /// <summary>
-        /// 階層コレクション
-        /// </summary>
-        public IEnumerable<FolderTreeNodeBase> Hierarchy
-        {
-            get
-            {
-                return HierarchyReverse.Reverse();
-            }
-        }
+        public IEnumerable<FolderTreeNodeBase> Hierarchy => HierarchyReverse.Reverse();
 
-        public IEnumerable<FolderTreeNodeBase> HierarchyReverse
-        {
-            get
-            {
-                yield return this;
-                for (var parent = Parent; parent != null; parent = parent.Parent)
-                {
-                    yield return parent;
-                }
-            }
-        }
+        public IEnumerable<FolderTreeNodeBase> HierarchyReverse => this.GteHierarchyReverse().Cast<FolderTreeNodeBase>();
 
-        IEnumerable<ITreeViewItemData>? ITreeViewItemData.Children => Children;
+        #region for ITreeNode
+        
+        ITreeNode? ITreeNode.Parent => Parent;
+
+        IEnumerable<ITreeNode>? ITreeNode.Children => Children;
+
+        #endregion for ITreeNode
+
 
         protected virtual void OnParentChanged(object sender, EventArgs e)
         {
@@ -365,5 +353,6 @@ namespace NeeView
             return DispName;
         }
     }
+
 }
 

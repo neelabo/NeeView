@@ -120,7 +120,7 @@ namespace NeeView
             ResetState();
         }
 
-        private void ResetState()
+        public void ResetState()
         {
             _prefix = "";
             _charsEntered.Clear();

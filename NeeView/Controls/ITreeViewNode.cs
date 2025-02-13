@@ -2,32 +2,31 @@
 
 namespace NeeView
 {
-    public interface ITreeViewItemData
+    public interface ITreeViewNode : ITreeNode
     {
         bool IsSelected { get; set; }
         bool IsExpanded { get; set; }
-        IEnumerable<ITreeViewItemData>? Children { get; }
     }
 
 
-    public interface ITreeViewItemData<T>
+    public interface ITreeViewNode<T> : ITreeNode<T>
+        where T : ITreeViewNode<T>, ITreeNode<T>
     {
         bool IsSelected { get; set; }
         bool IsExpanded { get; set; }
-        IEnumerable<ITreeViewItemData<T>>? Children { get; }
     }
 
 
-    public static class TreeViewItemDataExtensions
+    public static class TreeViewNodeExtensions
     {
-        public static IEnumerable<ITreeViewItemData> WalkChildren(this ITreeViewItemData node)
+        public static IEnumerable<ITreeViewNode> WalkChildren(this ITreeViewNode node)
         {
             if (!node.IsExpanded || node.Children is null)
             {
                 yield break;
             }
 
-            foreach (var child in node.Children)
+            foreach (ITreeViewNode child in node.Children)
             {
                 yield return child;
                 foreach (var subChild in WalkChildren(child))
@@ -37,7 +36,7 @@ namespace NeeView
             }
         }
 
-        public static IEnumerable<ITreeViewItemData> Walk(this ITreeViewItemData node)
+        public static IEnumerable<ITreeViewNode> Walk(this ITreeViewNode node)
         {
             yield return node;
 
@@ -47,7 +46,8 @@ namespace NeeView
             }
         }
 
-        public static IEnumerable<ITreeViewItemData<T>> WalkChildren<T>(this ITreeViewItemData<T> item)
+        public static IEnumerable<T> WalkChildren<T>(this T item)
+            where T : ITreeViewNode<T>
         {
             if (!item.IsExpanded || item.Children is null)
             {
@@ -64,7 +64,8 @@ namespace NeeView
             }
         }
 
-        public static IEnumerable<ITreeViewItemData<T>> Walk<T>(this ITreeViewItemData<T> item)
+        public static IEnumerable<T> Walk<T>(this T item)
+            where T : ITreeViewNode<T>
         {
             yield return item;
 
