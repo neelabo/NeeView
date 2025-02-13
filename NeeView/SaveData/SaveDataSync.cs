@@ -110,7 +110,15 @@ namespace NeeView
         {
             Debug.WriteLine($"{SaveDataProfile.UserSettingFileName} is updated by other process.");
             var setting = SaveData.Current.LoadUserSetting(false);
-            UserSettingTools.Restore(setting);
+            try
+            {
+                Config.Current.Window.FreezeWindowState = true;
+                UserSettingTools.Restore(setting);
+            }
+            finally
+            {
+                Config.Current.Window.FreezeWindowState = false;
+            }
         }
 
         private void LoadHistory(RemoteCommand command)

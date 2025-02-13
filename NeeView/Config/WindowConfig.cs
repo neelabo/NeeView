@@ -49,7 +49,11 @@ namespace NeeView
         public WindowStateEx State
         {
             get { return _state; }
-            set { SetProperty(ref _state, value); }
+            set
+            {
+                if (FreezeWindowState) return;
+                SetProperty(ref _state, value);
+            }
         }
 
         /// <summary>
@@ -98,6 +102,14 @@ namespace NeeView
         [PropertyMapIgnore]
         [ObjectMergeReferenceCopy]
         public WindowPlacement? WindowPlacement { get; set; }
+
+        /// <summary>
+        /// ウィンドウ状態を凍結
+        /// </summary>
+        [JsonIgnore]
+        [PropertyMapIgnore]
+        [ObjectMergeIgnore]
+        public bool FreezeWindowState { get; set; }
 
         #endregion HiddenParameters
 
