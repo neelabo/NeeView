@@ -15,7 +15,7 @@ namespace NeeView
 {
     public partial class App
     {
-        public static string ErrorLogFileName => System.IO.Path.Combine(Environment.LocalApplicationDataPath, "ErrorLog.txt");
+        public static string ErrorLogFileName => System.IO.Path.Combine(Environment.LocalApplicationDataPath, $"ErrorLog-{DateTime.Now.ToString("yyyyMMddTHHmmss")}.txt");
 
 
         // 未処理例外発生数

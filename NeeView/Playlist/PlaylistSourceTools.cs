@@ -27,7 +27,7 @@ namespace NeeView
 
         private static string CreateTmpPlaylist(IEnumerable<string> files, string outputDirectory)
         {
-            string name = DateTime.Now.ToString("yyyyMMddHHmmss", CultureInfo.InvariantCulture) + PlaylistArchive.Extension;
+            string name = DateTime.Now.ToString("yyyyMMddTHHmmss", CultureInfo.InvariantCulture) + PlaylistArchive.Extension;
             string path = FileIO.CreateUniquePath(System.IO.Path.Combine(outputDirectory, name));
             Save(new PlaylistSource(files), path, true, true);
             return path;

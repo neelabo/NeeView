@@ -259,7 +259,7 @@ namespace NeeView
             //if (!System.IO.Directory.Exists(downloadPath)) throw new DropException("保存先フォルダーが存在しません");
 
             // ファイル名は固定
-            name = DateTime.Now.ToString("yyyyMMddHHmmss", CultureInfo.InvariantCulture);
+            name = DateTime.Now.ToString("yyyyMMddTHHmmss", CultureInfo.InvariantCulture);
             string ext = "";
 
             // 画像ファイルチェック
@@ -298,7 +298,7 @@ namespace NeeView
         // ファイル名の修正
         private static string ValidateFileName(string name)
         {
-            string DefaultName = DateTime.Now.ToString("yyyyMMddHHmmss");
+            string DefaultName = DateTime.Now.ToString("yyyyMMddTHHmmss");
 
             // nullの場合はデフォルト名
             name = name ?? DefaultName;
@@ -542,7 +542,7 @@ namespace NeeView
             {
                 if (data.GetData(DataFormats.Bitmap) is System.Windows.Interop.InteropBitmap bitmap)
                 {
-                    var name = DateTime.Now.ToString("yyyyMMddHHmmss", CultureInfo.InvariantCulture) + ".png";
+                    var name = DateTime.Now.ToString("yyyyMMddTHHmmss", CultureInfo.InvariantCulture) + ".png";
 
                     // ユニークなパスを作成
                     string fileName = FileIO.CreateUniquePath(System.IO.Path.Combine(downloadPath, name));
