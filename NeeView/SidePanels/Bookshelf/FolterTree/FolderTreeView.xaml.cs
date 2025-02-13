@@ -27,10 +27,22 @@ namespace NeeView
     /// <summary>
     /// FolderTreeView.xaml の相互作用ロジック
     /// </summary>
-    public partial class FolderTreeView : UserControl
+    public partial class FolderTreeView : UserControl, INavigateControl
     {
         private readonly FolderTreeViewModel _vm;
         private CancellationTokenSource _removeUnlinkedCommandCancellationTokenSource = new();
+        private readonly SimpleTextSearch _textSearch = new();
+
+        private RelayCommand? _addQuickAccessCommand;
+        private RelayCommand? _removeCommand;
+        private RelayCommand? _propertyCommand;
+        private RelayCommand? _refreshFolderCommand;
+        private RelayCommand? _openExplorerCommand;
+        private RelayCommand? _newFolderCommand;
+        private RelayCommand? _renameCommand;
+        private RelayCommand? _removeUnlinkedCommand;
+        private RelayCommand? _addBookmarkCommand;
+
 
         public FolderTreeView()
         {
@@ -47,6 +59,10 @@ namespace NeeView
             this.Loaded += FolderTreeView_Loaded;
             this.Unloaded += FolderTreeView_Unloaded;
         }
+
+
+        public object SelectedItem => this.TreeView.SelectedItem;
+
 
         #region Dependency Properties
 
@@ -72,7 +88,6 @@ namespace NeeView
 
         #region Commands
 
-        private RelayCommand? _addQuickAccessCommand;
         public RelayCommand AddQuickAccessCommand
         {
             get
@@ -90,7 +105,6 @@ namespace NeeView
             }
         }
 
-        private RelayCommand? _removeCommand;
         public RelayCommand RemoveCommand
         {
             get
@@ -116,12 +130,11 @@ namespace NeeView
             }
         }
 
-        private RelayCommand? _PropertyCommand;
         public RelayCommand PropertyCommand
         {
             get
             {
-                return _PropertyCommand = _PropertyCommand ?? new RelayCommand(Execute);
+                return _propertyCommand = _propertyCommand ?? new RelayCommand(Execute);
 
                 void Execute()
                 {
@@ -148,12 +161,11 @@ namespace NeeView
             }
         }
 
-        private RelayCommand? _RefreshFolderCommand;
         public RelayCommand RefreshFolderCommand
         {
             get
             {
-                return _RefreshFolderCommand = _RefreshFolderCommand ?? new RelayCommand(Execute);
+                return _refreshFolderCommand = _refreshFolderCommand ?? new RelayCommand(Execute);
 
                 void Execute()
                 {
@@ -162,12 +174,11 @@ namespace NeeView
             }
         }
 
-        private RelayCommand? _OpenExplorerCommand;
         public RelayCommand OpenExplorerCommand
         {
             get
             {
-                return _OpenExplorerCommand = _OpenExplorerCommand ?? new RelayCommand(Execute);
+                return _openExplorerCommand = _openExplorerCommand ?? new RelayCommand(Execute);
 
                 void Execute()
                 {
@@ -179,13 +190,11 @@ namespace NeeView
             }
         }
 
-
-        private RelayCommand? _NewFolderCommand;
         public RelayCommand NewFolderCommand
         {
             get
             {
-                return _NewFolderCommand = _NewFolderCommand ?? new RelayCommand(Execute);
+                return _newFolderCommand = _newFolderCommand ?? new RelayCommand(Execute);
 
                 async void Execute()
                 {
@@ -206,13 +215,11 @@ namespace NeeView
             }
         }
 
-
-        private RelayCommand? _RenameCommand;
         public RelayCommand RenameCommand
         {
             get
             {
-                return _RenameCommand = _RenameCommand ?? new RelayCommand(Execute);
+                return _renameCommand = _renameCommand ?? new RelayCommand(Execute);
 
                 async void Execute()
                 {
@@ -230,8 +237,6 @@ namespace NeeView
             }
         }
 
-
-        private RelayCommand? _removeUnlinkedCommand;
         public RelayCommand RemoveUnlinkedCommand
         {
             get { return _removeUnlinkedCommand = _removeUnlinkedCommand ?? new RelayCommand(RemoveUnlinkedCommand_Executed); }
@@ -248,7 +253,6 @@ namespace NeeView
             }
         }
 
-        private RelayCommand? _addBookmarkCommand;
         public RelayCommand AddBookmarkCommand
         {
             get
@@ -315,24 +319,44 @@ namespace NeeView
             if (_vm.Model.IsFocusAtOnce)
             {
                 _vm.Model.IsFocusAtOnce = false;
-                ScrollIntoView(true);
+                ScrollIntoViewSelectedItem(true);
             }
         }
 
-        private void ScrollIntoView(bool isFocus)
+        private void ScrollIntoViewSelectedItem(bool isFocus)
         {
             if (!_vm.IsValid) return;
             if (_vm.Model is null) return;
-
-            if (!this.TreeView.IsVisible)
-            {
-                return;
-            }
 
             var selectedItem = _vm.Model.SelectedItem;
             if (selectedItem == null)
             {
                 return;
+            }
+
+            var container = ScrollIntoView(selectedItem);
+            if (container is not null && isFocus)
+            {
+                container.Focus();
+                ////Debug.WriteLine($"FolderTree.Focused: {isFocused}");
+            }
+
+            _vm.Model.SelectedItem = selectedItem;
+        }
+
+        private ItemsControl? ScrollIntoView(FolderTreeNodeBase item)
+        {
+            if (item == null)
+            {
+                return null;
+            }
+
+            if (!_vm.IsValid) return null;
+            if (_vm.Model is null) return null;
+
+            if (!this.TreeView.IsVisible)
+            {
+                return null;
             }
 
             ////Debug.WriteLine("ScrollIntoView:");
@@ -341,7 +365,7 @@ namespace NeeView
 
             ItemsControl? container = this.TreeView;
             var lastContainer = container;
-            foreach (var node in selectedItem.Hierarchy.Skip(1))
+            foreach (var node in item.Hierarchy.Skip(1))
             {
                 if (node.Parent == null)
                 {
@@ -369,15 +393,8 @@ namespace NeeView
                 lastContainer = container;
             }
 
-            if (isFocus)
-            {
-                lastContainer.Focus();
-                ////Debug.WriteLine($"FolderTree.Focused: {isFocused}");
-            }
-
-            _vm.Model.SelectedItem = selectedItem;
-
             ////Debug.WriteLine("ScrollIntoView: done.");
+            return lastContainer;
         }
 
         // from https://docs.microsoft.com/ja-jp/dotnet/framework/wpf/controls/how-to-find-a-treeviewitem-in-a-treeview
@@ -435,10 +452,9 @@ namespace NeeView
             }
         }
 
-
         private void ViewModel_SelectedItemChanged(object? sender, EventArgs e)
         {
-            ScrollIntoView(false);
+            ScrollIntoViewSelectedItem(false);
         }
 
         private void TreeView_SelectedItemChanged(object? sender, RoutedPropertyChangedEventArgs<object> e)
@@ -970,6 +986,45 @@ namespace NeeView
 #pragma warning restore IDE0060 // 未使用のパラメーターを削除します
 
         #endregion DragDrop
+
+        #region TextSearch
+
+        private void TreeView_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (Config.Current.Panels.IsTextSearchEnabled)
+            {
+                KeyExGesture.AllowSingleKey = false;
+            }
+        }
+
+        private void TreeView_TextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (Config.Current.Panels.IsTextSearchEnabled)
+            {
+                var item = this.TreeView.SelectedItem as FolderTreeNodeBase;
+                if (item is not null)
+                {
+                    // カテゴリ単位のツリー内でのテキスト検索
+                    var root = item.Hierarchy.Skip(1).FirstOrDefault();
+                    if (root != null)
+                    {
+                        var source = new TreeViewTextSearchCollection(this, [root]);
+                        _textSearch.DoSearch(source, e.Text);
+                        e.Handled = true;
+                    }
+                }
+            }
+        }
+
+        public void NavigateToItem(object item)
+        {
+            if (item is not FolderTreeNodeBase itemData) return;
+
+            ScrollIntoView(itemData);
+            itemData.IsSelected = true;
+        }
+
+        #endregion TextSearch
     }
 
 

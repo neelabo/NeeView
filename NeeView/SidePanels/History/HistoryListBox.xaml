@@ -105,7 +105,7 @@
             ScrollViewer.HorizontalScrollBarVisibility="Disabled" HorizontalContentAlignment="Stretch" ItemsSource="{Binding Items, NotifyOnTargetUpdated=True}" SelectedItem="{Binding SelectedItem}"
             TargetUpdated="HistoryListBox_TargetUpdated" KeyDown="HistoryListBox_KeyDown" SelectionChanged="HistoryListBox_SelectionChanged" IsVisibleChanged="HistoryListBox_IsVisibleChanged"
             VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.ScrollUnit="{StaticResource PanelScrollUnit}" VirtualizingStackPanel.VirtualizationMode="Recycling"
-            IsTextSearchEnabled="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsTextSearchEnabled}">
+            IsSimpleTextSearchEnabled="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsTextSearchEnabled}">
 
         <ListBox.Style>
             <Style TargetType="ListBox" BasedOn="{StaticResource NVListBox}">

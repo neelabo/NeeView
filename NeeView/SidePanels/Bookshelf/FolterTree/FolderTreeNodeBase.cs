@@ -14,7 +14,7 @@ namespace NeeView
     /// <summary>
     /// TreeViewNode基底.
     /// </summary>
-    public abstract class FolderTreeNodeBase : BindableBase, IRenameable, IDisposable
+    public abstract class FolderTreeNodeBase : BindableBase, IRenameable, IDisposable, ITreeViewItemData
     {
         private bool _isDisposed;
         private bool _isSelected;
@@ -145,6 +145,7 @@ namespace NeeView
             }
         }
 
+        IEnumerable<ITreeViewItemData>? ITreeViewItemData.Children => Children;
 
         protected virtual void OnParentChanged(object sender, EventArgs e)
         {
@@ -357,6 +358,11 @@ namespace NeeView
         {
             _isDisposed = true;
             _parent = null;
+        }
+
+        public override string ToString()
+        {
+            return DispName;
         }
     }
 }

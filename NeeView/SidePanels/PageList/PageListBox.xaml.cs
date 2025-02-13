@@ -292,7 +292,7 @@ namespace NeeView
         // リストのキ入力
         private void PageList_KeyDown(object? sender, KeyEventArgs e)
         {
-            if (this.ListBox.IsTextSearchEnabled)
+            if (this.ListBox.IsSimpleTextSearchEnabled)
             {
                 KeyExGesture.AllowSingleKey = false;
             }

@@ -246,7 +246,7 @@
                  IsVisibleChanged="PageList_IsVisibleChanged"
                  TargetUpdated="PageList_TargetUpdated"
                  SelectionMode="Extended"
-                 IsTextSearchEnabled="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsTextSearchEnabled}"
+                 IsSimpleTextSearchEnabled="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsTextSearchEnabled}"
                  VirtualizingPanel.IsVirtualizing="True"
                  VirtualizingPanel.ScrollUnit="{StaticResource PanelScrollUnit}"
                  VirtualizingPanel.VirtualizationMode="Recycling">

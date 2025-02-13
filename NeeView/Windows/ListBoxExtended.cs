@@ -10,15 +10,30 @@ namespace NeeView.Windows
     /// <summary>
     /// 複数選択専用ListBix
     /// </summary>
-    public class ListBoxExtended : ListBox
+    public class ListBoxExtended : ListBox, ITextSearchCollection
     {
+        private readonly SimpleTextSearch _textSearch = new();
+
+
         public ListBoxExtended()
         {
             SelectionMode = SelectionMode.Extended;
+            IsTextSearchEnabled = false;
         }
 
 
         public event EventHandler<MouseButtonEventArgs>? PreviewMouseUpWithSelectionChanged;
+
+        public bool IsSimpleTextSearchEnabled
+        {
+            get { return (bool)GetValue(IsSimpleTextSearchEnabledProperty); }
+            set { SetValue(IsSimpleTextSearchEnabledProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsSimpleTextSearchEnabledProperty =
+            DependencyProperty.Register(nameof(IsSimpleTextSearchEnabled), typeof(bool), typeof(ListBoxExtended), new PropertyMetadata(true));
+
+        public int ItemsCount => this.Items.Count;
 
 
         protected override void OnIsKeyboardFocusWithinChanged(DependencyPropertyChangedEventArgs e)
@@ -30,10 +45,19 @@ namespace NeeView.Windows
 
         protected override void OnTextInput(TextCompositionEventArgs e)
         {
-            if (IsTextSearchEnabled)
+            if (IsSimpleTextSearchEnabled)
             {
-                // SHIFTキーが押されているときに問題があるので、シングル選択モードに設定する
-                var current = this.SelectionMode;
+                _textSearch.DoSearch(this, e.Text);
+                e.Handled = true;
+            }
+            else
+            {
+                base.OnTextInput(e);
+            }
+
+#if false
+            // SHIFTキーが押されているときに問題があるので、シングル選択モードに設定する
+            var current = this.SelectionMode;
                 this.SelectionMode = SelectionMode.Single;
                 base.OnTextInput(e);
                 this.SelectionMode = current;
@@ -42,6 +66,7 @@ namespace NeeView.Windows
             {
                 base.OnTextInput(e);
             }
+#endif
         }
 
         public void FocusSelectedItem(bool force)
@@ -104,6 +129,26 @@ namespace NeeView.Windows
         public void RaisePreviewMouseUpWithSelectionChanged(object sender, MouseButtonEventArgs e)
         {
             PreviewMouseUpWithSelectionChanged?.Invoke(sender, e);
+        }
+
+        public void NavigateToItem(int index)
+        {
+            this.SelectedIndex = index;
+            this.ScrollIntoView(this.SelectedItem);
+            this.FocusItem(this.SelectedItem, true);
+        }
+
+        public string? GetPrimaryText(int index)
+        {
+            var count = this.Items.Count;
+            if (count == 0) return null;
+
+            if (index < 0 || index >= count)
+            {
+                return null;
+            }
+
+            return this.Items[index]?.ToString();
         }
     }
 }

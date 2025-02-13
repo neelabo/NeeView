@@ -240,7 +240,7 @@ namespace NeeView
         {
             if (_vm is null) return;
 
-            if (this.ListBox.IsTextSearchEnabled)
+            if (this.ListBox.IsSimpleTextSearchEnabled)
             {
                 KeyExGesture.AllowSingleKey = false;
             }

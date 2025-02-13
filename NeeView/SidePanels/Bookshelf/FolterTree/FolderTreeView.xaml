@@ -43,6 +43,8 @@
                   PreviewDragLeave="TreeView_PreviewDragLeave"
                   PreviewDragOver="TreeView_PreviewDragOver"
                   Drop="TreeView_Drop"
+                  KeyDown="TreeView_KeyDown"
+                  TextInput="TreeView_TextInput"
                   VirtualizingStackPanel.ScrollUnit="Item"
                   VirtualizingStackPanel.IsVirtualizing="True"
                   VirtualizingStackPanel.VirtualizationMode="Recycling">
