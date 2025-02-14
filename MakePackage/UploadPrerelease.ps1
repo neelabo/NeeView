@@ -208,9 +208,7 @@ $canary_body = @"
 NeeView Canary is a snapshot of the development process.
 It is intended to give you a preview of features that will be available in the official version.
 
-- [About Canary Version](https://neelabo.github.io/NeeView/package-canary.html)
-- [Full Changelog](https://github.com/neelabo/NeeView/compare/$latest_tag..$tag_name)
-
+See also: [About Canary Version](https://neelabo.github.io/NeeView/package-canary.html)
 "@
 
 $beta_body = @"
@@ -219,9 +217,9 @@ $beta_body = @"
 NeeView Beta is the version just before the official release.
 No new features will be added, only bug fixes. The official version will be released in approximately one to two weeks.
 
-- [About Beta Version](https://neelabo.github.io/NeeView/package-beta.html)
-- [Changelog $version (beta)](https://neelabo.github.io/NeeView/changelog.html#$version_id)
+See also: [About Beta Version](https://neelabo.github.io/NeeView/package-beta.html)
 
+Changelog: [Version $version](https://neelabo.github.io/NeeView/changelog.html#$version_id)
 "@
 
 $date = (Get-Date).ToString("yyyy-MM-dd") 
