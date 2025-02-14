@@ -22,10 +22,16 @@ namespace NeeView.Windows.Controls
     [NotifyPropertyChanged]
     public partial class FileNameBox : UserControl, INotifyPropertyChanged
     {
+        public FileNameBox()
+        {
+            InitializeComponent();
+            this.Root.DataContext = this;
+        }
+
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
 
-        //
         public static readonly DependencyProperty TextProperty =
             DependencyProperty.Register(
             "Text",
@@ -43,7 +49,6 @@ namespace NeeView.Windows.Controls
         {
         }
 
-        //
         public string DefaultText
         {
             get { return (string)GetValue(DefaultTextProperty); }
@@ -53,7 +58,6 @@ namespace NeeView.Windows.Controls
         public static readonly DependencyProperty DefaultTextProperty =
             DependencyProperty.Register("DefaultText", typeof(string), typeof(FileNameBox), new PropertyMetadata(null));
 
-        //
         public static readonly DependencyProperty DefaultDirectoryProperty =
             DependencyProperty.Register(
             "DefaultDirectory",
@@ -71,7 +75,6 @@ namespace NeeView.Windows.Controls
         {
         }
 
-        //
         public static readonly DependencyProperty IsValidProperty =
             DependencyProperty.Register(
             "IsValid",
@@ -89,8 +92,6 @@ namespace NeeView.Windows.Controls
         {
         }
 
-
-        //
         public FileDialogType FileDialogType
         {
             get { return (FileDialogType)GetValue(FileDialogTypeProperty); }
@@ -108,8 +109,6 @@ namespace NeeView.Windows.Controls
             }
         }
 
-
-        //
         public static readonly DependencyProperty TitleProperty =
             DependencyProperty.Register(
             "Title",
@@ -127,7 +126,6 @@ namespace NeeView.Windows.Controls
         {
         }
 
-        //
         public static readonly DependencyProperty FilterProperty =
             DependencyProperty.Register(
             "Filter",
@@ -144,8 +142,7 @@ namespace NeeView.Windows.Controls
         private static void OnFilterChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
         }
-
-        //
+        
         public static readonly DependencyProperty NoteProperty =
             DependencyProperty.Register(
             "Note",
@@ -168,13 +165,6 @@ namespace NeeView.Windows.Controls
         }
 
 
-        public FileNameBox()
-        {
-            InitializeComponent();
-            this.Root.DataContext = this;
-        }
-
-
         public string EmptyMessage
         {
             get => Note ?? (FileDialogType == FileDialogType.Directory ? Properties.TextResources.GetString("FileNameBox.Directory.Message") : Properties.TextResources.GetString("FileNameBox.File.Message"));
@@ -184,7 +174,7 @@ namespace NeeView.Windows.Controls
         private void ButtonOpenDialog_Click(object sender, RoutedEventArgs e)
         {
             var path = Text ?? "";
-            var owner = new WindowsFormsTools.Win32Window(Window.GetWindow(this));
+            var owner = Window.GetWindow(this);
 
             // check path chars
             var invalidChars = System.IO.Path.GetInvalidPathChars();
@@ -196,24 +186,23 @@ namespace NeeView.Windows.Controls
 
             if (FileDialogType == FileDialogType.Directory)
             {
-                var dialog = new System.Windows.Forms.FolderBrowserDialog();
-                dialog.Description = Title ?? Properties.TextResources.GetString("FileNameBox.SelectDirectory");
-                dialog.SelectedPath = path;
-
-                if (string.IsNullOrWhiteSpace(dialog.SelectedPath))
+                var dialog = new Microsoft.Win32.OpenFolderDialog();
+                dialog.Title = Title ?? Properties.TextResources.GetString("FileNameBox.SelectDirectory");
+                if (!string.IsNullOrWhiteSpace(path))
                 {
-                    dialog.SelectedPath = DefaultDirectory;
+                    dialog.InitialDirectory = LoosePath.GetDirectoryName(path);
+                    dialog.FolderName = LoosePath.GetFileName(path);
                 }
 
                 var result = dialog.ShowDialog(owner);
-                if (result == System.Windows.Forms.DialogResult.OK)
+                if (result == true)
                 {
-                    path = dialog.SelectedPath;
+                    path = dialog.FolderName;
                 }
             }
             else if (FileDialogType == FileDialogType.SaveFile)
             {
-                var dialog = new System.Windows.Forms.SaveFileDialog();
+                var dialog = new Microsoft.Win32.SaveFileDialog();
                 dialog.Title = Title ?? Properties.TextResources.GetString("FileNameBox.SelectFile");
                 dialog.InitialDirectory = string.IsNullOrWhiteSpace(path) ? null : Path.GetDirectoryName(path);
                 dialog.FileName = string.IsNullOrWhiteSpace(path) ? DefaultText : Path.GetFileName(path);
@@ -222,21 +211,21 @@ namespace NeeView.Windows.Controls
                 dialog.CreatePrompt = false;
 
                 var result = dialog.ShowDialog(owner);
-                if (result == System.Windows.Forms.DialogResult.OK)
+                if (result == true)
                 {
                     path = dialog.FileName;
                 }
             }
             else
             {
-                var dialog = new System.Windows.Forms.OpenFileDialog();
+                var dialog = new Microsoft.Win32.OpenFileDialog();
                 dialog.Title = Title ?? Properties.TextResources.GetString("FileNameBox.SelectFile");
                 dialog.InitialDirectory = string.IsNullOrWhiteSpace(path) ? null : Path.GetDirectoryName(path);
                 dialog.FileName = string.IsNullOrWhiteSpace(path) ? DefaultText : Path.GetFileName(path);
                 dialog.Filter = Filter;
 
                 var result = dialog.ShowDialog(owner);
-                if (result == System.Windows.Forms.DialogResult.OK)
+                if (result == true)
                 {
                     path = dialog.FileName;
                 }
@@ -245,7 +234,6 @@ namespace NeeView.Windows.Controls
             Text = path;
         }
 
-        //
         private void PathTextBox_PreviewDragOver(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop, true))
@@ -255,7 +243,6 @@ namespace NeeView.Windows.Controls
             }
         }
 
-        //
         private void PathTextBox_Drop(object sender, DragEventArgs e)
         {
             if (e.Data.GetData(System.Windows.DataFormats.FileDrop) is not string[] dropFiles) return;
@@ -276,6 +263,6 @@ namespace NeeView.Windows.Controls
                 Text = dropFiles[0];
             }
         }
-    }
 
+    }
 }

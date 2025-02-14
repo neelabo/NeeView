@@ -28,8 +28,8 @@ namespace NeeView.IO
         public string Name { get; private set; }
         public byte[] Bytes { get; private set; }
 
-        private static readonly System.Windows.Forms.DataFormats.Format s_CFSTR_FILEDESCRIPTORW = System.Windows.Forms.DataFormats.GetFormat("FileGroupDescriptorW");
-        private static readonly System.Windows.Forms.DataFormats.Format s_CFSTR_FILECONTENTS = System.Windows.Forms.DataFormats.GetFormat("FileContents");
+        private static readonly uint CF_FILEDESCRIPTORW = NativeMethods.RegisterClipboardFormat("FileGroupDescriptorW");
+        private static readonly uint CF_FILECONTENTS = NativeMethods.RegisterClipboardFormat("FileContents");
 
         public static FileContents[] Get(System.Windows.IDataObject dataObject)
         {
@@ -46,7 +46,7 @@ namespace NeeView.IO
         {
             var format = new FORMATETC
             {
-                cfFormat = unchecked((short)s_CFSTR_FILEDESCRIPTORW.Id),
+                cfFormat = unchecked((short)(CF_FILEDESCRIPTORW & 0xFFFF)),
                 dwAspect = DVASPECT.DVASPECT_CONTENT,
                 ptd = IntPtr.Zero,
                 lindex = -1,
@@ -68,7 +68,7 @@ namespace NeeView.IO
         {
             var format = new FORMATETC
             {
-                cfFormat = unchecked((short)s_CFSTR_FILECONTENTS.Id),
+                cfFormat = unchecked((short)(CF_FILECONTENTS & 0xFFFF)),
                 dwAspect = DVASPECT.DVASPECT_CONTENT,
                 ptd = IntPtr.Zero,
                 lindex = i,

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Interop;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace NeeView
 {
     public class SimpleTextSearch
     {
+        private static TimeSpan _timeoutSpan = TimeSpan.Zero;
         private DispatcherTimer? _timeoutTimer;
         private string _prefix = "";
         private readonly List<string> _charsEntered = new(10);
@@ -111,8 +113,17 @@ namespace NeeView
                 _timeoutTimer.Stop();
             }
 
-            _timeoutTimer.Interval = TimeSpan.FromMilliseconds(1000);
+            _timeoutTimer.Interval = GetTimeoutSpan();
             _timeoutTimer.Start();
+        }
+
+        private static TimeSpan GetTimeoutSpan()
+        {
+            if (_timeoutSpan == TimeSpan.Zero)
+            {
+                _timeoutSpan = TimeSpan.FromMilliseconds(Math.Max(NativeMethods.GetDoubleClickTime() * 2, 100));
+            }
+            return _timeoutSpan;
         }
 
         private void OnTimeout(object? sender, EventArgs e)

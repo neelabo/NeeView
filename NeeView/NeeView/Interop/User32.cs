@@ -118,5 +118,11 @@ namespace NeeView.Interop
         public const uint SWP_NOSIZE = 0x0001;
         public const uint SWP_NOZORDER = 0x0004;
         public const uint SWP_SHOWWINDOW = 0x0040;
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        internal static extern int GetDoubleClickTime();
+
+        [DllImport("user32.dll", SetLastError = true)]
+        internal static extern uint RegisterClipboardFormat(string lpszFormat);
     }
 }

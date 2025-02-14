@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeView.Interop;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -129,7 +130,7 @@ namespace NeeView
 
             var elapsedMilliseconds = _doubleTapStopwatch.ElapsedMilliseconds;
             _doubleTapStopwatch.Restart();
-            bool isTapsAreCloseInTime = (elapsedMilliseconds != 0 && elapsedMilliseconds < System.Windows.Forms.SystemInformation.DoubleClickTime);
+            bool isTapsAreCloseInTime = (elapsedMilliseconds != 0 && elapsedMilliseconds < NativeMethods.GetDoubleClickTime());
 
             return isTapsAreCloseInDistance && isTapsAreCloseInTime;
         }
