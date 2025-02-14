@@ -21,9 +21,9 @@ namespace NeeView
 
         public string Path => _info.FullName;
 
-        public DateTime LastWriteTime => _info.LastWriteTime;
+        public DateTime CreationTime => _info.GetSafeCreationTime();
 
-        public DateTime CreationTime => _info.CreationTime;
+        public DateTime LastWriteTime => _info.GetSafeLastWriteTime();
 
         public long Size => _info is System.IO.FileInfo fileInfo ? fileInfo.Length : -1;
 
@@ -39,7 +39,7 @@ namespace NeeView
                 case "text":
                     return new StringSearchValue(_info.Name);
                 case "date":
-                    return new DateTimeSearchValue(_info.LastWriteTime);
+                    return new DateTimeSearchValue(_info.GetSafeLastWriteTime());
                 case "size":
                     return new IntegerSearchValue(Size);
                 case "bookmark":

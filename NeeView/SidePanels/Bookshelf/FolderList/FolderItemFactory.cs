@@ -140,8 +140,8 @@ namespace NeeView
                 Place = _place,
                 Name = e.Name,
                 TargetPath = new QueryPath(e.FullName),
-                LastWriteTime = e.LastWriteTime,
-                CreationTime = e.CreationTime,
+                CreationTime = e.GetSafeCreationTime(),
+                LastWriteTime = e.GetSafeLastWriteTime(),
                 Length = -1,
                 Attributes = FolderItemAttribute.Directory,
                 IsReady = true
@@ -182,8 +182,8 @@ namespace NeeView
                     Place = _place,
                     Name = e.Name,
                     TargetPath = new QueryPath(e.FullName),
-                    LastWriteTime = e.LastWriteTime,
-                    CreationTime= e.CreationTime,
+                    CreationTime= e.GetSafeCreationTime(),
+                    LastWriteTime = e.GetSafeLastWriteTime(),
                     Length = e.Length,
                     IsReady = true
                 };

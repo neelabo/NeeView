@@ -77,7 +77,7 @@ namespace NeeView
                     if (linkTarget.Exists)
                     {
                         var path = linkTarget.FullName;
-                        var length = linkTarget.Attributes.HasFlag(FileAttributes.Directory) ? linkTarget.LastWriteTime.ToBinary() : (linkTarget as FileInfo)?.Length ?? 0;
+                        var length = linkTarget.Attributes.HasFlag(FileAttributes.Directory) ? linkTarget.GetSafeLastWriteTime().ToBinary() : (linkTarget as FileInfo)?.Length ?? 0;
                         _header = new ThumbnailCacheHeader(path, length, null, Config.Current.Thumbnail.GetThumbnailImageGenerateHash());
                     }
                     else

@@ -117,7 +117,7 @@ namespace NeeView
                 {
                     BookHistoryCollection.Memento? memento = SafetyLoad(BookHistoryCollection.Memento.Load, HistoryFilePath, failedDialog);
                     BookHistoryCollection.Current.Restore(memento, true);
-                    _historyLastWriteTime = fileInfo.LastWriteTime;
+                    _historyLastWriteTime = fileInfo.GetSafeLastWriteTime();
                 }
             }
         }
@@ -257,7 +257,7 @@ namespace NeeView
                 {
                     // NOTE: 一度マージが発生したらその後は常にマージを行う。負荷が高いのが問題。
                     var fileInfo = new FileInfo(HistoryFilePath);
-                    if (fileInfo.Exists && (_historyMergeFlag || fileInfo.LastWriteTime > _historyLastWriteTime))
+                    if (fileInfo.Exists && (_historyMergeFlag || fileInfo.GetSafeLastWriteTime() > _historyLastWriteTime))
                     {
                         //Debug.WriteLine("SaveData.SaveHistory(): merge.");
                         var failedDialog = new LoadFailedDialog("@Notice.LoadHistoryFailed", "@Notice.LoadHistoryFailedTitle");
@@ -272,7 +272,7 @@ namespace NeeView
                 }
 
                 SafetySave(bookHistoryMemento.Save, HistoryFilePath, false);
-                _historyLastWriteTime = File.GetLastWriteTime(HistoryFilePath);
+                _historyLastWriteTime = new FileInfo(HistoryFilePath).GetSafeLastWriteTime();
             }
         }
 

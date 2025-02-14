@@ -212,13 +212,13 @@ namespace NeeView
             {
                 case DirectoryInfo directoryInfo:
                     item.Length = -1;
-                    item.LastWriteTime = directoryInfo.LastWriteTime;
-                    item.CreationTime = directoryInfo.CreationTime;
+                    item.CreationTime = directoryInfo.GetSafeCreationTime();
+                    item.LastWriteTime = directoryInfo.GetSafeLastWriteTime();
                     break;
                 case FileInfo fileInfo:
                     item.Length = fileInfo.Length;
-                    item.LastWriteTime = fileInfo.LastWriteTime;
-                    item.CreationTime = fileInfo.CreationTime;
+                    item.CreationTime = fileInfo.GetSafeCreationTime();
+                    item.LastWriteTime = fileInfo.GetSafeLastWriteTime();
                     break;
             }
 

@@ -33,8 +33,8 @@ namespace NeeView
                 Instance = null,
                 RawEntryName = LoosePath.GetFileName(this.EntryName),
                 Length = fileInfo.Length,
-                CreationTime = fileInfo.CreationTime,
-                LastWriteTime = fileInfo.LastWriteTime,
+                CreationTime = fileInfo.GetSafeCreationTime(),
+                LastWriteTime = fileInfo.GetSafeLastWriteTime(),
             };
 
             return await Task.FromResult(new List<ArchiveEntry>() { entry });

@@ -1,4 +1,5 @@
-﻿using NeeView.Interop;
+﻿using NeeView;
+using NeeView.Interop;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -145,7 +146,7 @@ namespace NeeLaboratory.IO
         public static DateTime GetLastWriteTime(string path)
         {
             var fileInfo = new System.IO.FileInfo(path);
-            return fileInfo.LastWriteTime;
+            return fileInfo.GetSafeLastWriteTime();
         }
 
         /// <summary>

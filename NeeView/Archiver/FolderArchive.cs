@@ -100,16 +100,16 @@ namespace NeeView
                     {
                         entry.Link = target.FullName;
                         entry.Length = -1;
-                        entry.CreationTime = target.CreationTime;
-                        entry.LastWriteTime = target.LastWriteTime;
+                        entry.CreationTime = target.GetSafeCreationTime();
+                        entry.LastWriteTime = target.GetSafeLastWriteTime();
                     }
                     else
                     {
                         var fileInfo = (FileInfo)target;
                         entry.Link = target.FullName;
                         entry.Length = fileInfo.Length;
-                        entry.CreationTime = target.CreationTime;
-                        entry.LastWriteTime = target.LastWriteTime;
+                        entry.CreationTime = target.GetSafeCreationTime();
+                        entry.LastWriteTime = target.GetSafeLastWriteTime();
                     }
                 }
             }
@@ -119,6 +119,7 @@ namespace NeeView
 
         private FolderArchiveEntry CreateCommonArchiveEntry(FileSystemInfo info, int id)
         {
+          
             var name = string.IsNullOrEmpty(Path) ? info.FullName : info.FullName[Path.Length..].TrimStart('\\', '/');
 
             var entry = new FolderArchiveEntry(this)
@@ -127,8 +128,8 @@ namespace NeeView
                 Id = id,
                 RawEntryName = name,
                 Length = info is FileInfo fileInfo ? fileInfo.Length : -1,
-                CreationTime = info.CreationTime,
-                LastWriteTime = info.LastWriteTime,
+                CreationTime = info.GetSafeCreationTime(),
+                LastWriteTime = info.GetSafeLastWriteTime(),
                 HasReparsePoint = info.Attributes.HasFlag(FileAttributes.ReparsePoint)
             };
 

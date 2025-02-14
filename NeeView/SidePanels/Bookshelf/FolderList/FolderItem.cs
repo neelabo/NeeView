@@ -535,7 +535,7 @@ namespace NeeView
 
             string GetLastWriteTimeString() => (LastWriteTime != default ? LastWriteTime.ToFormatString() + "   " : "");
 
-            return order switch
+            var note = order switch
             {
                 FolderOrder.FileType or FolderOrder.FileTypeDescending
                     => GetLastWriteTimeString() + (IsDirectoryMaybe() ? Properties.TextResources.GetString("Word.Folder") : LoosePath.GetExtension(Name)),
@@ -544,6 +544,8 @@ namespace NeeView
                 _
                     => GetLastWriteTimeString() + (Length > 0 ? FileSizeToStringConverter.ByteToDisplayString(Length) : ""),
             };
+
+            return note.Trim();
         }
     }
 
