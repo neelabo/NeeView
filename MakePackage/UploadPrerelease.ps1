@@ -93,8 +93,26 @@ else {
     throw "Cannot get tag name"
 }
 
+# バージョン番号生成
+if ($tag_name -match "^\d+\.\d+") {
+    $version = $Matches[0]
+    $version_id = $version -replace "\.", ""
+}
+else {
+    throw "Cannot get version number: $tag_name"
+}
+
+# 最終リリースタグ取得
+$latest_tag = git tag | Where-Object { $_ -match "^\d+\.\d+$" } | Select-Object -Last 1
+
 
 if (-not $SkipCheckRepository) {
+
+    # git ブランチが master であるか
+    $branch = git rev-parse --abbrev-ref HEAD
+    if ($branch -ne "master") {
+        throw "Must be a master branch: $branch"
+    }
     
     # git リポジトリが最新版であるかチェック
     git fetch
@@ -126,6 +144,7 @@ if ($tag_result -ne $tag_name) {
     }
 }
 #>
+
 
 
 # 開始確認
@@ -189,7 +208,9 @@ $canary_body = @"
 NeeView Canary is a snapshot of the development process.
 It is intended to give you a preview of features that will be available in the official version.
 
-See also: [About Canary Version](https://neelabo.github.io/NeeView/package-canary.html)
+- [About Canary Version](https://neelabo.github.io/NeeView/package-canary.html)
+- [Full Changelog](https://github.com/neelabo/NeeView/compare/$latest_tag..$tag_name)
+
 "@
 
 $beta_body = @"
@@ -198,7 +219,9 @@ $beta_body = @"
 NeeView Beta is the version just before the official release.
 No new features will be added, only bug fixes. The official version will be released in approximately one to two weeks.
 
-See also: [About Beta Version](https://neelabo.github.io/NeeView/package-beta.html)
+- [About Beta Version](https://neelabo.github.io/NeeView/package-beta.html)
+- [Changelog $version (beta)](https://neelabo.github.io/NeeView/changelog.html#$version_id)
+
 "@
 
 $date = (Get-Date).ToString("yyyy-MM-dd") 
