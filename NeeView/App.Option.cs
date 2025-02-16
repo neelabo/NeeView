@@ -132,7 +132,7 @@ namespace NeeView
                 return query;
             }
 
-            return query.ReplacePath(Path.GetFullPath(query.Path));
+            return query with { Path = Path.GetFullPath(query.Path) };
         }
     }
 

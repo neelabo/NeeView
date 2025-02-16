@@ -21,7 +21,7 @@ namespace NeeView
         {
             if (!queries.Any()) return;
 
-            data.SetData(new QueryPathCollection(queries));
+            data.SetQueryPathCollection(queries);
         }
 
         public static void SetFileDropList(this DataObject data, IEnumerable<QueryPath> queries)

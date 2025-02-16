@@ -268,7 +268,7 @@ namespace NeeView
             e.Data.SetData(collection);
             e.AllowedEffects |= DragDropEffects.Move;
 
-            e.Data.SetData(items.Select(x => new QueryPath(x.Path)).ToQueryPathCollection());
+            e.Data.SetQueryPathCollection(items.Select(x => new QueryPath(x.Path)));
 
             if (Config.Current.System.TextCopyPolicy != TextCopyPolicy.None)
             {
@@ -308,7 +308,7 @@ namespace NeeView
             DropToPlaylist(sender, e, isDrop, targetItem, e.Data.GetData<PlaylistListBoxItemCollection>());
             if (e.Handled) return;
 
-            DropToPlaylist(sender, e, isDrop, targetItem, e.Data.GetData<QueryPathCollection>());
+            DropToPlaylist(sender, e, isDrop, targetItem, e.Data.GetQueryPathCollection());
             if (e.Handled) return;
 
             DropToPlaylist(sender, e, isDrop, targetItem, e.Data.GetFileDrop());

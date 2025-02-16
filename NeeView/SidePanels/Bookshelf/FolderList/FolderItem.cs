@@ -270,7 +270,7 @@ namespace NeeView
         public bool IsFileSystem() => (Attributes & (FolderItemAttribute.System | FolderItemAttribute.Bookmark | FolderItemAttribute.QuickAccess | FolderItemAttribute.Empty | FolderItemAttribute.None)) == 0;
 
         // FolderCollection上のパス
-        public QueryPath? GetFolderCollectionPath() => _place?.ReplacePath(LoosePath.Combine(_place.Path, _name));
+        public QueryPath? GetFolderCollectionPath() => _place is not null ? _place with { Path = LoosePath.Combine(_place.Path, _name) } : null;
 
         // 推定ディレクトリ
         public bool IsDirectoryMaybe() => IsDirectory || IsPlaylist || Length == -1;

@@ -111,141 +111,164 @@ namespace NeeView
     /// パスのクエリパラメータを分解する.
     /// immutable.
     /// </summary>
-    [Serializable]
-    public sealed partial class QueryPath : IEquatable<QueryPath>
+    public sealed partial record class QueryPath
     {
         [GeneratedRegex(@"^\\*([a-zA-Z]):(.*)$")]
         private static partial Regex _driveRegex { get; }
 
+        private static readonly string _querySearch = "?search=";
+
         public static QueryPath Empty { get; } = new QueryPath(QueryScheme.Root);
-
-        static readonly string _querySearch = "?search=";
-
-        private QueryScheme _scheme;
-        private string? _path;
-        private string? _search;
 
 
         public QueryPath(string? source)
         {
             var rest = source;
-            rest = TakeQuerySearch(rest, out _search);
-            rest = TakeScheme(rest, out _scheme);
-            _path = GetValidatePath(rest, _scheme);
+            (rest, Search) = TakeQuerySearch(rest);
+            (rest, Scheme) = TakeScheme(rest);
+            Path = GetValidatePath(rest, Scheme);
         }
 
         public QueryPath(string? source, string? search)
         {
             var rest = source;
-            _search = string.IsNullOrWhiteSpace(search) ? null : search;
-            rest = TakeScheme(rest, out _scheme);
-            _path = GetValidatePath(rest, _scheme);
+            Search = string.IsNullOrWhiteSpace(search) ? null : search;
+            (rest, Scheme) = TakeScheme(rest);
+            Path = GetValidatePath(rest, Scheme);
         }
 
         public QueryPath(QueryScheme scheme, string? path, string? search)
         {
-            _search = string.IsNullOrWhiteSpace(search) ? null : search;
-            _scheme = scheme;
-            _path = GetValidatePath(path, _scheme);
+            Search = string.IsNullOrWhiteSpace(search) ? null : search;
+            Scheme = scheme;
+            Path = GetValidatePath(path, Scheme);
         }
 
         public QueryPath(QueryScheme scheme, string? path)
         {
-            _search = null;
-            _scheme = scheme;
-            _path = GetValidatePath(path, _scheme);
+            Search = null;
+            Scheme = scheme;
+            Path = GetValidatePath(path, Scheme);
         }
 
         public QueryPath(QueryScheme scheme)
         {
-            _search = null;
-            _scheme = scheme;
-            _path = null;
+            Search = null;
+            Scheme = scheme;
+            Path = null;
         }
 
-        public QueryScheme Scheme
-        {
-            get { return _scheme; }
-            private set { _scheme = value; }
-        }
 
-        public string? Path
-        {
-            get { return _path; }
-            private set { _path = value; }
-        }
+        public QueryScheme Scheme { get; init; }
 
-        public string? Search
-        {
-            get { return _search; }
-            private set { _search = value; }
-        }
+        public string? Path { get; init; }
 
-        public bool IsEmpty => _path is null;
+        public string? Search { get; init; }
+
+        public bool IsEmpty => Path is null;
 
 
         /// <summary>
         /// 完全クエリ
         /// </summary>
-        public string FullQuery => FullPath + (_search != null ? _querySearch + _search : null);
+        public string FullQuery => FullPath + (Search != null ? _querySearch + Search : null);
 
         /// <summary>
         /// 簡略化したクエリ
         /// </summary>
-        public string SimpleQuery => SimplePath + (_search != null ? _querySearch + _search : null);
-
+        public string SimpleQuery => SimplePath + (Search != null ? _querySearch + Search : null);
 
         /// <summary>
         /// 完全パス
         /// </summary>
-        public string FullPath => _scheme.ToSchemeString() + _path;
+        public string FullPath => Scheme.ToSchemeString() + Path;
 
         /// <summary>
         /// 簡略化したパス
         /// </summary>
-        public string SimplePath => _scheme == QueryScheme.File ? _path ?? "" : FullPath;
+        public string SimplePath => Scheme == QueryScheme.File ? Path ?? "" : FullPath;
+
+        public string FileName => LoosePath.GetFileName(Path);
+
+        public string DisplayName => (Path == null) ? Scheme.ToAliasName() : FileName;
+
+        public string DisplayPath => (Path == null) ? Scheme.ToAliasName() : SimplePath;
 
 
-        public string FileName => LoosePath.GetFileName(_path);
-
-        public string DisplayName => (_path == null) ? _scheme.ToAliasName() : FileName;
-
-        public string DisplayPath => (_path == null) ? _scheme.ToAliasName() : SimplePath;
-
-
-        private static string? TakeQuerySearch(string? source, out string? searchWord)
+        private static (string? RestSource, string? SearchWord) TakeQuerySearch(string? source)
         {
             if (source != null)
             {
                 var index = source.IndexOf(_querySearch, StringComparison.Ordinal);
                 if (index >= 0)
                 {
-                    searchWord = source[(index + _querySearch.Length)..];
-                    return source[..index];
+                    return (source[..index], source[(index + _querySearch.Length)..]);
                 }
             }
 
-            searchWord = null;
-            return source;
+            return(source, null);
         }
 
-        private static string? TakeScheme(string? source, out QueryScheme scheme)
+        private static (string? RestSource, QueryScheme Scheme) TakeScheme(string? source)
         {
             if (source != null)
             {
-                scheme = QuerySchemeExtensions.GetScheme(source);
+                var scheme = QuerySchemeExtensions.GetScheme(source);
                 var schemeString = scheme.ToSchemeString();
                 if (source.StartsWith(schemeString, StringComparison.Ordinal))
                 {
-                    return source[schemeString.Length..];
+                    return (source[schemeString.Length..], scheme);
                 }
+            }
+            return (source, QueryScheme.File);
+        }
+
+        public QueryPath GetParent()
+        {
+            if (Path == null)
+            {
+                return QueryPath.Empty;
+            }
+
+            var parent = LoosePath.GetDirectoryName(Path);
+            return new QueryPath(this.Scheme, parent, null);
+        }
+
+        public bool Include(QueryPath target)
+        {
+            var pathX = this.FullPath;
+            var pathY = target.FullPath;
+
+            var lengthX = pathX.Length;
+            var lengthY = pathY.Length;
+
+            if (lengthX > lengthY)
+            {
+                return false;
+            }
+            else if (lengthX == lengthY)
+            {
+                return pathX == pathY;
             }
             else
             {
-                scheme = QueryScheme.File;
+                return pathY.StartsWith(pathX, StringComparison.Ordinal) && pathY[lengthX] == '\\';
             }
+        }
 
-            return source;
+        public bool IsRoot(QueryScheme scheme)
+        {
+            return Scheme == scheme && Path == null && Search == null;
+        }
+
+        public static QueryPath Parse(string? path)
+        {
+            return new QueryPath(path);
+        }
+
+        public override string ToString()
+        {
+            return FullQuery;
         }
 
         private static string? GetValidatePath(string? source, QueryScheme scheme)
@@ -279,124 +302,12 @@ namespace NeeView
             return string.IsNullOrWhiteSpace(s) ? null : s;
         }
 
-        public QueryPath ReplacePath(string? path)
-        {
-            var query = (QueryPath)this.MemberwiseClone();
-            query.Path = string.IsNullOrWhiteSpace(path) ? null : path;
-            return query;
-        }
-
-        public QueryPath ReplaceSearch(string? search)
-        {
-            var query = (QueryPath)this.MemberwiseClone();
-            query.Search = string.IsNullOrWhiteSpace(search) ? null : search;
-            return query;
-        }
-
-        public QueryPath GetParent()
-        {
-            if (_path == null)
-            {
-                //return null;
-                return QueryPath.Empty;
-            }
-
-            var parent = LoosePath.GetDirectoryName(_path);
-            return new QueryPath(this.Scheme, parent, null);
-        }
-
-        public bool Include(QueryPath target)
-        {
-            var pathX = this.FullPath;
-            var pathY = target.FullPath;
-
-            var lengthX = pathX.Length;
-            var lengthY = pathY.Length;
-
-            if (lengthX > lengthY)
-            {
-                return false;
-            }
-            else if (lengthX == lengthY)
-            {
-                return pathX == pathY;
-            }
-            else
-            {
-                return pathY.StartsWith(pathX, StringComparison.Ordinal) && pathY[lengthX] == '\\';
-            }
-        }
-
-        public bool IsRoot(QueryScheme scheme)
-        {
-            return Scheme == scheme && Path == null && Search == null;
-        }
-
-        public override string ToString()
-        {
-            return FullQuery;
-        }
-
-        #region IEquatable Support
-
-        public override int GetHashCode()
-        {
-            return _scheme.GetHashCode() ^ (_path == null ? 0 : _path.GetHashCode(StringComparison.Ordinal)) ^ (_search == null ? 0 : _search.GetHashCode(StringComparison.Ordinal));
-        }
-
-        public bool Equals(QueryPath? obj)
-        {
-            if (obj is null)
-            {
-                return false;
-            }
-
-            return _scheme == obj._scheme && _path == obj._path && _search == obj._search;
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is null || this.GetType() != obj.GetType())
-            {
-                return false;
-            }
-
-            return this.Equals((QueryPath?)obj);
-        }
-
-
-        public static bool Equals(QueryPath? a, QueryPath? b)
-        {
-            if ((object?)a == (object?)b)
-            {
-                return true;
-            }
-
-            if (a is null || b is null)
-            {
-                return false;
-            }
-
-            return a.Equals(b);
-        }
-
-        // HACK: 等号の再定義はあまりよろしくない。
-        public static bool operator ==(QueryPath? x, QueryPath? y)
-        {
-            return Equals(x, y);
-        }
-
-        public static bool operator !=(QueryPath? x, QueryPath? y)
-        {
-            return !(Equals(x, y));
-        }
-
-
-        #endregion IEquatable Support
-
         /// <summary>
         /// 正規化
         /// </summary>
+        /// <remarks>
+        /// ファイル存在チェックを行うので重め
+        /// </remarks>
         /// <returns></returns>
         public QueryPath Normalize()
         {

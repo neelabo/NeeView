@@ -82,7 +82,7 @@ namespace NeeView
         public string EntrySmartName => Prefix == null ? EntryName : EntryName[Prefix.Length..];
 
         // ページ名：フルパス名 (リンクはそのまま)
-        public string EntryFullName => LoosePath.Combine(BookPath, EntryName);
+        public string EntryFullName => ArchiveEntry.Archive is MediaArchive ? BookPath : LoosePath.Combine(BookPath, EntryName);
 
         // ページ名：システムパス (リンクは実体に変換済)
         public string TargetPath => ArchiveEntry.TargetPath;

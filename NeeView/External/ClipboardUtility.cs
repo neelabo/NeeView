@@ -52,7 +52,7 @@ namespace NeeView
             if (pages.Count == 0) return false;
 
             // query path
-            data.SetData(pages.Select(x => new QueryPath(x.EntryFullName)).ToQueryPathCollection());
+            data.SetQueryPathCollection(pages.Select(x => new QueryPath(x.EntryFullName)));
 
             // realize file path
             var files = await PageUtility.CreateRealizedFilePathListAsync(pages, policy.ArchiveCopyPolicy, token);

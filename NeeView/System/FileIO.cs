@@ -97,6 +97,9 @@ namespace NeeView
         /// <summary>
         /// パス名の正規化
         /// </summary>
+        /// <remarks>
+        /// パスの存在チェックを行うので重い処理です
+        /// </remarks>
         /// <param name="source"></param>
         /// <returns></returns>
         public static string GetNormalizedPath(string? source)

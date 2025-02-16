@@ -698,7 +698,7 @@ namespace NeeView
                             DropToQuickAccess(sender, e, isDrop, null, e.Data.GetData<BookmarkNodeCollection>());
                             if (e.Handled) return;
 
-                            DropToQuickAccess(sender, e, isDrop, null, e.Data.GetData<QueryPathCollection>());
+                            DropToQuickAccess(sender, e, isDrop, null, e.Data.GetQueryPathCollection());
                             if (e.Handled) return;
 
                             DropToQuickAccess(sender, e, isDrop, null, e.Data.GetFileDrop());
@@ -714,7 +714,7 @@ namespace NeeView
                             DropToQuickAccess(sender, e, isDrop, quickAccessTarget, e.Data.GetData<BookmarkNodeCollection>());
                             if (e.Handled) return;
 
-                            DropToQuickAccess(sender, e, isDrop, quickAccessTarget, e.Data.GetData<QueryPathCollection>());
+                            DropToQuickAccess(sender, e, isDrop, quickAccessTarget, e.Data.GetQueryPathCollection());
                             if (e.Handled) return;
 
                             DropToQuickAccess(sender, e, isDrop, quickAccessTarget, e.Data.GetFileDrop());
@@ -727,7 +727,7 @@ namespace NeeView
                             DropToBookmark(sender, e, isDrop, bookmarkFolderTarget, e.Data.GetData<BookmarkNodeCollection>());
                             if (e.Handled) return;
 
-                            DropToBookmark(sender, e, isDrop, bookmarkFolderTarget, e.Data.GetData<QueryPathCollection>());
+                            DropToBookmark(sender, e, isDrop, bookmarkFolderTarget, e.Data.GetQueryPathCollection());
                             if (e.Handled) return;
 
                             DropToBookmark(sender, e, isDrop, bookmarkFolderTarget, e.Data.GetFileDrop());
@@ -941,7 +941,7 @@ namespace NeeView
                 return;
             }
 
-            if (query.Search == null && query.Scheme == QueryScheme.File)
+            if (query.Search == null && query.Scheme == QueryScheme.File && CanDropToBookmark(query.SimplePath))
             {
                 if (isDrop)
                 {
@@ -967,7 +967,7 @@ namespace NeeView
             bool isDropped = false;
             foreach (var fileName in fileNames)
             {
-                if (ArchiveManager.Current.IsSupported(fileName, true, true) || System.IO.Directory.Exists(fileName))
+                if (CanDropToBookmark(fileName))
                 {
                     if (isDrop)
                     {
@@ -981,6 +981,11 @@ namespace NeeView
                 e.Effects = DragDropEffects.Copy;
                 e.Handled = true;
             }
+        }
+
+        private static bool CanDropToBookmark(string path)
+        {
+            return ArchiveManager.Current.IsSupported(path, true, true) || System.IO.Directory.Exists(path);
         }
 
         private static TreeViewItem? PointToViewItem(TreeView treeView, Point point)

@@ -259,8 +259,8 @@ namespace NeeView
 
             if (options.HasFlag(FolderSetPlaceOption.UpdateHistory))
             {
-                var place = Place?.ReplaceSearch(null);
-                if (place is null) return;
+                if (Place is null) return;
+                var place = Place with { Search = null };
                 this.History?.Add(place);
             }
         }

@@ -529,7 +529,7 @@ namespace NeeView
                 return;
             }
 
-            var query = Place.ReplaceSearch(keyword);
+            var query = Place with { Search = keyword };
             var option = isForce ? FolderSetPlaceOption.Refresh : FolderSetPlaceOption.None;
             RequestPlace(query, null, option);
         }

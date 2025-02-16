@@ -543,7 +543,7 @@ namespace NeeView
             }
 
             // List<QueryPath>
-            e.Data.SetData(items.Select(x => x.TargetPath).ToQueryPathCollection());
+            e.Data.SetQueryPathCollection(items.Select(x => x.TargetPath));
 
             // bookmark?
             if (items.Any(x => x.Attributes.AnyFlag(FolderItemAttribute.Bookmark)))
@@ -620,7 +620,7 @@ namespace NeeView
                     DropToBookmark(sender, e, isDrop, bookmarkNode, e.Data.GetData<BookmarkNodeCollection>());
                     if (e.Handled) return;
 
-                    DropToBookmark(sender, e, isDrop, bookmarkNode, e.Data.GetData<QueryPathCollection>());
+                    DropToBookmark(sender, e, isDrop, bookmarkNode, e.Data.GetQueryPathCollection());
                     if (e.Handled) return;
 
                     DropToBookmark(sender, e, isDrop, bookmarkNode, e.Data.GetFileDrop());

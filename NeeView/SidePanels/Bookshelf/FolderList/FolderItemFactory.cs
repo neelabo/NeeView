@@ -30,7 +30,7 @@ namespace NeeView
                 Type = FolderItemType.Empty,
                 Place = _place,
                 Name = ".",
-                TargetPath = _place.ReplacePath(LoosePath.Combine(_place.Path, ".")),
+                TargetPath = _place with { Path = LoosePath.Combine(_place.Path, ".") },
                 DisplayName = Properties.TextResources.GetString("Notice.NoFiles"),
                 Attributes = FolderItemAttribute.Empty,
             };
@@ -182,7 +182,7 @@ namespace NeeView
                     Place = _place,
                     Name = e.Name,
                     TargetPath = new QueryPath(e.FullName),
-                    CreationTime= e.GetSafeCreationTime(),
+                    CreationTime = e.GetSafeCreationTime(),
                     LastWriteTime = e.GetSafeLastWriteTime(),
                     Length = e.Length,
                     IsReady = true
