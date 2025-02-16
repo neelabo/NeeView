@@ -5,7 +5,6 @@ namespace NeeView
     /// <summary>
     /// Susie 例外
     /// </summary>
-    [Serializable]
     public class SusieIOException : Exception
     {
         public SusieIOException() : base(Properties.TextResources.GetString("SusieLoadFailedException.Message"))

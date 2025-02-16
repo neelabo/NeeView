@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 
 namespace NeeView.Interop
 {
-    [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public struct POINT
     {
