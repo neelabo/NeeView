@@ -196,6 +196,15 @@ namespace NeeView
                 }
             }
 
+            // ver 43.0
+            if (self.Format.CompareTo(new FormatVersion(Environment.SolutionName, 43, 0, 3661)) < 0)
+            {
+                if (self.Commands != null)
+                {
+                    ResolveCommandShortCutKeyConflicts(self.Commands, new CutFileCommand());
+                }
+            }
+
 #if false
             // ver.99 (バージョン変更処理テスト)
             if (self.Format.CompareTo(new FormatVersion(Environment.SolutionName, 99, 0, 0)) < 0)
@@ -205,7 +214,7 @@ namespace NeeView
             }
 #endif
 
-            return self;
+                return self;
         }
 
 

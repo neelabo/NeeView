@@ -112,6 +112,7 @@ namespace NeeView
                 new PrintCommand(),
                 new DeleteFileCommand(),
                 new DeleteBookCommand(),
+                new CutFileCommand(),
                 new CopyFileCommand(),
                 new CopyImageCommand(),
                 new PasteCommand(),

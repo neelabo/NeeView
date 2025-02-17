@@ -234,6 +234,37 @@ namespace NeeView
             return pages.ToList();
         }
 
+        // クリップボードに切り取り
+        public bool CanCutToClipboard(CopyFileCommandParameter parameter)
+        {
+            var pages = CollectPages(_book, parameter.MultiPagePolicy);
+            return Config.Current.System.IsFileWriteAccessEnabled && pages.Any() && pages.All(e => e.ArchiveEntry.IsFileSystem);
+        }
+
+        // クリップボードに切り取り
+        public void CutToClipboard(CopyFileCommandParameter parameter)
+        {
+            _ = CutToClipboardAsync(parameter, CancellationToken.None);
+        }
+
+        // クリップボードに切り取り
+        public async Task CutToClipboardAsync(CopyFileCommandParameter parameter, CancellationToken token)
+        {
+            try
+            {
+                var pages = CollectPages(_book, parameter.MultiPagePolicy);
+                await ClipboardUtility.CutAsync(pages, token);
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (Exception e)
+            {
+                new MessageDialog($"{Properties.TextResources.GetString("Word.Cause")}: {e.Message}", Properties.TextResources.GetString("CopyErrorDialog.Title")).ShowDialog();
+            }
+        }
+
+
         // クリップボードにコピー
         public bool CanCopyToClipboard(CopyFileCommandParameter parameter)
         {

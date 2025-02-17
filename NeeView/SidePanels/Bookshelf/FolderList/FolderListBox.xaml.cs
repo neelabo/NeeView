@@ -250,7 +250,7 @@ namespace NeeView
         private void Cut_CanExecute(object? sender, CanExecuteRoutedEventArgs e)
         {
             var items = this.ListBox.SelectedItems.Cast<FolderItem>();
-            e.CanExecute = items != null && items.All(x => x.IsEditable && x.IsFileSystem());
+            e.CanExecute = Config.Current.System.IsFileWriteAccessEnabled && items != null && items.All(x => x.IsEditable && x.IsFileSystem());
         }
 
         /// <summary>
@@ -277,7 +277,7 @@ namespace NeeView
             {
                 return;
             }
-            
+
             var collection = new System.Collections.Specialized.StringCollection();
             selectedItems.ForEach(e => collection.Add(e.EntityPath.SimplePath));
 
@@ -389,7 +389,7 @@ namespace NeeView
         private bool MoveToFolder_CanExecute()
         {
             var items = this.ListBox.SelectedItems.Cast<FolderItem>();
-            return Config.Current.System.IsFileWriteAccessEnabled && items != null && items.All(x => x.IsEditable);
+            return Config.Current.System.IsFileWriteAccessEnabled && items != null && items.All(x => x.IsEditable && x.IsFileSystem());
         }
 
         public async void MoveToFolder_Execute(object? sender, ExecutedRoutedEventArgs e)
@@ -577,7 +577,7 @@ namespace NeeView
             _vm.Model.AddBookmark();
         }
 
-#endregion
+        #endregion
 
         #region DragDrop
 

@@ -21,6 +21,9 @@ namespace NeeView
         bool CanOpenFilePlace();
         void OpenFilePlace();
 
+        bool CanCutToClipboard(CopyFileCommandParameter parameter);
+        void CutToClipboard(CopyFileCommandParameter parameter);
+
         bool CanCopyToClipboard(CopyFileCommandParameter parameter);
         void CopyToClipboard(CopyFileCommandParameter parameter);
 

@@ -597,6 +597,7 @@ namespace NeeView
                         new MenuTree(MenuElementType.Command) { CommandName = "OpenExplorer" },
                         new MenuTree(MenuElementType.Command) { CommandName = "OpenExternalAppAs" },
                         new MenuTree(MenuElementType.Separator),
+                        new MenuTree(MenuElementType.Command) { CommandName = "CutFile" },
                         new MenuTree(MenuElementType.Command) { CommandName = "CopyFile" },
                         new MenuTree(MenuElementType.Command) { CommandName = "Paste" },
                         new MenuTree(MenuElementType.Command) { CommandName = "CopyToFolderAs" },

@@ -176,6 +176,16 @@ namespace NeeView
             return _actionControl.CanOpenFilePlace();
         }
 
+        public bool CanCutToClipboard(CopyFileCommandParameter parameter)
+        {
+            return _actionControl.CanCutToClipboard(parameter);
+        }
+
+        public void CutToClipboard(CopyFileCommandParameter parameter)
+        {
+            _actionControl.CutToClipboard(parameter);
+        }
+
         public bool CanCopyToClipboard(CopyFileCommandParameter parameter)
         {
             return _actionControl.CanCopyToClipboard(parameter);

@@ -7,7 +7,7 @@ namespace NeeView
     {
         private readonly DestinationFolderParameterCommandParameterFactory _parameterFactory;
         private MoveableViewPageBindingSource? _bindingSource;
-        
+
         public MoveToFolderAsCommand()
         {
             this.Group = Properties.TextResources.GetString("CommandGroup.File");
@@ -20,6 +20,8 @@ namespace NeeView
 
         public override bool CanExecute(object? sender, CommandContext e)
         {
+            if (!Config.Current.System.IsFileWriteAccessEnabled) return false;
+
             var parameter = e.Parameter.Cast<MoveToFolderAsCommandParameter>();
             var index = parameter.Index - 1;
             if (index >= 0)
