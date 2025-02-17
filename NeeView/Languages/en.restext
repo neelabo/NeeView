@@ -1082,6 +1082,7 @@ MemoryControl.IsAutoGC=System manages memory
 MemoryControl.IsAutoGC.Remarks=When turned off, memory is released each time a page is switched.
 Menu.Close=_Close
 Menu.Copy=_Copy
+Menu.Cut=Cu_t
 Menu.Delete=_Delete
 Menu.Edit=_Edit
 Menu.Explorer=Open in e_xplorer

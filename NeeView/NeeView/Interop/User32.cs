@@ -124,5 +124,11 @@ namespace NeeView.Interop
 
         [DllImport("user32.dll", SetLastError = true)]
         internal static extern uint RegisterClipboardFormat(string lpszFormat);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        internal extern static void AddClipboardFormatListener(nint hwnd);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        internal extern static void RemoveClipboardFormatListener(nint hwnd);
     }
 }

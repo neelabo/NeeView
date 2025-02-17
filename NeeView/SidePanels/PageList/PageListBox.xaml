@@ -49,6 +49,7 @@
         <local:PageToNoteConverter x:Key="PageToNoteConverter"/>
         <local:ArchivePageToVisibilityConverter x:Key="ArchviePageToVisibilityConverter"/>
         <local:BrushAlphaToVisibilityConverter x:Key="BrushAlphaToVisibilityConverter" />
+        <local:PendingCountToOpacityConverter x:Key="PendingCountToOpacityConverter" />
 
         <Style x:Key="NameStyle" TargetType="TextBlock">
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
@@ -154,7 +155,7 @@
                 <Rectangle Style="{StaticResource VerticalSelectedStyle}" />
                 <Image DockPanel.Dock="Right" Style="{StaticResource FolderIconStyle}" Margin="1" />
                 <Image DockPanel.Dock="Right" Style="{StaticResource PageMarkStyle}" Margin="1" />
-                <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource NormalNameStyle}" Margin="5,1" />
+                <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource NormalNameStyle}" Margin="5,1" Opacity="{Binding PendingCount, Converter={StaticResource PendingCountToOpacityConverter}}" />
             </DockPanel>
         </DataTemplate>
 
@@ -162,7 +163,7 @@
             <DockPanel>
                 <Rectangle Style="{StaticResource VerticalSelectedStyle}" />
                 <DockPanel Margin="2" LastChildFill="False">
-                    <local:PanelListContentImage Thumbnail="{Binding Thumbnail}" />
+                    <local:PanelListContentImage Thumbnail="{Binding Thumbnail}" Opacity="{Binding PendingCount, Converter={StaticResource PendingCountToOpacityConverter}}" />
                     <Image DockPanel.Dock="Right" Style="{StaticResource FolderIconStyle}" />
                     <Image DockPanel.Dock="Right" Style="{StaticResource PageMarkStyle}" />
                     <StackPanel VerticalAlignment="Center">
@@ -182,7 +183,7 @@
                         <Image DockPanel.Dock="Right" Style="{StaticResource PageMarkStyle}" />
                         <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource BannerrNameStyle}" />
                     </DockPanel>
-                    <local:PanelListBannerImage Thumbnail="{Binding Thumbnail}" />
+                    <local:PanelListBannerImage Thumbnail="{Binding Thumbnail}" Opacity="{Binding PendingCount, Converter={StaticResource PendingCountToOpacityConverter}}" />
                 </DockPanel>
             </DockPanel>
         </DataTemplate>
@@ -190,7 +191,7 @@
         <DataTemplate x:Key="ThumbnailTemplate">
             <StackPanel Margin="5" Width="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.ShapeWidth}" ToolTip="{Binding EntryFullName}" ToolTipService.InitialShowDelay="1000">
                 <Grid>
-                    <local:PanelListThumbnailImage Thumbnail="{Binding Thumbnail}" />
+                    <local:PanelListThumbnailImage Thumbnail="{Binding Thumbnail}" Opacity="{Binding PendingCount, Converter={StaticResource PendingCountToOpacityConverter}}" />
                     <StackPanel Style="{StaticResource OverrideIconStackPanelStyle}">
                         <Image DockPanel.Dock="Right" Style="{StaticResource PageMarkStyle}" VerticalAlignment="Top"/>
                         <Image DockPanel.Dock="Right" Style="{StaticResource FolderIconStyle}" VerticalAlignment="Top"/>

@@ -107,6 +107,7 @@ namespace NeeView
         public static readonly RoutedCommand OpenBookCommand = new(nameof(OpenBookCommand), typeof(ThumbnailListView));
         public static readonly RoutedCommand OpenExplorerCommand = new(nameof(OpenExplorerCommand), typeof(ThumbnailListView));
         public static readonly RoutedCommand OpenExternalAppCommand = new(nameof(OpenExternalAppCommand), typeof(ThumbnailListView));
+        public static readonly RoutedCommand CutCommand = new(nameof(CutCommand), typeof(ThumbnailListView));
         public static readonly RoutedCommand CopyCommand = new(nameof(CopyCommand), typeof(ThumbnailListView));
         public static readonly RoutedCommand CopyToFolderCommand = new(nameof(CopyToFolderCommand), typeof(ThumbnailListView));
         public static readonly RoutedCommand MoveToFolderCommand = new(nameof(MoveToFolderCommand), typeof(ThumbnailListView));
@@ -122,6 +123,7 @@ namespace NeeView
         {
             OpenCommand.InputGestures.Add(new KeyGesture(Key.Return));
             ////OpenBookCommand.InputGestures.Add(new KeyGesture(Key.Down, ModifierKeys.Alt));
+            CutCommand.InputGestures.Add(new KeyGesture(Key.X, ModifierKeys.Control));
             CopyCommand.InputGestures.Add(new KeyGesture(Key.C, ModifierKeys.Control));
             RemoveCommand.InputGestures.Add(new KeyGesture(Key.Delete));
             RenameCommand.InputGestures.Add(new KeyGesture(Key.F2));
@@ -134,6 +136,7 @@ namespace NeeView
             this.ThumbnailListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(OpenBookCommand));
             this.ThumbnailListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(OpenExplorerCommand));
             this.ThumbnailListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(OpenExternalAppCommand));
+            this.ThumbnailListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(CutCommand));
             this.ThumbnailListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(CopyCommand));
             this.ThumbnailListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(CopyToFolderCommand));
             this.ThumbnailListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(MoveToFolderCommand));
@@ -590,6 +593,7 @@ namespace NeeView
             contextMenu.Items.Add(new Separator());
             contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@PageListItem.Menu.Explorer"), Command = OpenExplorerCommand });
             contextMenu.Items.Add(ExternalAppCollectionUtility.CreateExternalAppItem(_commandResource.OpenExternalApp_CanExecute(listBox), OpenExternalAppCommand, OpenExternalAppDialogCommand));
+            contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@PageListItem.Menu.Cut"), Command = CutCommand });
             contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@PageListItem.Menu.Copy"), Command = CopyCommand });
             contextMenu.Items.Add(DestinationFolderCollectionUtility.CreateDestinationFolderItem(ResourceService.GetString("@PageListItem.Menu.CopyToFolder"), _commandResource.CopyToFolder_CanExecute(listBox), CopyToFolderCommand, OpenDestinationFolderCommand));
             contextMenu.Items.Add(DestinationFolderCollectionUtility.CreateDestinationFolderItem(ResourceService.GetString("@PageListItem.Menu.MoveToFolder"), _commandResource.MoveToFolder_CanExecute(listBox), MoveToFolderCommand, OpenDestinationFolderCommand));

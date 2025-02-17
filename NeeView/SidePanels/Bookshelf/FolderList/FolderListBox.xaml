@@ -20,6 +20,7 @@
         <local:FolderItemToNoteConverter x:Key="FolderItemToNoteConverter"/>
         <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityHiddenConverter" False="Hidden" />
         <local:BrushAlphaToVisibilityConverter x:Key="BrushAlphaToVisibilityConverter" />
+        <local:PendingCountToOpacityConverter x:Key="PendingCountToOpacityConverter" />
 
         <Style x:Key="NameStyleBase" TargetType="TextBlock" >
             <Setter Property="Text" Value="{Binding DisplayName}"/>
@@ -99,7 +100,7 @@
             <DockPanel LastChildFill="False" MinHeight="20">
                 <Rectangle Style="{StaticResource VerticalSelectedStyle}" />
                 <local:FolderListIcon DockPanel.Dock="Right" Margin="1" />
-                <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource NormalNameStyle}" Margin="5,1" />
+                <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource NormalNameStyle}" Margin="5,1" Opacity="{Binding PendingCount, Converter={StaticResource PendingCountToOpacityConverter}}" />
             </DockPanel>
         </DataTemplate>
 
@@ -108,7 +109,7 @@
                 <Rectangle Style="{StaticResource VerticalSelectedStyle}" />
                 <DockPanel LastChildFill="False" Margin="2">
                     <local:FolderListIcon DockPanel.Dock="Right" />
-                    <local:PanelListContentImage Thumbnail="{Binding Thumbnail}" />
+                    <local:PanelListContentImage Thumbnail="{Binding Thumbnail}" Opacity="{Binding PendingCount, Converter={StaticResource PendingCountToOpacityConverter}}" />
                     <StackPanel VerticalAlignment="Center">
                         <TextBlock Style="{StaticResource NoteTextStyle}">
                             <TextBlock.Text>
@@ -132,14 +133,14 @@
                         <local:FolderListIcon DockPanel.Dock="Right" />
                         <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource BannerNameStyle}" Margin="0" />
                     </DockPanel>
-                    <local:PanelListBannerImage Thumbnail="{Binding Thumbnail}" />
+                    <local:PanelListBannerImage Thumbnail="{Binding Thumbnail}" Opacity="{Binding PendingCount, Converter={StaticResource PendingCountToOpacityConverter}}" />
                 </DockPanel>
             </DockPanel>
         </DataTemplate>
 
         <DataTemplate x:Key="ThumbnailTemplate">
             <StackPanel Margin="5" Width="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.ShapeWidth}" Style="{StaticResource ThumbnailStackPanelStyle}">
-                <local:PanelListThumbnailImage Thumbnail="{Binding Thumbnail}" />
+                <local:PanelListThumbnailImage Thumbnail="{Binding Thumbnail}" Opacity="{Binding PendingCount, Converter={StaticResource PendingCountToOpacityConverter}}" />
                 <Rectangle DockPanel.Dock="Bottom" Style="{StaticResource HorizontalSelectedStyle}" Margin="-5,0,-5,1" />
                 <DockPanel>
                     <local:FolderListIcon DockPanel.Dock="Right" VerticalAlignment="Top" IsKeepArea="False" />

@@ -1,17 +1,34 @@
-﻿using System;
+﻿using NeeView.Windows;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
 namespace NeeView
 {
-    // コピー設定
     public static class ClipboardUtility
     {
+        public static async Task CutAsync(List<Page> pages, CancellationToken token)
+        {
+            var data = new DataObject();
+
+            // 実在するファイルのみを対象とする。テキストは処理しない
+            var copyPolicy = new CopyPolicy(ArchivePolicy.None, TextCopyPolicy.None);
+            if (await SetDataAsync(data, pages, copyPolicy, token))
+            {
+                var guid = Guid.NewGuid();
+                data.SetGuid(guid);
+                data.SetPreferredDropEffect(DragDropEffects.Move);
+                Clipboard.SetDataObject(data);
+
+                // TODO: できれば実際に処理するページのみ対象としたい
+                PendingItemManager.Current.AddRange(guid, pages);
+            }
+        }
+
         public static async Task CopyAsync(List<Page> pages, CancellationToken token)
         {
             var data = new DataObject();
@@ -24,15 +41,20 @@ namespace NeeView
 
         public static async Task<bool> SetDataAsync(DataObject data, List<Page> pages, CancellationToken token)
         {
+            return await SetDataAsync(data, pages, Config.Current.System, token);
+        }
+
+        public static async Task<bool> SetDataAsync(DataObject data, List<Page> pages, ICopyPolicy policy, CancellationToken token)
+        {
             try
             {
-                return await SetDataAsync(data, pages, Config.Current.System, token);
+                return await SetDataCoreAsync(data, pages, Config.Current.System, token);
             }
-            catch(OperationCanceledException)
+            catch (OperationCanceledException)
             {
                 return false;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ToastService.Current.Show(new Toast(ex.Message, null, ToastIcon.Error));
                 return false;
@@ -47,7 +69,7 @@ namespace NeeView
         /// <param name="policy">登録方針</param>
         /// <param name="token"></param>
         /// <returns>登録成功/失敗</returns>
-        private static async Task<bool> SetDataAsync(DataObject data, List<Page> pages, ICopyPolicy policy, CancellationToken token)
+        private static async Task<bool> SetDataCoreAsync(DataObject data, List<Page> pages, ICopyPolicy policy, CancellationToken token)
         {
             if (pages.Count == 0) return false;
 

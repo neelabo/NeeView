@@ -78,19 +78,20 @@ namespace NeeView
     /// フォルダー情報
     /// フォルダーリストの１項目の情報 
     /// </summary>
-    public abstract class FolderItem : BindableBase, IHasPage, IHasName, IRenameable, ISearchItem
+    public abstract class FolderItem : BindableBase, IHasPage, IHasName, IRenameable, ISearchItem, IPendingItem
     {
         private readonly bool _isOverlayEnabled;
 
         private QueryPath? _place;
         private string? _name;
-        private string? _dispName;
+        private string? _displayName;
         private QueryPath _targetPath = QueryPath.Empty;
         private QueryPath _entityPath = QueryPath.Empty;
         private bool _isReady;
         private bool _isRecursive;
         private FolderItemIconOverlay _iconOverlay = FolderItemIconOverlay.Uninitialized;
         private bool _isVisible;
+        private int _pendingCount;
 
 
         public FolderItem(bool isOverlayEnabled)
@@ -139,8 +140,8 @@ namespace NeeView
         // 表示名
         public string? DisplayName
         {
-            get { return _dispName ?? (IsHideExtension() ? System.IO.Path.GetFileNameWithoutExtension(_name) : _name); }
-            set { SetProperty(ref _dispName, value); }
+            get { return _displayName ?? (IsHideExtension() ? System.IO.Path.GetFileNameWithoutExtension(_name) : _name); }
+            set { SetProperty(ref _displayName, value); }
         }
 
         /// <summary>
@@ -237,6 +238,14 @@ namespace NeeView
         {
             get { return _isVisible; }
             set { SetProperty(ref _isVisible, value); }
+        }
+
+        /// <summary>
+        /// 削除未確定カウント
+        /// </summary>
+        public int PendingCount
+        {
+            get { return _pendingCount; }
         }
 
 
@@ -421,7 +430,20 @@ namespace NeeView
         protected virtual void OnRenamed()
         {
         }
+
+        public void IncrementPendingCount()
+        {
+            Interlocked.Increment(ref _pendingCount);
+            RaisePropertyChanged(nameof(PendingCount));
+        }
+
+        public void DecrementPendingCount()
+        {
+            Interlocked.Decrement(ref _pendingCount);
+            RaisePropertyChanged(nameof(PendingCount));
+        }
     }
+
 
     /// <summary>
     /// 標準 FolderItem

@@ -10,6 +10,7 @@
         <local:SliderDirectionToFlowDirectionConverter x:Key="SliderDirectionToFlowDirectionConverter"/>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityHiddenConverter" False="Hidden"/>
+        <local:PendingCountToOpacityConverter x:Key="PendingCountToOpacityConverter" />
 
         <DrawingImage x:Key="ic_bookmark_24px">
             <DrawingImage.Drawing>
@@ -74,7 +75,7 @@
                                         <Grid Width="{Binding Source={x:Static local:Config.Current},  Path=FilmStrip.ImageWidth}"
                                                 Height="{Binding Source={x:Static local:Config.Current},  Path=FilmStrip.ImageWidth}">
                                             <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-                                                <local:ThumbnailListThumbnailImage Thumbnail="{Binding Thumbnail}" />
+                                                <local:ThumbnailListThumbnailImage Thumbnail="{Binding Thumbnail}" Opacity="{Binding PendingCount, Converter={StaticResource PendingCountToOpacityConverter}}" />
                                                 <Grid Width="16" Height="16" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-4,4,0"
                                                       Visibility="{Binding Source={x:Static local:Config.Current}, Path=FilmStrip.IsVisiblePlaylistMark, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                     <Image Source="{StaticResource ic_bookmark_24px}" Visibility="{Binding IsMarked, Converter={StaticResource BooleanToVisibilityConverter}}">

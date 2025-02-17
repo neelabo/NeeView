@@ -1076,6 +1076,7 @@ MemoryControl.IsAutoGC=メモリ開放をシステムに任せる
 MemoryControl.IsAutoGC.Remarks=オフの時はページ切り替え毎にメモリ開放を行います
 Menu.Close=閉じる(_C)
 Menu.Copy=コピー(_C)
+Menu.Cut=切り取り(_T)
 Menu.Delete=削除(_D)
 Menu.Edit=編集(_E)
 Menu.Explorer=エクスプローラーで開く(_X)

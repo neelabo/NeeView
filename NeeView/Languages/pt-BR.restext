@@ -1082,6 +1082,7 @@ MemoryControl.IsAutoGC=O sistema gerencia a memória
 MemoryControl.IsAutoGC.Remarks=Quando está DESLIGADO, a memória é liberada toda vez que a página é trocada
 Menu.Close=_Fechar
 Menu.Copy=_Copiar
+Menu.Cut=
 Menu.Delete=_Excluir
 Menu.Edit=_Editar
 Menu.Explorer=Abrir no e_xplorer

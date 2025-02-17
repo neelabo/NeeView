@@ -2,7 +2,11 @@
 {
     public interface ICopyPolicy
     {
-        ArchivePolicy ArchiveCopyPolicy { get; set; }
-        TextCopyPolicy TextCopyPolicy { get; set; }
+        ArchivePolicy ArchiveCopyPolicy { get; }
+        TextCopyPolicy TextCopyPolicy { get; }
+    }
+
+    public record class CopyPolicy(ArchivePolicy ArchiveCopyPolicy, TextCopyPolicy TextCopyPolicy) : ICopyPolicy
+    {
     }
 }

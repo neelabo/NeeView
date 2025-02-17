@@ -54,19 +54,6 @@ namespace NeeView.Windows
             {
                 base.OnTextInput(e);
             }
-
-#if false
-            // SHIFTキーが押されているときに問題があるので、シングル選択モードに設定する
-            var current = this.SelectionMode;
-                this.SelectionMode = SelectionMode.Single;
-                base.OnTextInput(e);
-                this.SelectionMode = current;
-            }
-            else
-            {
-                base.OnTextInput(e);
-            }
-#endif
         }
 
         public void FocusSelectedItem(bool force)

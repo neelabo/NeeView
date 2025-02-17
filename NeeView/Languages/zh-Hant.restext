@@ -1076,6 +1076,7 @@ MemoryControl.IsAutoGC=讓系統管理釋放記憶體
 MemoryControl.IsAutoGC.Remarks=關閉時記憶體會在每次頁面切換後釋放
 Menu.Close=關閉(_C)
 Menu.Copy=複製(_C)
+Menu.Cut=
 Menu.Delete=刪除(_D)
 Menu.Edit=編輯(_E)
 Menu.Explorer=以檔案總管開啟(_X)

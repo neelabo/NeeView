@@ -25,6 +25,7 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityHiddenConverter" False="Hidden" />
         <local:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
+        <local:PendingCountToOpacityConverter x:Key="PendingCountToOpacityConverter" />
 
         <Style x:Key="PageMarkStyle" TargetType="Image">
             <Setter Property="Width" Value="16" />
@@ -48,7 +49,8 @@
             </DockPanel>
 
             <nw:ListBoxExtended x:Name="ThumbnailListBox" DockPanel.Dock="Top" Style="{StaticResource NVListBox}" Template="{StaticResource NoScroll}" ItemsSource="{Binding FileInformationCollection}"
-                    SelectedItem="{Binding SelectedItem}" Margin="2" MinHeight="120" ScrollViewer.HorizontalScrollBarVisibility="Disabled" PreviewMouseWheel="ThumbnailListBox_PreviewMouseWheel">
+                    SelectedItem="{Binding SelectedItem}" Margin="2" MinHeight="120" ScrollViewer.HorizontalScrollBarVisibility="Disabled" PreviewMouseWheel="ThumbnailListBox_PreviewMouseWheel"
+                    IsSimpleTextSearchEnabled="False">
                 <b:Interaction.Behaviors>
                     <nw:ListBoxExtendedDragDropStartBehavior AllowedEffects="Copy, Scroll" AllowRightButtonDrag="True" DragDropFormat="{x:Static local:FileInformationView.DragDropFormat}"
                             DragBeginAsync="DragStartBehavior_DragBeginAsync" />
@@ -73,7 +75,7 @@
                     <DataTemplate>
                         <Grid Width="96" Height="96" Margin="4,8">
                             <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <ContentControl Content="{Binding Icon}" IsTabStop="false" Focusable="False" />
+                                <ContentControl Content="{Binding Icon}" IsTabStop="false" Focusable="False" Opacity="{Binding Page.PendingCount, Converter={StaticResource PendingCountToOpacityConverter}}" />
                                 <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-4,4,0">
                                     <Image Style="{StaticResource PageMarkStyle}">
                                         <Image.Effect>

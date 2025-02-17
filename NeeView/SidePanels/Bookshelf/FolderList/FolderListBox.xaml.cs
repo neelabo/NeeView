@@ -107,7 +107,7 @@ namespace NeeView
         // サムネイルが表示されている？
         public bool IsThumbnailVisible => _vm.IsThumbnailVisible;
 
-        public IEnumerable<IHasPage> CollectPageList(IEnumerable<object> objs) => objs.OfType<IHasPage>();
+        public IEnumerable<IHasPage> CollectPageList(IEnumerable<object> enums) => enums.OfType<IHasPage>();
 
         #endregion
 
@@ -118,6 +118,7 @@ namespace NeeView
         public static readonly RoutedCommand OpenBookCommand = new("OpenBookCommand", typeof(FolderListBox));
         public static readonly RoutedCommand OpenExplorerCommand = new("OpenExplorerCommand", typeof(FolderListBox));
         public static readonly RoutedCommand OpenExternalAppCommand = new("OpenExternalAppCommand", typeof(FolderListBox));
+        public static readonly RoutedCommand CutCommand = new("CutCommand", typeof(FolderListBox));
         public static readonly RoutedCommand CopyCommand = new("CopyCommand", typeof(FolderListBox));
         public static readonly RoutedCommand CopyToFolderCommand = new("CopyToFolderCommand", typeof(FolderListBox));
         public static readonly RoutedCommand MoveToFolderCommand = new("MoveToFolderCommand", typeof(FolderListBox));
@@ -133,6 +134,7 @@ namespace NeeView
         {
             OpenCommand.InputGestures.Add(new KeyGesture(Key.Down, ModifierKeys.Alt));
             OpenBookCommand.InputGestures.Add(new KeyGesture(Key.Enter));
+            CutCommand.InputGestures.Add(new KeyGesture(Key.X, ModifierKeys.Control));
             CopyCommand.InputGestures.Add(new KeyGesture(Key.C, ModifierKeys.Control));
             RemoveCommand.InputGestures.Add(new KeyGesture(Key.Delete));
             RenameCommand.InputGestures.Add(new KeyGesture(Key.F2));
@@ -146,6 +148,7 @@ namespace NeeView
             this.ListBox.CommandBindings.Add(new CommandBinding(OpenBookCommand, OpenBook_Executed));
             this.ListBox.CommandBindings.Add(new CommandBinding(OpenExplorerCommand, OpenExplorer_Executed, OpenExplorer_CanExecute));
             this.ListBox.CommandBindings.Add(new CommandBinding(OpenExternalAppCommand, OpenExternalApp_Executed, OpenExternalApp_CanExecute));
+            this.ListBox.CommandBindings.Add(new CommandBinding(CutCommand, Cut_Executed, Cut_CanExecute));
             this.ListBox.CommandBindings.Add(new CommandBinding(CopyCommand, Copy_Executed, Copy_CanExecute));
             this.ListBox.CommandBindings.Add(new CommandBinding(CopyToFolderCommand, CopyToFolder_Execute, CopyToFolder_CanExecute));
             this.ListBox.CommandBindings.Add(new CommandBinding(MoveToFolderCommand, MoveToFolder_Execute, MoveToFolder_CanExecute));
@@ -240,6 +243,55 @@ namespace NeeView
         }
 
         /// <summary>
+        /// 切り取りコマンド実行可能判定
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Cut_CanExecute(object? sender, CanExecuteRoutedEventArgs e)
+        {
+            var items = this.ListBox.SelectedItems.Cast<FolderItem>();
+            e.CanExecute = items != null && items.All(x => x.IsEditable && x.IsFileSystem());
+        }
+
+        /// <summary>
+        /// 切り取りコマンド実行
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void Cut_Executed(object? sender, ExecutedRoutedEventArgs e)
+        {
+            var items = this.ListBox.SelectedItems.Cast<FolderItem>();
+            if (items != null && items.Any())
+            {
+                CutToClipboard(items);
+            }
+        }
+
+        /// <summary>
+        /// クリップボードに切り取り
+        /// </summary>
+        private static void CutToClipboard(IEnumerable<FolderItem> items)
+        {
+            var selectedItems = items.Where(e => !e.IsEmpty() && e.IsEditable && e.IsFileSystem()).ToList();
+            if (selectedItems.Count == 0)
+            {
+                return;
+            }
+            
+            var collection = new System.Collections.Specialized.StringCollection();
+            selectedItems.ForEach(e => collection.Add(e.EntityPath.SimplePath));
+
+            var data = new DataObject();
+            var guid = Guid.NewGuid();
+            data.SetGuid(guid);
+            data.SetFileDropList(collection);
+            data.SetPreferredDropEffect(DragDropEffects.Move);
+            Clipboard.SetDataObject(data);
+
+            PendingItemManager.Current.AddRange(guid, selectedItems);
+        }
+
+        /// <summary>
         /// コピーコマンド実行可能判定
         /// </summary>
         /// <param name="sender"></param>
@@ -267,10 +319,10 @@ namespace NeeView
         /// <summary>
         /// クリップボードにコピー
         /// </summary>
-        private static void CopyToClipboard(IEnumerable<FolderItem> infos)
+        private static void CopyToClipboard(IEnumerable<FolderItem> items)
         {
             var collection = new System.Collections.Specialized.StringCollection();
-            foreach (var item in infos.Where(e => !e.IsEmpty()).Select(e => e.EntityPath.SimplePath).Where(e => new QueryPath(e).Scheme == QueryScheme.File))
+            foreach (var item in items.Where(e => !e.IsEmpty()).Select(e => e.EntityPath.SimplePath).Where(e => new QueryPath(e).Scheme == QueryScheme.File))
             {
                 collection.Add(item);
             }
@@ -525,7 +577,7 @@ namespace NeeView
             _vm.Model.AddBookmark();
         }
 
-        #endregion
+#endregion
 
         #region DragDrop
 
@@ -1056,6 +1108,7 @@ namespace NeeView
                     contextMenu.Items.Add(new Separator());
                     contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@BookshelfItem.Menu.Explorer"), Command = OpenExplorerCommand });
                     contextMenu.Items.Add(ExternalAppCollectionUtility.CreateExternalAppItem(OpenExternalApp_CanExecute(), OpenExternalAppCommand, OpenExternalAppDialogCommand));
+                    contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@BookshelfItem.Menu.Cut"), Command = CutCommand });
                     contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@BookshelfItem.Menu.Copy"), Command = CopyCommand });
                     contextMenu.Items.Add(DestinationFolderCollectionUtility.CreateDestinationFolderItem(ResourceService.GetString("@BookshelfItem.Menu.CopyToFolder"), CopyToFolder_CanExecute(), CopyToFolderCommand, OpenDestinationFolderCommand));
                     contextMenu.Items.Add(DestinationFolderCollectionUtility.CreateDestinationFolderItem(ResourceService.GetString("@BookshelfItem.Menu.MoveToFolder"), false, MoveToFolderCommand, OpenDestinationFolderCommand));
@@ -1084,6 +1137,7 @@ namespace NeeView
                 contextMenu.Items.Add(new Separator());
                 contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@BookshelfItem.Menu.Explorer"), Command = OpenExplorerCommand });
                 contextMenu.Items.Add(ExternalAppCollectionUtility.CreateExternalAppItem(OpenExternalApp_CanExecute(), OpenExternalAppCommand, OpenExternalAppDialogCommand));
+                contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@BookshelfItem.Menu.Cut"), Command = CutCommand });
                 contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@BookshelfItem.Menu.Copy"), Command = CopyCommand });
                 contextMenu.Items.Add(DestinationFolderCollectionUtility.CreateDestinationFolderItem(ResourceService.GetString("@BookshelfItem.Menu.CopyToFolder"), CopyToFolder_CanExecute(), CopyToFolderCommand, OpenDestinationFolderCommand));
                 contextMenu.Items.Add(DestinationFolderCollectionUtility.CreateDestinationFolderItem(ResourceService.GetString("@BookshelfItem.Menu.MoveToFolder"), MoveToFolder_CanExecute(), MoveToFolderCommand, OpenDestinationFolderCommand));

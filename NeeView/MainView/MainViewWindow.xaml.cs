@@ -76,6 +76,7 @@ namespace NeeView
             this.Closed += MainViewWindow_Closed;
 
             // key event for window
+            this.PreviewKeyDown += MainViewWindow_PreviewKeyDown;
             this.KeyDown += MainViewWindow_KeyDown;
 
             UpdateCaptionBar();
@@ -159,6 +160,14 @@ namespace NeeView
         private void MainViewWindow_Activated(object? sender, EventArgs e)
         {
             RoutedCommandTable.Current.UpdateInputGestures();
+        }
+
+        private void MainViewWindow_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                PendingItemManager.Current.Cancel();
+            }
         }
 
         private void MainViewWindow_KeyDown(object sender, KeyEventArgs e)

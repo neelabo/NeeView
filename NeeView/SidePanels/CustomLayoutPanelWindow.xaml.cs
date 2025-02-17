@@ -71,6 +71,16 @@ namespace NeeView
             base.OnClosed(e);
         }
 
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                PendingItemManager.Current.Cancel();
+            }
+
+            base.OnPreviewKeyDown(e);
+        }
+
         #region IHasRenameManager
 
         public RenameManager GetRenameManager()

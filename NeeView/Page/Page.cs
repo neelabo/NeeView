@@ -12,7 +12,7 @@ using NeeLaboratory.IO.Search;
 namespace NeeView
 {
     [NotifyPropertyChanged]
-    public partial class Page : IDisposable, INotifyPropertyChanged, IPageContentLoader, IPageThumbnailLoader, IHasPage, IRenameable, ISearchItem
+    public partial class Page : IDisposable, INotifyPropertyChanged, IPageContentLoader, IPageThumbnailLoader, IHasPage, IRenameable, ISearchItem, IPendingItem
     {
         private int _index;
         private readonly PageContent _content;
@@ -20,6 +20,7 @@ namespace NeeView
         private bool _isMarked;
         private bool _isDeleted;
         private bool _disposedValue;
+        private int _pendingCount;
 
         public Page(PageContent content) : this(content, "", content.ArchiveEntry.EntryFullName)
         {
@@ -141,7 +142,6 @@ namespace NeeView
             set { SetProperty(ref _isMarked, value); }
         }
 
-
         /// <summary>
         /// 要求状態
         /// </summary>
@@ -159,6 +159,15 @@ namespace NeeView
             get { return _isDeleted | ArchiveEntry.IsDeleted; }
             set { _isDeleted = value; }
         }
+
+        /// <summary>
+        /// 削除未確定カウント
+        /// </summary>
+        public int PendingCount
+        {
+            get { return _pendingCount; }
+        }
+
 
         #region Thumbnail
 
@@ -406,6 +415,18 @@ namespace NeeView
         public Dictionary<string, string> GetMetaValueMap(CancellationToken token)
         {
             return PageMetadataTools.GetValueStringMap(this, token);
+        }
+
+        public void IncrementPendingCount()
+        {
+            Interlocked.Increment(ref _pendingCount);
+            RaisePropertyChanged(nameof(PendingCount));
+        }
+
+        public void DecrementPendingCount()
+        {
+            Interlocked.Decrement(ref _pendingCount);
+            RaisePropertyChanged(nameof(PendingCount));
         }
 
         #endregion

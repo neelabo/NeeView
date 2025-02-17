@@ -76,6 +76,7 @@ namespace NeeView
         public readonly static RoutedCommand MoveToAnotherCommand = new(nameof(MoveToAnotherCommand), typeof(PlaylistListBox));
         public static readonly RoutedCommand OpenExplorerCommand = new(nameof(OpenExplorerCommand), typeof(PlaylistListBox));
         public static readonly RoutedCommand OpenExternalAppCommand = new(nameof(OpenExternalAppCommand), typeof(PlaylistListBox));
+        public static readonly RoutedCommand CutCommand = new(nameof(CutCommand), typeof(PlaylistListBox));
         public static readonly RoutedCommand CopyCommand = new(nameof(CopyCommand), typeof(PlaylistListBox));
         public static readonly RoutedCommand CopyToFolderCommand = new(nameof(CopyToFolderCommand), typeof(PlaylistListBox));
         public static readonly RoutedCommand MoveToFolderCommand = new(nameof(MoveToFolderCommand), typeof(PlaylistListBox));
@@ -88,6 +89,7 @@ namespace NeeView
         {
             RenameCommand.InputGestures.Add(new KeyGesture(Key.F2));
             RemoveCommand.InputGestures.Add(new KeyGesture(Key.Delete));
+            CutCommand.InputGestures.Add(new KeyGesture(Key.X, ModifierKeys.Control));
             CopyCommand.InputGestures.Add(new KeyGesture(Key.C, ModifierKeys.Control));
         }
 
@@ -103,6 +105,7 @@ namespace NeeView
             this.ListBox.CommandBindings.Add(new CommandBinding(MoveToAnotherCommand, MoveToAnotherCommand_Execute, MoveToAnotherCommand_CanExecute));
             this.ListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(OpenExplorerCommand));
             this.ListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(OpenExternalAppCommand));
+            this.ListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(CutCommand));
             this.ListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(CopyCommand));
             this.ListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(CopyToFolderCommand));
             this.ListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(MoveToFolderCommand));
@@ -559,6 +562,7 @@ namespace NeeView
             contextMenu.Items.Add(new Separator());
             contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@PlaylistItem.Menu.Explorer"), Command = OpenExplorerCommand });
             contextMenu.Items.Add(ExternalAppCollectionUtility.CreateExternalAppItem(_commandResource.OpenExternalApp_CanExecute(listBox), OpenExternalAppCommand, OpenExternalAppDialogCommand));
+            contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@PlaylistItem.Menu.Cut"), Command = CutCommand });
             contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@PlaylistItem.Menu.Copy"), Command = CopyCommand });
             contextMenu.Items.Add(DestinationFolderCollectionUtility.CreateDestinationFolderItem(ResourceService.GetString("@PlaylistItem.Menu.CopyToFolder"), _commandResource.CopyToFolder_CanExecute(listBox), CopyToFolderCommand, OpenDestinationFolderCommand));
             contextMenu.Items.Add(DestinationFolderCollectionUtility.CreateDestinationFolderItem(ResourceService.GetString("@PlaylistItem.Menu.MoveToFolder"), _commandResource.MoveToFolder_CanExecute(listBox), MoveToFolderCommand, OpenDestinationFolderCommand));

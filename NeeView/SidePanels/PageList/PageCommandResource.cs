@@ -42,6 +42,7 @@ namespace NeeView
                 "OpenBookCommand" => new CommandBinding(command, OpenBook_Exec, OpenBook_CanExec),
                 "OpenExplorerCommand" => new CommandBinding(command, OpenExplorer_Executed, OpenExplorer_CanExecute),
                 "OpenExternalAppCommand" => new CommandBinding(command, OpenExternalApp_Executed, OpenExternalApp_CanExecute),
+                "CutCommand" => new CommandBinding(command, Cut_Exec, Cut_CanExec),
                 "CopyCommand" => new CommandBinding(command, Copy_Exec, Copy_CanExec),
                 "CopyToFolderCommand" => new CommandBinding(command, CopyToFolder_Execute, CopyToFolder_CanExecute),
                 "MoveToFolderCommand" => new CommandBinding(command, MoveToFolder_Execute, MoveToFolder_CanExecute),
@@ -170,6 +171,45 @@ namespace NeeView
             {
                 await externalApp.ExecuteAsync(items, CancellationToken.None);
             }
+        }
+
+        /// <summary>
+        /// クリップボードにカット
+        /// </summary>
+        public void Cut_CanExec(object sender, CanExecuteRoutedEventArgs e)
+        {
+            var items = GetSelectedPages(sender);
+            e.CanExecute =  Config.Current.System.IsFileWriteAccessEnabled && items != null && items.Any() && CanMoveToFolder(items);
+        }
+
+        public async void Cut_Exec(object sender, ExecutedRoutedEventArgs e)
+        {
+            var items = GetSelectedPages(sender);
+
+            if (items != null && items.Count > 0)
+            {
+                try
+                {
+                    App.Current.MainWindow.Cursor = Cursors.Wait;
+                    await CutAsync(items, CancellationToken.None);
+                }
+                catch (Exception ex)
+                {
+                    App.Current.MainWindow.Cursor = null;
+                    new MessageDialog(ex.Message, Properties.TextResources.GetString("CopyErrorDialog.Title")).ShowDialog();
+                }
+                finally
+                {
+                    App.Current.MainWindow.Cursor = null;
+                }
+            }
+
+            e.Handled = true;
+        }
+
+        private static async Task CutAsync(List<Page> pages, CancellationToken token)
+        {
+            await ClipboardUtility.CutAsync(pages, token);
         }
 
         /// <summary>

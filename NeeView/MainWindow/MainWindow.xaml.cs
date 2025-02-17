@@ -424,10 +424,11 @@ namespace NeeView
         {
             Debug.WriteLine($"App.MainWindow.SourceInitialized: {App.Current.Stopwatch.ElapsedMilliseconds}ms");
 
-            // NOTE: Chromeの変更を行った場合、Loadedイベントが発生する。WindowPlacementの処理順番に注意
+            // Chrome の情報を最新にする
             _windowController.Refresh();
 
             // ウィンドウ座標の復元
+            // NOTE: NativeMethods.SetWindowPlacement() を呼ぶとLoadedイベントが発生する。WindowPlacementの処理順番に注意
             RestoreWindowPlacement();
 
             Debug.WriteLine($"App.MainWindow.SourceInitialized.Done: {App.Current.Stopwatch.ElapsedMilliseconds}ms");
@@ -441,6 +442,8 @@ namespace NeeView
             MessageDialog.OwnerWindow = this;
 
             _dpiProvider.SetDipScale(VisualTreeHelper.GetDpi(this));
+            
+            PendingItemManager.Initialize(this);
 
             MainViewManager.Current.Update(false);
 
@@ -515,6 +518,11 @@ namespace NeeView
         {
             // 自動非表示ロック解除
             _vm.Model.LeaveVisibleLocked();
+
+            if (e.Key == Key.Escape)
+            {
+                PendingItemManager.Current.Cancel();
+            }
         }
 
         private void MainWindow_PreviewKeyUp(object sender, KeyEventArgs e)
