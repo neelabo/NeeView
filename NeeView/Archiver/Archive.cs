@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeLaboratory.Generators;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -11,11 +12,12 @@ namespace NeeView
     /// <summary>
     /// アーカイバー基底クラス
     /// </summary>
-    public abstract class Archive : IDisposable
+    public abstract partial class Archive : IDisposable
     {
         private readonly ArchivePreExtractor _preExtractor;
         private int _preExtractorActivateCount;
         private bool _disposedValue;
+        private int _watchCount;
 
         /// <summary>
         /// ArchiveEntry Cache
@@ -63,6 +65,17 @@ namespace NeeView
             _preExtractor = new ArchivePreExtractor(this);
             _preExtractor.Sleep();
         }
+
+
+        [Subscribable]
+        public event EventHandler<FileSystemEventArgs>? Created;
+
+        [Subscribable]
+        public event EventHandler<FileSystemEventArgs>? Deleted;
+
+        [Subscribable]
+        public event EventHandler<RenamedEventArgs>? Renamed;
+
 
         // Disposed?
         public bool IsDisposed => _disposedValue;
@@ -131,6 +144,47 @@ namespace NeeView
         /// </summary>
         public string Ident => (Parent == null || Parent is FolderArchive) ? Path : LoosePath.Combine(Parent.Ident, $"{Id}.{EntryName}");
 
+
+        protected virtual void OnCreated(FileSystemEventArgs e)
+        {
+            Created?.Invoke(this, e);
+        }
+
+        protected virtual void OnDeleted(FileSystemEventArgs e)
+        {
+            Deleted?.Invoke(this, e);
+        }
+
+        protected virtual void OnRenamed(RenamedEventArgs e)
+        {
+            Renamed?.Invoke(this, e);
+        }
+
+        protected virtual void OnStartWatch()
+        {
+        }
+
+        protected virtual void OnStopWatch()
+        {
+        }
+
+        public void StartWatch()
+        {
+            var count = Interlocked.Increment(ref _watchCount);
+            if (count == 1)
+            {
+                OnStartWatch();
+            }
+        }
+
+        public void StopWatch()
+        {
+            var count = Interlocked.Decrement(ref _watchCount);
+            if (count == 0)
+            {
+                OnStopWatch();
+            }
+        }
 
         // 本来のファイルシスでのパスを取得
         public string GetSourceFileSystemPath()
@@ -214,6 +268,16 @@ namespace NeeView
             });
 
             return _entries;
+        }
+
+        protected List<ArchiveEntry>? GetEntriesCache()
+        {
+            return _entries;
+        }
+
+        protected void SetEntriesCache(List<ArchiveEntry> entries)
+        {
+            _entries = entries;
         }
 
         /// <summary>

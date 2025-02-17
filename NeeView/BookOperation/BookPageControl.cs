@@ -56,6 +56,8 @@ namespace NeeView
                     _book.Pages.PagesSorted -= Book_PagesSorted;
                     _book.Pages.PageRemoved -= Book_PageRemoved;
                     _box.SelectedRangeChanged -= Book_SelectedRangeChanged;
+
+                    _actionControl.Dispose();
                 }
                 _disposedValue = true;
             }

@@ -396,6 +396,17 @@ namespace NeeView
             return isSuccess;
         }
 
+        public void ValidateEntryName()
+        {
+            // TODO: BookパスとArchiveEntry.EntryName では階層があっていないと思う
+            if (EntryName != ArchiveEntry.EntryName)
+            {
+                EntryName = LoosePath.Rename(EntryName, ArchiveEntry.EntryName);
+                RaiseNamePropertyChanged();
+                FileInformation.Current.Update(); // TODO: 伝達方法がよろしくない
+            }
+        }
+
         private void RaiseNamePropertyChanged()
         {
             if (_disposedValue) return;

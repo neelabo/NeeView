@@ -18,10 +18,22 @@ namespace NeeView
     /// </summary>
     public class FolderArchive : Archive
     {
+        private FileSystemWatcher? _fileSystemWatcher;
+
         public FolderArchive(string path, ArchiveEntry? source) : base(path, source)
         {
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+            }
+
+            TerminateWatcher();
+
+            base.Dispose(disposing);
+        }
 
         public override string ToString()
         {
@@ -119,7 +131,7 @@ namespace NeeView
 
         private FolderArchiveEntry CreateCommonArchiveEntry(FileSystemInfo info, int id)
         {
-          
+
             var name = string.IsNullOrEmpty(Path) ? info.FullName : info.FullName[Path.Length..].TrimStart('\\', '/');
 
             var entry = new FolderArchiveEntry(this)
@@ -194,7 +206,7 @@ namespace NeeView
             var paths = entries.Select(e => e.EntityPath).WhereNotNull().ToList();
             if (!paths.Any()) return DeleteResult.Success;
 
-            ClearEntryCache();
+            ClearEntryCache(); // TODO: 特定のキャッシュだけ削除できないか？
             try
             {
                 await FileIO.DeleteAsync(paths);
@@ -245,5 +257,168 @@ namespace NeeView
 
             return isSuccess;
         }
+
+        #region FileSystemWatcher
+
+        protected override void OnStartWatch()
+        {
+            InitializeWatcher(Path);
+        }
+
+        protected override void OnStopWatch()
+        {
+            TerminateWatcher();
+        }
+
+        /// <summary>
+        /// ファイルシステム監視初期化
+        /// </summary>
+        /// <param name="path"></param>
+        private void InitializeWatcher(string path)
+        {
+            if (_fileSystemWatcher != null)
+            {
+                Debug.Assert(_fileSystemWatcher.Path == path);
+                return;
+            }
+
+            _fileSystemWatcher = new FileSystemWatcher();
+
+            try
+            {
+                _fileSystemWatcher.Path = path;
+                _fileSystemWatcher.IncludeSubdirectories = false;
+                _fileSystemWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName;
+                _fileSystemWatcher.Created += Watcher_Created;
+                _fileSystemWatcher.Deleted += Watcher_Deleted;
+                _fileSystemWatcher.Renamed += Watcher_Renamed;
+                _fileSystemWatcher.Error += Watcher_Error;
+                _fileSystemWatcher.EnableRaisingEvents = true;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                _fileSystemWatcher.Dispose();
+                _fileSystemWatcher = null;
+            }
+        }
+
+        /// <summary>
+        /// ファイルシステム監視終了
+        /// </summary>
+        private void TerminateWatcher()
+        {
+            if (_fileSystemWatcher != null)
+            {
+                _fileSystemWatcher.EnableRaisingEvents = false;
+                _fileSystemWatcher.Error -= Watcher_Error;
+                _fileSystemWatcher.Created -= Watcher_Created;
+                _fileSystemWatcher.Deleted -= Watcher_Deleted;
+                _fileSystemWatcher.Renamed -= Watcher_Renamed;
+                _fileSystemWatcher.Dispose();
+                _fileSystemWatcher = null;
+            }
+        }
+
+        private void Watcher_Error(object sender, ErrorEventArgs e)
+        {
+            var ex = e.GetException();
+            Debug.WriteLine($"FileSystemWatcher: Error!! : {ex} : {ex.Message}");
+
+            // recovery...
+            ////var path = _fileSystemWatcher.Path;
+            ////TerminateWatcher();
+            ////InitializeWatcher(path);
+        }
+
+        private void Watcher_Created(object sender, FileSystemEventArgs e)
+        {
+            // TODO: パスの一致検査
+            if (e.Name is null) return;
+            Debug.WriteLine($"FileSystemWatcher: Created: {e.FullPath}");
+
+            AppDispatcher.BeginInvoke(async () =>
+            {
+                await CreateEntryAsync(e, CancellationToken.None);
+            });
+        }
+
+        public async ValueTask<ArchiveEntry?> CreateEntryAsync(FileSystemEventArgs args, CancellationToken token)
+        {
+            var info = FileIO.CreateFileSystemInfo(args.FullPath);
+            if (!FileIOProfile.Current.IsFileValid(info.Attributes))
+            {
+                return null;
+            }
+
+            var entries = await GetEntriesAsync(token);
+            var entry = entries.FirstOrDefault(e => string.Equals(e.RawEntryName, args.Name, StringComparison.OrdinalIgnoreCase));
+            if (entry is null)
+            {
+                var id = (entries.Count > 0) ? entries.Last().Id + 1 : 0;
+                entry = CreateArchiveEntry(info, id);
+                SetEntriesCache(entries.Append(entry).ToList());
+            }
+
+            // TODO: entry を渡したい
+            OnCreated(args);
+            return entry;
+        }
+
+
+        private void Watcher_Deleted(object sender, FileSystemEventArgs e)
+        {
+            // TODO: パスの一致検査
+            if (e.Name is null) return;
+            Debug.WriteLine($"FileSystemWatcher: Deleted: {e.FullPath}");
+
+            AppDispatcher.BeginInvoke(async () =>
+            {
+                await DeleteEntryAsync(e, CancellationToken.None);
+            });
+        }
+
+        public async ValueTask DeleteEntryAsync(FileSystemEventArgs args, CancellationToken token)
+        {
+            var entries = GetEntriesCache();
+            if (entries is null) return;
+
+            SetEntriesCache(entries.Where(e => string.Compare(e.RawEntryName, args.Name, StringComparison.OrdinalIgnoreCase) != 0).ToList());
+
+            OnDeleted(args);
+            await ValueTask.CompletedTask;
+        }
+
+        private void Watcher_Renamed(object sender, RenamedEventArgs e)
+        {
+            // TODO: パスの一致検査
+            if (e.Name is null) return;
+            Debug.WriteLine($"FileSystemWatcher: Renamed: {e.OldFullPath} => {e.Name}");
+
+            AppDispatcher.BeginInvoke(async () =>
+            {
+                await RenameEntryAsync(e, CancellationToken.None);
+            });
+        }
+
+        public async ValueTask RenameEntryAsync(RenamedEventArgs args, CancellationToken token)
+        {
+            if (args.Name is null) return;
+
+            var entries = GetEntriesCache();
+            if (entries is null) return;
+
+            var entry = entries.FirstOrDefault(e => string.Equals(e.RawEntryName, args.OldName, StringComparison.OrdinalIgnoreCase));
+            if (entry is null) return;
+
+            // TODO: 名前変更 PropertyChanged
+            entry.RawEntryName = args.Name;
+
+            OnRenamed(args);
+            await ValueTask.CompletedTask;
+        }
+
+        #endregion FileSystemWatcher
+
     }
 }

@@ -8,6 +8,8 @@ using System.Threading;
 using NeeView.PageFrames;
 using NeeLaboratory.Linq;
 using System.Diagnostics;
+using NeeLaboratory.ComponentModel;
+using System.IO;
 
 namespace NeeView
 {
@@ -19,12 +21,77 @@ namespace NeeView
         private readonly Book _book;
         private readonly IBookControl _bookControl;
         private readonly PageFrameBox _box;
+        private readonly DisposableCollection _disposables = new();
+        private bool _disposedValue;
 
         public BookPageActionControl(PageFrameBox box, IBookControl bookControl)
         {
             _box = box;
             _book = _box.Book;
             _bookControl = bookControl;
+
+            var archives = _book.Pages.SourceArchives;
+            archives.ForEach(e => AttachArchive(e));
+        }
+
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    _disposables.Dispose();
+                }
+
+                _disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void AttachArchive(Archive archive)
+        {
+            _disposables.Add(archive.SubscribeCreated(Archive_Created));
+            _disposables.Add(archive.SubscribeDeleted(Archive_Deleted));
+            _disposables.Add(archive.SubscribeRenamed(Archive_Renamed));
+        }
+
+        private void Archive_Created(object? sender, FileSystemEventArgs e)
+        {
+            // TODO: なるべくリロードは避けたい。ページ追加はソート扱いにできないだろうか
+            ReloadBook();
+        }
+
+        private async void Archive_Deleted(object? sender, FileSystemEventArgs e)
+        {
+            if (sender is null) throw new ArgumentNullException(nameof(sender));
+
+            // TODO: e.FullPath が RawEntryName なのは FolderArchive だけでは？
+            // TODO: アーカイブによらずインスタンスを特定する識別子が必要か
+            var archive = sender as Archive;
+            var page = _book.Pages.FirstOrDefault(x => x.ArchiveEntry.Archive == archive && string.Equals(x.ArchiveEntry.RawEntryName, e.Name, StringComparison.OrdinalIgnoreCase));
+            if (page is null) return;
+
+            await DeleteFileAsyncCore([page]);
+
+            ReloadBook();
+        }
+
+        private void Archive_Renamed(object? sender, RenamedEventArgs e)
+        {
+            if (sender is null) throw new ArgumentNullException(nameof(sender));
+
+            // 既にエントリの名前は変更されているので、エントリとページの名前の食い違いだけ修正する
+            // TODO: エントリから直接ページ名修正できないだろうか？
+            foreach(var page in _book.Pages)
+            {
+                page.ValidateEntryName();
+            }
         }
 
         #region ページ削除
@@ -66,21 +133,7 @@ namespace NeeView
                 }
             }
 
-            // ページ削除予約
-            pages.ForEach(e => e.IsDeleted = true);
-
-            // 次の現在位置を取得
-            var next = _book.Pages.GetValidPage(_book.CurrentPage);
-
-            // ブックからページを削除
-            _book.Pages.Remove(pages);
-
-            // ビューのページ表示を停止
-            _bookControl.DisposeViewContent(pages);
-            await Task.Delay(16);
-
-            // 次のページ位置に移動
-            _box.MoveTo(new PagePosition(next?.Index ?? 0, 0), ComponentModel.LinkedListDirection.Next);
+            await DeleteFileAsyncCore(pages);
 
             try
             {
@@ -99,6 +152,25 @@ namespace NeeView
                 new MessageDialog($"{Properties.TextResources.GetString("Word.Cause")}: {ex.Message}", Properties.TextResources.GetString("FileDeleteErrorDialog.Title")).ShowDialog();
                 ReloadBook();
             }
+        }
+        
+        private async Task DeleteFileAsyncCore(List<Page> pages)
+        {
+            // ページ削除予約
+            pages.ForEach(e => e.IsDeleted = true);
+
+            // 次の現在位置を取得
+            var next = _book.Pages.GetValidPage(_book.CurrentPage);
+
+            // ブックからページを削除
+            _book.Pages.Remove(pages);
+
+            // ビューのページ表示を停止
+            _bookControl.DisposeViewContent(pages);
+            await Task.Delay(16);
+
+            // 次のページ位置に移動
+            _box.MoveTo(new PagePosition(next?.Index ?? 0, 0), ComponentModel.LinkedListDirection.Next);
         }
 
         private void ReloadBook()

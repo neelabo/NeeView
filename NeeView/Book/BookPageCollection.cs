@@ -17,6 +17,7 @@ namespace NeeView
     {
         private readonly PageThumbnailPool _thumbnailPool = new();
 
+        private List<Archive> _sourceArchives;
         private List<Page> _sourcePages;
         private PageSortMode _sortMode = PageSortMode.Entry;
         private string _searchKeyword = "";
@@ -52,6 +53,11 @@ namespace NeeView
                 _sourcePages[i].EntryIndex = i;
             }
 
+            _sourceArchives = Pages
+                .Select(e => e.ArchiveEntry.Archive)
+                .Distinct()
+                .WhereNotNull()
+                .ToList();
         }
 
         private void AttachPage(Page page)
@@ -75,6 +81,8 @@ namespace NeeView
         [Subscribable]
         public event EventHandler<PageRemovedEventArgs>? PageRemoved;
 
+
+        public List<Archive> SourceArchives => _sourceArchives;
 
         public List<Page> Pages { get; private set; }
 
@@ -582,19 +590,5 @@ namespace NeeView
         }
 
         #endregion
-
-        /// <summary>
-        /// 依存しているアーカイバを収集
-        /// </summary>
-        /// <returns></returns>
-        public List<Archive> CollectArchive()
-        {
-            var archivers = Pages
-                .Select(e => e.ArchiveEntry.Archive)
-                .Distinct()
-                .WhereNotNull()
-                .ToList();
-            return archivers;
-        }
     }
 }

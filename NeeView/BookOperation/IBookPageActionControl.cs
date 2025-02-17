@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NeeView
@@ -6,7 +7,8 @@ namespace NeeView
     /// <summary>
     /// ブックの現在ページに対する操作
     /// </summary>
-    public interface IBookPageActionControl
+
+    public interface IBookPageActionControl : IDisposable
     {
         bool CanDeleteFile();
         Task DeleteFileAsync();

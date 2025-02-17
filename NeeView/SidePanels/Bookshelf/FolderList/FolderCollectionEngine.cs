@@ -60,18 +60,6 @@ namespace NeeView
         }
 
         /// <summary>
-        /// 項目削除
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="ms">登録遅延時間</param>
-        public void RequestDelete(QueryPath path, int ms)
-        {
-            if (_disposedValue) return;
-
-            _engine.Enqueue(new DeleteJob(this, path, false));
-        }
-
-        /// <summary>
         /// 項目名変更
         /// </summary>
         /// <param name="oldPath"></param>
