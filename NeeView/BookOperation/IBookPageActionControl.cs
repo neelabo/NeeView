@@ -15,6 +15,7 @@ namespace NeeView
 
         bool CanDeleteFile(List<Page> pages);
         Task DeleteFileAsync(List<Page> pages);
+        Task RemovePagesAsync(List<Page> pages);
 
         bool CanExport();
         void Export(ExportImageCommandParameter parameter);

@@ -172,6 +172,25 @@ namespace NeeView
             _control.MoveTo(sender, page.Index);
         }
 
+        // ページの存在確認
+        public void ValidatePages(IEnumerable<Page> pages)
+        {
+            var targetPages = pages.Where(e => e.PageType != PageType.Empty && !e.ArchiveEntry.Exists()).ToList();
+
+            // 非同期での確認
+            AppDispatcher.BeginInvoke(async () =>
+            {
+                try
+                {
+                    await _control.RemovePagesAsync(targetPages);
+                }
+                catch
+                {
+                    // 処理できなくても大きな問題はないので例外を無視する
+                }
+            });
+        }
+
         #endregion
 
         #region BookCommand : メディア操作

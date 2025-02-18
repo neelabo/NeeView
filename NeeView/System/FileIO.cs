@@ -312,7 +312,7 @@ namespace NeeView
             if (book is null) return;
             var pages = paths.Select(e => book.Pages.GetPageWithEntryFullName(e)).WhereNotNull();
             if (!pages.Any()) return;
-            BookOperation.Current.BookControl.ValidateRemoveFile(pages);
+            BookOperation.Current.ValidatePages(pages);
         }
 
 

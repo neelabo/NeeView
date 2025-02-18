@@ -76,11 +76,6 @@ namespace NeeView
             RaisePropertyChanged(e.PropertyName);
         }
 
-        public void DisposeViewContent(IEnumerable<Page> pages)
-        {
-            _source?.DisposeViewContent(pages);
-        }
-
         public bool CanDeleteBook()
         {
             return _source?.CanDeleteBook() ?? false;
@@ -95,12 +90,6 @@ namespace NeeView
         {
             _source?.ReLoad();
         }
-
-        public void ValidateRemoveFile(IEnumerable<Page> pages)
-        {
-            _source?.ValidateRemoveFile(pages);
-        }
-
 
         public bool CanBookmark()
         {

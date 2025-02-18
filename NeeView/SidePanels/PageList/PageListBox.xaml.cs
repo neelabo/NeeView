@@ -491,7 +491,7 @@ namespace NeeView
                 // しっかり実装するならページのファイルシステムの監視が必要になる。ファイルの追加削除が自動的にページに反映するように。
 
                 // ひとまずドラッグ完了後のページ削除を限定的に行う。
-                e.DragEndAction = () => BookOperation.Current.BookControl.ValidateRemoveFile(pages);
+                e.DragEndAction = () => BookOperation.Current.ValidatePages(pages);
             }
         }
 

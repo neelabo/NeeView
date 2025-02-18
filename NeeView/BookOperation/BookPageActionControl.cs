@@ -72,9 +72,19 @@ namespace NeeView
             var page = _book.Pages.FirstOrDefault(x => x.PendingCount > 0 && x.ArchiveEntry.Archive == archive && string.Equals(x.ArchiveEntry.RawEntryName, e.Name, StringComparison.OrdinalIgnoreCase));
             if (page is null) return;
 
-            await DeleteFileAsyncCore([page]);
+            await RemovePagesAsync([page]);
+        }
 
-            if (_book.Pages.Count == 0 || page.ArchiveEntry.Archive is not FolderArchive)
+        /// <summary>
+        /// ページ登録解除
+        /// </summary>
+        /// <param name="pages"></param>
+        /// <returns></returns>
+        public async Task RemovePagesAsync(List<Page> pages)
+        {
+            await RemovePagesCoreAsync(pages);
+
+            if (_book.Pages.Count == 0 || pages.Any(e => e.ArchiveEntry.Archive is not FolderArchive))
             {
                 ReloadBook();
             }
@@ -119,7 +129,7 @@ namespace NeeView
                 }
             }
 
-            await DeleteFileAsyncCore(pages);
+            await RemovePagesCoreAsync(pages);
 
             try
             {
@@ -140,8 +150,10 @@ namespace NeeView
             }
         }
 
-        private async Task DeleteFileAsyncCore(List<Page> pages)
+        private async Task RemovePagesCoreAsync(List<Page> pages)
         {
+            if (pages.Count == 0) return;
+
             // ページ削除予約
             pages.ForEach(e => e.IsDeleted = true);
 
@@ -152,13 +164,24 @@ namespace NeeView
             _book.Pages.Remove(pages);
 
             // ビューのページ表示を停止
-            _bookControl.DisposeViewContent(pages);
+            DisposeViewContent(pages);
             await Task.Delay(16);
 
             // 次のページ位置に移動
             _box.MoveTo(new PagePosition(next?.Index ?? 0, 0), ComponentModel.LinkedListDirection.Next);
         }
 
+        /// <summary>
+        /// ページ表示の停止
+        /// </summary>
+        public void DisposeViewContent(IEnumerable<Page> pages)
+        {
+            _box.DisposeViewContent(pages);
+        }
+
+        /// <summary>
+        /// ブックの再読み込み
+        /// </summary>
         private void ReloadBook()
         {
             if (_book.Path == _bookControl.Path)

@@ -255,6 +255,11 @@ namespace NeeView
             return _source?.DeleteFileAsync(pages) ?? Task.CompletedTask;
         }
 
+        public Task RemovePagesAsync(List<Page> pages)
+        {
+            return _source?.RemovePagesAsync(pages) ?? Task.CompletedTask;
+        }
+
         #endregion IBookPageActionControl
     }
 

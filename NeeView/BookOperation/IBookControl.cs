@@ -14,11 +14,9 @@ namespace NeeView
         bool IsBookmark { get; }
         string? Path { get; }
 
-        void DisposeViewContent(IEnumerable<Page> pages);
         bool CanDeleteBook();
         void DeleteBook();
         void ReLoad();
-        void ValidateRemoveFile(IEnumerable<Page> pages);
 
         bool CanBookmark();
         void SetBookmark(bool isBookmark);

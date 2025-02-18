@@ -54,14 +54,6 @@ namespace NeeView
         }
 
         /// <summary>
-        /// ページ表示の停止
-        /// </summary>
-        public void DisposeViewContent(IEnumerable<Page> pages)
-        {
-            _box.DisposeViewContent(pages);
-        }
-
-        /// <summary>
         /// ブックの再読み込み
         /// </summary>
         public void ReLoad()
@@ -73,20 +65,6 @@ namespace NeeView
             var page = book.Pages.GetValidPage(viewPage);
             BookHub.Current.RequestReLoad(this, page?.EntryName);
         }
-
-        /// <summary>
-        /// 削除された可能性のあるページの処理
-        /// </summary>
-        /// <remarks>
-        /// 主にドラッグ処理の後始末
-        /// </remarks>
-        /// <param name="pages">削除された可能性のあるページ</param>
-        public void ValidateRemoveFile(IEnumerable<Page> pages)
-        {
-            if (pages.Where(e => e.PageType != PageType.Empty).All(e => e.ArchiveEntry.Exists())) return;
-            ReLoad();
-        }
-
 
         // 現在表示しているブックの削除可能？
         public bool CanDeleteBook()
