@@ -71,20 +71,27 @@ namespace NeeView
                 BookPageCollectMode.ImageAndBook => await archiveEntryCollection.GetEntriesWhereImageAndArchiveAsync(token),
                 _ => await archiveEntryCollection.GetEntriesWherePageAllAsync(token),
             };
-            var bookPath = archiveEntryCollection.Path;
-            return entries.Select(e => CreatePage(bookPath, e, contentFactory, token)).ToList();
+
+#if DEBUG
+            if (entries.Count != 0)
+            {
+                Debug.Assert(entries[0].Archive.SystemPath == archiveEntryCollection.Path);
+            }
+#endif
+
+            return entries.Select(e => CreatePage(e, contentFactory, token)).ToList();
         }
 
         /// <summary>
         /// ページ作成
         /// </summary>
-        /// <param name="entry">ファイルエントリ</param>
+        /// <param name="entryNode">論理パス</param>
         /// <returns></returns>
-        private static Page CreatePage(string bookPath, ArchiveEntryNode entry, PageContentFactory contentFactory, CancellationToken token)
+        private static Page CreatePage(ArchiveEntryNode entryNode, PageContentFactory contentFactory, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
-            return new Page(contentFactory.CreatePageContent(entry.ArchiveEntry, token), bookPath, entry.Path);
+            return new Page(contentFactory.CreatePageContent(entryNode.ArchiveEntry, token), entryNode);
         }
 
 

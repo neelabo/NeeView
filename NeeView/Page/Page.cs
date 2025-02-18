@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -15,6 +16,7 @@ namespace NeeView
     public partial class Page : IDisposable, INotifyPropertyChanged, IPageContentLoader, IPageThumbnailLoader, IHasPage, IRenameable, ISearchItem, IPendingItem
     {
         private int _index;
+        private readonly ArchiveEntryNode _entryNode;
         private readonly PageContent _content;
         private bool _isVisible;
         private bool _isMarked;
@@ -22,14 +24,15 @@ namespace NeeView
         private bool _disposedValue;
         private int _pendingCount;
 
-        public Page(PageContent content) : this(content, "", content.ArchiveEntry.EntryFullName)
+        public Page(PageContent content) : this(content, new ArchiveEntryNode(null, content.ArchiveEntry))
         {
         }
 
-        public Page(PageContent content, string bookPath, string entryName)
+        public Page(PageContent content, ArchiveEntryNode entryNode)
         {
-            BookPath = bookPath;
-            EntryName = entryName;
+            Debug.Assert(content.ArchiveEntry == entryNode.ArchiveEntry);
+
+            _entryNode = entryNode;
 
             _content = content;
             _content.ContentChanged += Content_ContentChanged;
@@ -73,8 +76,11 @@ namespace NeeView
         // TODO: 表示番号と内部番号のずれ
         public int IndexPlusOne => Index + 1;
 
+        // ブックのパス
+        public string BookPath => _entryNode.Archive.SystemPath;
+
         // ページ名 : エントリ名
-        public string EntryName { get; private set; }
+        public string EntryName => _entryNode.EntryName;
 
         // ページ名：ファイル名のみ
         public string EntryLastName => LoosePath.GetFileName(EntryName);
@@ -90,9 +96,6 @@ namespace NeeView
 
         // ページ名：スマート名用プレフィックス
         public string? Prefix { get; set; }
-
-        // ブックのパス
-        public string BookPath { get; }
 
         // ファイル情報：ファイル作成日
         public DateTime CreationTime => ArchiveEntry != null ? ArchiveEntry.CreationTime : default;
@@ -389,22 +392,10 @@ namespace NeeView
             var isSuccess = await ArchiveEntry.RenameAsync(name);
             if (isSuccess)
             {
-                EntryName = LoosePath.Rename(EntryName, name);
                 RaiseNamePropertyChanged();
                 FileInformation.Current.Update(); // TODO: 伝達方法がよろしくない
             }
             return isSuccess;
-        }
-
-        public void ValidateEntryName()
-        {
-            // TODO: BookパスとArchiveEntry.EntryName では階層があっていないと思う
-            if (EntryName != ArchiveEntry.EntryName)
-            {
-                EntryName = LoosePath.Rename(EntryName, ArchiveEntry.EntryName);
-                RaiseNamePropertyChanged();
-                FileInformation.Current.Update(); // TODO: 伝達方法がよろしくない
-            }
         }
 
         private void RaiseNamePropertyChanged()
