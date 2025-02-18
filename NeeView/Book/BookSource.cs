@@ -142,7 +142,6 @@ namespace NeeView
             foreach (var archive in Pages.SourceArchives)
             {
                 archive.ActivatePreExtractor();
-                archive.StartWatch();
             }
         }
 
@@ -155,7 +154,6 @@ namespace NeeView
             {
                 archive.DeactivatePreExtractor();
                 archive.ClearRawData();
-                archive.StopWatch();
             }
         }
 

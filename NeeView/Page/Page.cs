@@ -431,12 +431,14 @@ namespace NeeView
         public void IncrementPendingCount()
         {
             Interlocked.Increment(ref _pendingCount);
+            ArchiveEntry.Archive.StartWatch();
             RaisePropertyChanged(nameof(PendingCount));
         }
 
         public void DecrementPendingCount()
         {
             Interlocked.Decrement(ref _pendingCount);
+            ArchiveEntry.Archive.StopWatch();
             RaisePropertyChanged(nameof(PendingCount));
         }
 

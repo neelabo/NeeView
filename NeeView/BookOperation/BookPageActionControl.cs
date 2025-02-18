@@ -56,17 +56,12 @@ namespace NeeView
 
         private void AttachArchive(Archive archive)
         {
-            _disposables.Add(archive.SubscribeCreated(Archive_Created));
             _disposables.Add(archive.SubscribeDeleted(Archive_Deleted));
-            _disposables.Add(archive.SubscribeRenamed(Archive_Renamed));
         }
 
-        private void Archive_Created(object? sender, FileSystemEventArgs e)
-        {
-            // TODO: なるべくリロードは避けたい。ページ追加はソート扱いにできないだろうか
-            ReloadBook();
-        }
-
+        /// <summary>
+        /// 削除予約されているページのみ、実際に削除されたらページも削除する
+        /// </summary>
         private async void Archive_Deleted(object? sender, FileSystemEventArgs e)
         {
             if (sender is null) throw new ArgumentNullException(nameof(sender));
@@ -74,24 +69,12 @@ namespace NeeView
             // TODO: e.FullPath が RawEntryName なのは FolderArchive だけでは？
             // TODO: アーカイブによらずインスタンスを特定する識別子が必要か
             var archive = sender as Archive;
-            var page = _book.Pages.FirstOrDefault(x => x.ArchiveEntry.Archive == archive && string.Equals(x.ArchiveEntry.RawEntryName, e.Name, StringComparison.OrdinalIgnoreCase));
+            var page = _book.Pages.FirstOrDefault(x => x.PendingCount > 0 && x.ArchiveEntry.Archive == archive && string.Equals(x.ArchiveEntry.RawEntryName, e.Name, StringComparison.OrdinalIgnoreCase));
             if (page is null) return;
 
             await DeleteFileAsyncCore([page]);
 
             ReloadBook();
-        }
-
-        private void Archive_Renamed(object? sender, RenamedEventArgs e)
-        {
-            if (sender is null) throw new ArgumentNullException(nameof(sender));
-
-            // 既にエントリの名前は変更されているので、エントリとページの名前の食い違いだけ修正する
-            // TODO: エントリから直接ページ名修正できないだろうか？
-            foreach(var page in _book.Pages)
-            {
-                page.ValidateEntryName();
-            }
         }
 
         #region ページ削除
@@ -153,7 +136,7 @@ namespace NeeView
                 ReloadBook();
             }
         }
-        
+
         private async Task DeleteFileAsyncCore(List<Page> pages)
         {
             // ページ削除予約

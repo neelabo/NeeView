@@ -1,4 +1,6 @@
-﻿using NeeLaboratory.Linq;
+﻿//#define LOCAL_DEBUG
+
+using NeeLaboratory.Linq;
 using NeeView.IO;
 using System;
 using System.Collections;
@@ -6,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -286,6 +289,7 @@ namespace NeeView
 
             try
             {
+                Trace($"Path={path}");
                 _fileSystemWatcher.Path = path;
                 _fileSystemWatcher.IncludeSubdirectories = false;
                 _fileSystemWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName;
@@ -310,6 +314,7 @@ namespace NeeView
         {
             if (_fileSystemWatcher != null)
             {
+                Trace($"Path={_fileSystemWatcher.Path}");
                 _fileSystemWatcher.EnableRaisingEvents = false;
                 _fileSystemWatcher.Error -= Watcher_Error;
                 _fileSystemWatcher.Created -= Watcher_Created;
@@ -323,7 +328,7 @@ namespace NeeView
         private void Watcher_Error(object sender, ErrorEventArgs e)
         {
             var ex = e.GetException();
-            Debug.WriteLine($"FileSystemWatcher: Error!! : {ex} : {ex.Message}");
+            Trace($"Error!! : {ex} : {ex.Message}");
 
             // recovery...
             ////var path = _fileSystemWatcher.Path;
@@ -333,92 +338,41 @@ namespace NeeView
 
         private void Watcher_Created(object sender, FileSystemEventArgs e)
         {
-            // TODO: パスの一致検査
-            if (e.Name is null) return;
-            Debug.WriteLine($"FileSystemWatcher: Created: {e.FullPath}");
+            Trace($"{e.FullPath}");
 
-            AppDispatcher.BeginInvoke(async () =>
+            AppDispatcher.BeginInvoke(() =>
             {
-                await CreateEntryAsync(e, CancellationToken.None);
+                OnCreated(e);
             });
         }
-
-        public async ValueTask<ArchiveEntry?> CreateEntryAsync(FileSystemEventArgs args, CancellationToken token)
-        {
-            var info = FileIO.CreateFileSystemInfo(args.FullPath);
-            if (!FileIOProfile.Current.IsFileValid(info.Attributes))
-            {
-                return null;
-            }
-
-            var entries = await GetEntriesAsync(token);
-            var entry = entries.FirstOrDefault(e => string.Equals(e.RawEntryName, args.Name, StringComparison.OrdinalIgnoreCase));
-            if (entry is null)
-            {
-                var id = (entries.Count > 0) ? entries.Last().Id + 1 : 0;
-                entry = CreateArchiveEntry(info, id);
-                SetEntriesCache(entries.Append(entry).ToList());
-            }
-
-            // TODO: entry を渡したい
-            OnCreated(args);
-            return entry;
-        }
-
 
         private void Watcher_Deleted(object sender, FileSystemEventArgs e)
         {
-            // TODO: パスの一致検査
-            if (e.Name is null) return;
-            Debug.WriteLine($"FileSystemWatcher: Deleted: {e.FullPath}");
+            Trace($"{e.FullPath}");
 
-            AppDispatcher.BeginInvoke(async () =>
+            AppDispatcher.BeginInvoke(() =>
             {
-                await DeleteEntryAsync(e, CancellationToken.None);
+                OnDeleted(e);
             });
-        }
-
-        public async ValueTask DeleteEntryAsync(FileSystemEventArgs args, CancellationToken token)
-        {
-            var entries = GetEntriesCache();
-            if (entries is null) return;
-
-            SetEntriesCache(entries.Where(e => string.Compare(e.RawEntryName, args.Name, StringComparison.OrdinalIgnoreCase) != 0).ToList());
-
-            OnDeleted(args);
-            await ValueTask.CompletedTask;
         }
 
         private void Watcher_Renamed(object sender, RenamedEventArgs e)
         {
-            // TODO: パスの一致検査
-            if (e.Name is null) return;
-            Debug.WriteLine($"FileSystemWatcher: Renamed: {e.OldFullPath} => {e.Name}");
+            Trace($"{e.OldFullPath} => {e.Name}");
 
-            AppDispatcher.BeginInvoke(async () =>
+            AppDispatcher.BeginInvoke(() =>
             {
-                await RenameEntryAsync(e, CancellationToken.None);
+                OnRenamed(e);
             });
-        }
-
-        public async ValueTask RenameEntryAsync(RenamedEventArgs args, CancellationToken token)
-        {
-            if (args.Name is null) return;
-
-            var entries = GetEntriesCache();
-            if (entries is null) return;
-
-            var entry = entries.FirstOrDefault(e => string.Equals(e.RawEntryName, args.OldName, StringComparison.OrdinalIgnoreCase));
-            if (entry is null) return;
-
-            // TODO: 名前変更 PropertyChanged
-            entry.RawEntryName = args.Name;
-
-            OnRenamed(args);
-            await ValueTask.CompletedTask;
         }
 
         #endregion FileSystemWatcher
 
+        [Conditional("LOCAL_DEBUG")]
+        private void Trace(string s, [CallerMemberName] string memberName = "")
+        {
+            Debug.WriteLine($"{this.GetType().Name}:{memberName}: {s}");
+        }
     }
+
 }
