@@ -74,7 +74,10 @@ namespace NeeView
 
             await DeleteFileAsyncCore([page]);
 
-            ReloadBook();
+            if (_book.Pages.Count == 0 || page.ArchiveEntry.Archive is not FolderArchive)
+            {
+                ReloadBook();
+            }
         }
 
         #region ページ削除
@@ -121,7 +124,7 @@ namespace NeeView
             try
             {
                 var anyFileModified = await PageFileIO.DeletePageAsync(pages);
-                if (anyFileModified)
+                if (_book.Pages.Count == 0 || anyFileModified)
                 {
                     ReloadBook();
                 }

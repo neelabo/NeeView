@@ -348,12 +348,23 @@ namespace NeeView
 
         private void Watcher_Deleted(object sender, FileSystemEventArgs e)
         {
+            if (e.Name is null) return;
             Trace($"{e.FullPath}");
 
             AppDispatcher.BeginInvoke(() =>
             {
+                RemoveCachedEntry(e.Name);
                 OnDeleted(e);
             });
+        }
+
+        private void RemoveCachedEntry(string entryName)
+        {
+            var entries = GetEntriesCache();
+            if (entries is null) return;
+
+            var newEntries = entries.Where(e => e.RawEntryName != entryName).ToList();
+            SetEntriesCache(newEntries);
         }
 
         private void Watcher_Renamed(object sender, RenamedEventArgs e)
