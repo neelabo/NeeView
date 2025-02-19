@@ -190,11 +190,10 @@ namespace NeeView
         /// can delete
         /// </summary>
         /// <exception cref="ArgumentException">Not registered with this archiver.</exception>
-        public override bool CanDelete(List<ArchiveEntry> entries)
+        public override bool CanDelete(List<ArchiveEntry> entries, bool strict)
         {
             if (entries.Any(e => e.Archive != this)) throw new ArgumentException("There are elements not registered with this archiver.", nameof(entries));
 
-            // NOTE: 実際に削除可能かは調べない。削除で失敗させる。
             return entries.All(e => e.EntityPath is not null);
         }
 
@@ -209,22 +208,9 @@ namespace NeeView
             var paths = entries.Select(e => e.EntityPath).WhereNotNull().ToList();
             if (!paths.Any()) return DeleteResult.Success;
 
-            ClearEntryCache(); // TODO: 特定のキャッシュだけ削除できないか？
-            try
-            {
-                await FileIO.DeleteAsync(paths);
-                return DeleteResult.Success;
-            }
-            finally
-            {
-                foreach (var entry in entries)
-                {
-                    if (!entry.Exists())
-                    {
-                        entry.IsDeleted = true;
-                    }
-                }
-            }
+            RemoveCachedEntry(entries);
+            await FileIO.DeleteAsync(paths);
+            return DeleteResult.Success;
         }
 
         /// <summary>
@@ -363,8 +349,10 @@ namespace NeeView
             var entries = GetEntriesCache();
             if (entries is null) return;
 
-            var newEntries = entries.Where(e => e.RawEntryName != entryName).ToList();
-            SetEntriesCache(newEntries);
+            var entry = entries.FirstOrDefault(e => e.RawEntryName == entryName);
+            if (entry is null) return;
+
+            RemoveCachedEntry(entry);
         }
 
         private void Watcher_Renamed(object sender, RenamedEventArgs e)

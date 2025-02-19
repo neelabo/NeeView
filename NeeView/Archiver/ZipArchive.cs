@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.Linq;
+using NeeLaboratory.Threading;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -20,12 +21,16 @@ namespace NeeView
     /// </summary>
     public class ZipArchive : Archive
     {
+        private readonly AsyncLock _asyncLock = new();
         private Encoding? _encoding;
 
 
         public ZipArchive(string path, ArchiveEntry? source) : base(path, source)
         {
         }
+
+
+        public AsyncLock AsyncLock => _asyncLock;
 
 
         public override string ToString()
@@ -77,9 +82,12 @@ namespace NeeView
 
                 // エントリー取得
                 stream.Seek(0, SeekOrigin.Begin);
+                using (await _asyncLock.LockAsync(token))
                 using (var archiver = new System.IO.Compression.ZipArchive(stream, ZipArchiveMode.Read, false, _encoding))
                 {
                     stream = null;
+
+                    var hashSet = new HashSet<string>(archiver.Entries.Count);
 
                     for (int id = 0; id < archiver.Entries.Count; ++id)
                     {
@@ -97,6 +105,16 @@ namespace NeeView
                             CreationTime = default,
                             LastWriteTime = entry.LastWriteTime.LocalDateTime,
                         };
+
+                        var success = hashSet.Add(archiveEntry.RawEntryName);
+                        if (!success)
+                        {
+                            archiveEntry.Attributes |= ArchiveEntryAttributes.Duplicate;
+                            foreach (var item in list.Where(e => e.RawEntryName == archiveEntry.RawEntryName))
+                            {
+                                item.Attributes |= ArchiveEntryAttributes.Duplicate;
+                            }
+                        }
 
                         if (!entry.IsDirectory())
                         {
@@ -133,13 +151,13 @@ namespace NeeView
             if (entry.Id < 0) throw new ArgumentException("Cannot open this entry: " + entry.EntryName);
             if (entry.IsDirectory) throw new InvalidOperationException("Cannot open directory: " + entry.EntryName);
 
+            using (await _asyncLock.LockAsync(token))
             using (var archiver = ZipFile.Open(Path, ZipArchiveMode.Read, _encoding))
             {
-                ZipArchiveEntry archiveEntry = archiver.Entries[entry.Id];
+                var rawEntry = archiver.FindEntry(entry);
+                if (rawEntry is null) throw new FileNotFoundException("Entry not found: " + entry.EntryName);
 
-                if (!IsValidEntry(entry, archiveEntry)) throw new ValidationException(Properties.TextResources.GetString("InconsistencyException.Message"));
-
-                using (var stream = archiveEntry.Open())
+                using (var stream = rawEntry.Open())
                 {
                     var ms = new MemoryStream();
                     await stream.CopyToAsync(ms, token);
@@ -172,38 +190,52 @@ namespace NeeView
         }
 
         /// <summary>
-        /// 有効なエントリであるかを判定
-        /// </summary>
-        /// <param name="entry">調査するエントリ</param>
-        /// <param name="zipArchiveEntry">関連付けられているZipArchiveEntry</param>
-        /// <remarks>
-        /// 同名エントリは正確に判定できない問題がある
-        /// </remarks>
-        public static bool IsValidEntry(ArchiveEntry entry, ZipArchiveEntry zipArchiveEntry)
-        {
-            return entry.RawEntryName == zipArchiveEntry.FullName;
-        }
-
-        /// <summary>
         /// exists?
         /// </summary>
         public override bool Exists(ArchiveEntry entry)
         {
-            // TODO：１つでも削除されるとIDが変更になるため、この実装は間違っている
-            // 同名エントリの区別ができれば解決するのだが現状では難しい
-            return base.Exists(entry);
+            Debug.Assert(entry.Archive == this);
+            if (entry.Id < 0) return false;
+            if (entry.Instance is not ZipArchiveEntryIdent) return false;
+
+            if (entry.IsDeleted) return false;
+
+            using (_asyncLock.Lock())
+            using (var archiver = ZipFile.Open(Path, ZipArchiveMode.Read, _encoding))
+            {
+                var rawEntry = archiver.FindEntry(entry);
+                var exists = rawEntry is not null;
+                if (!exists)
+                {
+                    entry.IsDeleted = true;
+                }
+                return exists;
+            }
         }
 
         /// <summary>
         /// can delete
         /// </summary>
         /// <exception cref="ArgumentException">Not registered with this archiver.</exception>
-        public override bool CanDelete(List<ArchiveEntry> entries)
+        public override bool CanDelete(List<ArchiveEntry> entries, bool strict)
         {
             if (entries.Any(e => e.Archive != this)) throw new ArgumentException("There are elements not registered with this archiver.", nameof(entries));
 
             if (!Config.Current.Archive.Zip.IsFileWriteAccessEnabled) return false;
-            return entries.All(e => e.Archive == this && e.Archive.IsRoot);
+
+            var isRootArchive = entries.All(e => e.Archive == this && e.Archive.IsRoot);
+            if (!isRootArchive) return false;
+
+            if (strict)
+            {
+                var fileInfo = new FileInfo(Path);
+                if (!fileInfo.Exists || fileInfo.Attributes.HasFlag(FileAttributes.ReadOnly))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -229,11 +261,21 @@ namespace NeeView
                 removes = entries.Concat(children).Where(e => e.Id >= 0).Distinct().ToList();
             }
             Debug.Assert(removes.All(e => e.Id >= 0));
+            if (removes.Count == 0) return DeleteResult.Success;
 
-            ClearEntryCache();
-            removes.ForEach(e => e.IsDeleted = true);
+            var fileInfo = new FileInfo(Path);
+            if (!fileInfo.Exists)
+            {
+                throw new FileNotFoundException("The file does not exist.", Path);
+            }
+            if (fileInfo.Attributes.HasFlag(FileAttributes.ReadOnly))
+            {
+                throw new UnauthorizedAccessException($"The file is read-only.");
+            }
+
+            RemoveCachedEntry(removes);
             var idents = removes.Select(e => e.Instance as ZipArchiveEntryIdent).WhereNotNull().ToList();
-            var task = ZipArchiveWriterManager.Current.CreateDeleteTask(Path, _encoding, idents);
+            var task = ZipArchiveWriterManager.Current.CreateDeleteTask(Path, _encoding, idents, _asyncLock);
             if (task is not null)
             {
                 await task;

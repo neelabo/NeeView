@@ -362,9 +362,9 @@ namespace NeeView
         /// <summary>
         /// can delete?
         /// </summary>
-        public bool CanDelete()
+        public bool CanDelete(bool strict)
         {
-            return ArchiveEntry.CanDelete();
+            return ArchiveEntry.CanDelete(strict);
         }
 
         /// <summary>

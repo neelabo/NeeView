@@ -14,9 +14,9 @@ namespace NeeView
         /// <summary>
         /// ページ削除可能？
         /// </summary>
-        public static bool CanDeletePage(List<Page> pages)
+        public static bool CanDeletePage(List<Page> pages, bool strict)
         {
-            return pages.All(e => e.CanDelete());
+            return pages.All(e => e.CanDelete(strict));
         }
 
         /// <summary>
@@ -34,22 +34,20 @@ namespace NeeView
         /// </summary>
         public static async Task<bool> DeletePageAsync(List<Page> pages)
         {
-            if (!pages.Any()) return false;
+            if (pages.Count == 0) return false;
 
-            bool anyFileModified = false;
-
+            bool success = false;
             foreach (var group in pages.Select(e => e.ArchiveEntry).GroupBy(e => e.Archive))
             {
                 var archiver = group.Key;
-                archiver.ClearEntryCache();
                 var result = await archiver.DeleteAsync(group.ToList());
-                if (result == DeleteResult.Success && archiver is not FolderArchive)
+                if (result == DeleteResult.Success)
                 {
-                    anyFileModified = true;
+                    success = true;
                 }
             }
 
-            return anyFileModified;
+            return success;
         }
     }
 }

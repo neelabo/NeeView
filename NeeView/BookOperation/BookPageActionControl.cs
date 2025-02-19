@@ -113,7 +113,7 @@ namespace NeeView
         {
             if (!pages.Any()) return false;
 
-            return Config.Current.System.IsFileWriteAccessEnabled && PageFileIO.CanDeletePage(pages);
+            return Config.Current.System.IsFileWriteAccessEnabled && PageFileIO.CanDeletePage(pages, true);
         }
 
         // 指定ページのファイルを削除する
@@ -133,8 +133,8 @@ namespace NeeView
 
             try
             {
-                var anyFileModified = await PageFileIO.DeletePageAsync(pages);
-                if (_book.Pages.Count == 0 || anyFileModified)
+                await PageFileIO.DeletePageAsync(pages);
+                if (_book.Pages.Count == 0)
                 {
                     ReloadBook();
                 }

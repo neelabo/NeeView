@@ -43,6 +43,21 @@ namespace NeeView
                 return null;
             }
         }
+
+        public static ZipArchiveEntry? FindEntry(this System.IO.Compression.ZipArchive archive, ArchiveEntry entry)
+        {
+            if (entry.Instance is not ZipArchiveEntryIdent ident) throw new InvalidOperationException("Entry does not have a ZipArchiveEntryIdent.");
+            Debug.Assert(entry.RawEntryName == ident.FullName);
+
+            if (entry.Attributes.HasFlag(ArchiveEntryAttributes.Duplicate))
+            {
+                return archive.FindEntry(ident);
+            }
+            else
+            {
+                return archive.GetEntry(ident.FullName);
+            }
+        }
     }
 
     public static class ZipArchiveEntryExtensions

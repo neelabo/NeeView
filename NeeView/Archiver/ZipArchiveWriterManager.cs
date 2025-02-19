@@ -1,5 +1,6 @@
 ﻿//#define LOCAL_DEBUG
 
+using NeeLaboratory.Threading;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -38,12 +39,12 @@ namespace NeeView
         /// <param name="encoding"></param>
         /// <param name="idents"></param>
         /// <returns>新しく作られたタスク。生成済の場合は null を返す</returns>
-        public Task? CreateDeleteTask(string path, Encoding? encoding, IEnumerable<ZipArchiveEntryIdent> idents)
+        public Task? CreateDeleteTask(string path, Encoding? encoding, IEnumerable<ZipArchiveEntryIdent> idents, AsyncLock asyncLock)
         {
             lock (_lock)
             {
                 var archive = AttachArchive(path, encoding);
-                return archive.CreateDeleteTask(idents);
+                return archive.CreateDeleteTask(idents, asyncLock);
             }
         }
 

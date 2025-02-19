@@ -39,6 +39,10 @@ namespace NeeView
         [Subscribable]
         public event EventHandler? DataChanged;
 
+        /// <summary>
+        /// 属性
+        /// </summary>
+        public ArchiveEntryAttributes Attributes { get; set; }
 
         /// <summary>
         ///  Emptyインスタンス？
@@ -457,9 +461,9 @@ namespace NeeView
         /// <summary>
         /// can delete?
         /// </summary>
-        public bool CanDelete()
+        public bool CanDelete(bool strict)
         {
-            return Archive.CanDelete(this);
+            return Archive.CanDelete(this, strict);
         }
 
         /// <summary>
@@ -480,7 +484,6 @@ namespace NeeView
             foreach (var group in entries.GroupBy(e => e.Archive))
             {
                 var archiver = group.Key;
-                archiver.ClearEntryCache();
                 var result = await archiver.DeleteAsync(group.ToList());
                 if (result < 0) return false;
             }
@@ -590,6 +593,13 @@ namespace NeeView
             return null;
         }
 
+    }
+
+
+    public enum ArchiveEntryAttributes
+    {
+        None = 0,
+        Duplicate = (1 << 0),
     }
 }
 

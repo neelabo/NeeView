@@ -270,16 +270,6 @@ namespace NeeView
             return _entries;
         }
 
-        protected List<ArchiveEntry>? GetEntriesCache()
-        {
-            return _entries;
-        }
-
-        protected void SetEntriesCache(List<ArchiveEntry> entries)
-        {
-            _entries = entries;
-        }
-
         /// <summary>
         /// 除外パス判定
         /// </summary>
@@ -294,6 +284,14 @@ namespace NeeView
         public void ClearEntryCache()
         {
             _entries = null;
+        }
+
+        /// <summary>
+        /// エントリキャッシュを取得
+        /// </summary>
+        protected List<ArchiveEntry>? GetEntriesCache()
+        {
+            return _entries;
         }
 
         /// <summary>
@@ -516,15 +514,15 @@ namespace NeeView
         /// <summary>
         /// can delete
         /// </summary>
-        public bool CanDelete(ArchiveEntry entry)
+        public bool CanDelete(ArchiveEntry entry, bool strict)
         {
-            return CanDelete(new List<ArchiveEntry>() { entry });
+            return CanDelete(new List<ArchiveEntry>() { entry }, strict);
         }
 
         /// <summary>
         /// can delete entries
         /// </summary>
-        public virtual bool CanDelete(List<ArchiveEntry> entries)
+        public virtual bool CanDelete(List<ArchiveEntry> entries, bool strict)
         {
             return false;
         }
@@ -543,6 +541,24 @@ namespace NeeView
         public virtual async Task<DeleteResult> DeleteAsync(List<ArchiveEntry> entries)
         {
             return await Task.FromResult(DeleteResult.Failed);
+        }
+
+        /// <summary>
+        /// remove entries from cache
+        /// </summary>
+        /// <param name="entries"></param>
+        protected void RemoveCachedEntry(params IEnumerable<ArchiveEntry> entries)
+        {
+            foreach (var entry in entries)
+            {
+                entry.IsDeleted = true;
+            }
+
+            var oldEntries = _entries;
+            if (oldEntries is null) return;
+
+            var newEntries = oldEntries.Except(entries).ToList();
+            _entries = newEntries;
         }
 
         /// <summary>

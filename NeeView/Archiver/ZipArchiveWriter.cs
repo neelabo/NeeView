@@ -1,5 +1,6 @@
 ﻿//#define LOCAL_DEBUG
 
+using NeeLaboratory.Threading;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -46,7 +47,7 @@ namespace NeeView
             }
         }
 
-        public Task? CreateDeleteTask(IEnumerable<ZipArchiveEntryIdent> idents)
+        public Task? CreateDeleteTask(IEnumerable<ZipArchiveEntryIdent> idents, AsyncLock asyncLock)
         {
             lock (_lock)
             {
@@ -58,7 +59,7 @@ namespace NeeView
                 _idents.AddRange(idents);
                 if (_task is null)
                 {
-                    _task = Task.Run(async () => await DeleteAsync(_tokenSource.Token));
+                    _task = Task.Run(async () => await DeleteAsync(asyncLock, _tokenSource.Token));
                     return _task;
                 }
             }
@@ -66,7 +67,7 @@ namespace NeeView
             return null;
         }
 
-        private async Task DeleteAsync(CancellationToken token)
+        private async Task DeleteAsync(AsyncLock asyncLock, CancellationToken token)
         {
             Trace($"Start task: {_path}");
 
@@ -132,7 +133,10 @@ namespace NeeView
                     {
                         try
                         {
-                            File.Replace(tempFilename, _path, null);
+                            using (await asyncLock.LockAsync(token))
+                            {
+                                File.Replace(tempFilename, _path, null);
+                            }
                             break;
                         }
                         catch
