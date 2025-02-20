@@ -776,9 +776,9 @@ namespace NeeView
             };
         }
 
-        private void DropToBookmark(object? sender, DragEventArgs e, bool isDrop, TreeListNode<IBookmarkEntry> node, IEnumerable<string> fileNames)
+        private void DropToBookmark(object? sender, DragEventArgs e, bool isDrop, TreeListNode<IBookmarkEntry> node, string[] fileNames)
         {
-            if (fileNames == null)
+            if (fileNames == null || fileNames.Length == 0)
             {
                 return;
             }

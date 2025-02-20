@@ -375,9 +375,9 @@ namespace NeeView
             e.Handled = true;
         }
 
-        private void DropToPlaylist(object? sender, DragEventArgs e, bool isDrop, PlaylistItem? targetItem, IEnumerable<string> fileNames)
+        private void DropToPlaylist(object? sender, DragEventArgs e, bool isDrop, PlaylistItem? targetItem, string[] fileNames)
         {
-            if (fileNames == null)
+            if (fileNames == null || fileNames.Length == 0)
             {
                 return;
             }

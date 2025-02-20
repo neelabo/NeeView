@@ -704,6 +704,7 @@ FileDeleteErrorDialog.Title=無法刪除。
 FileDeleteMultiDialog.Message=要刪除 {0} 個項目嗎？
 FileDeleteMultiDialog.Message.Completely=
 FileDeletePageDialog.Title=刪除頁面
+FileDropComError.Message=
 FileNameBox.Directory.Message=請輸入資料夾的路徑
 FileNameBox.File.Message=請輸入檔案的路徑
 FileNameBox.SelectDirectory=選擇資料夾

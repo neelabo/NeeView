@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Windows;
 
 namespace NeeView.Windows
@@ -41,7 +43,16 @@ namespace NeeView.Windows
 
         public static string[] GetFileDrop(this IDataObject data)
         {
-            return (string[])data.GetData(DataFormats.FileDrop, false);
+            try
+            {
+                return (string[])data.GetData(DataFormats.FileDrop, false) ?? [];
+            }
+            // 応急処置：パスが MAX_PATH を超えていると COMException が発生することがあるので、その場合は空の配列を返す
+            catch (COMException ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return [];
+            }
         }
     }
 

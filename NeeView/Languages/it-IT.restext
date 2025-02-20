@@ -707,6 +707,7 @@ FileDeleteMultiDialog.Message=Vuoi eliminare questi {0} elementi?
 FileDeleteMultiDialog.Message:1=Vuoi eliminare questo {0} elemento?
 FileDeleteMultiDialog.Message.Completely=Nota: Sarà completamente eliminato.
 FileDeletePageDialog.Title=Elimina pagina
+FileDropComError.Message=
 FileNameBox.Directory.Message=Prego inserisci percorso cartella
 FileNameBox.File.Message=Prego inserisci percorso del file
 FileNameBox.SelectDirectory=Seleziona cartella

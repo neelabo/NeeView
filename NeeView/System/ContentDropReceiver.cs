@@ -1,12 +1,15 @@
 ﻿using NeeLaboratory.IO;
 using NeeView.IO;
 using NeeView.Text;
+using NeeView.Windows;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
@@ -380,17 +383,24 @@ namespace NeeView
             // File drop
             if (data.GetDataPresent(DataFormats.FileDrop))
             {
-                if (data.GetData(DataFormats.FileDrop) is not string[] files)
+                try
                 {
-                    return new List<string>();
+                    if (data.GetData(DataFormats.FileDrop) is not string[] files)
+                    {
+                        return new List<string>();
+                    }
+                    else if (files.Length <= 1)
+                    {
+                        return new List<string>() { files[0] };
+                    }
+                    else
+                    {
+                        return new List<string>(files);
+                    }
                 }
-                else if (files.Length <= 1)
+                catch (COMException ex)
                 {
-                    return new List<string>() { files[0] };
-                }
-                else
-                {
-                    return new List<string>(files);
+                    throw new DropException(ResourceService.GetString("@FileDropComError.Message"), ex);
                 }
             }
 
@@ -410,21 +420,21 @@ namespace NeeView
             // File drop (from browser)
             if (data.GetDataPresent(DataFormats.FileDrop))
             {
-                if (data.GetData(DataFormats.FileDrop) is string[] files)
-                {
-                    var fileNames = new List<string>();
-                    foreach (var file in files)
-                    {
-                        // copy
-                        var bytes = await Task.Run(() => System.IO.File.ReadAllBytes(file));
+                var files = data.GetFileDrop();
+                if (files == null || files.Length <= 0) return null;
 
-                        string? fileName = await DownloadToFileAsync(bytes, System.IO.Path.GetFileName(file), downloadPath);
-                        if (fileName != null) fileNames.Add(fileName);
-                    }
-                    if (fileNames.Count > 0)
-                    {
-                        return new List<string>() { fileNames[0] };
-                    }
+                var fileNames = new List<string>();
+                foreach (var file in files)
+                {
+                    // copy
+                    var bytes = await Task.Run(() => System.IO.File.ReadAllBytes(file));
+
+                    string? fileName = await DownloadToFileAsync(bytes, System.IO.Path.GetFileName(file), downloadPath);
+                    if (fileName != null) fileNames.Add(fileName);
+                }
+                if (fileNames.Count > 0)
+                {
+                    return new List<string>() { fileNames[0] };
                 }
             }
 

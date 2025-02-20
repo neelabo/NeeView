@@ -707,6 +707,7 @@ FileDeleteMultiDialog.Message=Deseja excluir estes {0} itens?
 FileDeleteMultiDialog.Message:1=Deseja excluir este {0} item?
 FileDeleteMultiDialog.Message.Completely=Nota: Ele será completamente excluído.
 FileDeletePageDialog.Title=Excluir página
+FileDropComError.Message=
 FileNameBox.Directory.Message=Por favor insira o caminho da pasta
 FileNameBox.File.Message=Por favor insira o caminho do arquivo
 FileNameBox.SelectDirectory=Selecionar pasta

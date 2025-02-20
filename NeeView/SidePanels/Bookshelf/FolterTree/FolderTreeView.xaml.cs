@@ -810,7 +810,7 @@ namespace NeeView
         {
             if (_vm.Model is null) return;
 
-            if (fileNames == null)
+            if (fileNames == null || fileNames.Length == 0)
             {
                 return;
             }
@@ -954,7 +954,7 @@ namespace NeeView
 
         private static void DropToBookmark(object? sender, DragEventArgs e, bool isDrop, BookmarkFolderNode bookmarkFolderTarget, string[] fileNames)
         {
-            if (fileNames == null)
+            if (fileNames == null || fileNames.Length == 0)
             {
                 return;
             }

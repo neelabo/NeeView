@@ -236,16 +236,17 @@ namespace NeeView.Windows.Controls
 
         private void PathTextBox_PreviewDragOver(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop, true))
+            if (e.Data.GetDataPresent(DataFormats.FileDrop, true))
             {
-                e.Effects = System.Windows.DragDropEffects.Copy;
+                e.Effects = DragDropEffects.Copy;
                 e.Handled = true;
             }
         }
 
         private void PathTextBox_Drop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetData(System.Windows.DataFormats.FileDrop) is not string[] dropFiles) return;
+            if (e.Data.GetFileDrop() is not string[] dropFiles) return;
+            if (dropFiles.Length == 0) return;
 
             if (FileDialogType == FileDialogType.Directory)
             {

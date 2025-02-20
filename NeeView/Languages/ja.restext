@@ -704,6 +704,7 @@ FileDeleteErrorDialog.Title=削除できませんでした。
 FileDeleteMultiDialog.Message=これら {0} 個の項目を削除しますか？
 FileDeleteMultiDialog.Message.Completely=注意：完全に削除されます。
 FileDeletePageDialog.Title=ページを削除します
+FileDropComError.Message=ファイル パスの取得に失敗しました。パスが長すぎる可能性があります。
 FileNameBox.Directory.Message=フォルダーのパスを入力してください
 FileNameBox.File.Message=ファイルのパスを入力してください
 FileNameBox.SelectDirectory=フォルダー選択

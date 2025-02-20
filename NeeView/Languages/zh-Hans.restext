@@ -704,6 +704,7 @@ FileDeleteErrorDialog.Title=无法删除。
 FileDeleteMultiDialog.Message=要删除这 {0} 个项目么?
 FileDeleteMultiDialog.Message.Completely=注意: 它将被完全删除。
 FileDeletePageDialog.Title=删除页面
+FileDropComError.Message=
 FileNameBox.Directory.Message=请输入文件夹路径
 FileNameBox.File.Message=请输入文件路径
 FileNameBox.SelectDirectory=选择文件夹
