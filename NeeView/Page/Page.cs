@@ -77,7 +77,7 @@ namespace NeeView
         public int IndexPlusOne => Index + 1;
 
         // ブックのパス
-        public string BookPath => _entryNode.Archive.SystemPath;
+        public string BookPath => _entryNode.RootSystemPath;
 
         // ページ名 : エントリ名
         public string EntryName => _entryNode.EntryName;

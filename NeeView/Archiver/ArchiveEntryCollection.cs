@@ -90,7 +90,7 @@ namespace NeeView
             Mode = (Archive is FolderArchive || Archive is PlaylistArchive) ? _mode : _modeIfArchive;
 
             var includeSubDirectories = Mode == ArchiveEntryCollectionMode.IncludeSubDirectories || Mode == ArchiveEntryCollectionMode.IncludeSubArchives;
-            var entries = (await rootArchive.GetEntriesAsync(rootArchivePath, includeSubDirectories, token)).Select(e => new ArchiveEntryNode(null, e)).ToList();
+            var entries = (await rootArchive.GetEntriesAsync(rootArchivePath, includeSubDirectories, token)).Select(e => new ArchiveEntryNode(null, e, rootArchivePath)).ToList();
 
             var includeAllSubDirectories = Mode == ArchiveEntryCollectionMode.IncludeSubArchives;
             if (includeAllSubDirectories)

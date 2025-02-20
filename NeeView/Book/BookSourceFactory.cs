@@ -72,12 +72,7 @@ namespace NeeView
                 _ => await archiveEntryCollection.GetEntriesWherePageAllAsync(token),
             };
 
-#if DEBUG
-            if (entries.Count != 0)
-            {
-                Debug.Assert(entries[0].Archive.SystemPath == archiveEntryCollection.Path);
-            }
-#endif
+            Debug.Assert(entries.Count == 0 || entries[0].RootSystemPath == archiveEntryCollection.Path);
 
             return entries.Select(e => CreatePage(e, contentFactory, token)).ToList();
         }
