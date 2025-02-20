@@ -10,6 +10,8 @@
 
     <UserControl.Resources>
 
+        <Pen x:Key="pen_folder" Brush="{DynamicResource Panel.Foreground}" Thickness="1.25"/>
+
         <DrawingImage x:Key="fic_arrow_forward_24px">
             <DrawingImage.Drawing>
                 <GeometryDrawing Brush="{DynamicResource Panel.Foreground}" Pen="{x:Null}" Geometry="{StaticResource g_arrow_forward_24px}" />
@@ -18,27 +20,13 @@
 
         <DrawingImage x:Key="fic_folder">
             <DrawingImage.Drawing>
-                <GeometryDrawing>
-                    <GeometryDrawing.Pen>
-                        <Pen Brush="{DynamicResource Panel.Foreground}" Thickness="1.25"></Pen>
-                    </GeometryDrawing.Pen>
-                    <GeometryDrawing.Geometry>
-                        <PathGeometry FillRule="Nonzero" Figures="M0,0 L14,0 14,10 16,12 16,18, 0,18Z M14,10 L13,12 13,18"/>
-                    </GeometryDrawing.Geometry>
-                </GeometryDrawing>
+                <GeometryDrawing Pen="{StaticResource pen_folder}" Geometry="{StaticResource g_folder}" />
             </DrawingImage.Drawing>
         </DrawingImage>
 
         <DrawingImage x:Key="fic_playlist">
             <DrawingImage.Drawing>
-                <GeometryDrawing>
-                    <GeometryDrawing.Pen>
-                        <Pen Brush="{DynamicResource Panel.Foreground}" Thickness="1.25"></Pen>
-                    </GeometryDrawing.Pen>
-                    <GeometryDrawing.Geometry>
-                        <PathGeometry FillRule="Nonzero" Figures="M0,0 L5,0 0,5Z  M6,3 16,3 M0,8 16,8 M0,13 16,13"/>
-                    </GeometryDrawing.Geometry>
-                </GeometryDrawing>
+                <GeometryDrawing Pen="{StaticResource pen_folder}" Geometry="{StaticResource g_playlist}" />
             </DrawingImage.Drawing>
         </DrawingImage>
         

@@ -12,6 +12,7 @@ namespace NeeView
         private string? _place;
         private Page? _archivePage;
         private bool? _isArchive;
+        private ArchiveType? _archiveType;
 
         public PlaylistItem(string path) : this(path, null)
         {
@@ -95,6 +96,27 @@ namespace NeeView
                     _isArchive = ArchiveManager.Current.IsSupported(targetPath) || System.IO.Directory.Exists(targetPath);
                 }
                 return _isArchive.Value;
+            }
+        }
+
+        public ArchiveType ArchiveType
+        {
+            get
+            {
+                if (_archiveType is null)
+                {
+                    var targetPath = Path;
+                    if (FileShortcut.IsShortcut(Path))
+                    {
+                        targetPath = new FileShortcut(Path).TargetPath ?? Path;
+                    }
+                    _archiveType = ArchiveManager.Current.GetSupportedType(targetPath);
+                    if (_archiveType == ArchiveType.None && System.IO.Directory.Exists(targetPath))
+                    {
+                        _archiveType = ArchiveType.FolderArchive;
+                    }
+                }
+                return _archiveType.Value;
             }
         }
 

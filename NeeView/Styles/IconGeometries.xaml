@@ -212,6 +212,16 @@
     <PathGeometry x:Key="g_noentry" FillRule="Nonzero"
             Figures="M-100,-100 M1100,1100 M500,10C229.4,10 10,229.4 10,500 10,770.6 229.4,990 500,990 770.6,990 990,770.6 990,500 990,229.4 770.6,10 500,10z M71.3,500C71.3,392.5,111.3,294.5,176.9,219.2L781.2,823.5C705.7,889.3 607.6,929.7 500,929.7 263.6,929.7 71.3,736.4 71.3,500z M824.3,780L220.1,175.9C295.3,110.9 393,71.3 500,71.3 736.4,71.3 928.8,263.7 928.8,500.1 928.8,606.8 889.2,704.7 824.3,780z" />
 
+    <!-- NeeView Custom : Manufacture -->
+    
+    <PathGeometry x:Key="g_folder" FillRule="Nonzero" Figures="M0,0 L14,0 14,10 16,12 16,18, 0,18Z M14,10 L13,12 13,18"/>
+
+    <PathGeometry x:Key="g_folder_zip" FillRule="Nonzero" Figures="M0,0 L14,0 14,10 16,12 16,18, 0,18Z M14,10 L13,12 13,18 M9,1 H8 M9,2 H10 M9,3 H8 M9,4 H10 M9,5 H8 M9,6 H10 M9,7 H8 M9,8 H10 M9,9 H8 M9,10 H10 M9,11 H8 M9,12 H10 M9,13 H8 M9,14 H10 M9,15 H8 M9,16 H10 M9,17 H8 "/>
+
+    <PathGeometry x:Key="g_folder_media" FillRule="Nonzero" Figures="M0,0 L14,0 14,10 16,12 16,18, 0,18Z M14,10 L13,12 13,18 M4,6 10,9 4,13Z"/>
+
+    <PathGeometry x:Key="g_playlist" FillRule="Nonzero" Figures="M0,0 L5,0 0,5Z  M6,3 16,3 M0,8 16,8 M0,13 16,13"/>
+    
     <!-- icons -->
     <DrawingImage x:Key="ic_help_24px">
         <DrawingImage.Drawing>

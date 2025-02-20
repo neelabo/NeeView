@@ -579,4 +579,37 @@ namespace NeeView
             throw new NotImplementedException();
         }
     }
+
+
+    public class ArchivePageToFolderImageSourceConverter : IValueConverter
+    {
+        public ImageSource? FolderImageSource { get; set; }
+        public ImageSource? FolderZipImageSource { get; set; }
+        public ImageSource? FolderMediaImageSource { get; set; }
+
+        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is Page page && page.PageType == PageType.Folder)
+            {
+                if (page.ArchiveEntry.IsDirectory)
+                {
+                    return FolderImageSource;
+                }
+                else if (page.ArchiveEntry.IsMedia())
+                {
+                    return FolderMediaImageSource;
+                }
+                else
+                {
+                    return FolderZipImageSource;
+                }
+            }
+            return null;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

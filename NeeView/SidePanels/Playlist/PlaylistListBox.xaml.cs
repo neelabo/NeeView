@@ -697,4 +697,32 @@ namespace NeeView
 
         #endregion UI Accessor
     }
+
+
+    public class PlaylistItemToFolderImageSourceConverter : IValueConverter
+    {
+        public ImageSource? FolderImageSource { get; set; }
+        public ImageSource? FolderZipImageSource { get; set; }
+        public ImageSource? FolderMediaImageSource { get; set; }
+
+        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is PlaylistItem item)
+            {
+                return item.ArchiveType switch
+                {
+                    ArchiveType.None => null,
+                    ArchiveType.FolderArchive => FolderImageSource,
+                    ArchiveType.MediaArchive => FolderMediaImageSource,
+                    _ => FolderZipImageSource,
+                };
+            }
+            return null;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

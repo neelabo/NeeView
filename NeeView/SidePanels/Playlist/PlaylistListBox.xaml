@@ -19,20 +19,23 @@
                 <ResourceDictionary Source="/Styles/PanelIcons.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <Pen x:Key="pen_folder" Brush="{DynamicResource Panel.Foreground}" Thickness="1.25"/>
+
             <DrawingImage x:Key="fic_folder">
                 <DrawingImage.Drawing>
-                    <DrawingGroup Opacity="1">
-                        <DrawingGroup.Children>
-                            <GeometryDrawing>
-                                <GeometryDrawing.Pen>
-                                    <Pen Brush="{DynamicResource Panel.Foreground}" Thickness="1.25"></Pen>
-                                </GeometryDrawing.Pen>
-                                <GeometryDrawing.Geometry>
-                                    <PathGeometry FillRule="Nonzero" Figures="M0,0 L14,0 14,10 16,12 16,18, 0,18Z M14,10 L13,12 13,18" />
-                                </GeometryDrawing.Geometry>
-                            </GeometryDrawing>
-                        </DrawingGroup.Children>
-                    </DrawingGroup>
+                    <GeometryDrawing Pen="{StaticResource pen_folder}" Geometry="{StaticResource g_folder}" />
+                </DrawingImage.Drawing>
+            </DrawingImage>
+
+            <DrawingImage x:Key="fic_folder_zip">
+                <DrawingImage.Drawing>
+                    <GeometryDrawing Pen="{StaticResource pen_folder}" Geometry="{StaticResource g_folder_zip}" />
+                </DrawingImage.Drawing>
+            </DrawingImage>
+
+            <DrawingImage x:Key="fic_folder_media">
+                <DrawingImage.Drawing>
+                    <GeometryDrawing Pen="{StaticResource pen_folder}" Geometry="{StaticResource g_folder_media}" />
                 </DrawingImage.Drawing>
             </DrawingImage>
 
@@ -52,6 +55,7 @@
             <local:NullableToVisibilityConverter x:Key="NullableToVisibilityInverseConverter" True="Visible" False="Collapsed" />
             <local:BooleanReverseConverter x:Key="BooleanReverseConverter" />
             <local:StringNullOrWhiteSpaceToVisibilityConverter x:Key="StringNullOrWhiteSpaceToVisibilityInverseConverter" True="Collapsed" False="Visible" />
+            <local:PlaylistItemToFolderImageSourceConverter x:Key="PlaylistItemToFolderImageSourceConverter" FolderImageSource="{StaticResource fic_folder}" FolderZipImageSource="{StaticResource fic_folder_zip}" FolderMediaImageSource="{StaticResource fic_folder_media}"/>
 
             <Style x:Key="NameStyle" TargetType="TextBlock">
                 <Setter Property="Text" Value="{Binding Name}" />
@@ -98,7 +102,7 @@
             <Style x:Key="FolderIconStyle" TargetType="Image">
                 <Setter Property="Width" Value="18" />
                 <Setter Property="Height" Value="18" />
-                <Setter Property="Source" Value="{StaticResource fic_folder}" />
+                <Setter Property="Source" Value="{Binding Converter={StaticResource PlaylistItemToFolderImageSourceConverter}}" />
                 <Setter Property="Visibility" Value="{Binding IsArchive, Converter={StaticResource BooleanToVisibilityConverter}}" />
             </Style>
 
