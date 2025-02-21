@@ -63,6 +63,36 @@ function Get-JsonContentFromZip {
     $zip.Dispose()
 }
 
+# ファイルのアップロード
+function Upload-Asset {
+    param (
+        $release_id,
+        $package
+    )
+    
+    $release_id = $release_response.id
+    $file_path = $package.FullName
+    $file_name = $package.Name
+    $upload_url = "https://uploads.github.com/repos/$owner/$repo/releases/$release_id/assets?name=$file_name"
+
+    Write-Host 
+    Read-Host "Press Enter to upload $file_name"
+
+    # GitHub REST API:  Upload a release asset
+    Write-Host "REST API: Upload $file_name" -fore Green
+    $upload_response = Invoke-RestMethod -Uri $upload_url -Method Post -Headers @{
+        Accept         = "application/vnd.github+json"
+        Authorization  = "token $token"
+        "Content-Type" = "application/zip"
+    } -InFile $file_path
+
+    $upload_response | Format-List
+    
+    # NOTE: Content-Type
+    # .zip -> application/zip
+    # .msi -> application/x-msi or application/octet-stream
+}
+
 
 # アップロードするファイルを選択
 $packages = Get-ChildItem -File | Where-Object Name -match "(Canary|Beta)\d+\.zip$"
@@ -83,6 +113,11 @@ if ($package -match "(Canary|Beta)") {
 else {
     throw "Cannot found package type"
 }
+
+# get ZIP-fd package
+$name_fd = $package.Name -replace "\.zip$", "-fd.zip"
+$package_fd = Get-ChildItem -File -Path $name_fd
+
 
 # タグ名生成
 if ($package.Name -match "^[^\d]+(.+)\.zip$") {
@@ -260,30 +295,12 @@ $release_response = Invoke-RestMethod -Uri $release_url -Method Post -Headers @{
 
 $release_response | Format-List
 
-
 # ファイルのアップロード
 $release_id = $release_response.id
-$file_path = $package.FullName
-$file_name = $package.Name
-$upload_url = "https://uploads.github.com/repos/$owner/$repo/releases/$release_id/assets?name=$file_name"
-
-Write-Host 
-Read-Host "Press Enter to upload $file_name"
-
-# GitHub REST API:  Upload a release asset
-Write-Host "REST API: Upload $file_name" -fore Green
-$upload_response = Invoke-RestMethod -Uri $upload_url -Method Post -Headers @{
-    Accept         = "application/vnd.github+json"
-    Authorization  = "token $token"
-    "Content-Type" = "application/zip"
-} -InFile $file_path
-
-$upload_response | Format-List
+Upload-Asset $release_id $package 
+Upload-Asset $release_id $package_fd
 
 Write-Host 
 Write-Host "done. "
 
-# NOTE: Content-Type
-# .zip -> application/zip
-# .msi -> application/x-msi or application/octet-stream
 

@@ -83,29 +83,29 @@ function Get-AppVersion($version) {
 
 # get git log
 function Get-GitLog {
-    param (
-        [string]$IssuesUrl
-    )
+	param (
+		[string]$IssuesUrl
+	)
 
 	$branch = Invoke-Expression "git rev-parse --abbrev-ref HEAD"
 	$descrive = Invoke-Expression "git tag" | Where-Object { $_ -match "^\d+\.\d+$" } | Select-Object -Last 1
 	$date = Invoke-Expression 'git log -1 --pretty=format:"%ad" --date=iso'
 	$result = Invoke-Expression "git log $descrive..head --encoding=$([Console]::OutputEncoding.WebName) --pretty=format:`"%s`""
 	$result = $result | Where-Object { -not ($_ -match '^Merge |^chore:|^docs:|^refactor:|^-|^\.\.') } 
-    #$result = $result | Select-Object -Unique
-    if ($IssuesUrl -ne "") {
-        $result = $result | ForEach-Object { $_ -replace "#(\d+)", "[#`$1]($IssuesUrl/`$1)" }
-    }
+	#$result = $result | Select-Object -Unique
+	if ($IssuesUrl -ne "") {
+		$result = $result | ForEach-Object { $_ -replace "#(\d+)", "[#`$1]($IssuesUrl/`$1)" }
+	}
 
 	return "[${branch}] $descrive to head", $date, $result
 }
 
 # get git log (markdown)
 function Get-GitLogMarkdown {
-    param (
-        [string]$Title,
-        [string]$IssuesUrl
-    )
+	param (
+		[string]$Title,
+		[string]$IssuesUrl
+	)
 
 	$result = Get-GitLog $IssuesUrl
 	$header = $result[0]
@@ -258,10 +258,10 @@ function New-Package($platform, $productName, $productDir, $packageDir, $fd) {
 	New-Readme $packageDir "ja-jp" $target
 }
 
-function Edit-Markdown{
+function Edit-Markdown {
 	[CmdletBinding()]
 	param(
-		[Parameter(Mandatory=$True, ValueFromPipeline=$True)]
+		[Parameter(Mandatory = $True, ValueFromPipeline = $True)]
 		[object[]]$Value,
 		[switch]$IncrementDepth,
 		[switch]$DecrementDepth,
@@ -270,15 +270,15 @@ function Edit-Markdown{
 
 	process {
 		$chop = $false
-        foreach ($line in $Value) {
+		foreach ($line in $Value) {
 			if ($line.StartsWith("#")) {
 				if ($ChopTitle -and !$chop) {
 					$chop = $true
 				}
-				elseif ($IncrementDepth){
+				elseif ($IncrementDepth) {
 					"#" + $line
 				}
-				elseif ($DecrementDepth){
+				elseif ($DecrementDepth) {
 					$line.Remove(0, 1)
 				}
 				else {
@@ -288,21 +288,21 @@ function Edit-Markdown{
 			else {
 				$line
 			}
-        }
-    }
+		}
+	}
 }
 
 function Get-MarkdownSection {
 
 	[CmdletBinding()]
-    param (
-		[Parameter(Mandatory=$True, ValueFromPipeline=$True)]
-        [object[]]$Content,
-        [string]$Section
-    )
-    begin {
-        $phase = 0
-    }
+	param (
+		[Parameter(Mandatory = $True, ValueFromPipeline = $True)]
+		[object[]]$Content,
+		[string]$Section
+	)
+	begin {
+		$phase = 0
+	}
 	process {
 		foreach ($line in $Content) {
 			if ($phase -eq 0) {
@@ -311,8 +311,8 @@ function Get-MarkdownSection {
 					if ($name -eq $Section) {
 						$phase = 1
 					}
-                    else {
-                    }
+					else {
+					}
 				}
 			}
 			elseif ($phase -eq 1) {
@@ -334,21 +334,21 @@ function New-Readme {
 	$readmeSource = "$solutionDir\docs\$culture"
 
 	$postfix = $appVersion
-	if ($target -eq "Canary") {
+	if ($target.StartsWith("Canary")) {
 		$postfix = "$appVersion-Canary${dateVersion}"
 	}
-	elseif ($target -eq "Beta") {
+	elseif ($target.StartsWith("Beta")) {
 		$postfix = "$appVersion-Beta${dateVersion}"
 	}
 
 	$source = @()
 
 	$rev = "Rev. ${revision}"
-	if ($target -eq "Canary") {
-		$source += Get-Content "$readmeSource\package-canary.md" | Edit-Markdown -IncrementDepth | ForEach-Object { $_.replace("<custom-revision/>", $rev)}
+	if ($target.StartsWith("Canary")) {
+		$source += Get-Content "$readmeSource\package-canary.md" | Edit-Markdown -IncrementDepth | ForEach-Object { $_.replace("<custom-revision/>", $rev) }
 	}
-	elseif ($target -eq "Beta") {
-		$source += Get-Content "$readmeSource\package-beta.md" | Edit-Markdown -IncrementDepth | ForEach-Object { $_.replace("<custom-revision/>", $rev)}
+	elseif ($target.StartsWith("Beta")) {
+		$source += Get-Content "$readmeSource\package-beta.md" | Edit-Markdown -IncrementDepth | ForEach-Object { $_.replace("<custom-revision/>", $rev) }
 	}
 
 	$overviewContent = Get-Content "$readmeSource\index.md" | Get-MarkdownSection -Section "overview"
@@ -356,10 +356,10 @@ function New-Readme {
 	$source += $overviewContent
 	
 	$source += @("")
-	if (($target -eq "Zip") -or ($target -eq "Beta")) {
+	if (($target -eq "Zip") -or ($target -eq "Canary") -or ($target -eq "Beta")) {
 		$source += Get-Content "$readmeSource\package-zip.md" | Edit-Markdown -IncrementDepth
 	}
-	elseif (($target -eq "Zip-fd") -or ($target -eq "Canary")) {
+	elseif (($target -eq "Zip-fd") -or ($target -eq "Canary-fd") -or ($target -eq "Beta-fd")) {
 		$source += Get-Content "$readmeSource\package-zip-fd.md" | Edit-Markdown -IncrementDepth
 	}
 	elseif ($target -eq "Msi") {
@@ -372,11 +372,11 @@ function New-Readme {
 	$source += @("")
 	if ($culture -eq "ja-jp") {
 		$source += @("## ポータル サイト")
-		$source += @("- [NeeView Portal Site](https://neelabo.github.io/NeeView/ja-jp)")
+		$source += @("- [NeeView Portal Site](https://neelabo.github.io/NeeView)")
 	}
 	else {
 		$source += @("## Portal Site")
-		$source += @("- [NeeView Portal Site](https://neelabo.github.io/NeeView/en-us)")
+		$source += @("- [NeeView Portal Site](https://neelabo.github.io/NeeView)")
 	}
 
 	$contactContent = Get-Content "$readmeSource\contact.md" | Edit-Markdown -IncrementDepth
@@ -398,7 +398,7 @@ function New-Readme {
 	$source += @("")
 	$source += $thirdPartyLicenseContent
 
-	if ($target -eq "Canary") {
+	if ($target.StartsWith("Canary")) {
 		$changeLogContent = Get-GitLogMarkdown -Title "$product $postfix - Changelog"  -IssuesUrl $issuesUrl
 	}
 	else {
@@ -694,44 +694,45 @@ function New-Appx($arch, $packageDir, $packageAppendDir, $appx) {
 }
 
 # archive to Canary.ZIP
-function Remove-Canary() {
-	if (Test-Path $packageCanary) {
-		Remove-Item $packageCanary
+function Remove-Canary($packageDir, $packageZip) {
+	if (Test-Path $packageZip) {
+		Remove-Item $packageZip
 	}
 
-	if (Test-Path $packageCanaryDir) {
-		Remove-Item $packageCanaryDir -Recurse
+	if (Test-Path $packageDir) {
+		Remove-Item $packageDir -Recurse
 	}
 }
 
-function New-Canary($packageDir) {
-	New-DevPackage $packageDir $packageCanaryDir $packageCanary "Canary"
+function New-Canary($referenceDir, $packageDir, $packageZip, $fd) {
+	New-DevPackage $referenceDir $packageDir $packageZip "Canary" $fd
 }
 
 # archive to Beta.ZIP
-function Remove-Beta() {
-	if (Test-Path $packageBeta) {
-		Remove-Item $packageBeta
+function Remove-Beta($packageDir, $packageZip) {
+	if (Test-Path $packageZip) {
+		Remove-Item $packageZip
 	}
 
-	if (Test-Path $packageBetaDir) {
-		Remove-Item $packageBetaDir -Recurse
+	if (Test-Path $packageDir) {
+		Remove-Item $packageDir -Recurse
 	}
 }
 
-function New-Beta($packageDir) {
-	New-DevPackage $packageDir $packageBetaDir $packageBeta "Beta"
+function New-Beta($referenceDir, $packageDir, $packageZip, $fd) {
+	New-DevPackage $referenceDir $packageDir $packageZip "Beta" $fd
 }
 
 # archive to Canary/Beta.ZIP
-function New-DevPackage($packageDir, $devPackageDir, $devPackage, $target) {
+function New-DevPackage($packageDir, $devPackageDir, $devPackage, $target, $fd) {
 	# update assembly
 	Copy-Item $packageDir $devPackageDir -Recurse
 	New-ConfigForDevPackage $packageDir "${product}.settings.json" $target $devPackageDir
 
 	# generate README.html
-	New-Readme $devPackageDir "en-us" $target
-	New-Readme $devPackageDir "ja-jp" $target
+	$targetName = $fd ? "$target-fd" : $target
+	New-Readme $devPackageDir "en-us" $targetName
+	New-Readme $devPackageDir "ja-jp" $targetName
 
 	Optimize-Package $devPackageDir
 	Compress-Archive $devPackageDir -DestinationPath $devPackage
@@ -765,8 +766,14 @@ function Remove-BuildObjects {
 	if (Test-Path $packageCanaryDir) {
 		Remove-Item $packageCanaryDir -Recurse -Force
 	}
+	if (Test-Path $packageCanaryDir_fd) {
+		Remove-Item $packageCanaryDir_fd -Recurse -Force
+	}
 	if (Test-Path $packageBetaDir) {
 		Remove-Item $packageBetaDir -Recurse -Force
+	}
+	if (Test-Path $packageBetaDir_fd) {
+		Remove-Item $packageBetaDir_fd -Recurse -Force
 	}
 	if (Test-Path $packageCanaryWild) {
 		Remove-Item $packageCanaryWild
@@ -822,7 +829,7 @@ function Build-Zip-x64 {
 
 	Remove-Zip $packageZip_x64
 	New-Zip $packageDir_x64 $packageName_x64 $packageZip_x64
-	Write-Host "`nExport $packageZip_x64 successed.`n" -fore Green
+	Write-Host "`nExport $packageZip_x64 succeeded.`n" -fore Green
 }
 
 function Build-Zip-x64-fd {
@@ -830,7 +837,7 @@ function Build-Zip-x64-fd {
 
 	Remove-Zip $packageZip_x64_fd
 	New-Zip $packageDir_x64_fd $packageName_x64_fd $packageZip_x64_fd
-	Write-Host "`nExport $packageZip_x64_fd successed.`n" -fore Green
+	Write-Host "`nExport $packageZip_x64_fd succeeded.`n" -fore Green
 }
 
 function Build-Installer-x64 {
@@ -839,7 +846,7 @@ function Build-Installer-x64 {
 	Remove-Msi $packageAppendDir_x64 $packageMsi_x64
 	New-PackageAppend $packageDir_x64 $packageAppendDir_x64
 	New-Msi "x64" $packageDir_x64 $packageAppendDir_x64 $packageMsi_x64
-	Write-Host "`nExport $packageMsi_x64 successed.`n" -fore Green
+	Write-Host "`nExport $packageMsi_x64 succeeded.`n" -fore Green
 }
 
 function Build-Appx-x64 {
@@ -848,27 +855,40 @@ function Build-Appx-x64 {
 	if (Test-Path "$env:CersPath\_Parameter.ps1") {
 		Remove-Appx $packageAppxDir_x64 $packageX64Appx
 		New-Appx "x64" $packageDir_x64 $packageAppxDir_x64 $packageX64Appx
-		Write-Host "`nExport $packageX64Appx successed.`n" -fore Green
+		Write-Host "`nExport $packageX64Appx succeeded.`n" -fore Green
 	}
 	else {
-		Write-Host "`nWarning: not exist make appx envionment. skip!`n" -fore Yellow
+		Write-Host "`nWarning: not exist make appx environment. skip!`n" -fore Yellow
 	}
 }
 
 function Build-Canary {
 	Write-Host "`n[Canary] ...`n" -fore Cyan
-	Remove-Canary
-	New-Canary $packageDir_x64_fd
-	Write-Host "`nExport $packageCanary successed.`n" -fore Green
+	Remove-Canary $packageCanaryDir $packageCanary
+	New-Canary $packageDir_x64 $packageCanaryDir $packageCanary $false
+	Write-Host "`nExport $packageCanary succeeded.`n" -fore Green
+}
+
+function Build-Canary-fd {
+	Write-Host "`n[Canary fd] ...`n" -fore Cyan
+	Remove-Canary $packageCanaryDir_fd $packageCanary_fd
+	New-Canary $packageDir_x64_fd $packageCanaryDir_fd $packageCanary_fd $true
+	Write-Host "`nExport $packageCanary_fd succeeded.`n" -fore Green
 }
 
 function Build-Beta {
 	Write-Host "`n[Beta] ...`n" -fore Cyan
-	Remove-Beta
-	New-Beta $packageDir_x64
-	Write-Host "`nExport $packageBeta successed.`n" -fore Green
+	Remove-Beta $packageBetaDir $packageBeta
+	New-Beta $packageDir_x64 $packageBetaDir $packageBeta $false
+	Write-Host "`nExport $packageBeta succeeded.`n" -fore Green
 }
 
+function Build-Beta-fd {
+	Write-Host "`n[Beta fd] ...`n" -fore Cyan
+	Remove-Beta $packageBetaDir_fd $packageBeta_fd
+	New-Beta $packageDir_x64_fd $packageBetaDir_fd $packageBeta_fd $true
+	Write-Host "`nExport $packageBeta_fd succeeded.`n" -fore Green
+}
 
 function Export-Current {
 	Write-Host "`n[Current] ...`n" -fore Cyan
@@ -945,22 +965,18 @@ $packageMsi_x64 = "$packageName_x64.msi"
 $packageAppxDir_x64 = "${product}${appVersion}-appx-x64"
 $packageX64Appx = "${product}${appVersion}.appx"
 
-# $packageCanaryDir = "${product}Canary"
-# $packageCanary = "${product}Canary${dateVersion}.zip"
-# $packageCanaryWild = "${product}Canary*.zip"
-
-# $packageBetaDir = "${product}Beta"
-# $packageBeta = "${product}Beta${dateVersion}.zip"
-# $packageBetaWild = "${product}Beta*.zip"
-
 $packageNameCanary = "${product}${appVersion}-Canary${dateVersion}"
 $packageCanaryDir = "$packageNameCanary"
+$packageCanaryDir_fd = "$packageNameCanary-fd"
 $packageCanary = "$packageNameCanary.zip"
+$packageCanary_fd = "$packageNameCanary-fd.zip"
 $packageCanaryWild = "${product}${appVersion}-Canary*.zip"
 
 $packageNameBeta = "${product}${appVersion}-Beta${dateVersion}"
 $packageBetaDir = "$packageNameBeta"
+$packageBetaDir_fd = "$packageNameBeta-fd"
 $packageBeta = "$packageNameBeta.zip"
+$packageBeta_fd = "$packageNameBeta-fd.zip"
 $packageBetaWild = "${product}${appVersion}-Beta*.zip"
 
 if (-not $continue) {
@@ -987,13 +1003,17 @@ if (($Target -eq "All") -or ($Target -eq "Appx")) {
 }
 
 if ($Target -eq "Canary") {
-	Build-PackageSource-x64-fd
+	Build-PackageSource-x64
 	Build-Canary
+	Build-PackageSource-x64-fd
+	Build-Canary-fd
 }
 
 if ($Target -eq "Beta") {
 	Build-PackageSource-x64
 	Build-Beta
+	Build-PackageSource-x64-fd
+	Build-Beta-fd
 }
 
 if (-not $continue) {

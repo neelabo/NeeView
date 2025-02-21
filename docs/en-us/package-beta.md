@@ -1,5 +1,7 @@
 # About Beta Version
 
+<custom-revision/>
+
 NeeView Beta is the version just before the official release.  
 No new features will be added, only bug fixes. The official version will be released in approximately one to two weeks.
 
@@ -8,4 +10,4 @@ No new features will be added, only bug fixes. The official version will be rele
 
   * It is more unstable than the official version.
   * Saved data may not be compatible. It is recommended to operate separately from the official version.
-  * Only the ZIP version is provided.
+  * ZIP version and ZIP-fd version are provided. .NET Desktop Runtime must be installed for the ZIP-fd version.

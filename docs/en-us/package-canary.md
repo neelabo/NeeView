@@ -10,6 +10,6 @@ It is intended to give you a preview of features that will be available in the o
 
   * It is more unstable than the official version.
   * Saved data may not be compatible. It is recommended to operate separately from the official version.
-  * Only the ZIP-fd version is provided. .NET Desktop Runtime must be installed.
+  * ZIP version and ZIP-fd version are provided. .NET Desktop Runtime must be installed for the ZIP-fd version.
   * Irregular releases, no announcements.
   
