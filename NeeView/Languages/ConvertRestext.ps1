@@ -6,13 +6,13 @@ Converting Language Files and Json
 Converts between language files ([culture].restext) and Json. This is a utility tool, not a required feature.
 
 .EXAMPLE
-> .\ConvertRestext.ps1
-Convert language files to Language.json.
-
-.EXAMPLE
-> .\ConvertRestext.ps1 -Mode Convert -Sort
+> .\ConvertRestext.ps1 Convert -Sort
 Generate language files from Language.json.
 -Sort by key if specified.
+
+.EXAMPLE
+> .\ConvertRestext.ps1 Revert
+Convert language files to Language.json.
 
 .PARAMETER Mode
 Convert mode 
