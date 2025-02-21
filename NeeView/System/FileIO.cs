@@ -109,6 +109,9 @@ namespace NeeView
             // 区切り文字修正
             source = _separateRegex.Replace(source, "\\").TrimEnd('\\');
 
+            // Chop long-path prefix
+            if (source.StartsWith(@"\\?\")) source = source[4..];
+
             // ドライブレター修正
             source = _lowerDriveLetterRegex.Replace(source, m => m.Value.ToUpperInvariant());
             source = _colonTerminalRegex.Replace(source, ":\\");
