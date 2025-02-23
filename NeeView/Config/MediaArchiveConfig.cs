@@ -20,7 +20,8 @@ namespace NeeView
         private double _volume = 0.5;
         private bool _isRepeat;
         private bool _isLibVlcEnabled;
-        
+        private DefaultSubtitle _defaultSubtitle = DefaultSubtitle.Default;
+
         [JsonInclude, JsonPropertyName(nameof(LibVlcPath))]
         public string? _libVlcPath;
 
@@ -101,6 +102,25 @@ namespace NeeView
             get { return _libVlcPath ?? LibVlcProfile.DefaultLibVlcPath; }
             set { SetProperty(ref _libVlcPath, (string.IsNullOrWhiteSpace(value) || value.Trim() == LibVlcProfile.DefaultLibVlcPath) ? null : value.Trim()); }
         }
+
+        [PropertyMember]
+        public DefaultSubtitle DefaultSubtitle
+        {
+            get { return _defaultSubtitle; }
+            set { SetProperty(ref _defaultSubtitle, value); }
+        }
+    }
+
+    /// <summary>
+    /// 既定の字幕
+    /// </summary>
+    public enum DefaultSubtitle
+    {
+        // 既定の字幕を使用する
+        Default,
+
+        // 字幕を無効にする
+        Disable,
     }
 
 

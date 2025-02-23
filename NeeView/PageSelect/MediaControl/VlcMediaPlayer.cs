@@ -403,6 +403,13 @@ namespace NeeView
         {
             var tracks = _player.SubTitles;
             if (tracks is null || tracks.Count <= 0) return null;
+
+            if (Config.Current.Archive.Media.DefaultSubtitle == DefaultSubtitle.Disable)
+            {
+                // 字幕を解除
+                tracks.Current = tracks.All.FirstOrDefault();
+            }
+
             return new VlcTrackCollectionSource(tracks);
         }
 

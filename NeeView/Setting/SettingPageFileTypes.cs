@@ -168,6 +168,10 @@ namespace NeeView.Setting
             {
                 IsEnabled = new IsEnabledPropertyValue(Config.Current.Archive.Media, nameof(MediaArchiveConfig.IsLibVlcEnabled)),
             });
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Archive.Media, nameof(MediaArchiveConfig.DefaultSubtitle)))
+            {
+                IsEnabled = new IsEnabledPropertyValue(Config.Current.Archive.Media, nameof(MediaArchiveConfig.IsLibVlcEnabled)),
+            });
 
             this.Items = new List<SettingItem>() { section };
         }
