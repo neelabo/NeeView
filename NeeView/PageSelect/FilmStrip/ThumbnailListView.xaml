@@ -45,6 +45,7 @@
         </Border>
         
         <ListBox x:Name="ThumbnailListBox" ItemsSource="{Binding Model.Items, NotifyOnTargetUpdated=True}" ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                             SelectionMode="Extended"
                              SelectedIndex="{Binding Model.SelectedIndex}"
                              Background="Transparent"
                              BorderThickness="0"

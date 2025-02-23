@@ -553,6 +553,8 @@ namespace NeeView
         // 履歴項目決定
         private void ThumbnailListItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            if (Keyboard.Modifiers != ModifierKeys.None) return;
+
             if ((sender as ListBoxItem)?.Content is Page page)
             {
                 BookOperation.Current.JumpPage(this, page);
