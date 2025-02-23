@@ -46,6 +46,8 @@ namespace NeeView
 
         public WindowTitle WindowTitle => WindowTitle.Current;
 
+        public SlideShow SlideShow => SlideShow.Current;
+
         public bool IsCaptionEnabled
         {
             get { return _windowCaptionEmulator.IsEnabled; }

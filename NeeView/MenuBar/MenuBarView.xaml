@@ -17,6 +17,17 @@
                 <ResourceDictionary Source="/Styles/MenuIcons.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <DrawingImage x:Key="ic_play_allow_24px">
+                <DrawingImage.Drawing>
+                    <DrawingGroup>
+                        <DrawingGroup.Children>
+                            <GeometryDrawing Brush="Transparent" Geometry="{StaticResource g_rect24x24}" />
+                            <GeometryDrawing Brush="{DynamicResource Control.Accent}" Pen="{x:Null}" Geometry="{StaticResource g_play_allow_24px}" />
+                        </DrawingGroup.Children>
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
+
             <local:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
             
@@ -58,8 +69,9 @@
                 <ContentControl x:Name="MainMenuJoint" Content="{Binding MainMenu}" IsTabStop="False" VerticalAlignment="Center" WindowChrome.IsHitTestVisibleInChrome="False"
                         Margin="4,0,0,0">
                 </ContentControl>
+                <Image Source="{StaticResource ic_play_allow_24px}" Width="24" Height="24" VerticalAlignment="Center" Visibility="{Binding SlideShow.IsPlayingSlideShow, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 <TextBlock x:Name="MenuTitle" Text="{Binding WindowTitle.Title}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0"
-                        FontSize="{DynamicResource MenuFontSize}"
+                        FontSize="{DynamicResource MenuFontSize}" 
                         TextTrimming="CharacterEllipsis">
                 </TextBlock>
             </DockPanel>
