@@ -121,7 +121,7 @@ namespace NeeView
             if (_isVisible)
             {
                 // 表示時、一定時間経過後に非表示にする処理
-                if (!IsVisibleTime())
+                if (!IsVisibleTime() && !MouseButtonBitsExtensions.Create().Any())
                 {
                     SetCursorVisible(false);
                 }
@@ -225,8 +225,7 @@ namespace NeeView
                 }
             }
 
-            // NOTE: カーソル指定があるときは強制表示
-            _view.Cursor = _isVisible || _cursor != null ? _cursor : Cursors.None;
+            _view.Cursor = _isVisible ? _cursor : Cursors.None;
         }
 
     }
