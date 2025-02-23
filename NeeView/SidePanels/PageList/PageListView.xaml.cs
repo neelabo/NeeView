@@ -31,6 +31,8 @@ namespace NeeView
 
             model.SearchBoxFocus += PageList_SearchBoxFocus;
 
+            ContentDropManager.Current.SetDragDropEvent(this);
+
             Debug.WriteLine($"> Create: {nameof(PageListView)}");
         }
 
