@@ -30,7 +30,7 @@ namespace NeeView
         private bool _isAutoHide;
         private Visibility _visibility;
         private readonly Func<DependencyObject, bool> _elementContainsFunc;
-        private bool _isPanelActived;
+        private bool _isPanelActive;
         
         
         public SidePanelViewModel(ItemsControl itemsControl, LayoutDockPanelContent dock, Func<DependencyObject, bool> elementContainsFunc)
@@ -51,11 +51,11 @@ namespace NeeView
                 if (_dock.SelectedItem != null)
                 {
                     AutoHideDescription.VisibleOnce(true);
-                    IsPanelActived = true;
+                    IsPanelActive = true;
                 }
                 else
                 {
-                    IsPanelActived = false;
+                    IsPanelActive = false;
                 }
             });
 
@@ -152,10 +152,10 @@ namespace NeeView
         /// <summary>
         /// パネルがなにか選択されている
         /// </summary>
-        public bool IsPanelActived
+        public bool IsPanelActive
         {
-            get { return _isPanelActived; }
-            set { SetProperty(ref _isPanelActived, value); }
+            get { return _isPanelActive; }
+            set { SetProperty(ref _isPanelActive, value); }
         }
 
 
@@ -195,9 +195,9 @@ namespace NeeView
     /// <summary>
     /// パネルドロップイベント
     /// </summary>
-    public class PanelDropedEventArgs : EventArgs
+    public class PanelDroppedEventArgs : EventArgs
     {
-        public PanelDropedEventArgs(IPanel panel, int index)
+        public PanelDroppedEventArgs(IPanel panel, int index)
         {
             Panel = panel;
             Index = index;

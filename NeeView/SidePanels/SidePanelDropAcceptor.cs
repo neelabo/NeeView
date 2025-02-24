@@ -35,7 +35,7 @@ namespace NeeView
         /// <summary>
         /// ドロップイベント
         /// </summary>
-        public EventHandler<LayoutPanelDropedEventArgs>? PanelDroped;
+        public EventHandler<LayoutPanelDroppedEventArgs>? PanelDropped;
 
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace NeeView
             _dock.MovePanel(index, panel);
 
             // NOTE: 未使用？
-            PanelDroped?.Invoke(this, new LayoutPanelDropedEventArgs(panel, index));
+            PanelDropped?.Invoke(this, new LayoutPanelDroppedEventArgs(panel, index));
         }
 
         /// <summary>

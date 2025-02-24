@@ -37,7 +37,7 @@ namespace NeeView
         {
             get
             {
-                if (Type != ThemeType.Custom) throw new InvalidOperationException($"{nameof(CustomThemeFilePath)} is required ChstomTmeme");
+                if (Type != ThemeType.Custom) throw new InvalidOperationException($"{nameof(CustomThemeFilePath)} is required CustomTheme");
                 if (this.FileName is null) throw new InvalidOperationException("CustomTheme.FileName must not be null");
                 return Path.Combine(Config.Current.Theme.CustomThemeFolder, this.FileName);
             }

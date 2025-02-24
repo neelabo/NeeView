@@ -9,7 +9,7 @@ namespace NeeView
         /// </summary>
         /// <param name="element">フォーカスする要素</param>
         /// <returns>フォーカスできた場合は true</returns>
-        public static bool FocusIfWindowActived(UIElement element)
+        public static bool FocusIfWindowActive(UIElement element)
         {
             if (element is null) return false;
 

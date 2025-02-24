@@ -366,17 +366,17 @@ namespace NeeView
             this.LeftPanel.IsVisibleChanged += LeftPanel_IsVisibleChanged;
             this.RightPanel.IsVisibleChanged += RightPanel_IsVisibleChanged;
 
-            vm.AddPropertyChanged(nameof(vm.IsLeftPanelActived), ViewModel_IsLeftPanelActivedChanged);
-            vm.AddPropertyChanged(nameof(vm.IsRightPanelActived), ViewModel_IsRightPanelActivedChanged);
+            vm.AddPropertyChanged(nameof(vm.IsLeftPanelActive), ViewModel_IsLeftPanelActiveChanged);
+            vm.AddPropertyChanged(nameof(vm.IsRightPanelActive), ViewModel_IsRightPanelActiveChanged);
 
             UpdateCanvas();
         }
 
-        private void ViewModel_IsLeftPanelActivedChanged(object? sender, PropertyChangedEventArgs e)
+        private void ViewModel_IsLeftPanelActiveChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (_vm is null) return;
 
-            if (_vm.IsLeftPanelActived && this.LeftColumnWidth.Value <= _panelMinWidth)
+            if (_vm.IsLeftPanelActive && this.LeftColumnWidth.Value <= _panelMinWidth)
             {
                 var length = Math.Max(Math.Min(this.CenterColumn.ActualWidth - _splitterWidth, _panelDefaultWidth), _panelMinWidth);
                 _adjustPanelWidthOrder = AdjustPanelWidthOrder.KeepLeft;
@@ -386,11 +386,11 @@ namespace NeeView
             UpdateCanvas();
         }
 
-        private void ViewModel_IsRightPanelActivedChanged(object? sender, PropertyChangedEventArgs e)
+        private void ViewModel_IsRightPanelActiveChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (_vm is null) return;
 
-            if (_vm.IsRightPanelActived && this.RightColumnWidth.Value <= _panelMinWidth)
+            if (_vm.IsRightPanelActive && this.RightColumnWidth.Value <= _panelMinWidth)
             {
                 var length = Math.Max(Math.Min(this.CenterColumn.ActualWidth - _splitterWidth, _panelDefaultWidth), _panelMinWidth);
                 _adjustPanelWidthOrder = AdjustPanelWidthOrder.KeepRight;

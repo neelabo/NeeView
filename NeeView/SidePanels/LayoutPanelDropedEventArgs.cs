@@ -6,9 +6,9 @@ namespace NeeView
     /// <summary>
     /// パネルドロップイベント
     /// </summary>
-    public class LayoutPanelDropedEventArgs : EventArgs
+    public class LayoutPanelDroppedEventArgs : EventArgs
     {
-        public LayoutPanelDropedEventArgs(LayoutPanel panel, int index)
+        public LayoutPanelDroppedEventArgs(LayoutPanel panel, int index)
         {
             Panel = panel;
             Index = index;

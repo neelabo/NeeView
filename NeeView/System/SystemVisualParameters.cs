@@ -24,7 +24,7 @@ namespace NeeView
 
         private SystemVisualParameters()
         {
-            // NOTE: nulalble警告回避
+            // NOTE: nullable 警告回避
             _messageFontName = SystemFonts.MessageFontFamily.Source;
 
             UpdateFonts();
@@ -103,12 +103,12 @@ namespace NeeView
         {
             try
             {
-                var registoryKeyName = @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
-                using (var registoryKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(registoryKeyName))
+                var registryKeyName = @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
+                using (var registryKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(registryKeyName))
                 {
-                    if (registoryKey is null) return SystemThemeType.Dark;
+                    if (registryKey is null) return SystemThemeType.Dark;
 
-                    var value = (int?)registoryKey.GetValue("AppsUseLightTheme");
+                    var value = (int?)registryKey.GetValue("AppsUseLightTheme");
                     return (value == 1) ? SystemThemeType.Light : SystemThemeType.Dark;
                 }
             }

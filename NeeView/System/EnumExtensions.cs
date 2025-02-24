@@ -12,7 +12,7 @@ namespace NeeView
         /// <param name="s">文字列</param>
         /// <param name="type">enum型</param>
         /// <returns>Enum値。変換できなかった場合は default を返す。</returns>
-        /// <exception cref="ArgumentException">typeがenum型ではない</exception>
+        /// <exception cref="ArgumentException">type が enum 型ではない</exception>
         public static object ToEnum(this string s, Type type)
         {
             if (type is null || !type.IsEnum) throw new ArgumentException("type must be enum.");
@@ -33,7 +33,7 @@ namespace NeeView
         /// <param name="s">文字列</param>
         /// <param name="type">enum型</param>
         /// <returns>Enum値</returns>
-        /// <exception cref="ArgumentException">typeがenum型ではない</exception>
+        /// <exception cref="ArgumentException">type が enum 型ではない</exception>
         /// <exception cref="InvalidCastException">変換失敗</exception>
         public static object ToEnumOrDefault(this string s, Type type)
         {

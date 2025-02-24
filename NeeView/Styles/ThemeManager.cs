@@ -156,11 +156,11 @@ namespace NeeView
         }
 
 
-        private ThemeProfile GeThemeProfile(ThemeSource theneId)
+        private ThemeProfile GeThemeProfile(ThemeSource themeId)
         {
             try
             {
-                var themeProfile = LoadThemeProfile(theneId);
+                var themeProfile = LoadThemeProfile(themeId);
                 themeProfile.Verify();
                 return themeProfile.Validate();
             }
@@ -168,7 +168,7 @@ namespace NeeView
             {
                 ToastService.Current.Show(new Toast(ex.Message, Properties.TextResources.GetString("ThemeErrorDialog.Title"), ToastIcon.Error));
 
-                if (theneId.Type is ThemeType.Custom)
+                if (themeId.Type is ThemeType.Custom)
                 {
                     return GeThemeProfile(new ThemeSource(ThemeType.Dark));
                 }

@@ -63,9 +63,9 @@ namespace NeeView
             // NOTE: シングルパッケージにすると次の方法ではアセンブリ情報が取得できない
             //var assembly = Assembly.GetExecutingAssembly();
             ////AssemblyCompanyの取得
-            //var asmcmp = (AssemblyCompanyAttribute?)Attribute.GetCustomAttribute(assembly, typeof(AssemblyCompanyAttribute));
+            //var asmCmp = (AssemblyCompanyAttribute?)Attribute.GetCustomAttribute(assembly, typeof(AssemblyCompanyAttribute));
             ////AssemblyProductの取得
-            //var asmprd = (AssemblyProductAttribute?)Attribute.GetCustomAttribute(assembly, typeof(AssemblyProductAttribute));
+            //var asmPrd = (AssemblyProductAttribute?)Attribute.GetCustomAttribute(assembly, typeof(AssemblyProductAttribute));
 
             var currentProcess = Process.GetCurrentProcess();
             //ProcessIDの取得
@@ -83,7 +83,7 @@ namespace NeeView
                 }
             }
 
-            TempDirectoryBaseName = processName + ".Temp"; //  asmprd.Product;
+            TempDirectoryBaseName = processName + ".Temp"; //  asmPrd.Product;
             TempDirectory = Path.Combine(TempRootPath, TempDirectoryBaseName) + processId.ToString(CultureInfo.InvariantCulture);
             TempDownloadDirectory = Path.Combine(TempDirectory, "Temporary");
             TempSystemDirectory = Path.Combine(TempDirectory, "System");

@@ -218,7 +218,7 @@ namespace NeeView
 
             if (restoreFocus && StoredFocusTarget != null)
             {
-                FocusTools.FocusIfWindowActived(StoredFocusTarget);
+                FocusTools.FocusIfWindowActive(StoredFocusTarget);
             }
 
             var args = new RenameClosedEventArgs(_oldValue, newValue, moveRename, restoreFocus);

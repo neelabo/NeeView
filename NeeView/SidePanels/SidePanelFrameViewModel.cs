@@ -80,14 +80,14 @@ namespace NeeView
             set => this.Right.Width = value.Value;
         }
 
-        public bool IsLeftPanelActived
+        public bool IsLeftPanelActive
         {
-            get => this.Left.IsPanelActived;
+            get => this.Left.IsPanelActive;
         }
 
-        public bool IsRightPanelActived
+        public bool IsRightPanelActive
         {
-            get => this.Right.IsPanelActived;
+            get => this.Right.IsPanelActive;
         }
 
         public bool IsLimitPanelWidth
@@ -191,8 +191,8 @@ namespace NeeView
                 case nameof(Right.PanelVisibility):
                     PanelVisibilityChanged?.Invoke(this, EventArgs.Empty);
                     break;
-                case nameof(Right.IsPanelActived):
-                    RaisePropertyChanged(nameof(IsRightPanelActived));
+                case nameof(Right.IsPanelActive):
+                    RaisePropertyChanged(nameof(IsRightPanelActive));
                     break;
             }
         }
@@ -210,8 +210,8 @@ namespace NeeView
                 case nameof(Left.PanelVisibility):
                     PanelVisibilityChanged?.Invoke(this, EventArgs.Empty);
                     break;
-                case nameof(Left.IsPanelActived):
-                    RaisePropertyChanged(nameof(IsLeftPanelActived));
+                case nameof(Left.IsPanelActive):
+                    RaisePropertyChanged(nameof(IsLeftPanelActive));
                     break;
             }
         }

@@ -33,25 +33,25 @@ namespace NeeView
             return viewWindow != null ? layoutPanelWindows.Prepend(viewWindow) : layoutPanelWindows;
         }
 
-        private static bool NextSubWindow(int direction, bool loopable)
+        private static bool NextSubWindow(int direction, bool allowLoop)
         {
             var windows = new List<Window>() { Application.Current.MainWindow };
             var subWindows = GetSubWindows();
             windows.AddRange(direction > 0 ? subWindows : subWindows.Reverse());
 
-            if (!loopable && windows.Last().IsActive) return false;
+            if (!allowLoop && windows.Last().IsActive) return false;
 
             var activeWindow = windows.FirstOrDefault(e => e.IsActive);
             if (activeWindow is null)
             {
-                var isActived = ActivateSubWindow(windows.First());
-                //Debug.WriteLine($"Activate: {isActived}: {windows.First().Title}");
+                var isActive = ActivateSubWindow(windows.First());
+                //Debug.WriteLine($"Activate: {isActive}: {windows.First().Title}");
             }
             else
             {
                 var index = (windows.IndexOf(activeWindow) + 1) % windows.Count;
-                var isActived = ActivateSubWindow(windows[index]);
-                //Debug.WriteLine($"Activate: {isActived}: {windows[index].Title}");
+                var isActive = ActivateSubWindow(windows[index]);
+                //Debug.WriteLine($"Activate: {isActive}: {windows[index].Title}");
             }
 
             return true;

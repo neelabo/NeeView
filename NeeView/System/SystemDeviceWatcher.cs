@@ -50,7 +50,7 @@ namespace NeeView
 
     public class DirectoryChangedEventArgs : EventArgs
     {
-        public DirectoryChangedEventArgs(DirectoryChangeType changeType, string fullPath, string? oldFullpath)
+        public DirectoryChangedEventArgs(DirectoryChangeType changeType, string fullPath, string? oldFullPath)
         {
             if (changeType == DirectoryChangeType.All) throw new ArgumentOutOfRangeException(nameof(changeType));
 
@@ -59,7 +59,7 @@ namespace NeeView
 
             if (changeType == DirectoryChangeType.Renamed)
             {
-                OldFullPath = oldFullpath ?? throw new ArgumentNullException(nameof(oldFullpath));
+                OldFullPath = oldFullPath ?? throw new ArgumentNullException(nameof(oldFullPath));
 
                 if (Path.GetDirectoryName(OldFullPath) != Path.GetDirectoryName(FullPath))
                 {
@@ -128,12 +128,12 @@ namespace NeeView
         {
             if (_window != null) throw new InvalidOperationException();
 
-            var hsrc = HwndSource.FromVisual(window) as HwndSource ?? throw new InvalidOperationException("Cannot get window handle");
+            var hWndSrc = HwndSource.FromVisual(window) as HwndSource ?? throw new InvalidOperationException("Cannot get window handle");
 
             _window = window;
 
             var notifyEntry = new SHChangeNotifyEntry() { pIdl = IntPtr.Zero, Recursively = true };
-            var notifyId = NativeMethods.SHChangeNotifyRegister(hsrc.Handle,
+            var notifyId = NativeMethods.SHChangeNotifyRegister(hWndSrc.Handle,
                                                   SHChangeNotifyRegisterFlags.SHCNRF_ShellLevel,
                                                   SHChangeNotifyEvents.SHCNE_MEDIAINSERTED | SHChangeNotifyEvents.SHCNE_MEDIAREMOVED
                                                   | SHChangeNotifyEvents.SHCNE_MKDIR | SHChangeNotifyEvents.SHCNE_RMDIR | SHChangeNotifyEvents.SHCNE_RENAMEFOLDER,
@@ -141,7 +141,7 @@ namespace NeeView
                                                   1,
                                                   ref notifyEntry);
 
-            hsrc.AddHook(WndProc);
+            hWndSrc.AddHook(WndProc);
         }
 
 
@@ -232,11 +232,11 @@ namespace NeeView
             }
         }
 
-        private static string? UnitMaskToDriveName(uint unitmask)
+        private static string? UnitMaskToDriveName(uint unitMask)
         {
             for (int i = 0; i < 32; ++i)
             {
-                if ((unitmask >> i & 1) == 1)
+                if ((unitMask >> i & 1) == 1)
                 {
                     return ((char)('A' + i)).ToString() + ":\\";
                 }
@@ -251,11 +251,11 @@ namespace NeeView
         {
             var shNotify = (SHNOTIFYSTRUCT)Marshal.PtrToStructure(wParam, typeof(SHNOTIFYSTRUCT))!;
 
-            var shcne = (SHChangeNotifyEvents)lParam;
+            var shChangeNotifyEvent = (SHChangeNotifyEvents)lParam;
 
-            ////Debug.WriteLine(shcne + ": " + shNotify);
+            ////Debug.WriteLine(shChangeNotifyEvent + ": " + shNotify);
 
-            switch (shcne)
+            switch (shChangeNotifyEvent)
             {
                 case SHChangeNotifyEvents.SHCNE_MEDIAINSERTED:
                     {

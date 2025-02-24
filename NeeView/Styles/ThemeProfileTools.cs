@@ -70,10 +70,10 @@ namespace NeeView
         {
             XNamespace ns = "http://schemas.microsoft.com/winfx/2006/xaml/presentation";
             XNamespace nsx = "http://schemas.microsoft.com/winfx/2006/xaml";
-            var xdoc = new XDocument();
+            var doc = new XDocument();
             var root = new XElement(ns + "ResourceDictionary", new XAttribute("xmlns", ns), new XAttribute(XNamespace.Xmlns + "x", nsx));
 
-            xdoc.Add(root);
+            doc.Add(root);
             foreach (var pair in themeProfile.Colors)
             {
                 var node = new XElement(ns + "SolidColorBrush",
@@ -82,11 +82,11 @@ namespace NeeView
                 root.Add(node);
             }
 
-            Debug.Write(xdoc);
+            Debug.Write(doc);
 
             using (var xw = XmlWriter.Create(path, new XmlWriterSettings { OmitXmlDeclaration = true, Indent = true, IndentChars = "    " }))
             {
-                xdoc.Save(xw);
+                doc.Save(xw);
             }
         }
     }
