@@ -1014,16 +1014,12 @@ namespace NeeView
             if (Config.Current.Panels.IsTextSearchEnabled)
             {
                 var item = this.TreeView.SelectedItem as FolderTreeNodeBase;
-                if (item is not null)
+                var roots = item?.Root?.Children;
+                if (roots is not null)
                 {
-                    // カテゴリ単位のツリー内でのテキスト検索
-                    var root = item.Hierarchy.Skip(1).FirstOrDefault();
-                    if (root != null)
-                    {
-                        var source = new TreeViewTextSearchCollection(this, [root]);
-                        _textSearch.DoSearch(source, e.Text);
-                        e.Handled = true;
-                    }
+                    var source = new TreeViewTextSearchCollection(this, roots);
+                    _textSearch.DoSearch(source, e.Text);
+                    e.Handled = true;
                 }
             }
         }

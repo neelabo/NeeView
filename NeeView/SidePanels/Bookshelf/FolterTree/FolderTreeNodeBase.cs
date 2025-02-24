@@ -82,6 +82,8 @@ namespace NeeView
 
         public object? Source { get; protected set; }
 
+        public FolderTreeNodeBase Root => Parent?.Root ?? this;
+
         public FolderTreeNodeBase? Parent
         {
             get { return _parent; }
