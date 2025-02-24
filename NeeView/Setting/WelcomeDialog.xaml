@@ -24,8 +24,6 @@
                 <ResourceDictionary Source="/NeeView/Windows/Property/PropertyValueTemplateDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <local:BooleanToSwitchStringConverter x:Key="BooleanToSwitchStringConverter" />
-
             <Style x:Key="DisableStyle" TargetType="FrameworkElement">
                 <Style.Triggers>
                     <Trigger Property="IsEnabled" Value="False">
@@ -36,8 +34,7 @@
 
             <DataTemplate DataType="{x:Type nvp:PropertyValue_Boolean}">
                 <StackPanel Orientation="Horizontal" Style="{StaticResource DisableStyle}">
-                    <nvc:ToggleSwitch IsChecked="{Binding Value}" Height="20" HorizontalAlignment="Left" />
-                    <TextBlock Margin="10,0" VerticalAlignment="Center" Text="{Binding Value, Converter={StaticResource BooleanToSwitchStringConverter}}" />
+                    <nvc:ToggleSwitch IsChecked="{Binding Value}" Height="20" HorizontalAlignment="Left" ShowState="True"/>
                 </StackPanel>
             </DataTemplate>
 

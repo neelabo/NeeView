@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -106,6 +107,16 @@ namespace NeeView.Windows.Controls
         {
             (d as ToggleSwitch)?.UpdateBrush();
         }
+
+
+        public bool ShowState
+        {
+            get { return (bool)GetValue(ShowStateProperty); }
+            set { SetValue(ShowStateProperty, value); }
+        }
+
+        public static readonly DependencyProperty ShowStateProperty =
+            DependencyProperty.Register("ShowState", typeof(bool), typeof(ToggleSwitch), new PropertyMetadata(false));
 
 
         public bool IsChecked
@@ -248,6 +259,20 @@ namespace NeeView.Windows.Controls
         private void BaseGrid_MouseLeave(object sender, MouseEventArgs e)
         {
             UpdateBrush();
+        }
+    }
+
+
+    public class BooleanToSwitchStringConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (bool)value ? Properties.TextResources.GetString("Word.On") : Properties.TextResources.GetString("Word.Off");
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

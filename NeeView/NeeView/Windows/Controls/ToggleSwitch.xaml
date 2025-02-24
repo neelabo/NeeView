@@ -19,6 +19,7 @@
               MouseLeftButtonUp="BaseGrid_MouseLeftButtonUp"
               MouseMove="BaseGrid_MouseMove">
             <Grid.Resources>
+                <local:BooleanToSwitchStringConverter x:Key="BooleanToSwitchStringConverter" />
                 <Storyboard x:Key="OnAnimation">
                     <DoubleAnimationUsingKeyFrames  Storyboard.TargetName="thumbTranslate" Storyboard.TargetProperty="X" FillBehavior="Stop" Completed="OnAnimation_Completed">
                         <SplineDoubleKeyFrame KeyTime="0:0:0.3" Value="20" KeySpline="0, 0.5, 0.5, 1"/>
@@ -30,12 +31,8 @@
                     </DoubleAnimationUsingKeyFrames>
                 </Storyboard>
                 <Storyboard x:Key="OnMouseOver">
-                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="thumbScale" Storyboard.TargetProperty="ScaleX" FillBehavior="HoldEnd" >
-                        <SplineDoubleKeyFrame KeyTime="0:0:0.3" Value="1.2" KeySpline="0, 0.5, 0.5, 1"/>
-                    </DoubleAnimationUsingKeyFrames>
-                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="thumbScale" Storyboard.TargetProperty="ScaleY" FillBehavior="HoldEnd" >
-                        <SplineDoubleKeyFrame KeyTime="0:0:0.3" Value="1.2" KeySpline="0, 0.5, 0.5, 1"/>
-                    </DoubleAnimationUsingKeyFrames>
+                    <DoubleAnimation Storyboard.TargetName="thumbScale" Storyboard.TargetProperty="ScaleX" To="1.2" Duration="0:0:0.1" />
+                    <DoubleAnimation Storyboard.TargetName="thumbScale" Storyboard.TargetProperty="ScaleY" To="1.2" Duration="0:0:0.1" />
                 </Storyboard>
                 <Storyboard x:Key="OffMouseOver">
                     <DoubleAnimationUsingKeyFrames Storyboard.TargetName="thumbScale" Storyboard.TargetProperty="ScaleX" FillBehavior="Stop" >
@@ -54,7 +51,11 @@
                     <BeginStoryboard Storyboard="{StaticResource OffMouseOver}" />
                 </EventTrigger>
             </Grid.Triggers>
-            <Canvas x:Name="canvas" Width="40" Height="20" Margin="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Canvas x:Name="canvas" Grid.Column="0" Width="40" Height="20" Margin="0">
                 <Rectangle x:Name="rectangle" Width="40" Height="20" RadiusX="9" RadiusY="9" Fill="White" Stroke="Black"  StrokeThickness="2" />
                 <Ellipse x:Name="ellipse" Canvas.Left="5" Canvas.Top="5" Width="10" Height="10" Fill="Black" RenderTransformOrigin="0.5,0.5" >
                     <Ellipse.RenderTransform>
@@ -65,6 +66,9 @@
                     </Ellipse.RenderTransform>
                 </Ellipse>
             </Canvas>
+            <TextBlock Grid.Column="1" Margin="10,0" VerticalAlignment="Center"
+                       Text="{Binding IsChecked, Converter={StaticResource BooleanToSwitchStringConverter}}"
+                       Visibility="{Binding ShowState, Converter={StaticResource BooleanToVisibilityConverter}}" />
         </Grid>
     </Viewbox>
 </UserControl>

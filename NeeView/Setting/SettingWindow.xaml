@@ -30,7 +30,6 @@
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <nvd:NotBoolToVisiblityConverter x:Key="NotBoolToVisiblityConverter" />
             <nv:BooleanToVisibilityConverter x:Key="NotBoolToHideVisiblityConverter" True="Hidden" False="Visible" />
-            <local:BooleanToSwitchStringConverter x:Key="BooleanToSwitchStringConverter" />
             <nv:DoubleToPercentStringConverter x:Key="DoubleToPercentStringConverter" />
             <nvd:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
 
@@ -48,8 +47,7 @@
 
             <DataTemplate DataType="{x:Type nvp:PropertyValue_Boolean}">
                 <StackPanel Orientation="Horizontal" Style="{StaticResource DisableStyle}">
-                    <nvc:ToggleSwitch IsChecked="{Binding Value}" Height="20" HorizontalAlignment="Left" />
-                    <TextBlock Margin="10,0" VerticalAlignment="Center" Text="{Binding Value, Converter={StaticResource BooleanToSwitchStringConverter}}" />
+                    <nvc:ToggleSwitch IsChecked="{Binding Value}" Height="20" HorizontalAlignment="Left" ShowState="True" />
                 </StackPanel>
             </DataTemplate>
 

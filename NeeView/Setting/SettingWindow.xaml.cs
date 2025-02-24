@@ -117,17 +117,4 @@ namespace NeeView.Setting
             }
         }
     }
-
-    public class BooleanToSwitchStringConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (bool)value ? Properties.TextResources.GetString("Word.On") : Properties.TextResources.GetString("Word.Off");
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
 }
