@@ -249,7 +249,7 @@ namespace NeeView
 
             if (string.IsNullOrWhiteSpace(themeProfile.BasedOn))
             {
-                return themeProfile;
+                return ThemeProfileTools.Merge(ThemeProfile.Default, themeProfile);
             }
 
             if (themeProfile.BasedOn.StartsWith(_themeProtocolHeader, StringComparison.Ordinal))

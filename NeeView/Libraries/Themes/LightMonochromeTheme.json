@@ -1,6 +1,6 @@
 {
   "Format": "NeeView.Theme/1.0.0",
-  "FormatManual": "https://neelabo.github.io/NeeView/en-us/theme.html",
+  "FormatManual": "https://neelabo.github.io/NeeView/theme.html",
   "Colors": {
     "Window.Background": "#FFFFFFFF",
     "Window.Foreground": "#FF404040",
@@ -17,6 +17,7 @@
     "Control.Accent": "Window.Foreground",
     "Control.AccentText": "#FFE0E0E0",
     "Control.Focus": "Control.Accent",
+    "Control.MouseOver.Background": "#FFE8E8E8",
 
     "Item.Separator": "#22888888",
     "Item.MouseOver.Background": "#11000000",
@@ -56,11 +57,13 @@
     "Slider.Foreground": "",
     "Slider.Border": "",
     "Slider.Thumb": "Control.Accent",
+    "Slider.Thumb.MouseOver": "Slider.Thumb/0.5",
     "Slider.Track": "",
 
     "TextBox.Background": "#FFF8F8F8",
     "TextBox.Foreground": "",
     "TextBox.Border": "Control.Border",
+    "TextBox.MouseOver.Background": "#FFF8F8F8",
 
     "Menu.Background": "",
     "Menu.Foreground": "",
@@ -93,6 +96,7 @@
     "BottomBar.Slider.Foreground": "Slider.Foreground",
     "BottomBar.Slider.Border": "Slider.Border",
     "BottomBar.Slider.Thumb": "Control.Accent",
+    "BottomBar.Slider.Thumb.MouseOver": "BottomBar.Slider.Thumb/0.5",
     "BottomBar.Slider.Track": "Control.Accent",
 
     "Toast.Background": "Menu.Background",

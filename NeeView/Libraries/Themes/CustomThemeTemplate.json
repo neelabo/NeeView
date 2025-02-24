@@ -1,6 +1,6 @@
 {
   "Format": "NeeView.Theme/1.0.0",
-  "FormatManual": "https://neelabo.github.io/NeeView/en-us/theme.html",
+  "FormatManual": "https://neelabo.github.io/NeeView/theme.html",
   "BasedOn": "themes://DarkTheme.json",
   "Colors": {
     "Control.Accent": "Orange"

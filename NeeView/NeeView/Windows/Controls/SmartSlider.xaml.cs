@@ -136,6 +136,16 @@ namespace NeeView.Windows.Controls
             DependencyProperty.Register("ThumbSize", typeof(double), typeof(SmartSlider), new PropertyMetadata(25.0));
 
 
+        public Thickness ThumbThickness
+        {
+            get { return (Thickness)GetValue(ThumbThicknessProperty); }
+            set { SetValue(ThumbThicknessProperty, value); }
+        }
+
+        public static readonly DependencyProperty ThumbThicknessProperty =
+            DependencyProperty.Register("ThumbThickness", typeof(Thickness), typeof(SmartSlider), new PropertyMetadata(new Thickness(3.0)));
+
+
         public Brush ThumbFill
         {
             get { return (Brush)GetValue(ThumbFillProperty); }
@@ -144,6 +154,16 @@ namespace NeeView.Windows.Controls
 
         public static readonly DependencyProperty ThumbFillProperty =
             DependencyProperty.Register("ThumbFill", typeof(Brush), typeof(SmartSlider), new PropertyMetadata(Brushes.Transparent));
+
+
+        public Brush ThumbFillMouseOver
+        {
+            get { return (Brush)GetValue(ThumbFillMouseOverProperty); }
+            set { SetValue(ThumbFillMouseOverProperty, value); }
+        }
+
+        public static readonly DependencyProperty ThumbFillMouseOverProperty =
+            DependencyProperty.Register("ThumbFillMouseOver", typeof(Brush), typeof(SmartSlider), new PropertyMetadata(Brushes.Transparent));
 
 
         public Brush ThumbBorderBrush
@@ -405,5 +425,17 @@ namespace NeeView.Windows.Controls
         }
     }
 
+    public class ThicknessToDoubleConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var thickness = (Thickness)value;
+            return thickness.Left;
+        }
 
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

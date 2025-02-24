@@ -181,8 +181,10 @@
 
                     <nwc:SmartSlider x:Name="VolumeSlider" Height="30" VerticalAlignment="Center" ThumbSize="12"
                                  Width="{Binding ElementName=Root, Path=ActualWidth, Converter={StaticResource RootWidthToVolumeSlierWidthConverter}, ConverterParameter=112}"
-                                 ThumbBorderBrush="{DynamicResource BottomBar.Foreground}"
+                                 ThumbBorderBrush="{DynamicResource BottomBar.Slider.Thumb}"
+                                 ThumbThickness="0"
                                  ThumbFill="{DynamicResource BottomBar.Foreground}"
+                                 ThumbFillMouseOver="{DynamicResource BottomBar.Slider.Thumb}"
                                  TrackDecreaseBrush="{DynamicResource BottomBar.Foreground}"
                                  TrackIncreaseBrush="{DynamicResource Slider.Background}"
                                  FocusVisualStyle="{StaticResource NVFocusVisual}" Focusable="True" IsTabStop="True"
@@ -250,10 +252,14 @@
                         </Style.Triggers>
                     </Style>
                 </StackPanel.Style>
-                <nwc:SmartSlider x:Name="Slider" ThumbSize="{Binding Slider.Thickness, Source={x:Static local:Config.Current}}" ThumbBorderBrush="{DynamicResource BottomBar.Slider.Thumb}"
-                        TrackDecreaseBrush="{DynamicResource BottomBar.Slider.Track}" TrackIncreaseBrush="{DynamicResource BottomBar.Slider.Background}"
+                <nwc:SmartSlider x:Name="Slider"
+                        ThumbSize="{Binding Slider.Thickness, Source={x:Static local:Config.Current}}"
+                        ThumbBorderBrush="{DynamicResource BottomBar.Slider.Thumb}"
+                        ThumbFillMouseOver="{DynamicResource BottomBar.Slider.Thumb.MouseOver}"
+                        TrackDecreaseBrush="{DynamicResource BottomBar.Slider.Track}"
+                        TrackIncreaseBrush="{DynamicResource BottomBar.Slider.Background}"
                         DragStarted="VideoSlider_DragStarted" DragCompleted="VideoSlider_DragCompleted"
-                                 Value="{Binding Operator.Position}"
+                        Value="{Binding Operator.Position}"
                         PreviewMouseLeftButtonDown="VideoSlider_PreviewMouseLeftButtonDown" >
 
                     <!--

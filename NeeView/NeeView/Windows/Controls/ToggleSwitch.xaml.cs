@@ -73,6 +73,16 @@ namespace NeeView.Windows.Controls
             DependencyProperty.Register("DisableBrush", typeof(Brush), typeof(ToggleSwitch), new PropertyMetadata(Brushes.Gray, BrushProperty_Changed));
 
 
+        public Brush SelectBrush
+        {
+            get { return (Brush)GetValue(SelectBrushProperty); }
+            set { SetValue(SelectBrushProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectBrushProperty =
+            DependencyProperty.Register("SelectBrush", typeof(Brush), typeof(ToggleSwitch), new PropertyMetadata(Brushes.White, BrushProperty_Changed));
+
+
         public Brush CheckedBrush
         {
             get { return (Brush)GetValue(CheckedBrushProperty); }
@@ -133,7 +143,7 @@ namespace NeeView.Windows.Controls
             }
             else
             {
-                this.rectangle.Fill = this.Fill;
+                this.rectangle.Fill = this.IsMouseOver ? this.SelectBrush : this.Fill;
                 this.rectangle.Stroke = IsEnabled ? this.Stroke : this.DisableBrush;
                 this.ellipse.Fill = IsEnabled ? this.Stroke : this.DisableBrush;
             }
@@ -230,5 +240,14 @@ namespace NeeView.Windows.Controls
             }
         }
 
+        private void BaseGrid_MouseEnter(object sender, MouseEventArgs e)
+        {
+            UpdateBrush();
+        }
+
+        private void BaseGrid_MouseLeave(object sender, MouseEventArgs e)
+        {
+            UpdateBrush();
+        }
     }
 }

@@ -26,6 +26,7 @@
     <SolidColorBrush x:Key="Control.Accent" Color="#FF1188DD" />
     <SolidColorBrush x:Key="Control.AccentText" Color="#FFFFFFFF" />
     <SolidColorBrush x:Key="Control.Focus" Color="#FF1188DD" />
+    <SolidColorBrush x:Key="Control.MouseOver.Background" Color="#FF404040" />
     <SolidColorBrush x:Key="Item.Separator" Color="#22888888" />
     <SolidColorBrush x:Key="Item.MouseOver.Background" Color="#261188DD" />
     <SolidColorBrush x:Key="Item.MouseOver.Border" Color="#A51188DD" />
@@ -55,6 +56,7 @@
     <SolidColorBrush x:Key="Slider.Foreground" Color="#FFF0F0F0" />
     <SolidColorBrush x:Key="Slider.Border" Color="#FF505050" />
     <SolidColorBrush x:Key="Slider.Thumb" Color="#FF1188DD" />
+    <SolidColorBrush x:Key="Slider.Thumb.MouseOver" Color="#881188DD" />
     <SolidColorBrush x:Key="Slider.Track" Color="#FF505050" />
     <SolidColorBrush x:Key="ScrollBar.Background" Color="#FF404040" />
     <SolidColorBrush x:Key="ScrollBar.Foreground" Color="#FF808080" />
@@ -64,6 +66,7 @@
     <SolidColorBrush x:Key="TextBox.Background" Color="#FF202020" />
     <SolidColorBrush x:Key="TextBox.Foreground" Color="#FFF0F0F0" />
     <SolidColorBrush x:Key="TextBox.Border" Color="#FFA0A0A0" />
+    <SolidColorBrush x:Key="TextBox.MouseOver.Background" Color="#FF404040" />
     <SolidColorBrush x:Key="Menu.Background" Color="#FF222222" />
     <SolidColorBrush x:Key="Menu.Foreground" Color="#FFF0F0F0" />
     <SolidColorBrush x:Key="Menu.Border" Color="#FF404040" />
@@ -90,6 +93,7 @@
     <SolidColorBrush x:Key="BottomBar.Slider.Foreground" Color="#FFF0F0F0" />
     <SolidColorBrush x:Key="BottomBar.Slider.Border" Color="#FF505050" />
     <SolidColorBrush x:Key="BottomBar.Slider.Thumb" Color="#FF1188DD" />
+    <SolidColorBrush x:Key="BottomBar.Slider.Thumb.MouseOver" Color="#881188DD" />
     <SolidColorBrush x:Key="BottomBar.Slider.Track" Color="#FF1188DD" />
     <SolidColorBrush x:Key="Toast.Background" Color="#FF222222" />
     <SolidColorBrush x:Key="Toast.Foreground" Color="#FFF0F0F0" />

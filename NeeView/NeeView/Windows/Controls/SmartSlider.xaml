@@ -9,6 +9,10 @@
              KeyboardNavigation.IsTabStop="True"
              FocusVisualStyle="{StaticResource NVFocusVisual}"
              d:DesignHeight="30" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <local:ThicknessToDoubleConverter x:Key="ThicknessToDoubleConverter" />
+    </UserControl.Resources>
     
     <Grid x:Name="Root">
         <Grid.Resources>
@@ -30,13 +34,18 @@
             <Style TargetType="{x:Type Thumb}">
                 <Setter Property="BorderBrush" Value="{Binding ThumbBorderBrush}" />
                 <Setter Property="Background" Value="{Binding ThumbFill}" />
+                <Setter Property="Foreground" Value="{Binding ThumbFillMouseOver}" />
+                <Setter Property="BorderThickness" Value="3"/>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type Thumb}">
                             <Grid Background="Transparent">
-                                <Ellipse x:Name="Ellipse" StrokeThickness="3" Stroke="{TemplateBinding BorderBrush}" Fill="{TemplateBinding Background}" />
+                                <Ellipse x:Name="Ellipse" StrokeThickness="{TemplateBinding BorderThickness, Converter={StaticResource ThicknessToDoubleConverter}}" Stroke="{TemplateBinding BorderBrush}" Fill="{TemplateBinding Background}" />
                             </Grid>
                             <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Ellipse" Property="Fill" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Foreground}" />
+                                </Trigger>
                                 <Trigger Property="IsMouseCaptured" Value="True">
                                     <Setter TargetName="Ellipse" Property="Fill" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=BorderBrush}" />
                                 </Trigger>
@@ -56,7 +65,8 @@
                 <RepeatButton Background="{Binding TrackDecreaseBrush}" />
             </Track.DecreaseRepeatButton>
             <Track.Thumb>
-                <Thumb Width="{Binding ThumbSize}" Height="{Binding ThumbSize}" PreviewMouseLeftButtonDown="Thumb_MouseLeftButtonDown" DragStarted="Thumb_DragStarted" DragCompleted="Thumb_DragCompleted" DragDelta="Thumb_DragDelta"
+                <Thumb Width="{Binding ThumbSize}" Height="{Binding ThumbSize}" BorderThickness="{Binding ThumbThickness}"
+                       PreviewMouseLeftButtonDown="Thumb_MouseLeftButtonDown" DragStarted="Thumb_DragStarted" DragCompleted="Thumb_DragCompleted" DragDelta="Thumb_DragDelta"
                        Visibility="{Binding RelativeSource={RelativeSource Self}, Path=IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
             </Track.Thumb>
             <Track.IncreaseRepeatButton>

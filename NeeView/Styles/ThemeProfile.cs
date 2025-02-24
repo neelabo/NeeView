@@ -28,6 +28,7 @@ namespace NeeView
             "Control.Accent",
             "Control.AccentText",
             "Control.Focus",
+            "Control.MouseOver.Background",
 
             "Item.Separator",
             "Item.MouseOver.Background",
@@ -61,6 +62,7 @@ namespace NeeView
             "Slider.Foreground",
             "Slider.Border",
             "Slider.Thumb",
+            "Slider.Thumb.MouseOver",
             "Slider.Track",
 
             "ScrollBar.Background",
@@ -72,6 +74,7 @@ namespace NeeView
             "TextBox.Background",
             "TextBox.Foreground",
             "TextBox.Border",
+            "TextBox.MouseOver.Background",
 
             "Menu.Background",
             "Menu.Foreground",
@@ -103,6 +106,7 @@ namespace NeeView
             "BottomBar.Slider.Foreground",
             "BottomBar.Slider.Border",
             "BottomBar.Slider.Thumb",
+            "BottomBar.Slider.Thumb.MouseOver",
             "BottomBar.Slider.Track",
 
             "Toast.Background",
@@ -140,7 +144,13 @@ namespace NeeView
             profile.Colors["Window.Background"] = new ThemeColor(System.Windows.Media.Colors.Black, 1.0);
             profile.Colors["Window.Foreground"] = new ThemeColor(System.Windows.Media.Colors.White, 1.0);
             profile.Colors["Control.Accent"] = new ThemeColor(System.Windows.Media.Colors.White, 1.0);
-            
+
+            // ver 43.0 で追加されたキーのデフォルト値
+            profile.Colors["Control.MouseOver.Background"] = new ThemeColor("Control.Background", 1.0);
+            profile.Colors["Slider.Thumb.MouseOver"] = new ThemeColor("Slider.Thumb", 0.5);
+            profile.Colors["TextBox.MouseOver.Background"] = new ThemeColor("TextBox.Background", 1.0);
+            profile.Colors["BottomBar.Slider.Thumb.MouseOver"] = new ThemeColor("BottomBar.Slider.Thumb", 0.5);
+
             return profile;
         }
 
@@ -157,7 +167,6 @@ namespace NeeView
         public Dictionary<string, ThemeColor> Colors { get; set; }
 
         public ThemeColor this[string key] { get => Colors[key]; set => Colors[key] = value; }
-
 
         [Conditional("DEBUG")]
         public void Verify()

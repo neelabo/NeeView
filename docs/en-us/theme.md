@@ -108,6 +108,7 @@ Control.GrayText | Generic: Gray text color of the control
 Control.Accent | Generic: Accent color for control
 Control.AccentText | Generic: Text color on control accent color
 Control.Focus | Generic: Focus color of control
+Control.MouseOver.Background | Generic: Background color when the mouse cursor is over the control (v43.0)
 Item.Separator | List item separator color
 Item.MouseOver.Background | Background color when the mouse cursor is over a list item
 Item.MouseOver.Border | Border color when the mouse cursor is over a list item
@@ -136,8 +137,9 @@ IconButton.Pressed.Border | Border color when icon button is pressed
 Slider.Background | Background color of slider control
 Slider.Foreground | Text color of slider control
 Slider.Border | Border color of slider control
-Slider.Thumb | Color of the thumb of the slider control
-Slider.Track | Color of the track of the slider control
+Slider.Thumb | Thumb color of slider control
+Slider.Thumb.MouseOver | Thumb color of slider control when the mouse cursor is over the thumb (v43.0)
+Slider.Track | Track color of slider control
 ScrollBar.Background | Background color of scrollbar
 ScrollBar.Foreground | Text color of scrollbar
 ScrollBar.Border | Border color of scrollbar
@@ -146,6 +148,7 @@ ScrollBar.Pressed | Color when scrollbar is pressed
 TextBox.Background | Background color of text box
 TextBox.Foreground | Text color of text box
 TextBox.Border | Border color of text box
+TextBox.MouseOver.Background | Background color when the mouse cursor is over the text box (v43.0)
 Menu.Background | Background color of menu
 Menu.Foreground | Text color of menu
 Menu.Border | Border color of menu
@@ -172,6 +175,7 @@ BottomBar.Slider.Background | Background color of page slider
 BottomBar.Slider.Foreground | Text color of page slider
 BottomBar.Slider.Border | Border color of page slider
 BottomBar.Slider.Thumb | Thumb color of page slider
+BottomBar.Slider.Thumb.MouseOver | Thumb color of page slider when the mouse cursor is over the thumb (v43.0)
 BottomBar.Slider.Track | Track color of page slider
 Toast.Background | Background color of toast notification
 Toast.Foreground | Text color of toast notification

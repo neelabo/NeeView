@@ -48,6 +48,7 @@
                                  Focusable="False"
                                  ThumbSize="{Binding Slider.Thickness, Source={x:Static local:Config.Current}}"
                                  ThumbBorderBrush="{DynamicResource BottomBar.Slider.Thumb}"
+                                 ThumbFillMouseOver="{DynamicResource BottomBar.Slider.Thumb.MouseOver}"
                                  TrackDecreaseBrush="{DynamicResource BottomBar.Slider.Track}"
                                  TrackIncreaseBrush="{DynamicResource BottomBar.Slider.Background}"
                                  Maximum="{Binding Model.PageSelector.MaxIndex}"

@@ -1159,6 +1159,20 @@
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="CheckRect" Property="Stroke" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=BorderBrush}" />
                         </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="IsChecked" Value="False"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="CheckRect" Property="Fill" Value="{DynamicResource Control.MouseOver.Background}" />
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                                <Condition Property="IsChecked" Value="{x:Null}"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="CheckRect" Property="Fill" Value="{DynamicResource Control.MouseOver.Background}" />
+                        </MultiTrigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="CheckRect" Property="Stroke" Value="{DynamicResource Control.GrayText}" />
                             <Setter TargetName="CheckRect" Property="Fill" Value="Transparent" />
@@ -1174,6 +1188,7 @@
     <Style x:Key="NVToggleSwitch" TargetType="{x:Type nvc:ToggleSwitch}">
         <Setter Property="FocusVisualStyle" Value="{StaticResource NVFocusVisual}" />
         <Setter Property="Fill" Value="Transparent" />
+        <Setter Property="SelectBrush" Value="{DynamicResource Control.MouseOver.Background}" />
         <Setter Property="Stroke" Value="{DynamicResource Window.Foreground}" />
         <Setter Property="CheckedBrush" Value="{DynamicResource Control.Accent}" />
         <Setter Property="CheckedThumbBrush" Value="{DynamicResource Control.AccentText}" />
@@ -1216,6 +1231,13 @@
                     <ControlTemplate.Triggers>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
+                                <Condition Property="IsEnabled" Value="True" />
+                                <Condition Property="IsMouseOver" Value="True" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource TextBox.MouseOver.Background}" />
+                        </MultiTrigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
                                 <Condition Property="IsKeyboardFocusWithin" Value="True" />
                                 <Condition Property="IsReadOnly" Value="False" />
                             </MultiTrigger.Conditions>
@@ -1239,6 +1261,41 @@
                 <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}" />
             </MultiTrigger>
         </Style.Triggers>
+    </Style>
+
+    <Style x:Key="NVTextBoxWithoutEffect" TargetType="{x:Type TextBox}" BasedOn="{StaticResource NVTextBox}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="True">
+                        <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Style="{StaticResource NVScrollViewer}">
+                            <ScrollViewer.ContentTemplate>
+                                <DataTemplate>
+                                    <Grid Background="{Binding Background, ElementName=PART_ContentHost}" RenderOptions.ClearTypeHint="{DynamicResource Window.ClearTypeHint}">
+                                        <ContentPresenter Content="{Binding Path=Content, ElementName=PART_ContentHost}"></ContentPresenter>
+                                    </Grid>
+                                </DataTemplate>
+                            </ScrollViewer.ContentTemplate>
+                        </ScrollViewer>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsKeyboardFocusWithin" Value="True" />
+                                <Condition Property="IsReadOnly" Value="False" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource Control.Accent}" />
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource TextBox.Background}" />
+                            <Setter TargetName="border" Property="TextElement.Foreground" Value="{DynamicResource TextBox.Foreground}" />
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" TargetName="border" Value="0.56" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="NVEnterTriggerTextBox" TargetType="{x:Type nvc:EnterTriggerTextBox}" BasedOn="{StaticResource NVTextBox}">
@@ -1292,9 +1349,12 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
                     <Grid Background="Transparent">
-                        <Ellipse x:Name="Ellipse" StrokeThickness="3" Stroke="{TemplateBinding BorderBrush}" Fill="{TemplateBinding Background}" />
+                        <Ellipse x:Name="Ellipse" StrokeThickness="3" Stroke="{TemplateBinding BorderBrush}" Fill="{TemplateBinding Background}" Margin="1" />
                     </Grid>
                     <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Ellipse" Property="Fill" Value="{DynamicResource Slider.Thumb.MouseOver}" />
+                        </Trigger>
                         <Trigger Property="IsMouseCaptured" Value="True">
                             <Setter TargetName="Ellipse" Property="Fill" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=BorderBrush}" />
                         </Trigger>

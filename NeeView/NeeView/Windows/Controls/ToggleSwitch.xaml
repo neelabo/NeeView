@@ -13,10 +13,12 @@
         Width="50" Height="30"
         -->
         <Grid x:Name="Root" Background="Transparent"
+              MouseEnter="BaseGrid_MouseEnter"
+              MouseLeave="BaseGrid_MouseLeave"
               MouseLeftButtonDown="BaseGrid_MouseLeftButtonDown"
               MouseLeftButtonUp="BaseGrid_MouseLeftButtonUp"
               MouseMove="BaseGrid_MouseMove">
-            <Grid.Resources>            
+            <Grid.Resources>
                 <Storyboard x:Key="OnAnimation">
                     <DoubleAnimationUsingKeyFrames  Storyboard.TargetName="thumbTranslate" Storyboard.TargetProperty="X" FillBehavior="Stop" Completed="OnAnimation_Completed">
                         <SplineDoubleKeyFrame KeyTime="0:0:0.3" Value="20" KeySpline="0, 0.5, 0.5, 1"/>
@@ -27,15 +29,42 @@
                         <SplineDoubleKeyFrame KeyTime="0:0:0.3" Value="0" KeySpline="0, 0.5, 0.5, 1"/>
                     </DoubleAnimationUsingKeyFrames>
                 </Storyboard>
+                <Storyboard x:Key="OnMouseOver">
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="thumbScale" Storyboard.TargetProperty="ScaleX" FillBehavior="HoldEnd" >
+                        <SplineDoubleKeyFrame KeyTime="0:0:0.3" Value="1.2" KeySpline="0, 0.5, 0.5, 1"/>
+                    </DoubleAnimationUsingKeyFrames>
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="thumbScale" Storyboard.TargetProperty="ScaleY" FillBehavior="HoldEnd" >
+                        <SplineDoubleKeyFrame KeyTime="0:0:0.3" Value="1.2" KeySpline="0, 0.5, 0.5, 1"/>
+                    </DoubleAnimationUsingKeyFrames>
+                </Storyboard>
+                <Storyboard x:Key="OffMouseOver">
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="thumbScale" Storyboard.TargetProperty="ScaleX" FillBehavior="Stop" >
+                        <SplineDoubleKeyFrame KeyTime="0:0:0.3" Value="1.0" KeySpline="0, 0.5, 0.5, 1"/>
+                    </DoubleAnimationUsingKeyFrames>
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="thumbScale" Storyboard.TargetProperty="ScaleY" FillBehavior="Stop" >
+                        <SplineDoubleKeyFrame KeyTime="0:0:0.3" Value="1.0" KeySpline="0, 0.5, 0.5, 1"/>
+                    </DoubleAnimationUsingKeyFrames>
+                </Storyboard>
             </Grid.Resources>
+            <Grid.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard Storyboard="{StaticResource OnMouseOver}" />
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <BeginStoryboard Storyboard="{StaticResource OffMouseOver}" />
+                </EventTrigger>
+            </Grid.Triggers>
             <Canvas x:Name="canvas" Width="40" Height="20" Margin="0">
                 <Rectangle x:Name="rectangle" Width="40" Height="20" RadiusX="9" RadiusY="9" Fill="White" Stroke="Black"  StrokeThickness="2" />
-                <Ellipse x:Name="ellipse" Canvas.Left="5" Canvas.Top="5" Width="10" Height="10" Fill="Black" >
+                <Ellipse x:Name="ellipse" Canvas.Left="5" Canvas.Top="5" Width="10" Height="10" Fill="Black" RenderTransformOrigin="0.5,0.5" >
                     <Ellipse.RenderTransform>
-                        <TranslateTransform x:Name="thumbTranslate" X="0" Y="0" />
+                        <TransformGroup>
+                            <ScaleTransform x:Name="thumbScale" ScaleX="1" ScaleY="1" />
+                            <TranslateTransform x:Name="thumbTranslate" X="0" Y="0" />
+                        </TransformGroup>
                     </Ellipse.RenderTransform>
                 </Ellipse>
             </Canvas>
         </Grid>
-    </Viewbox>  
+    </Viewbox>
 </UserControl>

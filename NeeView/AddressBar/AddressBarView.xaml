@@ -13,7 +13,7 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
-            
+
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/ArrowIcons.xaml" />
                 <ResourceDictionary Source="/Styles/MenuIcons.xaml" />
@@ -238,7 +238,8 @@
                                 QueryContinueDrag="BookButton_QueryContinueDrag">
                             <Image Source="{StaticResource ic_info_outline_24px}" />
                         </Button>
-                        <TextBox x:Name="AddressTextBox" Text="{Binding Model.Address}" BorderThickness="0" VerticalAlignment="Center" TabIndex="12" KeyDown="AddressTextBox_KeyDown"
+                        <TextBox x:Name="AddressTextBox" Style="{StaticResource NVTextBoxWithoutEffect}"
+                                 Text="{Binding Model.Address}" BorderThickness="0" VerticalAlignment="Center" TabIndex="12" KeyDown="AddressTextBox_KeyDown"
                                  Background="Transparent" IsReadOnly="{Binding Model.IsBookLocked}"/>
                     </DockPanel>
 
