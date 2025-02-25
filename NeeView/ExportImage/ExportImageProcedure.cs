@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.IO;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -38,8 +39,51 @@ namespace NeeView
             else
             {
                 filename = LoosePath.Combine(exporter.ExportFolder, filename);
-                filename = FileIO.CreateUniquePath(filename);
-                isOverwrite = false;
+                if (System.IO.Directory.Exists(filename))
+                {
+                    new MessageDialog($"Directory '{LoosePath.GetFileName(filename)}' already exists.", TextResources.GetString("ImageExportErrorDialog.Title")).ShowDialog();
+                    return;
+                }
+                else if (System.IO.File.Exists(filename))
+                {
+                    switch (parameter.OverwriteMode)
+                    {
+                        case ExportImageOverwriteMode.Confirm:
+                            var dialog = new MessageDialog(TextResources.GetFormatString("ConfirmFileReplaceDialog.Message", LoosePath.GetFileName(filename)), TextResources.GetString("ConfirmFileReplaceDialog.Title"));
+                            var commandReplace = new UICommand("@ConfirmFileReplaceDialog.Replace") { IsPossible = true };
+                            var commandAddNumber = new UICommand("@ConfirmFileReplaceDialog.AddNumber") { IsPossible = true };
+                            dialog.Commands.Add(commandReplace);
+                            dialog.Commands.Add(commandAddNumber);
+                            dialog.Commands.Add(UICommands.Cancel);
+                            var answer = dialog.ShowDialog();
+                            if (answer.Command == commandReplace)
+                            {
+                                isOverwrite = true;
+                            }
+                            else if (answer.Command == commandAddNumber)
+                            {
+                                filename = FileIO.CreateUniquePath(filename);
+                                isOverwrite = false;
+                            }
+                            else
+                            {
+                                return;
+                            }
+                            break;
+
+                        case ExportImageOverwriteMode.AddNumber:
+                            filename = FileIO.CreateUniquePath(filename);
+                            isOverwrite = false;
+                            break;
+
+                        default:
+                            throw new NotSupportedException($"Unsupported overwrite mode: {parameter.OverwriteMode}");
+                    }
+                }
+                else
+                {
+                    isOverwrite = false;
+                }
             }
 
             exporter.Export(filename, isOverwrite);

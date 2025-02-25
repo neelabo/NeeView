@@ -14,6 +14,7 @@ namespace NeeView
         private ExportImageFormat _fileFormat;
         private int _qualityLevel = 80;
         private bool _isShowToast = true;
+        private ExportImageOverwriteMode _overwriteMode;
 
 
         [PropertyMember]
@@ -78,5 +79,19 @@ namespace NeeView
             get { return _isShowToast; }
             set { SetProperty(ref _isShowToast, value); }
         }
+
+        [PropertyMember]
+        public ExportImageOverwriteMode OverwriteMode
+        {
+            get { return _overwriteMode; }
+            set { SetProperty(ref _overwriteMode, value); }
+        }
+    }
+
+
+    public enum ExportImageOverwriteMode
+    {
+        Confirm,
+        AddNumber,
     }
 }

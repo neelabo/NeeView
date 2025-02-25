@@ -351,6 +351,11 @@ namespace NeeView
             await Task.Run(() => ShellFileOperation.Copy(hwnd, paths, directoryPath), token);
         }
 
+        public static async Task CopyToAsync(string source, string destination, CancellationToken token)
+        {
+            await Task.Run(() => ShellFileOperation.Copy(WindowTools.GetWindowHandle(), [source], destination), token);
+        }
+
         public static async Task CopyAsync(string source, string destination, CancellationToken token)
         {
             await CopyAsync(WindowTools.GetWindowHandle(), source, destination, token);
@@ -387,6 +392,11 @@ namespace NeeView
             var directoryPath = EnsureDirectory(toDirectory);
             await Task.Run(() => ShellFileOperation.Move(hwnd, paths, directoryPath), token);
             ValidateBookPages(paths);
+        }
+
+        public static async Task MoveToAsync(string source, string destination, CancellationToken token)
+        {
+            await Task.Run(() => ShellFileOperation.Move(WindowTools.GetWindowHandle(), [source], destination), token);
         }
 
         public static async Task MoveAsync(string source, string destination, CancellationToken token)
