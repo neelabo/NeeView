@@ -1,4 +1,5 @@
-﻿using NeeLaboratory.Generators;
+﻿using Microsoft.Win32;
+using NeeLaboratory.Generators;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -186,7 +187,7 @@ namespace NeeView.Windows.Controls
 
             if (FileDialogType == FileDialogType.Directory)
             {
-                var dialog = new Microsoft.Win32.OpenFolderDialog();
+                var dialog = new OpenFolderDialog();
                 dialog.Title = Title ?? Properties.TextResources.GetString("FileNameBox.SelectDirectory");
                 if (!string.IsNullOrWhiteSpace(path))
                 {
@@ -202,7 +203,7 @@ namespace NeeView.Windows.Controls
             }
             else if (FileDialogType == FileDialogType.SaveFile)
             {
-                var dialog = new Microsoft.Win32.SaveFileDialog();
+                var dialog = new SaveFileDialog();
                 dialog.Title = Title ?? Properties.TextResources.GetString("FileNameBox.SelectFile");
                 dialog.InitialDirectory = string.IsNullOrWhiteSpace(path) ? null : Path.GetDirectoryName(path);
                 dialog.FileName = string.IsNullOrWhiteSpace(path) ? DefaultText : Path.GetFileName(path);
@@ -218,7 +219,7 @@ namespace NeeView.Windows.Controls
             }
             else
             {
-                var dialog = new Microsoft.Win32.OpenFileDialog();
+                var dialog = new OpenFileDialog();
                 dialog.Title = Title ?? Properties.TextResources.GetString("FileNameBox.SelectFile");
                 dialog.InitialDirectory = string.IsNullOrWhiteSpace(path) ? null : Path.GetDirectoryName(path);
                 dialog.FileName = string.IsNullOrWhiteSpace(path) ? DefaultText : Path.GetFileName(path);

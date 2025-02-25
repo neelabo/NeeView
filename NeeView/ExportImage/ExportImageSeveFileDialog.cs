@@ -54,7 +54,7 @@ namespace NeeView
         {
             var dialog = new SaveFileDialog();
 
-            dialog.InitialDirectory = directory;
+            dialog.DefaultDirectory = directory;
             dialog.OverwritePrompt = true;
 
             dialog.AddExtension = true;

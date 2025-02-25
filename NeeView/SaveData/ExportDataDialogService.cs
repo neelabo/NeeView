@@ -7,6 +7,8 @@ namespace NeeView
 {
     public class ExportDataDialogService : DialogService
     {
+        public static Guid DialogGuid { get; } = Guid.Parse("F4CAB185-940D-46EC-87F6-DCC11D4E25AA");
+
         public ExportDataDialogService()
         {
             this.Register(nameof(SaveExportDataDialog), new SaveExportDataDialog());
@@ -31,7 +33,8 @@ namespace NeeView
             var param = (SaveExportDataDialogParameter)parameter;
 
             var dialog = new SaveFileDialog();
-            dialog.InitialDirectory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
+            dialog.ClientGuid = ExportDataDialogService.DialogGuid;
+            dialog.DefaultDirectory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
             dialog.OverwritePrompt = true;
             dialog.AddExtension = true;
             dialog.FileName = $"NeeView{Environment.DisplayVersionShort}-{DateTime.Now:yyyyMMdd}";
@@ -60,7 +63,8 @@ namespace NeeView
             var param = (OpenExportDataDialogParameter)parameter;
 
             var dialog = new OpenFileDialog();
-            dialog.InitialDirectory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
+            dialog.ClientGuid = ExportDataDialogService.DialogGuid;
+            dialog.DefaultDirectory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
             dialog.AddExtension = true;
             dialog.DefaultExt = SaveExportDataDialog.ExportDataFileExtension;
             dialog.Filter = SaveExportDataDialog.ExportDataFileDialogFilter;

@@ -313,7 +313,7 @@ namespace NeeView
         public void LoadAs()
         {
             var dialog = new OpenFileDialog();
-            dialog.InitialDirectory = GetDefaultFolder();
+            dialog.DefaultDirectory = GetDefaultFolder();
 
             if (dialog.ShowDialog(App.Current.MainWindow) == true)
             {
