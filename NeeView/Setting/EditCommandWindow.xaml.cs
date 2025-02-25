@@ -36,6 +36,8 @@ namespace NeeView.Setting
     {
         private CommandCollection _memento;
         private string _key;
+        private bool _isShowMessage;
+
 
         public EditCommandWindow(string key, EditCommandWindowTab start)
         {
@@ -56,12 +58,13 @@ namespace NeeView.Setting
         public event MouseWheelEventHandler? MouseHorizontalWheelChanged;
 
 
-        private bool _isShowMessage;
         public bool IsShowMessage
         {
-            get { return _isShowMessage; }
-            set { if (_isShowMessage != value) { _isShowMessage = value; RaisePropertyChanged(); } }
+            get => _isShowMessage;
+            set => SetProperty(ref _isShowMessage, value);
         }
+
+        public string CommandName => _key;
 
         public string Note { get; private set; }
 

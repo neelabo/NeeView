@@ -507,6 +507,7 @@ DragActionType.WindowMove=창 이동
 DragControlCenter.Cursor=마우스 포인터 위치
 DragControlCenter.Target=사진 중심
 DragControlCenter.View=화면 중심
+EditCommandWindow.CommandName=
 EditCommandWindow.Remarks=명령 설명
 EditCommandWindow.Title=명령 설정
 EditCommandWindow.Visible=명령 실행 시 메시지 표시

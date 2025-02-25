@@ -44,7 +44,9 @@
                             FocusVisualStyle="{StaticResource NVBorderFocusVisual}" />
                     <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
                         <TextBlock Text="{properties:TextBinding EditCommandWindow.Remarks}" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding Note}" Padding="10" TextWrapping="Wrap"/>
+                        <TextBlock Text="{Binding Note}" Margin="0,5,0,20" TextWrapping="Wrap"/>
+                        <TextBlock Text="{properties:TextBinding EditCommandWindow.CommandName}" FontWeight="Bold" />
+                        <TextBox Text="{Binding CommandName, Mode=OneWay}" Margin="0,5,0,0" IsReadOnly="True" BorderThickness="0" />
                     </StackPanel>
                 </DockPanel>
             </TabItem>

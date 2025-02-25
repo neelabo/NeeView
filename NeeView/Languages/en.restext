@@ -509,6 +509,7 @@ DragActionType.WindowMove=Move window
 DragControlCenter.Cursor=Cursor position
 DragControlCenter.Target=Image center
 DragControlCenter.View=View center
+EditCommandWindow.CommandName=Command name (for script)
 EditCommandWindow.Remarks=Command description
 EditCommandWindow.Title=Command settings
 EditCommandWindow.Visible=Display a message when executing a command

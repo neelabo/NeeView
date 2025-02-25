@@ -507,6 +507,7 @@ DragActionType.WindowMove=ウィンドウ移動
 DragControlCenter.Cursor=マウス ポインター位置
 DragControlCenter.Target=画像の中心
 DragControlCenter.View=表示の中心
+EditCommandWindow.CommandName=コマンド名 (スクリプト用)
 EditCommandWindow.Remarks=コマンドの説明
 EditCommandWindow.Title=コマンド設定
 EditCommandWindow.Visible=コマンド実行時にメッセージを表示する

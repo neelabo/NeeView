@@ -1232,6 +1232,7 @@
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsEnabled" Value="True" />
+                                <Condition Property="IsReadOnly" Value="False" />
                                 <Condition Property="IsMouseOver" Value="True" />
                             </MultiTrigger.Conditions>
                             <Setter TargetName="border" Property="Background" Value="{DynamicResource TextBox.MouseOver.Background}" />

@@ -509,6 +509,7 @@ DragActionType.WindowMove=Mover janela
 DragControlCenter.Cursor=Posição do cursor
 DragControlCenter.Target=Centro da imagem
 DragControlCenter.View=Exibir centro
+EditCommandWindow.CommandName=
 EditCommandWindow.Remarks=Descrição do comando
 EditCommandWindow.Title=Configuração de comando
 EditCommandWindow.Visible=Exibir uma mensagem ao executar um comando

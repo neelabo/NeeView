@@ -507,6 +507,7 @@ DragActionType.WindowMove=移动窗口
 DragControlCenter.Cursor=光标位置
 DragControlCenter.Target=图像中心
 DragControlCenter.View=视图中心
+EditCommandWindow.CommandName=
 EditCommandWindow.Remarks=命令说明
 EditCommandWindow.Title=命令设置
 EditCommandWindow.Visible=执行命令时显示消息
