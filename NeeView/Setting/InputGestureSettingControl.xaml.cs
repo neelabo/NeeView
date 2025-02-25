@@ -39,6 +39,8 @@ namespace NeeView.Setting
 
         private void InputGestureSettingControl_Loaded(object sender, RoutedEventArgs e)
         {
+            if (DesignTimeHelper.IsInDesignMode()) return;
+
             var window = Window.GetWindow(this) as INotifyMouseHorizontalWheelChanged ?? throw new InvalidOperationException();
 
             var source = new MouseHorizontalWheelSource(this.MouseGestureBox, window);
