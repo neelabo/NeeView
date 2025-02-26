@@ -366,7 +366,7 @@ namespace NeeView
                 if (items != null && items.Any())
                 {
                     ////Debug.WriteLine($"CopyToFolder: to {folder.Path}");
-                    await FileIO.CopyToFolderAsync(items.Select(x => x.TargetPath.SimplePath), folder.Path, CancellationToken.None);
+                    await FileIO.SHCopyToFolderAsync(items.Select(x => x.TargetPath.SimplePath), folder.Path, CancellationToken.None);
                 }
             }
             catch (OperationCanceledException)
@@ -407,7 +407,7 @@ namespace NeeView
                 if (items != null && items.Any())
                 {
                     ////Debug.WriteLine($"MoveToFolder: to {folder.Path}");
-                    await FileIO.MoveToFolderAsync(items.Select(x => x.TargetPath.SimplePath), folder.Path, CancellationToken.None);
+                    await FileIO.SHMoveToFolderAsync(items.Select(x => x.TargetPath.SimplePath), folder.Path, CancellationToken.None);
                 }
             }
             catch (OperationCanceledException)

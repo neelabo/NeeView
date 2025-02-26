@@ -96,7 +96,7 @@ namespace NeeView
                 throw new DirectoryNotFoundException();
             }
 
-            await FileIO.CopyToFolderAsync(paths, this.Path, token);
+            await FileIO.SHCopyToFolderAsync(paths, this.Path, token);
         }
 
         public async Task MoveAsyncNoExceptions(IEnumerable<string> paths, CancellationToken token)
@@ -124,7 +124,7 @@ namespace NeeView
                 throw new DirectoryNotFoundException();
             }
 
-            await FileIO.MoveToFolderAsync(paths, this.Path, token);
+            await FileIO.SHMoveToFolderAsync(paths, this.Path, token);
         }
     }
 

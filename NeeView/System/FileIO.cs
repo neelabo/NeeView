@@ -13,7 +13,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 
 // TODO: UI要素の除外
 
@@ -331,37 +330,29 @@ namespace NeeView
         /// <returns></returns>
         public static async Task CopyFileAsync(string sourceFileName, string destFileName, bool isOverwrite, CancellationToken token)
         {
-            var mode = isOverwrite ? FileMode.Create : FileMode.CreateNew;
-            using var source = new FileStream(sourceFileName, FileMode.Open, FileAccess.Read);
-            using var destination = new FileStream(destFileName, mode, FileAccess.Write);
-            await source.CopyToAsync(destination, token);
+            await Task.Run(() => File.Copy(sourceFileName, destFileName, isOverwrite), token);
         }
 
         /// <summary>
         /// ファイル、ディレクトリーを指定のフォルダーにコピーする
         /// </summary>
-        public static async Task CopyToFolderAsync(IEnumerable<string> paths, string toDirectory, CancellationToken token)
+        public static async Task SHCopyToFolderAsync(IEnumerable<string> paths, string toDirectory, CancellationToken token)
         {
-            await CopyToFolderAsync(WindowTools.GetWindowHandle(), paths, toDirectory, token);
+            await SHCopyToFolderAsync(WindowTools.GetWindowHandle(), paths, toDirectory, token);
         }
 
-        public static async Task CopyToFolderAsync(IntPtr hwnd, IEnumerable<string> paths, string toDirectory, CancellationToken token)
+        public static async Task SHCopyToFolderAsync(IntPtr hwnd, IEnumerable<string> paths, string toDirectory, CancellationToken token)
         {
             var directoryPath = EnsureDirectory(toDirectory);
             await Task.Run(() => ShellFileOperation.Copy(hwnd, paths, directoryPath), token);
         }
 
-        public static async Task CopyToAsync(string source, string destination, CancellationToken token)
+        public static async Task SHCopyAsync(string source, string destination, CancellationToken token)
         {
-            await Task.Run(() => ShellFileOperation.Copy(WindowTools.GetWindowHandle(), [source], destination), token);
+            await SHCopyAsync(WindowTools.GetWindowHandle(), source, destination, token);
         }
 
-        public static async Task CopyAsync(string source, string destination, CancellationToken token)
-        {
-            await CopyAsync(WindowTools.GetWindowHandle(), source, destination, token);
-        }
-
-        public static async Task CopyAsync(IntPtr hwnd, string source, string destination, CancellationToken token)
+        public static async Task SHCopyAsync(IntPtr hwnd, string source, string destination, CancellationToken token)
         {
             var dest = LoosePath.TrimEnd(destination);
 
@@ -381,12 +372,12 @@ namespace NeeView
         /// <summary>
         /// ファイル、ディレクトリーを指定のフォルダーに移動する
         /// </summary>
-        public static async Task MoveToFolderAsync(IEnumerable<string> paths, string toDirectory, CancellationToken token)
+        public static async Task SHMoveToFolderAsync(IEnumerable<string> paths, string toDirectory, CancellationToken token)
         {
-            await MoveToFolderAsync(WindowTools.GetWindowHandle(), paths, toDirectory, token);
+            await SHMoveToFolderAsync(WindowTools.GetWindowHandle(), paths, toDirectory, token);
         }
 
-        public static async Task MoveToFolderAsync(IntPtr hwnd, IEnumerable<string> paths, string toDirectory, CancellationToken token)
+        public static async Task SHMoveToFolderAsync(IntPtr hwnd, IEnumerable<string> paths, string toDirectory, CancellationToken token)
         {
             await CloseBookAsync(paths);
             var directoryPath = EnsureDirectory(toDirectory);
@@ -394,19 +385,17 @@ namespace NeeView
             ValidateBookPages(paths);
         }
 
-        public static async Task MoveToAsync(string source, string destination, CancellationToken token)
+        public static async Task SHMoveAsync(string source, string destination, CancellationToken token)
         {
-            await Task.Run(() => ShellFileOperation.Move(WindowTools.GetWindowHandle(), [source], destination), token);
+            await SHMoveAsync(WindowTools.GetWindowHandle(), source, destination, token);
         }
 
-        public static async Task MoveAsync(string source, string destination, CancellationToken token)
+        public static async Task SHMoveAsync(IntPtr hwnd, string source, string destination, CancellationToken token)
         {
-            await MoveAsync(WindowTools.GetWindowHandle(), source, destination, token);
-        }
-
-        public static async Task MoveAsync(IntPtr hwnd, string source, string destination, CancellationToken token)
-        {
-            await Task.Run(() => ShellFileOperation.Move(hwnd, [source], destination), token);
+            var paths = new string[] { source };
+            await CloseBookAsync(paths);
+            await Task.Run(() => ShellFileOperation.Move(hwnd, paths, destination), token);
+            ValidateBookPages(paths);
         }
 
         #endregion Move

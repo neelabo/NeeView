@@ -218,7 +218,7 @@ namespace NeeView
                     var path = await entry.RealizeAsync(_cancellationToken);
                     if (path is not null)
                     {
-                        await FileIO.CopyAsync(path, destination, _cancellationToken);
+                        await FileIO.SHCopyAsync(path, destination, _cancellationToken);
                     }
                 }
                 catch (OperationCanceledException)
@@ -238,7 +238,7 @@ namespace NeeView
             {
                 try
                 {
-                    await FileIO.MoveAsync(source, destination, _cancellationToken);
+                    await FileIO.SHMoveAsync(source, destination, _cancellationToken);
                 }
                 catch (OperationCanceledException)
                 {
