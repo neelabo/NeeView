@@ -32,6 +32,8 @@ namespace NeeView
             exporter.IsDotKeep = parameter.IsDotKeep;
             exporter.QualityLevel = parameter.QualityLevel;
 
+            exporter.ThrowIfCannotExport();
+
             string filename = exporter.CreateFileName(parameter.FileNameMode, parameter.FileFormat);
             bool isOverwrite;
 
@@ -48,8 +50,7 @@ namespace NeeView
                 filename = LoosePath.Combine(exporter.ExportFolder, filename);
                 if (System.IO.Directory.Exists(filename))
                 {
-                    new MessageDialog($"Directory '{LoosePath.GetFileName(filename)}' already exists.", TextResources.GetString("ImageExportErrorDialog.Title")).ShowDialog();
-                    return;
+                    throw new IOException($"Directory '{LoosePath.GetFileName(filename)}' already exists");
                 }
                 else if (System.IO.File.Exists(filename))
                 {

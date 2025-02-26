@@ -54,6 +54,18 @@ namespace NeeView
             return (_source.PageFrameContent.ViewContents.FirstOrDefault() as IHasImageSource)?.ImageSource;
         }
 
+        public bool CanExport()
+        {
+            return !_source.Pages[0].ArchiveEntry.IsDirectory;
+        }
+
+        public void ThrowIfCannotExport()
+        {
+            if (!CanExport())
+            {
+                throw new NotSupportedException("Cannot export directory.");
+            }
+        }
 
         public string CreateFileName()
         {

@@ -10,6 +10,8 @@ namespace NeeView
         void Export(string path, bool isOverwrite, int qualityLevel, ImageExporterCreateOptions options);
         ImageSource? CreateImageSource(ImageExporterCreateOptions options);
         string CreateFileName();
+        bool CanExport();
+        public void ThrowIfCannotExport();
         DateTime GetLastWriteTime();
         long GetLength(string path, int qualityLevel, ImageExporterCreateOptions options);
     }

@@ -234,6 +234,16 @@ namespace NeeView
             }
         }
 
+        public bool CanExport()
+        {
+            return _exporter.CanExport();
+        }
+
+        public void ThrowIfCannotExport()
+        {
+            _exporter.ThrowIfCannotExport();
+        }
+
         public DateTime GetLastWriteTime()
         {
             return _exporter.GetLastWriteTime();
