@@ -394,7 +394,7 @@ namespace NeeView
         {
         }
 
-        public virtual MenuItem? CreateMenuItem()
+        public virtual MenuItem? CreateMenuItem(bool isDefault)
         {
             return null;
         }

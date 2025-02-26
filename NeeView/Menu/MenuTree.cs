@@ -384,9 +384,8 @@ namespace NeeView
         }
 
 
-
         //
-        public object? CreateMenuControl()
+        public object? CreateMenuControl(bool isDefault)
         {
             switch (this.MenuElementType)
             {
@@ -396,7 +395,7 @@ namespace NeeView
 
                         if (this.CommandName is not null && CommandTable.Current.TryGetValue(this.CommandName, out var command))
                         {
-                            var menuItem = command.CreateMenuItem();
+                            var menuItem = command.CreateMenuItem(isDefault);
                             if (menuItem is not null)
                             {
                                 item = menuItem;
@@ -445,7 +444,7 @@ namespace NeeView
                         item.Header = this.Label;
                         foreach (var child in this.Children)
                         {
-                            var control = child.CreateMenuControl();
+                            var control = child.CreateMenuControl(isDefault);
                             if (control != null) item.Items.Add(control);
                         }
                         item.IsEnabled = item.Items.Count > 0;
@@ -478,7 +477,7 @@ namespace NeeView
 
             foreach (var element in this.Children)
             {
-                var control = element.CreateMenuControl();
+                var control = element.CreateMenuControl(false);
                 if (control != null) contextMenu.Items.Add(control);
             }
 
@@ -490,7 +489,7 @@ namespace NeeView
             if (this.Children == null) return new List<object>();
 
             var children = this.Children
-                .Select(e => e.CreateMenuControl())
+                .Select(e => e.CreateMenuControl(false))
                 .WhereNotNull()
                 .ToList();
 
@@ -498,10 +497,10 @@ namespace NeeView
         }
 
         //
-        public Menu? CreateMenu()
+        public Menu? CreateMenu(bool isDefault)
         {
             var menu = new Menu();
-            foreach (var element in CreateMenuItems())
+            foreach (var element in CreateMenuItems(isDefault))
             {
                 menu.Items.Add(element);
             }
@@ -510,7 +509,7 @@ namespace NeeView
         }
 
         //
-        public List<object> CreateMenuItems()
+        public List<object> CreateMenuItems(bool isDefault)
         {
             var collection = new List<object>();
 
@@ -518,7 +517,7 @@ namespace NeeView
             {
                 foreach (var element in this.Children)
                 {
-                    var control = element.CreateMenuControl();
+                    var control = element.CreateMenuControl(isDefault);
                     if (control != null) collection.Add(control);
                 }
             }

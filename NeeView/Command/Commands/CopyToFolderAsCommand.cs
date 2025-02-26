@@ -1,4 +1,5 @@
-﻿using System.Reflection.Metadata;
+﻿using System;
+using System.Reflection.Metadata;
 using System.Windows.Controls;
 
 namespace NeeView
@@ -49,9 +50,23 @@ namespace NeeView
             }
         }
 
-        public override MenuItem? CreateMenuItem()
+        public override MenuItem? CreateMenuItem(bool isDefault)
         {
-            return MainViewCopyToFolderTools.CreateCopyToFolderItem(_parameterFactory);
+            var parameter = GetCommandParameter();
+            var index = parameter.Index - 1;
+            if (isDefault || index < 0)
+            {
+                return MainViewCopyToFolderTools.CreateCopyToFolderItem(_parameterFactory);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private CopyToFolderAsCommandParameter GetCommandParameter()
+        {
+            return (Parameter as CopyToFolderAsCommandParameter) ?? throw new InvalidOperationException();
         }
     }
 

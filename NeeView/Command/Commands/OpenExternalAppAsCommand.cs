@@ -43,9 +43,23 @@ namespace NeeView
             }
         }
 
-        public override MenuItem? CreateMenuItem()
+        public override MenuItem? CreateMenuItem(bool isDefault)
         {
-            return MainViewExternalAppTools.CreateExternalAppItem(_parameterFactory);
+            var parameter = GetCommandParameter();
+            var index = parameter.Index - 1;
+            if (isDefault || index < 0)
+            {
+                return MainViewExternalAppTools.CreateExternalAppItem(_parameterFactory);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private OpenExternalAppAsCommandParameter GetCommandParameter()
+        {
+            return (Parameter as OpenExternalAppAsCommandParameter) ?? throw new InvalidOperationException();
         }
     }
 

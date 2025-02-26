@@ -1,4 +1,5 @@
-﻿using System.Reflection.Metadata;
+﻿using System;
+using System.Reflection.Metadata;
 using System.Windows.Controls;
 
 namespace NeeView
@@ -52,11 +53,24 @@ namespace NeeView
             }
         }
 
-
-        public override MenuItem? CreateMenuItem()
+        public override MenuItem? CreateMenuItem(bool isDefault)
         {
-            _bindingSource ??= new MoveableViewPageBindingSource(PageFrameBoxPresenter.Current, new MoveToDestinationFolderOption(this));
-            return MainViewMoveToFolderTools.CreateMoveToFolderItem(_parameterFactory, _bindingSource);
+            var parameter = GetCommandParameter();
+            var index = parameter.Index - 1;
+            if (isDefault || index < 0)
+            {
+                _bindingSource ??= new MoveableViewPageBindingSource(PageFrameBoxPresenter.Current, new MoveToDestinationFolderOption(this));
+                return MainViewMoveToFolderTools.CreateMoveToFolderItem(_parameterFactory, _bindingSource);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private MoveToFolderAsCommandParameter GetCommandParameter()
+        {
+            return (Parameter as MoveToFolderAsCommandParameter) ?? throw new InvalidOperationException();
         }
     }
 

@@ -57,7 +57,7 @@ namespace NeeView
 
         private Menu CreateMainMenu(bool isHamburgerMenu)
         {
-            var items = _mainMenuSource.CreateMenuItems();
+            var items = _mainMenuSource.CreateMenuItems(true);
 #if DEBUG
             items.Add(_debugMenu.CreateDevMenuItem());
 #endif
