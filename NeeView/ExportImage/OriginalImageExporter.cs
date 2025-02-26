@@ -29,7 +29,7 @@ namespace NeeView
 
             try
             {
-                var imageSource = (_source.PageFrameContent.ViewContents.FirstOrDefault() as IHasImageSource)?.ImageSource;
+                var imageSource = CreateImageSource(options);
                 var image = new Image();
                 image.Source = imageSource;
                 RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.HighQuality);
@@ -49,9 +49,25 @@ namespace NeeView
             _ = _page.ArchiveEntry.ExtractToFileAsync(path, isOverwrite, CancellationToken.None); // TODO: async
         }
 
+        public ImageSource? CreateImageSource(ImageExporterCreateOptions options)
+        {
+            return (_source.PageFrameContent.ViewContents.FirstOrDefault() as IHasImageSource)?.ImageSource;
+        }
+
+
         public string CreateFileName()
         {
             return LoosePath.ValidFileName(_page.EntryLastName);
+        }
+
+        public DateTime GetLastWriteTime()
+        {
+            return _source.Pages[0].LastWriteTime;
+        }
+
+        public long GetLength(string path, int qualityLevel, ImageExporterCreateOptions options)
+        {
+            return _source.Pages[0].Length;
         }
 
         public void Dispose()

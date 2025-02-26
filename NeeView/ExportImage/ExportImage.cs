@@ -182,6 +182,17 @@ namespace NeeView
             });
         }
 
+        public ImageSource? CreateImageSource()
+        {
+            var options = new ImageExporterCreateOptions()
+            {
+                HasBackground = _hasBackground,
+                IsOriginalSize = _isOriginalSize,
+                IsDotKeep = _isDotKeep,
+            };
+            return _exporter.CreateImageSource(options);
+        }
+
         public void Export(string path, bool isOverwrite)
         {
             path = System.IO.Path.GetFullPath(path);
@@ -223,5 +234,20 @@ namespace NeeView
             }
         }
 
+        public DateTime GetLastWriteTime()
+        {
+            return _exporter.GetLastWriteTime();
+        }
+
+        public long GetLength(string path)
+        {
+            var options = new ImageExporterCreateOptions()
+            {
+                HasBackground = _hasBackground,
+                IsOriginalSize = _isOriginalSize,
+                IsDotKeep = _isDotKeep,
+            };
+            return _exporter.GetLength(path, QualityLevel, options);
+        }
     }
 }

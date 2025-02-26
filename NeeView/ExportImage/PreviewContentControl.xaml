@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="NeeView.PreviewContentControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NeeView"
+             mc:Ignorable="d" 
+             d:DesignHeight="200" d:DesignWidth="300">
+
+    <Border>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="10">
+            <Grid Width="128" MaxHeight="128">
+                <Image x:Name="PreviewImage" VerticalAlignment="Top" Stretch="Uniform" StretchDirection="DownOnly" RenderOptions.BitmapScalingMode="Fant"/>
+            </Grid>
+            <StackPanel Margin="10,0">
+                <TextBlock x:Name="LastWriteTimeTextBlock" Text="0000/00/00 00:00:00"/>
+                <TextBlock x:Name="LengthTextBlock" Text="1,234 KB"/>
+                <TextBlock x:Name="SizeTextBlock" Text="1234 x 1234"/>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

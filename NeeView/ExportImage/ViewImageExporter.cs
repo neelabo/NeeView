@@ -74,6 +74,17 @@ namespace NeeView
             return new ImageExporterContent(grid, rect.Size);
         }
 
+
+        private BitmapImageFormat GetBitmapImageFormatFromFileName(string path)
+        {
+            var ext = System.IO.Path.GetExtension(path).ToLowerInvariant();
+            return ext switch
+            {
+                ".png" => BitmapImageFormat.Png,
+                _ => BitmapImageFormat.Jpeg,
+            };
+        }
+
         public void Export(string path, bool isOverwrite, int qualityLevel, ImageExporterCreateOptions options)
         {
             var bitmapSource = CreateBitmapSource(options);
@@ -82,21 +93,41 @@ namespace NeeView
 
             using (var stream = new FileStream(path, fileMode))
             {
-                // 出力ファイル名からフォーマットを決定する
-                if (System.IO.Path.GetExtension(path).ToLowerInvariant() == ".png")
-                {
-                    var encoder = new PngBitmapEncoder();
-                    encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
-                    encoder.Save(stream);
-                }
-                else
-                {
-                    var encoder = new JpegBitmapEncoder();
-                    encoder.QualityLevel = qualityLevel;
-                    encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
-                    encoder.Save(stream);
-                }
+                var format = GetBitmapImageFormatFromFileName(path);
+                Export(stream, format, qualityLevel, bitmapSource);
             }
+        }
+
+        public void Export(Stream stream, string path, int qualityLevel, ImageExporterCreateOptions options)
+        {
+            Export(stream, path, qualityLevel, CreateBitmapSource(options));
+        }
+
+        public void Export(Stream stream, string path, int qualityLevel, BitmapSource bitmapSource)
+        {
+            Export(stream, GetBitmapImageFormatFromFileName(path), qualityLevel, bitmapSource);
+        }
+
+        public void Export(Stream stream, BitmapImageFormat format, int qualityLevel, BitmapSource bitmapSource)
+        {
+            if (format == BitmapImageFormat.Png)
+            {
+                var encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+                encoder.Save(stream);
+            }
+            else
+            {
+                var encoder = new JpegBitmapEncoder();
+                encoder.QualityLevel = qualityLevel;
+                encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+                encoder.Save(stream);
+            }
+        }
+
+        public ImageSource CreateImageSource(ImageExporterCreateOptions options)
+        {
+            return CreateBitmapSource(options);
         }
 
         private BitmapSource CreateBitmapSource(ImageExporterCreateOptions options)
@@ -154,6 +185,17 @@ namespace NeeView
             }
         }
 
+        public DateTime GetLastWriteTime()
+        {
+            return DateTime.MinValue;
+        }
+
+        public long GetLength(string path, int qualityLevel, ImageExporterCreateOptions options)
+        {
+            using var stream = new MemoryStream();
+            Export(stream, path, qualityLevel, options);
+            return stream.Length;
+        }
 
         protected virtual void Dispose(bool disposing)
         {

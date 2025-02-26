@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace NeeView
 {
@@ -7,7 +8,10 @@ namespace NeeView
     {
         ImageExporterContent? CreateView(ImageExporterCreateOptions options);
         void Export(string path, bool isOverwrite, int qualityLevel, ImageExporterCreateOptions options);
+        ImageSource? CreateImageSource(ImageExporterCreateOptions options);
         string CreateFileName();
+        DateTime GetLastWriteTime();
+        long GetLength(string path, int qualityLevel, ImageExporterCreateOptions options);
     }
 
     public class ImageExporterCreateOptions
