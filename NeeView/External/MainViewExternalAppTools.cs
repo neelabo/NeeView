@@ -34,20 +34,20 @@ namespace NeeView
             return Config.Current.System.ExternalAppCollection.IsValidIndex(index);
         }
 
-        public static bool CanOpenExternalApp(int index)
+        public static bool CanOpenExternalApp(ICommandParameterFactory<ExternalApp> parameterFactory, int index)
         {
             var externalApps = Config.Current.System.ExternalAppCollection;
             if (!externalApps.IsValidIndex(index)) return false;
 
-            return _openExternalAppCommand.CanExecute(externalApps[index]);
+            return _openExternalAppCommand.CanExecute(parameterFactory.CreateParameter(externalApps[index]));
         }
 
-        public static void OpenExternalApp(int index)
+        public static void OpenExternalApp(ICommandParameterFactory<ExternalApp> parameterFactory, int index)
         {
             var externalApps = Config.Current.System.ExternalAppCollection;
             if (!externalApps.IsValidIndex(index)) throw new ArgumentOutOfRangeException(nameof(index));
 
-            _openExternalAppCommand.Execute(externalApps[index]);
+            _openExternalAppCommand.Execute(parameterFactory.CreateParameter(externalApps[index]));
         }
 
 

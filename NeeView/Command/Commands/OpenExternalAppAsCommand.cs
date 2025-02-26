@@ -22,7 +22,7 @@ namespace NeeView
             var index = e.Parameter.Cast<OpenExternalAppAsCommandParameter>().Index - 1;
             if (index >= 0)
             {
-                return MainViewExternalAppTools.CanOpenExternalApp(index);
+                return MainViewExternalAppTools.CanOpenExternalApp(_parameterFactory, index);
             }
             else
             {
@@ -35,7 +35,7 @@ namespace NeeView
             var index = e.Parameter.Cast<OpenExternalAppAsCommandParameter>().Index - 1;
             if (index >= 0)
             {
-                MainViewExternalAppTools.OpenExternalApp(index);
+                MainViewExternalAppTools.OpenExternalApp(_parameterFactory, index);
             }
             else
             {
