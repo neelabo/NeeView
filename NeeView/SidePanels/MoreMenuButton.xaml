@@ -23,7 +23,8 @@
     </UserControl.Resources>
     
     <ToggleButton x:Name="MoreButton" Style="{StaticResource IconToggleButton}" Width="28" MouseRightButtonUp="MoreButton_MouseRightButtonUp"
-            Checked="MoreButton_Checked" nvc:DropDownMenuBehavior.DropDownMenu="{Binding MoreMenu}">
+                  IsChecked="{Binding IsMoreButtonChecked}"
+                  nvc:DropDownMenuBehavior.DropDownMenu="{Binding MoreMenu}">
         <Image x:Name="MoreButtonImage" Source="{StaticResource ic_more_24px_a}" Margin="2" />
     </ToggleButton>
 </UserControl>

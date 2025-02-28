@@ -25,6 +25,7 @@ namespace NeeView
     public partial class MoreMenuButton : UserControl, INotifyPropertyChanged
     {
         private ContextMenu? _moreMenu;
+        private bool _isMoreButtonChecked;
 
 
         public MoreMenuButton()
@@ -80,6 +81,18 @@ namespace NeeView
             private set { SetProperty(ref _moreMenu, value); }
         }
 
+        public bool IsMoreButtonChecked
+        {
+            get { return _isMoreButtonChecked; }
+            set
+            {
+                if (SetProperty(ref _isMoreButtonChecked, value))
+                {
+                    OnMoreButtonCheckedChanged();
+                }
+            }
+        }
+
 
         private void UpdateImageSource()
         {
@@ -97,7 +110,8 @@ namespace NeeView
             e.Handled = true;
         }
 
-        private void MoreButton_Checked(object sender, RoutedEventArgs e)
+
+        private void OnMoreButtonCheckedChanged()
         {
             if (Description != null)
             {
@@ -106,7 +120,15 @@ namespace NeeView
                     MoreMenu = Description.Update(MoreMenu);
                 }
             }
-            ContextMenuWatcher.SetTargetElement((UIElement)sender);
+
+            if (_isMoreButtonChecked)
+            {
+                ContextMenuWatcher.RaiseContextMenuOpening(this, this.MoreButton);
+            }
+            else
+            {
+                ContextMenuWatcher.RaiseContextMenuClosing(this, this.MoreButton);
+            }
         }
 
     }

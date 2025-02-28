@@ -1,4 +1,6 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿//#define LOCAL_DEBUG
+
+using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
 using NeeView.Data;
 using NeeView.Native;
@@ -7,9 +9,9 @@ using NeeView.Threading;
 using NeeView.Windows;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
@@ -442,7 +444,7 @@ namespace NeeView
             MessageDialog.OwnerWindow = this;
 
             _dpiProvider.SetDipScale(VisualTreeHelper.GetDpi(this));
-            
+
             PendingItemManager.Initialize(this);
 
             MainViewManager.Current.Update(false);
@@ -647,7 +649,7 @@ namespace NeeView
             StoreWindowPlacement();
         }
 
-#endregion
+        #endregion
 
         #region メニューエリア、ステータスエリアマウスオーバー監視
 
@@ -883,6 +885,9 @@ namespace NeeView
             _vm.AddPropertyChanged(nameof(_vm.Title),
                 (s, e) => UpdatePageCaptionVisibility());
 
+            ContextMenuWatcher.ContextMenuClosing +=
+                (s, e) => UpdatePageCaptionVisibility();
+
             _pageCaptionVisibility = new DelayVisibility();
             _pageCaptionVisibility.Changed +=
                 (s, e) => PageCaptionVisibility_Changed(s, e);
@@ -908,15 +913,18 @@ namespace NeeView
         {
             if (ContextMenuWatcher.TargetElement != null)
             {
+                LocalWriteLine($"ContextMenu is exists");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(_vm.Title))
             {
+                LocalWriteLine($"PageTitle is empty");
                 _pageCaptionVisibility.SetDelayVisibility(Visibility.Collapsed, 0, NeeView.Windows.Data.DelayValueOverwriteOption.Force);
             }
             else
             {
+                LocalWriteLine($"IsMouseOver: {this.LayerStatusArea.IsMouseOver}, {this.DockStatusArea.IsMouseOver}");
                 var isVisible = Config.Current.PageTitle.IsEnabled && (this.LayerStatusArea.IsMouseOver || this.DockStatusArea.IsMouseOver);
                 if (isVisible)
                 {
@@ -960,6 +968,11 @@ namespace NeeView
             DebugGesture.Initialize();
         }
 
+        [Conditional("LOCAL_DEBUG")]
+        private void LocalWriteLine(string s, params object[] args)
+        {
+            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
+        }
 
         #endregion
 
