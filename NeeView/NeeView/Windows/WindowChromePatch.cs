@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Shell;
+using NeeLaboratory.Generators;
 using NeeView.Interop;
 
 
@@ -19,7 +20,8 @@ namespace NeeView.Windows
     /// <summary>
     /// WindowChrome が適用されたウィンドウ挙動の問題を補正する
     /// </summary>
-    public class WindowChromePatch
+    [LocalDebug]
+    public partial class WindowChromePatch
     {
         private readonly Window _window;
         private readonly WindowChrome _windowChrome;
@@ -59,8 +61,8 @@ namespace NeeView.Windows
             if (_window.WindowState == WindowState.Maximized)
             {
                 var dpiScale = _window.GetDpiScale();
-                Trace($"Window.BorderThickness(raw): {_windowBorderThickness}");
-                Trace($"Window.DpiScale: {dpiScale.DpiScaleX}, {dpiScale.DpiScaleY}");
+                LocalDebug.WriteLine($"Window.BorderThickness(raw): {_windowBorderThickness}");
+                LocalDebug.WriteLine($"Window.DpiScale: {dpiScale.DpiScaleX}, {dpiScale.DpiScaleY}");
                 if ((dpiScale.DpiScaleX != 1.0 || dpiScale.DpiScaleY != 1.0) && dpiScale.DpiScaleX > 0.0 && dpiScale.DpiScaleY > 0.0)
                 {
                     var left = _windowBorderThickness.Left / dpiScale.DpiScaleX;
@@ -78,7 +80,7 @@ namespace NeeView.Windows
             {
                 _window.BorderThickness = default;
             }
-            Trace($"Window.BorderThickness: {_window.BorderThickness}");
+            LocalDebug.WriteLine($"Window.BorderThickness: {_window.BorderThickness}");
         }
 
         private bool AddHook()
@@ -145,16 +147,16 @@ namespace NeeView.Windows
             if (WindowParameters.IsTabletMode) return IntPtr.Zero;
 
             var nonClientCalcSize = Marshal.PtrToStructure<NCCALCSIZE_PARAMS>(lParam);
-            Trace("RCSize.LPPos.Flags {0}", nonClientCalcSize.lppos.flags);
+            LocalDebug.WriteLine($"RCSize.LPPos.Flags {nonClientCalcSize.lppos.flags}");
 
             // NOTE: タスクバーが横に配置されているときに幅によっては SWP_NOSIZE が立って補正できないため、SWP_NOSIZE のときも補正するようにした 
             //if (nonClientCalcSize.lppos.flags.HasFlag(SetWindowPosFlags.SWP_NOSIZE)) return IntPtr.Zero;
 
             // NOTE: 最小化から復元するタイミングではウィンドウがタスクバーのモニター側に存在することがあるため、座標から対象モニターを取得する
-            Trace($"RCSize.rgrc[0] {nonClientCalcSize.rgrc[0]}");
+            LocalDebug.WriteLine($"RCSize.rgrc[0] {nonClientCalcSize.rgrc[0]}");
             var sourceArea = nonClientCalcSize.rgrc[0];
             var windowCenter = new POINT((sourceArea.right + sourceArea.left) / 2, (sourceArea.top + sourceArea.bottom) / 2);
-            Trace($"RCSize.rgrc[0].Center: {windowCenter}");
+            LocalDebug.WriteLine($"RCSize.rgrc[0].Center: {windowCenter}");
 
             var hMonitor = NativeMethods.MonitorFromPoint(windowCenter, (int)MonitorDefaultTo.MONITOR_DEFAULTTONEAREST);
             if (hMonitor == IntPtr.Zero) return IntPtr.Zero;
@@ -165,7 +167,7 @@ namespace NeeView.Windows
             // 安全のため、補正サイズが元のサイズを超える場合は補正しない
             if (workArea.left < sourceArea.left || sourceArea.right < workArea.right || workArea.top < sourceArea.top || sourceArea.bottom < workArea.bottom)
             {
-                Trace($"Skip: RCSize is over the original range.");
+                LocalDebug.WriteLine($"Skip: RCSize is over the original range.");
                 return IntPtr.Zero;
             }
 
@@ -208,7 +210,7 @@ namespace NeeView.Windows
         {
             var monitorInfo = new MONITORINFO() { cbSize = (uint)Marshal.SizeOf(typeof(MONITORINFO)) };
             if (!NativeMethods.GetMonitorInfo(hMonitor, ref monitorInfo)) return (false, new RECT());
-            Trace($"MonitorInfo: Monitor={monitorInfo.rcMonitor}, Work={monitorInfo.rcWork}, Flags={monitorInfo.dwFlags}");
+            LocalDebug.WriteLine($"MonitorInfo: Monitor={monitorInfo.rcMonitor}, Work={monitorInfo.rcWork}, Flags={monitorInfo.dwFlags}");
 
             RECT workArea;
             if (isFullScreen)
@@ -226,11 +228,11 @@ namespace NeeView.Windows
                 // モニターサイズで SetWindowPos() を呼んでも変化がない現象の対策
                 if (WindowParameters.IsTabletMode && workArea.Equals(monitorInfo.rcMonitor))
                 {
-                    Trace($"Cannot get auto hide AppBar");
+                    LocalDebug.WriteLine($"Cannot get auto hide AppBar");
                     workArea.bottom--;
                 }
             }
-            Trace($"Calc.RCSize {workArea}");
+            LocalDebug.WriteLine($"Calc.RCSize {workArea}");
 
             return (true, workArea);
         }
@@ -251,7 +253,7 @@ namespace NeeView.Windows
             //var windowInfo = new WINDOWINFO() { cbSize = (int)Marshal.SizeOf(typeof(WINDOWINFO)) };
             //if (!NativeMethods.GetWindowInfo(hWnd, ref windowInfo)) return;
             //var windowRect = windowInfo.rcWindow;
-            //Trace($"Window.Source: {windowInfo.rcWindow}");
+            //LocalDebug.WriteLine($"Window.Source: {windowInfo.rcWindow}");
 
             var hMonitor = NativeMethods.MonitorFromWindow(hWnd, (int)MonitorDefaultTo.MONITOR_DEFAULTTONEAREST);
             if (hMonitor == IntPtr.Zero) return;
@@ -259,22 +261,10 @@ namespace NeeView.Windows
             (bool isSuccess, RECT rect) = GetMonitorWorkArea(hMonitor, isFullScreen);
             if (isSuccess)
             {
-                Trace($"Window.Reset: {rect}");
+                LocalDebug.WriteLine($"Window.Reset: {rect}");
                 NativeMethods.SetWindowPos(hWnd, IntPtr.Zero, rect.left, rect.top, rect.Width, rect.Height, NativeMethods.SWP_NOZORDER);
             }
         }
 
-
-        [Conditional("LOCAL_DEBUG")]
-        private static void Trace(string message)
-        {
-            Debug.WriteLine($"{nameof(WindowChromePatch)}: {message}");
-        }
-
-        [Conditional("LOCAL_DEBUG")]
-        private static void Trace(string format, params object[] args)
-        {
-            Debug.WriteLine($"{nameof(WindowChromePatch)}: {string.Format(CultureInfo.InvariantCulture, format, args)}");
-        }
     }
 }

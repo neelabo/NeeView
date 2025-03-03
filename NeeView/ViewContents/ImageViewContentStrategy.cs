@@ -6,11 +6,13 @@ using System.Globalization;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media;
+using NeeLaboratory.Generators;
 using NeeView.Threading;
 
 namespace NeeView
 {
-    public class ImageViewContentStrategy : IDisposable, IViewContentStrategy, IHasImageSource, IHasScalingMode
+    [LocalDebug]
+    public partial class ImageViewContentStrategy : IDisposable, IViewContentStrategy, IHasImageSource, IHasScalingMode
     {
         private readonly ViewContent _viewContent;
         private readonly DelayAction _delayAction = new();
@@ -80,7 +82,7 @@ namespace NeeView
 
             var viewData = data as ImageViewData ?? throw new InvalidOperationException();
 
-            Trace($"Create={_viewContent.Page}, {_imageControl is not null}");
+            LocalDebug.WriteLine($"Create={_viewContent.Page}, {_imageControl is not null}");
 
             lock (_lock)
             {
@@ -100,10 +102,5 @@ namespace NeeView
             }
         }
 
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
-        }
     }
 }

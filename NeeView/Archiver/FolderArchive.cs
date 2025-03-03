@@ -1,5 +1,6 @@
 ﻿//#define LOCAL_DEBUG
 
+using NeeLaboratory.Generators;
 using NeeLaboratory.Linq;
 using NeeView.IO;
 using System;
@@ -19,7 +20,8 @@ namespace NeeView
     /// アーカイバー：通常ファイル
     /// ディレクトリをアーカイブとみなしてアクセスする
     /// </summary>
-    public class FolderArchive : Archive
+    [LocalDebug]
+    public partial class FolderArchive : Archive
     {
         private FileSystemWatcher? _fileSystemWatcher;
 
@@ -275,7 +277,7 @@ namespace NeeView
 
             try
             {
-                Trace($"Path={path}");
+                LocalDebug.WriteLine($"Path={path}");
                 _fileSystemWatcher.Path = path;
                 _fileSystemWatcher.IncludeSubdirectories = false;
                 _fileSystemWatcher.NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName;
@@ -300,7 +302,7 @@ namespace NeeView
         {
             if (_fileSystemWatcher != null)
             {
-                Trace($"Path={_fileSystemWatcher.Path}");
+                LocalDebug.WriteLine($"Path={_fileSystemWatcher.Path}");
                 _fileSystemWatcher.EnableRaisingEvents = false;
                 _fileSystemWatcher.Error -= Watcher_Error;
                 _fileSystemWatcher.Created -= Watcher_Created;
@@ -314,7 +316,7 @@ namespace NeeView
         private void Watcher_Error(object sender, ErrorEventArgs e)
         {
             var ex = e.GetException();
-            Trace($"Error!! : {ex} : {ex.Message}");
+            LocalDebug.WriteLine($"Error!! : {ex} : {ex.Message}");
 
             // recovery...
             ////var path = _fileSystemWatcher.Path;
@@ -324,7 +326,7 @@ namespace NeeView
 
         private void Watcher_Created(object sender, FileSystemEventArgs e)
         {
-            Trace($"{e.FullPath}");
+            LocalDebug.WriteLine($"{e.FullPath}");
 
             AppDispatcher.BeginInvoke(() =>
             {
@@ -335,7 +337,7 @@ namespace NeeView
         private void Watcher_Deleted(object sender, FileSystemEventArgs e)
         {
             if (e.Name is null) return;
-            Trace($"{e.FullPath}");
+            LocalDebug.WriteLine($"{e.FullPath}");
 
             AppDispatcher.BeginInvoke(() =>
             {
@@ -357,7 +359,7 @@ namespace NeeView
 
         private void Watcher_Renamed(object sender, RenamedEventArgs e)
         {
-            Trace($"{e.OldFullPath} => {e.Name}");
+            LocalDebug.WriteLine($"{e.OldFullPath} => {e.Name}");
 
             AppDispatcher.BeginInvoke(() =>
             {
@@ -366,12 +368,6 @@ namespace NeeView
         }
 
         #endregion FileSystemWatcher
-
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, [CallerMemberName] string memberName = "")
-        {
-            Debug.WriteLine($"{this.GetType().Name}:{memberName}: {s}");
-        }
     }
 
 }

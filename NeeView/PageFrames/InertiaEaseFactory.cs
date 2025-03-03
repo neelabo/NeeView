@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
+using NeeLaboratory.Generators;
 using NeeView.ComponentModel;
 
 namespace NeeView.PageFrames
@@ -8,7 +9,8 @@ namespace NeeView.PageFrames
     /// <summary>
     /// 移動制限を反映した慣性減速の EasingFunction を作成
     /// </summary>
-    public class InertiaEaseFactory
+    [LocalDebug]
+    public partial class InertiaEaseFactory
     {
         public delegate HitData GetHitDataFunc(Point start, Vector delta);
 
@@ -87,7 +89,7 @@ namespace NeeView.PageFrames
                     var vx = hit.XHit ? 0.0 : velocity.X;
                     var vy = hit.YHit ? 0.0 : velocity.Y;
                     velocity = new Vector(vx, vy);
-                    Trace($"Add.LockHit: Delta={easeSet.Delta:f2}, Rate={hit.Rate:f2}, V1={velocity:f2}");
+                    LocalDebug.WriteLine($"Add.LockHit: Delta={easeSet.Delta:f2}, Rate={hit.Rate:f2}, V1={velocity:f2}");
                 }
             }
 
@@ -109,12 +111,12 @@ namespace NeeView.PageFrames
                     var vx = hit.XHit ? 0.0 : velocity.X;
                     var vy = hit.YHit ? 0.0 : velocity.Y;
                     velocity = new Vector(vx, vy);
-                    Trace($"Add.Hit: Delta={easeSet.Delta:f2}, Rate={hit.Rate:f2}, V1={velocity:f2}");
+                    LocalDebug.WriteLine($"Add.Hit: Delta={easeSet.Delta:f2}, Rate={hit.Rate:f2}, V1={velocity:f2}");
                 }
                 else
                 {
                     multiEaseSet.Add(easeSet);
-                    Trace($"Add.End: Delta={easeSet.Delta:f2}, Rate={1}, V1={easeSet.V1:f2}");
+                    LocalDebug.WriteLine($"Add.End: Delta={easeSet.Delta:f2}, Rate={1}, V1={easeSet.V1:f2}");
                     break;
                 }
             }
@@ -122,10 +124,5 @@ namespace NeeView.PageFrames
             return multiEaseSet;
         }
 
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
-        }
     }
 }

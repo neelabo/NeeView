@@ -1,5 +1,6 @@
 ﻿//#define LOCAL_DEBUG
 
+using NeeLaboratory.Generators;
 using NeeLaboratory.Threading;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,8 @@ using System.Threading.Tasks;
 
 namespace NeeView
 {
-    public class ZipArchiveWriter
+    [LocalDebug]
+    public partial class ZipArchiveWriter
     {
         private readonly ZipArchiveWriterManager _manager;
         private readonly string _path;
@@ -53,7 +55,7 @@ namespace NeeView
             {
                 foreach (var ident in idents)
                 {
-                    Trace($"Add: {ident.FullName}");
+                    LocalDebug.WriteLine($"Add: {ident.FullName}");
                 }
 
                 _idents.AddRange(idents);
@@ -69,7 +71,7 @@ namespace NeeView
 
         private async Task DeleteAsync(AsyncLock asyncLock, CancellationToken token)
         {
-            Trace($"Start task: {_path}");
+            LocalDebug.WriteLine($"Start task: {_path}");
 
             var tempFilename = FileIO.CreateUniquePath(_path + ".temp");
 
@@ -83,14 +85,14 @@ namespace NeeView
 
                 while (true)
                 {
-                    Trace($"Copy to temp file: {_path}");
+                    LocalDebug.WriteLine($"Copy to temp file: {_path}");
 
                     token.ThrowIfCancellationRequested();
                     await CopyAsync(_path, tempFilename, token);
 
                     while (true)
                     {
-                        Trace($"Open archive: {_path}");
+                        LocalDebug.WriteLine($"Open archive: {_path}");
 
                         token.ThrowIfCancellationRequested();
                         using (var archive = ZipFile.Open(tempFilename, ZipArchiveMode.Update, _encoding))
@@ -107,11 +109,11 @@ namespace NeeView
                                 var entry = archive.FindEntry(ident);
                                 if (entry is null)
                                 {
-                                    Trace($"Cannot found {ident.FullName}");
+                                    LocalDebug.WriteLine($"Cannot found {ident.FullName}");
                                 }
                                 else
                                 {
-                                    Trace($"Delete entry: {entry.FullName}");
+                                    LocalDebug.WriteLine($"Delete entry: {entry.FullName}");
                                     entry.Delete();
                                 }
                             }
@@ -124,7 +126,7 @@ namespace NeeView
                     }
 
                     token.ThrowIfCancellationRequested();
-                    Trace($"Replace file: {_path}");
+                    LocalDebug.WriteLine($"Replace file: {_path}");
 
                     // 元のファイルへ差し替え。
                     // 元ファイルアクセス中は置き換えできないのでリトライさせる
@@ -143,7 +145,7 @@ namespace NeeView
                         {
                             retryCount++;
                             if (retryCount >= 5) throw;
-                            Trace($"Retry: {_path}");
+                            LocalDebug.WriteLine($"Retry: {_path}");
                             await Task.Delay(1000, token);
                         }
                     }
@@ -157,12 +159,12 @@ namespace NeeView
                         }
                     }
 
-                    Trace($"Done: {_path}");
+                    LocalDebug.WriteLine($"Done: {_path}");
                 }
             }
             catch (Exception ex)
             {
-                Trace($"Exception: {ex.Message}");
+                LocalDebug.WriteLine($"Exception: {ex.Message}");
 
                 if (File.Exists(tempFilename))
                 {
@@ -186,11 +188,5 @@ namespace NeeView
             await destinationStream.FlushAsync(token);
         }
 
-
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {s}");
-        }
     }
 }

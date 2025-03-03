@@ -16,13 +16,15 @@ using NeeView;
 using NeeView.Windows;
 using NeeView.Maths;
 using System.Globalization;
+using NeeLaboratory.Generators;
 
 namespace NeeView.PageFrames
 {
     /// <summary>
     /// ページフレーム表示
     /// </summary>
-    public class PageFrameContent : IPageFrameContent, IDisposable, INotifyTransformChanged
+    [LocalDebug]
+    public partial class PageFrameContent : IPageFrameContent, IDisposable, INotifyTransformChanged
     {
         private readonly ViewContentFactory _viewContentFactory;
 
@@ -139,7 +141,7 @@ namespace NeeView.PageFrames
             // ページフレーム情報が既に古い？
             if (IsPageFrameDirty() || IsWidePageFrameDirty())
             {
-                Trace("PageFrameContent: PageFrame is dirty.");
+                LocalDebug.WriteLine("PageFrameContent: PageFrame is dirty.");
                 DirtyLevel = PageFrameDirtyLevel.Moderate;
             }
         }
@@ -224,7 +226,7 @@ namespace NeeView.PageFrames
 
         private void Page_SizeChanged(object? sender, EventArgs e)
         {
-            Trace($"Page.SizeChanged: Call, {((Page?)sender)?.Size}");
+            LocalDebug.WriteLine($"Page.SizeChanged: Call, {((Page?)sender)?.Size}");
             RaiseContentSizeChanged();
         }
 
@@ -233,12 +235,12 @@ namespace NeeView.PageFrames
             // ページ補填の余地あり？
             if (IsWidePageFrameDirty())
             {
-                Trace($"NextPage.SizeChanged: Call, {((Page?)sender)?.Size}");
+                LocalDebug.WriteLine($"NextPage.SizeChanged: Call, {((Page?)sender)?.Size}");
                 RaiseContentSizeChanged();
             }
             else
             {
-                Trace($"NextPage.SizeChanged: Skip");
+                LocalDebug.WriteLine($"NextPage.SizeChanged: Skip");
             }
         }
 
@@ -359,7 +361,7 @@ namespace NeeView.PageFrames
                 var limitScale = 0.10;
                 var width = Math.Max(bounds.Width, _context.CanvasSize.Width * limitScale);
                 var height = Math.Max(bounds.Height, _context.CanvasSize.Height * limitScale);
-                Trace($"# FrameSize: {_pageFrame.FrameRange} => {width:f1}x{height:f1}");
+                LocalDebug.WriteLine($"# FrameSize: {_pageFrame.FrameRange} => {width:f1}x{height:f1}");
                 return new Size(width, height);
             }
         }
@@ -447,7 +449,7 @@ namespace NeeView.PageFrames
             if (e.Action == TransformAction.Scale || e.Action == TransformAction.Angle)
             {
                 var scale = CreateElementScale(); // GetRenderScale();
-                Trace($"{FrameRange}: Scale={scale:f2}");
+                LocalDebug.WriteLine($"{FrameRange}: Scale={scale:f2}");
 
                 foreach (var viewContent in _viewContents)
                 {
@@ -565,11 +567,6 @@ namespace NeeView.PageFrames
             return _pageFrame.ToString();
         }
 
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
-        }
     }
 
 }

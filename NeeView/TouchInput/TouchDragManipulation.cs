@@ -1,5 +1,6 @@
 ﻿//#define LOCAL_DEBUG
 
+using NeeLaboratory.Generators;
 using NeeView.Maths;
 using NeeView.PageFrames;
 using System;
@@ -18,7 +19,8 @@ namespace NeeView
     /// <summary>
     /// タッチ操作によるビューの変更
     /// </summary>
-    public class TouchDragManipulation
+    [LocalDebug]
+    public partial class TouchDragManipulation
     {
         private readonly IDragTransformContextFactory _transformContextFactory;
         private ContentDragTransformContext? _transformContext;
@@ -59,7 +61,7 @@ namespace NeeView
                 return;
             }
 
-            Trace("Init");
+            LocalDebug.WriteLine("Init");
             _transform = new DragTransform(_transformContext);
             _first = GetNowTransform();
         }
@@ -72,7 +74,7 @@ namespace NeeView
         {
             if (_transform is null) return;
             
-            Trace("Start");
+            LocalDebug.WriteLine("Start");
             _origin = new TouchDragContext(_context.Sender, _context.TouchMap.Keys);
 
             _start = GetNowTransform();
@@ -95,7 +97,7 @@ namespace NeeView
             if (_transform is null) return;
             if (_goal is null) return;
             
-            Trace("Stop");
+            LocalDebug.WriteLine("Stop");
             _transform.SetAngle(GetSnapAngle(_goal.Angle), TimeSpan.FromMilliseconds(200));
             _transform.DoInertia(_context.Speedometer.GetVelocity(), InertiaTools.GetAcceleration(Config.Current.Touch.InertiaSensitivity));
         }
@@ -214,13 +216,6 @@ namespace NeeView
             }
 
             return angle;
-        }
-
-
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
         }
 
     }

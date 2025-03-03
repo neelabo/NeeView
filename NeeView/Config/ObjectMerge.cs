@@ -1,4 +1,5 @@
 ﻿//#define LOCAL_DEBUG
+using NeeLaboratory.Generators;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -12,7 +13,8 @@ namespace NeeView
         public bool IsIgnoreEnabled { get; set; } = true;
     }
 
-    public static class ObjectMerge
+    [LocalDebug]
+    public static partial class ObjectMerge
     { 
         /// <summary>
         /// インスタンスのプロパティを上書き
@@ -40,15 +42,15 @@ namespace NeeView
                 }
                 else if (property.GetCustomAttribute(typeof(ObsoleteAttribute)) != null)
                 {
-                    Trace($"Merge: {property.Name} is obsolete");
+                    LocalDebug.WriteLine($"Merge: {property.Name} is obsolete");
                 }
                 else if (options.IsIgnoreEnabled && property.GetCustomAttribute(typeof(ObjectMergeIgnoreAttribute)) != null)
                 {
-                    Trace($"Merge: {property.Name} is ignore");
+                    LocalDebug.WriteLine($"Merge: {property.Name} is ignore");
                 }
                 else if (property.GetSetMethod(false) == null)
                 {
-                    Trace($"Merge: {property.Name} is readonly");
+                    LocalDebug.WriteLine($"Merge: {property.Name} is readonly");
                 }
                 else if (property.PropertyType.IsValueType || property.PropertyType == typeof(string))
                 {
@@ -81,21 +83,5 @@ namespace NeeView
                 }
             }
         }
-
-        #region LOCAL_DEBUG
-
-        [Conditional("LOCAL_DEBUG")]
-        private static void Trace(string message)
-        {
-            Debug.WriteLine($"{nameof(ObjectMerge)}: {message}");
-        }
-
-        [Conditional("LOCAL_DEBUG")]
-        private static void Trace(string format, params object[] args)
-        {
-            Debug.WriteLine($"{nameof(ObjectMerge)}: {string.Format(CultureInfo.InvariantCulture, format, args)}");
-        }
-
-        #endregion LOCAL_DEBUG
     }
 }

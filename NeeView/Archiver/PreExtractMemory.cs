@@ -1,12 +1,14 @@
 ﻿//#define LOCAL_DEBUG
 
+using NeeLaboratory.Generators;
 using System;
 using System.Diagnostics;
 using System.Globalization;
 
 namespace NeeView
 {
-    public class PreExtractMemory
+    [LocalDebug]
+    public partial class PreExtractMemory
     {
         public class Key : IDisposable
         {
@@ -79,7 +81,7 @@ namespace NeeView
         {
             var key = new Key(this, size);
             _size += key.Size;
-            Trace($"Open: {key.Size:N0}byte: {Size:N0}/{Capacity:N0}");
+            LocalDebug.WriteLine($"Open: {key.Size:N0}byte: {Size:N0}/{Capacity:N0}");
             return key;
         }
 
@@ -87,24 +89,8 @@ namespace NeeView
         {
             key.Detach();
             _size -= key.Size;
-            Trace($"Close: {key.Size:N0}byte: {Size:N0}/{Capacity:N0}");
+            LocalDebug.WriteLine($"Close: {key.Size:N0}byte: {Size:N0}/{Capacity:N0}");
         }
-
-        #region LOCAL_DEBUG
-
-        [Conditional("LOCAL_DEBUG")]
-        private static void Trace(string message)
-        {
-            Debug.WriteLine($"{nameof(PreExtractMemory)}: {message}");
-        }
-
-        [Conditional("LOCAL_DEBUG")]
-        private static void Trace(string format, params object[] args)
-        {
-            Debug.WriteLine($"{nameof(PreExtractMemory)}: {string.Format(CultureInfo.InvariantCulture, format, args)}");
-        }
-
-        #endregion LOCAL_DEBUG
     }
 
 }

@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Globalization;
 using NeeView.Threading;
+using NeeLaboratory.Generators;
 
 
 namespace NeeLaboratory.IO.Nodes
@@ -18,7 +19,8 @@ namespace NeeLaboratory.IO.Nodes
     /// <summary>
     /// ファイル監視付きファイルツリー
     /// </summary>
-    public class FileTree : NodeTree, IDisposable
+    [LocalDebug]
+    public partial class FileTree : NodeTree, IDisposable
     {
         private readonly string _path;
         private FileSystemWatcher? _fileSystemWatcher;
@@ -105,7 +107,7 @@ namespace NeeLaboratory.IO.Nodes
                 if (_initialized) return;
                 InitializeWatcher(_recurseSubdirectories);
 
-                Trace($"Initialize: ...");
+                LocalDebug.WriteLine($"Initialize: ...");
 
                 await Task.Run(async () =>
                 {
@@ -166,7 +168,7 @@ namespace NeeLaboratory.IO.Nodes
             // 既に子が定義されているなら処理しない
             if (parent.Children is not null)
             {
-                Trace($"CreateChildrenRecursive: Children already exists: {directoryInfo.FullName}");
+                LocalDebug.WriteLine($"CreateChildrenRecursive: Children already exists: {directoryInfo.FullName}");
                 return parent;
             }
 
@@ -195,7 +197,7 @@ namespace NeeLaboratory.IO.Nodes
             // 既に子が定義されているなら処理しない
             if (parent.Children is not null)
             {
-                Trace($"CreateChildrenRecursive: Children already exists: {directoryInfo.FullName}");
+                LocalDebug.WriteLine($"CreateChildrenRecursive: Children already exists: {directoryInfo.FullName}");
                 return parent;
             }
 
@@ -274,18 +276,18 @@ namespace NeeLaboratory.IO.Nodes
             var info = CreateFileInfo(path);
             if ((info.Attributes & _enumerationOptions.AttributesToSkip) != 0)
             {
-                Trace($"Cannot Add: AttributeToSkip: {path}");
+                LocalDebug.WriteLine($"Cannot Add: AttributeToSkip: {path}");
                 return;
             }
 
             var node = Add(info.FullName);
             if (node is null)
             {
-                Trace($"Cannot Add: {path}");
+                LocalDebug.WriteLine($"Cannot Add: {path}");
                 return;
             }
 
-            Trace($"Add: {path}");
+            LocalDebug.WriteLine($"Add: {path}");
             Debug.Assert(node.FullName == path);
             AttachContent(node, info);
 
@@ -302,7 +304,7 @@ namespace NeeLaboratory.IO.Nodes
             var node = Find(oldPath);
             if (node is null)
             {
-                Trace($"Cannot Rename: Not found: {path}");
+                LocalDebug.WriteLine($"Cannot Rename: Not found: {path}");
                 // リストにない項目は追加を試みる
                 Add(path, token);
                 return;
@@ -315,7 +317,7 @@ namespace NeeLaboratory.IO.Nodes
                 return;
             }
 
-            Trace($"Rename: {oldPath} -> {path}");
+            LocalDebug.WriteLine($"Rename: {oldPath} -> {path}");
             Rename(oldPath, Path.GetFileName(path));
 
             // コンテンツ更新
@@ -329,11 +331,11 @@ namespace NeeLaboratory.IO.Nodes
             var node = Remove(path);
             if (node is null)
             {
-                Trace($"Cannot Removed: {path}");
+                LocalDebug.WriteLine($"Cannot Removed: {path}");
                 return;
             }
 
-            Trace($"Removed: {path}");
+            LocalDebug.WriteLine($"Removed: {path}");
 
             // 自身と子のコンテンツクリア
             foreach (var n in node.Walk())
@@ -404,31 +406,25 @@ namespace NeeLaboratory.IO.Nodes
 
         private void Watcher_Created(object sender, FileSystemEventArgs e)
         {
-            Trace($"Watcher created: {e.FullPath}");
+            LocalDebug.WriteLine($"Watcher created: {e.FullPath}");
             _jobEngine.Enqueue(new FileSystemJob(this, FileSystemAction.Created, e));
         }
 
         private void Watcher_Deleted(object sender, FileSystemEventArgs e)
         {
-            Trace($"Watcher deleted: {e.FullPath}");
+            LocalDebug.WriteLine($"Watcher deleted: {e.FullPath}");
             _jobEngine.Enqueue(new FileSystemJob(this, FileSystemAction.Deleted, e));
         }
 
         private void Watcher_Renamed(object? sender, RenamedEventArgs e)
         {
-            Trace($"Watcher renamed: {e.OldFullPath} => {e.Name}");
+            LocalDebug.WriteLine($"Watcher renamed: {e.OldFullPath} => {e.Name}");
             _jobEngine.Enqueue(new FileSystemJob(this, FileSystemAction.Renamed, e));
         }
 
         private void Watcher_Changed(object? sender, FileSystemEventArgs e)
         {
             // 情報更新？
-        }
-
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{nameof(FileTree)}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
         }
 
 

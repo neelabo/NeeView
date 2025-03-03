@@ -7,11 +7,13 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Shapes;
+using NeeLaboratory.Generators;
 using NeeView.PageFrames;
 
 namespace NeeView
 {
-    public static class ViewContentTools
+    [LocalDebug]
+    public static partial class ViewContentTools
     {
         public static FrameworkElement CreateLoadingContent(PageFrameElement source, bool isBlackBackground, bool showProgress)
         {
@@ -73,14 +75,14 @@ namespace NeeView
             // ScalingMode が指定されている
             if (scalingMode is not null)
             {
-                Trace($"XX: Force {scalingMode.Value}: {imageSize:f0}");
+                LocalDebug.WriteLine($"XX: Force {scalingMode.Value}: {imageSize:f0}");
                 RenderOptions.SetBitmapScalingMode(element, scalingMode.Value);
                 element.SnapsToDevicePixels = scalingMode.Value == BitmapScalingMode.NearestNeighbor;
             }
             // 画像サイズがビッタリの場合はドットバイドットになるような設定
             else if (contentSize.IsRightAngle && Math.Abs(contentSize.PixelSize.Width - imageSize.Width) < 1.1 && Math.Abs(contentSize.PixelSize.Height - imageSize.Height) < 1.1)
             {
-                Trace($"OO: NearestNeighbor: {imageSize:f0}");
+                LocalDebug.WriteLine($"OO: NearestNeighbor: {imageSize:f0}");
                 RenderOptions.SetBitmapScalingMode(element, BitmapScalingMode.NearestNeighbor);
                 element.SnapsToDevicePixels = true;
             }
@@ -88,23 +90,16 @@ namespace NeeView
             // TODO: Config.Current参照はよろしくない
             else if (Config.Current.ImageDotKeep.IsImageDotKeep(contentSize.PixelSize, imageSize))
             {
-                Trace($"XX: NearestNeighbor: {imageSize:f0} != request {contentSize.PixelSize:f0}");
+                LocalDebug.WriteLine($"XX: NearestNeighbor: {imageSize:f0} != request {contentSize.PixelSize:f0}");
                 RenderOptions.SetBitmapScalingMode(element, BitmapScalingMode.NearestNeighbor);
                 element.SnapsToDevicePixels = true;
             }
             else
             {
-                Trace($"XX: Fantastic: {imageSize:f0} != request {contentSize.PixelSize:f0}");
+                LocalDebug.WriteLine($"XX: Fantastic: {imageSize:f0} != request {contentSize.PixelSize:f0}");
                 RenderOptions.SetBitmapScalingMode(element, BitmapScalingMode.Fant);
                 element.SnapsToDevicePixels = false;
             }
-        }
-
-
-        [Conditional("LOCAL_DEBUG")]
-        private static void Trace(string message)
-        {
-            Debug.WriteLine($"{nameof(ViewContentTools)}: {message}");
         }
 
     }

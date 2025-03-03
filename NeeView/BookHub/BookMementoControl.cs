@@ -1,6 +1,7 @@
 ﻿//#define LOCAL_DEBUG
 
 using NeeLaboratory.ComponentModel;
+using NeeLaboratory.Generators;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -12,7 +13,8 @@ namespace NeeView
     /// <summary>
     /// ブックに対する履歴操作
     /// </summary>
-    public class BookMementoControl : IDisposable
+    [LocalDebug]
+    public partial class BookMementoControl : IDisposable
     {
         private readonly Book _book;
         private readonly BookHistoryCollection _historyCollection;
@@ -74,7 +76,7 @@ namespace NeeView
 
             if (e.IsTopPageChanged)
             {
-                Trace("CurrentPageChanged");
+                LocalDebug.WriteLine("CurrentPageChanged");
                 _pageChangedCount++;
                 _historyRemoved = false;
             }
@@ -90,7 +92,7 @@ namespace NeeView
             var book = _book;
             if (book is null) return;
 
-            Trace("Try save BookMemento...");
+            LocalDebug.WriteLine("Try save BookMemento...");
 
             bool allowUpdateHistory = !book.IsKeepHistoryOrder || Config.Current.History.IsForceUpdateHistory;
 
@@ -102,7 +104,7 @@ namespace NeeView
                 if (memento is not null)
                 {
                     BookHistoryCollection.Current.Add(memento, false);
-                    Trace("Try save BookMemento: Saved");
+                    LocalDebug.WriteLine("Try save BookMemento: Saved");
                 }
             }
         }
@@ -139,7 +141,7 @@ namespace NeeView
             // 履歴の保存
             if (CanHistory(book))
             {
-                Trace("Save BookMemento.");
+                LocalDebug.WriteLine("Save BookMemento.");
                 BookHistoryCollection.Current.Add(memento, isKeepHistoryOrder);
             }
         }
@@ -163,12 +165,6 @@ namespace NeeView
                 && (Config.Current.History.IsUncHistoryEnabled || !LoosePath.IsUnc(book.Path));
         }
 
-
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
-        }
     }
 }
 

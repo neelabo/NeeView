@@ -1,5 +1,6 @@
 ﻿//#define LOCAL_DEBUG
 
+using NeeLaboratory.Generators;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,7 +9,8 @@ using System.Windows;
 
 namespace NeeView
 {
-    public class PendingItemManager : IDisposable
+    [LocalDebug]
+    public partial class PendingItemManager : IDisposable
     {
         private static PendingItemManager? _current;
         public static PendingItemManager Current => _current ?? throw new InvalidOperationException("Not initialized.");
@@ -36,7 +38,7 @@ namespace NeeView
             var item = new PendingItem(_clipboardWatcher, guid, pages);
             lock (_lock)
             {
-                Trace($"Add: {item}");
+                LocalDebug.WriteLine($"Add: {item}");
                 _items.Add(item);
                 item.Completed += PendingItem_Completed;
                 item.Start();
@@ -54,7 +56,7 @@ namespace NeeView
 
             lock (_lock)
             {
-                Trace($"Remove: {unit}");
+                LocalDebug.WriteLine($"Remove: {unit}");
                 unit.Dispose();
                 _items.Remove(unit);
             }
@@ -66,7 +68,7 @@ namespace NeeView
 
             lock (_lock)
             {
-                Trace($"Cancel: All");
+                LocalDebug.WriteLine($"Cancel: All");
                 foreach (var unit in _items)
                 {
                     unit.Dispose();
@@ -95,14 +97,5 @@ namespace NeeView
             GC.SuppressFinalize(this);
         }
 
-        #region LOCAL_DEBUG
-
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {s}");
-        }
-
-        #endregion LOCAL_DEBUG
     }
 }

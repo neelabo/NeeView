@@ -1,4 +1,5 @@
 ﻿//#define LOCAL_DEBUG
+using NeeLaboratory.Generators;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,7 +9,8 @@ using System.Threading;
 
 namespace NeeView
 {
-    public class FileSearchResultWatcher : IDisposable, ISearchResult<FileItem>
+    [LocalDebug]
+    public partial class FileSearchResultWatcher : IDisposable, ISearchResult<FileItem>
     {
         /// <summary>
         /// 所属する検索エンジン
@@ -53,7 +55,7 @@ namespace NeeView
 
             foreach (var item in items)
             {
-                Trace($"Add: {item.Path}");
+                LocalDebug.WriteLine($"Add: {item.Path}");
                 _result.Items.Add(item);
                 CollectionChanged?.Invoke(this, new CollectionChangedEventArgs<FileItem>(CollectionChangedAction.Add, item));
             }
@@ -64,7 +66,7 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
-            Trace($"Remove: {e.FileItem.Path}");
+            LocalDebug.WriteLine($"Remove: {e.FileItem.Path}");
             _result.Items.Remove(e.FileItem);
             CollectionChanged?.Invoke(this, new CollectionChangedEventArgs<FileItem>(CollectionChangedAction.Remove, e.FileItem));
         }
@@ -75,7 +77,7 @@ namespace NeeView
             Debug.Assert(e.OldFileItem != null);
             if (e.OldFileItem is null) return;
 
-            Trace($"Change: {e.FileItem.Path} <- {e.OldFileItem.Path}");
+            LocalDebug.WriteLine($"Change: {e.FileItem.Path} <- {e.OldFileItem.Path}");
             var index = _result.Items.IndexOf(e.OldFileItem);
             if (index < 0)
             {
@@ -138,12 +140,6 @@ namespace NeeView
             GC.SuppressFinalize(this);
         }
         #endregion
-
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
-        }
 
     }
 

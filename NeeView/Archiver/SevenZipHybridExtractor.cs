@@ -1,5 +1,6 @@
 ﻿//#define LOCAL_DEBUG
 
+using NeeLaboratory.Generators;
 using SevenZip;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,8 @@ using System.Threading.Tasks;
 
 namespace NeeView
 {
-    public class SevenZipHybridExtractor
+    [LocalDebug]
+    public partial class SevenZipHybridExtractor
     {
         private readonly SevenZipExtractor _extractor;
         private readonly string _directory;
@@ -33,7 +35,7 @@ namespace NeeView
             _map.Clear();
             _cancellationToken = token;
 
-            Trace($"PreExtract: ...");
+            LocalDebug.WriteLine($"PreExtract: ...");
             _stopwatch.Restart();
             try
             {
@@ -47,13 +49,13 @@ namespace NeeView
                 _extractor.FileExtractionStarted -= Extractor_FileExtractionStarted;
                 _extractor.FileExtractionFinished -= Extractor_FileExtractionFinished;
                 _stopwatch.Stop();
-                Trace($"PreExtract: done. {_stopwatch.ElapsedMilliseconds}ms");
+                LocalDebug.WriteLine($"PreExtract: done. {_stopwatch.ElapsedMilliseconds}ms");
             }
         }
 
         private void Extractor_FileExtractionStarted(object? sender, FileInfoEventArgs e)
         {
-            //Trace($"Extract.Started: {e.FileInfo}, {e.FileInfo.Size:N0}byte, {_stopwatch.ElapsedMilliseconds}ms");
+            //LocalDebug.WriteLine($"Extract.Started: {e.FileInfo}, {e.FileInfo.Size:N0}byte, {_stopwatch.ElapsedMilliseconds}ms");
             e.Cancel = _cancellationToken.IsCancellationRequested;
         }
 
@@ -66,7 +68,7 @@ namespace NeeView
             {
                 _map.Remove(e.FileInfo.Index);
                 item.Stream.Dispose();
-                //Trace($"Extract.Finished: {e.FileInfo}, {e.FileInfo.Size:N0}byte, {_stopwatch.ElapsedMilliseconds}ms");
+                //LocalDebug.WriteLine($"Extract.Finished: {e.FileInfo}, {e.FileInfo.Size:N0}byte, {_stopwatch.ElapsedMilliseconds}ms");
                 if (item.Data is not null)
                 {
                     Debug.Assert(item.Data is not byte[] rawData || (int)e.FileInfo.Size == rawData.Length);
@@ -104,34 +106,6 @@ namespace NeeView
             var extension = info.IsDirectory ? "" : LoosePath.GetExtension(info.FileName);
             return $"{info.Index:000000}{extension}";
         }
-
-        #region LOCAL_DEBUG
-
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {s}");
-        }
-
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
-        }
-
-        [Conditional("LOCAL_DEBUG")]
-        private static void StaticTrace(string message)
-        {
-            Debug.WriteLine($"{nameof(SevenZipHybridExtractor)}: {message}");
-        }
-
-        [Conditional("LOCAL_DEBUG")]
-        private static void StaticTrace(string format, params object[] args)
-        {
-            Debug.WriteLine($"{nameof(SevenZipHybridExtractor)}: {string.Format(CultureInfo.InvariantCulture, format, args)}");
-        }
-
-        #endregion LOCAL_DEBUG
     }
 
 

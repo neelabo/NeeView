@@ -1,4 +1,5 @@
 ﻿//#define LOCAL_DEBUG
+using NeeLaboratory.Generators;
 using NeeLaboratory.IO.Nodes;
 using System;
 using System.Collections;
@@ -10,7 +11,8 @@ using System.Linq;
 
 namespace NeeView
 {
-    public class FileItemTree : FileTree
+    [LocalDebug]
+    public partial class FileItemTree : FileTree
     {
         public FileItemTree(string path, EnumerationOptions enumerationOptions) : base(path, enumerationOptions)
         {
@@ -45,7 +47,7 @@ namespace NeeView
 
             var fileItem = new FileItem(file);
             node.Content = fileItem;
-            Trace($"Add: {fileItem}");
+            LocalDebug.WriteLine($"Add: {fileItem}");
             ContentAdded?.Invoke(this, new FileTreeContentChangedEventArgs(fileItem));
         }
 
@@ -57,7 +59,7 @@ namespace NeeView
             node.Content = null;
             if (fileItem is not null)
             {
-                Trace($"Remove: {fileItem}");
+                LocalDebug.WriteLine($"Remove: {fileItem}");
                 ContentRemoved?.Invoke(this, new FileTreeContentChangedEventArgs(fileItem));
             }
         }
@@ -105,12 +107,6 @@ namespace NeeView
             fileItem = new FileItem(info);
             node.Content = fileItem;
             return fileItem;
-        }
-
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
         }
 
     }

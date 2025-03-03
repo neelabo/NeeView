@@ -1,12 +1,14 @@
-﻿//b#define LOCAL_DEBUG
+﻿//#define LOCAL_DEBUG
 
+using NeeLaboratory.Generators;
 using System;
 using System.Diagnostics;
 using System.Threading;
 
 namespace NeeLaboratory.Threading
 {
-    public class BusyLockEvent : IDisposable
+    [LocalDebug]
+    public partial class BusyLockEvent : IDisposable
     {
         private volatile int _currentCount;
         private bool _disposed;
@@ -67,11 +69,11 @@ namespace NeeLaboratory.Threading
             lock (_lock)
             {
                 _currentCount++;
-                Trace($"Increment: {_currentCount}");
+                LocalDebug.WriteLine($"Increment: {_currentCount}");
                 if (_currentCount == 1)
                 {
                     _event.Reset();
-                    Trace($"IsSet: {_event.IsSet}");
+                    LocalDebug.WriteLine($"IsSet: {_event.IsSet}");
                 }
             }
         }
@@ -85,11 +87,11 @@ namespace NeeLaboratory.Threading
                     throw new InvalidOperationException("Nothing is locked.");
                 }
                 _currentCount--;
-                Trace($"Decrement: {_currentCount}");
+                LocalDebug.WriteLine($"Decrement: {_currentCount}");
                 if (_currentCount == 0)
                 {
                     _event.Set();
-                    Trace($"IsSet: {_event.IsSet}");
+                    LocalDebug.WriteLine($"IsSet: {_event.IsSet}");
                 }
             }
         }
@@ -170,10 +172,5 @@ namespace NeeLaboratory.Threading
             }
         }
 
-        [Conditional("LOCAL_DEBUG")]
-        private static void Trace(string message)
-        {
-            Debug.WriteLine($"{nameof(BusyLockEvent)}: {message}");
-        }
     }
 }

@@ -425,11 +425,5 @@ namespace NeeView
 
         #endregion ページ出力
 
-
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {s}");
-        }
     }
 }

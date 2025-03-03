@@ -29,6 +29,7 @@ namespace NeeView
     /// <summary>
     /// MainWindow.xaml の相互作用ロジック
     /// </summary>
+    [LocalDebug]
     public partial class MainWindow : Window, IDpiScaleProvider, IHasWindowController, INotifyMouseHorizontalWheelChanged, IHasRenameManager, IMainViewWindow
     {
         private static MainWindow? _current;
@@ -913,18 +914,18 @@ namespace NeeView
         {
             if (ContextMenuWatcher.TargetElement != null)
             {
-                LocalWriteLine($"ContextMenu is exists");
+                LocalDebug.WriteLine($"ContextMenu is exists");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(_vm.Title))
             {
-                LocalWriteLine($"PageTitle is empty");
+                LocalDebug.WriteLine($"PageTitle is empty");
                 _pageCaptionVisibility.SetDelayVisibility(Visibility.Collapsed, 0, NeeView.Windows.Data.DelayValueOverwriteOption.Force);
             }
             else
             {
-                LocalWriteLine($"IsMouseOver: {this.LayerStatusArea.IsMouseOver}, {this.DockStatusArea.IsMouseOver}");
+                LocalDebug.WriteLine($"IsMouseOver: {this.LayerStatusArea.IsMouseOver}, {this.DockStatusArea.IsMouseOver}");
                 var isVisible = Config.Current.PageTitle.IsEnabled && (this.LayerStatusArea.IsMouseOver || this.DockStatusArea.IsMouseOver);
                 if (isVisible)
                 {
@@ -966,12 +967,6 @@ namespace NeeView
         private static void Debug_Initialize()
         {
             DebugGesture.Initialize();
-        }
-
-        [Conditional("LOCAL_DEBUG")]
-        private void LocalWriteLine(string s, params object[] args)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
         }
 
         #endregion

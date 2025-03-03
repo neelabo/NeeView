@@ -33,6 +33,7 @@ namespace NeeView
     /// <summary>
     /// MouseInputManager
     /// </summary>
+    [LocalDebug]
     public partial class MouseInput : BindableBase
     {
         /// <summary>
@@ -338,7 +339,7 @@ namespace NeeView
         /// </summary>
         private void OnMouseButtonDown(object sender, MouseButtonEventArgs e)
         {
-            TracePoint("Down", e);
+            LocalWritePoint("Down", e);
 
             bool isEnabled = (sender == _sender)
                 && !IsStylusDevice(e)
@@ -364,7 +365,7 @@ namespace NeeView
         /// </summary>
         private void OnMouseButtonUp(object sender, MouseButtonEventArgs e)
         {
-            TracePoint("Up", e);
+            LocalWritePoint("Up", e);
 
             bool isEnabled = (sender == _sender)
                 && !IsStylusDevice(e)
@@ -372,7 +373,7 @@ namespace NeeView
 
             if (isEnabled)
             {
-                Trace($"Up.Time: {System.Environment.TickCount}");
+                LocalWriteLine($"Up.Time: {System.Environment.TickCount}");
                 _context.Speedometer.Add(e.GetPosition(_sender), e.Timestamp);
 
                 _current?.OnMouseButtonUp(_sender, e);
@@ -433,7 +434,7 @@ namespace NeeView
             var buttons = MouseButtonBitsExtensions.Create(e);
             if (buttons.Any())
             {
-                TracePoint("Move", e);
+                LocalWritePoint("Move", e);
             }
 
             bool isEnabled = (sender == _sender)
@@ -497,19 +498,18 @@ namespace NeeView
             _current?.OnUpdateSelectedFrame(changeType);
         }
 
-
         [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
+        private void LocalWriteLine(string s, params object[] args)
         {
-            Debug.WriteLine($"{this.GetType().Name}({_serialNumber}): {string.Format(CultureInfo.InvariantCulture, s, args)}");
+            LocalDebug.WriteLine($"({_serialNumber}): " + s);
         }
 
         [Conditional("LOCAL_DEBUG")]
-        private void TracePoint(string label, MouseEventArgs e)
+        private void LocalWritePoint(string label, MouseEventArgs e)
         {
             var buttons = MouseButtonBitsExtensions.Create(e);
             var isStylus = e.StylusDevice != null;
-            Trace($"{label}: {isStylus} {e.GetPosition(_sender):f0}, {e.Timestamp}, {buttons}");
+            LocalWriteLine($"{label}: {isStylus} {e.GetPosition(_sender):f0}, {e.Timestamp}, {buttons}");
         }
 
     }

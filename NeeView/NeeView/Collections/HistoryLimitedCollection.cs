@@ -1,6 +1,7 @@
 ﻿//#define LOCAL_DEBUG
 
 using NeeLaboratory;
+using NeeLaboratory.Generators;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,7 +13,8 @@ namespace NeeView.Collections
     /// 履歴。容量制限有り
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class HistoryLimitedCollection<T>
+    [LocalDebug]
+    public partial class HistoryLimitedCollection<T>
     {
         private readonly T?[] _buffer;
         private readonly int _bufferCapacity;
@@ -76,7 +78,7 @@ namespace NeeView.Collections
 
             Set(_bufferSize - 1, element);
             _current = _bufferSize;
-            Trace($"Add: {element}: {GetInfoString()}");
+            LocalDebug.WriteLine($"Add: {element}: {GetInfoString()}");
             Changed?.Invoke(this, EventArgs.Empty);
         }
 
@@ -89,14 +91,14 @@ namespace NeeView.Collections
             if (_current > _bufferSize)
             {
                 _current = _bufferSize;
-                Trace($"TrimEnd: {GetInfoString()}");
+                LocalDebug.WriteLine($"TrimEnd: {GetInfoString()}");
             }
         }
 
         public void Move(int delta)
         {
             _current = MathUtility.Clamp(_current + delta, 0, _bufferSize);
-            Trace($"Move: Delta={delta}: {GetInfoString()}");
+            LocalDebug.WriteLine($"Move: Delta={delta}: {GetInfoString()}");
             Changed?.Invoke(this, EventArgs.Empty);
         }
 
@@ -133,7 +135,7 @@ namespace NeeView.Collections
         public void SetCurrent(int index)
         {
             _current = MathUtility.Clamp(index, 0, _bufferSize);
-            Trace($"SetCurrent: Index={index}: {GetInfoString()}");
+            LocalDebug.WriteLine($"SetCurrent: Index={index}: {GetInfoString()}");
             Changed?.Invoke(this, EventArgs.Empty);
         }
 
@@ -175,10 +177,5 @@ namespace NeeView.Collections
             return $"Top={_bufferTop}, Size={_bufferSize}, Current={_current}";
         }
 
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
-        }
     }
 }

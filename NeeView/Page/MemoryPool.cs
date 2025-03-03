@@ -1,5 +1,6 @@
 ﻿//#define LOCAL_DEBUG
 
+using NeeLaboratory.Generators;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,7 +9,8 @@ using System.Linq;
 
 namespace NeeView
 {
-    public class MemoryPool : IDisposable
+    [LocalDebug]
+    public partial class MemoryPool : IDisposable
     {
         private class MemoryUnit : IMemoryElement
         {
@@ -104,7 +106,7 @@ namespace NeeView
 
                 AssertTotalSize();
 
-                Trace($"Add: [{element.Owner}] TotalSize {TotalSize / 1024:N0} KB (+{element.MemorySize / 1024:N0} KB)");
+                LocalDebug.WriteLine($"Add: [{element.Owner}] TotalSize {TotalSize / 1024:N0} KB (+{element.MemorySize / 1024:N0} KB)");
             }
         }
 
@@ -118,12 +120,12 @@ namespace NeeView
             {
                 if (_disposedValue) return;
 
-                Trace($"Cleanup: TotalSize {TotalSize / 1024:N0} KB to {limitSize / 1024:N0} KB");
+                LocalDebug.WriteLine($"Cleanup: TotalSize {TotalSize / 1024:N0} KB to {limitSize / 1024:N0} KB");
                 if (limitSize >= TotalSize) return;
 
                 // 削除可能順にソート
                 var units = _collection.Values.OrderByDescending(e => e.Owner, comparer).ToList();
-                Trace($"Sorted: " + string.Join(", ", units.Select(e => e.Owner.Index.ToString())));
+                LocalDebug.WriteLine($"Sorted: " + string.Join(", ", units.Select(e => e.Owner.Index.ToString())));
 
                 int index = 0;
                 while (limitSize < TotalSize)
@@ -187,7 +189,7 @@ namespace NeeView
                 AssertTotalSize();
 
                 unit.Unload();
-                Trace($"Remove: [{unit.Owner}] TotalSize {TotalSize / 1024:N0} KB (-{unit.Size / 1024:N0} KB)");
+                LocalDebug.WriteLine($"Remove: [{unit.Owner}] TotalSize {TotalSize / 1024:N0} KB (-{unit.Size / 1024:N0} KB)");
             }
         }
 
@@ -201,11 +203,6 @@ namespace NeeView
             }
         }
 
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{this.GetType().Name}.{_name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
-        }
     }
 
 }

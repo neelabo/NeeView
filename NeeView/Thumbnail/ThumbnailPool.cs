@@ -1,5 +1,6 @@
 ﻿//#define LOCAL_DEBUG
 
+using NeeLaboratory.Generators;
 using NeeView.Collections.Generic;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,8 @@ namespace NeeView
     /// サムネイルを使用するタイミングで随時追加。
     /// 容量を越えたら古いものからクリア処理を行う。
     /// </summary>
-    public class ThumbnailPool
+    [LocalDebug]
+    public partial class ThumbnailPool
     {
         /// <summary>
         /// 管理ユニット
@@ -122,12 +124,12 @@ namespace NeeView
                 if (last?.Thumbnail == thumbnail)
                 {
                     last.Touch();
-                    Trace($"Touch: {thumbnail}, count={_collection.Count}");
+                    LocalDebug.WriteLine($"Touch: {thumbnail}, count={_collection.Count}");
                 }
                 else
                 {
                     _collection.Add(new ThumbnailUnit(thumbnail));
-                    Trace($"Add: {thumbnail}, count={_collection.Count}");
+                    LocalDebug.WriteLine($"Add: {thumbnail}, count={_collection.Count}");
                     Cleanup();
                 }
             }
@@ -142,11 +144,11 @@ namespace NeeView
             // 1st path.
             if (_collection.Count < GetTolerance1()) return false;
 
-            Trace($"Cleanup... {_collection.Count}");
+            LocalDebug.WriteLine($"Cleanup... {_collection.Count}");
 
             _collection.RemoveAll(e => !e.IsValid);
 
-            Trace($"Cleanup: Level.1: {_collection.Count}: No.{_serial}");
+            LocalDebug.WriteLine($"Cleanup: Level.1: {_collection.Count}: No.{_serial}");
 
             // 2nd path.
             if (_collection.Count < GetTolerance2()) return false;
@@ -160,16 +162,10 @@ namespace NeeView
 
             _collection.RemoveRange(0, erase);
 
-            Trace($"Cleanup: Level.2: {_collection.Count}");
+            LocalDebug.WriteLine($"Cleanup: Level.2: {_collection.Count}");
 
             return true;
         }
 
-
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
-        }
     }
 }

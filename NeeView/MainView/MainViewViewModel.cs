@@ -215,17 +215,5 @@ namespace NeeView
             window.Height = newCanvasSize.Height + frameHeight;
         }
 
-
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
-        }
-
-        [Conditional("LOCAL_DEBUG")]
-        private static void StaticTrace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{nameof(MainViewViewModel)}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
-        }
     }
 }

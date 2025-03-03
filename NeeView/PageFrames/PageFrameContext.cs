@@ -14,6 +14,7 @@ namespace NeeView.PageFrames
     /// <summary>
     /// PageFrameBox 状態情報
     /// </summary>
+    [LocalDebug]
     [NotifyPropertyChanged]
     public partial class PageFrameContext : INotifyPropertyChanged, IStaticFrame, IDisposable, IContentSizeCalculatorProfile
     {
@@ -392,15 +393,9 @@ namespace NeeView.PageFrames
 
         public void SetAutoStretchTarget(PageRange range)
         {
-            Trace($"AutoStretchTarget: {range}");
+            LocalDebug.WriteLine($"AutoStretchTarget: {range}");
             _autoStretchTarget = range;
         }
 
-
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
-        }
     }
 }

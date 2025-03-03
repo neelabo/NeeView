@@ -16,6 +16,7 @@ using NeeView.PageFrames;
 namespace NeeView
 {
     // TODO: BookMemoryService: RawSourceとViewSource を同列に管理。ページ単位で増減させる方向で。
+    [LocalDebug]
     [NotifyPropertyChanged]
     public partial class BookPageLoader : IDisposable, INotifyPropertyChanged
     {
@@ -171,7 +172,7 @@ namespace NeeView
 
             lock (_lock)
             {
-                Trace($"LoadAsync: {context}");
+                LocalDebug.WriteLine($"LoadAsync: {context}");
                 _cancellationTokenSource?.Cancel();
                 _cancellationTokenSource?.Dispose();
                 _cancellationTokenSource = new CancellationTokenSource();
@@ -191,9 +192,9 @@ namespace NeeView
                 ClearPageState();
 
                 // 指定分読み込み
-                Trace($"LoadMainAsync...");
+                LocalDebug.WriteLine($"LoadMainAsync...");
                 await LoadMainAsync(range, direction, linkedTokenSource.Token);
-                Trace($"LoadMainAsync done.");
+                LocalDebug.WriteLine($"LoadMainAsync done.");
 
                 // 先読み：次１ページ
                 var next = await LoadAheadAsync(range.Next(direction), direction, 1, linkedTokenSource.Token);
@@ -387,18 +388,6 @@ namespace NeeView
             return frame;
         }
 
-
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {s}");
-        }
-
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
-        }
     }
 
 

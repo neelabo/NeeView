@@ -1,5 +1,6 @@
 ﻿//#define LOCAL_DEBUG
 
+using NeeLaboratory.Generators;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -11,7 +12,8 @@ namespace NeeView
     /// <summary>
     /// 移動速度計測
     /// </summary>
-    public class Speedometer : ISpeedometer
+    [LocalDebug]
+    public partial class Speedometer : ISpeedometer
     {
         private readonly RingList<PointRecord> _points;
         private readonly System.Threading.Lock _lock = new();
@@ -46,7 +48,7 @@ namespace NeeView
             lock (_lock)
             {
                 Chop(timestamp);
-                Trace($"add: point={point:f0}, time={timestamp}");
+                LocalDebug.WriteLine($"add: point={point:f0}, time={timestamp}");
                 _points.Add(new PointRecord(point, timestamp));
             }
         }
@@ -63,7 +65,7 @@ namespace NeeView
                 {
                     if (_points.Any() && timestamp - _points.LastOrDefault().Timestamp <= 0)
                     {
-                        Trace($"chop record over {timestamp}");
+                        LocalDebug.WriteLine($"chop record over {timestamp}");
                         _points.RemoveLast();
                     }
                     else
@@ -103,7 +105,7 @@ namespace NeeView
 
             lock (_lock)
             {
-                TraceDump();
+                LocalWriteDump();
 
                 for (int i = _points.Count - 1; i > 0; i--)
                 {
@@ -118,7 +120,7 @@ namespace NeeView
                         var speed = delta / span;
                         totalSpan += span;
                         speedSum += speed * span;
-                        Trace($"{i}: Speed = {speed:f2}, Span = {span}");
+                        LocalDebug.WriteLine($"{i}: Speed = {speed:f2}, Span = {span}");
                     }
                 }
             }
@@ -126,29 +128,24 @@ namespace NeeView
             if (totalSpan <= 0) return default;
             var velocity = speedSum / totalSpan;
 
-            Trace($"Velocity = {velocity.Length:f2} ({velocity:f2}), TotalSpan = {totalSpan}");
+            LocalDebug.WriteLine($"Velocity = {velocity.Length:f2} ({velocity:f2}), TotalSpan = {totalSpan}");
             return velocity;
         }
 
 
         [Conditional("LOCAL_DEBUG")]
-        private void TraceDump()
+        private void LocalWriteDump()
         {
             lock (_lock)
             {
                 for (int i = 0; i < _points.Count; i++)
                 {
                     var p = _points[i];
-                    Trace($"{i}: Point = {p.Point:f0}, Timestamp = {p.Timestamp}");
+                    LocalDebug.WriteLine($"{i}: Point = {p.Point:f0}, Timestamp = {p.Timestamp}");
                 }
             }
         }
 
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
-        }
 
         /// <summary>
         /// 座標記録

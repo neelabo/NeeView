@@ -1,5 +1,6 @@
 ﻿//#define LOCAL_DEBUG
 
+using NeeLaboratory.Generators;
 using NeeLaboratory.Threading;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,7 +10,8 @@ using System.Threading.Tasks;
 
 namespace NeeView
 {
-    public class ZipArchiveWriterManager
+    [LocalDebug]
+    public partial class ZipArchiveWriterManager
     {
         static ZipArchiveWriterManager() => Current = new ZipArchiveWriterManager();
         public static ZipArchiveWriterManager Current { get; }
@@ -54,7 +56,7 @@ namespace NeeView
             {
                 if (!_archives.TryGetValue(path, out var archive))
                 {
-                    Trace($"Attach {path}");
+                    LocalDebug.WriteLine($"Attach {path}");
                     archive = new ZipArchiveWriter(this, path, encoding);
                     _archives.Add(path, archive);
                 }
@@ -66,7 +68,7 @@ namespace NeeView
         {
             lock (_lock)
             {
-                Trace($"Detach {path}");
+                LocalDebug.WriteLine($"Detach {path}");
                 _archives.Remove(path);
             }
         }
@@ -102,13 +104,6 @@ namespace NeeView
                     archive.Cancel();
                 }
             }
-        }
-
-
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {s}");
         }
     }
 }

@@ -21,6 +21,7 @@ namespace NeeView
     /// サムネイル.
     /// Jpegで保持し、必要に応じてBitmapSourceを生成
     /// </summary>
+    [LocalDebug]
     public partial class Thumbnail : BindableBase, IThumbnail, IDisposable
     {
         /// <summary>
@@ -134,7 +135,7 @@ namespace NeeView
                 if (_image != value)
                 {
                     _image = value;
-                    Trace($"Image={_image is not null}");
+                    LocalWriteLine($"Image={_image is not null}");
                     RaisePropertyChanged();
                     RaisePropertyChanged(nameof(IsValid));
                     if (_image != null)
@@ -218,7 +219,7 @@ namespace NeeView
             if (_imageSourceLoading > 0) return;
             Interlocked.Increment(ref _imageSourceLoading);
 
-            Trace("Create ImageSourceAsync...");
+            LocalWriteLine("Create ImageSourceAsync...");
             Task.Run(() =>
             {
                 try
@@ -231,12 +232,12 @@ namespace NeeView
                             _imageSource = imageSource;
                             ThumbnailLifetimeManagement.Current.Add(this);
                         }
-                        Trace("Create ImageSourceAsync done.");
+                        LocalWriteLine("Create ImageSourceAsync done.");
                         RaisePropertyChanged(nameof(ImageSource));
                     }
                     else
                     {
-                        Trace("Create ImageSourceAsync is null");
+                        LocalWriteLine("Create ImageSourceAsync is null");
                     }
                 }
                 finally
@@ -254,7 +255,7 @@ namespace NeeView
         {
             lock (_lock)
             {
-                Trace("Remove ImageSource");
+                LocalWriteLine("Remove ImageSource");
                 _imageSource = null;
             }
         }
@@ -275,7 +276,7 @@ namespace NeeView
             }
 #endif
             var image = await ThumbnailCache.Current.LoadAsync(_header, token);
-            Trace($"Initialize: from cache={_header.Key}: {(image == null ? "Miss" : "Hit!")}");
+            LocalWriteLine($"Initialize: from cache={_header.Key}: {(image == null ? "Miss" : "Hit!")}");
             Image = image;
         }
 
@@ -305,7 +306,7 @@ namespace NeeView
             if (_disposedValue) return;
             if (IsValid) return;
 
-            Trace($"Initialize: from binary={image?.Length ?? 0} byte");
+            LocalWriteLine($"Initialize: from binary={image?.Length ?? 0} byte");
             Image = image ?? ThumbnailResource.EmptyImage;
 
             SaveCacheAsync();
@@ -319,7 +320,7 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
-            Trace($"Initialize: from type={type}");
+            LocalWriteLine($"Initialize: from type={type}");
             Image = type switch
             {
                 ThumbnailType.Media => ThumbnailResource.MediaImage,
@@ -514,11 +515,10 @@ namespace NeeView
             return $"{name}: LifeSerial={LifeSerial}: Length={_image?.Length ?? 0:#,0}";
         }
 
-
         [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
+        private void LocalWriteLine(string s, params object[] args)
         {
-            Debug.WriteLine($"{this.GetType().Name}({_serialNumber}): {string.Format(CultureInfo.InvariantCulture, s, args)}");
+            LocalDebug.WriteLine($"({_serialNumber}): " + s);
         }
     }
 }

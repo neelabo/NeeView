@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Globalization;
+using NeeLaboratory.Generators;
 
 namespace NeeView
 {
@@ -16,7 +17,8 @@ namespace NeeView
     /// <summary>
     /// 検索コレクション
     /// </summary>
-    public class FolderSearchCollection : FolderCollection, IDisposable
+    [LocalDebug]
+    public partial class FolderSearchCollection : FolderCollection, IDisposable
     {
         private readonly FileSearchResultWatcher _searchResult;
         private readonly FolderCollectionEngine? _engine;
@@ -122,18 +124,18 @@ namespace NeeView
             {
                 case CollectionChangedAction.Add:
                     if (e.Item is null) throw new ArgumentException("e.Item is null");
-                    Trace($"Add: {e.Item}");
+                    LocalDebug.WriteLine($"Add: {e.Item}");
                     RequestCreate(new QueryPath(e.Item.Path));
                     break;
 
                 case CollectionChangedAction.Remove:
-                    Trace($"Remove: {e.Item}");
+                    LocalDebug.WriteLine($"Remove: {e.Item}");
                     if (e.Item is null) throw new ArgumentException("e.Item is null");
                     RequestDelete(new QueryPath(e.Item.Path));
                     break;
 
                 case CollectionChangedAction.Rename:
-                    Trace($"Rename: {e.Item} <= {e.OldItem}");
+                    LocalDebug.WriteLine($"Rename: {e.Item} <= {e.OldItem}");
                     if (e.OldItem is null) throw new ArgumentException("e.OldItem is null");
                     if (e.Item is null) throw new ArgumentException("e.Item is null");
                     RequestRename(new QueryPath(e.OldItem.Path), new QueryPath(e.Item.Path));
@@ -241,11 +243,5 @@ namespace NeeView
         }
         #endregion
 
-
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
-        }
     }
 }

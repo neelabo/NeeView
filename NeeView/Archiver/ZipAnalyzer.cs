@@ -1,5 +1,6 @@
 ﻿//#define LOCAL_DEBUG
 
+using NeeLaboratory.Generators;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -12,7 +13,8 @@ namespace NeeView
     /// ZIPファイル解析。
     /// 現状では簡易UTF8判定処理のみ実装。
     /// </summary>
-    public class ZipAnalyzer : IDisposable
+    [LocalDebug]
+    public partial class ZipAnalyzer : IDisposable
     {
         private readonly ZipBinaryReader _reader;
         private bool _disposedValue;
@@ -52,54 +54,54 @@ namespace NeeView
         public bool IsEncodingUTF8()
         {
             // check header (PK34)
-            //Trace("[PK34] LocalFileHeader:");
+            //LocalDebug.WriteLine("[PK34] LocalFileHeader:");
             //_reader.Seek(0, SeekOrigin.Begin);
             //if (_reader.ReadSignature() != ZipSignatures.LocalFileHeader) throw new FormatException("Signature is not PK34");
 
             // read end of central directory (PK56)
-            Trace("[PK56] End of central directory:");
+            LocalDebug.WriteLine("[PK56] End of central directory:");
             var pos = _reader.SeekEndOfCentralDirectory();
             if (pos < 0) throw new FormatException();
 
             // get number of central directory entries
             _reader.Seek(pos + 8, SeekOrigin.Begin);
             long numOfEntries = _reader.ReadUInt16();
-            Trace($"numOfEntries={numOfEntries}");
+            LocalDebug.WriteLine($"numOfEntries={numOfEntries}");
 
             // get central directory offset
             _reader.Seek(pos + 16, SeekOrigin.Begin);
             long centralDirectoryOffset = _reader.ReadUInt32();
-            Trace($"centralDirectoryOffset={centralDirectoryOffset}");
+            LocalDebug.WriteLine($"centralDirectoryOffset={centralDirectoryOffset}");
 
             // Zip64 ?
             if (numOfEntries == 0xffff || centralDirectoryOffset == 0xffffffff)
             {
-                Trace($"Zip64 now.");
+                LocalDebug.WriteLine($"Zip64 now.");
                 const int zip64EndOfCentralDirectoryLocatorSize = 20;
                 pos = _reader.Seek(pos - zip64EndOfCentralDirectoryLocatorSize, SeekOrigin.Begin);
 
-                Trace($"[PK67] Zip64 central directory locator:");
+                LocalDebug.WriteLine($"[PK67] Zip64 central directory locator:");
                 if (_reader.ReadSignature() != ZipSignatures.Zip64EndOfCentralDirectoryLocator) throw new FormatException("Signature is not PK67");
 
                 _reader.Seek(pos + 8, SeekOrigin.Begin);
                 long zip64EndOfCentralDirectoryOffset = _reader.ReadInt64();
                 pos = _reader.Seek(zip64EndOfCentralDirectoryOffset, SeekOrigin.Begin);
-                Trace($"zip64EndOfCentralDirectoryOffset={zip64EndOfCentralDirectoryOffset}");
+                LocalDebug.WriteLine($"zip64EndOfCentralDirectoryOffset={zip64EndOfCentralDirectoryOffset}");
 
-                Trace($"[PK66] Zip64 central directory record:");
+                LocalDebug.WriteLine($"[PK66] Zip64 central directory record:");
                 if (_reader.ReadSignature() != ZipSignatures.Zip64EndOfCentralDirectoryRecord) throw new FormatException("Signature is not PK66");
 
                 _reader.Seek(pos + 24, SeekOrigin.Begin);
                 numOfEntries = _reader.ReadInt64();
-                Trace($"numOfEntries={numOfEntries}");
+                LocalDebug.WriteLine($"numOfEntries={numOfEntries}");
 
                 _reader.Seek(pos + 48, SeekOrigin.Begin);
                 centralDirectoryOffset = _reader.ReadInt64();
-                Trace($"centralDirectoryOffset={centralDirectoryOffset}");
+                LocalDebug.WriteLine($"centralDirectoryOffset={centralDirectoryOffset}");
             }
 
             // read central directory entries (PK12)
-            Trace("Read central directory entries...");
+            LocalDebug.WriteLine("Read central directory entries...");
             _reader.Seek(centralDirectoryOffset, SeekOrigin.Begin);
 
             // for:
@@ -108,13 +110,13 @@ namespace NeeView
                 pos = _reader.Position;
 
                 // check signature
-                Trace($"[PK12] central directory entry[{i}]:");
+                LocalDebug.WriteLine($"[PK12] central directory entry[{i}]:");
                 if (_reader.ReadSignature() != ZipSignatures.CentralDirectoryEntry) throw new FormatException("Signature is not PK12");
 
                 // get entry bitflag
                 _reader.Seek(pos + 8, SeekOrigin.Begin);
                 var bitFlags = (ZipGeneralBitFlags)_reader.ReadUInt16();
-                Trace($"bitFlags={bitFlags}");
+                LocalDebug.WriteLine($"bitFlags={bitFlags}");
 
                 // has bitflag.UTF8
                 var isUTF8 = bitFlags.HasFlag(ZipGeneralBitFlags.UnicodeText);
@@ -122,16 +124,16 @@ namespace NeeView
                 // get name length
                 _reader.Seek(pos + 28, SeekOrigin.Begin);
                 var nameLength = _reader.ReadUInt16();
-                Trace($"nameLen={nameLength}");
+                LocalDebug.WriteLine($"nameLen={nameLength}");
                 var extraFieldLength = _reader.ReadUInt16();
-                Trace($"extraFieldLength={extraFieldLength}");
+                LocalDebug.WriteLine($"extraFieldLength={extraFieldLength}");
                 var commentLength = _reader.ReadUInt16();
-                Trace($"commentLength={commentLength}");
+                LocalDebug.WriteLine($"commentLength={commentLength}");
 
                 // check string
                 if (isUTF8)
                 {
-                    Trace($"name(UTF8) skip.");
+                    LocalDebug.WriteLine($"name(UTF8) skip.");
                 }
                 else
                 {
@@ -142,12 +144,12 @@ namespace NeeView
                     // if (name.bytes is not UTF8) return false;
                     if (!IsUTF8Binary(name))
                     {
-                        Trace($"name(???)={Environment.Encoding.GetString(name)}");
-                        Trace($"[Result] Unknown encoding.");
+                        LocalDebug.WriteLine($"name(???)={Environment.Encoding.GetString(name)}");
+                        LocalDebug.WriteLine($"[Result] Unknown encoding.");
                         return false;
                     }
 
-                    Trace($"name(UTF8)={Encoding.UTF8.GetString(name)}");
+                    LocalDebug.WriteLine($"name(UTF8)={Encoding.UTF8.GetString(name)}");
                 }
 
                 // seek next
@@ -155,7 +157,7 @@ namespace NeeView
             }
 
             // result
-            Trace($"[Result] UTF8 encoding.");
+            LocalDebug.WriteLine($"[Result] UTF8 encoding.");
             return true;
         }
 
@@ -207,14 +209,6 @@ namespace NeeView
             }
             return true;
         }
-
-
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
-        }
-
 
 
         /// <summary>

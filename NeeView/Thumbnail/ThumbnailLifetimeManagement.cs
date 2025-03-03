@@ -1,5 +1,6 @@
 ﻿//#define LOCAL_DEBUG
 
+using NeeLaboratory.Generators;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -10,7 +11,8 @@ namespace NeeView
     /// <summary>
     /// サムネイルの ImageSource の寿命管理
     /// </summary>
-    public class ThumbnailLifetimeManagement
+    [LocalDebug]
+    public partial class ThumbnailLifetimeManagement
     {
         public static ThumbnailLifetimeManagement Current { get; } = new ThumbnailLifetimeManagement();
 
@@ -23,7 +25,7 @@ namespace NeeView
             lock (_lock)
             {
                 _map[thumbnail] = System.Environment.TickCount;
-                Trace($"Added: {thumbnail.SerialNumber}");
+                LocalWriteLine($"Added: {thumbnail.SerialNumber}");
                 Cleanup();
             }
         }
@@ -38,16 +40,16 @@ namespace NeeView
                 foreach (var thumbnail in removes)
                 {
                     thumbnail.RemoveImageSource();
-                    Trace($"Removed: {thumbnail.SerialNumber}");
+                    LocalWriteLine($"Removed: {thumbnail.SerialNumber}");
                     _map.Remove(thumbnail);
                 }
             }
         }
 
         [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
+        private void LocalWriteLine(string s)
         {
-            Debug.WriteLine($"{this.GetType().Name}({_map.Count}): {string.Format(CultureInfo.InvariantCulture, s, args)}");
+            LocalDebug.WriteLine($"({_map.Count}): " + s);
         }
     }
 }

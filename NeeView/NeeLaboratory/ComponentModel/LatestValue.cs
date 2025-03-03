@@ -1,5 +1,6 @@
 ﻿//#define LOCAL_DEBUG
 
+using NeeLaboratory.Generators;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,7 +14,8 @@ namespace NeeLaboratory.ComponentModel
     /// 更新したときに操作子を返す。操作子を介して最新値を変更できるが、別処理ですでに更新されていた場合は変更できない。
     /// </remarks>
     /// <typeparam name="T"></typeparam>
-    public class LatestValue<T>
+    [LocalDebug]
+    public partial class LatestValue<T>
         where T : class
     {
         public record class Operation(LatestValue<T> LatestValue, T Value) : IDisposable
@@ -32,7 +34,7 @@ namespace NeeLaboratory.ComponentModel
             {
                 if (EqualityComparer<T>.Default.Equals(Value, value))
                 {
-                    Trace($"Skip CompareSet {value}");
+                    LocalDebug.WriteLine($"Skip CompareSet {value}");
                     return null;
                 }
                 return Set(value);
@@ -43,7 +45,7 @@ namespace NeeLaboratory.ComponentModel
         {
             lock (_lock)
             {
-                Trace($"Set {value}");
+                LocalDebug.WriteLine($"Set {value}");
                 _operation = new Operation(this, value);
                 return _operation;
             }
@@ -55,19 +57,14 @@ namespace NeeLaboratory.ComponentModel
             {
                 if (_operation != operation)
                 {
-                    Trace($"Skip Remove {Value}");
+                    LocalDebug.WriteLine($"Skip Remove {Value}");
                     return;
                 }
-                Trace($"Remove {Value}");
+                LocalDebug.WriteLine($"Remove {Value}");
                 _operation = null;
             }
         }
 
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {s}");
-        }
     }
 
 }

@@ -25,7 +25,7 @@ using System.Globalization;
 
 namespace NeeView
 {
-
+    [LocalDebug]
     public partial class ViewContent : ContentControl, IDisposable, IHasImageSource, IHasViewContentMediaPlayer, IHasScalingMode
     {
         private bool _initialized;
@@ -130,7 +130,7 @@ namespace NeeView
 
             UpdateContent(_viewSource.DataSource);
 
-            Trace($"InitializeContentAsync: {ArchiveEntry}");
+            LocalDebug.WriteLine($"InitializeContentAsync: {ArchiveEntry}");
             RequestLoadViewSource(CancellationToken.None);
         }
 
@@ -166,7 +166,7 @@ namespace NeeView
                 }
             }
 
-            Trace($"OnSourceChanged: {ArchiveEntry} ({LayoutSize})");
+            LocalDebug.WriteLine($"OnSourceChanged: {ArchiveEntry} ({LayoutSize})");
             OnSourceChanged();
         }
 
@@ -242,7 +242,7 @@ namespace NeeView
 
             NVDebug.AssertMTA();
             var pictureSize = _viewContentSize.GetPictureSize();
-            Trace($"LoadViewSourceAsync: {_element.Page}, PictureSize = {pictureSize:f0}");
+            LocalDebug.WriteLine($"LoadViewSourceAsync: {_element.Page}, PictureSize = {pictureSize:f0}");
             await _viewSource.LoadAsync(pictureSize, token);
         }
 
@@ -289,18 +289,18 @@ namespace NeeView
                 switch (data.DataState)
                 {
                     case DataState.None:
-                        Trace($"CreateContent.Ready: {ArchiveEntry}");
+                        LocalDebug.WriteLine($"CreateContent.Ready: {ArchiveEntry}");
                         bool isBlackBackground = this.Page.Content is MediaPageContent;
                         return new ViewContentData(ViewContentTools.CreateLoadingContent(Element, isBlackBackground, !_context.IsReadyToPageMove), ViewContentState.Loading);
 
                     case DataState.Loaded:
-                        Trace($"CreateContent.Loaded: {ArchiveEntry}");
+                        LocalDebug.WriteLine($"CreateContent.Loaded: {ArchiveEntry}");
                         Debug.Assert(data.Data is not null);
                         PageContent.UndefinedSize = data.Size;
                         return new ViewContentData(CreateLoadedContent(data.Data), ViewContentState.Loaded);
 
                     case DataState.Failed:
-                        Trace($"CreateContent.Failed: {ArchiveEntry}");
+                        LocalDebug.WriteLine($"CreateContent.Failed: {ArchiveEntry}");
                         return new ViewContentData(ViewContentTools.CreateErrorContent(Element, data.ErrorMessage), ViewContentState.Failed);
 
                     default:
@@ -341,11 +341,6 @@ namespace NeeView
             };
         }
 
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
-        }
     }
 
 

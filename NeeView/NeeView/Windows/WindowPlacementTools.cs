@@ -1,6 +1,7 @@
 ﻿//#define LOCAL_DEBUG
 
 // from http://grabacr.net/archives/1585
+using NeeLaboratory.Generators;
 using NeeView.Interop;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,8 @@ using System.Windows.Interop;
 namespace NeeView.Windows
 {
     // TODO: AeroSnap保存ON/OFFフラグ。WindowPlacementOptionフラグ？
-    public static class WindowPlacementTools
+    [LocalDebug]
+    public static partial class WindowPlacementTools
     {
         public static WindowPlacement StoreWindowPlacement(Window window, bool withAeroSnap)
         {
@@ -25,7 +27,7 @@ namespace NeeView.Windows
             if (hwnd == IntPtr.Zero) throw new InvalidOperationException();
 
             NativeMethods.GetWindowPlacement(hwnd, out WINDOWPLACEMENT raw);
-            Trace($"Store: Native.WindowPlacement: {raw}");
+            LocalDebug.WriteLine($"Store: Native.WindowPlacement: {raw}");
 
             if (withAeroSnap)
             {
@@ -50,7 +52,7 @@ namespace NeeView.Windows
             raw.normalPosition.Height = (int)(raw.normalPosition.Height / dpi.DpiScaleY);
 
             var placement = ConvertToWindowPlacement(raw);
-            Trace($"Store: Placement={placement}");
+            LocalDebug.WriteLine($"Store: Placement={placement}");
             return placement;
         }
 
@@ -104,7 +106,7 @@ namespace NeeView.Windows
         public static void RestoreWindowPlacement(Window window, WindowPlacement placement)
         {
             if (placement == null || !placement.IsValid()) return;
-            Trace($"Restore: Placement={placement}");
+            LocalDebug.WriteLine($"Restore: Placement={placement}");
 
             var hwnd = new WindowInteropHelper(window).Handle;
             var raw = ConvertToNativeWindowPlacement(placement);
@@ -158,11 +160,6 @@ namespace NeeView.Windows
             };
         }
 
-        [Conditional("LOCAL_DEBUG")]
-        private static void Trace(string format, params object[] args)
-        {
-            Debug.WriteLine($"{nameof(WindowPlacementTools)}: {string.Format(CultureInfo.InvariantCulture, format, args)}");
-        }
     }
 
 }

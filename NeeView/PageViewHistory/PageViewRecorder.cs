@@ -134,7 +134,7 @@ namespace NeeView
                 }
                 catch (IOException err)
                 {
-                    Debug.WriteLine("[Error] {0}", err.Message);
+                    Debug.WriteLine($"[Error] {err.Message}");
                     ToastService.Current.Show(new Toast(Properties.TextResources.GetString("PageViewRecordWriteError.Message"), "", ToastIcon.Error));
                 }
             }
@@ -153,7 +153,7 @@ namespace NeeView
                 }
                 catch (IOException err)
                 {
-                    Debug.WriteLine("[Error] {0}", err.Message);
+                    Debug.WriteLine($"[Error] {err.Message}");
                     ToastService.Current.Show(new Toast(Properties.TextResources.GetString("PageViewRecordWriteError.Message"), "", ToastIcon.Error));
                 }
                 _viewedBookAddress = null;
@@ -184,7 +184,7 @@ namespace NeeView
                 }
                 catch (Exception err)
                 {
-                    Debug.WriteLine("[Skip] {0}", err.Message);
+                    Debug.WriteLine($"[Skip] {err.Message}");
                 }
                 finally
                 {

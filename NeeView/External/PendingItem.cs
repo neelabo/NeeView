@@ -105,14 +105,5 @@ namespace NeeView
             return $"CutPageUnit: Page={s}";
         }
 
-        #region LOCAL_DEBUG
-
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {s}");
-        }
-
-        #endregion LOCAL_DEBUG
     }
 }

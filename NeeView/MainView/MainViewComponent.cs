@@ -16,6 +16,7 @@ using System.Windows.Input;
 
 namespace NeeView
 {
+    [LocalDebug]
     [NotifyPropertyChanged]
     public partial class MainViewComponent : INotifyPropertyChanged, IDisposable
     {
@@ -177,12 +178,12 @@ namespace NeeView
             var box = PageFrameBoxPresenter.View;
             if (box is null) return;
 
-            Trace($"ViewContentChanged={e}, {e.PageFrameContent?.GetContentRect():f0}");
+            LocalDebug.WriteLine($"ViewContentChanged={e}, {e.PageFrameContent?.GetContentRect():f0}");
 
             // AutoStretch
             if (e.State == ViewContentState.Loaded && e.PageFrameContent is not null && box.Context.AutoStretchTarget.Conflict(e.PageFrameContent.FrameRange))
             {
-                Trace($"ViewContentChanged: PageFrameContent={e.PageFrameContent}");
+                LocalDebug.WriteLine($"ViewContentChanged: PageFrameContent={e.PageFrameContent}");
                 box.Context.ResetAutoStretchTarget();
                 if (Config.Current.MainView.IsFloating && Config.Current.MainView.IsAutoStretch)
                 {
@@ -229,10 +230,5 @@ namespace NeeView
             _touchEmulateController.Execute(sender);
         }
 
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
-        }
     }
 }

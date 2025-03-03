@@ -14,6 +14,7 @@ namespace NeeView
     /// <summary>
     /// 事前展開
     /// </summary>
+    [LocalDebug]
     public partial class ArchivePreExtractor : IDisposable
     {
         private readonly Archive _archiver;
@@ -84,7 +85,7 @@ namespace NeeView
             if (_disposedValue) return;
             if (_state != ArchivePreExtractState.Sleep) return;
 
-            Trace($"Resume");
+            LocalWriteLine($"Resume");
             _cancellationTokenSource.Cancel();
             _cancellationTokenSource = new CancellationTokenSource();
             SetState(ArchivePreExtractState.None);
@@ -102,7 +103,7 @@ namespace NeeView
             if (_state != state)
             {
                 _state = state;
-                Trace($"State = {state}");
+                LocalWriteLine($"State = {state}");
                 StateChanged?.Invoke(this, new PreExtractStateChangedEventArgs(state));
             }
         }
@@ -153,18 +154,18 @@ namespace NeeView
                 using var linked = CancellationTokenSource.CreateLinkedTokenSource(token, sleepToken);
 
                 var sw = Stopwatch.StartNew();
-                Trace($"PreExtract ...");
+                LocalWriteLine($"PreExtract ...");
                 if (_extractDirectory is null)
                 {
                     var directory = Temporary.Current.CreateCountedTempFileName("arc", "");
                     Directory.CreateDirectory(directory);
                     _extractDirectory = new TempDirectory(directory);
-                    Trace($"PreExtract create directory. {sw.ElapsedMilliseconds}ms");
+                    LocalWriteLine($"PreExtract create directory. {sw.ElapsedMilliseconds}ms");
                 }
 
                 await _archiver.PreExtractAsync(_extractDirectory.Path, linked.Token);
                 sw.Stop();
-                Trace($"PreExtract done. {sw.ElapsedMilliseconds}ms");
+                LocalWriteLine($"PreExtract done. {sw.ElapsedMilliseconds}ms");
                 SetState(ArchivePreExtractState.Done, sleepToken);
                 return true;
             }
@@ -234,7 +235,7 @@ namespace NeeView
             // キャンセル状態を初期状態に戻す
             ResetState();
 
-            Trace($"WaitPreExtract: {entry} ...");
+            LocalWriteLine($"WaitPreExtract: {entry} ...");
 
             RunPreExtractAsync(CancellationToken.None);
 
@@ -257,25 +258,21 @@ namespace NeeView
                 throw new InvalidOperationException($"Could not pre extract: {entry}");
             }
 
-            Trace($"WaitPreExtract: {entry} done.");
+            LocalWriteLine($"WaitPreExtract: {entry} done.");
+
+            LocalDebug.WriteLine("TEST");
         }
 
 
         private string TraceHeader()
         {
-            return this.GetType().Name + "[" + _archiver.EntryName + "]";
+            return "[" + _archiver.EntryName + "]";
         }
 
         [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s)
+        private void LocalWriteLine(string s)
         {
-            Debug.WriteLine(TraceHeader() + ": " + s);
-        }
-
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine(TraceHeader() + ": " + string.Format(CultureInfo.InvariantCulture, s, args));
+            LocalDebug.WriteLine(TraceHeader() + ": " + s);
         }
     }
 

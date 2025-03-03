@@ -1,6 +1,7 @@
 ﻿//#define LOCAL_DEBUG
 
 using NeeLaboratory.ComponentModel;
+using NeeLaboratory.Generators;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,7 +13,8 @@ namespace NeeView
     /// <summary>
     /// ブックのメモリ管理
     /// </summary>
-    public class BookMemoryService : BindableBase, IBookMemoryService, IDisposable
+    [LocalDebug]
+    public partial class BookMemoryService : BindableBase, IBookMemoryService, IDisposable
     {
         private readonly MemoryPool _contentPool = new("BookMemory");
         private bool _disposedValue;
@@ -50,7 +52,7 @@ namespace NeeView
             if (_disposedValue) return;
 
             _contentPool.Add(content);
-            Trace($"AddPageContent: {TotalSize / 1024 / 1024} MB (+{content.MemorySize / 1024:N0} KB)");
+            LocalDebug.WriteLine($"AddPageContent: {TotalSize / 1024 / 1024} MB (+{content.MemorySize / 1024:N0} KB)");
             RaisePropertyChanged("");
         }
 
@@ -59,7 +61,7 @@ namespace NeeView
             if (_disposedValue) return;
 
             _contentPool.Add(pictureSource);
-            Trace($"AddPictureSource: {TotalSize / 1024 / 1024} MB (+{pictureSource.MemorySize / 1024:N0} KB)");
+            LocalDebug.WriteLine($"AddPictureSource: {TotalSize / 1024 / 1024} MB (+{pictureSource.MemorySize / 1024:N0} KB)");
             RaisePropertyChanged("");
         }
 
@@ -145,10 +147,5 @@ namespace NeeView
             RaisePropertyChanged("");
         }
 
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
-        }
     }
 }

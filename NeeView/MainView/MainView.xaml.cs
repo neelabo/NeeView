@@ -29,6 +29,7 @@ namespace NeeView
     /// <summary>
     /// MainView.xaml の相互作用ロジック
     /// </summary>
+    [LocalDebug]
     public partial class MainView : UserControl, IHasDeviceInput, IDisposable, ICursorSetter
     {
         private MainViewViewModel? _vm;
@@ -284,7 +285,7 @@ namespace NeeView
             var pageFrameContent = box.GetSelectedPageFrameContent();
             if (pageFrameContent is null) return Size.Empty;
 
-            StaticTrace($"GetContentRenderSize(): PageFrameContent={pageFrameContent}");
+            LocalDebug.WriteLine($"GetContentRenderSize(): PageFrameContent={pageFrameContent}");
 
             var size = pageFrameContent.GetContentRect().Size;
             var scale = ignoreScale ? pageFrameContent.Transform.Scale : 1.0;
@@ -355,17 +356,5 @@ namespace NeeView
 
         #endregion SizeChanged
 
-        [Conditional("LOCAL_DEBUG")]
-        private void Trace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{this.GetType().Name}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
-        }
-
-
-        [Conditional("LOCAL_DEBUG")]
-        private static void StaticTrace(string s, params object[] args)
-        {
-            Debug.WriteLine($"{nameof(MainViewViewModel)}: {string.Format(CultureInfo.InvariantCulture, s, args)}");
-        }
     }
 }
