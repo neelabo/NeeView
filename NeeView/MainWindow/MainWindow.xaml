@@ -15,7 +15,7 @@
         Icon="{Binding WindowIcon}"
         Topmost="{Binding IsTopmost}"
         d:DesignHeight="768" d:DesignWidth="1024"
-        MinHeight="50" MinWidth="150"
+        MinHeight="300" MinWidth="400"
         SourceInitialized="MainWindow_SourceInitialized"
         Loaded="MainWindow_Loaded"
         ContentRendered="MainWindow_ContentRendered"

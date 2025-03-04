@@ -376,9 +376,9 @@ namespace NeeView
         {
             if (_vm is null) return;
 
-            if (_vm.IsLeftPanelActive && this.LeftColumnWidth.Value <= _panelMinWidth)
+            if (_vm.IsLeftPanelActive && this.LeftColumnWidth.Value < _panelMinWidth)
             {
-                var length = Math.Max(Math.Min(this.CenterColumn.ActualWidth - _splitterWidth, _panelDefaultWidth), _panelMinWidth);
+                var length = _panelMinWidth;
                 _adjustPanelWidthOrder = AdjustPanelWidthOrder.KeepLeft;
                 this.LeftColumnWidth = new GridLength(length);
             }
@@ -390,9 +390,15 @@ namespace NeeView
         {
             if (_vm is null) return;
 
-            if (_vm.IsRightPanelActive && this.RightColumnWidth.Value <= _panelMinWidth)
+            // NOTE: 右パネル表示の場合のみ左パネルの幅を調整する。左パネル表示では不要。
+            if (_vm.IsRightPanelActive && this.ScreenRect.ActualWidth < this.Screen.ActualWidth)
             {
-                var length = Math.Max(Math.Min(this.CenterColumn.ActualWidth - _splitterWidth, _panelDefaultWidth), _panelMinWidth);
+                AdjustLeftPanelWidth();
+            }
+
+            if (_vm.IsRightPanelActive && this.RightColumnWidth.Value < _panelMinWidth)
+            {
+                var length = _panelMinWidth;
                 _adjustPanelWidthOrder = AdjustPanelWidthOrder.KeepRight;
                 this.RightColumnWidth = new GridLength(length);
             }
