@@ -46,7 +46,7 @@ namespace NeeView
             if (inputEventArgs is not KeyEventArgs keyEventArgs) return false;
 
             // 入力許可？ (Escキーは常に受け入れる)
-            if (!AllowSingleKey && keyEventArgs.Key != Key.Escape) return false;
+            if (!AllowSingleKey && keyEventArgs.Key != Key.Escape && !IsNormal(keyEventArgs.Key, Keyboard.Modifiers)) return false;
 
             // ALTが押されたときはシステムキーを通常キーとする
             Key key = keyEventArgs.Key;
@@ -56,6 +56,35 @@ namespace NeeView
             }
 
             return this.Key == key && this.ModifierKeys == Keyboard.Modifiers;
+        }
+
+        // 標準キー判定
+        internal static bool IsNormal(Key key, ModifierKeys modifiers)
+        {
+            if (!((key >= Key.F1 && key <= Key.F24) || (key >= Key.NumPad0 && key <= Key.Divide)))
+            {
+                if ((modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Windows)) != 0)
+                {
+                    switch (key)
+                    {
+                        case Key.LeftCtrl:
+                        case Key.RightCtrl:
+                        case Key.LeftAlt:
+                        case Key.RightAlt:
+                        case Key.LWin:
+                        case Key.RWin:
+                            return false;
+
+                        default:
+                            return true;
+                    }
+                }
+                else if ((key >= Key.D0 && key <= Key.D9) || (key >= Key.A && key <= Key.Z))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         private static bool IsDefinedKey(Key key)

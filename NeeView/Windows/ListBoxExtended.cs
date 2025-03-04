@@ -122,6 +122,7 @@ namespace NeeView.Windows
         {
             this.SelectedIndex = index;
             this.ScrollIntoView(this.SelectedItem);
+            this.SetAnchorItem(this.SelectedItem);
             this.FocusItem(this.SelectedItem, true);
         }
 

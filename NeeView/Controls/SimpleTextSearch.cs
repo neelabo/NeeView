@@ -36,6 +36,8 @@ namespace NeeView
 
         public bool DoSearch(ITextSearchCollection collection, string nextChar)
         {
+            if (string.IsNullOrEmpty(nextChar)) return false;
+
             AddCharToPrefix(nextChar);
 
             int startItemIndex = collection.SelectedIndex;
