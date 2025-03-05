@@ -760,6 +760,7 @@ FocusHistorySearchBoxCommand.Remarks=Concentre-se na caixa de pesquisa do histó
 FocusMainViewCommand=Focar na exibição principal
 FocusMainViewCommand.Menu=Exibição Principal
 FocusMainViewCommand.Remarks=Mover o foco para a exibição principal.
+FocusMainViewCommandParameter.IsToggle=
 FocusMainViewCommandParameter.NeedClosePanels=Fechar todos os painéis
 FocusNextAppCommand=Mudar próximo NeeView
 FocusNextAppCommand.Remarks=Mudar para o próximo NeeView quando vários forem iniciados.

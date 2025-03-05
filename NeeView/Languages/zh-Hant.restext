@@ -757,6 +757,7 @@ FocusHistorySearchBoxCommand.Remarks=
 FocusMainViewCommand=移動焦點至主要檢視
 FocusMainViewCommand.Menu=主要檢視
 FocusMainViewCommand.Remarks=移動焦點到主要檢視。
+FocusMainViewCommandParameter.IsToggle=
 FocusMainViewCommandParameter.NeedClosePanels=關閉所有的面板
 FocusNextAppCommand=切換下一個 NeeView
 FocusNextAppCommand.Remarks=多重啟動時切換到下一個 NeeView 。

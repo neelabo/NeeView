@@ -760,6 +760,7 @@ FocusHistorySearchBoxCommand.Remarks=Focalizza la cronologia casella di ricerca.
 FocusMainViewCommand=Focus su vista principale
 FocusMainViewCommand.Menu=Vista principale
 FocusMainViewCommand.Remarks=Sposta focus su vista principale.
+FocusMainViewCommandParameter.IsToggle=
 FocusMainViewCommandParameter.NeedClosePanels=Chiudi tutti i pannelli
 FocusNextAppCommand=Finestra successiva NeeView
 FocusNextAppCommand.Remarks=Vai alla successiva finestra di NeeView.

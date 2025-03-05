@@ -474,21 +474,6 @@ namespace NeeView
         }
 
         /// <summary>
-        /// メインビューにフォーカスを移す。コマンド用
-        /// </summary>
-        public void FocusMainView(FocusMainViewCommandParameter parameter, bool byMenu)
-        {
-            if (parameter.NeedClosePanels)
-            {
-                CustomLayoutPanelManager.Current.LeftDock.SelectedItem = null;
-                CustomLayoutPanelManager.Current.RightDock.SelectedItem = null;
-                ////SidePanel.Current.CloseAllPanels();
-            }
-
-            FocusMainViewCall?.Invoke(this, EventArgs.Empty);
-        }
-
-        /// <summary>
         /// メインビューにフォーカスを移す
         /// </summary>
         public void FocusMainView()

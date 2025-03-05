@@ -55,7 +55,7 @@ namespace NeeView.Windows.Media
         }
 
         /// <summary>
-        /// ListBoxitem から、名前を指定してコントロールを取得する 
+        /// ListBoxItem から、名前を指定してコントロールを取得する 
         /// </summary>
         /// <param name="item"></param>
         /// <param name="name"></param>
@@ -70,12 +70,12 @@ namespace NeeView.Windows.Media
 
             // Finding textBlock from the DataTemplate that is set on that ContentPresenter
             DataTemplate? myDataTemplate = myContentPresenter.ContentTemplate;
-            if (myDataTemplate == null) throw new InvalidOperationException("DataTempate not exist.");
+            if (myDataTemplate == null) throw new InvalidOperationException("DataTemplate not exist.");
             return (FrameworkElement)myDataTemplate.FindName(name, myContentPresenter);
         }
 
         /// <summary>
-        /// ListBoxitem から、型、名前を指定してコントロールを取得する
+        /// ListBoxItem から、型、名前を指定してコントロールを取得する
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="item"></param>
@@ -139,8 +139,8 @@ namespace NeeView.Windows.Media
         /// <summary>
         /// childItemに対応したTreeViewItemの検索
         /// </summary>
-        /// <param name="parent">親ノード。TreeViewまたはTreeViewItem</param>
-        /// <param name="childItem">TreeViewItemを取得したいitem</param>
+        /// <param name="parent">親ノード。TreeView または TreeViewItem</param>
+        /// <param name="childItem">TreeViewItem を取得したい item</param>
         /// <returns></returns>
         public static T? FindContainer<T>(ItemsControl parent, object childItem) where T : DependencyObject
         {
@@ -472,5 +472,30 @@ namespace NeeView.Windows.Media
             return s.ToString();
         }
 
+        /// <summary>
+        /// HitTest and Focus
+        /// </summary>
+        /// <param name="reference"></param>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public static bool HitTestToFocus(Visual reference, Point point)
+        {
+            HitTestResult result = VisualTreeHelper.HitTest(reference, point);
+            var element = result?.VisualHit as FrameworkElement;
+
+            while (element is not null)
+            {
+                //Debug.WriteLine($"{element}: Name={element.Name}, Focusable={element.Focusable}");
+                if (element.Focusable)
+                {
+                    return element.Focus();
+                }
+                // TODO: 親の範囲内に子がいることを前提としている
+                element = VisualTreeHelper.GetParent(element) as FrameworkElement;
+            }
+
+            return false;
+        }
     }
+
 }

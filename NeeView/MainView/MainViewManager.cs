@@ -25,6 +25,7 @@ namespace NeeView
         private readonly MainViewLockerMediator _mediator;
         private readonly MainViewLocker _dockingLocker;
         private MainViewLocker? _floatingLocker;
+        private FocusMemento? _focusMemento;
 
 
         public static void Initialize(MainViewComponent viewComponent, ContentControl defaultSocket)
@@ -237,6 +238,41 @@ namespace NeeView
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
+                }
+            }
+        }
+
+        /// <summary>
+        /// メインビューにフォーカスを移す。コマンド用
+        /// </summary>
+        public void FocusMainView(FocusMainViewCommandParameter parameter)
+        {
+            if (parameter.IsToggle)
+            {
+                if (_mainView.IsKeyboardFocusWithin)
+                {
+                    _focusMemento?.RestoreFocus();
+                }
+                else
+                {
+                    UpdatePanels(parameter.NeedClosePanels);
+                    _focusMemento = FocusMemento.Create();
+                    _mainView.FocusMainView();
+                }
+            }
+            else
+            {
+                UpdatePanels(parameter.NeedClosePanels);
+                _focusMemento = null;
+                _mainView.FocusMainView();
+            }
+
+            void UpdatePanels(bool closePanels)
+            {
+                if (closePanels && !IsFloating())
+                {
+                    CustomLayoutPanelManager.Current.LeftDock.SelectedItem = null;
+                    CustomLayoutPanelManager.Current.RightDock.SelectedItem = null;
                 }
             }
         }

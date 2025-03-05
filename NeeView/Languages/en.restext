@@ -760,6 +760,7 @@ FocusHistorySearchBoxCommand.Remarks=Focus on the history search box. The Histor
 FocusMainViewCommand=Focus on main view
 FocusMainViewCommand.Menu=Main view
 FocusMainViewCommand.Remarks=Move focus to the main view.
+FocusMainViewCommandParameter.IsToggle=Toggle
 FocusMainViewCommandParameter.NeedClosePanels=Close all panels
 FocusNextAppCommand=Switch next NeeView
 FocusNextAppCommand.Remarks=Switch to next NeeView window.

@@ -757,6 +757,7 @@ FocusHistorySearchBoxCommand.Remarks=履歴検索ボックスにフォーカス�
 FocusMainViewCommand=メインビューにフォーカスを移す
 FocusMainViewCommand.Menu=メインビュー
 FocusMainViewCommand.Remarks=メインビューにフォーカスを移します。
+FocusMainViewCommandParameter.IsToggle=交互に切り替える
 FocusMainViewCommandParameter.NeedClosePanels=全てのパネルを閉じる
 FocusNextAppCommand=次の NeeView に切り替える
 FocusNextAppCommand.Remarks=次の NeeView ウィンドウに切り替えます。

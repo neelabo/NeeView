@@ -14,7 +14,7 @@ namespace NeeView
 
         public override void Execute(object? sender, CommandContext e)
         {
-            MainWindowModel.Current.FocusMainView(e.Parameter.Cast<FocusMainViewCommandParameter>(), e.Options.HasFlag(CommandOption.ByMenu));
+            MainViewManager.Current.FocusMainView(e.Parameter.Cast<FocusMainViewCommandParameter>());
         }
     }
 

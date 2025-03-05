@@ -212,7 +212,7 @@ namespace NeeView
         }
 
 
-        private void FocusMainView()
+        public void FocusMainView()
         {
             this.View.Focus();
         }

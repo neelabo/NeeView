@@ -757,6 +757,7 @@ FocusHistorySearchBoxCommand.Remarks=내역 검색 상자로 포커스를 이동
 FocusMainViewCommand=메인 뷰어로 포커스 이동
 FocusMainViewCommand.Menu=메인 뷰어
 FocusMainViewCommand.Remarks=메인 뷰어로 포커스를 이동합니다.
+FocusMainViewCommandParameter.IsToggle=
 FocusMainViewCommandParameter.NeedClosePanels=모든 패널 닫기
 FocusNextAppCommand=다음 NeeView 창으로 전환
 FocusNextAppCommand.Remarks=다음 NeeView 창으로 전환합니다.
