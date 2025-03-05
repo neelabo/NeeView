@@ -354,7 +354,7 @@ namespace NeeView
             }
         }
 
-#endregion Requests
+        #endregion Requests
 
         #region BookHubCommand.Load
 
@@ -463,6 +463,12 @@ namespace NeeView
                 {
                     bookChangedEventArgs.EmptyMessage = string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("Notice.NoPages"), book?.Path);
                 }
+
+                // フォーカス更新
+                if (args.Option.HasFlag(BookLoadOption.FocusOnLoaded))
+                {
+                    await AppDispatcher.BeginInvoke(() => FocusMainViewOnBookLoaded(args.Sender));
+                }
             }
             catch (OperationCanceledException)
             {
@@ -507,6 +513,35 @@ namespace NeeView
                 {
                     AppDispatcher.Invoke(() => ConfirmRecursive(args.Sender, _book, token));
                 }
+            }
+        }
+
+        /// <summary>
+        /// ブック読み込み後のフォーカス調整
+        /// </summary>
+        /// <param name="targetWindow"></param>
+        private static void FocusMainViewOnBookLoaded(object? sender)
+        {
+            // TODO: BookHub で UI操作を行っていることに違和感
+            var layoutPanelManager = CustomLayoutPanelManager.Current;
+            var mainView = MainViewManager.Current.MainView;
+            var window = sender is System.Windows.DependencyObject element ? System.Windows.Window.GetWindow(element) : null;
+
+            // 本棚へのフォーカスを試す
+            if (layoutPanelManager.IsPanelVisible(nameof(FolderPanel)) && !layoutPanelManager.IsPanelFloating(nameof(FolderPanel)))
+            {
+                var panel = layoutPanelManager.GetPanel(nameof(FolderPanel));
+                if (window is null || window == System.Windows.Window.GetWindow(panel.View.Value))
+                {
+                    layoutPanelManager.Focus(nameof(FolderPanel));
+                    return;
+                }
+            }
+
+            // メインビューへのフォーカスを試す
+            if (window is null || window == System.Windows.Window.GetWindow(mainView))
+            {
+                mainView.FocusMainView();
             }
         }
 

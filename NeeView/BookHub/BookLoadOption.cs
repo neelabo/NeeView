@@ -90,6 +90,11 @@ namespace NeeView
         /// 名前変更による再読み込み
         /// </summary>
         Rename = 0x8000,
+
+        /// <summary>
+        /// ブック読み込み後にフォーカスを移動する
+        /// </summary>
+        FocusOnLoaded = 0x0001_0000,
     };
 
 

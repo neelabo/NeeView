@@ -124,7 +124,8 @@ namespace NeeView
         {
             if (_bookPaths != null)
             {
-                BookHubTools.RequestLoad(this, _bookPaths, _bookLoadOptions, _folderPath == null);
+                var options = _bookLoadOptions | BookLoadOption.FocusOnLoaded;
+                BookHubTools.RequestLoad(this, _bookPaths, options, _folderPath == null);
             }
         }
 

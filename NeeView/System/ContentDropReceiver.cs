@@ -74,7 +74,7 @@ namespace NeeView
         private async void Element_Drop(object sender, DragEventArgs e)
         {
             FocusWindow(sender as DependencyObject);
-            await LoadDataObjectAsync(e.Data);
+            await LoadDataObjectAsync(sender, e.Data);
         }
 
         // ウィンドウフォーカスを得る
@@ -95,21 +95,21 @@ namespace NeeView
         }
 
         // コピー＆ペーストで処理を開始する
-        public async void LoadFromClipboard()
+        public async void LoadFromClipboard(object sender)
         {
-            await LoadDataObjectAsync(Clipboard.GetDataObject());
+            await LoadDataObjectAsync(sender, Clipboard.GetDataObject());
         }
 
         // データオブジェクトからのロード処理
-        private async Task LoadDataObjectAsync(IDataObject data)
+        private async Task LoadDataObjectAsync(object sender, IDataObject data)
         {
             if (NowLoading.Current.IsDisplayNowLoading || data == null) return;
 
             try
             {
                 var downloadPath = string.IsNullOrWhiteSpace(Config.Current.System.DownloadPath) ? Temporary.Current.TempDownloadDirectory : Config.Current.System.DownloadPath;
-                var files = await DropAsync(this, data, downloadPath, (string message) => NeeView.NowLoading.Current.SetLoading(message));
-                LoadFiles(files);
+                var files = await DropAsync(sender, data, downloadPath, (string message) => NeeView.NowLoading.Current.SetLoading(message));
+                LoadFiles(sender, files);
             }
             catch (Exception ex)
             {
@@ -118,9 +118,9 @@ namespace NeeView
             }
         }
 
-        private void LoadFiles(List<string> files)
+        private void LoadFiles(object sender, List<string> files)
         {
-            BookHubTools.RequestLoad(this, files);
+            BookHubTools.RequestLoad(sender, files, BookLoadOption.FocusOnLoaded, true);
         }
 
         // ドロップ受付判定

@@ -16,7 +16,7 @@
 
         public override void Execute(object? sender, CommandContext e)
         {
-            ContentDropManager.Current.LoadFromClipboard();
+            ContentDropManager.Current.LoadFromClipboard(sender ?? this);
         }
     }
 }
