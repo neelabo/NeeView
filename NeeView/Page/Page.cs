@@ -300,6 +300,7 @@ namespace NeeView
             {
                 PageNameFormat.Smart => GetSmartFullName(),
                 PageNameFormat.NameOnly => EntryLastName,
+                PageNameFormat.PageNumber => (Index + 1).ToString(),
                 _ => EntryName,
             };
         }

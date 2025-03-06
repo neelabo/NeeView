@@ -1370,6 +1370,7 @@ PageMode.SinglePage=1 頁面顯示
 PageMode.WidePage=2 頁面顯示
 PageNameFormat=在列面列表的項目名稱格式
 PageNameFormat.NameOnly=僅名稱
+PageNameFormat.PageNumber=
 PageNameFormat.Raw=維持不變
 PageNameFormat.Smart=標準顯示
 PageOperation.Landscape=橫向

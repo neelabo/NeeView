@@ -10,5 +10,8 @@
 
         [AliasName]
         Raw,
+
+        [AliasName]
+        PageNumber,
     }
 }

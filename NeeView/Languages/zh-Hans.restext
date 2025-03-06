@@ -1370,6 +1370,7 @@ PageMode.SinglePage=单页显示
 PageMode.WidePage=双页显示
 PageNameFormat=页面列表中的项目名称格式
 PageNameFormat.NameOnly=仅名称
+PageNameFormat.PageNumber=
 PageNameFormat.Raw=保持原样
 PageNameFormat.Smart=智能
 PageOperation.Landscape=横向

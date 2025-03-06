@@ -1370,6 +1370,7 @@ PageMode.SinglePage=한 쪽 보기
 PageMode.WidePage=두 쪽 보기
 PageNameFormat=페이지 목록의 항목 형식
 PageNameFormat.NameOnly=이름만
+PageNameFormat.PageNumber=
 PageNameFormat.Raw=그대로
 PageNameFormat.Smart=기본
 PageOperation.Landscape=가로

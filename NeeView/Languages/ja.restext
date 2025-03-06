@@ -1370,6 +1370,7 @@ PageMode.SinglePage=1 ページ表示
 PageMode.WidePage=2 ページ表示
 PageNameFormat=ページリストでの項目名フォーマット
 PageNameFormat.NameOnly=名前のみ
+PageNameFormat.PageNumber=ページ番号
 PageNameFormat.Raw=そのまま
 PageNameFormat.Smart=標準表示
 PageOperation.Landscape=横

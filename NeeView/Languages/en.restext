@@ -1378,6 +1378,7 @@ PageMode.SinglePage=One page
 PageMode.WidePage=Two pages
 PageNameFormat=Item name format in PageList
 PageNameFormat.NameOnly=Name
+PageNameFormat.PageNumber=Page number
 PageNameFormat.Raw=Raw
 PageNameFormat.Smart=Smart
 PageOperation.Landscape=Landscape
