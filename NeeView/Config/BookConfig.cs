@@ -16,6 +16,7 @@ namespace NeeView
         private double _wideRatio = 1.0;
         private StringCollection _excludes = (StringCollection)DefaultExcludes.Clone();
         private PageEndAction _pageEndAction;
+        private bool _resetNextBookPage = true;
         private bool _isPrioritizeBookMove = false;
         private bool _isPrioritizePageMove = true;
         private bool _isReadyToPageMove;
@@ -133,6 +134,13 @@ namespace NeeView
         {
             get { return _pageEndAction; }
             set { SetProperty(ref _pageEndAction, value); }
+        }
+
+        [PropertyMember]
+        public bool ResetNextBookPage
+        {
+            get { return _resetNextBookPage; }
+            set { SetProperty(ref _resetNextBookPage, value); }
         }
 
         [PropertyMember]
