@@ -217,6 +217,7 @@ BookConfig.IsSortFileFirst=Ordina le pagine secondo il file
 BookConfig.IsSortFileFirst.Remarks=Organizza i file prima delle cartelle.
 BookConfig.IsStaticWidePage=
 BookConfig.IsStaticWidePage.Remarks=
+BookConfig.LoadingPageColor=
 BookConfig.Orientation=Orientamento layout di pagina
 BookConfig.PageEndAction=Comportamento quando si cerca di andare oltre la fine della pagina
 BookConfig.ResetNextBookPage=

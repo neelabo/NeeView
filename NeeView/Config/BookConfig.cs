@@ -38,6 +38,7 @@ namespace NeeView
         private bool _isStaticWidePage;
         private WidePageStretch _widePageStretch = WidePageStretch.UniformHeight;
         private WidePageVerticalAlignment _widePageVerticalAlignment = WidePageVerticalAlignment.Center;
+        private Color _loadingPageColor = Color.FromRgb(0xE0, 0xE0, 0xE0);
 
 
         /// <summary>
@@ -250,6 +251,15 @@ namespace NeeView
             get { return _widePageVerticalAlignment; }
             set { SetProperty(ref _widePageVerticalAlignment, value); }
         }
+
+        // 読込中ページカラー
+        [PropertyMember]
+        public Color LoadingPageColor
+        {
+            get { return _loadingPageColor; }
+            set { SetProperty(ref _loadingPageColor, value); }
+        }
+
 
         #region Obsolete
 

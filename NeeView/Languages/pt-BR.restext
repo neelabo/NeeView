@@ -217,6 +217,7 @@ BookConfig.IsSortFileFirst=Ordene as páginas por arquivo primeiro
 BookConfig.IsSortFileFirst.Remarks=Organize os arquivos antes das pastas.
 BookConfig.IsStaticWidePage=Duas páginas estáticas
 BookConfig.IsStaticWidePage.Remarks=A página base para a exibição de duas páginas é determinada apenas por números. O movimento do controle deslizante segue o exemplo.
+BookConfig.LoadingPageColor=
 BookConfig.Orientation=Orientação do layout da página
 BookConfig.PageEndAction=Comportamento ao tentar passar do final da página
 BookConfig.ResetNextBookPage=

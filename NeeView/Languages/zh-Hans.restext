@@ -216,6 +216,7 @@ BookConfig.IsSortFileFirst=排列页面时文件优先
 BookConfig.IsSortFileFirst.Remarks=文件排列在文件夹之前。
 BookConfig.IsStaticWidePage=静态双页
 BookConfig.IsStaticWidePage.Remarks=双页显示的基准页仅由数字决定。滚动条移动也以此为准。
+BookConfig.LoadingPageColor=
 BookConfig.Orientation=页面排列方向
 BookConfig.PageEndAction=页面移动超过尾页时的行为
 BookConfig.ResetNextBookPage=

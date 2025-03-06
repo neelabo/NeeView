@@ -217,6 +217,7 @@ BookConfig.IsSortFileFirst=Sort pages by file first
 BookConfig.IsSortFileFirst.Remarks=Arrange files before folders.
 BookConfig.IsStaticWidePage=Static two pages
 BookConfig.IsStaticWidePage.Remarks=The base page for the two pages display is determined by numbers only. Slider movement follows suit.
+BookConfig.LoadingPageColor=Loading page color
 BookConfig.Orientation=Page layout orientation
 BookConfig.PageEndAction=Behavior when trying to move past the end of the page
 BookConfig.ResetNextBookPage=Reset next book page

@@ -216,6 +216,7 @@ BookConfig.IsSortFileFirst=以檔案優先排序頁面
 BookConfig.IsSortFileFirst.Remarks=將檔案排序在資料夾之前。
 BookConfig.IsStaticWidePage=
 BookConfig.IsStaticWidePage.Remarks=
+BookConfig.LoadingPageColor=
 BookConfig.Orientation=
 BookConfig.PageEndAction=嘗試移動超過頁面結尾時的行為
 BookConfig.ResetNextBookPage=

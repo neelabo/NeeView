@@ -18,7 +18,7 @@ namespace NeeView
         public static FrameworkElement CreateLoadingContent(PageFrameElement source, bool isBlackBackground, bool showProgress)
         {
             var grid = new Grid();
-            grid.Background = isBlackBackground ? new SolidColorBrush(Color.FromRgb(0x10, 0x10, 0x10)) : new SolidColorBrush(Color.FromRgb(0xE0, 0xE0, 0xE0));
+            grid.Background = isBlackBackground ? new SolidColorBrush(Color.FromRgb(0x10, 0x10, 0x10)) : new SolidColorBrush(Config.Current.Book.LoadingPageColor);
 
             if (showProgress)
             {

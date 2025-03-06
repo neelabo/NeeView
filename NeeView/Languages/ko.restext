@@ -216,6 +216,7 @@ BookConfig.IsSortFileFirst=파일을 우선하여 페이지 정렬
 BookConfig.IsSortFileFirst.Remarks=파일을 폴더보다 먼저 나열합니다.
 BookConfig.IsStaticWidePage=정적인 두 쪽 보기
 BookConfig.IsStaticWidePage.Remarks=두 쪽 보기의 기준 페이지는 숫자만으로 결정됩니다. 슬라이더 동작도 그에 준거합니다.
+BookConfig.LoadingPageColor=
 BookConfig.Orientation=페이지 나열 방향
 BookConfig.PageEndAction=끝 페이지에 도달 시 동작
 BookConfig.ResetNextBookPage=
