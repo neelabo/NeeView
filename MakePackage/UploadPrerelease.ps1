@@ -1,8 +1,7 @@
 # Canary, Beta のアップロード
 
 param (
-    [switch]$SkipCheckRepository,
-    [switch]$SkipDelete
+    [switch]$SkipCheckRepository
 )
 
 # error to break
@@ -67,7 +66,8 @@ function Get-JsonContentFromZip {
 function Upload-Asset {
     param (
         $release_id,
-        $package
+        $package,
+        [switch]$Confirm 
     )
     
     $release_id = $release_response.id
@@ -76,7 +76,10 @@ function Upload-Asset {
     $upload_url = "https://uploads.github.com/repos/$owner/$repo/releases/$release_id/assets?name=$file_name"
 
     Write-Host 
-    Read-Host "Press Enter to upload $file_name"
+
+    if ($Confirm) {
+        Read-Host "Press Enter to upload $file_name"
+    }
 
     # GitHub REST API:  Upload a release asset
     Write-Host "REST API: Upload $file_name" -fore Green
@@ -181,7 +184,6 @@ if ($tag_result -ne $tag_name) {
 #>
 
 
-
 # 開始確認
 Write-Host
 Write-Host "[Upload Prerelease Package]" -fore Cyan
@@ -198,18 +200,19 @@ $release_url = "https://api.github.com/repos/$owner/$repo/releases"
 
 
 # 既存の Prerelease パッケージを削除
+<#
 if (-not $SkipDelete) {
+    
+# GitHub REST API: List releases
+Write-Host "REST API: List releases" -fore Green
+$list_response = Invoke-RestMethod -Uri $release_url -Headers @{
+    Authorization = "token $token"
+    Accept        = "application/vnd.github.v3+json"
+}
 
-    # GitHub REST API: List releases
-    Write-Host "REST API: List releases" -fore Green
-    $list_response = Invoke-RestMethod -Uri $release_url -Headers @{
-        Authorization = "token $token"
-        Accept        = "application/vnd.github.v3+json"
-    }
-    
-    $pre_releases = $list_response | Where-Object { $_.prerelease -eq $true }
-    
-    if ($pre_releases.Count -gt 0) {
+$pre_releases = $list_response | Where-Object { $_.prerelease -eq $true }
+
+if ($pre_releases.Count -gt 0) {
         Write-Host
         Write-Host "[Delete]" -fore Cyan
         $pre_releases | ForEach-Object {
@@ -220,7 +223,7 @@ if (-not $SkipDelete) {
         
         $pre_releases | ForEach-Object {
             $delete_url = $_.url
-
+            
             # GitHub REST API: Delete a release
             Write-Host "REST API: Delete $($_.name)" -fore Green
             Invoke-RestMethod -Method Delete -Uri $delete_url -Headers @{
@@ -233,6 +236,7 @@ if (-not $SkipDelete) {
         Write-Host "No prereleases currently exist."
     }
 }
+#>
 
 
 # リリースを作成
@@ -297,7 +301,7 @@ $release_response | Format-List
 
 # ファイルのアップロード
 $release_id = $release_response.id
-Upload-Asset $release_id $package 
+Upload-Asset $release_id $package -Confirm
 Upload-Asset $release_id $package_fd
 
 Write-Host 
