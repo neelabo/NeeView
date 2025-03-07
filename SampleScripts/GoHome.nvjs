@@ -1,0 +1,5 @@
+﻿// @name Go Home
+// @description Go to Bookshelf Home
+
+nv.Bookshelf.Open()
+nv.Bookshelf.Path = nv.Config.Bookshelf.Home
