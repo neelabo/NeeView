@@ -30,7 +30,7 @@
 
         <StackPanel DockPanel.Dock="Top">
             <DockPanel LastChildFill="False">
-                <TextBlock DockPanel.Dock="Right" Text="{Binding Model.ValidCount, StringFormat={}{0}}" Foreground="{DynamicResource Panel.Foreground}" Margin="5,0"
+                <TextBlock DockPanel.Dock="Right" Text="{Binding Model.ViewItemsCount}" Foreground="{DynamicResource Panel.Foreground}" Margin="5,0"
                         Visibility="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsVisibleItemsCount, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 <TextBlock Text="{Binding FilterPath}" ToolTip="{Binding FilterPath}" HorizontalAlignment="Right" VerticalAlignment="Center" />
             </DockPanel>

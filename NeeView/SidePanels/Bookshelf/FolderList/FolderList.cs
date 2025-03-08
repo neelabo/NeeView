@@ -117,7 +117,9 @@ namespace NeeView
                     (s, e) => AppDispatcher.Invoke(() => SyncWeak(e))));
 
                 _disposables.Add(BookHistoryCollection.Current.SubscribeHistoryChanged(
-                    (s, e) => RefreshIcon(new QueryPath(e.Key))));
+                    BookHistoryCollection_HistoryChanged));
+
+                //e.NewItems.ForEach(item => RefreshIcon(new QueryPath(item.Path)))));
 
                 _disposables.Add(BookHub.Current.SubscribeLoadRequested(
                     (s, e) => CancelMoveCruiseFolder()));
@@ -443,6 +445,23 @@ namespace NeeView
             set { }
         }
 
+
+        private void BookHistoryCollection_HistoryChanged(object? sender, BookMementoCollectionChangedArgs e)
+        {
+            switch (e.HistoryChangedType)
+            {
+                case BookMementoCollectionChangedType.Reset:
+                case BookMementoCollectionChangedType.Load:
+                    RefreshIcon(null);
+                    break;
+                default:
+                    foreach (var item in e.NewItems.Union(e.OldItems))
+                    {
+                        RefreshIcon(new QueryPath(item.Path));
+                    }
+                    break;
+            }
+        }
 
         private void RaiseCollectionChanged()
         {
@@ -1555,7 +1574,7 @@ namespace NeeView
         public void NewFolder()
         {
             if (_disposedValue) return;
-            
+
             NewFolder(null);
         }
 

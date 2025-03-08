@@ -20,6 +20,7 @@ namespace NeeView
         private TimeSpan _limitSpan;
         private bool _isCurrentFolder;
         private bool _isAutoCleanupEnabled;
+        private bool _isGroupBy;
 
         [JsonInclude, JsonPropertyName(nameof(HistoryFilePath))]
         public string? _historyFilePath;
@@ -137,6 +138,13 @@ namespace NeeView
             set { SetProperty(ref _isAutoCleanupEnabled, value); }
         }
 
+        // 履歴リストのグループ表示
+        [PropertyMember]
+        public bool IsGroupBy
+        {
+            get { return _isGroupBy; }
+            set { SetProperty(ref _isGroupBy, value); }
+        }
 
     }
 }

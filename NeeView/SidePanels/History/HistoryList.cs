@@ -1,31 +1,34 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeLaboratory.Generators;
 using NeeLaboratory.IO.Search;
+using NeeView.Collections.ObjectModel;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace NeeView
 {
-    public class HistoryList : BindableBase
+    public partial class HistoryList : BindableBase
     {
         static HistoryList() => Current = new HistoryList();
         public static HistoryList Current { get; }
 
-
         private readonly BookHub _bookHub;
-
         private string? _filterPath;
-        private List<BookHistory> _items = new();
-        private bool _isDirty = true;
-        private string _searchKeyword = "";
+        private readonly CollectionViewSource _collectionViewSource = new();
         private BookHistory? _selectedItem;
-        private bool _isEnabled;
+        private string _searchKeyword = "";
         private readonly Searcher _searcher;
+        private SearcherFilter _searcherFilter;
+
 
         private HistoryList()
         {
@@ -34,30 +37,46 @@ namespace NeeView
                 .AddProfile(new SizeSearchProfile())
                 .AddProfile(new BookSearchProfile());
             _searcher = new Searcher(searchContext);
+            _searcherFilter = _searcher.CreateFilter("");
 
             _bookHub = BookHub.Current;
 
             BookOperation.Current.BookChanged += BookOperation_BookChanged;
 
-            Config.Current.History.AddPropertyChanged(nameof(HistoryConfig.IsCurrentFolder), (s, e) => UpdateFilterPath());
+            Config.Current.History.AddPropertyChanged(nameof(HistoryConfig.IsCurrentFolder),
+                (s, e) => UpdateFilterPath());
 
-            BookHistoryCollection.Current.HistoryChanged +=
-                (s, e) => AppDispatcher.Invoke(() => BookHistoryCollection_HistoryChanged(s, e));
+            Config.Current.History.AddPropertyChanged(nameof(HistoryConfig.IsGroupBy),
+                (s, e) => UpdateGroupBy());
 
-            BookHub.Current.HistoryListSync +=
-                (s, e) => AppDispatcher.Invoke(() => BookHub_HistoryListSync(s, e));
+            BookHub.Current.HistoryListSync += BookHub_HistoryListSync;
 
             this.SearchBoxModel = new SearchBoxModel(new HistorySearchBoxComponent(this));
 
+            // 内部履歴の並びを反転する。SortDescriptions での並び替えより軽い。
+            _collectionViewSource.Source = new ReverseObservableCollection<BookHistory>(BookHistoryCollection.Current.Items);
+            _collectionViewSource.Culture = TextResources.Culture;
+            _collectionViewSource.Filter += CollectionViewSource_Filter;
+            _collectionViewSource.LiveGroupingProperties.Add(nameof(BookHistory.LastAccessTime));
+
             UpdateFilterPath();
+            UpdateGroupBy();
+
+            _collectionViewSource.View.Refresh();
+
+            _collectionViewSource.View.CollectionChanged
+                += (s, e) => RaisePropertyChanged(nameof(ViewItemsCount));
         }
 
 
         // 検索ボックスにフォーカスを
+        [Subscribable]
         public event EventHandler? SearchBoxFocus;
 
 
         public SearchBoxModel SearchBoxModel { get; }
+
+        public bool IsGroupBy => Config.Current.History.IsGroupBy;
 
         public bool IsThumbnailVisible
         {
@@ -88,8 +107,7 @@ namespace NeeView
             {
                 if (SetProperty(ref _filterPath, value))
                 {
-                    _isDirty = true;
-                    _ = UpdateItemsAsync(CancellationToken.None);
+                    UpdateFilter();
                 }
             }
         }
@@ -104,26 +122,15 @@ namespace NeeView
             {
                 if (SetProperty(ref _searchKeyword, value))
                 {
-                    _isDirty = true;
-                    _ = UpdateItemsAsync(CancellationToken.None);
+                    UpdateFilter();
                 }
             }
         }
 
         /// <summary>
-        /// 履歴リスト
+        /// 履歴リスト (ViewSource)
         /// </summary>
-        public List<BookHistory> Items
-        {
-            get { return _items; }
-            private set
-            {
-                if (SetProperty(ref _items, value))
-                {
-                    RaisePropertyChanged(nameof(ValidCount));
-                }
-            }
-        }
+        public CollectionViewSource CollectionViewSource => _collectionViewSource;
 
         /// <summary>
         /// 選択項目
@@ -135,47 +142,22 @@ namespace NeeView
         }
 
         /// <summary>
-        /// 項目数
+        /// 表示項目数
         /// </summary>
-        public int ValidCount => _items.Count;
+        public int ViewItemsCount => _collectionViewSource.View is CollectionView collectionView ? collectionView.Count : -1;
 
 
+        private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
+        {
+            if (e.Item is BookHistory item)
+            {
+                e.Accepted = Filter(item);
+            }
+        }
 
         private void BookOperation_BookChanged(object? sender, BookChangedEventArgs e)
         {
             UpdateFilterPath();
-        }
-
-
-        /// <summary>
-        /// 有効フラグ
-        /// </summary>
-        /// <remarks>
-        /// 有効の場合にのみ履歴リストは更新される
-        /// </remarks>
-        public bool IsEnabled
-        {
-            get { return _isEnabled; }
-            set
-            {
-                if (SetProperty(ref _isEnabled, value))
-                {
-                    if (_isEnabled)
-                    {
-                        _ = UpdateItemsAsync(CancellationToken.None);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// 履歴更新イベント
-        /// </summary>
-        private void BookHistoryCollection_HistoryChanged(object? sender, BookMementoCollectionChangedArgs e)
-        {
-            if (e.HistoryChangedType == BookMementoCollectionChangedType.Update) return;
-            _isDirty = true;
-            _ = UpdateItemsAsync(CancellationToken.None);
         }
 
         /// <summary>
@@ -185,11 +167,31 @@ namespace NeeView
         {
             if (e.Path is null) return;
 
-            SelectedItem = _items.FirstOrDefault(x => x.Path == e.Path);
+            AppDispatcher.BeginInvoke(() => SelectedItem = _collectionViewSource.View.Cast<BookHistory>().FirstOrDefault(x => x.Path == e.Path));
         }
 
         /// <summary>
-        /// 履歴フィルター更新
+        /// グループ更新
+        /// </summary>
+        private void UpdateGroupBy()
+        {
+            if (IsGroupBy)
+            {
+                _collectionViewSource.GroupDescriptions.Clear();
+                _collectionViewSource.GroupDescriptions.Add(new HistoryListGroupDescription());
+                _collectionViewSource.IsLiveGroupingRequested = true;
+            }
+            else
+            {
+                _collectionViewSource.GroupDescriptions.Clear();
+                _collectionViewSource.IsLiveGroupingRequested = false;
+            }
+
+            RaisePropertyChanged(nameof(IsGroupBy));
+        }
+
+        /// <summary>
+        /// パスフィルター更新
         /// </summary>
         private void UpdateFilterPath()
         {
@@ -197,68 +199,37 @@ namespace NeeView
         }
 
         /// <summary>
-        /// 履歴リスト更新
+        /// フィルター更新
         /// </summary>
-        public async Task UpdateItemsAsync(CancellationToken token)
+        private void UpdateFilter()
         {
-            if (!_isEnabled) return;
-
-            token.ThrowIfCancellationRequested();
-            await Task.Run(() => UpdateItems(false, token));
+            try
+            {
+                _searcherFilter = _searcher.CreateFilter(_searchKeyword);
+                _collectionViewSource.View.Refresh();
+            }
+            catch (Exception ex)
+            {
+                ToastService.Current.Show(new Toast(ex.Message, "", ToastIcon.Error));
+            }
         }
 
-        /// <summary>
-        /// 履歴リスト更新
-        /// </summary>
-        public void UpdateItems(bool force, CancellationToken token)
+        private bool Filter(BookHistory item)
         {
-            if (!_isEnabled && !force) return;
-
-            if (!_isDirty) return;
-            _isDirty = false;
-
-            Items = CreateItems(token);
-        }
-
-        /// <summary>
-        /// 履歴リスト生成
-        /// </summary>
-        private List<BookHistory> CreateItems(CancellationToken token)
-        {
-            List<BookHistory> items;
-            lock (BookHistoryCollection.Current.ItemsLock)
+            if (!string.IsNullOrEmpty(FilterPath))
             {
-                items = BookHistoryCollection.Current.Items
-                    .Where(e => string.IsNullOrEmpty(FilterPath) || FilterPath == LoosePath.GetDirectoryName(e.Path))
-                    .ToList();
+                if (FilterPath != LoosePath.GetDirectoryName(item.Path)) return false;
             }
 
-            if (!string.IsNullOrEmpty(_searchKeyword))
-            {
-                try
-                {
-                    items = _searcher.Search(_searchKeyword, items, token).Cast<BookHistory>().ToList();
-                }
-                catch (OperationCanceledException)
-                {
-                    throw;
-                }
-                catch (Exception ex)
-                {
-                    ToastService.Current.Show(new Toast(ex.Message, "", ToastIcon.Error));
-                }
-            }
-
-            return items;
+            return _searcherFilter.Filter(item);
         }
 
         /// <summary>
         /// 最新の履歴リスト取得
         /// </summary>
-        public List<BookHistory> GetLatestItems()
+        private List<BookHistory> GetViewItems()
         {
-            UpdateItems(true, CancellationToken.None);
-            return _items;
+            return _collectionViewSource.View.Cast<BookHistory>().ToList();
         }
 
         /// <summary>
@@ -266,7 +237,7 @@ namespace NeeView
         /// </summary>
         public bool CanPrevHistory()
         {
-            var items = GetLatestItems();
+            var items = GetViewItems();
 
             var index = items.FindIndex(e => e.Path == _bookHub.Address);
 
@@ -285,7 +256,7 @@ namespace NeeView
         /// </summary>
         public void PrevHistory()
         {
-            var items = GetLatestItems();
+            var items = GetViewItems();
 
             if (_bookHub.IsLoading || items.Count <= 0) return;
 
@@ -310,7 +281,7 @@ namespace NeeView
         /// </summary>
         public bool CanNextHistory()
         {
-            var items = GetLatestItems();
+            var items = GetViewItems();
 
             var index = items.FindIndex(e => e.Path == _bookHub.Address);
             return index > 0;
@@ -321,7 +292,7 @@ namespace NeeView
         /// </summary>
         public void NextHistory()
         {
-            var items = GetLatestItems();
+            var items = GetViewItems();
 
             var index = items.FindIndex(e => e.Path == _bookHub.Address);
             if (index > 0)
@@ -343,39 +314,8 @@ namespace NeeView
         {
             if (items == null) return;
 
-            // 位置ずらし
-            SelectedItem = GetNeighbor(_selectedItem, items);
-
-            // 削除実行
             BookHistoryCollection.Current.Remove(items.Select(e => e.Path));
         }
-
-        /// <summary>
-        /// となりを取得
-        /// </summary>
-        /// <param name="item">基準項目</param>
-        /// <param name="excludes">除外項目</param>
-        /// <returns></returns>
-        private BookHistory? GetNeighbor(BookHistory? item, IEnumerable<BookHistory> excludes)
-        {
-            var items = _items;
-
-            if (items == null || items.Count <= 0) return null;
-
-            if (item is null) return items[0];
-
-            int index = items.IndexOf(item);
-            if (index < 0) return items[0];
-
-            var next = items
-                .Skip(index)
-                .Concat(items.Take(index))
-                .Except(excludes)
-                .FirstOrDefault();
-
-            return next;
-        }
-
 
         public SearchKeywordAnalyzeResult SearchKeywordAnalyze(string keyword)
         {
@@ -420,5 +360,30 @@ namespace NeeView
         }
     }
 
+
+    /// <summary>
+    /// 日付でグループ化
+    /// </summary>
+    public class HistoryListGroupDescription : GroupDescription
+    {
+        public override object GroupNameFromItem(object item, int level, CultureInfo culture)
+        {
+            if (item is not BookHistory data) return ResourceService.GetString("@Word.ItemNone");
+
+            var today = DateTime.Today;
+            if (data.LastAccessTime.Date == today)
+            {
+                return ResourceService.GetString("@Word.Today");
+            }
+            else if (data.LastAccessTime.Date == today.AddDays(-1))
+            {
+                return ResourceService.GetString("@Word.Yesterday");
+            }
+            else
+            {
+                return data.LastAccessTime.Date.ToString("D", culture);
+            }
+        }
+    }
 
 }

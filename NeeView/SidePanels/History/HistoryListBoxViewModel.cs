@@ -2,12 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 
 namespace NeeView
 {
@@ -15,15 +17,11 @@ namespace NeeView
     public partial class HistoryListBoxViewModel : INotifyPropertyChanged
     {
         private readonly HistoryList _model;
-        private Visibility _visibility = Visibility.Hidden;
 
 
         public HistoryListBoxViewModel(HistoryList model)
         {
             _model = model;
-
-            _model.AddPropertyChanged(nameof(HistoryList.Items),
-                (s, e) => RaisePropertyChanged(nameof(Items)));
 
             _model.AddPropertyChanged(nameof(HistoryList.SelectedItem),
                 (s, e) => RaisePropertyChanged(nameof(SelectedItem)));
@@ -34,37 +32,14 @@ namespace NeeView
         public event PropertyChangedEventHandler? PropertyChanged;
 
 
-
         public bool IsThumbnailVisible => _model.IsThumbnailVisible;
 
-        public List<BookHistory> Items => _model.Items;
+        public CollectionViewSource CollectionViewSource => _model.CollectionViewSource;
 
         public BookHistory? SelectedItem
         {
             get => _model.SelectedItem;
             set => _model.SelectedItem = value;
-        }
-
-        public Visibility Visibility
-        {
-            get { return _visibility; }
-            set
-            {
-                if (SetProperty(ref _visibility, value))
-                {
-                    _model.IsEnabled = _visibility == Visibility.Visible;
-                }
-            }
-        }
-
-        public async Task UpdateItemsAsync(CancellationToken token)
-        {
-            await _model.UpdateItemsAsync(token);
-        }
-
-        public void UpdateItems(bool force, CancellationToken token)
-        {
-            _model.UpdateItems(force, token);
         }
 
         public void Remove(IEnumerable<BookHistory> items)

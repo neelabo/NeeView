@@ -1,6 +1,10 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿//#define LOCAL_DEBUG
+
+using NeeLaboratory.ComponentModel;
+using NeeLaboratory.Generators;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
@@ -10,6 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -23,15 +28,16 @@ namespace NeeView
     /// <summary>
     /// HistoryListBox.xaml の相互作用ロジック
     /// </summary>
+    [LocalDebug]
     public partial class HistoryListBox : UserControl, IPageListPanel, IDisposable
     {
         private readonly HistoryListBoxViewModel _vm;
         private readonly ListBoxThumbnailLoader _thumbnailLoader;
         private readonly PageThumbnailJobClient _jobClient;
         private bool _focusRequest;
-        private ValidTimeFlag _focusRequestTimestamp = ValidTimeFlag.Empty;
         private bool _disposedValue = false;
         private readonly DisposableCollection _disposables = new();
+        private SelectorMemento _selectorMemento = new();
 
 
         static HistoryListBox()
@@ -62,11 +68,7 @@ namespace NeeView
             _disposables.Add(Config.Current.Panels.ContentItemProfile.SubscribePropertyChanged(PanelListItemProfile_PropertyChanged));
             _disposables.Add(Config.Current.Panels.BannerItemProfile.SubscribePropertyChanged(PanelListItemProfile_PropertyChanged));
             _disposables.Add(Config.Current.Panels.ThumbnailItemProfile.SubscribePropertyChanged(PanelListItemProfile_PropertyChanged));
-
-            _disposables.Add(_vm.SubscribePropertyChanged(nameof(_vm.Items),
-                (s, e) => AppDispatcher.BeginInvoke(() => ViewModel_ItemsChanged(s, e))));
         }
-
 
         protected virtual void Dispose(bool disposing)
         {
@@ -93,7 +95,7 @@ namespace NeeView
 
         public bool IsThumbnailVisible => _vm is not null && _vm.IsThumbnailVisible;
 
-        public IEnumerable<IHasPage> CollectPageList(IEnumerable<object> objs) => objs.OfType<IHasPage>();
+        public IEnumerable<IHasPage> CollectPageList(IEnumerable<object> collection) => collection.OfType<IHasPage>();
 
         #endregion
 
@@ -138,32 +140,12 @@ namespace NeeView
 
         #endregion
 
-
-        private void ViewModel_ItemsChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            this.ListBox.SetAnchorItem(null);
-
-            // リストが更新されても選択項目のフォーカスを維持するための処理
-            // NOTE: この一連の処理はかなり無理やりな実装になっているので再検討対象です
-            if (this.ListBox.IsKeyboardFocusWithin)
-            {
-                FocusSelectedItem(true);
-                _focusRequestTimestamp = ValidTimeFlag.Create();
-            }
-        }
-
         private void ListBox_GotFocus(object sender, RoutedEventArgs e)
         {
             if (!this.ListBox.IsFocused) return;
 
-            // フォーカス予約処理
-            // リストが更新されるとフォーカスはそのListBox自体に移るので、選択項目にフォーカスを戻す。
-            if (_focusRequestTimestamp.Condition(100))
-            {
-                _focusRequestTimestamp = ValidTimeFlag.Empty;
-                // このイベント内でフォーカス移動させるのは問題があるのでディスパッチ処理にする
-                AppDispatcher.BeginInvoke(() => FocusSelectedItem(true));
-            }
+            LocalDebug.WriteLine($"ReFocus");
+            AppDispatcher.BeginInvoke(() => FocusSelectedItem(true));
         }
 
         private void PanelListItemProfile_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -203,7 +185,6 @@ namespace NeeView
             }
         }
 
-
         // 履歴項目決定
         private void HistoryListItem_MouseLeftButtonDown(object? sender, MouseButtonEventArgs e)
         {
@@ -232,8 +213,6 @@ namespace NeeView
                 _vm.Load(item.Path);
             }
         }
-
-
 
         // 履歴項目決定(キー)
         private void HistoryListItem_KeyDown(object? sender, KeyEventArgs e)
@@ -274,27 +253,40 @@ namespace NeeView
         }
 
         // 表示/非表示イベント
-        private async void HistoryListBox_IsVisibleChanged(object? sender, DependencyPropertyChangedEventArgs e)
+        // TODO: 初回のフォーカスに失敗する。
+        private void HistoryListBox_IsVisibleChanged(object? sender, DependencyPropertyChangedEventArgs e)
         {
             if (_vm is null) return;
+            if (sender is not ListBox listBox) return;
 
-            _vm.Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Hidden;
-
-            if (_vm.Visibility == Visibility.Visible)
+            if (listBox.IsVisible)
             {
-                await _vm.UpdateItemsAsync(CancellationToken.None);
-                this.ListBox.UpdateLayout();
+                _vm.CollectionViewSource.View.Refresh();
+                if (listBox.SelectedIndex < 0) listBox.SelectedIndex = 0;
+                listBox.UpdateLayout();
 
-                await Task.Yield();
-
-                if (this.ListBox.SelectedIndex < 0) this.ListBox.SelectedIndex = 0;
-                FocusSelectedItem(_focusRequest);
-                _focusRequest = false;
+                AppDispatcher.BeginInvoke(() =>
+                {
+                    FocusSelectedItem(_focusRequest);
+                    _focusRequest = false;
+                });
             }
         }
 
         private void HistoryListBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
         {
+            if (sender is not ListBox listBox) return;
+            LocalDebug.WriteLine($"SelectedIndex={listBox.SelectedIndex}, SelectedItem={listBox.SelectedItem}");
+
+            if (listBox.SelectedIndex >= 0)
+            {
+                LocalDebug.WriteLine("Store");
+                _selectorMemento = new SelectorMemento(listBox);
+            }
+            else if (listBox.Items.Count > 0)
+            {
+                _selectorMemento.RestoreTo(listBox);
+            }
         }
 
         // リスト全体が変化したときにサムネイルを更新する
@@ -309,8 +301,8 @@ namespace NeeView
         {
             if (_vm is null) return null;
 
-            _vm.UpdateItems(true, CancellationToken.None);
-            return this.ListBox.Items?.Cast<BookHistory>().ToList();
+            _vm.CollectionViewSource.View.Refresh();
+            return _vm.CollectionViewSource.View.Cast<BookHistory>().ToList();
         }
 
         public List<BookHistory> GetSelectedItems()
@@ -331,6 +323,39 @@ namespace NeeView
         #endregion UI Accessor
     }
 
+
+    /// <summary>
+    /// 選択項目の記憶
+    /// </summary>
+    /// <param name="Index"></param>
+    /// <param name="Item"></param>
+    [LocalDebug]
+    internal partial record SelectorMemento(int Index, object? Item)
+    {
+        public SelectorMemento() : this(0, null)
+        {
+        }
+
+        public SelectorMemento(Selector listBox) : this(listBox.SelectedIndex, listBox.SelectedItem)
+        {
+        }
+
+        public void RestoreTo(Selector listBox)
+        {
+            listBox.SelectedItem = Item;
+            if (listBox.SelectedItem is null)
+            {
+                LocalDebug.WriteLine($"Restore Selected item by index");
+                listBox.SelectedIndex = Index;
+            }
+            else
+            {
+                LocalDebug.WriteLine($"Restore Selected item by object");
+            }
+        }
+    }
+
+
     public class ArchiveEntryToDecoratePlaceNameConverter : IValueConverter
     {
         public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -349,6 +374,7 @@ namespace NeeView
             throw new NotImplementedException();
         }
     }
+
 
     public class DateTimeToStringConverter : IValueConverter
     {

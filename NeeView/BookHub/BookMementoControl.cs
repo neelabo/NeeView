@@ -63,7 +63,7 @@ namespace NeeView
             if (book is null) return;
 
             // 履歴削除されたものを履歴登録しないようにする
-            if (e.HistoryChangedType == BookMementoCollectionChangedType.Remove && (book.Path == e.Key || e.Key == null))
+            if (e.HistoryChangedType == BookMementoCollectionChangedType.Remove && e.OldItems.Any(e => e.Path == book.Path))
             {
                 _historyRemoved = true;
             }

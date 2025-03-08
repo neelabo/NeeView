@@ -15,15 +15,16 @@
 
             _historyListBoxViewModel = new HistoryListBoxViewModel(historyList);
 
-            UpdateListBoxContent();
-            _historyListView.Created += (s, e) => UpdateListBoxContent(false);
+            _historyListView.Created +=
+                (s, e) => UpdateListBoxContent(false);
 
-            Config.Current.History.AddPropertyChanged(nameof(HistoryConfig.PanelListItemStyle), (s, e) => UpdateListBoxContent());
+            Config.Current.History.AddPropertyChanged(nameof(HistoryConfig.PanelListItemStyle),
+                (s, e) => UpdateListBoxContent());
         }
 
 
         public HistoryListView HistoryListView => _historyListView.Value;
-        public HistoryListBox? HistoryListBox => _historyListBox;
+        public HistoryListBox? HistoryListBox => _historyListBox ?? _historyListView.Value.ListBoxContent.Content as HistoryListBox;
         public HistoryList HistoryList => _historyList;
 
 
@@ -41,12 +42,12 @@
 
         public void Refresh()
         {
-            _historyListBox?.Refresh();
+            HistoryListBox?.Refresh();
         }
 
         public void FocusAtOnce()
         {
-            _historyListBox?.FocusAtOnce();
+            HistoryListBox?.FocusAtOnce();
         }
     }
 }

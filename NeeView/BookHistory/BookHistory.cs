@@ -4,6 +4,7 @@ using NeeView.Collections;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
@@ -16,23 +17,22 @@ namespace NeeView
     {
         private string _path;
         private BookMementoUnit? _unit;
+        private DateTime _lastAccessTime;
 
-        public BookHistory()
+
+        public BookHistory() : this("", default)
         {
-            _path = "";
+        }
+
+        public BookHistory(BookMementoUnit unit, DateTime lastAccessTime) : this(unit.Path, lastAccessTime)
+        {
+            Unit = unit;
         }
 
         public BookHistory(string path, DateTime lastAccessTime)
         {
             _path = path;
             LastAccessTime = lastAccessTime;
-        }
-
-        public BookHistory(BookMementoUnit unit, DateTime lastAccessTime)
-        {
-            _path = unit.Path;
-            LastAccessTime = lastAccessTime;
-            Unit = unit;
         }
 
         public string Key => _path;
@@ -50,7 +50,11 @@ namespace NeeView
             }
         }
 
-        public DateTime LastAccessTime { get; set; }
+        public DateTime LastAccessTime
+        {
+            get { return _lastAccessTime; }
+            set { SetProperty(ref _lastAccessTime, value); }
+        }
 
         public Page ArchivePage => Unit.ArchivePage;
 

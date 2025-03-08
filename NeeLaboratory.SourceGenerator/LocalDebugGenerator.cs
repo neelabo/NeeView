@@ -20,7 +20,7 @@ public sealed class LocalDebugGenerator : IIncrementalGenerator
             using System;
             namespace {{_generatorNamespace}};
             
-            [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+            [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]
             internal sealed class LocalDebugAttribute : Attribute
             {
             }
@@ -53,6 +53,18 @@ public sealed class LocalDebugGenerator : IIncrementalGenerator
             fullType = fullType.Substring(global.Length);
         }
 
+        string typeString = "";
+        if (typeSymbol.IsStatic)
+        {
+            typeString += "static ";
+        }
+        typeString += "partial ";
+        if (typeSymbol.IsRecord)
+        {
+            typeString += "record ";
+        }
+        typeString += typeSymbol.IsValueType ? "struct" : "class";
+
         var code = $$"""
             #nullable enable
             using System;
@@ -60,7 +72,7 @@ public sealed class LocalDebugGenerator : IIncrementalGenerator
 
             {{ns}}
 
-            partial class {{name}}
+            {{typeString}} {{name}}
             {
                 private static class LocalDebug
                 {

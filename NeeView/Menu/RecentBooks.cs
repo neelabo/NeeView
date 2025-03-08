@@ -22,7 +22,7 @@ namespace NeeView
                 {
                     switch (e.HistoryChangedType)
                     {
-                        case BookMementoCollectionChangedType.Clear:
+                        case BookMementoCollectionChangedType.Reset:
                         case BookMementoCollectionChangedType.Load:
                             UpdateLastFiles();
                             break;

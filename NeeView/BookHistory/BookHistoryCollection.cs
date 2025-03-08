@@ -1,23 +1,26 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿//#define LOCAL_DEBUG
+
+using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
+using NeeLaboratory.Linq;
 using NeeView.Collections.Generic;
-using NeeView.Windows.Property;
+using NeeView.Collections.ObjectModel;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
 
 namespace NeeView
 {
+    [LocalDebug]
     public partial class BookHistoryCollection : BindableBase
     {
         static BookHistoryCollection() => Current = new BookHistoryCollection();
@@ -25,8 +28,12 @@ namespace NeeView
 
 
         private Dictionary<string, FolderParameter.Memento> _folders = new();
-        private readonly System.Threading.Lock _lock = new();
+        private readonly Lock _lock = new();
 
+        // 履歴は内部的には日時昇順の ObservableCollection として保持する。
+        // 末端のほうが更新頻度が高いので入れ替えに有利なため。
+        private readonly ObservableCollectionEx<BookHistory> _items;
+        private readonly ObservableCollectionMap<BookHistory> _itemsMap;
 
         private BookHistoryCollection()
         {
@@ -36,6 +43,9 @@ namespace NeeView
             BookmarkSearchHistory.CollectionChanged += SearchHistoryChanged;
             BookHistorySearchHistory.CollectionChanged += SearchHistoryChanged;
             PageListSearchHistory.CollectionChanged += SearchHistoryChanged;
+
+            _items = new();
+            _itemsMap = new(_items);
         }
 
 
@@ -47,19 +57,16 @@ namespace NeeView
 
 
         // 履歴コレクションロック
-        public System.Threading.Lock ItemsLock => _lock;
+        public Lock ItemsLock => _lock;
 
         // 履歴コレクション
-        public LinkedDicionary<string, BookHistory> Items { get; set; } = new LinkedDicionary<string, BookHistory>();
+        public ObservableCollectionEx<BookHistory> Items => _items;
 
         // 要素数
-        public int Count => Items.Count;
+        public int Count => _items.Count;
 
         // 更新番号
         public int SerialNumber { get; private set; }
-
-        // 先頭の要素
-        public LinkedListNode<BookHistory>? First => Items.First;
 
         // 本棚 検索履歴
         public HistoryStringCollection BookshelfSearchHistory { get; } = new();
@@ -90,18 +97,18 @@ namespace NeeView
         {
             lock (_lock)
             {
-                Items.Clear();
+                _items.Clear();
                 BookMementoCollection.Current.CleanUp();
             }
 
-            HistoryChanged?.Invoke(this, new BookMementoCollectionChangedArgs(BookMementoCollectionChangedType.Clear, null));
+            HistoryChanged?.Invoke(this, new BookMementoCollectionChangedArgs(BookMementoCollectionChangedType.Reset));
         }
 
         public void Load(IEnumerable<BookHistory> items, IEnumerable<BookMemento> books)
         {
             lock (_lock)
             {
-                Items.Clear();
+                _items.Clear();
                 BookMementoCollection.Current.CleanUp();
 
                 foreach (var book in books)
@@ -109,23 +116,23 @@ namespace NeeView
                     BookMementoCollection.Current.Set(book);
                 }
 
-                foreach (var item in items)
+                try
                 {
-                    try
+                    // 日時昇順にする。ソート済のはずなので反転のみ行う。
+                    if (items.Any() && items.First().LastAccessTime > items.Last().LastAccessTime)
                     {
-                        var newItem = new BookHistory(item.Path, item.LastAccessTime);
-                        Items.AddLastRaw(newItem.Path, newItem);
+                        items = items.Reverse();
                     }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine(ex.Message);
-                    }
+                    _items.Reset(items.Select(e => new BookHistory(e.Path, e.LastAccessTime)));
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
                 }
             }
 
-            HistoryChanged?.Invoke(this, new BookMementoCollectionChangedArgs(BookMementoCollectionChangedType.Load, null));
+            HistoryChanged?.Invoke(this, new BookMementoCollectionChangedArgs(BookMementoCollectionChangedType.Load));
         }
-
 
         public bool Contains(string place)
         {
@@ -133,30 +140,18 @@ namespace NeeView
 
             lock (_lock)
             {
-                return Items.ContainsKey(place);
+                return _itemsMap.ContainsKey(place);
             }
         }
 
-
-        // 履歴検索
-        public LinkedListNode<BookHistory>? FindNode(string place)
+        public BookMementoUnit? FindUnit(string place)
         {
             if (place == null) return null;
 
             lock (_lock)
             {
-                return Items.Find(place);
+                return _itemsMap.Find(place)?.Unit;
             }
-        }
-
-        public BookHistory? Find(string place)
-        {
-            return FindNode(place)?.Value;
-        }
-
-        public BookMementoUnit? FindUnit(string place)
-        {
-            return Find(place)?.Unit;
         }
 
         // 履歴追加
@@ -168,35 +163,35 @@ namespace NeeView
 
             try
             {
+                BookHistory? item;
                 lock (_lock)
                 {
-                    var node = FindNode(memento.Path);
-                    if (node != null && isKeepOrder)
+                    item = _itemsMap.Find(memento.Path);
+                    if (item != null)
                     {
-                        node.Value.Unit.Memento = memento;
-                        changeType = BookMementoCollectionChangedType.Update;
+                        item.Unit.Memento = memento;
+                        if (!isKeepOrder)
+                        {
+                            item.LastAccessTime = DateTime.Now;
+                            //HistoryChanged?.Invoke(this, BookMementoCollectionChangedArgs.Create(BookMementoCollectionChangedType.UpdateLastAccessTime, [item]));
+                            MoveCore(_items.Count - 1, item);
+                            changeType = BookMementoCollectionChangedType.Replace;
+                        }
                     }
                     else
                     {
-                        node = node ?? new LinkedListNode<BookHistory>(new BookHistory(BookMementoCollection.Current.Set(memento), DateTime.Now));
-                        node.Value.Unit.Memento = memento;
-                        node.Value.LastAccessTime = DateTime.Now;
-
-                        if (node == Items.First)
-                        {
-                            changeType = BookMementoCollectionChangedType.Update;
-                        }
-                        else
-                        {
-                            Items.AddFirst(node.Value.Path, node.Value);
-                            changeType = BookMementoCollectionChangedType.Add;
-                        }
+                        item = new BookHistory(BookMementoCollection.Current.Set(memento), DateTime.Now);
+                        item.Unit.Memento = memento;
+                        item.LastAccessTime = DateTime.Now;
+                        //InsertCore(0, item);
+                        AddCore(item);
+                        changeType = BookMementoCollectionChangedType.Add;
                     }
                 }
 
                 if (changeType != BookMementoCollectionChangedType.None)
                 {
-                    HistoryChanged?.Invoke(this, new BookMementoCollectionChangedArgs(changeType, memento.Path));
+                    HistoryChanged?.Invoke(this, BookMementoCollectionChangedArgs.Create(changeType, [item]));
                 }
             }
             catch (Exception e)
@@ -208,21 +203,11 @@ namespace NeeView
         // 履歴削除
         public void Remove(string place)
         {
-            bool isRemoved = false;
+            var item = RemoveCore(place);
 
-            lock (_lock)
+            if (item is not null)
             {
-                var node = FindNode(place);
-                if (node != null)
-                {
-                    Items.Remove(place);
-                    isRemoved = true;
-                }
-            }
-
-            if (isRemoved)
-            {
-                HistoryChanged?.Invoke(this, new BookMementoCollectionChangedArgs(BookMementoCollectionChangedType.Remove, place));
+                HistoryChanged?.Invoke(this, new BookMementoCollectionChangedArgs(BookMementoCollectionChangedType.Remove, null, [item]));
             }
         }
 
@@ -231,42 +216,21 @@ namespace NeeView
         {
             if (places == null) return;
 
-            bool isRemoved = false;
+            var unlinked = RemoveCore(places);
 
-            lock (_lock)
+            if (unlinked.Count != 0)
             {
-                var unlinked = places.Where(e => FindNode(e) != null);
-
-                if (unlinked.Any())
-                {
-                    foreach (var place in unlinked)
-                    {
-                        Debug.WriteLine($"HistoryRemove: {place}");
-                        Items.Remove(place);
-                        isRemoved = true;
-                    }
-                }
-            }
-
-            if (isRemoved)
-            {
-                HistoryChanged?.Invoke(this, new BookMementoCollectionChangedArgs(BookMementoCollectionChangedType.Remove, null));
+                HistoryChanged?.Invoke(this, new BookMementoCollectionChangedArgs(BookMementoCollectionChangedType.Remove, null, unlinked));
             }
         }
 
         // 無効な履歴削除
         public async Task<int> RemoveUnlinkedAsync(CancellationToken token)
         {
-            Debug.WriteLine($"BookHistory: RemoveUnlinked...");
-
-            List<BookHistory> items;
-            lock (_lock)
-            {
-                items = this.Items.ToList();
-            }
+            LocalDebug.WriteLine($"RemoveUnlinked...");
 
             var unlinked = new List<BookHistory>();
-            foreach (var item in items)
+            foreach (var item in this.ToList())
             {
                 if (!await ArchiveEntryUtility.ExistsAsync(item.Path, token))
                 {
@@ -274,21 +238,13 @@ namespace NeeView
                 }
             }
 
-            if (unlinked.Any())
+            if (unlinked.Count != 0)
             {
-                lock (_lock)
-                {
-                    foreach (var item in unlinked)
-                    {
-                        Debug.WriteLine($"HistoryRemove: {item.Path}");
-                        Items.Remove(item.Path);
-                    }
-                }
-
-                HistoryChanged?.Invoke(this, new BookMementoCollectionChangedArgs(BookMementoCollectionChangedType.Remove, null));
+                RemoveCore(unlinked.Select(e => e.Path));
+                HistoryChanged?.Invoke(this, new BookMementoCollectionChangedArgs(BookMementoCollectionChangedType.Remove, null, unlinked));
             }
 
-            Debug.WriteLine($"BookHistory: RemoveUnlinked done.");
+            LocalDebug.WriteLine($"RemoveUnlinked done.");
             return unlinked.Count;
         }
 
@@ -297,69 +253,105 @@ namespace NeeView
             ToastService.Current.Show(new Toast(Properties.TextResources.GetFormatString("History.DeleteItemsMessage", removedCount)));
         }
 
+        public List<BookHistory> ToList()
+        {
+            lock (_lock)
+            {
+                return _items.ToList();
+            }
+        }
 
         // 最近使った履歴のリストアップ
         public List<BookHistory> ListUp(int size)
         {
             lock (_lock)
             {
-                return Items.Take(size).ToList();
+                return _items.Take(size).ToList();
             }
         }
-
-        /// <summary>
-        /// 範囲指定して履歴をリストアップ
-        /// </summary>
-        /// <param name="current">基準位置</param>
-        /// <param name="direction">方向</param>
-        /// <param name="size">取得サイズ</param>
-        /// <returns></returns>
-        internal List<BookHistory> ListUp(string current, int direction, int size)
-        {
-            lock (_lock)
-            {
-                var list = new List<BookHistory>();
-
-                var now = FindNode(current);
-                var node = now ?? Items.First;
-
-                if (now == null && node != null && direction < 0)
-                {
-                    list.Add(node.Value);
-                }
-
-                for (int i = 0; i < size; i++)
-                {
-                    node = direction < 0 ? node?.Next : node?.Previous; // リストと履歴の方向は逆
-
-                    if (node == null) break;
-                    list.Add(node.Value);
-                }
-
-                return list;
-            }
-        }
-
 
         public void Rename(string src, string dst)
         {
-            bool isRenamed = false;
-
+            BookHistory? node;
             lock (_lock)
             {
-                var item = Items.Find(src);
-                if (item != null)
+                node = _itemsMap.Find(src);
+                if (node != null)
                 {
-                    Items.Remove(dst);
-                    Items.Remap(src, dst);
-                    item.Value.Path = dst;
-                    isRenamed = true;
+                    var dstNode = _itemsMap.Find(dst);
+                    if (dstNode is not null)
+                    {
+                        _items.Remove(dstNode);
+                    }
+                    node.Path = dst;
+                    _itemsMap.Remap(src, node);
                 }
             }
 
-            if (isRenamed)
+            if (node is not null)
             {
-                HistoryChanged?.Invoke(this, new BookMementoCollectionChangedArgs(BookMementoCollectionChangedType.Add, dst));
+                List<BookHistory> list = [node];
+                HistoryChanged?.Invoke(this, new BookMementoCollectionChangedArgs(BookMementoCollectionChangedType.Replace, list, list));
+            }
+        }
+
+        private void AddCore(BookHistory item)
+        {
+            lock (_lock)
+            {
+                Debug.Assert(!_itemsMap.ContainsKey(item.Key));
+                _items.Add(item);
+            }
+        }
+
+        private void InsertCore(int index, BookHistory item)
+        {
+            lock (_lock)
+            {
+                Debug.Assert(!_itemsMap.ContainsKey(item.Key));
+                _items.Insert(index, item);
+            }
+        }
+
+        private bool MoveCore(int index, BookHistory item)
+        {
+            lock (_lock)
+            {
+                var oldIndex = _items.LastIndexOf(item);
+                if (oldIndex < 0) throw new ArgumentException("Cannot found item.");
+                if (oldIndex == index) return false;
+                _items.Move(oldIndex, index);
+                return true;
+            }
+        }
+
+        private BookHistory? RemoveCore(string place)
+        {
+            lock (_lock)
+            {
+                var item = _itemsMap.Find(place);
+                if (item != null)
+                {
+                    _items.Remove(item);
+                }
+                return item;
+            }
+        }
+
+        private List<BookHistory> RemoveCore(IEnumerable<string> places)
+        {
+            lock (_lock)
+            {
+                var unlinked = places.Select(e => _itemsMap.Find(e)).WhereNotNull().ToList();
+                if (unlinked.Count != 0)
+                {
+                    foreach (var item in unlinked)
+                    {
+                        LocalDebug.WriteLine($"Remove {item.Path}");
+                        _items.Remove(item);
+                    }
+                }
+                return unlinked;
             }
         }
 
@@ -455,11 +447,11 @@ namespace NeeView
             {
                 if (memento == null) return;
 
-                Debug.WriteLine("HistoryMerge...");
+                LocalDebug.WriteLine("HistoryMerge...");
 
                 if (Format != memento.Format)
                 {
-                    Debug.WriteLine("HistoryMerge failed: Illegal format");
+                    LocalDebug.WriteLine("HistoryMerge failed: Illegal format");
                     return;
                 }
 
@@ -474,7 +466,7 @@ namespace NeeView
                     {
                         if (itemMap[item.Path].LastAccessTime < item.LastAccessTime)
                         {
-                            Debug.WriteLine($"HistoryMerge: Update: {item.Path}");
+                            LocalDebug.WriteLine($"HistoryMerge: Update: {item.Path}");
                             itemMap[item.Path] = item;
                             bookMap[item.Path] = importBookMap[item.Path];
                             isDirty = true;
@@ -482,7 +474,7 @@ namespace NeeView
                     }
                     else
                     {
-                        Debug.WriteLine($"HistoryMerge: Add: {item.Path}");
+                        LocalDebug.WriteLine($"HistoryMerge: Add: {item.Path}");
                         itemMap.Add(item.Path, item);
                         bookMap.Add(item.Path, importBookMap[item.Path]);
                         isDirty = true;
@@ -502,7 +494,8 @@ namespace NeeView
         {
             var memento = new Memento();
 
-            memento.Items = Limit(this.Items.Where(e => !e.Path.StartsWith(Temporary.Current.TempDirectory, StringComparison.Ordinal)), Config.Current.History.LimitSize, Config.Current.History.LimitSpan).ToList();
+            // NOTE: 保存時は日時降順にする
+            memento.Items = Limit(this.Items.Reverse().Where(e => !e.Path.StartsWith(Temporary.Current.TempDirectory, StringComparison.Ordinal)), Config.Current.History.LimitSize, Config.Current.History.LimitSpan).ToList();
             memento.Books = memento.Items.Select(e => e.Unit.Memento).ToList();
 
             if (Config.Current.History.IsKeepFolderStatus)
