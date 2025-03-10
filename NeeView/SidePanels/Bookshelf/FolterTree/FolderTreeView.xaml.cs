@@ -1005,7 +1005,7 @@ namespace NeeView
         {
             if (Config.Current.Panels.IsTextSearchEnabled)
             {
-                KeyExGesture.AllowSingleKey = false;
+                KeyExGesture.AddFilter(KeyExGestureFilter.TextKey);
             }
         }
 

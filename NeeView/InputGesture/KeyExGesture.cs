@@ -16,9 +16,26 @@ namespace NeeView
     [TypeConverter(typeof(KeyExGestureConverter))]
     public class KeyExGesture : InputGesture
     {
+        #region Filter
+
         // 入力許可フラグ
         // NOTE: キーボード入力を一律拒否する挙動のためのフラグだがあまりよろしくない実装
-        public static bool AllowSingleKey { get; set; }
+        private static KeyExGestureFilter _filter = KeyExGestureFilter.None;
+
+        public static void AddFilter(KeyExGestureFilter filter)
+        {
+            if (_filter < filter)
+            {
+                _filter = filter;
+            }
+        }
+
+        public static void ResetFilter()
+        {
+            _filter = KeyExGestureFilter.None;
+        }
+
+        #endregion Filter
 
 
         // メインキー
@@ -45,8 +62,18 @@ namespace NeeView
         {
             if (inputEventArgs is not KeyEventArgs keyEventArgs) return false;
 
-            // 入力許可？ (Escキーは常に受け入れる)
-            if (!AllowSingleKey && keyEventArgs.Key != Key.Escape && !IsNormal(keyEventArgs.Key, Keyboard.Modifiers)) return false;
+            // 入力許可？
+            switch (_filter)
+            {
+                case KeyExGestureFilter.None:
+                    break;
+                case KeyExGestureFilter.TextKey:
+                    if (IsTextKey(keyEventArgs.Key, Keyboard.Modifiers)) return false;
+                    break;
+                case KeyExGestureFilter.All:
+                    if (!IsAllowKey(keyEventArgs.Key, Keyboard.Modifiers)) return false;
+                    break;
+            }
 
             // ALTが押されたときはシステムキーを通常キーとする
             Key key = keyEventArgs.Key;
@@ -58,34 +85,22 @@ namespace NeeView
             return this.Key == key && this.ModifierKeys == Keyboard.Modifiers;
         }
 
-        // 標準キー判定
-        internal static bool IsNormal(Key key, ModifierKeys modifiers)
+        // Esc, Alt+F4 は常に受け入れる
+        private static bool IsAllowKey(Key key, ModifierKeys modifiers)
         {
-            if (!((key >= Key.F1 && key <= Key.F24) || (key >= Key.NumPad0 && key <= Key.Divide)))
-            {
-                if ((modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Windows)) != 0)
-                {
-                    switch (key)
-                    {
-                        case Key.LeftCtrl:
-                        case Key.RightCtrl:
-                        case Key.LeftAlt:
-                        case Key.RightAlt:
-                        case Key.LWin:
-                        case Key.RWin:
-                            return false;
+            return key == Key.Escape || (key == Key.F4 && modifiers == ModifierKeys.Alt);
+        }
 
-                        default:
-                            return true;
-                    }
-                }
-                else if ((key >= Key.D0 && key <= Key.D9) || (key >= Key.A && key <= Key.Z))
-                {
-                    return false;
-                }
-            }
+        // 文字キー判定
+        private static bool IsTextKey(Key key, ModifierKeys modifiers)
+        {
+            if ((modifiers & (ModifierKeys.Control | ModifierKeys.Alt | ModifierKeys.Windows)) != 0) return false;
+            if (key >= Key.Cancel && key <= Key.Help && key != Key.Space) return false;
+            if (key >= Key.F1 && key <= Key.LaunchApplication2) return false;
+            if (key >= Key.ImeProcessed) return false;
             return true;
         }
+
 
         private static bool IsDefinedKey(Key key)
         {
@@ -97,4 +112,18 @@ namespace NeeView
             return new KeyGestureSource(Key, ModifierKeys).GetDisplayString();
         }
     }
+
+
+    public enum KeyExGestureFilter
+    {
+        // 全て有効
+        None,
+
+        // 文字になるキーのみ無効
+        TextKey,
+
+        // 全て無効 
+        All,
+    }
+
 }

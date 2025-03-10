@@ -45,7 +45,7 @@ namespace NeeView
         // 単キーのショートカット無効
         private void Control_KeyDown_IgnoreSingleKeyGesture(object? sender, KeyEventArgs e)
         {
-            KeyExGesture.AllowSingleKey = false;
+            KeyExGesture.AddFilter(KeyExGestureFilter.All);
         }
 
         private void NavigateView_IsVisibleChanged(object? sender, DependencyPropertyChangedEventArgs e)

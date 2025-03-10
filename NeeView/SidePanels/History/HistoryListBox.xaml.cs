@@ -221,7 +221,7 @@ namespace NeeView
 
             if (this.ListBox.IsSimpleTextSearchEnabled)
             {
-                KeyExGesture.AllowSingleKey = false;
+                KeyExGesture.AddFilter(KeyExGestureFilter.TextKey);
             }
 
             var item = ((sender as ListBoxItem)?.Content as BookHistory);

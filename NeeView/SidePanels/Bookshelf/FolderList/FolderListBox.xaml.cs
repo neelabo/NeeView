@@ -958,7 +958,7 @@ namespace NeeView
         {
             if (this.ListBox.IsSimpleTextSearchEnabled)
             {
-                KeyExGesture.AllowSingleKey = false;
+                KeyExGesture.AddFilter(KeyExGestureFilter.TextKey);
             }
 
             bool isLRKeyEnabled = _vm.IsLRKeyEnabled();

@@ -126,7 +126,7 @@ namespace NeeView
         private void PageSliderTextBox_KeyDown(object? sender, KeyEventArgs e)
         {
             // 単キーのショートカット無効
-            KeyExGesture.AllowSingleKey = false;
+            KeyExGesture.AddFilter(KeyExGestureFilter.All);
             //e.Handled = true;
         }
 

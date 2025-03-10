@@ -297,7 +297,7 @@ namespace NeeView
         {
             if (this.ListBox.IsSimpleTextSearchEnabled)
             {
-                KeyExGesture.AllowSingleKey = false;
+                KeyExGesture.AddFilter(KeyExGestureFilter.TextKey);
             }
 
             var page = this.ListBox.SelectedItem as Page;

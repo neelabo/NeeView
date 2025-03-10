@@ -91,7 +91,7 @@ namespace NeeView
             }
 
             // 単キーのショートカット無効
-            KeyExGesture.AllowSingleKey = false;
+            KeyExGesture.AddFilter(KeyExGestureFilter.All);
             //e.Handled = true;
         }
 

@@ -129,7 +129,7 @@ namespace NeeView
         /// </summary>
         private void Control_KeyDown_IgnoreSingleKeyGesture(object? sender, KeyEventArgs e)
         {
-            KeyExGesture.AllowSingleKey = false;
+            KeyExGesture.AddFilter(KeyExGestureFilter.All);
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace NeeView
         /// </summary>
         private void SearchBox_KeyDown(object sender, KeyEventArgs e)
         {
-            KeyExGesture.AllowSingleKey = false;
+            KeyExGesture.AddFilter(KeyExGestureFilter.All);
 
             if (e.Key == Key.Enter)
             {

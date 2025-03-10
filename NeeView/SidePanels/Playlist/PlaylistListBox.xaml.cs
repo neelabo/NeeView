@@ -598,7 +598,7 @@ namespace NeeView
         {
             if (this.ListBox.IsSimpleTextSearchEnabled)
             {
-                KeyExGesture.AllowSingleKey = false;
+                KeyExGesture.AddFilter(KeyExGestureFilter.TextKey);
             }
 
             // このパネルで使用するキーのイベントを止める

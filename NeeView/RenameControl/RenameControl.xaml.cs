@@ -287,7 +287,7 @@ namespace NeeView
         // 単キーコマンド無効
         private void Control_KeyDown_IgnoreSingleKeyGesture(object? sender, KeyEventArgs e)
         {
-            KeyExGesture.AllowSingleKey = false;
+            KeyExGesture.AddFilter(KeyExGestureFilter.All);
         }
 
         /// <summary>
