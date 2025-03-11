@@ -388,7 +388,7 @@ namespace NeeView.PageFrames
         public IDisposable IgnoreScaleStretchTracking()
         {
             _ignoreScaleStretchTracking = true;
-            return new AnonymousDisposable(() =>  { _ignoreScaleStretchTracking = false; });
+            return new AnonymousDisposable(() => { _ignoreScaleStretchTracking = false; });
         }
 
         public void SetAutoStretchTarget(PageRange range)

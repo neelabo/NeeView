@@ -49,6 +49,8 @@ namespace NeeView
 
             _bookMementoControl = new BookMementoControl(book, BookHistoryCollection.Current);
             _disposables.Add(_bookMementoControl);
+
+            _disposables.Add(Config.Current.BookSetting.SubscribePropertyChanged((s, e) => _bookMementoControl.RequestSaveBookMemento()));
         }
 
         [Subscribable]

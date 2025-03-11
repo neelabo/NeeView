@@ -20,6 +20,7 @@ namespace NeeView
         private readonly BookHistoryCollection _historyCollection;
         private bool _historyEntry;
         private bool _historyRemoved;
+        private bool _historyAddRequested;
         private bool _disposedValue;
         private readonly DisposableCollection _disposables = new();
         private int _pageChangedCount;
@@ -85,6 +86,15 @@ namespace NeeView
         }
 
         /// <summary>
+        /// 履歴保存要求
+        /// </summary>
+        public void RequestSaveBookMemento()
+        {
+            _historyAddRequested = true;
+            TrySaveBookMemento();
+        }
+
+        /// <summary>
         /// 必要であれば履歴保存する
         /// </summary>
         public void TrySaveBookMemento()
@@ -108,7 +118,6 @@ namespace NeeView
                 }
             }
         }
-
 
         // 設定の保存
         public void SaveBookMemento()
@@ -160,7 +169,7 @@ namespace NeeView
 
             return !_historyRemoved
                 && book.Pages.Count > 0
-                && (_historyEntry || _pageChangedCount >= historyEntryPageCount || book.CurrentPages.LastOrDefault() == book.Pages.Last())
+                && (_historyAddRequested || _historyEntry || _pageChangedCount >= historyEntryPageCount || book.CurrentPages.LastOrDefault() == book.Pages.Last())
                 && (Config.Current.History.IsInnerArchiveHistoryEnabled || book.Source.ArchiveEntryCollection.Archive?.Parent == null)
                 && (Config.Current.History.IsUncHistoryEnabled || !LoosePath.IsUnc(book.Path));
         }
