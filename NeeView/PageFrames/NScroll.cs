@@ -74,7 +74,10 @@ namespace NeeView.PageFrames
             {
                 NScrollType.NType => GetNTypeScrollDelta(area, direction, bookReadDirection, rate, endMargin),
                 NScrollType.ZType => GetZTypeScrollDelta(area, direction, bookReadDirection, rate, endMargin),
-                _ => GetDiagonalScrollDelta(area, direction, bookReadDirection, rate, endMargin),
+                NScrollType.Diagonal => GetDiagonalScrollDelta(area, direction, bookReadDirection, rate, endMargin),
+                NScrollType.Horizontal => GetHorizontalScrollDelta(area, direction, bookReadDirection, rate, endMargin),
+                NScrollType.Vertical => GetVerticalScrollDelta(area, direction, bookReadDirection, rate, endMargin),
+                _ => throw new NotSupportedException()
             };
         }
 
@@ -103,6 +106,18 @@ namespace NeeView.PageFrames
             var deltaX = GetNScrollHorizontal(area, direction, bookReadDirection, rate);
             var deltaY = GetNScrollVertical(area, direction, bookReadDirection, rate);
             return SnapZero(new Vector(deltaX.X, deltaY.Y), endMargin);
+        }
+
+        private static Vector GetHorizontalScrollDelta(DragArea area, int direction, int bookReadDirection, double rate, double endMargin)
+        {
+            var deltaX = GetNScrollHorizontal(area, direction, bookReadDirection, rate);
+            return SnapZero(new Vector(deltaX.X, 0.0), endMargin);
+        }
+
+        private static Vector GetVerticalScrollDelta(DragArea area, int direction, int bookReadDirection, double rate, double endMargin)
+        {
+            var deltaY = GetNScrollVertical(area, direction, bookReadDirection, rate);
+            return SnapZero(new Vector(0.0, deltaY.Y), endMargin);
         }
 
         private static Vector GetNScrollHorizontal(DragArea area, int direction, int bookReadDirection, double rate)

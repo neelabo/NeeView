@@ -97,6 +97,8 @@ namespace NeeView
         NType,
         ZType,
         Diagonal,
+        Horizontal,
+        Vertical,
     }
 
     public enum LineBreakStopMode
