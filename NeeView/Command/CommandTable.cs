@@ -286,7 +286,7 @@ namespace NeeView
                 new NextPlaylistItemInBookCommand(),
 
                 new ToggleCustomSizeCommand(),
-
+                new ToggleTrimCommand(),
                 new ToggleResizeFilterCommand(),
                 new ToggleGridCommand(),
                 new ToggleEffectCommand(),

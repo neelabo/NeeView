@@ -9,7 +9,7 @@ namespace NeeView
     {
         public ToggleCustomSizeCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.ImageScale");
+            this.Group = Properties.TextResources.GetString("CommandGroup.Effect");
             this.IsShowMessage = true;
         }
 
