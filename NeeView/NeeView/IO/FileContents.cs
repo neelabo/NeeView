@@ -54,9 +54,23 @@ namespace NeeView.IO
             };
             dataObject.GetData(ref format, out STGMEDIUM medium);
             Debug.Assert(medium.tymed == TYMED.TYMED_HGLOBAL && medium.unionmember != IntPtr.Zero && medium.pUnkForRelease == null);
+            if (medium.unionmember == IntPtr.Zero) throw new FormatException("Wrong DataObject.FileDescriptorW format.");
             try
             {
-                return Marshal.PtrToStructure<FILEGROUPDESCRIPTORW>(NativeMethods.GlobalLock(medium.unionmember));
+                var fileGroupDescriptor = new FILEGROUPDESCRIPTORW();
+
+                IntPtr ptr = NativeMethods.GlobalLock(medium.unionmember);
+                fileGroupDescriptor.cItems = Marshal.PtrToStructure<int>(ptr);
+                ptr += Marshal.SizeOf(fileGroupDescriptor.cItems);
+
+                fileGroupDescriptor.fgd = new FILEDESCRIPTORW[fileGroupDescriptor.cItems];
+                for (int index = 0; index < fileGroupDescriptor.cItems; index++)
+                {
+                    fileGroupDescriptor.fgd[index] = Marshal.PtrToStructure<FILEDESCRIPTORW>(ptr);
+                    ptr += Marshal.SizeOf<FILEDESCRIPTORW>();
+                }
+
+                return fileGroupDescriptor;
             }
             finally
             {
@@ -75,31 +89,39 @@ namespace NeeView.IO
                 tymed = TYMED.TYMED_HGLOBAL | TYMED.TYMED_ISTREAM
             };
             dataObject.GetData(ref format, out STGMEDIUM medium);
-            Debug.Assert(medium.unionmember != IntPtr.Zero && medium.pUnkForRelease == null);
-            switch (medium.tymed)
+            if (medium.unionmember == IntPtr.Zero) throw new FormatException("Wrong DataObject.FileContent format.");
+            try
             {
-                case TYMED.TYMED_HGLOBAL:
-                    {
-                        var size = (long)NativeMethods.GlobalSize(medium.unionmember);
-                        Debug.Assert(size <= Int32.MaxValue);
-                        var buffer = new byte[size];
-                        Marshal.Copy(NativeMethods.GlobalLock(medium.unionmember), buffer, 0, buffer.Length);
-                        NativeMethods.GlobalUnlock(medium.unionmember);
-                        NativeMethods.GlobalFree(medium.unionmember);
-                        return buffer;
-                    }
-                case TYMED.TYMED_ISTREAM:
-                    {
-                        var stream = (IStream)Marshal.GetObjectForIUnknown(medium.unionmember);
-                        Marshal.Release(medium.unionmember);
-                        stream.Stat(out STATSTG statstg, 0);
-                        Debug.Assert(statstg.cbSize <= Int32.MaxValue);
-                        var buffer = new byte[statstg.cbSize];
-                        stream.Read(buffer, buffer.Length, IntPtr.Zero);
-                        return buffer;
-                    }
+                switch (medium.tymed)
+                {
+                    case TYMED.TYMED_HGLOBAL:
+                        {
+                            var size = (long)NativeMethods.GlobalSize(medium.unionmember);
+                            Debug.Assert(size <= Int32.MaxValue);
+                            var buffer = new byte[size];
+                            Marshal.Copy(NativeMethods.GlobalLock(medium.unionmember), buffer, 0, buffer.Length);
+                            NativeMethods.GlobalUnlock(medium.unionmember);
+                            NativeMethods.GlobalFree(medium.unionmember);
+                            return buffer;
+                        }
+                    case TYMED.TYMED_ISTREAM:
+                        {
+                            var stream = (IStream)Marshal.GetObjectForIUnknown(medium.unionmember);
+                            Marshal.Release(medium.unionmember);
+                            stream.Stat(out STATSTG statstg, 0);
+                            Debug.Assert(statstg.cbSize <= Int32.MaxValue);
+                            var buffer = new byte[statstg.cbSize];
+                            stream.Read(buffer, buffer.Length, IntPtr.Zero);
+                            return buffer;
+                        }
+                    default:
+                        throw new NotSupportedException($"Not supported TYMED: {medium.tymed}");
+                }
             }
-            throw new Exception();
+            finally
+            {
+                NativeMethods.ReleaseStgMedium(ref medium);
+            }
         }
     }
 }
