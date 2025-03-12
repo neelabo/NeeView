@@ -259,24 +259,8 @@ namespace NeeView
         /// <returns>出力されたファイルパスを返す。バイナリが画像データ出なかった場合は null</returns>
         public static string? DownloadToFile(byte[] buff, string? name, string downloadPath)
         {
-            //if (!System.IO.Directory.Exists(downloadPath)) throw new DropException("保存先フォルダーが存在しません");
-
-            // ファイル名は固定
-            name = DateTime.Now.ToString("yyyyMMddTHHmmss", CultureInfo.InvariantCulture);
-            string ext = "";
-
-            // 画像ファイルチェック
-            // 対応拡張子に変更する
-            var exts = PictureFormat.GetSupportImageExtensions(buff);
-            if (exts == null) return null;
-            if (!exts.Contains(ext))
-            {
-                var newExtension = exts[0];
-                // 一部拡張子置き換え
-                if (newExtension == ".jpeg") newExtension = ".jpg";
-                if (newExtension == ".tiff") newExtension = ".tif";
-                name = System.IO.Path.ChangeExtension(name, newExtension);
-            }
+            name = ValidateFileName(name, buff);
+            if (name is null) return null;
 
             // ユニークなパスを作成
             string fileName = FileIO.CreateUniquePath(System.IO.Path.Combine(downloadPath, name));
@@ -297,30 +281,52 @@ namespace NeeView
             return fileName;
         }
 
-#if false
-        // ファイル名の修正
-        private static string ValidateFileName(string name)
+        /// <summary>
+        /// ファイル名補正
+        /// </summary>
+        /// <param name="name">提供された名前</param>
+        /// <param name="buff">ファイル データ。拡張子推定用</param>
+        /// <returns>補正されたファイル名。サポート外データの場合は null</returns>
+        public static string? ValidateFileName(string? name, byte[] buff)
         {
-            string DefaultName = DateTime.Now.ToString("yyyyMMddTHHmmss");
+            string defaultName = DateTime.Now.ToString("yyyyMMddTHHmmss", CultureInfo.InvariantCulture);
+            string ext = "";
 
-            // nullの場合はデフォルト名
-            name = name ?? DefaultName;
-
-            // ファイル名として使用可能な文字列にする
-            name = LoosePath.ValidFileName(name);
-
-            // 拡張子取得
-            string ext = System.IO.Path.GetExtension(name).ToLowerInvariant();
-
-            // 名前が長すぎる場合は独自名にする。64文字ぐらい？
-            if (string.IsNullOrWhiteSpace(name) || name.Length > 64)
+            if (string.IsNullOrWhiteSpace(name))
             {
-                name = DefaultName + ext;
+                name = defaultName;
+                ext = "";
+            }
+            else
+            {
+                name = LoosePath.ValidFileName(name);
+                ext = LoosePath.GetExtension(name);
+                name = name[..^ext.Length];
             }
 
-            return name;
+            // データから拡張子を推測する
+            // 画像ファイル？
+            var exts = PictureFormat.GetSupportImageExtensions(buff);
+            if (exts is not null && exts.Length != 0)
+            {
+                ext = exts[0];
+                if (ext == ".jpeg") ext = ".jpg";
+                if (ext == ".tiff") ext = ".tif";
+            }
+            // アーカイブでもサポートされていない拡張子なら中止
+            else if (!ArchiveManager.Current.IsSupported(ext))
+            {
+                return null;
+            }
+
+            // ファイル名が長すぎる場合の調整
+            if (name.Length + ext.Length >= 256)
+            {
+                name = defaultName;
+            }
+
+            return name + ext;
         }
-#endif
     }
 
 
@@ -331,7 +337,6 @@ namespace NeeView
     {
         public override async Task<List<string>?> DropAsync(object sender, IDataObject data, string downloadPath, Action<string> nowLoading)
         {
-            //
             if (data.GetDataPresent("FileContents") && data.GetDataPresent("FileGroupDescriptorW"))
             {
                 var fileNames = new List<string>();
@@ -345,7 +350,7 @@ namespace NeeView
 
                 if (fileNames.Count > 0)
                 {
-                    return new List<string>() { fileNames[0] };
+                    return fileNames;
                 }
             }
 
@@ -389,13 +394,9 @@ namespace NeeView
                     {
                         return new List<string>();
                     }
-                    else if (files.Length <= 1)
-                    {
-                        return new List<string>() { files[0] };
-                    }
                     else
                     {
-                        return new List<string>(files);
+                        return files.ToList();
                     }
                 }
                 catch (COMException ex)
@@ -434,7 +435,7 @@ namespace NeeView
                 }
                 if (fileNames.Count > 0)
                 {
-                    return new List<string>() { fileNames[0] };
+                    return fileNames;
                 }
             }
 
@@ -473,7 +474,7 @@ namespace NeeView
                 }
                 if (fileNames.Count > 0)
                 {
-                    return new List<string>() { fileNames[0] };
+                    return fileNames;
                 }
             }
 
@@ -513,7 +514,7 @@ namespace NeeView
                     }
                     if (fileNames.Count > 0)
                     {
-                        return new List<string> { fileNames[0] };
+                        return fileNames;
                     }
                 }
 
@@ -527,7 +528,7 @@ namespace NeeView
                         var bytes = await client.GetByteArrayAsync(new Uri(url));
 
                         // ファイル化
-                        var result = DownloadToFile(bytes, null, downloadPath);
+                        var result = DownloadToFile(bytes, LoosePath.GetFileName(url), downloadPath);
                         if (result is null) return null;
 
                         return new List<string>() { result };

@@ -239,6 +239,7 @@ namespace NeeView
         public ArchiveType GetSupportedType(string fileName, bool isArrowFileSystem = true, bool isAllowMedia = true)
         {
             if (_disposedValue) return ArchiveType.None;
+            if (string.IsNullOrEmpty(fileName)) return ArchiveType.None;
 
             if (isArrowFileSystem && (fileName.Last() == '\\' || fileName.Last() == '/'))
             {
