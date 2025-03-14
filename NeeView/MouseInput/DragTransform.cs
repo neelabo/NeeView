@@ -231,15 +231,23 @@ namespace NeeView
             {
                 _context.Transform.SetFlipHorizontal(isFlip, span);
 
-                // 角度を反転
-                var angle = -MathUtility.NormalizeLoopRange(_context.StartAngle, -180, 180);
-                _context.Transform.SetAngle(angle, span);
+                if (_context.StartFlipHorizontal != isFlip)
+                {
+                    // 角度を反転
+                    var angle = -MathUtility.NormalizeLoopRange(_context.StartAngle, -180, 180);
+                    _context.Transform.SetAngle(angle, span);
 
-                // 座標を反転
-                var v0 = _context.ContentCenter - _context.FlipCenter;
-                var v1 = new Vector(-v0.X, v0.Y);
-                var delta = v1 - v0;
-                _context.Transform.SetPoint(_context.StartPoint + delta, span);
+                    // 座標を反転
+                    var v0 = _context.ContentCenter - _context.FlipCenter;
+                    var v1 = new Vector(-v0.X, v0.Y);
+                    var delta = v1 - v0;
+                    _context.Transform.SetPoint(_context.StartPoint + delta, span);
+                }
+                else
+                {
+                    _context.Transform.SetAngle(_context.StartAngle, span);
+                    _context.Transform.SetPoint(_context.StartPoint, span);
+                }
             }
         }
 
@@ -250,15 +258,23 @@ namespace NeeView
             {
                 _context.Transform.SetFlipVertical(isFlip, span);
 
-                // 角度を反転
-                var angle = 90 - MathUtility.NormalizeLoopRange(_context.Transform.Angle + 90, -180, 180);
-                _context.Transform.SetAngle(angle, span); //, TransformActionType.FlipVertical);
+                if (_context.StartFlipVertical != isFlip)
+                {
+                    // 角度を反転
+                    var angle = 90 - MathUtility.NormalizeLoopRange(_context.Transform.Angle + 90, -180, 180);
+                    _context.Transform.SetAngle(angle, span);
 
-                // 座標を反転
-                var v0 = _context.ContentCenter - _context.FlipCenter;
-                var v1 = new Vector(v0.X, -v0.Y);
-                var delta = v1 - v0;
-                _context.Transform.SetPoint(_context.StartPoint + delta, span);
+                    // 座標を反転
+                    var v0 = _context.ContentCenter - _context.FlipCenter;
+                    var v1 = new Vector(v0.X, -v0.Y);
+                    var delta = v1 - v0;
+                    _context.Transform.SetPoint(_context.StartPoint + delta, span);
+                }
+                else
+                {
+                    _context.Transform.SetAngle(_context.StartAngle, span);
+                    _context.Transform.SetPoint(_context.StartPoint, span);
+                }
             }
         }
 
