@@ -12,6 +12,22 @@ $ErrorActionPreference = "stop"
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 
+# csproj から .NET バージョンを取得する
+function Get-DotNetVersion
+{
+    param ($csproj)
+
+    $xml = [xml](Get-Content $csproj)
+    $targetFramework = $xml.Project.PropertyGroup[0].TargetFramework
+
+    if ($targetFramework -match "net(\d+)") {
+        return $Matches[1]
+    }
+    else {
+        throw "Cannot get .NET version."
+    }
+}
+
 # 配列から１つ選択する
 function Select-OneFromArray {
 
@@ -97,6 +113,10 @@ function Upload-Asset {
 }
 
 
+#================================
+# MAIN
+#================================
+
 # アップロードするファイルを選択
 $packages = Get-ChildItem -File | Where-Object Name -match "(Canary|Beta)\d+\.zip$"
 
@@ -168,21 +188,6 @@ if (-not $SkipCheckRepository) {
     }
 }
 
-# タグ存在チェック
-<#
-$tag_result = git tag -l $tag_name
-if ($tag_result -ne $tag_name) {
-    if ($CreateTag) {
-        git tag $tag_name
-        Write-Host "Tag $tag_name created. Please git push."
-        exit 0
-    }
-    else {
-        throw "The tag $tag_name does not exist"
-    }
-}
-#>
-
 
 # 開始確認
 Write-Host
@@ -198,45 +203,8 @@ $token = Get-Content "$env:CersPath/_GH.ReleaseAccessToken.txt" | Select-Object 
 $token = $token.Trim()
 $release_url = "https://api.github.com/repos/$owner/$repo/releases"
 
-
-# 既存の Prerelease パッケージを削除
-<#
-if (-not $SkipDelete) {
-    
-# GitHub REST API: List releases
-Write-Host "REST API: List releases" -fore Green
-$list_response = Invoke-RestMethod -Uri $release_url -Headers @{
-    Authorization = "token $token"
-    Accept        = "application/vnd.github.v3+json"
-}
-
-$pre_releases = $list_response | Where-Object { $_.prerelease -eq $true }
-
-if ($pre_releases.Count -gt 0) {
-        Write-Host
-        Write-Host "[Delete]" -fore Cyan
-        $pre_releases | ForEach-Object {
-            Write-Host $_.name
-        }
-        Write-Host
-        Read-Host "Press Enter to delete all prerelease"
-        
-        $pre_releases | ForEach-Object {
-            $delete_url = $_.url
-            
-            # GitHub REST API: Delete a release
-            Write-Host "REST API: Delete $($_.name)" -fore Green
-            Invoke-RestMethod -Method Delete -Uri $delete_url -Headers @{
-                Authorization = "token $token"
-                Accept        = "application/vnd.github.v3+json"
-            }
-        }
-    }
-    else {
-        Write-Host "No prereleases currently exist."
-    }
-}
-#>
+# .NET version
+$dotNetVersion = Get-DotNetVersion  ..\NeeView\NeeView.csproj
 
 
 # リリースを作成
@@ -247,6 +215,8 @@ $canary_body = @"
 NeeView Canary is a snapshot of the development process.
 It is intended to give you a preview of features that will be available in the official version.
 
+This version runs on .NET $dotNetVersion.
+
 See also: [About Canary Version](https://neelabo.github.io/NeeView/package-canary.html)
 "@
 
@@ -255,6 +225,8 @@ $beta_body = @"
 
 NeeView Beta is the version just before the official release.
 No new features will be added, only bug fixes. The official version will be released in approximately one to two weeks.
+
+This version runs on .NET $dotNetVersion.
 
 See also: [About Beta Version](https://neelabo.github.io/NeeView/package-beta.html)
 
