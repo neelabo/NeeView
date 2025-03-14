@@ -897,6 +897,9 @@ namespace NeeView.PageFrames
             var verticalAlignment = GetVerticalAlignment(math, verticalOrigin, direction);
             var point = math.GetAlignedPoint(horizontalAlignment, verticalAlignment);
 
+            // reset scale center
+            AutoCenterContext.ResetScaleCenter(horizontalAlignment, verticalAlignment);
+
             // scroll content
             point.X = -point.X; // コンテンツ座標系に補正する
             point.Y = -point.Y;
@@ -1191,6 +1194,9 @@ namespace NeeView.PageFrames
             var horizontalAlignment = GetHorizontalAlignment(math, horizontalOrigin, direction);
             var verticalAlignment = GetVerticalAlignment(math, verticalOrigin, direction);
             var point = math.GetAlignedPoint(horizontalAlignment, verticalAlignment);
+
+            // reset scale center
+            AutoCenterContext.ResetScaleCenter(horizontalAlignment, verticalAlignment);
 
             // scroll view
             _scrollViewer.SetPoint(new Point(-point.X, -point.Y), _context.PageChangeDuration);

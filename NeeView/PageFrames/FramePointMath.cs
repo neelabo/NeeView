@@ -23,12 +23,12 @@ namespace NeeView.PageFrames
 
         public bool ContainsHorizontal()
         {
-            return _rect.Width <= _viewRect.Width;
+            return _rect.Width <= _viewRect.Width + 0.01;
         }
 
         public bool ContainsVertical()
         {
-            return _rect.Height <= _viewRect.Height;
+            return _rect.Height <= _viewRect.Height + 0.01;
         }
 
         public HorizontalAlignment GetHorizontalAlignment(int direction)

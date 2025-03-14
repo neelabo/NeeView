@@ -511,6 +511,7 @@ DragActionType.Scale=확대/축소
 DragActionType.ScaleSlider=확대/축소 (슬라이드식)
 DragActionType.ScaleSliderCentered=확대/축소 (슬라이드식, 중앙)
 DragActionType.WindowMove=창 이동
+DragControlCenter.Auto=자동
 DragControlCenter.Cursor=마우스 포인터 위치
 DragControlCenter.Target=사진 중심
 DragControlCenter.View=화면 중심

@@ -513,6 +513,7 @@ DragActionType.Scale=Scaling
 DragActionType.ScaleSlider=Scaling (horizontal slide)
 DragActionType.ScaleSliderCentered=Scaling (horizontal slide, centered)
 DragActionType.WindowMove=Move window
+DragControlCenter.Auto=Auto
 DragControlCenter.Cursor=Cursor position
 DragControlCenter.Target=Image center
 DragControlCenter.View=View center

@@ -513,6 +513,7 @@ DragActionType.Scale=Scala
 DragActionType.ScaleSlider=Scala (orizzontale)
 DragActionType.ScaleSliderCentered=Scala (orizzontale, centrato)
 DragActionType.WindowMove=Sposta finestra
+DragControlCenter.Auto=Auto
 DragControlCenter.Cursor=Posizione cursore
 DragControlCenter.Target=Centro immagine
 DragControlCenter.View=Vedi centro

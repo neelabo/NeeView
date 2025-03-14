@@ -10,7 +10,7 @@ namespace NeeView
     /// </summary>
     public class PageFrameContentDragTransformContext : ContentDragTransformContext
     {
-        private PageFrameContainer _container;
+        private readonly PageFrameContainer _container;
         private readonly ICanvasToViewTranslator _canvasToViewTranslator;
 
 
@@ -27,20 +27,50 @@ namespace NeeView
         {
             base.Initialize(point, timestamp);
 
-            RotateCenter = GetCenterPosition(ViewConfig.RotateCenter);
-            ScaleCenter = GetCenterPosition(ViewConfig.ScaleCenter);
-            FlipCenter = GetCenterPosition(ViewConfig.FlipCenter);
+            RotateCenter = GetCenterPosition(ViewConfig.RotateCenter, false);
+            ScaleCenter = GetCenterPosition(ViewConfig.ScaleCenter, true);
+            FlipCenter = GetCenterPosition(ViewConfig.FlipCenter, false);
         }
 
-        private Point GetCenterPosition(DragControlCenter dragControlCenter)
+        private Point GetCenterPosition(DragControlCenter dragControlCenter, bool allowAuto)
         {
             return dragControlCenter switch
             {
                 DragControlCenter.View => ViewRect.Center(), // NOTE: 常に(0,0)
                 DragControlCenter.Target => ContentRect.Center(),
                 DragControlCenter.Cursor => First,
+                DragControlCenter.Auto => allowAuto ? GetAutoCenterPosition() : ViewRect.Center(),
                 _ => throw new NotImplementedException(),
             };
+        }
+
+        private Point GetAutoCenterPosition()
+        {
+            var center = new Point(0.0, 0.0);
+
+            if (AutoCenterContext.CanAutoCenterX)
+            {
+                var xa = ViewRect.Left + ContentRect.Width * 0.5;
+                var xb = ViewRect.Right - ContentRect.Width * 0.5;
+                if (Math.Abs(xb - xa) > 0.01)
+                {
+                    AutoCenterContext.RateX = (ContentRect.Center().X - xa) / (xb - xa);
+                }
+                center.X = ViewRect.Left + ViewRect.Width * AutoCenterContext.RateX;
+            }
+
+            if (AutoCenterContext.CanAutoCenterY)
+            {
+                var ya = ViewRect.Top + ContentRect.Height * 0.5;
+                var yb = ViewRect.Bottom - ContentRect.Height * 0.5;
+                if (Math.Abs(yb - ya) > 0.01)
+                {
+                    AutoCenterContext.RateY = (ContentRect.Center().Y - ya) / (yb - ya);
+                }
+                center.Y = ViewRect.Top + ViewRect.Height * AutoCenterContext.RateY;
+            }
+
+            return center;
         }
 
         public override PageFrameContent? GetPageFrameContent()

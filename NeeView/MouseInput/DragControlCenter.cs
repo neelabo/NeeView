@@ -1,6 +1,4 @@
-﻿// TODO: 関数が大きすぎる？細分化を検討
-
-namespace NeeView
+﻿namespace NeeView
 {
     // 回転、拡大操作の中心
     public enum DragControlCenter
@@ -13,6 +11,9 @@ namespace NeeView
 
         [AliasName]
         Cursor,
+
+        [AliasName]
+        Auto,
     }
 
 }

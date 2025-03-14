@@ -511,6 +511,7 @@ DragActionType.Scale=缩放
 DragActionType.ScaleSlider=缩放 (平滑)
 DragActionType.ScaleSliderCentered=缩放 (平滑、居中)
 DragActionType.WindowMove=移动窗口
+DragControlCenter.Auto=自动
 DragControlCenter.Cursor=光标位置
 DragControlCenter.Target=图像中心
 DragControlCenter.View=视图中心

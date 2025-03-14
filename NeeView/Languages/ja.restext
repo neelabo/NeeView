@@ -511,6 +511,7 @@ DragActionType.Scale=拡大縮小
 DragActionType.ScaleSlider=拡大縮小 (スライド式)
 DragActionType.ScaleSliderCentered=拡大縮小 (スライド式、中央寄せ)
 DragActionType.WindowMove=ウィンドウ移動
+DragControlCenter.Auto=自動
 DragControlCenter.Cursor=マウス ポインター位置
 DragControlCenter.Target=画像の中心
 DragControlCenter.View=表示の中心
