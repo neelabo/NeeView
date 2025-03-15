@@ -349,7 +349,7 @@ namespace NeeView
 
             if (entry.Data is string fileName)
             {
-                await FileIO.CopyFileAsync(fileName, exportFileName, isOverwrite, token);
+                await FileIO.CopyFileAsync(fileName, exportFileName, isOverwrite, true, token);
             }
             else if (entry.Data is byte[] rawData)
             {

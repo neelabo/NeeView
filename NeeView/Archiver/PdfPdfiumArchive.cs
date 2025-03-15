@@ -133,6 +133,10 @@ namespace NeeView
                 File.Delete(exportFileName);
             }
 
+            // ensure directory
+            var outputDir = System.IO.Path.GetDirectoryName(exportFileName) ?? throw new IOException($"Illegal path: {exportFileName}");
+            Directory.CreateDirectory(outputDir);
+
             using (var stream = new FileStream(Path, FileMode.Open, FileAccess.Read))
             using (var pdfDocument = PdfDocument.Load(stream))
             {

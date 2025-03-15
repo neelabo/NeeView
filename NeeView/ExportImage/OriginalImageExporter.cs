@@ -44,9 +44,9 @@ namespace NeeView
             }
         }
 
-        public void Export(string path, bool isOverwrite, int qualityLevel, ImageExporterCreateOptions options)
+        public async Task ExportAsync(string path, bool isOverwrite, int qualityLevel, ImageExporterCreateOptions options, CancellationToken token)
         {
-            _ = _page.ArchiveEntry.ExtractToFileAsync(path, isOverwrite, CancellationToken.None); // TODO: async
+            await _page.ArchiveEntry.ExtractToFileAsync(path, isOverwrite, token);
         }
 
         public ImageSource? CreateImageSource(ImageExporterCreateOptions options)

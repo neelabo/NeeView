@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -193,7 +194,7 @@ namespace NeeView
             return _exporter.CreateImageSource(options);
         }
 
-        public void Export(string path, bool isOverwrite)
+        public async Task ExportAsync(string path, bool isOverwrite, CancellationToken token)
         {
             path = System.IO.Path.GetFullPath(path);
 
@@ -203,7 +204,7 @@ namespace NeeView
                 IsOriginalSize = _isOriginalSize,
                 IsDotKeep = _isDotKeep,
             };
-            _exporter.Export(path, isOverwrite, QualityLevel, options);
+            await _exporter.ExportAsync(path, isOverwrite, QualityLevel, options, token);
             ExportFolder = System.IO.Path.GetDirectoryName(path);
         }
 

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -51,9 +52,11 @@ namespace NeeView
             }
         }
 
-        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            bool? result = _vm?.ShowSelectSaveFileDialog(this);
+            if (_vm is null) return;
+
+            bool? result = await _vm.ShowSelectSaveFileDialogAsync(this, CancellationToken.None);
             if (result == true)
             {
                 this.DialogResult = true;
@@ -68,8 +71,10 @@ namespace NeeView
 
         private void DestinationFolderOptionButton_Click(object sender, RoutedEventArgs e)
         {
+            if (_vm is null) return;
+
             DestinationFolderDialog.ShowDialog(this);
-            _vm?.UpdateDestinationFolderList();
+            _vm.UpdateDestinationFolderList();
         }
     }
 }

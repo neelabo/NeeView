@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
@@ -7,7 +8,7 @@ namespace NeeView
     public interface IImageExporter : IDisposable
     {
         ImageExporterContent? CreateView(ImageExporterCreateOptions options);
-        void Export(string path, bool isOverwrite, int qualityLevel, ImageExporterCreateOptions options);
+        Task ExportAsync(string path, bool isOverwrite, int qualityLevel, ImageExporterCreateOptions options, CancellationToken token);
         ImageSource? CreateImageSource(ImageExporterCreateOptions options);
         string CreateFileName();
         bool CanExport();

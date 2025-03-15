@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -85,16 +86,23 @@ namespace NeeView
             };
         }
 
-        public void Export(string path, bool isOverwrite, int qualityLevel, ImageExporterCreateOptions options)
+        public async Task ExportAsync(string path, bool isOverwrite, int qualityLevel, ImageExporterCreateOptions options, CancellationToken token)
         {
-            var bitmapSource = CreateBitmapSource(options);
+            token.ThrowIfCancellationRequested();
 
+            // create bitmap
+            var bitmapSource = AppDispatcher.Invoke(() => CreateBitmapSource(options));
+
+            // ensure directory
+            var outputDir = System.IO.Path.GetDirectoryName(path) ?? throw new IOException($"Illegal path: {path}");
+            Directory.CreateDirectory(outputDir);
+
+            // export to file
             var fileMode = isOverwrite ? FileMode.Create : FileMode.CreateNew;
-
             using (var stream = new FileStream(path, fileMode))
             {
                 var format = GetBitmapImageFormatFromFileName(path);
-                Export(stream, format, qualityLevel, bitmapSource);
+                await AppDispatcher.InvokeAsync(() => Export(stream, format, qualityLevel, bitmapSource));
             }
         }
 

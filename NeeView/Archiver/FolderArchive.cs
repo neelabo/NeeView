@@ -172,7 +172,7 @@ namespace NeeView
         {
             Debug.Assert(entry.Archive == this);
             Debug.Assert(entry.EntityPath is not null);
-            await FileIO.CopyFileAsync(entry.EntityPath, exportFileName, isOverwrite, token);
+            await FileIO.CopyFileAsync(entry.EntityPath, exportFileName, isOverwrite, true, token);
         }
 
         /// <summary>

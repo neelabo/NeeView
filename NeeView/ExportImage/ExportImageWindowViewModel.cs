@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -138,7 +139,7 @@ namespace NeeView
             _model.UpdatePreview();
         }
 
-        public bool? ShowSelectSaveFileDialog(Window owner)
+        public async Task<bool?> ShowSelectSaveFileDialogAsync(Window owner, CancellationToken token)
         {
             var dialog = new ExportImageSeveFileDialog(_model.ExportFolder,
                 _model.CreateFileName(ExportImageFileNameMode.Default, ExportImageFormat.Png),
@@ -152,7 +153,7 @@ namespace NeeView
             var result = dialog.ShowDialog(owner);
             if (result == true)
             {
-                _model.Export(dialog.FileName, true);
+                await _model.ExportAsync(dialog.FileName, true, token);
             }
 
             return result;

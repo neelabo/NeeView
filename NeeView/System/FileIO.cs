@@ -328,9 +328,18 @@ namespace NeeView
         /// <param name="isOverwrite"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static async Task CopyFileAsync(string sourceFileName, string destFileName, bool isOverwrite, CancellationToken token)
+        public static async Task CopyFileAsync(string sourceFileName, string destFileName, bool isOverwrite, bool createDirectory, CancellationToken token)
         {
-            await Task.Run(() => File.Copy(sourceFileName, destFileName, isOverwrite), token);
+            await Task.Run(() =>
+            {
+                if (createDirectory)
+                {
+                    var outputDir = System.IO.Path.GetDirectoryName(destFileName) ?? throw new IOException($"Illegal path: {destFileName}");
+                    Directory.CreateDirectory(outputDir);
+                }
+
+                File.Copy(sourceFileName, destFileName, isOverwrite);
+            }, token);
         }
 
         /// <summary>

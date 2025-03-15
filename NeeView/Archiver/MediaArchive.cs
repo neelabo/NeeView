@@ -56,7 +56,7 @@ namespace NeeView
         {
             Debug.Assert(entry.Archive == this);
             var path = entry.EntityPath ?? throw new InvalidOperationException("Must exist.");
-            await FileIO.CopyFileAsync(path, exportFileName, isOverwrite, token);
+            await FileIO.CopyFileAsync(path, exportFileName, isOverwrite, true, token);
         }
     }
 }

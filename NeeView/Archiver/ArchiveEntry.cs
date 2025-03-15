@@ -344,7 +344,7 @@ namespace NeeView
             {
                 if (fileNamePolicy.IsKeepFileName && fileName != tempFileName)
                 {
-                    await FileIO.CopyFileAsync(fileName, tempFileName, isOverwrite, token);
+                    await FileIO.CopyFileAsync(fileName, tempFileName, isOverwrite, false, token);
                     return new TempFile(fileName);
                 }
                 else

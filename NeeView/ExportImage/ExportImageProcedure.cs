@@ -8,6 +8,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -98,13 +100,25 @@ namespace NeeView
                 }
             }
 
-            exporter.Export(filename, isOverwrite);
-
-            if (parameter.IsShowToast)
+            // 非同期処理
+            Task.Run(async () =>
             {
-                var toast = new Toast(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("ExportImage.Message.Success"), filename));
-                ToastService.Current.Show(toast);
-            }
+                try
+                {
+                    await exporter.ExportAsync(filename, isOverwrite, CancellationToken.None);
+
+                    if (parameter.IsShowToast)
+                    {
+                        var toast = new Toast(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("ExportImage.Message.Success"), filename));
+                        ToastService.Current.Show(toast);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    var toast = new Toast(ex.Message, ResourceService.GetString("@Word.Error"), ToastIcon.Error);
+                    ToastService.Current.Show(toast);
+                }
+            });
         }
 
         private static FrameworkElement CreateOverwriteContent(string filename, ExportImage exporter)
