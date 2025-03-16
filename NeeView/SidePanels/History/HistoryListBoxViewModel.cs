@@ -57,5 +57,15 @@ namespace NeeView
         {
             return Config.Current.Panels.IsLeftRightKeyEnabled || _model.PanelListItemStyle == PanelListItemStyle.Thumbnail;
         }
+
+        public List<BookHistory> GetViewItems()
+        {
+            var collectionView = (CollectionView)CollectionViewSource.View;
+            if (collectionView.NeedsRefresh)
+            {
+                collectionView.Refresh();
+            }
+            return collectionView.Cast<BookHistory>().ToList();
+        }
     }
 }

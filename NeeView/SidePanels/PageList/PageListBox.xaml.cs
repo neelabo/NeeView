@@ -498,13 +498,27 @@ namespace NeeView
         #endregion
 
         #region UI Accessor
+
         public List<Page>? GetItems()
         {
-            return this.ListBox.Items?.Cast<Page>().ToList();
+            return _vm.Model.Items?.ToList();
         }
 
         public List<Page> GetSelectedItems()
         {
+            // ListBox 生成直後でプロパティが不定の場合、モデルデータの値を返す
+            if (this.ListBox.SelectedItem is null)
+            {
+                if (_vm.Model.SelectedItem is null)
+                {
+                    return new();
+                }
+                else
+                {
+                    return new() { _vm.Model.SelectedItem };
+                }
+            }
+
             return this.ListBox.SelectedItems.Cast<Page>().ToList();
         }
 
@@ -516,6 +530,13 @@ namespace NeeView
             var items = selectedItems?.Intersect(sources).ToList();
             this.ListBox.SetSelectedItems(items);
             this.ListBox.ScrollItemsIntoView(items);
+
+            // ListBox 生成直後でプロパティが不定の場合、モデルデータにも反映
+            // 個数 0 は未初期化とみなされるらしい
+            if (items is null || items.Count == 0)
+            {
+                _vm.Model.SelectedItem = null;
+            }
         }
 
         #endregion UI Accessor

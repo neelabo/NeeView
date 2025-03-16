@@ -202,9 +202,23 @@ namespace NeeView
                 this.Items = _model.Items;
                 this.CollectionViewSource.Source = this.Items;
                 UpdateGroupBy();
+                this.CollectionViewSource.View.CollectionChanged += CollectionView_CollectionChanged;
+                EnsureSelectedItem();
             }
         }
 
+        private void CollectionView_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            EnsureSelectedItem();
+        }
+
+        private void EnsureSelectedItem()
+        {
+            if (this.SelectedItem is null)
+            {
+                this.SelectedItem = this.CollectionViewSource.View.Cast<PlaylistItem>().FirstOrDefault();
+            }
+        }
 
         public bool IsLRKeyEnabled()
         {
@@ -432,5 +446,14 @@ namespace NeeView
             }
         }
 
+        public List<PlaylistItem> GetViewItems()
+        {
+            var collectionView = (CollectionView)CollectionViewSource.View;
+            if (collectionView.NeedsRefresh)
+            {
+                collectionView.Refresh();
+            }
+            return collectionView.Cast<PlaylistItem>().ToList();
+        }
     }
 }

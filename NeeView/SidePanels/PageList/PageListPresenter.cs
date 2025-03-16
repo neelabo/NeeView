@@ -19,8 +19,7 @@ namespace NeeView
 
             Config.Current.PageList.AddPropertyChanged(nameof(PageListConfig.PanelListItemStyle), (s, e) => UpdateListBoxContent());
 
-            UpdateListBoxContent();
-            _pageListView.Created += (s, e) => UpdateListBoxContent(false);
+            _pageListView.Created += (s, e) => UpdateListBoxContent();
         }
 
 
@@ -28,7 +27,7 @@ namespace NeeView
 
         public PageListView PageListView => _pageListView.Value;
 
-        public PageListBox? PageListBox => _pageListBox;
+        public PageListBox? PageListBox => _pageListBox ?? _pageListView.Value.ListBoxContent.Content as PageListBox;
 
 
         private void UpdateListBoxContent(bool rebuild = true)

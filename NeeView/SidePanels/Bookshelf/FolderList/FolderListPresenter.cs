@@ -14,7 +14,7 @@ namespace NeeView
         private readonly FolderList _folderList;
         private readonly FolderListBoxViewModel _folderListBoxViewModel;
         private IHasFolderListBox? _folderListView;
-        private FolderListBox? _folderListBox;
+        private LazyEx<FolderListBox> _folderListBox;
 
 
         public FolderListPresenter(FolderList folderList)
@@ -23,11 +23,13 @@ namespace NeeView
             _folderList.FolderListConfig.AddPropertyChanged(nameof(FolderListConfig.PanelListItemStyle), (s, e) => UpdateFolderListBox());
 
             _folderListBoxViewModel = new FolderListBoxViewModel(folderList);
-            UpdateFolderListBox();
+
+            _folderListBox = new(() => new FolderListBox(_folderListBoxViewModel));
+            _folderListBox.Created += (s, e) => AttachFolderListBox();
         }
 
 
-        public FolderListBox? FolderListBox => _folderListBox;
+        public FolderListBox? FolderListBox => _folderListBox.Value;
 
 
         public void InitializeView(IHasFolderListBox folderListView)
@@ -38,22 +40,27 @@ namespace NeeView
 
         public void UpdateFolderListBox(bool rebuild = true)
         {
-            if (rebuild || _folderListBox is null)
+            if (rebuild)
             {
-                _folderListBox = new FolderListBox(_folderListBoxViewModel);
+                _folderListBox = new(() => new FolderListBox(_folderListBoxViewModel));
             }
-            _folderListView?.SetFolderListBoxContent(_folderListBox);
+            AttachFolderListBox();
+        }
+
+        private void AttachFolderListBox()
+        {
+            _folderListView?.SetFolderListBoxContent(_folderListBox.Value);
         }
 
         public void Refresh()
         {
-            _folderListBox?.Refresh();
+            FolderListBox?.Refresh();
         }
 
         public void FocusAtOnce()
         {
             _folderList.FocusAtOnce();
-            _folderListBox?.FocusSelectedItem(false);
+            FolderListBox?.FocusSelectedItem(false);
         }
     }
 }

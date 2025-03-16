@@ -54,7 +54,7 @@ namespace NeeView
             this.SearchBoxModel = new SearchBoxModel(new HistorySearchBoxComponent(this));
 
             // 内部履歴の並びを反転する。SortDescriptions での並び替えより軽い。
-            _collectionViewSource.Source = new ReverseObservableCollection<BookHistory>(BookHistoryCollection.Current.Items);
+            _collectionViewSource.Source = new ReverseObservableCollection<BookHistory>(BookHistoryCollection.Current.Items); 
             _collectionViewSource.Culture = TextResources.Culture;
             _collectionViewSource.Filter += CollectionViewSource_Filter;
             _collectionViewSource.LiveGroupingProperties.Add(nameof(BookHistory.LastAccessTime));
@@ -62,10 +62,22 @@ namespace NeeView
             UpdateFilterPath();
             UpdateGroupBy();
 
+            _collectionViewSource.View.CollectionChanged += CollectionView_CollectionChanged;
             _collectionViewSource.View.Refresh();
+        }
 
-            _collectionViewSource.View.CollectionChanged
-                += (s, e) => RaisePropertyChanged(nameof(ViewItemsCount));
+        private void CollectionView_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            EnsureSelectedItem();
+            RaisePropertyChanged(nameof(ViewItemsCount));
+        }
+
+        private void EnsureSelectedItem()
+        {
+            if (this.SelectedItem is null)
+            {
+                this.SelectedItem = _collectionViewSource.View.Cast<BookHistory>().FirstOrDefault();
+            }
         }
 
 

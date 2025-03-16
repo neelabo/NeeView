@@ -26,13 +26,12 @@ namespace NeeView
             Config.Current.Playlist.AddPropertyChanged(nameof(PlaylistConfig.PanelListItemStyle),
                 (s, e) => UpdateListBoxContent());
 
-            UpdateListBox();
-            _playlistView.Created += (s, e) => UpdateListBoxContent(false);
+            _playlistView.Created += (s, e) => UpdateListBox();
         }
 
 
         public PlaylistView PlaylistView => _playlistView.Value;
-        public PlaylistListBox? PlaylistListBox => _playlistListBox;
+        public PlaylistListBox? PlaylistListBox => _playlistListBox ?? _playlistView.Value.ListBoxContent.Content as PlaylistListBox;
         public PlaylistHub PlaylistHub => _playlistHub;
 
 
@@ -63,12 +62,12 @@ namespace NeeView
 
         public void Refresh()
         {
-            _playlistListBox?.Refresh();
+            PlaylistListBox?.Refresh();
         }
 
         public void FocusAtOnce()
         {
-            _playlistListBox?.FocusAtOnce();
+            PlaylistListBox?.FocusAtOnce();
         }
     }
 }

@@ -249,7 +249,7 @@ namespace NeeView
 
         public bool IsThumbnailVisible => _vm.IsThumbnailVisible;
 
-        public IEnumerable<IHasPage> CollectPageList(IEnumerable<object> objs) => objs.OfType<IHasPage>();
+        public IEnumerable<IHasPage> CollectPageList(IEnumerable<object> collection) => collection.OfType<IHasPage>();
 
         #endregion IPageListBox support
 
@@ -647,18 +647,27 @@ namespace NeeView
 
         public List<PlaylistItem>? GetItems()
         {
-            return this.ListBox.Items?.Cast<PlaylistItem>().ToList();
+            if (_vm is null) return null;
+
+            return _vm.GetViewItems();
         }
 
         public List<PlaylistItem> GetSelectedItems()
         {
-            return this.ListBox.SelectedItems.Cast<PlaylistItem>().ToList();
-        }
+            // ListBox 生成直後でプロパティが不定の場合、モデルデータの値を返す
+            if (this.ListBox.SelectedItem is null)
+            {
+                if (_vm.SelectedItem is null)
+                {
+                    return new();
+                }
+                else
+                {
+                    return new() { _vm.SelectedItem };
+                }
+            }
 
-        public void SetSelectedItem(PlaylistItem? item)
-        {
-            this.ListBox.SelectedItem = item;
-            this.ListBox.ScrollIntoView(item);
+            return this.ListBox.SelectedItems.Cast<PlaylistItem>().ToList();
         }
 
         public void SetSelectedItems(IEnumerable<PlaylistItem> selectedItems)
@@ -669,6 +678,13 @@ namespace NeeView
             var items = selectedItems?.Intersect(sources).ToList();
             this.ListBox.SetSelectedItems(items);
             this.ListBox.ScrollItemsIntoView(items);
+
+            // ListBox 生成直後でプロパティが不定の場合、モデルデータにも反映
+            // 個数 0 は未初期化とみなされるらしい
+            if (items is null || items.Count == 0)
+            {
+                _vm.SelectedItem = null;
+            }
         }
 
         public bool CanMovePrevious()
@@ -695,7 +711,7 @@ namespace NeeView
             return result;
         }
 
-        #endregion UI Accessor
+#endregion UI Accessor
     }
 
 

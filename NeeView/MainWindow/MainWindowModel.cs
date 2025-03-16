@@ -282,18 +282,25 @@ namespace NeeView
                 SlideShow.Current.Play();
             }
 
-            // 起動時スクリプトの実行
-            if (App.Current.Option.ScriptQuery is not null)
+            AppDispatcher.BeginInvoke(async () =>
             {
-                var path = App.Current.Option.ScriptQuery.ResolvePath().SimplePath;
-                if (!string.IsNullOrEmpty(path))
-                {
-                    ScriptManager.Current.Execute(this, path, null, null);
-                }
-            }
+                // パネル初期化待機
+                await BookmarkFolderList.Current.WaitAsync(CancellationToken.None);
+                await BookshelfFolderList.Current.WaitAsync(CancellationToken.None);
 
-            // Script: OnStartup
-            CommandTable.Current.TryExecute(this, ScriptCommand.EventOnStartup, null, CommandOption.None);
+                // 起動時スクリプトの実行
+                if (App.Current.Option.ScriptQuery is not null)
+                {
+                    var path = App.Current.Option.ScriptQuery.ResolvePath().SimplePath;
+                    if (!string.IsNullOrEmpty(path))
+                    {
+                        ScriptManager.Current.Execute(this, path, null, null);
+                    }
+                }
+
+                // Script: OnStartup
+                CommandTable.Current.TryExecute(this, ScriptCommand.EventOnStartup, null, CommandOption.None);
+            });
 
 #if DEBUG
             // [開発用] デバッグアクションの実行
