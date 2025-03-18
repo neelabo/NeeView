@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-// TODO: CommandTalbe.Current をコンストラクタに渡す
+// TODO: CommandTable.Current をコンストラクタに渡す
 
 namespace NeeView
 {
@@ -26,7 +26,8 @@ namespace NeeView
         private HashSet<Key> _usedKeyMap = new();
         private bool _isDirty = true;
         private List<EventHandler<KeyEventArgs>> _imeKeyHandlers = new();
-        private readonly MouseWheelDelta _mouseWheelDelta = new();
+        private readonly MouseWheelDelta _mouseVerticalWheelDelta = new();
+        private readonly MouseWheelDelta _mouseHorizontalWheelDelta = new();
         private readonly List<TouchInput> _touchInputCollection = new();
         private readonly List<MouseInput> _mouseInputCollection = new();
         private bool _disposedValue;
@@ -210,7 +211,7 @@ namespace NeeView
 
             foreach (var command in this.Commands)
             {
-                var inputGestures = CommandTable.Current.GetElement(command.Key).ShortCutKey.Gestures.Select(e => e.GetInputGesture()); 
+                var inputGestures = CommandTable.Current.GetElement(command.Key).ShortCutKey.Gestures.Select(e => e.GetInputGesture());
                 foreach (var gesture in inputGestures)
                 {
                     if (gesture is MouseGesture)
@@ -344,21 +345,21 @@ namespace NeeView
         // 垂直ホイールの回転数に応じたコマンド実行
         private void VerticalWheelCommandExecute(object? sender, MouseWheelEventArgs arg, MouseWheelDeltaOption wheelOptions, RoutedUICommand command)
         {
-            WheelCommandExecute(sender, arg, wheelOptions, command, Config.Current.Command.IsReversePageMoveWheel);
+            WheelCommandExecute(sender, arg, _mouseVerticalWheelDelta, wheelOptions, command, Config.Current.Command.IsReversePageMoveWheel);
         }
 
         // 水平ホイールの回転数に応じたコマンド実行
         private void HorizontalWheelCommandExecute(object? sender, MouseWheelEventArgs arg, MouseWheelDeltaOption wheelOptions, RoutedUICommand command)
         {
-            WheelCommandExecute(sender, arg, wheelOptions, command, Config.Current.Command.IsReversePageMoveHorizontalWheel);
+            WheelCommandExecute(sender, arg, _mouseHorizontalWheelDelta, wheelOptions, command, Config.Current.Command.IsReversePageMoveHorizontalWheel);
         }
 
         // ホイールの回転数に応じたコマンド実行
-        private void WheelCommandExecute(object? sender, MouseWheelEventArgs arg, MouseWheelDeltaOption wheelOptions, RoutedUICommand command, bool allowFlip)
+        private void WheelCommandExecute(object? sender, MouseWheelEventArgs arg, MouseWheelDelta wheelDelta, MouseWheelDeltaOption wheelOptions, RoutedUICommand command, bool allowFlip)
         {
             if (_disposedValue) return;
 
-            int turn = Math.Abs(_mouseWheelDelta.NotchCount(arg, wheelOptions));
+            int turn = Math.Abs(wheelDelta.NotchCount(arg, wheelOptions));
             if (turn > 0)
             {
                 // Debug.WriteLine($"WheelCommand: {turn}({arg.Delta})");
