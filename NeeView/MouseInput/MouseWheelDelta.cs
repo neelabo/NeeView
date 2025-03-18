@@ -14,7 +14,7 @@ namespace NeeView
         private int _timestamp;
         private int _count;
 
-        private readonly int _resettime = 1000;
+        private readonly int _resetTime = 1000;
         private readonly int _notch = 120;
 
         public void Reset()
@@ -24,7 +24,7 @@ namespace NeeView
 
         public int NotchCount(MouseWheelEventArgs e, MouseWheelDeltaOption options = MouseWheelDeltaOption.None)
         {
-            if (e.Timestamp - _timestamp > _resettime)
+            if (e.Timestamp - _timestamp > _resetTime)
             {
                 ////System.Diagnostics.Debug.WriteLine($"WheelCount: reset.");
                 _delta = 0;

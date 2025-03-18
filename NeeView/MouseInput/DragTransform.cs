@@ -95,6 +95,11 @@ namespace NeeView
             _context.Transform.AddPoint(delta, span);
         }
 
+        public void DoMove(Vector delta, TimeSpan span, IEasingFunction? easeX, IEasingFunction? easeY)
+        {
+            _context.Transform.AddPoint(delta, span, easeX, easeY);
+        }
+
         /// <summary>
         /// 慣性移動
         /// </summary>

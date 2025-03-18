@@ -92,6 +92,12 @@ namespace NeeView.Setting
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Mouse, nameof(MouseConfig.AutoScrollSensitivity))));
             this.Items.Add(section);
 
+            section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.Manipulate.MouseWheelScroll"));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Mouse, nameof(MouseConfig.IsMouseWheelScrollEnabled))));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Mouse, nameof(MouseConfig.MouseWheelScrollSensitivity))));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Mouse, nameof(MouseConfig.MouseWheelScrollDuration))));
+            this.Items.Add(section);
+
             section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.Manipulate.MouseVisibility"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Mouse, nameof(MouseConfig.IsCursorHideEnabled))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Mouse, nameof(MouseConfig.CursorHideTime))));

@@ -60,9 +60,19 @@ namespace NeeView.PageFrames
 
         public void SetPoint(Point value, TimeSpan span, IEasingFunction? easeX, IEasingFunction? easeY)
         {
+            var changeX = _point.X != value.X;
+            var changeY = _point.Y != value.Y;
             _point = value;
-            SetPropertyValue(_translateTransform, TranslateTransform.XProperty, value.X, span, easeX);
-            SetPropertyValue(_translateTransform, TranslateTransform.YProperty, value.Y, span, easeY);
+
+            // 変化のある項目だけアニメーション適用
+            if (changeX)
+            {
+                SetPropertyValue(_translateTransform, TranslateTransform.XProperty, value.X, span, easeX);
+            }
+            if (changeY)
+            {
+                SetPropertyValue(_translateTransform, TranslateTransform.YProperty, value.Y, span, easeY);
+            }
         }
 
         public void SetFlipHorizontal(bool isFlipHorizontal, TimeSpan span)
@@ -115,6 +125,6 @@ namespace NeeView.PageFrames
     {
         //public static IEasingFunction DefaultEase { get; } = new CubicEase() { EasingMode = EasingMode.EaseOut };
         public static IEasingFunction DefaultEase { get; } = new QuadraticEase() { EasingMode = EasingMode.EaseOut };
+        public static LinerEase LinearEase { get; } = new LinerEase();
     }
-
 }

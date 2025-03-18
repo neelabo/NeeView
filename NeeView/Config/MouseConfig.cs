@@ -24,6 +24,9 @@ namespace NeeView
         private double _hoverScrollDuration = 0.5;
         private double _inertiaSensitivity = 0.5;
         private double _autoScrollSensitivity = 1.0;
+        private bool _isMouseWheelScrollEnabled;
+        private double _mouseWheelScrollSensitivity = 1.0;
+        private double _mouseWheelScrollDuration = 0.2;
 
 
         // マウスジェスチャー有効
@@ -142,6 +145,27 @@ namespace NeeView
         {
             get { return _autoScrollSensitivity; }
             set { SetProperty(ref _autoScrollSensitivity, value); }
+        }
+
+        [PropertyMember]
+        public bool IsMouseWheelScrollEnabled
+        {
+            get { return _isMouseWheelScrollEnabled; }
+            set { SetProperty(ref _isMouseWheelScrollEnabled, value); }
+        }
+
+        [PropertyRange(0.0, 2.0, TickFrequency = 0.1, IsEditable = true, HasDecimalPoint = true)]
+        public double MouseWheelScrollSensitivity
+        {
+            get { return _mouseWheelScrollSensitivity; }
+            set { SetProperty(ref _mouseWheelScrollSensitivity, value); }
+        }
+
+        [PropertyRange(0.0, 1.0, TickFrequency = 0.1, IsEditable = true, HasDecimalPoint = true)]
+        public double MouseWheelScrollDuration
+        {
+            get { return _mouseWheelScrollDuration; }
+            set { SetProperty(ref _mouseWheelScrollDuration, value); }
         }
     }
 

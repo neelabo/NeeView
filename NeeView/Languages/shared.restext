@@ -505,3 +505,4 @@ WidePageVerticalAlignment.Top=@VerticalAlignment.Top
 WindowChromeFrame.None=@Word.None
 WindowSettingTitle=@Word.Settings
 WindowStateEx.FullScreen=@Word.FullScreen
+SettingPage.Manipulate.MouseWheelScroll=@Word.MouseWheelScroll

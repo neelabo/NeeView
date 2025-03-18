@@ -30,6 +30,8 @@ namespace NeeView
 
         private HoverTransformControl? _hoverTransformControl;
 
+        private MouseWheelScroll? _wheelScroll;
+
         /// <summary>
         /// コンストラクター
         /// </summary>
@@ -42,6 +44,7 @@ namespace NeeView
             if (_context.DragTransformContextFactory is not null)
             {
                 _hoverTransformControl = new HoverTransformControl(_context.DragTransformContextFactory);
+                _wheelScroll = new(_context.DragTransformContextFactory);
             }
         }
 
@@ -207,9 +210,14 @@ namespace NeeView
         /// <param name="e"></param>
         public override void OnMouseWheel(object? sender, MouseWheelEventArgs e)
         {
+            _wheelScroll?.OnMouseVerticalWheel(sender, e);
+
             // コマンド決定
             // ホイールがメインキー、それ以外は装飾キー
-            MouseWheelChanged?.Invoke(sender, e);
+            if (!e.Handled)
+            {
+                MouseWheelChanged?.Invoke(sender, e);
+            }
 
             // その後の操作は全て無効
             Cancel();
@@ -222,9 +230,14 @@ namespace NeeView
         /// <param name="e"></param>
         public override void OnMouseHorizontalWheel(object? sender, MouseWheelEventArgs e)
         {
+            _wheelScroll?.OnMouseHorizontalWheel(sender, e);
+
             // コマンド決定
             // ホイールがメインキー、それ以外は装飾キー
-            MouseHorizontalWheelChanged?.Invoke(sender, e);
+            if (!e.Handled)
+            {
+                MouseHorizontalWheelChanged?.Invoke(sender, e);
+            }
 
             // その後の操作は全て無効
             Cancel();
