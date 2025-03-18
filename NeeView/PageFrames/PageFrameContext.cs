@@ -116,6 +116,7 @@ namespace NeeView.PageFrames
         public bool IsSupportedSingleLastPage => _bookSetting.IsSupportedSingleLastPage && FramePageSize == 2;
         public bool IsRecursiveFolder => _bookSetting.IsRecursiveFolder;
         public AutoRotateType AutoRotate => _bookSetting.AutoRotate;
+        public AutoRotatePolicy AutoRotatePolicy => _config.View.AutoRotatePolicy;
         public double BaseScale => _bookSetting.BaseScale;
 
         public bool IsStaticFrame => _frameProfile.IsStaticFrame;
@@ -266,6 +267,10 @@ namespace NeeView.PageFrames
 
                 case nameof(ViewConfig.IsKeepAngle):
                     RaisePropertyChanged(nameof(IsAngleLocked));
+                    break;
+
+                case nameof(ViewConfig.AutoRotatePolicy):
+                    RaisePropertyChanged(nameof(AutoRotatePolicy));
                     break;
             }
 

@@ -26,6 +26,7 @@ namespace NeeView.PageFrames
 
         public Size CanvasSize => _profile.CanvasSize;
         public AutoRotateType AutoRotate => _profile.AutoRotate;
+        public AutoRotatePolicy AutoRotatePolicy => _profile.AutoRotatePolicy;
         public bool AllowFileContentAutoRotate => _profile.AllowFileContentAutoRotate;
         public PageStretchMode StretchMode => _profile.StretchMode;
         public double ContentsSpace => _profile.ContentsSpace;
@@ -68,7 +69,18 @@ namespace NeeView.PageFrames
 
             var isContentLandscape = AspectRatioTools.IsLandscape(size);
             var isCanvasLandscape = canvasSize.Width >= canvasSize.Height;
-            return (isContentLandscape != isCanvasLandscape || AutoRotate.IsForced()) ? AutoRotate.ToAngle() : 0.0;
+            return (CheckAutoRotate(isContentLandscape, isCanvasLandscape) || AutoRotate.IsForced()) ? AutoRotate.ToAngle() : 0.0;
+        }
+
+        private bool CheckAutoRotate(bool isContentLandscape, bool isCanvasLandscape)
+        {
+            return AutoRotatePolicy switch
+            {
+                AutoRotatePolicy.FitToViewArea => isContentLandscape != isCanvasLandscape,
+                AutoRotatePolicy.ToLandscape => !isContentLandscape,
+                AutoRotatePolicy.ToPortrait => isContentLandscape,
+                _ => false,
+            };
         }
 
         /// <summary>

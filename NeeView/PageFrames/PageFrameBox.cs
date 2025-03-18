@@ -598,6 +598,7 @@ namespace NeeView.PageFrames
                     break;
 
                 case nameof(Context.AutoRotate):
+                case nameof(Context.AutoRotatePolicy):
                 case nameof(Context.AllowFileContentAutoRotate):
                     UpdateContainers(PageFrameDirtyLevel.Moderate, TransformMask.Angle, false, true);
                     break;

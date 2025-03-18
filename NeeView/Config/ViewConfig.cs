@@ -33,6 +33,7 @@ namespace NeeView
         private double _scrollDuration = 0.2;
         private double _pageMoveDuration = 0.0;
         private BookSettingConfig? _bookSetting;
+        private AutoRotatePolicy _autoRotatePolicy = AutoRotatePolicy.FitToViewArea;
 
 
         // 回転の中心
@@ -232,6 +233,15 @@ namespace NeeView
             set { SetProperty(ref _pageMoveDuration, value); }
         }
 
+        // 自動回転方針
+        [PropertyMember]
+        public AutoRotatePolicy AutoRotatePolicy
+        {
+            get { return _autoRotatePolicy; }
+            set { SetProperty(ref _autoRotatePolicy, value); }
+        }
+
+
         #region Obsolete
 
         [Obsolete("no used"), Alternative($"{nameof(ViewHorizontalOrigin)}, {nameof(ViewVerticalOrigin)}", 42, ScriptErrorLevel.Warning)] // ver.42
@@ -401,4 +411,21 @@ namespace NeeView
         CenterOrDirectionDependent,
     }
 
+    public enum AutoRotatePolicy
+    {
+        /// <summary>
+        /// 表示領域に合わせる
+        /// </summary>
+        FitToViewArea,
+
+        /// <summary>
+        /// 横長にする
+        /// </summary>
+        ToLandscape,
+
+        /// <summary>
+        /// 縦長にする
+        /// </summary>
+        ToPortrait,
+    }
 }
