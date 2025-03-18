@@ -42,16 +42,17 @@ namespace NeeView
 
             for (int retry = 0; retry < 2; ++retry)
             {
-                var processes = Process.GetProcessesByName(processName)
-                    .ToList();
-
-                foreach (var p in processes)
-                {
-                    Trace.WriteLine($"GetServerProcess: FindProcess: ProcessName={p.ProcessName}, ProcessFileName={p.MainModule?.FileName}, Id={p.Id}");
-                }
-
                 try
                 {
+                    var processes = Process.GetProcessesByName(processName)
+                        .ToList();
+
+#if DEBUG
+                    foreach (var p in processes)
+                    {
+                        Trace.WriteLine($"GetServerProcess: FindProcess: ProcessName={p.ProcessName}, ProcessFileName={p.MainModule?.FileName}, Id={p.Id}");
+                    }
+#endif
                     // 自身以外のプロセスをターゲットにする
                     var serverProcess = processes
                         // ウィンドウハンドルが存在しないものは除外
