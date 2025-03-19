@@ -14,6 +14,7 @@ namespace NeeView
     /// </summary>
     public abstract partial class Archive : IDisposable
     {
+        private readonly ArchiveTemporary _archiveTemporary = new();
         private readonly ArchivePreExtractor _preExtractor;
         private int _preExtractorActivateCount;
         private bool _disposedValue;
@@ -607,6 +608,22 @@ namespace NeeView
             await _zoneIdentifier.WriteAsync(path, token);
         }
 
+        /// <summary>
+        /// Create temporary file path
+        /// </summary>
+        public string CreateTempFileName(ArchiveEntry entry, TempFileNamePolicy policy)
+        {
+            // ファイル名を維持する場合はアーカイブ専用テンポラリに作成することで名前の衝突を回避する
+            if (policy.IsKeepFileName)
+            {
+                return _archiveTemporary.CreateTempFileName(LoosePath.GetFileName(entry.EntryName));
+            }
+            else
+            {
+                return Temporary.Current.CreateCountedTempFileName(policy.Prefix, System.IO.Path.GetExtension(entry.EntryName));
+            }
+        }
+
 
         protected virtual void Dispose(bool disposing)
         {
@@ -614,6 +631,7 @@ namespace NeeView
             {
                 if (disposing)
                 {
+                    _archiveTemporary.Dispose();
                 }
                 _preExtractor.Dispose();
                 _disposedValue = true;

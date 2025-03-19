@@ -317,7 +317,7 @@ namespace NeeView
         /// <param name="isKeepFileName">エントリー名をファイル名にする</param>
         public async Task<FileProxy> GetFileProxyAsync(bool isKeepFileName, CancellationToken token)
         {
-            _fileProxy = _fileProxy ?? await CreateFileProxyAsync(new TempArchiveEntryNamePolicy(isKeepFileName, "entry"), false, token);
+            _fileProxy = _fileProxy ?? await CreateFileProxyAsync(new TempFileNamePolicy(isKeepFileName, "entry"), false, token);
             return _fileProxy;
         }
 
@@ -328,7 +328,7 @@ namespace NeeView
         /// <param name="fileNamePolicy">ファイル名ポリシ―</param>
         /// <param name="isOverwrite">上書き許可</param>
         /// <returns>ファイル</returns>
-        public async Task<FileProxy> CreateFileProxyAsync(TempArchiveEntryNamePolicy fileNamePolicy, bool isOverwrite, CancellationToken token)
+        public async Task<FileProxy> CreateFileProxyAsync(TempFileNamePolicy fileNamePolicy, bool isOverwrite, CancellationToken token)
         {
             var entityPath = EntityPath;
             if (entityPath is not null)
@@ -338,14 +338,14 @@ namespace NeeView
 
             await WaitPreExtractAsync(token);
 
-            var tempFileName = fileNamePolicy.Create(this);
+            var tempFileName = this.Archive.CreateTempFileName(this, fileNamePolicy);
 
             if (this.Data is string fileName)
             {
                 if (fileNamePolicy.IsKeepFileName && fileName != tempFileName)
                 {
                     await FileIO.CopyFileAsync(fileName, tempFileName, isOverwrite, false, token);
-                    return new TempFile(fileName);
+                    return new TempFile(tempFileName);
                 }
                 else
                 {

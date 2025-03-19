@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -16,13 +15,6 @@ namespace NeeView
         // NOTE: SetDirectory必須
         static Temporary() => Current = new Temporary();
         public static Temporary Current { get; }
-
-
-        // テンポラリファイル名用のカウンタ
-        private int _count = 0;
-
-        // 排他制御用オブジェクト
-        private readonly System.Threading.Lock _lock = new();
 
 
         private Temporary()
@@ -105,11 +97,7 @@ namespace NeeView
         {
             Debug.Assert(TempDirectory != null, "Need SetDirectory()");
 
-            lock (_lock)
-            {
-                _count = (_count + 1) % 10000;
-                return CreateTempFileName(string.Format(CultureInfo.InvariantCulture, "{0}{1:0000}{2}", prefix, _count, ext));
-            }
+            return TemporaryTools.CreateCountedTempFileName(TempCacheDirectory, prefix, ext);
         }
 
         /// <summary>
@@ -122,21 +110,7 @@ namespace NeeView
         {
             Debug.Assert(TempDirectory != null, "Need SetDirectory()");
 
-            // 専用フォルダー作成
-            Directory.CreateDirectory(TempCacheDirectory);
-
-            // 名前の修正
-            var validName = LoosePath.ValidFileName(name);
-
-            // ファイル名作成
-            string tempFileName = Path.Combine(TempCacheDirectory, validName);
-            int count = 1;
-            while (File.Exists(tempFileName) || Directory.Exists(tempFileName))
-            {
-                tempFileName = Path.Combine(TempCacheDirectory, Path.GetFileNameWithoutExtension(validName) + $"-{count++}" + Path.GetExtension(validName));
-            }
-
-            return tempFileName;
+            return TemporaryTools.CreateTempFileName(TempCacheDirectory, name);
         }
 
 

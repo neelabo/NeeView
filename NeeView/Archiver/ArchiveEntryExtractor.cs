@@ -16,7 +16,7 @@ namespace NeeView
     /// </summary>
     public class ArchiveEntryExtractor : IDisposable
     {
-        private static TempArchiveEntryNamePolicy _namePolicy = new(false, "arcv");
+        private static TempFileNamePolicy _namePolicy = new(false, "arcv");
 
         private readonly ArchiveEntry _entry;
         private readonly Task _task;

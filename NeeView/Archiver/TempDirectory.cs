@@ -9,6 +9,8 @@ namespace NeeView
     /// </summary>
     public class TempDirectory : ITrash
     {
+        private bool _disposedValue = false;
+
         public TempDirectory(string path)
         {
             // テンポラリフォルダー以外は非対応
@@ -16,16 +18,11 @@ namespace NeeView
             Path = path;
         }
 
-        public string Path { get; private set; }
 
-        #region ITrash Support
+        public string Path { get; private set; }
 
         public bool IsDisposed => _disposedValue;
 
-        #endregion
-
-        #region IDisposable Support
-        private bool _disposedValue = false;
 
         protected virtual void Dispose(bool disposing)
         {
@@ -61,7 +58,6 @@ namespace NeeView
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-        #endregion
 
     }
 }
