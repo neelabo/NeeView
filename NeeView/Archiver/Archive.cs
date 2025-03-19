@@ -18,6 +18,7 @@ namespace NeeView
         private int _preExtractorActivateCount;
         private bool _disposedValue;
         private int _watchCount;
+        private ZoneIdentifier? _zoneIdentifier;
 
         /// <summary>
         /// ArchiveEntry Cache
@@ -355,6 +356,7 @@ namespace NeeView
             {
                 FileIO.CheckOverwrite(exportFileName, isOverwrite);
                 await File.WriteAllBytesAsync(exportFileName, rawData, token);
+                await WriteZoneIdentifierAsync(exportFileName, token);
             }
             else
             {
@@ -575,6 +577,34 @@ namespace NeeView
         public virtual async Task<bool> RenameAsync(ArchiveEntry entry, string name)
         {
             return await Task.FromResult(false);
+        }
+
+        /// <summary>
+        /// async read Zone.Identifier
+        /// </summary>
+        protected async Task ReadZoneIdentifierAsync(CancellationToken token)
+        {
+            _zoneIdentifier = await ZoneIdentifier.ReadAsync(Path, token);
+        }
+
+        /// <summary>
+        /// write Zone.Identifier
+        /// </summary>
+        public void WriteZoneIdentifier(string path)
+        {
+            if (_zoneIdentifier is null) return;
+
+            _zoneIdentifier.Write(path);
+        }
+
+        /// <summary>
+        /// async write Zone.Identifier
+        /// </summary>
+        public async Task WriteZoneIdentifierAsync(string path, CancellationToken token)
+        {
+            if (_zoneIdentifier is null) return;
+
+            await _zoneIdentifier.WriteAsync(path, token);
         }
 
 

@@ -73,6 +73,7 @@ namespace NeeView
                 {
                     Debug.Assert(item.Data is not byte[] rawData || (int)e.FileInfo.Size == rawData.Length);
                     _fileExtraction.SetData(e.FileInfo, item.Data);
+                    _fileExtraction.WriteZoneIdentifier(e.FileInfo);
                 }
             }
         }
@@ -114,6 +115,7 @@ namespace NeeView
     {
         bool DataExists(ArchiveFileInfo info);
         void SetData(ArchiveFileInfo info, object data);
+        void WriteZoneIdentifier(ArchiveFileInfo info);
     }
 
 

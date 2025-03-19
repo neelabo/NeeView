@@ -15,6 +15,7 @@ namespace NeeView
 
         public override async Task ExtractAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
         {
+            Debug.Assert(entry.Archive == _archive);
             Debug.Assert(_archive.Initialized());
             Debug.Assert(!_archive.CanPreExtract(), "Pre-extract, so no direct extract.");
 
@@ -25,6 +26,8 @@ namespace NeeView
 
         protected override async Task ExtractCore(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
         {
+            Debug.Assert(entry.Archive == _archive);
+
             _archive.Extract(entry, exportFileName, isOverwrite, token);
 
             await Task.CompletedTask;

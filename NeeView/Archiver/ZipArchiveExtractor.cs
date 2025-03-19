@@ -48,6 +48,7 @@ namespace NeeView
             if (rawEntry is null) throw new ApplicationException("Cannot open this entry: " + entry.EntryName);
             
             rawEntry.Export(exportFileName, isOverwrite);
+            _archive.WriteZoneIdentifier(exportFileName);
 
             await Task.CompletedTask;
         }

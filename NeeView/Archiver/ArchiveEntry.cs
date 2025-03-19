@@ -356,6 +356,7 @@ namespace NeeView
             {
                 FileIO.CheckOverwrite(tempFileName, isOverwrite);
                 await File.WriteAllBytesAsync(tempFileName, rawData, token);
+                await this.Archive.WriteZoneIdentifierAsync(tempFileName, token);
                 return new TempFile(tempFileName);
             }
             else

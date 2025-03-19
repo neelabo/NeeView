@@ -97,7 +97,8 @@ namespace NeeView
             // ディレクトリエントリを追加
             list.AddRange(CreateDirectoryEntries(list.Concat(directories)));
 
-            await Task.CompletedTask;
+            await ReadZoneIdentifierAsync(token);
+
             return list;
         }
 
@@ -160,6 +161,7 @@ namespace NeeView
             {
                 _accessor.ExtractFile(entry.Id, fs);
             }
+            WriteZoneIdentifier(exportFileName);
         }
 
         /// <summary>
@@ -245,6 +247,13 @@ namespace NeeView
                 Debug.Assert(false, "Don't come here: Entry not found");
             }
         }
-    }
 
+        public void WriteZoneIdentifier(ArchiveFileInfo info)
+        {
+            if (_map.TryGetValue(info.Index, out var entry) && entry.Data is string path)
+            {
+                entry.Archive.WriteZoneIdentifier(path);
+            }
+        }
+    }
 }

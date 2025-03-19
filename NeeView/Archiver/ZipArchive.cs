@@ -142,7 +142,8 @@ namespace NeeView
                 stream?.Dispose();
             }
 
-            await Task.CompletedTask;
+            await ReadZoneIdentifierAsync(token);
+
             return list;
         }
 

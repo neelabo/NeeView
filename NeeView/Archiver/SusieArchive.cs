@@ -89,7 +89,8 @@ namespace NeeView
             // ディレクトリエントリを追加
             list.AddRange(CreateDirectoryEntries(list.Concat(directories)));
 
-            await Task.CompletedTask;
+            await ReadZoneIdentifierAsync(token);
+
             return list;
         }
 
@@ -188,7 +189,9 @@ namespace NeeView
             {
                 try
                 {
-                    return ExtractToFileCore(entry, extractFileName, isOverwrite);
+                    ExtractToFileCore(entry, extractFileName, isOverwrite);
+                    WriteZoneIdentifier(extractFileName);
+                    return extractFileName;
                 }
                 catch (Susie.SusieException e)
                 {
@@ -203,6 +206,7 @@ namespace NeeView
             {
                 ms.WriteTo(stream);
             }
+            WriteZoneIdentifier(extractFileName);
             return extractFileName;
         }
 
