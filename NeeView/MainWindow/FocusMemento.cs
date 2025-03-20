@@ -20,8 +20,11 @@ namespace NeeView
             if (element is not null)
             {
                 var window = Window.GetWindow(element);
-                var center = new Point(element.ActualWidth * 0.5, element.ActualHeight * 0.5);
-                return new FocusMemento(window, new WeakReference<FrameworkElement>(element), element.TranslatePoint(center, window));
+                if (window is not null)
+                {
+                    var center = new Point(element.ActualWidth * 0.5, element.ActualHeight * 0.5);
+                    return new FocusMemento(window, new WeakReference<FrameworkElement>(element), element.TranslatePoint(center, window));
+                }
             }
 
             return null;
@@ -36,8 +39,11 @@ namespace NeeView
             }
             else
             {
-                VisualTreeUtility.HitTestToFocus(this.Owner, this.Point);
-                this.Owner.Activate();
+                if (this.Owner is not null)
+                {
+                    VisualTreeUtility.HitTestToFocus(this.Owner, this.Point);
+                    this.Owner.Activate();
+                }
             }
         }
     }

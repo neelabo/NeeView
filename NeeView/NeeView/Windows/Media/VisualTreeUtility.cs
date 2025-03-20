@@ -480,6 +480,8 @@ namespace NeeView.Windows.Media
         /// <returns></returns>
         public static bool HitTestToFocus(Visual reference, Point point)
         {
+            if (reference is null) return false;
+
             HitTestResult result = VisualTreeHelper.HitTest(reference, point);
             var element = result?.VisualHit as FrameworkElement;
 
