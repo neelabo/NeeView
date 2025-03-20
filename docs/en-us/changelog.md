@@ -1,5 +1,89 @@
 # Changelog
 
+## 43.0
+(2025-03-20)
+
+> [!WARNING] This is still a beta version.
+
+#### Welcome Dialogue
+
+- Minimal settings, such as the selection of command presets, are made at initial startup.
+- This setting can be changed later.
+
+####  Extension associations
+
+- You can now manage extension associations on the “Explorer” page of the settings.
+- The Explorer context menu registration in the installer version has also been changed to be done here.
+
+> [!NOTE] This feature is not available in the Store App version.
+
+#### Added
+
+- Language: Korean added.
+- System: Display a slideshow playing icon in the title.
+- System: Symbolic link supported.
+- System: File export from compressed files now also copies Zone.Identifier.
+- System: Supports multiple file drops from compressed folders.
+- System: Added command line option "--language" to set temporary language.
+- System: Added command line option "--clear-registry" to clear registry settings.
+- Command: “Cut (Ctrl+X)” command added.
+- Command: “Toggle trimming” command added.
+- Command: “Overwrite mode” setting added to “Save” command.
+- Command: "Scroll + Next/Prev" and "N-type scroll" commands added "Horizontal/Vertical scroll" to the scroll type parameter.
+- Theme: Added missing mouse-over theme color setting.
+- Book: Page reset setting added when moving to the next book in a page move. (Settings > Move > Reset next book page)
+- View: Mouse wheel scrolling implemented. (Settings > Mouse operation > Mouse wheel scroll)
+- View: Auto scroll sensitivity setting added. (Settings > Mouse operation > Auto scroll sensitivity)
+- View: Added setting of conditions for automatic rotation. (Settings > View operation > Auto rotate policy)
+- View: Added "Auto" to "Center of scaling". The center point will be set to fit within the screen as much as possible. (Settings > View operation > Center of scaling)
+- View: Added color setting for the page being loaded. (Settings > Book > Loading page color)
+- Panel: Added the ability to select list items by input text. (Settings > Panels > Select item with input text)
+- History: Added the ability to display date/time groups in the history panel.
+- PageList: "Page number" added to page list name format
+- Video: Added video playback speed setting.
+- Video: "Default Subtitle" setting added. (Settings > Video > Default Subtitle)
+- Video: Noted that libVLC support is for 3.x only.
+
+#### Changed
+
+- System: Changed to .NET 9 based.
+- System: Delayed panel generation to speed up startup a bit.
+- System: When multiple startups are used, the window state is not changed even if the configuration file is updated in one of them.
+- System: Date and time are now inherited in file copying.
+- System: Export data selection dialog now inherits the location to be opened.
+- System: renaming cursor movement made the same as in Explorer.
+- System: added configuration importer is invoked when .nvzip file is specified as a command line argument.
+- Command: Apply copy policy setting for compressed files when "Copy to folder"
+- Command: "Save" is not available for directories as is.
+- Command: "Focus on main view” command is now switchable.
+- Settings: Command names for scripts can be found in the Command Parameters dialog.
+- Book: Tried to avoid reloading when deleting pages.
+- Book: The current page is not restored to the top page when it is deleted.
+- Book: History saved when page settings are changed.
+- View: Adjusting focus when a book is opened with file drop. Try the bookshelf first, then the focus to the main view.
+- View: Support for auto-hiding the autoscroll cursor.
+- Filmstrip: Filmstrip allows multiple selections.
+- Panels: Compressed file icons and media file icons added to folder icons in PageList and Playlist.
+- PageList: File drop to PageList now opens book.
+
+#### Fixed
+
+- System: Flash reduction at start of window display.
+- System: Pages can now be loaded even with invalid file dates and times.
+- System: Fixed a bug that if the application is terminated while deleting a ZIP entry, it will not be deleted correctly.
+- System: Fixed a bug that sometimes caused file names to change when exporting files from compressed files.
+- System: Fixed a bug that could cause an error if the destination folder for images did not exist.
+- System: Fixed a bug when registering a context menu for a command whose menu hierarchy changes depending on the command parameters.
+- System: Reduces file path case differences.
+- Command: Fixed a bug in which the "External app" command did not work when a number was specified.
+- View: Fixed a bug that sometimes left the page title displayed.
+- View: Fixed a bug that caused the vertical and horizontal wheel counters to reset each other.
+- View: Fixed a bug in image inversion by mouse dragging.
+- Panels: Fixed a bug that panels were sometimes not displayed in the window when trying to display them.
+- Navigator: Fixed an issue where the drag position of the navigator thumbnail could shift.
+- Script: Fixed a bug that video operations in scripts were not reflected when the video page was refreshed.
+
+
 ## 42.6
 (2025-01-22)
 
