@@ -83,7 +83,7 @@ namespace NeeView.Setting
             }
             else
             {
-                CommandTable.Current.RestoreCommandCollection(_memento);
+                CommandTable.Current.RestoreCommandCollection(_memento, false);
             }
         }
 

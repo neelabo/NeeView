@@ -127,7 +127,7 @@ namespace NeeView
             CustomLayoutPanelManager.RestoreMaybe();
 
             // コマンド設定反映
-            CommandTable.Current.RestoreCommandCollection(setting.Commands);
+            CommandTable.Current.RestoreCommandCollection(setting.Commands, true);
 
             // ドラッグアクション反映
             DragActionTable.Current.RestoreDragActionCollection(setting.DragActions);

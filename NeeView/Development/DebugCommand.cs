@@ -48,7 +48,7 @@ namespace NeeView
                 CommandTable.Current.RestoreCommandCollection(InputScheme.TypeA);
                 var commandList = CommandTable.Current.CreateCommandListHelp();
                 File.WriteAllText(Path.Combine(Environment.UserDataPath, $"CommandList.{culture}.html"), commandList);
-                CommandTable.Current.RestoreCommandCollection(memento);
+                CommandTable.Current.RestoreCommandCollection(memento, true);
             }
             catch (Exception ex)
             {

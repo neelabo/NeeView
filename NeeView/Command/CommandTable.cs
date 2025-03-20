@@ -692,7 +692,7 @@ namespace NeeView
             {
                 var memento = item.Value.CreateMemento();
 
-                if (trim && DefaultMemento != null)
+                if (trim && DefaultMemento != null && !item.Value.IsCloneCommand())
                 {
                     // デフォルトと同じものは除外
                     if (DefaultMemento.TryGetValue(item.Key, out var defaultMemento))
@@ -709,7 +709,7 @@ namespace NeeView
             return collection;
         }
 
-        public void RestoreCommandCollection(CommandCollection? collection)
+        public void RestoreCommandCollection(CommandCollection? collection, bool cleanup)
         {
             if (collection == null) return;
 
@@ -744,12 +744,22 @@ namespace NeeView
                 }
             }
 
+            // cleanup undefined clone commands
+            if (cleanup)
+            {
+                var excepts = _elements.Where(e => e.Value.IsCloneCommand()).Select(e => e.Key).Except(collection.Keys).ToList();
+                foreach (var key in excepts)
+                {
+                    RemoveCommand(key);
+                }
+            }
+
             Changed?.Invoke(this, new CommandChangedEventArgs(false));
         }
 
         public void RestoreCommandCollection(InputScheme inputScheme)
         {
-            RestoreCommandCollection(CreateDefaultMemento(inputScheme));
+            RestoreCommandCollection(CreateDefaultMemento(inputScheme), true);
         }
 
         #endregion
