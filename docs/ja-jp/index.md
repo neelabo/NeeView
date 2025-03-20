@@ -56,12 +56,12 @@ title: HOME
 ## ドキュメント
 
 * [ユーザーガイド](userguide.md)
-* [コマンドライン オプション](commandline-options.md)
+* [コマンドラインオプション](commandline-options.md)
 * [環境変数](environment-value.md)
 * [メインメニュー](main-menu.html)
 * [コマンド一覧](command-list.html)
 * [検索オプション](search-options.html)
-* [スクリプト マニュアル](script-manual.html)
+* [スクリプトマニュアル](script-manual.html)
 * [テーマファイル仕様](theme.md)
 * [Q&A](question-and-answer.md)
 * [プライバシーポリシー](privacy-policy.md)

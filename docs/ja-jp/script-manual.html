@@ -6,6 +6,8 @@ title: スクリプトマニュアル
 
 <h1>スクリプトマニュアル</h1>
 
+<p>Version 43.0</p>
+
 <ul>
     <li><a href="#s1">概要</a></li>
     <li><a href="#s2">コマンドスクリプト</a></li>
@@ -705,10 +707,12 @@ nv.Command.ViewRotateLeft.Patch({"Angle": 5}).Execute()</code></pre></p>
 <p><table>
 <tr><td>AudioTrack</td><td><a href="#TrackCollectionAccessor">TrackCollectionAccessor</a></td><td>r</td><td class="td-middle">オーディオ トラック管理。存在しなければ null</td></tr>
 <tr><td>Duration</td><td>double</td><td>r</td><td class="td-middle">メディアの再生時間 (秒)</td></tr>
+<tr><td>IsDisposed</td><td>bool</td><td>r</td><td class="td-middle">破棄されたインスタンス</td></tr>
 <tr><td>IsMuted</td><td>bool</td><td>rw</td><td class="td-middle">消音モード ON/OFF</td></tr>
 <tr><td>IsPlaying</td><td>bool</td><td>rw</td><td class="td-middle">再生 ON/OFF</td></tr>
 <tr><td>IsRepeat</td><td>bool</td><td>rw</td><td class="td-middle">繰り返しモード ON/OFF</td></tr>
 <tr><td>Position</td><td>double</td><td>rw</td><td class="td-middle">現在位置 (0.0-1.0)</td></tr>
+<tr><td>Rate</td><td>double</td><td>rw</td><td class="td-middle">再生速度</td></tr>
 <tr><td>Subtitle</td><td><a href="#TrackCollectionAccessor">TrackCollectionAccessor</a></td><td>r</td><td class="td-middle">字幕トラック管理。存在しなければ null</td></tr>
 <tr><td>Volume</td><td>double</td><td>rw</td><td class="td-middle">音量 (0.0-1.0)</td></tr>
 </table></p>
@@ -1054,6 +1058,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>Smart</td><td>標準表示</td></tr>
 <tr><td>NameOnly</td><td>名前のみ</td></tr>
 <tr><td>Raw</td><td>そのまま</td></tr>
+<tr><td>PageNumber</td><td>ページ番号</td></tr>
 </table></p>
 <h3 id="PageReadOrder">[Enum] PageReadOrder</h3>
 <p>本を開く方向</p>
@@ -1100,12 +1105,13 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <th class="td-middle">型</th>
 <th class="td-middle">概要</th>
 </tr>
+<tr><td>nv.Config.Archive.Media.DefaultSubtitle</td><td><dl><dt>"Default"</dt><dd>既定</dd><dt>"Disable"</dt><dd>無効</dd></dl></td><td><b>既定の字幕</b></td></tr>
 <tr><td>nv.Config.Archive.Media.IsEnabled</td><td>bool</td><td><b>動画をブックとして開く</b></td></tr>
-<tr><td>nv.Config.Archive.Media.IsLibVlcEnabled</td><td>bool</td><td><b>libVLC を使用して動画を再生する</b><p class="remarks">VLC media player が別途必要です。対応動画フォーマットが多く、字幕やオーディオチャンネルの選択が可能です。</p></td></tr>
+<tr><td>nv.Config.Archive.Media.IsLibVlcEnabled</td><td>bool</td><td><b>libVLC を使用して動画を再生する</b><p class="remarks">VLC media player 3.x が別途必要です。対応動画フォーマットが多く、字幕やオーディオチャンネルの選択が可能です。</p></td></tr>
 <tr><td>nv.Config.Archive.Media.IsMediaPageEnabled</td><td>bool</td><td><b>動画をページとして開く</b></td></tr>
 <tr><td>nv.Config.Archive.Media.IsMuted</td><td>bool</td><td><b>動画をミュートする</b></td></tr>
 <tr><td>nv.Config.Archive.Media.IsRepeat</td><td>bool</td><td><b>動画のリピート</b></td></tr>
-<tr><td>nv.Config.Archive.Media.LibVlcPath</td><td>string</td><td><b>libVLC のディレクトリ</b><p class="remarks">64bit版 libvlc.dll の存在するディレクトリ。通常、これは VLC media player のインストールフォルダーになります。</p></td></tr>
+<tr><td>nv.Config.Archive.Media.LibVlcPath</td><td>string</td><td><b>libVLC のディレクトリ</b><p class="remarks">64bit版 libvlc.dll 3.x の存在するディレクトリ。通常、これは VLC media player 3.x のインストールフォルダーになります。</p></td></tr>
 <tr><td>nv.Config.Archive.Media.MediaStartDelaySeconds</td><td>double</td><td><b>再生開始遅延 (秒)</b><p class="remarks">0 を指定すると画面がちらつくことがあります。</p></td></tr>
 <tr><td>nv.Config.Archive.Media.PageSeconds</td><td>double</td><td><b>ページ移動での変化時間 (秒)</b></td></tr>
 <tr><td>nv.Config.Archive.Media.SupportFileTypes</td><td>".ex1;.ex2;.ex3"</td><td><b>動画ファイルの拡張子</b><p class="remarks">Windows Media Player で再生できるものが、おおよそ再生可能です。</p></td></tr>
@@ -1152,8 +1158,10 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.Book.IsReadyToPageMove</td><td>bool</td><td><b>ページ移動準備</b><p class="remarks">ページの準備ができたら表示を切り替えます。「パノラマ」では無効です。</p></td></tr>
 <tr><td>nv.Config.Book.IsSortFileFirst</td><td>bool</td><td><b>ファイル優先でページをソートする</b><p class="remarks">ファイルをフォルダーより先に並べます。</p></td></tr>
 <tr><td>nv.Config.Book.IsStaticWidePage</td><td>bool</td><td><b>静的な 2 ページ</b><p class="remarks">2 ページ表示の基準ページは数字だけで決まります。スライダーの動きもそれに準じます。</p></td></tr>
+<tr><td>nv.Config.Book.LoadingPageColor</td><td>"#AARRGGBB"</td><td><b>読込中ページの色</b></td></tr>
 <tr><td>nv.Config.Book.Orientation</td><td><dl><dt>"Horizontal"</dt><dd>水平</dd><dt>"Vertical"</dt><dd>垂直</dd></dl></td><td><b>ページの並び方向</b></td></tr>
 <tr><td>nv.Config.Book.PageEndAction</td><td><dl><dt>"None"</dt><dd>そのまま</dd><dt>"NextBook"</dt><dd>次のブックに移動</dd><dt>"Loop"</dt><dd>ループする</dd><dt>"SeamlessLoop"</dt><dd>シームレス ループ</dd><dt>"Dialog"</dt><dd>ダイアログで選択</dd></dl></td><td><b>ページの終端を超えて移動しようとした時の挙動</b></td></tr>
+<tr><td>nv.Config.Book.ResetNextBookPage</td><td>bool</td><td><b>次のブックのページを初期化する</b><p class="remarks">「ページの終端を超えて移動しようとした時の挙動」で次のブックに移動した時にページを初期化する</p></td></tr>
 <tr><td>nv.Config.Book.ResetPageWhenRandomSort</td><td>bool</td><td><b>シャッフルしたときにページをリセットする</b></td></tr>
 <tr><td>nv.Config.Book.TerminalSound</td><td>string</td><td><b>移動できなかったときの効果音</b></td></tr>
 <tr><td>nv.Config.Book.WidePageStretch</td><td><dl><dt>"None"</dt><dd>なし</dd><dt>"UniformHeight"</dt><dd>縦幅を揃える</dd><dt>"UniformWidth"</dt><dd>横幅を揃える</dd></dl></td><td><b>「2 ページ表示」でのサイズの揃え方</b></td></tr>
@@ -1241,6 +1249,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.History.IsAutoCleanupEnabled</td><td>bool</td><td><b>起動時に無効な履歴を自動的に削除する</b></td></tr>
 <tr><td>nv.Config.History.IsCurrentFolder</td><td>bool</td><td><b>現在のフォルダーのみ</b><p class="remarks">現在開いているブックのフォルダーのみの履歴を表示します。</p></td></tr>
 <tr><td>nv.Config.History.IsForceUpdateHistory</td><td>bool</td><td><b>履歴からブックを開いたときでも最終閲覧日を更新する</b></td></tr>
+<tr><td>nv.Config.History.IsGroupBy</td><td>bool</td><td><b>@HistoryConfig.IsGroupBy</b></td></tr>
 <tr><td>nv.Config.History.IsInnerArchiveHistoryEnabled</td><td>bool</td><td><b>多重圧縮ファイルを履歴に保存する</b></td></tr>
 <tr><td>nv.Config.History.IsKeepFolderStatus</td><td>bool</td><td><b>各フォルダーの並び順等の情報を保存する</b></td></tr>
 <tr><td>nv.Config.History.IsKeepSearchHistory</td><td>bool</td><td><b>検索履歴を保存する</b></td></tr>
@@ -1357,6 +1366,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.MenuBar.IsHideMenu</td><td>bool</td><td><b>メニューを自動的に隠す</b></td></tr>
 <tr><td>nv.Config.MenuBar.IsHideMenuInAutoHideMode</td><td>bool</td><td><b>自動非表示モードのときにメニューを自動的に隠す</b></td></tr>
 <tr><td>nv.Config.MenuBar.IsVisible</td><td>bool</td><td><b>メニュー表示状態 (読み取り専用)</b></td></tr>
+<tr><td>nv.Config.Mouse.AutoScrollSensitivity</td><td>double</td><td><b>オート スクロールの感度</b></td></tr>
 <tr><td>nv.Config.Mouse.CursorHideReleaseDistance</td><td>double</td><td><b>再表示する移動距離 (ピクセル)</b></td></tr>
 <tr><td>nv.Config.Mouse.CursorHideTime</td><td>double</td><td><b>非表示にするまでの時間 (秒)</b></td></tr>
 <tr><td>nv.Config.Mouse.GestureMinimumDistance</td><td>double</td><td><b>マウス ジェスチャーのストローク (ピクセル)</b><p class="remarks">この距離の移動でジェスチャー ストロークと判断されます。</p></td></tr>
@@ -1367,11 +1377,14 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.Mouse.IsDragEnabled</td><td>bool</td><td><b>マウス ドラッグ機能を使用する</b></td></tr>
 <tr><td>nv.Config.Mouse.IsGestureEnabled</td><td>bool</td><td><b>マウス ジェスチャー機能を使用する</b></td></tr>
 <tr><td>nv.Config.Mouse.IsHoverScroll</td><td>bool</td><td><b>ホバー スクロール モード</b></td></tr>
+<tr><td>nv.Config.Mouse.IsMouseWheelScrollEnabled</td><td>bool</td><td><b>マウス ホイール スクロールを使用する</b><p class="remarks">マウス ホイールによる画像スクロールです。同じ操作のコマンドはキャンセルされます。</p></td></tr>
 <tr><td>nv.Config.Mouse.LongButtonDownMode</td><td><dl><dt>"None"</dt><dd>なし</dd><dt>"Loupe"</dt><dd>ルーペ</dd><dt>"AutoScroll"</dt><dd>オート スクロール</dd><dt>"Repeat"</dt><dd>リピート入力</dd></dl></td><td><b>長押しモード</b></td></tr>
 <tr><td>nv.Config.Mouse.LongButtonDownTime</td><td>double</td><td><b>長押し判定時間 (秒)</b><p class="remarks">長押しと判定される時間です。</p></td></tr>
 <tr><td>nv.Config.Mouse.LongButtonMask</td><td><dl><dt>"Left"</dt><dd>左ボタン</dd><dt>"Right"</dt><dd>右ボタン</dd><dt>"All"</dt><dd>全てのボタン</dd></dl></td><td><b>長押しボタン</b></td></tr>
 <tr><td>nv.Config.Mouse.LongButtonRepeatTime</td><td>double</td><td><b>リピート間隔 (秒)</b><p class="remarks">リピート入力でのリピート時間です。</p></td></tr>
 <tr><td>nv.Config.Mouse.MinimumDragDistance</td><td>double</td><td><b>ドラッグ開始距離 (ピクセル)</b><p class="remarks">ドラッグやジェスチャーになる最初の移動距離</p></td></tr>
+<tr><td>nv.Config.Mouse.MouseWheelScrollDuration</td><td>double</td><td><b>マウス ホイール スクロール時間 (秒)</b></td></tr>
+<tr><td>nv.Config.Mouse.MouseWheelScrollSensitivity</td><td>double</td><td><b>マウス ホイール スクロールの感度</b></td></tr>
 <tr><td>nv.Config.Navigator.IsVisibleControlBar</td><td>bool</td><td><b>ナビゲーター パネルにコントロール バーを表示</b></td></tr>
 <tr><td>nv.Config.Navigator.IsVisibleThumbnail</td><td>bool</td><td><b>サムネイルを表示する</b></td></tr>
 <tr><td>nv.Config.Navigator.ThumbnailHeight</td><td>double</td><td><b>サムネイル エリアの高さ</b></td></tr>
@@ -1385,7 +1398,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.Notice.NowLoadingShowMessageStyle</td><td><dl><dt>"None"</dt><dd>表示しない</dd><dt>"Normal"</dt><dd>表示する</dd><dt>"Tiny"</dt><dd>小さく表示する</dd></dl></td><td><b>Now Loading の表示</b></td></tr>
 <tr><td>nv.Config.Notice.ViewTransformShowMessageStyle</td><td><dl><dt>"None"</dt><dd>表示しない</dd><dt>"Normal"</dt><dd>表示する</dd><dt>"Tiny"</dt><dd>小さく表示する</dd></dl></td><td><b>ドラッグ操作によるスケール変更等の情報表示</b></td></tr>
 <tr><td>nv.Config.PageList.FocusMainView</td><td>bool</td><td><b>メインビューをフォーカス</b><p class="remarks">ページ選択後、メインビューにフォーカスを移動します。</p></td></tr>
-<tr><td>nv.Config.PageList.Format</td><td><dl><dt>"Smart"</dt><dd>標準表示</dd><dt>"NameOnly"</dt><dd>名前のみ</dd><dt>"Raw"</dt><dd>そのまま</dd></dl></td><td><b>ページリストのページ名表示形式</b></td></tr>
+<tr><td>nv.Config.PageList.Format</td><td><dl><dt>"Smart"</dt><dd>標準表示</dd><dt>"NameOnly"</dt><dd>名前のみ</dd><dt>"Raw"</dt><dd>そのまま</dd><dt>"PageNumber"</dt><dd>ページ番号</dd></dl></td><td><b>ページリストのページ名表示形式</b></td></tr>
 <tr><td>nv.Config.PageList.PanelListItemStyle</td><td><dl><dt>"Normal"</dt><dd>テキスト</dd><dt>"Content"</dt><dd>コンテンツ</dd><dt>"Banner"</dt><dd>バナー</dd><dt>"Thumbnail"</dt><dd>サムネイル</dd></dl></td><td><b>ページリスト項目スタイル</b></td></tr>
 <tr><td>nv.Config.PageList.ShowBookTitle</td><td>bool</td><td><b>ブック名を表示</b></td></tr>
 <tr><td>nv.Config.PageTitle.IsEnabled</td><td>bool</td><td><b>ページ タイトル: ページ タイトルを表示する</b><p class="remarks">マウス ポインターがスライダーやフィルムストリップの上にあるときに表示されます。</p></td></tr>
@@ -1411,6 +1424,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.Panels.IsLimitPanelWidth</td><td>bool</td><td><b>パネル幅を制限</b><p class="remarks">ウィンドウに収まるようにパネル幅を制限する</p></td></tr>
 <tr><td>nv.Config.Panels.IsManipulationBoundaryFeedbackEnabled</td><td>bool</td><td><b>サイド パネルタッチスクロールの終端バウンド</b></td></tr>
 <tr><td>nv.Config.Panels.IsSideBarEnabled</td><td>bool</td><td><b>サイド バーを表示する</b></td></tr>
+<tr><td>nv.Config.Panels.IsTextSearchEnabled</td><td>bool</td><td><b>入力テキストで項目を選択</b><p class="remarks">リスト上での単キーのショートカットは無効になります。</p></td></tr>
 <tr><td>nv.Config.Panels.IsVisibleItemsCount</td><td>bool</td><td><b>項目数を表示</b></td></tr>
 <tr><td>nv.Config.Panels.MouseWheelSpeedRate</td><td>double</td><td><b>サムネイル表示でのマウス ホイール スクロール速度倍率</b></td></tr>
 <tr><td>nv.Config.Panels.Opacity</td><td>double</td><td><b>パネル不透明度</b><p class="remarks">自動非表示の場合に有効です。</p></td></tr>
@@ -1485,7 +1499,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.System.IsRemoveWantNukeWarning</td><td>bool</td><td><b>ごみ箱に入らないサイズのファイルを削除するときに確認ダイアログを表示する</b></td></tr>
 <tr><td>nv.Config.System.IsSettingBackup</td><td>bool</td><td><b>設定ファイルのバックアップを作る</b><p class="remarks">設定ファイルのバックアップを作成し、もし通常の設定ファイルが読み込めない場合に代わりに読み込みます。ファイル名は "UserSetting.json.bak" です。更新タイミングは、設定ウィンドウを閉じた時と、アプリを終了した時です。</p></td></tr>
 <tr><td>nv.Config.System.IsSyncUserSetting</td><td>bool</td><td><b>設定を同期する</b><p class="remarks">多重起動しているとき、設定ウィンドウを閉じたときに他の NeeView の設定も更新します。</p></td></tr>
-<tr><td>nv.Config.System.Language</td><td>string</td><td><b>言語</b><p class="remarks">※次の起動から適用されます。</p></td></tr>
+<tr><td>nv.Config.System.Language</td><td>string</td><td><b>言語 (Language)</b><p class="remarks">※次の起動から適用されます。</p></td></tr>
 <tr><td>nv.Config.System.SearchHistorySize</td><td>int</td><td><b>検索履歴サイズ</b></td></tr>
 <tr><td>nv.Config.System.TemporaryDirectory</td><td>string</td><td><b>一時フォルダーの場所</b><p class="remarks">多重圧縮ファイルの展開や事前展開に使用されます。</p></td></tr>
 <tr><td>nv.Config.System.TextCopyPolicy</td><td><dl><dt>"None"</dt><dd>なし</dd><dt>"CopyFilePath"</dt><dd>一時ファイルのパス</dd><dt>"OriginalPath"</dt><dd>もとのパス</dd></dl></td><td><b>テキスト コピー</b><p class="remarks">「もとのパス」にすると、一時ファイルのテキストは元のファイルのパス名になります。</p></td></tr>
@@ -1515,7 +1529,8 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.View.AllowStretchScaleDown</td><td>bool</td><td><b>ストレッチで縮小を許可</b></td></tr>
 <tr><td>nv.Config.View.AllowStretchScaleUp</td><td>bool</td><td><b>ストレッチで拡大を許可</b></td></tr>
 <tr><td>nv.Config.View.AngleFrequency</td><td>double</td><td><b>回転スナップ</b></td></tr>
-<tr><td>nv.Config.View.FlipCenter</td><td><dl><dt>"View"</dt><dd>表示の中心</dd><dt>"Target"</dt><dd>画像の中心</dd><dt>"Cursor"</dt><dd>マウス ポインター位置</dd></dl></td><td><b>反転の中心</b></td></tr>
+<tr><td>nv.Config.View.AutoRotatePolicy</td><td><dl><dt>"FitToViewArea"</dt><dd>表示領域に合わせる</dd><dt>"ToLandscape"</dt><dd>横長にする</dd><dt>"ToPortrait"</dt><dd>縦長にする</dd></dl></td><td><b>自動回転の方針</b></td></tr>
+<tr><td>nv.Config.View.FlipCenter</td><td><dl><dt>"View"</dt><dd>表示の中心</dd><dt>"Target"</dt><dd>画像の中心</dd><dt>"Cursor"</dt><dd>マウス ポインター位置</dd><dt>"Auto"</dt><dd>自動</dd></dl></td><td><b>反転の中心</b></td></tr>
 <tr><td>nv.Config.View.IsBaseScaleEnabled</td><td>bool</td><td><b>基底スケール有効</b><p class="remarks">基底スケールを有効にします。</p></td></tr>
 <tr><td>nv.Config.View.IsKeepAngle</td><td>bool</td><td><b>ページを変更しても回転を維持する</b><p class="remarks">自動回転有効時はこの設定は機能しません。</p></td></tr>
 <tr><td>nv.Config.View.IsKeepAngleBooks</td><td>bool</td><td><b>ブックを変更しても回転を維持する</b><p class="remarks">「ページを変更しても回転を維持する」が有効なときに機能します。</p></td></tr>
@@ -1529,8 +1544,8 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.View.IsScaleStretchTracking</td><td>bool</td><td><b>ストレッチ追従</b><p class="remarks">回転している場合にストレッチ モードに応じてスケールを調整します。</p></td></tr>
 <tr><td>nv.Config.View.MainViewMargin</td><td>double</td><td><b>メインビューの余白 (ピクセル)</b></td></tr>
 <tr><td>nv.Config.View.PageMoveDuration</td><td>double</td><td><b>ページ移動時間 (秒)</b><p class="remarks">「パノラマ」が OFF の時に有効です。</p></td></tr>
-<tr><td>nv.Config.View.RotateCenter</td><td><dl><dt>"View"</dt><dd>表示の中心</dd><dt>"Target"</dt><dd>画像の中心</dd><dt>"Cursor"</dt><dd>マウス ポインター位置</dd></dl></td><td><b>回転の中心</b></td></tr>
-<tr><td>nv.Config.View.ScaleCenter</td><td><dl><dt>"View"</dt><dd>表示の中心</dd><dt>"Target"</dt><dd>画像の中心</dd><dt>"Cursor"</dt><dd>マウス ポインター位置</dd></dl></td><td><b>拡大縮小の中心</b></td></tr>
+<tr><td>nv.Config.View.RotateCenter</td><td><dl><dt>"View"</dt><dd>表示の中心</dd><dt>"Target"</dt><dd>画像の中心</dd><dt>"Cursor"</dt><dd>マウス ポインター位置</dd><dt>"Auto"</dt><dd>自動</dd></dl></td><td><b>回転の中心</b></td></tr>
+<tr><td>nv.Config.View.ScaleCenter</td><td><dl><dt>"View"</dt><dd>表示の中心</dd><dt>"Target"</dt><dd>画像の中心</dd><dt>"Cursor"</dt><dd>マウス ポインター位置</dd><dt>"Auto"</dt><dd>自動</dd></dl></td><td><b>拡大縮小の中心</b></td></tr>
 <tr><td>nv.Config.View.ScrollDuration</td><td>double</td><td><b>スクロール時間 (秒)</b></td></tr>
 <tr><td>nv.Config.View.StretchMode</td><td><dl><dt>"None"</dt><dd>オリジナル サイズ</dd><dt>"Uniform"</dt><dd>ウィンドウに合わせる</dd><dt>"UniformToFill"</dt><dd>ウィンドウいっぱいに広げる</dd><dt>"UniformToSize"</dt><dd>面積をウィンドウに合わせる</dd><dt>"UniformToVertical"</dt><dd>高さをウィンドウに合わせる</dd><dt>"UniformToHorizontal"</dt><dd>幅をウィンドウに合わせる</dd></dl></td><td><b>ストレッチ モード</b></td></tr>
 <tr><td>nv.Config.View.ViewHorizontalOrigin</td><td><dl><dt>"Center"</dt><dd>中央</dd><dt>"Left"</dt><dd>左寄せ</dd><dt>"Right"</dt><dd>右寄せ</dd><dt>"DirectionDependent"</dt><dd>方向に依存</dd><dt>"CenterOrLeft"</dt><dd>中央。表示領域より大きければ左寄せ</dd><dt>"CenterOrRight"</dt><dd>中央。表示領域より大きければ右寄せ</dd><dt>"CenterOrDirectionDependent"</dt><dd>中央。表示領域より大きければ方向に依存</dd></dl></td><td><b>開始時の水平配置</b></td></tr>
@@ -1602,7 +1617,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr>
 <td class="nowrap">ExportImage</td>
 </td><td></td>
-<td><dl><dt><b>Mode</b>: enum</dt><dd>"Original": 元ファイルのまま保存 / "View": 表示を保存<br/>出力画像の種類。<dd/><dt><b>HasBackground</b>: bool</dt><dd>背景を含める。<dd/><dt><b>IsOriginalSize</b>: bool</dt><dd>オリジナル サイズで出力。<dd/><dt><b>IsDotKeep</b>: bool</dt><dd>ドットを維持。<dd/><dt><b>ExportFolder</b>: string</dt><dd>出力フォルダー。<dd/><dt><b>FileNameMode</b>: enum</dt><dd>"Original": 元ファイルのまま / "BookPageNumber": ブック名 + ページ番号<br/>出力ファイル名。<dd/><dt><b>FileFormat</b>: enum</dt><dd>"Png": PNG / "Jpeg": JPEG<br/>出力ファイル フォーマット。 「出力画像の種類」が「表示を保存」の場合に使用されます。<dd/><dt><b>QualityLevel</b>: int</dt><dd>JPEG 品質。 変換が必要な場合にのみ使用されます。<dd/><dt><b>IsShowToast</b>: bool</dt><dd>トースト通知。<dd/></dl></td>
+<td><dl><dt><b>Mode</b>: enum</dt><dd>"Original": 元ファイルのまま保存 / "View": 表示を保存<br/>出力画像の種類。<dd/><dt><b>HasBackground</b>: bool</dt><dd>背景を含める。<dd/><dt><b>IsOriginalSize</b>: bool</dt><dd>オリジナル サイズで出力。<dd/><dt><b>IsDotKeep</b>: bool</dt><dd>ドットを維持。<dd/><dt><b>ExportFolder</b>: string</dt><dd>出力フォルダー。<dd/><dt><b>FileNameMode</b>: enum</dt><dd>"Original": 元ファイルのまま / "BookPageNumber": ブック名 + ページ番号<br/>出力ファイル名。<dd/><dt><b>FileFormat</b>: enum</dt><dd>"Png": PNG / "Jpeg": JPEG<br/>出力ファイル フォーマット。 「出力画像の種類」が「表示を保存」の場合に使用されます。<dd/><dt><b>QualityLevel</b>: int</dt><dd>JPEG 品質。 変換が必要な場合にのみ使用されます。<dd/><dt><b>IsShowToast</b>: bool</dt><dd>トースト通知。<dd/><dt><b>OverwriteMode</b>: enum</dt><dd>"Confirm": 確認する / "AddNumber": 数字を追加<br/>上書きモード。<dd/></dl></td>
 <td><b>ファイルに保存</b><p class="remarks">画像をファイルに保存します。保存フォルダーはコマンド パラメーターで指定します。</p></td>
 </tr>
 <tr>
@@ -1622,6 +1637,12 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 </td><td></td>
 <td></td>
 <td><b>ブックを削除</b><p class="remarks">現在閲覧中のフォルダーまたは圧縮ファイルを削除します。</p></td>
+</tr>
+<tr>
+<td class="nowrap">CutFile</td>
+</td><td></td>
+<td><dl><dt><b>MultiPagePolicy</b>: enum</dt><dd>"Once": 1 ページのみ実行する / "All": 全てのページを実行する / "AllLeftToRight": 全てのページを実行する (左から右)<br/>2 ページの場合。<dd/></dl></td>
+<td><b>ファイルを切り取り</b><p class="remarks">ファイルをクリップボードに切り取ります。</p></td>
 </tr>
 <tr>
 <td class="nowrap">CopyFile</td>
@@ -1740,12 +1761,6 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <td></td>
 <td><b>縮小を許可</b><p class="remarks">ストレッチの適用で縮小を許可します。</p></td>
 </tr>
-<tr>
-<td class="nowrap">ToggleCustomSize</td>
-</td><td><dl><dt>switch: bool</dt><dd>有効/無効。省略した場合は切り替え。</dd></dl></td>
-<td></td>
-<td><b>サイズ指定の有効/無効</b><p class="remarks">オリジナルサイズに適用されるサイズ指定の有効/無効を切り替えます。</p></td>
-</tr>
 </table>
 <h3>エフェクト</h3>
 <table>
@@ -1802,6 +1817,18 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 </td><td></td>
 <td></td>
 <td><b>背景をカスタム背景にする</b><p class="remarks">背景をカスタム背景にします。</p></td>
+</tr>
+<tr>
+<td class="nowrap">ToggleCustomSize</td>
+</td><td><dl><dt>switch: bool</dt><dd>有効/無効。省略した場合は切り替え。</dd></dl></td>
+<td></td>
+<td><b>サイズ指定の有効/無効</b><p class="remarks">オリジナルサイズに適用されるサイズ指定の有効/無効を切り替えます。</p></td>
+</tr>
+<tr>
+<td class="nowrap">ToggleTrim</td>
+</td><td><dl><dt>switch: bool</dt><dd>有効/無効。省略した場合は切り替え。</dd></dl></td>
+<td></td>
+<td><b>トリミング有効/無効</b><p class="remarks">トリミングの有効/無効を切り替えます。</p></td>
 </tr>
 <tr>
 <td class="nowrap">ToggleResizeFilter</td>
@@ -2022,7 +2049,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr>
 <td class="nowrap">FocusMainView</td>
 </td><td></td>
-<td><dl><dt><b>NeedClosePanels</b>: bool</dt><dd>全てのパネルを閉じる。<dd/></dl></td>
+<td><dl><dt><b>NeedClosePanels</b>: bool</dt><dd>全てのパネルを閉じる。<dd/><dt><b>IsToggle</b>: bool</dt><dd>交互に切り替える。<dd/></dl></td>
 <td><b>メインビューにフォーカスを移す</b><p class="remarks">メインビューにフォーカスを移します。</p></td>
 </tr>
 <tr>
@@ -2076,13 +2103,13 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr>
 <td class="nowrap">ViewScrollNTypeUp</td>
 </td><td></td>
-<td><dl><dt><b>ScrollType</b>: enum</dt><dd>"NType": N字スクロール / "ZType": Z字スクロール / "Diagonal": 斜めスクロール<br/>スクロール タイプ。<dd/><dt><b>Scroll</b>: double</dt><dd>移動量。 一度の操作でスクロールするする画面に対する割合です。<dd/><dt><b>LineBreakStopTime</b>: double</dt><dd>改行停止 (秒)。 すぐに改行させないための待機時間です。<dd/><dt><b>PagesAsOne</b>: bool</dt><dd>パノラマ モードでは全てのページを 1 ページとみなす。<dd/><dt><b>IsReverse</b>: bool</dt><dd>スライダー方向による操作入れ替え許可。 スライダー方向の変更による操作入れ替えを許可します。<dd/></dl></td>
+<td><dl><dt><b>ScrollType</b>: enum</dt><dd>"NType": N字スクロール / "ZType": Z字スクロール / "Diagonal": 斜めスクロール / "Horizontal": 水平スクロール / "Vertical": 垂直スクロール<br/>スクロール タイプ。<dd/><dt><b>Scroll</b>: double</dt><dd>移動量。 一度の操作でスクロールするする画面に対する割合です。<dd/><dt><b>LineBreakStopTime</b>: double</dt><dd>改行停止 (秒)。 すぐに改行させないための待機時間です。<dd/><dt><b>PagesAsOne</b>: bool</dt><dd>パノラマ モードでは全てのページを 1 ページとみなす。<dd/><dt><b>IsReverse</b>: bool</dt><dd>スライダー方向による操作入れ替え許可。 スライダー方向の変更による操作入れ替えを許可します。<dd/></dl></td>
 <td><b>N字スクロール↑</b><p class="remarks">縦横スクロールが可能な場合、N字を描くようにスクロールします。</p></td>
 </tr>
 <tr>
 <td class="nowrap">ViewScrollNTypeDown</td>
 </td><td></td>
-<td><dl><p style="color:red">「ViewScrollNTypeUp」と共通のパラメーターです。</p><dt><b>ScrollType</b>: enum</dt><dd>"NType": N字スクロール / "ZType": Z字スクロール / "Diagonal": 斜めスクロール<br/>スクロール タイプ。<dd/><dt><b>Scroll</b>: double</dt><dd>移動量。 一度の操作でスクロールするする画面に対する割合です。<dd/><dt><b>LineBreakStopTime</b>: double</dt><dd>改行停止 (秒)。 すぐに改行させないための待機時間です。<dd/><dt><b>PagesAsOne</b>: bool</dt><dd>パノラマ モードでは全てのページを 1 ページとみなす。<dd/><dt><b>IsReverse</b>: bool</dt><dd>スライダー方向による操作入れ替え許可。 スライダー方向の変更による操作入れ替えを許可します。<dd/></dl></td>
+<td><dl><p style="color:red">「ViewScrollNTypeUp」と共通のパラメーターです。</p><dt><b>ScrollType</b>: enum</dt><dd>"NType": N字スクロール / "ZType": Z字スクロール / "Diagonal": 斜めスクロール / "Horizontal": 水平スクロール / "Vertical": 垂直スクロール<br/>スクロール タイプ。<dd/><dt><b>Scroll</b>: double</dt><dd>移動量。 一度の操作でスクロールするする画面に対する割合です。<dd/><dt><b>LineBreakStopTime</b>: double</dt><dd>改行停止 (秒)。 すぐに改行させないための待機時間です。<dd/><dt><b>PagesAsOne</b>: bool</dt><dd>パノラマ モードでは全てのページを 1 ページとみなす。<dd/><dt><b>IsReverse</b>: bool</dt><dd>スライダー方向による操作入れ替え許可。 スライダー方向の変更による操作入れ替えを許可します。<dd/></dl></td>
 <td><b>N字スクロール↓</b><p class="remarks">縦横スクロールが可能な場合、N字を描くようにスクロールします。</p></td>
 </tr>
 <tr>
@@ -2289,13 +2316,13 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr>
 <td class="nowrap">PrevScrollPage</td>
 </td><td></td>
-<td><dl><dt><b>ScrollType</b>: enum</dt><dd>"NType": N字スクロール / "ZType": Z字スクロール / "Diagonal": 斜めスクロール<br/>スクロール タイプ。<dd/><dt><b>Scroll</b>: double</dt><dd>移動量。 一度の操作でスクロールするする画面に対する割合です。<dd/><dt><b>EndMargin</b>: double</dt><dd>スクロール終端マージン (ピクセル)。 このスクロール距離未満では行移動が優先されます。<dd/><dt><b>LineBreakStopTime</b>: double</dt><dd>改行停止 (秒)。 すぐに改行させないための待機時間です。<dd/><dt><b>LineBreakStopMode</b>: enum</dt><dd>"Line": 行 / "Page": ページ<br/>改行動停止モード。 行単位か、ページ単位か。<dd/><dt><b>PagesAsOne</b>: bool</dt><dd>パノラマ モードでは全てのページを 1 ページとみなす。<dd/><dt><b>IsReverse</b>: bool</dt><dd>スライダー方向による操作入れ替え許可。 スライダー方向の変更による操作入れ替えを許可します。<dd/></dl></td>
+<td><dl><dt><b>ScrollType</b>: enum</dt><dd>"NType": N字スクロール / "ZType": Z字スクロール / "Diagonal": 斜めスクロール / "Horizontal": 水平スクロール / "Vertical": 垂直スクロール<br/>スクロール タイプ。<dd/><dt><b>Scroll</b>: double</dt><dd>移動量。 一度の操作でスクロールするする画面に対する割合です。<dd/><dt><b>EndMargin</b>: double</dt><dd>スクロール終端マージン (ピクセル)。 このスクロール距離未満では行移動が優先されます。<dd/><dt><b>LineBreakStopTime</b>: double</dt><dd>改行停止 (秒)。 すぐに改行させないための待機時間です。<dd/><dt><b>LineBreakStopMode</b>: enum</dt><dd>"Line": 行 / "Page": ページ<br/>改行動停止モード。 行単位か、ページ単位か。<dd/><dt><b>PagesAsOne</b>: bool</dt><dd>パノラマ モードでは全てのページを 1 ページとみなす。<dd/><dt><b>IsReverse</b>: bool</dt><dd>スライダー方向による操作入れ替え許可。 スライダー方向の変更による操作入れ替えを許可します。<dd/></dl></td>
 <td><b>スクロール＋前のページに戻る</b><p class="remarks">ページ前方向に画像をスクロールさせます。スクロールできない場合は前ページに移動します。ルーペ使用時はページ移動のみ行います。</p></td>
 </tr>
 <tr>
 <td class="nowrap">NextScrollPage</td>
 </td><td></td>
-<td><dl><p style="color:red">「PrevScrollPage」と共通のパラメーターです。</p><dt><b>ScrollType</b>: enum</dt><dd>"NType": N字スクロール / "ZType": Z字スクロール / "Diagonal": 斜めスクロール<br/>スクロール タイプ。<dd/><dt><b>Scroll</b>: double</dt><dd>移動量。 一度の操作でスクロールするする画面に対する割合です。<dd/><dt><b>EndMargin</b>: double</dt><dd>スクロール終端マージン (ピクセル)。 このスクロール距離未満では行移動が優先されます。<dd/><dt><b>LineBreakStopTime</b>: double</dt><dd>改行停止 (秒)。 すぐに改行させないための待機時間です。<dd/><dt><b>LineBreakStopMode</b>: enum</dt><dd>"Line": 行 / "Page": ページ<br/>改行動停止モード。 行単位か、ページ単位か。<dd/><dt><b>PagesAsOne</b>: bool</dt><dd>パノラマ モードでは全てのページを 1 ページとみなす。<dd/><dt><b>IsReverse</b>: bool</dt><dd>スライダー方向による操作入れ替え許可。 スライダー方向の変更による操作入れ替えを許可します。<dd/></dl></td>
+<td><dl><p style="color:red">「PrevScrollPage」と共通のパラメーターです。</p><dt><b>ScrollType</b>: enum</dt><dd>"NType": N字スクロール / "ZType": Z字スクロール / "Diagonal": 斜めスクロール / "Horizontal": 水平スクロール / "Vertical": 垂直スクロール<br/>スクロール タイプ。<dd/><dt><b>Scroll</b>: double</dt><dd>移動量。 一度の操作でスクロールするする画面に対する割合です。<dd/><dt><b>EndMargin</b>: double</dt><dd>スクロール終端マージン (ピクセル)。 このスクロール距離未満では行移動が優先されます。<dd/><dt><b>LineBreakStopTime</b>: double</dt><dd>改行停止 (秒)。 すぐに改行させないための待機時間です。<dd/><dt><b>LineBreakStopMode</b>: enum</dt><dd>"Line": 行 / "Page": ページ<br/>改行動停止モード。 行単位か、ページ単位か。<dd/><dt><b>PagesAsOne</b>: bool</dt><dd>パノラマ モードでは全てのページを 1 ページとみなす。<dd/><dt><b>IsReverse</b>: bool</dt><dd>スライダー方向による操作入れ替え許可。 スライダー方向の変更による操作入れ替えを許可します。<dd/></dl></td>
 <td><b>スクロール＋次のページに進む</b><p class="remarks">ページ次方向に画像をスクロールさせます。スクロールできない場合は次ページに移動します。ルーペ使用時はページ移動のみ行います。</p></td>
 </tr>
 <tr>
@@ -2946,6 +2973,18 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
   <tr>
     <td>Warning</td>
     <td>nv.Command.CopyFile.Parameter.TextCopyPolicy</td>
+    <td class="nowrap">廃止</td>
+    <td>nv.Config.System.TextCopyPolicy</td>
+  </tr>
+  <tr>
+    <td>Warning</td>
+    <td>nv.Command.CutFile.Parameter.ArchivePolicy</td>
+    <td class="nowrap">廃止</td>
+    <td>nv.Config.System.ArchiveCopyPolicy</td>
+  </tr>
+  <tr>
+    <td>Warning</td>
+    <td>nv.Command.CutFile.Parameter.TextCopyPolicy</td>
     <td class="nowrap">廃止</td>
     <td>nv.Config.System.TextCopyPolicy</td>
   </tr>

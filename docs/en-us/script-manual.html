@@ -6,6 +6,8 @@ title: Script Manual
 
 <h1>Script Manual</h1>
 
+<p>Version 43.0</p>
+
 <ul>
     <li><a href="#s1">Overview</a></li>
     <li><a href="#s2">Command script</a></li>
@@ -705,10 +707,12 @@ nv.Command.ViewRotateLeft.Patch({"Angle": 5}).Execute()</code></pre></p>
 <p><table>
 <tr><td>AudioTrack</td><td><a href="#TrackCollectionAccessor">TrackCollectionAccessor</a></td><td>r</td><td class="td-middle">Audio Track Management. If it does not exist, null</td></tr>
 <tr><td>Duration</td><td>double</td><td>r</td><td class="td-middle">Media duration (seconds)</td></tr>
+<tr><td>IsDisposed</td><td>bool</td><td>r</td><td class="td-middle">Disposed instance</td></tr>
 <tr><td>IsMuted</td><td>bool</td><td>rw</td><td class="td-middle">Mute mode ON/OFF</td></tr>
 <tr><td>IsPlaying</td><td>bool</td><td>rw</td><td class="td-middle">Playback ON/OFF</td></tr>
 <tr><td>IsRepeat</td><td>bool</td><td>rw</td><td class="td-middle">Repeat mode ON/OFF</td></tr>
 <tr><td>Position</td><td>double</td><td>rw</td><td class="td-middle">Current position (0.0-1.0)</td></tr>
+<tr><td>Rate</td><td>double</td><td>rw</td><td class="td-middle">Speed</td></tr>
 <tr><td>Subtitle</td><td><a href="#TrackCollectionAccessor">TrackCollectionAccessor</a></td><td>r</td><td class="td-middle">Subtitle Track Management. If it does not exist, null</td></tr>
 <tr><td>Volume</td><td>double</td><td>rw</td><td class="td-middle">Volume (0.0-1.0)</td></tr>
 </table></p>
@@ -1054,6 +1058,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>Smart</td><td>Smart</td></tr>
 <tr><td>NameOnly</td><td>Name</td></tr>
 <tr><td>Raw</td><td>Raw</td></tr>
+<tr><td>PageNumber</td><td>Page number</td></tr>
 </table></p>
 <h3 id="PageReadOrder">[Enum] PageReadOrder</h3>
 <p>Page read order</p>
@@ -1100,12 +1105,13 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <th class="td-middle">Type</th>
 <th class="td-middle">Summary</th>
 </tr>
+<tr><td>nv.Config.Archive.Media.DefaultSubtitle</td><td><dl><dt>"Default"</dt><dd>Default</dd><dt>"Disable"</dt><dd>Disable</dd></dl></td><td><b>Default Subtitle</b></td></tr>
 <tr><td>nv.Config.Archive.Media.IsEnabled</td><td>bool</td><td><b>Open video as a book</b></td></tr>
-<tr><td>nv.Config.Archive.Media.IsLibVlcEnabled</td><td>bool</td><td><b>Play videos using libVLC</b><p class="remarks">VLC media player is required. Many video formats are supported, and subtitles and audio channels can be selected.</p></td></tr>
+<tr><td>nv.Config.Archive.Media.IsLibVlcEnabled</td><td>bool</td><td><b>Play videos using libVLC</b><p class="remarks">VLC media player 3.x is required. Many video formats are supported, and subtitles and audio channels can be selected.</p></td></tr>
 <tr><td>nv.Config.Archive.Media.IsMediaPageEnabled</td><td>bool</td><td><b>Open video as a page</b></td></tr>
 <tr><td>nv.Config.Archive.Media.IsMuted</td><td>bool</td><td><b>Mute video</b></td></tr>
 <tr><td>nv.Config.Archive.Media.IsRepeat</td><td>bool</td><td><b>Video repeat</b></td></tr>
-<tr><td>nv.Config.Archive.Media.LibVlcPath</td><td>string</td><td><b>libVLC directory</b><p class="remarks">Directory where the 64-bit version of libvlc.dll resides. This is usually the VLC media player installation folder.</p></td></tr>
+<tr><td>nv.Config.Archive.Media.LibVlcPath</td><td>string</td><td><b>libVLC directory</b><p class="remarks">Directory where the 64-bit version of libvlc.dll 3.x resides. This is usually the VLC media player 3.x installation folder.</p></td></tr>
 <tr><td>nv.Config.Archive.Media.MediaStartDelaySeconds</td><td>double</td><td><b>Play start delay (sec)</b><p class="remarks">If 0 is specified, the contents may flicker.</p></td></tr>
 <tr><td>nv.Config.Archive.Media.PageSeconds</td><td>double</td><td><b>Change time in page movement (sec)</b></td></tr>
 <tr><td>nv.Config.Archive.Media.SupportFileTypes</td><td>".ex1;.ex2;.ex3"</td><td><b>Video file extension</b><p class="remarks">Probably what you can play with Windows Media Player is playable.</p></td></tr>
@@ -1152,8 +1158,10 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.Book.IsReadyToPageMove</td><td>bool</td><td><b>Ready to page move</b><p class="remarks">Switch display when page is ready. Not valid in "Panorama".</p></td></tr>
 <tr><td>nv.Config.Book.IsSortFileFirst</td><td>bool</td><td><b>Sort pages by file first</b><p class="remarks">Arrange files before folders.</p></td></tr>
 <tr><td>nv.Config.Book.IsStaticWidePage</td><td>bool</td><td><b>Static two pages</b><p class="remarks">The base page for the two pages display is determined by numbers only. Slider movement follows suit.</p></td></tr>
+<tr><td>nv.Config.Book.LoadingPageColor</td><td>"#AARRGGBB"</td><td><b>Loading page color</b></td></tr>
 <tr><td>nv.Config.Book.Orientation</td><td><dl><dt>"Horizontal"</dt><dd>Horizontal</dd><dt>"Vertical"</dt><dd>Vertical</dd></dl></td><td><b>Page layout orientation</b></td></tr>
 <tr><td>nv.Config.Book.PageEndAction</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"NextBook"</dt><dd>Move to next book</dd><dt>"Loop"</dt><dd>Loop</dd><dt>"SeamlessLoop"</dt><dd>Seamless loop</dd><dt>"Dialog"</dt><dd>Select in dialog</dd></dl></td><td><b>Behavior when trying to move past the end of the page</b></td></tr>
+<tr><td>nv.Config.Book.ResetNextBookPage</td><td>bool</td><td><b>Reset next book page</b><p class="remarks">Reset the page when moving to the next book with "Behavior when trying to move past the end of the page"</p></td></tr>
 <tr><td>nv.Config.Book.ResetPageWhenRandomSort</td><td>bool</td><td><b>Reset page when shuffle</b></td></tr>
 <tr><td>nv.Config.Book.TerminalSound</td><td>string</td><td><b>Sound when not able to move</b></td></tr>
 <tr><td>nv.Config.Book.WidePageStretch</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"UniformHeight"</dt><dd>Uniform height</dd><dt>"UniformWidth"</dt><dd>Uniform width</dd></dl></td><td><b>How to align sizes in "Two pages"</b></td></tr>
@@ -1241,6 +1249,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.History.IsAutoCleanupEnabled</td><td>bool</td><td><b>Automatically delete invalid history at startup</b></td></tr>
 <tr><td>nv.Config.History.IsCurrentFolder</td><td>bool</td><td><b>Current folder only</b><p class="remarks">Shows the history of only the folders of the currently open book.</p></td></tr>
 <tr><td>nv.Config.History.IsForceUpdateHistory</td><td>bool</td><td><b>Even if you open a book from history, it updates the last browsing date</b></td></tr>
+<tr><td>nv.Config.History.IsGroupBy</td><td>bool</td><td><b>@HistoryConfig.IsGroupBy</b></td></tr>
 <tr><td>nv.Config.History.IsInnerArchiveHistoryEnabled</td><td>bool</td><td><b>Save recursive compressed file in history</b></td></tr>
 <tr><td>nv.Config.History.IsKeepFolderStatus</td><td>bool</td><td><b>Save folder state</b></td></tr>
 <tr><td>nv.Config.History.IsKeepSearchHistory</td><td>bool</td><td><b>Save search history</b></td></tr>
@@ -1357,6 +1366,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.MenuBar.IsHideMenu</td><td>bool</td><td><b>Hide menu automatically</b></td></tr>
 <tr><td>nv.Config.MenuBar.IsHideMenuInAutoHideMode</td><td>bool</td><td><b>Automatically hide the menu when it is auto-hide mode</b></td></tr>
 <tr><td>nv.Config.MenuBar.IsVisible</td><td>bool</td><td><b>Menu visibility (Read only)</b></td></tr>
+<tr><td>nv.Config.Mouse.AutoScrollSensitivity</td><td>double</td><td><b>Auto scroll sensitivity</b></td></tr>
 <tr><td>nv.Config.Mouse.CursorHideReleaseDistance</td><td>double</td><td><b>Move distance to redisplay (pixel)</b></td></tr>
 <tr><td>nv.Config.Mouse.CursorHideTime</td><td>double</td><td><b>Hide time (sec)</b></td></tr>
 <tr><td>nv.Config.Mouse.GestureMinimumDistance</td><td>double</td><td><b>Mouse gesture stroke (pixel)</b><p class="remarks">By moving this distance, it is judged as a gesture stroke.</p></td></tr>
@@ -1367,11 +1377,14 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.Mouse.IsDragEnabled</td><td>bool</td><td><b>Use mouse drag</b></td></tr>
 <tr><td>nv.Config.Mouse.IsGestureEnabled</td><td>bool</td><td><b>Use mouse gesture</b></td></tr>
 <tr><td>nv.Config.Mouse.IsHoverScroll</td><td>bool</td><td><b>Hover scroll mode</b></td></tr>
+<tr><td>nv.Config.Mouse.IsMouseWheelScrollEnabled</td><td>bool</td><td><b>Use mouse wheel scroll</b><p class="remarks">Image scrolling by mouse wheel. Commands for the same operation are canceled.</p></td></tr>
 <tr><td>nv.Config.Mouse.LongButtonDownMode</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Loupe"</dt><dd>Loupe</dd><dt>"AutoScroll"</dt><dd>Auto scroll</dd><dt>"Repeat"</dt><dd>Repeat input</dd></dl></td><td><b>Long press mode</b></td></tr>
 <tr><td>nv.Config.Mouse.LongButtonDownTime</td><td>double</td><td><b>Long press decision time (sec)</b><p class="remarks">It is time to be judged to be long pressed.</p></td></tr>
 <tr><td>nv.Config.Mouse.LongButtonMask</td><td><dl><dt>"Left"</dt><dd>Left button</dd><dt>"Right"</dt><dd>Right button</dd><dt>"All"</dt><dd>All buttons</dd></dl></td><td><b>Long press button</b></td></tr>
 <tr><td>nv.Config.Mouse.LongButtonRepeatTime</td><td>double</td><td><b>Repeat interval (sec)</b><p class="remarks">Repeat time with repeat input.</p></td></tr>
 <tr><td>nv.Config.Mouse.MinimumDragDistance</td><td>double</td><td><b>Drag starting distance (pixel)</b><p class="remarks">First moving distance to become a drag or gesture</p></td></tr>
+<tr><td>nv.Config.Mouse.MouseWheelScrollDuration</td><td>double</td><td><b>Mouse wheel scroll duration (sec)</b></td></tr>
+<tr><td>nv.Config.Mouse.MouseWheelScrollSensitivity</td><td>double</td><td><b>Mouse wheel scroll sensitivity</b></td></tr>
 <tr><td>nv.Config.Navigator.IsVisibleControlBar</td><td>bool</td><td><b>Control bar in the navigator panel</b></td></tr>
 <tr><td>nv.Config.Navigator.IsVisibleThumbnail</td><td>bool</td><td><b>Show thumbnail</b></td></tr>
 <tr><td>nv.Config.Navigator.ThumbnailHeight</td><td>double</td><td><b>Thumbnail area height</b></td></tr>
@@ -1385,7 +1398,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.Notice.NowLoadingShowMessageStyle</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Normal"</dt><dd>Visible</dd><dt>"Tiny"</dt><dd>Tiny</dd></dl></td><td><b>Show Now Loading</b></td></tr>
 <tr><td>nv.Config.Notice.ViewTransformShowMessageStyle</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Normal"</dt><dd>Visible</dd><dt>"Tiny"</dt><dd>Tiny</dd></dl></td><td><b>Show status change by drag operation</b></td></tr>
 <tr><td>nv.Config.PageList.FocusMainView</td><td>bool</td><td><b>Focus to main view</b><p class="remarks">After selecting a page, move the focus to the main view.</p></td></tr>
-<tr><td>nv.Config.PageList.Format</td><td><dl><dt>"Smart"</dt><dd>Smart</dd><dt>"NameOnly"</dt><dd>Name</dd><dt>"Raw"</dt><dd>Raw</dd></dl></td><td><b>Page name display format of PageList</b></td></tr>
+<tr><td>nv.Config.PageList.Format</td><td><dl><dt>"Smart"</dt><dd>Smart</dd><dt>"NameOnly"</dt><dd>Name</dd><dt>"Raw"</dt><dd>Raw</dd><dt>"PageNumber"</dt><dd>Page number</dd></dl></td><td><b>Page name display format of PageList</b></td></tr>
 <tr><td>nv.Config.PageList.PanelListItemStyle</td><td><dl><dt>"Normal"</dt><dd>Text</dd><dt>"Content"</dt><dd>Content</dd><dt>"Banner"</dt><dd>Banner</dd><dt>"Thumbnail"</dt><dd>Thumbnail</dd></dl></td><td><b>PageList item style</b></td></tr>
 <tr><td>nv.Config.PageList.ShowBookTitle</td><td>bool</td><td><b>Show book title</b></td></tr>
 <tr><td>nv.Config.PageTitle.IsEnabled</td><td>bool</td><td><b>Page title: Show page title</b><p class="remarks">Appears when the cursor is over a slider or filmstrip.</p></td></tr>
@@ -1411,6 +1424,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.Panels.IsLimitPanelWidth</td><td>bool</td><td><b>Limit panel width</b><p class="remarks">Limit the width of the panel to fit in the window</p></td></tr>
 <tr><td>nv.Config.Panels.IsManipulationBoundaryFeedbackEnabled</td><td>bool</td><td><b>Touch scroll termination bound on side panel</b></td></tr>
 <tr><td>nv.Config.Panels.IsSideBarEnabled</td><td>bool</td><td><b>Show side bars</b></td></tr>
+<tr><td>nv.Config.Panels.IsTextSearchEnabled</td><td>bool</td><td><b>Select item with input text</b><p class="remarks">Single-key shortcuts on the list are disabled.</p></td></tr>
 <tr><td>nv.Config.Panels.IsVisibleItemsCount</td><td>bool</td><td><b>Show number of items</b></td></tr>
 <tr><td>nv.Config.Panels.MouseWheelSpeedRate</td><td>double</td><td><b>Mouse wheel scroll speed rate in thumbnail view</b></td></tr>
 <tr><td>nv.Config.Panels.Opacity</td><td>double</td><td><b>Panel opacity</b><p class="remarks">It is effective in auto-hide mode.</p></td></tr>
@@ -1515,7 +1529,8 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.View.AllowStretchScaleDown</td><td>bool</td><td><b>Allow scale down on stretch</b></td></tr>
 <tr><td>nv.Config.View.AllowStretchScaleUp</td><td>bool</td><td><b>Allow scale up on stretch</b></td></tr>
 <tr><td>nv.Config.View.AngleFrequency</td><td>double</td><td><b>Rotating Snap</b></td></tr>
-<tr><td>nv.Config.View.FlipCenter</td><td><dl><dt>"View"</dt><dd>View center</dd><dt>"Target"</dt><dd>Image center</dd><dt>"Cursor"</dt><dd>Cursor position</dd></dl></td><td><b>Center of flip</b></td></tr>
+<tr><td>nv.Config.View.AutoRotatePolicy</td><td><dl><dt>"FitToViewArea"</dt><dd>Fit to display area</dd><dt>"ToLandscape"</dt><dd>To landscape</dd><dt>"ToPortrait"</dt><dd>To portrait</dd></dl></td><td><b>Auto rotate policy</b></td></tr>
+<tr><td>nv.Config.View.FlipCenter</td><td><dl><dt>"View"</dt><dd>View center</dd><dt>"Target"</dt><dd>Image center</dd><dt>"Cursor"</dt><dd>Cursor position</dd><dt>"Auto"</dt><dd>Auto</dd></dl></td><td><b>Center of flip</b></td></tr>
 <tr><td>nv.Config.View.IsBaseScaleEnabled</td><td>bool</td><td><b>Enable base scale</b><p class="remarks">Enable base scale.</p></td></tr>
 <tr><td>nv.Config.View.IsKeepAngle</td><td>bool</td><td><b>Maintain the angle even when changing pages</b><p class="remarks">This setting does not work when automatic rotation is enabled.</p></td></tr>
 <tr><td>nv.Config.View.IsKeepAngleBooks</td><td>bool</td><td><b>Maintain the angle even when changing books</b><p class="remarks">Works when "Maintain the angle even when changing pages" is enabled.</p></td></tr>
@@ -1529,8 +1544,8 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.View.IsScaleStretchTracking</td><td>bool</td><td><b>Stretch tracking</b><p class="remarks">Adjusts the scale according to the stretch mode when rotating.</p></td></tr>
 <tr><td>nv.Config.View.MainViewMargin</td><td>double</td><td><b>Main view margin (pixel)</b></td></tr>
 <tr><td>nv.Config.View.PageMoveDuration</td><td>double</td><td><b>Page move time (sec)</b><p class="remarks">Effective when "Panorama" is off.</p></td></tr>
-<tr><td>nv.Config.View.RotateCenter</td><td><dl><dt>"View"</dt><dd>View center</dd><dt>"Target"</dt><dd>Image center</dd><dt>"Cursor"</dt><dd>Cursor position</dd></dl></td><td><b>Center of rotation</b></td></tr>
-<tr><td>nv.Config.View.ScaleCenter</td><td><dl><dt>"View"</dt><dd>View center</dd><dt>"Target"</dt><dd>Image center</dd><dt>"Cursor"</dt><dd>Cursor position</dd></dl></td><td><b>Center of scaling</b></td></tr>
+<tr><td>nv.Config.View.RotateCenter</td><td><dl><dt>"View"</dt><dd>View center</dd><dt>"Target"</dt><dd>Image center</dd><dt>"Cursor"</dt><dd>Cursor position</dd><dt>"Auto"</dt><dd>Auto</dd></dl></td><td><b>Center of rotation</b></td></tr>
+<tr><td>nv.Config.View.ScaleCenter</td><td><dl><dt>"View"</dt><dd>View center</dd><dt>"Target"</dt><dd>Image center</dd><dt>"Cursor"</dt><dd>Cursor position</dd><dt>"Auto"</dt><dd>Auto</dd></dl></td><td><b>Center of scaling</b></td></tr>
 <tr><td>nv.Config.View.ScrollDuration</td><td>double</td><td><b>Scroll time (sec)</b></td></tr>
 <tr><td>nv.Config.View.StretchMode</td><td><dl><dt>"None"</dt><dd>Original size</dd><dt>"Uniform"</dt><dd>Fit to window size</dd><dt>"UniformToFill"</dt><dd>Extend it to fill the window</dd><dt>"UniformToSize"</dt><dd>Fit the area size to the window</dd><dt>"UniformToVertical"</dt><dd>Fit height to window</dd><dt>"UniformToHorizontal"</dt><dd>Fit width to window</dd></dl></td><td><b>Stretch mode</b></td></tr>
 <tr><td>nv.Config.View.ViewHorizontalOrigin</td><td><dl><dt>"Center"</dt><dd>Center</dd><dt>"Left"</dt><dd>Left alignment</dd><dt>"Right"</dt><dd>Right alignment</dd><dt>"DirectionDependent"</dt><dd>Direction dependent</dd><dt>"CenterOrLeft"</dt><dd>Center. Left alignment if larger than display area</dd><dt>"CenterOrRight"</dt><dd>Center. Right alignment if larger than display area</dd><dt>"CenterOrDirectionDependent"</dt><dd>Center. Direction dependent if larger than display area</dd></dl></td><td><b>Horizontal alignment at start</b></td></tr>
@@ -1602,7 +1617,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr>
 <td class="nowrap">ExportImage</td>
 </td><td></td>
-<td><dl><dt><b>Mode</b>: enum</dt><dd>"Original": Save as original file / "View": Save view<br/>Output image type.<dd/><dt><b>HasBackground</b>: bool</dt><dd>Include background.<dd/><dt><b>IsOriginalSize</b>: bool</dt><dd>Output in original size.<dd/><dt><b>IsDotKeep</b>: bool</dt><dd>Keep dot.<dd/><dt><b>ExportFolder</b>: string</dt><dd>Output folder.<dd/><dt><b>FileNameMode</b>: enum</dt><dd>"Original": Original file name / "BookPageNumber": Book name + page number<br/>Output file name.<dd/><dt><b>FileFormat</b>: enum</dt><dd>"Png": PNG / "Jpeg": JPEG<br/>Output file format. Used when "Output image type" is "Save view".<dd/><dt><b>QualityLevel</b>: int</dt><dd>JPEG quality. It is used only when conversion is required.<dd/><dt><b>IsShowToast</b>: bool</dt><dd>Toast notification.<dd/></dl></td>
+<td><dl><dt><b>Mode</b>: enum</dt><dd>"Original": Save as original file / "View": Save view<br/>Output image type.<dd/><dt><b>HasBackground</b>: bool</dt><dd>Include background.<dd/><dt><b>IsOriginalSize</b>: bool</dt><dd>Output in original size.<dd/><dt><b>IsDotKeep</b>: bool</dt><dd>Keep dot.<dd/><dt><b>ExportFolder</b>: string</dt><dd>Output folder.<dd/><dt><b>FileNameMode</b>: enum</dt><dd>"Original": Original file name / "BookPageNumber": Book name + page number<br/>Output file name.<dd/><dt><b>FileFormat</b>: enum</dt><dd>"Png": PNG / "Jpeg": JPEG<br/>Output file format. Used when "Output image type" is "Save view".<dd/><dt><b>QualityLevel</b>: int</dt><dd>JPEG quality. It is used only when conversion is required.<dd/><dt><b>IsShowToast</b>: bool</dt><dd>Toast notification.<dd/><dt><b>OverwriteMode</b>: enum</dt><dd>"Confirm": Confirm / "AddNumber": Add number<br/>Overwrite mode.<dd/></dl></td>
 <td><b>Save</b><p class="remarks">Save the image to a file. The storage folder is specified by a command parameter.</p></td>
 </tr>
 <tr>
@@ -1624,10 +1639,16 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <td><b>Delete book</b><p class="remarks">Delete the currently viewed folder or compressed file.</p></td>
 </tr>
 <tr>
+<td class="nowrap">CutFile</td>
+</td><td></td>
+<td><dl><dt><b>MultiPagePolicy</b>: enum</dt><dd>"Once": Run only one page / "All": Run all pages / "AllLeftToRight": Run all pages (Left to right)<br/>For 2 pages.<dd/></dl></td>
+<td><b>Cut files</b><p class="remarks">Cut files to the clipboard.</p></td>
+</tr>
+<tr>
 <td class="nowrap">CopyFile</td>
 </td><td></td>
 <td><dl><dt><b>MultiPagePolicy</b>: enum</dt><dd>"Once": Run only one page / "All": Run all pages / "AllLeftToRight": Run all pages (Left to right)<br/>For 2 pages.<dd/></dl></td>
-<td><b>Copy file</b><p class="remarks">Copy the file to the clipboard.</p></td>
+<td><b>Copy files</b><p class="remarks">Copy files to the clipboard.</p></td>
 </tr>
 <tr>
 <td class="nowrap">CopyImage</td>
@@ -1740,12 +1761,6 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <td></td>
 <td><b>Allow stretch scale down</b><p class="remarks">Allow scale down on stretch.</p></td>
 </tr>
-<tr>
-<td class="nowrap">ToggleCustomSize</td>
-</td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td>
-<td></td>
-<td><b>Toggle custom size</b><p class="remarks">Toggles enabling / disabling of size specification applied to original size.</p></td>
-</tr>
 </table>
 <h3>Effect</h3>
 <table>
@@ -1802,6 +1817,18 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 </td><td></td>
 <td></td>
 <td><b>Custom Background</b><p class="remarks">Make the background a custom background.</p></td>
+</tr>
+<tr>
+<td class="nowrap">ToggleCustomSize</td>
+</td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td>
+<td></td>
+<td><b>Toggle custom size</b><p class="remarks">Toggles enabling / disabling of size specification applied to original size.</p></td>
+</tr>
+<tr>
+<td class="nowrap">ToggleTrim</td>
+</td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td>
+<td></td>
+<td><b>Toggle trimming</b><p class="remarks">Toggle trimming ON / OFF.</p></td>
 </tr>
 <tr>
 <td class="nowrap">ToggleResizeFilter</td>
@@ -2022,7 +2049,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr>
 <td class="nowrap">FocusMainView</td>
 </td><td></td>
-<td><dl><dt><b>NeedClosePanels</b>: bool</dt><dd>Close all panels.<dd/></dl></td>
+<td><dl><dt><b>NeedClosePanels</b>: bool</dt><dd>Close all panels.<dd/><dt><b>IsToggle</b>: bool</dt><dd>Toggle.<dd/></dl></td>
 <td><b>Focus on main view</b><p class="remarks">Move focus to the main view.</p></td>
 </tr>
 <tr>
@@ -2076,13 +2103,13 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr>
 <td class="nowrap">ViewScrollNTypeUp</td>
 </td><td></td>
-<td><dl><dt><b>ScrollType</b>: enum</dt><dd>"NType": N-type scroll / "ZType": Z-type scroll / "Diagonal": Diagonal scroll<br/>Scroll type.<dd/><dt><b>Scroll</b>: double</dt><dd>Amount of movement. The ratio to the screen to scroll in one operation.<dd/><dt><b>LineBreakStopTime</b>: double</dt><dd>Line break stop (sec). This is the waiting time to prevent a line break immediately.<dd/><dt><b>PagesAsOne</b>: bool</dt><dd>In panorama mode, all pages are considered as one page.<dd/><dt><b>IsReverse</b>: bool</dt><dd>Enable operation swap by slider direction. Allows the operation replacement by changing the slider direction.<dd/></dl></td>
+<td><dl><dt><b>ScrollType</b>: enum</dt><dd>"NType": N-type scroll / "ZType": Z-type scroll / "Diagonal": Diagonal scroll / "Horizontal": Horizontal scroll / "Vertical": Vertical scroll<br/>Scroll type.<dd/><dt><b>Scroll</b>: double</dt><dd>Amount of movement. The ratio to the screen to scroll in one operation.<dd/><dt><b>LineBreakStopTime</b>: double</dt><dd>Line break stop (sec). This is the waiting time to prevent a line break immediately.<dd/><dt><b>PagesAsOne</b>: bool</dt><dd>In panorama mode, all pages are considered as one page.<dd/><dt><b>IsReverse</b>: bool</dt><dd>Enable operation swap by slider direction. Allows the operation replacement by changing the slider direction.<dd/></dl></td>
 <td><b>N-type scroll ↑</b><p class="remarks">If you can scroll vertically and horizontally, scroll to draw N characters.</p></td>
 </tr>
 <tr>
 <td class="nowrap">ViewScrollNTypeDown</td>
 </td><td></td>
-<td><dl><p style="color:red">Parameters to share with "ViewScrollNTypeUp"</p><dt><b>ScrollType</b>: enum</dt><dd>"NType": N-type scroll / "ZType": Z-type scroll / "Diagonal": Diagonal scroll<br/>Scroll type.<dd/><dt><b>Scroll</b>: double</dt><dd>Amount of movement. The ratio to the screen to scroll in one operation.<dd/><dt><b>LineBreakStopTime</b>: double</dt><dd>Line break stop (sec). This is the waiting time to prevent a line break immediately.<dd/><dt><b>PagesAsOne</b>: bool</dt><dd>In panorama mode, all pages are considered as one page.<dd/><dt><b>IsReverse</b>: bool</dt><dd>Enable operation swap by slider direction. Allows the operation replacement by changing the slider direction.<dd/></dl></td>
+<td><dl><p style="color:red">Parameters to share with "ViewScrollNTypeUp"</p><dt><b>ScrollType</b>: enum</dt><dd>"NType": N-type scroll / "ZType": Z-type scroll / "Diagonal": Diagonal scroll / "Horizontal": Horizontal scroll / "Vertical": Vertical scroll<br/>Scroll type.<dd/><dt><b>Scroll</b>: double</dt><dd>Amount of movement. The ratio to the screen to scroll in one operation.<dd/><dt><b>LineBreakStopTime</b>: double</dt><dd>Line break stop (sec). This is the waiting time to prevent a line break immediately.<dd/><dt><b>PagesAsOne</b>: bool</dt><dd>In panorama mode, all pages are considered as one page.<dd/><dt><b>IsReverse</b>: bool</dt><dd>Enable operation swap by slider direction. Allows the operation replacement by changing the slider direction.<dd/></dl></td>
 <td><b>N-type scroll ↓</b><p class="remarks">If you can scroll vertically and horizontally, scroll to draw N characters.</p></td>
 </tr>
 <tr>
@@ -2289,13 +2316,13 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr>
 <td class="nowrap">PrevScrollPage</td>
 </td><td></td>
-<td><dl><dt><b>ScrollType</b>: enum</dt><dd>"NType": N-type scroll / "ZType": Z-type scroll / "Diagonal": Diagonal scroll<br/>Scroll type.<dd/><dt><b>Scroll</b>: double</dt><dd>Amount of movement. The ratio to the screen to scroll in one operation.<dd/><dt><b>EndMargin</b>: double</dt><dd>Scroll end margin. If the scroll distance is less than this, line movement is prioritized.<dd/><dt><b>LineBreakStopTime</b>: double</dt><dd>Line break stop (sec). This is the waiting time to prevent a line break immediately.<dd/><dt><b>LineBreakStopMode</b>: enum</dt><dd>"Line": Line / "Page": Page<br/>Line break stop mode. Line by line or page by page.<dd/><dt><b>PagesAsOne</b>: bool</dt><dd>In panorama mode, all pages are considered as one page.<dd/><dt><b>IsReverse</b>: bool</dt><dd>Enable operation swap by slider direction. Allows the operation replacement by changing the slider direction.<dd/></dl></td>
+<td><dl><dt><b>ScrollType</b>: enum</dt><dd>"NType": N-type scroll / "ZType": Z-type scroll / "Diagonal": Diagonal scroll / "Horizontal": Horizontal scroll / "Vertical": Vertical scroll<br/>Scroll type.<dd/><dt><b>Scroll</b>: double</dt><dd>Amount of movement. The ratio to the screen to scroll in one operation.<dd/><dt><b>EndMargin</b>: double</dt><dd>Scroll end margin. If the scroll distance is less than this, line movement is prioritized.<dd/><dt><b>LineBreakStopTime</b>: double</dt><dd>Line break stop (sec). This is the waiting time to prevent a line break immediately.<dd/><dt><b>LineBreakStopMode</b>: enum</dt><dd>"Line": Line / "Page": Page<br/>Line break stop mode. Line by line or page by page.<dd/><dt><b>PagesAsOne</b>: bool</dt><dd>In panorama mode, all pages are considered as one page.<dd/><dt><b>IsReverse</b>: bool</dt><dd>Enable operation swap by slider direction. Allows the operation replacement by changing the slider direction.<dd/></dl></td>
 <td><b>Scroll + Prev</b><p class="remarks">Scroll the image backward in the page. If it is not possible to scroll, it will move to the previous page. When using a loupe, only move pages.</p></td>
 </tr>
 <tr>
 <td class="nowrap">NextScrollPage</td>
 </td><td></td>
-<td><dl><p style="color:red">Parameters to share with "PrevScrollPage"</p><dt><b>ScrollType</b>: enum</dt><dd>"NType": N-type scroll / "ZType": Z-type scroll / "Diagonal": Diagonal scroll<br/>Scroll type.<dd/><dt><b>Scroll</b>: double</dt><dd>Amount of movement. The ratio to the screen to scroll in one operation.<dd/><dt><b>EndMargin</b>: double</dt><dd>Scroll end margin. If the scroll distance is less than this, line movement is prioritized.<dd/><dt><b>LineBreakStopTime</b>: double</dt><dd>Line break stop (sec). This is the waiting time to prevent a line break immediately.<dd/><dt><b>LineBreakStopMode</b>: enum</dt><dd>"Line": Line / "Page": Page<br/>Line break stop mode. Line by line or page by page.<dd/><dt><b>PagesAsOne</b>: bool</dt><dd>In panorama mode, all pages are considered as one page.<dd/><dt><b>IsReverse</b>: bool</dt><dd>Enable operation swap by slider direction. Allows the operation replacement by changing the slider direction.<dd/></dl></td>
+<td><dl><p style="color:red">Parameters to share with "PrevScrollPage"</p><dt><b>ScrollType</b>: enum</dt><dd>"NType": N-type scroll / "ZType": Z-type scroll / "Diagonal": Diagonal scroll / "Horizontal": Horizontal scroll / "Vertical": Vertical scroll<br/>Scroll type.<dd/><dt><b>Scroll</b>: double</dt><dd>Amount of movement. The ratio to the screen to scroll in one operation.<dd/><dt><b>EndMargin</b>: double</dt><dd>Scroll end margin. If the scroll distance is less than this, line movement is prioritized.<dd/><dt><b>LineBreakStopTime</b>: double</dt><dd>Line break stop (sec). This is the waiting time to prevent a line break immediately.<dd/><dt><b>LineBreakStopMode</b>: enum</dt><dd>"Line": Line / "Page": Page<br/>Line break stop mode. Line by line or page by page.<dd/><dt><b>PagesAsOne</b>: bool</dt><dd>In panorama mode, all pages are considered as one page.<dd/><dt><b>IsReverse</b>: bool</dt><dd>Enable operation swap by slider direction. Allows the operation replacement by changing the slider direction.<dd/></dl></td>
 <td><b>Scroll + Next</b><p class="remarks">Page Scrolls the image in the next direction. If it is not possible to scroll, it will move to the next page. When using a loupe, only move pages.</p></td>
 </tr>
 <tr>
@@ -2946,6 +2973,18 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
   <tr>
     <td>Warning</td>
     <td>nv.Command.CopyFile.Parameter.TextCopyPolicy</td>
+    <td class="nowrap">Obsolete</td>
+    <td>nv.Config.System.TextCopyPolicy</td>
+  </tr>
+  <tr>
+    <td>Warning</td>
+    <td>nv.Command.CutFile.Parameter.ArchivePolicy</td>
+    <td class="nowrap">Obsolete</td>
+    <td>nv.Config.System.ArchiveCopyPolicy</td>
+  </tr>
+  <tr>
+    <td>Warning</td>
+    <td>nv.Command.CutFile.Parameter.TextCopyPolicy</td>
     <td class="nowrap">Obsolete</td>
     <td>nv.Config.System.TextCopyPolicy</td>
   </tr>

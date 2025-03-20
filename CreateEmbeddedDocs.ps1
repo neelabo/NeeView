@@ -1,3 +1,8 @@
+# error to break
+trap { break }
+$ErrorActionPreference = "stop"
+
+
 function Get-JekyllSource {
     [CmdletBinding()]
     param (
@@ -136,7 +141,7 @@ function Write-CultureDocs {
     $content | Get-JekyllSource -Title $title > "$output\search-options.html"
 }
 
-$neeview = "NeeView\bin\x64\Debug\net8.0-windows"
+$neeview = "NeeView\bin\x64\Debug\net9.0-windows"
 $neeview_profile = "$neeview\Profile"
 
 Write-Host "Create en-us Embedded Documents..."
