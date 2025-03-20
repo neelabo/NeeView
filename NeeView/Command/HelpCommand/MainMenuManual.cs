@@ -16,13 +16,13 @@ namespace NeeView
 
             using (var writer = new System.IO.StreamWriter(fileName, false))
             {
-                writer.WriteLine(CreateMainMenuManual());
+                writer.WriteLine(CreateMainMenuManual(false));
             }
 
             ExternalProcess.Start(fileName);
         }
 
-        public static string CreateMainMenuManual()
+        public static string CreateMainMenuManual(bool version)
         {
             var sb = new StringBuilder();
 
@@ -33,6 +33,11 @@ namespace NeeView
 
             var node = new TagNode("body");
             node.AddNode(new TagNode("h1").AddText(title));
+
+            if (version)
+            {
+                node.AddNode(new TagNode("p").AddText("Version " + Environment.ApplicationVersion));
+            }
 
             if (menuTree.Children is null) throw new InvalidOperationException("menuTree.Children must not be null");
             foreach (var group in menuTree.Children)

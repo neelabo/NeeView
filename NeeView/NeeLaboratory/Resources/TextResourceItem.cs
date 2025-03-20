@@ -19,6 +19,17 @@ namespace NeeLaboratory.Resources
 
         private List<CaseText>? _caseTexts;
 
+
+        public TextResourceItem()
+        {
+        }
+
+        public TextResourceItem(string text)
+        {
+            SetText(text);
+        }
+
+
         public string Text { get; private set; } = "";
 
 

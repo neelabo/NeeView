@@ -40,6 +40,7 @@ namespace NeeView.Properties
             //CheckDuplicateText();
 
             Resource.Add(new AppFileSource(new Uri("/Languages/shared.restext", UriKind.Relative)));
+            Resource.SetItem("_VersionTag", "");
         }
 
         /// <summary>
@@ -53,6 +54,7 @@ namespace NeeView.Properties
                 System.Diagnostics.Debug.WriteLine($"Culture: {c}");
                 Resource.Load(c);
                 Resource.Add(new AppFileSource(new Uri("/Languages/shared.restext", UriKind.Relative)));
+                Resource.SetItem("_VersionTag", "");
                 SearchOptionManual.OpenSearchOptionManual();
                 System.Threading.Thread.Sleep(2000);
             }

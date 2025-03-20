@@ -105,10 +105,15 @@ namespace NeeView.Data
         }
 
 #if DEBUG
-        public string GetCommandLineHelpMarkdown()
+        public string GetCommandLineHelpMarkdown(bool version)
         {
             var sb = new StringBuilder();
             sb.AppendLine("# " + Properties.TextResources.GetString("BootOptionDialog.Title"));
+            if (version)
+            {
+                sb.AppendLine();
+                sb.AppendLine("Version " + Environment.ApplicationVersion);
+            }
             sb.AppendLine();
 
             sb.AppendLine("### Usage");

@@ -577,18 +577,23 @@ namespace NeeView
 
             using (var writer = new System.IO.StreamWriter(fileName, false))
             {
-                writer.WriteLine(CreateCommandListHelp());
+                writer.WriteLine(CreateCommandListHelp(false));
             }
 
             ExternalProcess.Start(fileName);
         }
 
-        public string CreateCommandListHelp()
+        public string CreateCommandListHelp(bool version)
         {
             var sb = new StringBuilder();
 
             sb.AppendLine(HtmlHelpUtility.CreateHeader("NeeView Command List"));
             sb.AppendLine($"<body><h1>{Properties.TextResources.GetString("HelpCommandList.Title")}</h1>");
+
+            if (version)
+            {
+                sb.AppendLine($"<p>Version {Environment.ApplicationVersion}</p>");
+            }
 
             sb.AppendLine("<!-- section: note -->");
             sb.AppendLine($"<p>{Properties.TextResources.GetString("HelpCommandList.Message")}</p>");

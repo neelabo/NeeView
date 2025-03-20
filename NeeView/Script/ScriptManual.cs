@@ -15,6 +15,8 @@ namespace NeeView
         private static readonly string _manualTemplate = """
             <h1>@_ScriptManual.Title</h1>
 
+            @_VersionTag
+
             <ul>
                 <li><a href="#s1">@_ScriptManual.S1</a></li>
                 <li><a href="#s2">@_ScriptManual.S2</a></li>

@@ -119,6 +119,16 @@ namespace NeeLaboratory.Resources
         }
 
         /// <summary>
+        /// 項目設定
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="text"></param>
+        public void SetItem(string key, string text)
+        {
+            _resource.SetItem(key, text);
+        }
+
+        /// <summary>
         /// 一時言語リソース取得
         /// </summary>
         /// <param name="culture">カルチャ</param>

@@ -83,5 +83,10 @@ namespace NeeLaboratory.Resources
                 }
             }
         }
+
+        public void SetItem(string key, string text)
+        {
+            _map[key] = new TextResourceItem(text);
+        }
     }
 }

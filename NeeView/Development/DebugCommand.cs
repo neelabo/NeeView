@@ -31,8 +31,10 @@ namespace NeeView
                 if (culture == "ja") culture = "ja-jp";
                 if (culture == "en") culture = "en-us";
 
+                Properties.TextResources.Resource.SetItem("_VersionTag", $"<p>Version {Environment.ApplicationVersion}</p>");
+
                 var optionMap = new OptionMap<CommandLineOption>();
-                var markdown = optionMap.GetCommandLineHelpMarkdown();
+                var markdown = optionMap.GetCommandLineHelpMarkdown(true);
                 File.WriteAllText(Path.Combine(Environment.UserDataPath, $"CommandLineOptions.{culture}.md"), markdown);
 
                 var scriptManual = new ScriptManual().CreateScriptManualText();
@@ -41,12 +43,12 @@ namespace NeeView
                 var searchOptionManual = SearchOptionManual.CreateSearchOptionManual();
                 File.WriteAllText(Path.Combine(Environment.UserDataPath, $"SearchOptionManual.{culture}.html"), searchOptionManual);
 
-                var mainMenu = MainMenuManual.CreateMainMenuManual();
+                var mainMenu = MainMenuManual.CreateMainMenuManual(true);
                 File.WriteAllText(Path.Combine(Environment.UserDataPath, $"MainMenu.{culture}.html"), mainMenu);
 
                 var memento = CommandTable.Current.CreateCommandCollectionMemento(false);
                 CommandTable.Current.RestoreCommandCollection(InputScheme.TypeA);
-                var commandList = CommandTable.Current.CreateCommandListHelp();
+                var commandList = CommandTable.Current.CreateCommandListHelp(true);
                 File.WriteAllText(Path.Combine(Environment.UserDataPath, $"CommandList.{culture}.html"), commandList);
                 CommandTable.Current.RestoreCommandCollection(memento, true);
             }

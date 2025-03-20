@@ -13,6 +13,8 @@ namespace NeeView
         private static readonly string _template = """
             <h1>@_SearchManual.Title</h1>
 
+            @_VersionTag
+
             <!--<h2>@_SearchManual.S1</h2>-->
             <p>
                 <ul>
