@@ -41,7 +41,7 @@ DLL: pdfium.dll
 
 * Copyright 2014 PDFium Authors. All rights reserved.
 * URL: [PDFium](https://pdfium.googlesource.com/pdfium/)
-* License: [3-Clause BSD License](https://pdfium.googlesource.com/pdfium/+/master/LICENSE)
+* License: [3-Clause BSD License, Apache License 2.0](https://pdfium.googlesource.com/pdfium/+/master/LICENSE)
 
 ### PdfiumViewer
 
