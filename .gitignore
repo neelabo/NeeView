@@ -220,6 +220,7 @@ ModelManifest.xml
 /MakePackage/BuildCount.xml
 /MakePackage/*.zip
 /MakePackage/*.msi
+/MakePackage/*.msix
 /MakePackage/*.appx
 /MakePackage/_*
 /MakePackage/Appx/_*

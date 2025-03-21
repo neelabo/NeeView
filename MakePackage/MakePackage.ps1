@@ -667,8 +667,7 @@ function New-Appx($arch, $packageDir, $packageAppendDir, $appx) {
 	New-Readme $contentDir "en-us" "Appx"
 	New-Readme $contentDir "ja-jp" "Appx"
 
-	. $env:CersPath/_$product.Parameter.ps1
-	$param = Get-AppxParameter
+	$param = Get-Content -Raw $env:CersPath/_$product.Parameter.json | ConvertFrom-Json
 	$appxName = $param.name
 	$appxPublisher = $param.publisher
 
@@ -963,7 +962,7 @@ $packageZip_x64 = "$packageName_x64.zip"
 $packageZip_x64_fd = "$packageName_x64_fd.zip"
 $packageMsi_x64 = "$packageName_x64.msi"
 $packageAppxDir_x64 = "${product}${appVersion}-appx-x64"
-$packageX64Appx = "${product}${appVersion}.appx"
+$packageX64Appx = "${product}${appVersion}.msix"
 
 $packageNameCanary = "${product}${appVersion}-Canary${dateVersion}"
 $packageCanaryDir = "$packageNameCanary"
