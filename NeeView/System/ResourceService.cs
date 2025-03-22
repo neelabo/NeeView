@@ -205,5 +205,47 @@ namespace NeeView
                 return '@' + key;
             }
         }
+
+        /// <summary>
+        /// 開発用：全言語のテキストリソースを検証する
+        /// </summary>
+        [Conditional("DEBUG")]
+        public static void ValidateAllCultures()
+        {
+            foreach (var culture in Properties.TextResources.LanguageResource.Cultures)
+            {
+                Properties.TextResources.LoadCulture(culture);
+
+                // 参照キーの存在チェック
+                ValidateResourceKeys();
+
+                // ヘルプテキスト目視チェック
+                //SearchOptionManual.OpenSearchOptionManual();
+                //System.Threading.Thread.Sleep(2000);
+            }
+        }
+
+        /// <summary>
+        /// 開発用：すべてのリソースについて含まれるリソースキー名が実在するかを確認する
+        /// </summary>
+        [Conditional("DEBUG")]
+        private static void ValidateResourceKeys()
+        {
+            var failureCount = 0;
+
+            foreach (var pair in Properties.TextResources.Resource.Map)
+            {
+                foreach (Match match in _keyRegex.Matches(pair.Value.Text))
+                {
+                    if (GetResourceString(match.Value) is null)
+                    {
+                        Debug.WriteLine($"Resource key not found: {match.Value} in {pair.Key}");
+                        failureCount++;
+                    }
+                }
+            }
+            
+            Debug.Assert(failureCount == 0, $"{failureCount} resource keys are undefined.");
+        }
     }
 }

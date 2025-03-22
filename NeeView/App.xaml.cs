@@ -307,6 +307,9 @@ namespace NeeView
             }
             TextResources.Initialize(culture);
             InputGestureDisplayString.Initialize(TextResources.Resource);
+
+            // 開発用：テキストリソース検証
+            //ResourceService.ValidateAllCultures();
         }
 
         /// <summary>

@@ -31,8 +31,12 @@ namespace NeeView.Properties
             if (_initialized) return;
             _initialized = true;
 
-            // 開発用：各カルチャのテスト
-            //AllCultureLoadTest();
+            LoadCulture(culture);
+        }
+
+        public static void LoadCulture(CultureInfo culture)
+        {
+            Debug.WriteLine($"Load Culture: {culture}");
 
             Resource.Load(culture);
 
@@ -44,28 +48,14 @@ namespace NeeView.Properties
         }
 
         /// <summary>
-        /// 開発用：全てのカルチャのテスト
-        /// </summary>
-        [Conditional("DEBUG")]
-        private static void AllCultureLoadTest()
-        {
-            foreach (var c in LanguageResource.Cultures)
-            {
-                System.Diagnostics.Debug.WriteLine($"Culture: {c}");
-                Resource.Load(c);
-                Resource.Add(new AppFileSource(new Uri("/Languages/shared.restext", UriKind.Relative)));
-                Resource.SetItem("_VersionTag", "");
-                SearchOptionManual.OpenSearchOptionManual();
-                System.Threading.Thread.Sleep(2000);
-            }
-        }
-
-        /// <summary>
         /// 開発用：テキストの重複チェック
         /// </summary>
         [Conditional("DEBUG")]
         private static void CheckDuplicateText()
         {
+            // テキスト重複項目を出力し、シェアテキストにするかの判断材料とする。
+            // 全言語同時にチェックする必要があるので、これはツールで行ったほうがよい。
+
             var resolved = new List<string>();
             Debug.WriteLine("<ResourceText.Duplicate>");
             foreach (var item in Resource.Map)
