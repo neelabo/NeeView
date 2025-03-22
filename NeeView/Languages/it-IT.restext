@@ -817,6 +817,7 @@ HistoryConfig.IsAutoCleanupEnabled=Cancella automaticamente cronologia non valid
 HistoryConfig.IsCurrentFolder=Solo cartella attuale
 HistoryConfig.IsCurrentFolder.Remarks=Mostra la cronologia delle sole cartelle del libro attualmente aperto.
 HistoryConfig.IsForceUpdateHistory=Anche se si apre un libro dalla cronologia, viene aggiornata la data dell'ultima consultazione.
+HistoryConfig.IsGroupBy=Gruppo di
 HistoryConfig.IsInnerArchiveHistoryEnabled=Save recursive compressed file in history
 HistoryConfig.IsKeepFolderStatus=Salva stato cartella
 HistoryConfig.IsKeepSearchHistory=Salva cronologia ricerca

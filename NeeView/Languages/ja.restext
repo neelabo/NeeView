@@ -814,6 +814,7 @@ HistoryConfig.IsAutoCleanupEnabled=起動時に無効な履歴を自動的に削
 HistoryConfig.IsCurrentFolder=現在のフォルダーのみ
 HistoryConfig.IsCurrentFolder.Remarks=現在開いているブックのフォルダーのみの履歴を表示します。
 HistoryConfig.IsForceUpdateHistory=履歴からブックを開いたときでも最終閲覧日を更新する
+HistoryConfig.IsGroupBy=グループで表示
 HistoryConfig.IsInnerArchiveHistoryEnabled=多重圧縮ファイルを履歴に保存する
 HistoryConfig.IsKeepFolderStatus=各フォルダーの並び順等の情報を保存する
 HistoryConfig.IsKeepSearchHistory=検索履歴を保存する

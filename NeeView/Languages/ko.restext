@@ -814,6 +814,7 @@ HistoryConfig.IsAutoCleanupEnabled=시작 시 자동으로 무효한 내역 삭�
 HistoryConfig.IsCurrentFolder=현재 폴더만
 HistoryConfig.IsCurrentFolder.Remarks=현재 열린 책의 폴더 내역만 표시합니다.
 HistoryConfig.IsForceUpdateHistory=내역에서 책을 열어도 마지막 열람일 갱신
+HistoryConfig.IsGroupBy=그룹화 표시
 HistoryConfig.IsInnerArchiveHistoryEnabled=다단 압축 파일을 내역에 저장
 HistoryConfig.IsKeepFolderStatus=폴더별로 정렬 정보 저장
 HistoryConfig.IsKeepSearchHistory=검색 내역 저장

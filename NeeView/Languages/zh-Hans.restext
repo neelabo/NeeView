@@ -814,6 +814,7 @@ HistoryConfig.IsAutoCleanupEnabled=启动时自动删除无效的历史记录
 HistoryConfig.IsCurrentFolder=仅当前文件夹
 HistoryConfig.IsCurrentFolder.Remarks=仅显示当前已打开书籍所在文件夹的历史记录。
 HistoryConfig.IsForceUpdateHistory=即使从历史记录中打开书籍，也更新其最近阅读日期
+HistoryConfig.IsGroupBy=分组显示
 HistoryConfig.IsInnerArchiveHistoryEnabled=在历史记录中保存多重压缩文件
 HistoryConfig.IsKeepFolderStatus=保存每个文件夹的排序方式等信息
 HistoryConfig.IsKeepSearchHistory=保存搜索历史

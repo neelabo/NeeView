@@ -817,6 +817,7 @@ HistoryConfig.IsAutoCleanupEnabled=Automatically delete invalid history at start
 HistoryConfig.IsCurrentFolder=Current folder only
 HistoryConfig.IsCurrentFolder.Remarks=Shows the history of only the folders of the currently open book.
 HistoryConfig.IsForceUpdateHistory=Even if you open a book from history, it updates the last browsing date
+HistoryConfig.IsGroupBy=Group by
 HistoryConfig.IsInnerArchiveHistoryEnabled=Save recursive compressed file in history
 HistoryConfig.IsKeepFolderStatus=Save folder state
 HistoryConfig.IsKeepSearchHistory=Save search history

@@ -814,6 +814,7 @@ HistoryConfig.IsAutoCleanupEnabled=啟動時自動刪除無效的歷史記錄
 HistoryConfig.IsCurrentFolder=僅在目前的資料夾
 HistoryConfig.IsCurrentFolder.Remarks=僅顯示目前開啟的書本資料夾的歷史記錄。
 HistoryConfig.IsForceUpdateHistory=從歷史記錄開啟時一併更新最後閱覽日期
+HistoryConfig.IsGroupBy=以群組顯示
 HistoryConfig.IsInnerArchiveHistoryEnabled=將多重壓縮檔儲存到歷史記錄
 HistoryConfig.IsKeepFolderStatus=儲存個別資料夾的排序等資訊
 HistoryConfig.IsKeepSearchHistory=儲存搜尋歷史記錄

@@ -817,6 +817,7 @@ HistoryConfig.IsAutoCleanupEnabled=Excluir automaticamente o histórico inválid
 HistoryConfig.IsCurrentFolder=Somente pasta atual
 HistoryConfig.IsCurrentFolder.Remarks=Mostra o histórico apenas das pastas do livro aberto no momento.
 HistoryConfig.IsForceUpdateHistory=Mesmo se você abrir um livro do histórico, ele atualizará a data da última navegação
+HistoryConfig.IsGroupBy=Agrupar por
 HistoryConfig.IsInnerArchiveHistoryEnabled=Salvar arquivo compactado recursivo no histórico
 HistoryConfig.IsKeepFolderStatus=Salvar estado da pasta
 HistoryConfig.IsKeepSearchHistory=Salvar histórico de pesquisa
