@@ -18,6 +18,7 @@ Convert language files to Language.json.
 Convert mode 
     Convert: Convert Json file to language files
     Revert: Convert language files to Json file
+    Test: Test language files. Files will not be changed.
 
 .PARAMETER JsonFile
 Json file name. Default is Language.json
@@ -40,7 +41,7 @@ e.g., -Cultures en,ja
 
 param (
     [Parameter(Mandatory = $true)]
-    [ValidateSet("Convert", "Revert")]
+    [ValidateSet("Convert", "Revert", "Test")]
     [string]$Mode,
     [string]$JsonFile = "Language.json",
     [switch]$Sort,
@@ -52,7 +53,8 @@ param (
 $modeDetail = switch ($Mode) {
     "Convert" { "$JsonFile -> *.restext" }
     "Revert" { "*.restext -> $JsonFile" }
-    default {"Unknown"}
+    "Test" { ".restext" }
+    default { "Unknown" }
 }
 
 Write-Host
@@ -76,9 +78,9 @@ trap { break }
 $ErrorActionPreference = "stop"
 
 
-function Get-Restext {
-    param ([string]$culture)
-    $restext = "$culture.restext"
+function Get-RestextFile {
+    param ([string]$restext, [bool]$ignoreNull)
+
     Write-Host Read $restext
     $array = @()
     foreach ($line in Get-Content $restext) {
@@ -88,7 +90,7 @@ function Get-Restext {
         $tokens = $line -split "=", 2
         $key = $tokens[0]
         $value = $tokens[1]
-        if (($culture -eq $defaultCulture) -or (-not [string]::IsNullOrEmpty($value))) {
+        if ((-not $ignoreNull) -or (-not [string]::IsNullOrEmpty($value))) {
             $array += [PSCustomObject]@{
                 Key   = $key
                 Value = $value
@@ -96,6 +98,13 @@ function Get-Restext {
         }
     }
     return $array
+}
+
+function Get-Restext {
+    param ([string]$culture)
+    $restext = "$culture.restext"
+    $ignoreNull = ($culture -ne $defaultCulture) 
+    Get-RestextFile $restext $ignoreNull
 }
 
 function ConvertTo-RestextMap {
@@ -116,7 +125,6 @@ function Add-RestextToRestextTable {
     param([PSCustomObject]$table, [string]$culture)
     $array = Get-Restext $culture
     $map = ConvertTo-RestextMap $array
-
     foreach ($entry in $map.GetEnumerator()) {
         $key = $entry.Key
         $value = $entry.Value
@@ -130,6 +138,77 @@ function Add-RestextToRestextTable {
             $table | Add-Member -MemberType NoteProperty -Name $key -Value $obj
         }
     }
+}
+
+function Add-SharedToRestextTable {
+    param([PSCustomObject]$table)
+    $culture = "shared"
+    $array = Get-RestextFile "$culture.restext" $false
+    $map = ConvertTo-RestextMap $array
+    foreach ($entry in $map.GetEnumerator()) {
+        $key = $entry.Key
+        $value = $entry.Value
+        if ($null -eq $table.$key) {
+            $obj = [PSCustomObject]@{
+                $culture = $value
+            }
+            $table | Add-Member -MemberType NoteProperty -Name $key -Value $obj
+        }
+        else {
+            throw "Shared key already exist: $key"
+        }
+    }
+    return $table
+}
+
+function Get-InputKeyDefines {
+
+    # System.Windows.Input を参照するために PresentationCore アセンブリをロードする
+    Add-Type -AssemblyName PresentationCore
+
+    # HACK: どうやらアセンブリは遅延ロードされるらしく、そのままでは enum にアクセスできないのでオブジェクトアクセスを一度行う
+    $null = [System.Windows.Input.Keyboard]::Modifiers
+
+    $keys = [System.Enum]::GetNames([System.Windows.Input.Key])|  ForEach-Object {"Key.$_"}
+
+    $modifierKeys = [System.Enum]::GetNames([System.Windows.Input.ModifierKeys])|  ForEach-Object {"ModifierKeys.$_"}
+
+    $mouseButtons = [System.Enum]::GetNames([System.Windows.Input.MouseButton])|  ForEach-Object {"MouseButton.$_"}
+
+    $mouseActions = @(
+        "MouseAction.LeftClick",
+        "MouseAction.RightClick",
+        "MouseAction.MiddleClick",
+        "MouseAction.LeftDoubleClick",
+        "MouseAction.RightDoubleClick",
+        "MouseAction.MiddleDoubleClick",
+        "MouseAction.XButton1Click",
+        "MouseAction.XButton1DoubleClick",
+        "MouseAction.XButton2Click",
+        "MouseAction.XButton2DoubleClick",
+        "MouseAction.WheelUp",
+        "MouseAction.WheelDown",
+        "MouseAction.WheelLeft",
+        "MouseAction.WheelRight"
+    )
+
+    $mouseDirections = @(
+        "MouseDirection.Up",
+        "MouseDirection.Down",
+        "MouseDirection.Left",
+        "MouseDirection.Right",
+        "MouseDirection.Click"
+    )
+
+    $touchAreas = @(
+        "TouchArea.TouchL1",
+        "TouchArea.TouchL2",
+        "TouchArea.TouchR1",
+        "TouchArea.TouchR2",
+        "TouchArea.TouchCenter"
+    )
+
+    return $keys + $modifierKeys + $mouseButtons + $mouseActions + $mouseDirections + $touchAreas
 }
 
 function ConvertTo-RestextFromRestextTable {
@@ -241,42 +320,35 @@ function Get-CulturesFromRestextTable {
     return $cultures
 }
 
-# fix typo (no used)
-function Get-ReplaceTypo {
-    $transform = [PSCustomObject]@{
-        "Confrict"   = "Conflict"
-        "Deault"     = "Default"
-        "Inclide"    = "Include"
-        "Sceme"      = "Scheme"
-        "Javascript" = "JavaScript"
-        "Playlsit"   = "Playlist"
-        "Rerset"     = "Reset"
-        "Lastest"    = "Latest"
-        "Vertival"   = "Vertical"
-        "Scipt"      = "Script"
-        "Manipurate" = "Manipulate"
-        "Fodler"     = "Folder"
-        "Visibled"   = "Visible"
-        "Openbook"   = "OpenBook"
-    }
+function Test-RestextTable { 
+    param([PSCustomObject]$table, $inputKeys)
 
-    param([string]$s)
-    foreach ($pair in $transform.psobject.properties) {
-        $s = $s -creplace $pair.Name, $pair.Value
-    }
-    return $s
-}
+    $allKeys = ($table.psobject.properties | ForEach-Object {$_.Name}) + $inputKeys
 
-# fix typo (table)
-function Get-ReplaceTypoTable { 
-    param([PSCustomObject]$table)
-    $newTable = [PSCustomObject]@{}
+    $failureCount = 0
+
     foreach ($property in $table.psobject.properties) {
-        $key = Get-ReplaceTypo $property.Name
+        $key = $property.Name
         $value = $property.Value
-        $newTable | Add-Member -MemberType NoteProperty -Name $key -Value $value
+        foreach ($item in $value.psobject.properties) {
+            $culture = $item.Name
+            $m = [regex]::Matches($item.Value, "@[a-zA-Z0-9_\.\-#]+[a-zA-Z0-9]")
+            for ($i = 0; $i -lt $m.Count; $i++) {
+                $refKey = $m[$i].Value.Trim("@")
+                if (-not ($allKeys -ccontains $refKey)) {
+                    Write-Output "@$refKey is undefined. in $key at $culture"
+                    $failureCount++
+                }
+            }
+        }
     }
-    return $newTable
+
+    if ($failureCount -eq 0) {
+        Write-Host "Test passed. ErrorCount=$failureCount" -fore Green
+    }
+    else{
+        Write-Host "Test failed. ErrorCount=$failureCount" -fore Red
+    }
 }
 
 #
@@ -301,7 +373,16 @@ elseif ($Mode -eq "Revert") {
     Write-Host Write $JsonFile
     $table | ConvertTo-Json | Set-Content $JsonFile -Encoding utf8
 }
+elseif ($Mode -eq "Test") {
+    $cultures = Get-RestextCultures
+    $table = Get-RestextTable $cultures
+    $table = Add-SharedToRestextTable $table
+    $inputKeys = Get-InputKeyDefines
+    Write-Host
+    Write-Host "[Test] ..."  -fore Cyan
+    Test-RestextTable $table $inputKeys
+}
 else { 
-    throw  "'$Mode' is an unknown mode. Specify 'Convert' or 'Revert' as the mode."
+    throw  "'$Mode' is an unknown mode. Specify 'Convert', 'Revert' or 'Test' as the mode."
 }
 
