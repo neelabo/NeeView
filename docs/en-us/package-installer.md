@@ -21,9 +21,7 @@ Uninstallation is done through the OS application management function.
 > User data is not removed by uninstallation alone.
 > Either delete it manually or execute "Delete all data" at the bottom of the "Saved data" page in the Settings before uninstalling.
 
-<!-- for 43.0
 > [!NOTE]  
-> Explorer-related settings use the registry.
+> [43.0] Explorer-related settings use the registry.
 > These settings do not disappear even if the application is deleted, so please turn them off in the settings before deleting.
 > It is also deleted by the above "Delete all data" operation.
--->
