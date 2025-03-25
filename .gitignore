@@ -220,8 +220,8 @@ ModelManifest.xml
 /MakePackage/BuildCount.xml
 /MakePackage/*.zip
 /MakePackage/*.msi
-/MakePackage/*.msix
-/MakePackage/*.appx
+/MakePackage/*.msix*
+/MakePackage/*.appx*
 /MakePackage/_*
 /MakePackage/Appx/_*
 /MakePackage/Appx/resources.pri.xml
@@ -242,5 +242,4 @@ launchSettings.json
 /docs/Gemfile*
 /docs/_site
 /docs/sample.md
-/docs/_RunDocker.ps1
-/docs/_CreateRedirect.ps1
+/docs/_*.ps1

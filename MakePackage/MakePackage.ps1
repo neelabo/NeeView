@@ -268,8 +268,11 @@ function Edit-Markdown {
 		[switch]$ChopTitle
 	)
 
-	process {
+	begin {
 		$chop = $false
+	}
+
+	process {
 		foreach ($line in $Value) {
 			if ($line.StartsWith("#")) {
 				if ($ChopTitle -and !$chop) {
@@ -692,6 +695,20 @@ function New-Appx($arch, $packageDir, $packageAppendDir, $appx) {
 	}
 }
 
+function New-AppxSym($publishDir, $appxSym) {
+	$files = Get-ChildItem $publishDir -File -Filter *.pdb
+	Compress-Archive -Path $files -DestinationPath $appxSym
+}
+
+function New-AppxUpload($arch, $publishDir, $packageDir, $packageAppendDir, $name) {
+	$appx = "$name.msix"
+	$appxSym = "$name.appxsym"
+	$appxUpload = "$name.msixupload"
+	New-Appx $arch $packageDir $packageAppendDir $appx
+	New-AppxSym $publishDir $appxSym
+	Compress-Archive -Path $appx, $appxSym -DestinationPath $appxupload
+}
+
 # archive to Canary.ZIP
 function Remove-Canary($packageDir, $packageZip) {
 	if (Test-Path $packageZip) {
@@ -780,6 +797,12 @@ function Remove-BuildObjects {
 	if (Test-Path $packageBetaWild) {
 		Remove-Item $packageBetaWild
 	}
+	if (Test-Path $packageAppxWild) {
+		Remove-Item $packageAppxWild
+	}
+	if (Test-Path $packageMsixWild) {
+		Remove-Item $packageMsixWild
+	}
 
 	Start-Sleep -m 100
 }
@@ -853,7 +876,8 @@ function Build-Appx-x64 {
 
 	if (Test-Path "$env:CersPath\_Parameter.ps1") {
 		Remove-Appx $packageAppxDir_x64 $packageX64Appx
-		New-Appx "x64" $packageDir_x64 $packageAppxDir_x64 $packageX64Appx
+		#New-Appx "x64" $packageDir_x64 $packageAppxDir_x64 $packageX64Appx
+		New-AppxUpload "x64" $publishDir_x64 $packageDir_x64 $packageAppxDir_x64 $packageName_x64
 		Write-Host "`nExport $packageX64Appx succeeded.`n" -fore Green
 	}
 	else {
@@ -963,6 +987,8 @@ $packageZip_x64_fd = "$packageName_x64_fd.zip"
 $packageMsi_x64 = "$packageName_x64.msi"
 $packageAppxDir_x64 = "${product}${appVersion}-appx-x64"
 $packageX64Appx = "${product}${appVersion}.msix"
+$packageAppxWild = "${product}${appVersion}.appx*"
+$packageMsixWild = "${product}${appVersion}.msix*"
 
 $packageNameCanary = "${product}${appVersion}-Canary${dateVersion}"
 $packageCanaryDir = "$packageNameCanary"
