@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization">
-    <String Id="language">1033</String>
-    <String Id="codepage">1252</String>
-    <String Id="downgradeErrorMessage">A new version of NeeView has already been installed.</String>
-    <String Id="openInNeeView">Open in Nee&amp;View</String>
-    <String Id="contextMenuFeatureDescription">Add "Open in NeeView" to the context menu.</String>
-</WixLocalization>

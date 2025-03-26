@@ -13,9 +13,6 @@ Param(
 	# ログ出力のあるパッケージ作成
 	[switch]$trace,
 
-	# MSI作成時にMainComponents.wsxを更新する
-	[switch]$updateComponent,
-
 	# Postfix. Canary や Beta での番号重複回避用
 	[string]$versionPostfix = "",
 
@@ -33,7 +30,6 @@ Write-Host "[Properties] ..." -fore Cyan
 Write-Host "Target: $Target"
 Write-Host "Continue: $continue"
 Write-Host "Trace: $trace"
-Write-Host "UpdateComponent: $updateComponent" 
 Write-Host "VersionPostfix: $versionPostfix" 
 Write-Host
 Read-Host "Press Enter to continue"
@@ -550,94 +546,59 @@ function Remove-Msi($packageAppendDir, $packageMsi) {
 
 # Msi
 function New-Msi($arch, $packageDir, $packageAppendDir, $packageMsi) {
-	$candle = $env:WIX + 'bin\candle.exe'
-	$light = $env:WIX + 'bin\light.exe'
-	$heat = $env:WIX + 'bin\heat.exe'
-	$torch = $env:WIX + 'bin\torch.exe'
-	$wisubstg = "$Win10SDK\wisubstg.vbs"
-	$wilangid = "$Win10SDK\wilangid.vbs"
 
-	$1041Msi = "$packageAppendDir\1041.msi"
-	$1041Mst = "$packageAppendDir\1041.mst"
+    # Require Wix toolset (e.g.; version 5.0.2)
+    # > dotnet tool install --global wix -version 5.02
+    #
+    # Use WiX UI Extension
+    # > wix extension add --global WixToolset.UI.wixext/5.0.2
 
-	#-------------------------
-	# WiX
-	#-------------------------
+    $wisubstg = "$Win10SDK\wisubstg.vbs"
+    $wilangid = "$Win10SDK\wilangid.vbs"
 
-	$ErrorActionPreference = "stop"
+    function New-MsiSub($arch, $culture, $packageMsi) {
 
-	function New-MainComponents {
-		$wxs = Convert-Path "WixSource\$arch\MainComponents.wxs"
-		& $heat dir "$packageDir" -cg MainComponents -ag -pog:Binaries -sfrag -srd -sreg -var var.ContentDir -dr INSTALLFOLDER -out $wxs
-		if ($? -ne $true) {
-			throw "heat error"
-		}
+        $properties = @(
+            "-d", "ProductName=NeeView $appVersion"
+            "-d", "ProductVersion=$version",
+            "-b", "Contents=$(Convert-Path $packageDir)",
+            "-b", "Append=$(Convert-Path $packageAppendDir)",
+            "-ext", "WixToolset.UI.wixext"
+        )
 
-		[xml]$xml = Get-Content $wxs
+        Write-Host "[wix] build $packageMsi -culture $culture" -fore Cyan 
+        & wix.exe build -arch $arch -out $packageMsi -culture $culture @properties WixSource\*.wx?
+        if ($? -ne $true) {
+            throw "wix build error"
+        }
+    }
 
-		Remove-WixComponentNode $xml "$product.exe"
-		Remove-WixComponentNode $xml "$product.settings.json"
-		Remove-WixComponentNode $xml "README.html"
-		Remove-WixComponentNode $xml "README.ja-jp.html"
+    $1033Msi = "$packageAppendDir\1033.msi"
+    $1041Msi = "$packageAppendDir\1041.msi"
+    $1041Mst = "$packageAppendDir\1041.mst"
 
-		$xml.Save($wxs)
-	}
-	
-	function Remove-WixComponentNode($xml, $name) {
-		$node = $xml.Wix.Fragment[0].DirectoryRef.Component | Where-Object { (Split-Path $_.File.Source -Leaf) -eq $name }
-		if ($null -ne $node) {
-			$componentId = $node.Id
-			$xml.Wix.Fragment[0].DirectoryRef.RemoveChild($node)
+    New-MsiSub $arch "en-us" $1033Msi
+    New-MsiSub $arch "ja-jp" $1041Msi 
 
-			$node = $xml.Wix.Fragment[1].ComponentGroup.ComponentRef | Where-Object { $_.Id -eq $componentId }
-			$xml.Wix.Fragment[1].ComponentGroup.RemoveChild($node)
-		}
-	}
+    Write-Host "[wix] msi transform $1041Mst" -fore Cyan
+    & wix.exe msi transform -p -t language $1033Msi $1041Msi -out $1041Mst
+    if ($? -ne $true) {
+        throw "wix msi transform error"
+    }
 
-	function New-MsiSub($packageMsi, $culture) {
-		Write-Host "$packageMsi : $culture" -fore Cyan
-		
-		$wixObjDir = "$packageAppendDir\obj.$culture"
-		New-EmptyFolder $wixObjDir
+    Copy-Item $1033Msi $packageMsi
 
-		& $candle -arch $arch -d"Platform=$arch" -d"AppVersion=$appVersion" -d"ProductVersion=$version" -d"ContentDir=$packageDir\\" -d"AppendDir=$packageDir.append\\" -d"LibrariesDir=$packageDir\\Libraries" -d"culture=$culture" -ext WixNetFxExtension -out "$wixObjDir\\"  WixSource\*.wxs .\WixSource\$arch\*.wxs
-		if ($? -ne $true) {
-			throw "candle error"
-		}
+    Write-Host "[msi] wisubstg $packageMsi" -fore Cyan
+    & cscript "$wisubstg" "$packageMsi" $1041Mst 1041
+    if ($? -ne $true) {
+        throw "$wisubstg error"
+    }
 
-		& $light -out "$packageMsi" -ext WixUIExtension -ext WixNetFxExtension -cultures:$culture -loc WixSource\Language-$culture.wxl  "$wixObjDir\*.wixobj"
-		if ($? -ne $true) {
-			throw "light error" 
-		}
-	}
-
-	## Create MainComponents.wxs
-	if ($updateComponent) {
-		Write-Host "Create MainComponents.wsx`n" -fore Cyan
-		New-MainComponents
-	}
-
-	New-MsiSub $packageMsi "en-us"
-	New-MsiSub $1041Msi "ja-jp"
-
-	& $torch -p -t language $packageMsi $1041Msi -out $1041Mst
-	if ($? -ne $true) {
-		throw "torch error"
-	}
-
-	#-------------------------
-	# WinSDK
-	#-------------------------
-
-	& cscript "$wisubstg" "$packageMsi" $1041Mst 1041
-	if ($? -ne $true) {
-		throw "wisubstg.vbs error"
-	}
-
-	& cscript "$wilangid" "$packageMsi" Package 1033, 1041
-	if ($? -ne $true) {
-		throw "wilangid.vbs error"
-	}
+    Write-Host "[msi] wilangid $packageMsi" -fore Cyan
+    & cscript "$wilangid" "$packageMsi" Package 1033, 1041
+    if ($? -ne $true) {
+        throw "$wilangid error"
+    }
 }
 
 # Appx remove

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<WixLocalization Culture="ja-jp" xmlns="http://schemas.microsoft.com/wix/2006/localization">
-    <String Id="language">1041</String>
-    <String Id="codepage">932</String>
-    <String Id="downgradeErrorMessage">新しいバージョンのNeeViewが既にインストール済です。</String>
-    <String Id="openInNeeView">NeeViewで開く(&amp;V)</String>
-    <String Id="contextMenuFeatureDescription">コンテキストメニューに「NeeViewで開く」を追加します。</String>
-</WixLocalization>

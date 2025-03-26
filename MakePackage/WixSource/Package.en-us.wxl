@@ -1,0 +1,7 @@
+﻿<WixLocalization xmlns="http://wixtoolset.org/schemas/v4/wxl" Culture="en-us" Codepage="1252">
+    <String Id="language" Value="1033" />
+    <String Id="codepage" Value="1252" />
+    <String Id="downgradeErrorMessage" Value="A new version of NeeView has already been installed." />
+    <String Id="openInNeeView" Value="Open in Nee&amp;View" />
+    <String Id="contextMenuFeatureDescription" Value="Add &quot;Open in NeeView&quot; to the context menu." />
+</WixLocalization>

@@ -1,0 +1,27 @@
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Fragment>
+
+    <ComponentGroup Id="MainComponents" Directory="INSTALLFOLDER">
+      <Files Include="!(bindpath.Contents)\**">
+          <Exclude Files="!(bindpath.Contents)\NeeView.exe" />
+          <Exclude Files="!(bindpath.Contents)\NeeView.settings.json" />
+          <Exclude Files="!(bindpath.Contents)\README.html" />
+          <Exclude Files="!(bindpath.Contents)\README.ja-jp.html" />
+      </Files>
+    </ComponentGroup>
+
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <File Id="EXE" Source="!(bindpath.Contents)\NeeView.exe" KeyPath="yes" Checksum="yes">
+        <Shortcut Id="MyMenuShortcut" Directory="ProgramMenuFolder" Name="NeeView" WorkingDirectory="INSTALLFOLDER" Advertise="yes" />
+      </File>
+      <File Source="!(bindpath.Append)\NeeView.settings.json" />
+      <File Source="!(bindpath.Append)\README.html" />
+      <File Source="!(bindpath.Append)\README.ja-jp.html" />
+      <Component>
+        <RegistryValue Root="HKLM" Key="SOFTWARE\NeeLaboratory\NeeView" Name="InstallDir" Type="string" Value="[INSTALLFOLDER]" KeyPath="yes" />
+     </Component>
+    </ComponentGroup>
+
+  </Fragment>
+</Wix>
+
