@@ -51,12 +51,10 @@
     </InstallExecuteSequence>
 
     <!-- CustomAction: Clear HKCU registry when uninstall -->
+    <!-- Deletes only the registry of the user who performed the uninstallation. -->
     <CustomAction Id="EXECUTE_CLEANUP" Execute="immediate" Impersonate="yes" Return="ignore" ExeCommand="--clear-registry" FileRef="EXE" />
-    <!-- perMachine only cleans the registry of the user who performed the uninstallation.  -->
-    <!--
     <InstallExecuteSequence>
       <Custom Action="EXECUTE_CLEANUP" After="InstallInitialize" Condition="(REMOVE = &quot;ALL&quot;) AND (NOT UPGRADINGPRODUCTCODE)" />
     </InstallExecuteSequence>
-    -->
   </Package>
 </Wix>

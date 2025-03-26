@@ -23,5 +23,5 @@ Uninstallation is done through the OS application management function.
 
 > [!NOTE]  
 > [43.0] Explorer-related settings use the registry.
-> These settings do not disappear even if the application is deleted, so please turn them off in the settings before deleting.
-> It is also deleted by the above "Delete all data" operation.
+> Uninstallation removes these registries, but only for the user who performed the uninstallation.
+> If other users have also been using the system, please disable it in the settings before uninstalling.
