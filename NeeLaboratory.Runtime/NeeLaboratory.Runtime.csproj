@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="..\NeeView.props" />
 
   <PropertyGroup>
     <TargetFramework>net9.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
+    <IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
 
   <PropertyGroup>

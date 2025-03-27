@@ -35,11 +35,11 @@ namespace NeeLaboratory.ComponentModel
         {
             var options = new JsonSerializerOptions() { IgnoreReadOnlyProperties = true };
             ReadOnlySpan<byte> json =  JsonSerializer.SerializeToUtf8Bytes(source, options);
-            return JsonSerializer.Deserialize<T>(json, options) ?? throw new InvalidOperationException("serialize must be successed");
+            return JsonSerializer.Deserialize<T>(json, options) ?? throw new InvalidOperationException("serialize must be succeed");
         }
 
         /// <summary>
-        /// DevaultValue属性でプロパティを初期化する
+        /// DefaultValue属性でプロパティを初期化する
         /// from: https://stackoverflow.com/questions/2329868/net-defaultvalue-attribute
         /// </summary>
         /// <param name="obj"></param>

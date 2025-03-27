@@ -9,6 +9,8 @@
     <Nullable>enable</Nullable>
     <ApplicationIcon>App.ico</ApplicationIcon>
     <CETCompat>false</CETCompat>
+    <PublishAot>true</PublishAot>
+    <IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
 
   <PropertyGroup>

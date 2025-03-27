@@ -6,6 +6,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <Platforms>AnyCPU;x64;x86</Platforms>
     <Nullable>enable</Nullable>
+    <IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
 
   <PropertyGroup>

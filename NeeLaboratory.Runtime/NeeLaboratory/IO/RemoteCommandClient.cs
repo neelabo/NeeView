@@ -56,7 +56,7 @@ namespace NeeLaboratory.IO
                 return delivery.Type switch
                 {
                     RemoteCommandDeliveryType.Custom => processes.Where(p => p.Id == delivery.ProcessId).Take(1).ToList(),
-                    RemoteCommandDeliveryType.Lastest => processes.OrderByDescending((p) => p.StartTime).Take(1).ToList(),
+                    RemoteCommandDeliveryType.Latest => processes.OrderByDescending((p) => p.StartTime).Take(1).ToList(),
                     RemoteCommandDeliveryType.Previous => ((IEnumerable<Process>)processes).Reverse().Take(1).ToList(),
                     RemoteCommandDeliveryType.Next => processes.Take(1).ToList(),
                     _ => processes.ToList(),
@@ -75,7 +75,7 @@ namespace NeeLaboratory.IO
                 await pipeClient.ConnectAsync(tokenSource.Token);
                 if (pipeClient.IsConnected)
                 {
-                    await JsonSerializer.SerializeAsync(pipeClient, command, RemoteCommandServer.SerializerOptions, tokenSource.Token);
+                    await JsonSerializer.SerializeAsync(pipeClient, command, RemoteCommandJsonSerializerContext.Default.RemoteCommand, tokenSource.Token);
                 }
             }
             catch (OperationCanceledException ex)
@@ -89,7 +89,7 @@ namespace NeeLaboratory.IO
     public class RemoteCommandDelivery
     {
         public static RemoteCommandDelivery All { get; } = new RemoteCommandDelivery(RemoteCommandDeliveryType.All);
-        public static RemoteCommandDelivery Lastest { get; } = new RemoteCommandDelivery(RemoteCommandDeliveryType.Lastest);
+        public static RemoteCommandDelivery Latest { get; } = new RemoteCommandDelivery(RemoteCommandDeliveryType.Latest);
         public static RemoteCommandDelivery Previous { get; } = new RemoteCommandDelivery(RemoteCommandDeliveryType.Previous);
         public static RemoteCommandDelivery Next { get; } = new RemoteCommandDelivery(RemoteCommandDeliveryType.Next);
 
@@ -122,7 +122,7 @@ namespace NeeLaboratory.IO
         /// <summary>
         /// 自身を除く最新プロセス
         /// </summary>
-        Lastest,
+        Latest,
 
         /// <summary>
         /// 指定のプロセス

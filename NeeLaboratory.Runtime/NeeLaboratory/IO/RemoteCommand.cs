@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.Json.Serialization;
 
 namespace NeeLaboratory.IO
 {
@@ -28,4 +29,9 @@ namespace NeeLaboratory.IO
         public string[] Args { get; set; }
     }
 
+
+    [JsonSerializable(typeof(RemoteCommand))]
+    internal partial class RemoteCommandJsonSerializerContext : JsonSerializerContext
+    {
+    }
 }

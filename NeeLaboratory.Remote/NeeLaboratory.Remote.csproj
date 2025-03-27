@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>NeeLaboratory.Remote</RootNamespace>
     <Platforms>AnyCPU</Platforms>
+    <IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
 
   <PropertyGroup>

@@ -12,9 +12,6 @@ namespace NeeLaboratory.IO
     /// </summary>
     public class RemoteCommandServer : IDisposable
     {
-        public static JsonSerializerOptions SerializerOptions { get; } = new JsonSerializerOptions();
-
-
         private readonly CancellationTokenSource _cancellationTokenSource = new();
 
 
@@ -30,7 +27,7 @@ namespace NeeLaboratory.IO
 
         public void Start()
         {
-            Task.Run(ReciverAsync);
+            Task.Run(ReceiverAsync);
         }
 
         public void Stop()
@@ -43,7 +40,7 @@ namespace NeeLaboratory.IO
             return process.ProcessName + ".p" + process.Id;
         }
 
-        private async Task ReciverAsync()
+        private async Task ReceiverAsync()
         {
             var pipeName = GetPipetName(Process.GetCurrentProcess());
 
@@ -56,10 +53,10 @@ namespace NeeLaboratory.IO
                     await pipeServer.WaitForConnectionAsync(_cancellationTokenSource.Token);
                     if (pipeServer.IsConnected)
                     {
-                        var command = await JsonSerializer.DeserializeAsync<RemoteCommand>(pipeServer, RemoteCommandServer.SerializerOptions, _cancellationTokenSource.Token);
+                        var command = await JsonSerializer.DeserializeAsync(pipeServer, RemoteCommandJsonSerializerContext.Default.RemoteCommand, _cancellationTokenSource.Token);
                         if (command != null && Called != null)
                         {
-                            ////Debug.WriteLine($"Recieve: {command.ID}({string.Join(",", command.Args)})");
+                            ////Debug.WriteLine($"Receive: {command.ID}({string.Join(",", command.Args)})");
                             Called(this, new RemoteCommandEventArgs(command));
                         }
                     }

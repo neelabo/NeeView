@@ -189,7 +189,8 @@ function Replace-Alert([string]$filepath) {
 }
 
 # build
-function Build-Project($platform, $outputDir, $options) {
+function Get-DefaultOptions($platform)
+{
 	$defaultOptions = @(
 		"-p:PublishProfile=FolderProfile-$platform.pubxml"
 		"-c", "Release"
@@ -201,12 +202,23 @@ function Build-Project($platform, $outputDir, $options) {
 		"Beta" { $defaultOptions += "-p:VersionSuffix=beta${dateVersion}"; break; }
 	}
 
+	return $defaultOptions
+}
+
+function Build-Project($platform, $outputDir, $options) {
+	$defaultOptions = Get-DefaultOptions $platform
+
 	& dotnet publish $project $defaultOptions $options -o Publish\$outputDir
 	if ($? -ne $true) {
 		throw "build error"
 	}
+}
 
-	& dotnet publish $projectSusie $defaultOptions $options -o Publish\$outputDir\Libraries\Susie
+function Build-SusieProject($platform, $outputDir) 
+{
+	$defaultOptions = Get-DefaultOptions $platform
+
+	& dotnet publish $projectSusie $defaultOptions -o Publish\$outputDir\Libraries\Susie
 	if ($? -ne $true) {
 		throw "build error"
 	}
@@ -216,17 +228,17 @@ function Build-ProjectSelfContained($platform) {
 	$options = @(
 		"--self-contained", "true"
 	)
-
 	Build-Project $platform "$product-$platform" $options
+	Build-SusieProject $platform "$product-$platform"
 }
 
 function Build-ProjectFrameworkDependent($platform) {
 	$options = @(
-		"-p:PublishTrimmed=false"
 		"--self-contained", "false"
 	)
 
 	Build-Project $platform "$product-$platform-fd" $options
+	Build-SusieProject $platform "$product-$platform-fd"
 }
 
 # package section
