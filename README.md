@@ -39,7 +39,6 @@ Powerful customization is available.
 
 ## Development Environment
 
-* Windows 10 64bit
 * VisualStudio 2022
     -  .NET Desktop Development
     - Desktop development in C++
@@ -59,10 +58,17 @@ This is the main development branch. Basically, pull requests are accepted here.
 Branches of each major version.
 When development of the next major version begins on the master branch, a branch is created to maintain the current major version.
 
+### feature-XX
+
+Working branches for feature development.
+It will be removed when merged into the master branch.
+
 ## Versioning Strategy
 
-Update the major version with any feature additions or changes.
+> MAJOR  . MINOR . BUILD
 
-If there are no changes in functionality, such as bug fixes, the minor version will be updated.
+Update the MAJOR version with any feature additions or changes.
 
-The build version is automatically assigned the number of commits up to that revision. It is internal and not public.
+If there are no changes in functionality, such as bug fixes, the MINOR version will be updated.
+
+The BUILD version is automatically assigned the number of commits up to that revision. It is internal and not public.
