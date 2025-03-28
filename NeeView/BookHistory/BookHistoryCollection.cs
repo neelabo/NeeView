@@ -266,7 +266,7 @@ namespace NeeView
         {
             lock (_lock)
             {
-                return _items.Take(size).ToList();
+                return _items.Reverse().Take(size).ToList();
             }
         }
 
