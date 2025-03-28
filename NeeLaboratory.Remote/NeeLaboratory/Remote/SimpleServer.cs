@@ -13,20 +13,20 @@ namespace NeeLaboratory.Remote
 {
     public class SimpleServer
     {
-        public delegate List<Chunk> SimpleReciever(List<Chunk> chunks);
+        public delegate List<Chunk> SimpleReceiver(List<Chunk> chunks);
 
         private readonly string _name;
 
-        private readonly Dictionary<int, SimpleReciever> _recievers = new();
+        private readonly Dictionary<int, SimpleReceiver> _receivers = new();
 
         public SimpleServer(string name)
         {
             _name = name;
         }
 
-        public void AddReciever(int id, SimpleReciever reciever)
+        public void AddReceiver(int id, SimpleReceiver receiver)
         {
-            _recievers.Add(id, reciever);
+            _receivers.Add(id, receiver);
         }
 
         public void ServerProcess()
@@ -62,7 +62,7 @@ namespace NeeLaboratory.Remote
             try
             {
                 ////Trace.WriteLine($"Server: Execute: ChunkCount={command.Count} CommandId={command[0].Id}");
-                var result = _recievers[command[0].Id].Invoke(command);
+                var result = _receivers[command[0].Id].Invoke(command);
                 ////Trace.WriteLine($"Server: Result: ChunkCount={result.Count}");
                 return result;
             }

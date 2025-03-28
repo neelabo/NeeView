@@ -44,15 +44,15 @@ namespace NeeView.Susie
 
     public class SusiePluginCommandInitialize
     {
-        public SusiePluginCommandInitialize(string pluginFolder, List<SusiePluginSetting> settings)
+        public SusiePluginCommandInitialize(string pluginFolder, List<SusiePluginInfo> plugins)
         {
             PluginFolder = pluginFolder;
-            Settings = settings;
+            Plugins = plugins;
         }
 
         public string PluginFolder { get; set; }
 
-        public List<SusiePluginSetting> Settings { get; set; }
+        public List<SusiePluginInfo> Plugins { get; set; }
     }
 
 
@@ -68,23 +68,23 @@ namespace NeeView.Susie
 
     public class SusiePluginCommandGetPluginResult
     {
-        public SusiePluginCommandGetPluginResult(List<SusiePluginInfo> pluginInfoList)
+        public SusiePluginCommandGetPluginResult(List<SusiePluginInfo> plugins)
         {
-            PluginInfoList = pluginInfoList;
+            Plugins = plugins;
         }
 
-        public List<SusiePluginInfo> PluginInfoList { get; set; }
+        public List<SusiePluginInfo> Plugins { get; set; }
     }
 
 
     public class SusiePluginCommandSetPlugin
     {
-        public SusiePluginCommandSetPlugin(List<SusiePluginSetting> settings)
+        public SusiePluginCommandSetPlugin(List<SusiePluginInfo> plugins)
         {
-            Settings = settings;
+            Plugins = plugins;
         }
 
-        public List<SusiePluginSetting> Settings { get; set; }
+        public List<SusiePluginInfo> Plugins { get; set; }
     }
 
 
@@ -128,12 +128,12 @@ namespace NeeView.Susie
 
     public class SusiePluginCommandGetArchivePluginResult
     {
-        public SusiePluginCommandGetArchivePluginResult(SusiePluginInfo? pluginInfo)
+        public SusiePluginCommandGetArchivePluginResult(SusiePluginInfo? plugin)
         {
-            PluginInfo = pluginInfo;
+            Plugin = plugin;
         }
 
-        public SusiePluginInfo? PluginInfo { get; set; }
+        public SusiePluginInfo? Plugin { get; set; }
     }
 
     public class SusiePluginCommandGetImagePlugin
@@ -151,12 +151,12 @@ namespace NeeView.Susie
 
     public class SusiePluginCommandGetImagePluginResult
     {
-        public SusiePluginCommandGetImagePluginResult(SusiePluginInfo? pluginInfo)
+        public SusiePluginCommandGetImagePluginResult(SusiePluginInfo? plugin)
         {
-            PluginInfo = pluginInfo;
+            Plugin = plugin;
         }
 
-        public SusiePluginInfo? PluginInfo { get; set; }
+        public SusiePluginInfo? Plugin { get; set; }
     }
 
 
@@ -179,12 +179,12 @@ namespace NeeView.Susie
 
     public class SusiePluginCommandGetImageResult
     {
-        public SusiePluginCommandGetImageResult(SusiePluginInfo? pluginInfo)
+        public SusiePluginCommandGetImageResult(SusiePluginInfo? plugin)
         {
-            PluginInfo = pluginInfo;
+            Plugin = plugin;
         }
 
-        public SusiePluginInfo? PluginInfo { get; set; }
+        public SusiePluginInfo? Plugin { get; set; }
     }
 
 

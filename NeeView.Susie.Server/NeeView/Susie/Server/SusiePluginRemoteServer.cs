@@ -23,17 +23,17 @@ namespace NeeView.Susie.Server
             var name = SusiePluginRemote.CreateServerName(Process.GetCurrentProcess());
             Trace.WriteLine($"ServerName: {name}");
             _server = new SimpleServer(name);
-            _server.AddReciever(SusiePluginCommandId.Initialize, Initialize);
-            _server.AddReciever(SusiePluginCommandId.GetPlugin, GetPlugin);
-            _server.AddReciever(SusiePluginCommandId.SetPlugin, SetPlugin);
-            _server.AddReciever(SusiePluginCommandId.SetPluginOrder, SetPluginOrder);
-            _server.AddReciever(SusiePluginCommandId.ShowConfigurationDlg, ShowConfigurationDlg);
-            _server.AddReciever(SusiePluginCommandId.GetArchivePlugin, GetArchivePlugin);
-            _server.AddReciever(SusiePluginCommandId.GetImagePlugin, GetImagePlugin);
-            _server.AddReciever(SusiePluginCommandId.GetImage, GetImage);
-            _server.AddReciever(SusiePluginCommandId.GetArchiveEntries, GetArchiveEntries);
-            _server.AddReciever(SusiePluginCommandId.ExtractArchiveEntry, ExtractArchiveEntry);
-            _server.AddReciever(SusiePluginCommandId.ExtractArchiveEntryToFolder, ExtractArchiveEntryToFolder);
+            _server.AddReceiver(SusiePluginCommandId.Initialize, Initialize);
+            _server.AddReceiver(SusiePluginCommandId.GetPlugin, GetPlugin);
+            _server.AddReceiver(SusiePluginCommandId.SetPlugin, SetPlugin);
+            _server.AddReceiver(SusiePluginCommandId.SetPluginOrder, SetPluginOrder);
+            _server.AddReceiver(SusiePluginCommandId.ShowConfigurationDlg, ShowConfigurationDlg);
+            _server.AddReceiver(SusiePluginCommandId.GetArchivePlugin, GetArchivePlugin);
+            _server.AddReceiver(SusiePluginCommandId.GetImagePlugin, GetImagePlugin);
+            _server.AddReceiver(SusiePluginCommandId.GetImage, GetImage);
+            _server.AddReceiver(SusiePluginCommandId.GetArchiveEntries, GetArchiveEntries);
+            _server.AddReceiver(SusiePluginCommandId.ExtractArchiveEntry, ExtractArchiveEntry);
+            _server.AddReceiver(SusiePluginCommandId.ExtractArchiveEntryToFolder, ExtractArchiveEntryToFolder);
 
 
             _process = new SusiePluginServer();
@@ -68,8 +68,8 @@ namespace NeeView.Susie.Server
         private List<Chunk> Initialize(List<Chunk> command)
         {
             var args = DeserializeChunk<SusiePluginCommandInitialize>(command[0]);
-            Trace.WriteLine($"Remote.Initialize: {args.PluginFolder}, {args.Settings}");
-            _process.Initialize(args.PluginFolder, args.Settings);
+            Trace.WriteLine($"Remote.Initialize: {args.PluginFolder}, {args.Plugins}");
+            _process.Initialize(args.PluginFolder, args.Plugins);
             return CreateResultIsSuccess(SusiePluginCommandId.Initialize, true);
         }
 
@@ -84,8 +84,8 @@ namespace NeeView.Susie.Server
         private List<Chunk> SetPlugin(List<Chunk> command)
         {
             var args = DeserializeChunk<SusiePluginCommandSetPlugin>(command[0]);
-            Trace.WriteLine($"Remote.SetPlugin: {args.Settings}");
-            _process.SetPlugin(args.Settings);
+            Trace.WriteLine($"Remote.SetPlugin: {args.Plugins}");
+            _process.SetPlugin(args.Plugins);
             return CreateResultIsSuccess(SusiePluginCommandId.SetPlugin, true);
         }
 

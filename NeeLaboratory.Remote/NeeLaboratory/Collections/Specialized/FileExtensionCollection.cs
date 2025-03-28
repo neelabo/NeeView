@@ -14,7 +14,9 @@ namespace NeeLaboratory.Collections.Specialized
     [JsonConverter(typeof(FileExtensionCollectionJsonConverter))]
     public class FileExtensionCollection : IEnumerable<string>, IEquatable<FileExtensionCollection>
     {
-        private List<string> _items;
+        public static FileExtensionCollection Empty { get; } = new FileExtensionCollection();
+
+        private readonly List<string> _items;
 
         public FileExtensionCollection()
         {
@@ -30,7 +32,6 @@ namespace NeeLaboratory.Collections.Specialized
         {
             _items = ValidateCollection(items?.Split(';').Select(e => e.Trim()));
         }
-
 
 
         public bool IsEmpty()
@@ -103,27 +104,28 @@ namespace NeeLaboratory.Collections.Specialized
         {
             return _items.GetHashCode();
         }
-    }
 
+        public FileExtensionCollection Clone()
+        {
+            return new FileExtensionCollection(_items);
+        }
+    }
 
 
     public sealed class FileExtensionCollectionJsonConverter : JsonConverter<FileExtensionCollection>
     {
         public override FileExtensionCollection? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var items = JsonSerializer.Deserialize(ref reader, IEnumerableStringJsonSerializerContext.Default.IEnumerableString);
-            if (items is null) return null;
-            return new FileExtensionCollection(items);
+            var s = reader.GetString();
+            if (s is null) return null;
+
+            return new FileExtensionCollection(s);
         }
 
         public override void Write(Utf8JsonWriter writer, FileExtensionCollection value, JsonSerializerOptions options)
         {
-            JsonSerializer.Serialize(writer, value, IEnumerableStringJsonSerializerContext.Default.IEnumerableString);
+            writer.WriteStringValue(value.ToOneLine());
         }
     }
 
-    [JsonSerializable(typeof(IEnumerable<string>))]
-    public partial class IEnumerableStringJsonSerializerContext : JsonSerializerContext
-    {
-    }
 }

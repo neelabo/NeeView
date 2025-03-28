@@ -85,7 +85,7 @@ namespace NeeView.Setting
         public SusiePluginSettingWindowViewModel(SusiePluginInfo spi)
         {
             _spi = spi;
-            DefaultExtensions = new FileTypeCollection(_spi.DefaultExtension);
+            DefaultExtensions = new FileTypeCollection(_spi.DefaultExtensions ?? FileExtensionCollection.Empty);
             Extensions = new FileTypeCollection(_spi.Extensions);
         }
 
@@ -127,7 +127,7 @@ namespace NeeView.Setting
 
         public void Flush()
         {
-            _spi.UserExtension = new FileExtensionCollection(Extensions.OneLine);
+            _spi.UserExtensions = new FileExtensionCollection(Extensions.OneLine);
             Debug.WriteLine($"TODO: Flush UserExtension");
         }
     }

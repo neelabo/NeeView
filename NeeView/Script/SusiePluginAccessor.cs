@@ -16,7 +16,7 @@ namespace NeeView
         public string Name => _plugin.Name;
 
         [WordNodeMember]
-        public string? Path => _plugin.FileName;
+        public string? Path => System.IO.Path.GetFullPath(System.IO.Path.Combine(Config.Current.Susie.SusiePluginPath, _plugin.Name));
 
         [WordNodeMember]
         public string? ApiVersion => _plugin.ApiVersion;
@@ -84,7 +84,7 @@ namespace NeeView
                 var extensions = string.IsNullOrEmpty(value) ? null : new FileExtensionCollection(value);
                 if (!_plugin.Extensions.Equals(extensions))
                 {
-                    _plugin.UserExtension = extensions;
+                    _plugin.UserExtensions = extensions;
                     Update();
                 }
             }

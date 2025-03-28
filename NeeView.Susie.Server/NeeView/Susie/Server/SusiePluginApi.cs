@@ -13,19 +13,22 @@ namespace NeeView.Susie.Server
     /// Susie Plugin API
     /// アンマネージなDLLアクセスを行います。
     /// </summary>
-    public class SusiePluginApi : IDisposable
+    public class SusiePluginApi : IDisposable, ISusiePluginApi
     {
         // DLLハンドル
         private IntPtr hModule = IntPtr.Zero;
 
         // APIデリゲートリスト
         private readonly Dictionary<Type, object> _apiDelegateList = new();
+        
+        private bool _disposedValue = false;
 
 
         private SusiePluginApi()
         {
         }
 
+        public bool IsDisposed => _disposedValue;
 
         /// <summary>
         /// プラグインをロードし、使用可能状態にする
@@ -66,43 +69,31 @@ namespace NeeView.Susie.Server
         }
 
         #region IDisposable Support
-        private bool _disposedValue = false; // 重複する呼び出しを検出するには
 
-        //
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposedValue)
             {
                 if (disposing)
                 {
-                    // ここで、マネージ状態を破棄します (マネージ オブジェクト)。
                 }
-
-                // ここで、アンマネージ リソース (アンマネージ オブジェクト) を解放し、下のファイナライザーをオーバーライドします。
-                // ここで、大きなフィールドを null に設定します。
                 Close();
-
                 _disposedValue = true;
             }
         }
 
-        // 上の Dispose(bool disposing) にアンマネージ リソースを解放するコードが含まれる場合にのみ、ファイナライザーをオーバーライドします。
         ~SusiePluginApi()
         {
-            // このコードを変更しないでください。クリーンアップ コードを上の Dispose(bool disposing) に記述します。
             Dispose(false);
         }
 
-        // このコードは、破棄可能なパターンを正しく実装できるように追加されました。
         public void Dispose()
         {
-            // このコードを変更しないでください。クリーンアップ コードを上の Dispose(bool disposing) に記述します。
             Dispose(true);
-            // 上のファイナライザーがオーバーライドされる場合は、次の行のコメントを解除してください。
             GC.SuppressFinalize(this);
         }
-        #endregion
 
+        #endregion
 
         /// <summary>
         /// APIの存在確認
@@ -124,7 +115,7 @@ namespace NeeView.Susie.Server
         /// <typeparam name="T">APIのデリゲート</typeparam>
         /// <param name="procName">API名</param>
         /// <returns></returns>
-        public T GetApiDelegate<T>(string procName)
+        private T GetApiDelegate<T>(string procName)
             where T : notnull
         {
             if (!_apiDelegateList.ContainsKey(typeof(T)))
@@ -197,7 +188,7 @@ namespace NeeView.Susie.Server
 
         #region 00IN,00AM 必須 IsSupported()
         private delegate bool IsSupportedFromFileDelegate(string filename, IntPtr dw);
-        private delegate bool IsSupportedFromMemoryDelegate(string filename, [In]byte[] dw);
+        private delegate bool IsSupportedFromMemoryDelegate(string filename, [In] byte[] dw);
 
         /// <summary>
         /// サポート判定(ファイル版)
@@ -233,8 +224,8 @@ namespace NeeView.Susie.Server
 
 
         #region 00AM 必須 GetArchiveInfo()
-        private delegate int GetArchiveInfoFromFileDelegate([In]string filename, int offset, uint flag, out IntPtr hInfo);
-        private delegate int GetArchiveInfoFromMemoryDelegate([In]byte[] buf, int offset, uint flag, out IntPtr hInfo);
+        private delegate int GetArchiveInfoFromFileDelegate([In] string filename, int offset, uint flag, out IntPtr hInfo);
+        private delegate int GetArchiveInfoFromMemoryDelegate([In] byte[] buf, int offset, uint flag, out IntPtr hInfo);
 
         /// <summary>
         /// アーカイブ情報取得
@@ -333,8 +324,8 @@ namespace NeeView.Susie.Server
 
 
         #region 00IN 必須 GetPicture()
-        private delegate int GetPictureFromMemoryDelegate([In]byte[] buf, int len, uint flag, out IntPtr pHBInfo, out IntPtr pHBm, ProgressCallback lpProgressCallback, int lData);
-        private delegate int GetPictureFromFileDelegate([In]string filename, int offset, uint flag, out IntPtr pHBInfo, out IntPtr pHBm, ProgressCallback lpProgressCallback, int lData);
+        private delegate int GetPictureFromMemoryDelegate([In] byte[] buf, int len, uint flag, out IntPtr pHBInfo, out IntPtr pHBm, ProgressCallback lpProgressCallback, int lData);
+        private delegate int GetPictureFromFileDelegate([In] string filename, int offset, uint flag, out IntPtr pHBInfo, out IntPtr pHBm, ProgressCallback lpProgressCallback, int lData);
 
 
 

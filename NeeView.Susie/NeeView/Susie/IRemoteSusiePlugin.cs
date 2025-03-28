@@ -10,7 +10,7 @@ namespace NeeView.Susie
         /// <summary>
         /// 初期化
         /// </summary>
-        void Initialize(string pluginFolder, List<SusiePluginSetting> settings);
+        void Initialize(string pluginFolder, List<SusiePluginInfo> plugins);
 
         /// <summary>
         /// プラグイン情報取得
@@ -21,8 +21,8 @@ namespace NeeView.Susie
         /// <summary>
         /// プラグイン情報設定
         /// </summary>
-        /// <param name="settings">プラグイン設定</param>
-        void SetPlugin(List<SusiePluginSetting> settings);
+        /// <param name="plugins">プラグイン設定</param>
+        void SetPlugin(List<SusiePluginInfo> plugins);
 
         /// <summary>
         /// プラグインの並び順設定

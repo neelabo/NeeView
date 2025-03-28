@@ -1,23 +1,18 @@
-﻿using NeeLaboratory.ComponentModel;
-using NeeView.Windows.Controls;
-using NeeView.Windows.Property;
+﻿using NeeLaboratory.Collections.Specialized;
+using NeeLaboratory.ComponentModel;
 using NeeView.Susie;
+using NeeView.Susie.Client;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-using NeeView.Susie.Client;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
+using System.Text.Json.Serialization;
+using System.Threading;
 using System.Windows;
 using System.Windows.Interop;
-using System.Threading;
-using NeeLaboratory.Collections.Specialized;
 
 namespace NeeView
 {
@@ -31,7 +26,7 @@ namespace NeeView
         private List<SusiePluginInfo> _unauthorizedPlugins;
         private ObservableCollection<SusiePluginInfo> _INPlugins;
         private ObservableCollection<SusiePluginInfo> _AMPlugins;
-        private static System.Threading.Lock _lock = new();
+        private static Lock _lock = new();
 
         private SusiePluginManager()
         {
@@ -173,8 +168,7 @@ namespace NeeView
         {
             if (_client is null) throw new InvalidOperationException("Client is null");
 
-            var settings = Plugins.Select(e => e.ToSusiePluginSetting()).ToList();
-            _client.Initialize(System.IO.Path.GetFullPath(Config.Current.Susie.SusiePluginPath), settings);
+            _client.Initialize(System.IO.Path.GetFullPath(Config.Current.Susie.SusiePluginPath), Plugins.ToList());
 
             var plugins = _client.GetPlugin(null);
             UnauthorizedPlugins = new List<SusiePluginInfo>();
@@ -243,20 +237,20 @@ namespace NeeView
         }
 
         // SusiePluginInfo を上書き
-        public void WriteSusiePluginInfo(SusiePluginInfo pluginInfo)
+        public void WriteSusiePlugin(SusiePluginInfo plugin)
         {
             lock (_lock)
             {
                 if (_client is null) throw new InvalidOperationException("Client is null");
 
-                var plugin = Plugins.FirstOrDefault(e => e.Name == pluginInfo.Name);
-                if (plugin is null) return;
+                var target = Plugins.FirstOrDefault(e => e.Name == plugin.Name);
+                if (target is null) return;
 
-                plugin.Set(pluginInfo);
+                plugin.CopyTo(target);
             }
         }
 
-        public void FlushSusiePluginSetting(string name)
+        public void FlushSusiePlugin(string name)
         {
             lock (_lock)
             {
@@ -264,24 +258,23 @@ namespace NeeView
 
                 var settings = Plugins
                     .Where(e => e.Name == name)
-                    .Select(e => e.ToSusiePluginSetting())
                     .ToList();
 
-                FlushSusiePluginSetting(settings);
+                FlushSusiePlugin(settings);
             }
         }
 
-        public void FlushSusiePluginSetting(List<SusiePluginSetting> settings)
+        public void FlushSusiePlugin(List<SusiePluginInfo> plugins)
         {
-            Debug.WriteLine($"FlushSusiePluginSetting: {string.Join(", ", settings.Select(e => e.Name).ToArray())}");
+            Debug.WriteLine($"FlushSusiePlugin: {string.Join(", ", plugins.Select(e => e.Name).ToArray())}");
 
-            if (settings.Count == 0) return;
-            
+            if (plugins.Count == 0) return;
+
             lock (_lock)
             {
                 if (_client is null) throw new InvalidOperationException("Client is null");
 
-                _client.SetPlugin(settings);
+                _client.SetPlugin(plugins);
             }
         }
 
@@ -295,26 +288,22 @@ namespace NeeView
                 if (plugins != null && plugins.Count == 1)
                 {
                     var collection = plugins[0].PluginType == SusiePluginType.Image ? INPlugins : AMPlugins;
-                    var plugin = collection.FirstOrDefault(e => e.Name == name);
-                    if (plugin is not null)
+                    var target = collection.FirstOrDefault(e => e.Name == name);
+                    if (target is not null)
                     {
-                        var index = collection.IndexOf(plugin);
-                        if (index >= 0)
-                        {
-                            collection[index].Set(plugins[0]);
-                        }
+                        plugins[0].CopyTo(target);
                     }
                 }
             }
         }
 
         // プラグイン設定の更新
-        public void UpdatePlugin(SusiePluginInfo pluginInfo)
+        public void UpdatePlugin(SusiePluginInfo plugin)
         {
-            WriteSusiePluginInfo(pluginInfo);
-            FlushSusiePluginSetting(pluginInfo.Name);
-            UpdateSusiePlugin(pluginInfo.Name);
-            UpdateExtensions(pluginInfo.PluginType);
+            WriteSusiePlugin(plugin);
+            FlushSusiePlugin(plugin.Name);
+            UpdateSusiePlugin(plugin.Name);
+            UpdateExtensions(plugin.PluginType);
         }
 
         public void FlushSusiePluginOrder()
@@ -398,49 +387,64 @@ namespace NeeView
         #endregion Memento
     }
 
+
     public class SusiePluginCollection : Dictionary<string, SusiePluginMemento>
     {
     }
 
     [Memento]
-    public class SusiePluginMemento
+    public class SusiePluginMemento : ISusiePluginInfo
     {
+        [JsonIgnore]
+        public string Name { get; set; } = "";
+
         public bool IsEnabled { get; set; }
-
         public bool IsCacheEnabled { get; set; }
-
         public bool IsPreExtract { get; set; }
 
-        public string? UserExtensions { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? ApiVersion { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? PluginVersion { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public bool HasConfigurationDlg { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public FileExtensionCollection? DefaultExtensions { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public FileExtensionCollection? UserExtensions { get; set; }
 
 
-        public static SusiePluginMemento FromSusiePluginInfo(SusiePluginInfo info)
+        public static SusiePluginMemento FromSusiePluginInfo(SusiePluginInfo plugin)
         {
             var setting = new SusiePluginMemento();
-            setting.IsEnabled = info.IsEnabled;
-            setting.IsCacheEnabled = info.IsCacheEnabled;
-            setting.IsPreExtract = info.IsPreExtract;
-            setting.UserExtensions = info.UserExtension?.ToOneLine();
+            setting.Name = plugin.Name;
+            setting.IsEnabled = plugin.IsEnabled;
+            setting.IsCacheEnabled = plugin.IsCacheEnabled;
+            setting.IsPreExtract = plugin.IsPreExtract;
+            setting.ApiVersion = plugin.ApiVersion;
+            setting.PluginVersion = plugin.PluginVersion;
+            setting.HasConfigurationDlg = plugin.HasConfigurationDlg;
+            setting.DefaultExtensions = plugin.DefaultExtensions?.Clone();
+            setting.UserExtensions = plugin.UserExtensions?.Clone();
             return setting;
-        }
-
-        public static SusiePluginMemento FromSusiePluginSetting(Susie.SusiePluginSetting setting)
-        {
-            var memento = new SusiePluginMemento();
-            memento.IsEnabled = setting.IsEnabled;
-            memento.IsCacheEnabled = setting.IsCacheEnabled;
-            memento.IsPreExtract = setting.IsPreExtract;
-            memento.UserExtensions = setting.UserExtensions;
-            return memento;
         }
 
         public SusiePluginInfo ToSusiePluginInfo(string name)
         {
             var info = new SusiePluginInfo(name);
+            // info.Name は引数で指定する
             info.IsEnabled = IsEnabled;
             info.IsCacheEnabled = IsCacheEnabled;
             info.IsPreExtract = IsPreExtract;
-            info.UserExtension = UserExtensions != null ? new FileExtensionCollection(UserExtensions) : null;
+            info.ApiVersion = ApiVersion;
+            info.PluginVersion = PluginVersion;
+            info.HasConfigurationDlg = HasConfigurationDlg;
+            info.DefaultExtensions = DefaultExtensions?.Clone();
+            info.UserExtensions = UserExtensions?.Clone();
             return info;
         }
     }

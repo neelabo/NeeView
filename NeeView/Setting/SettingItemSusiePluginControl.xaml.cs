@@ -82,7 +82,7 @@ namespace NeeView.Setting
             dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             dialog.ShowDialog();
 
-            SusiePluginManager.Current.FlushSusiePluginSetting(spi.Name);
+            SusiePluginManager.Current.FlushSusiePlugin(spi.Name);
             SusiePluginManager.Current.UpdateSusiePlugin(spi.Name);
             UpdateExtensions();
         }
@@ -140,8 +140,7 @@ namespace NeeView.Setting
                     plugin.IsEnabled = flag;
                 }
 
-                var settings = collection.Select(e => e.ToSusiePluginSetting()).ToList();
-                SusiePluginManager.Current.FlushSusiePluginSetting(settings);
+                SusiePluginManager.Current.FlushSusiePlugin(collection.ToList());
                 UpdateExtensions();
 
                 this.PluginList.Items.Refresh();
@@ -200,7 +199,7 @@ namespace NeeView.Setting
         {
             if ((sender as CheckBox)?.DataContext is not SusiePluginInfo item) return;
 
-            SusiePluginManager.Current.FlushSusiePluginSetting(item.Name);
+            SusiePluginManager.Current.FlushSusiePlugin(item.Name);
             UpdateExtensions();
         }
 

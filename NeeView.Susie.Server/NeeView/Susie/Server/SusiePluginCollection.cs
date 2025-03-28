@@ -67,7 +67,7 @@ namespace NeeView.Susie.Server
         }
         #endregion
 
-        public void Initialize(string spiFolder)
+        public void Initialize(string spiFolder, List<SusiePluginInfo> settings)
         {
             if (string.IsNullOrWhiteSpace(spiFolder)) throw new ArgumentException("spiFolder must be not null.", nameof(spiFolder));
             if (!Directory.Exists(spiFolder)) throw new DirectoryNotFoundException($"Directory not found: {spiFolder}");
@@ -79,7 +79,9 @@ namespace NeeView.Susie.Server
             var plugins = new List<SusiePlugin>();
             foreach (var fileName in spiFiles)
             {
-                var spi = SusiePlugin.Create(fileName);
+                var name = Path.GetFileName(fileName);
+                var setting = settings.FirstOrDefault(e => e.Name == name);
+                var spi = SusiePlugin.Create(fileName, setting);
                 if (spi != null)
                 {
                     if (spi.PluginType == SusiePluginType.None)
@@ -103,7 +105,7 @@ namespace NeeView.Susie.Server
         }
 
 
-        public void SetPluginSetting(List<SusiePluginSetting> settings)
+        public void SetPluginSetting(List<SusiePluginInfo> settings)
         {
             if (settings == null) return;
 

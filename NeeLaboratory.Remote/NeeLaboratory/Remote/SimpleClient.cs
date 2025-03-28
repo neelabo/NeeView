@@ -53,7 +53,7 @@ namespace NeeLaboratory.Remote
 
                     // result
                     var result = await stream.ReadChunkArrayAsync(token);
-                    ////Debug.WriteLine($"Client: Result.Recv: {result[0].Id}");
+                    ////Debug.WriteLine($"Client: Result.Id: {result[0].Id}");
 
                     if (result[0].Id < 0)
                     {

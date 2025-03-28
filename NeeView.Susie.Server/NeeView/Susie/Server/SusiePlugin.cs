@@ -17,16 +17,20 @@ namespace NeeView.Susie.Server
     public class SusiePlugin : IDisposable
     {
         private readonly System.Threading.Lock _lock = new();
-        private SusiePluginApi? _module;
+        private readonly SusiePluginApiCache _apiCache;
         private bool _isCacheEnabled = true;
         private FileExtensionCollection? _userExtensions;
+        private bool _propertiesInitialized;
+        private bool _isDisposed = false;
 
 
         public SusiePlugin(string fileName)
         {
             FileName = fileName;
-        }
 
+            _apiCache = new SusiePluginApiCache(this);
+            _apiCache.ModuleLoaded += (sender, e) => ReadProperties(e.Module);
+        }
 
         // 有効/無効
         public bool IsEnabled { get; set; } = true;
@@ -46,26 +50,11 @@ namespace NeeView.Susie.Server
         // プラグインバージョン
         public string? PluginVersion { get; private set; }
 
-        // 詳細テキスト
-        public string DetailText { get { return $"{Name} ( {string.Join(" ", Extensions)} )"; } }
-
         // 設定ダイアログの有無
         public bool HasConfigurationDlg { get; private set; }
 
-
         // プラグインの種類
-        public SusiePluginType PluginType
-        {
-            get
-            {
-                return this.ApiVersion switch
-                {
-                    "00IN" => SusiePluginType.Image,
-                    "00AM" => SusiePluginType.Archive,
-                    _ => SusiePluginType.None,
-                };
-            }
-        }
+        public SusiePluginType PluginType => SusiePluginTypeExtensions.FromApiVersion(this.ApiVersion);
 
         // プラグインDLLをキャッシュする?
         public bool IsCacheEnabled
@@ -76,14 +65,15 @@ namespace NeeView.Susie.Server
                 _isCacheEnabled = value;
                 if (!_isCacheEnabled)
                 {
-                    UnloadModule();
+                    _apiCache.UnloadModule();
                 }
             }
         }
 
-
         // 標準拡張子
-        public FileExtensionCollection DefaultExtensions { get; set; } = new FileExtensionCollection();
+        public FileExtensionCollection? DefaultExtensions { get; set; }
+
+        // ユーザー拡張子
         public FileExtensionCollection? UserExtensions
         {
             get { return _userExtensions; }
@@ -103,7 +93,26 @@ namespace NeeView.Susie.Server
         // 対応拡張子
         public FileExtensionCollection Extensions
         {
-            get { return UserExtensions ?? DefaultExtensions; }
+            get { return UserExtensions ?? DefaultExtensions ?? FileExtensionCollection.Empty; }
+        }
+
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
+            {
+                if (disposing)
+                {
+                    _apiCache.Dispose();
+                }
+                _isDisposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         // 文字列変換
@@ -112,14 +121,29 @@ namespace NeeView.Susie.Server
             return Name ?? "(none)";
         }
 
+        // プロパティ情報が有効か
+        private bool IsValidProperties() => ApiVersion is not null;
+
         /// <summary>
         /// プラグインアクセサ作成
         /// </summary>
         /// <param name="fileName">プラグインファイルのパス</param>
         /// <returns>プラグイン。失敗したら nullを返す</returns>
-        public static SusiePlugin? Create(string fileName)
+        public static SusiePlugin? Create(string fileName, SusiePluginInfo? setting)
         {
             var spi = new SusiePlugin(fileName);
+
+            // 設定がある場合はそれを適用、ない場合はプラグインを読み込んで初期化する
+            if (setting is not null)
+            {
+                Debug.Assert(setting.Name == Path.GetFileName(fileName));
+                spi.Restore(setting);
+                if (spi.IsValidProperties())
+                {
+                    return spi;
+                }
+            }
+
             return spi.Initialize() ? spi : null;
         }
 
@@ -138,22 +162,34 @@ namespace NeeView.Susie.Server
         /// <returns>成功したら true</returns>
         public bool Initialize()
         {
+            using var api = _apiCache.Lock();
+            return ReadProperties(api);
+        }
+
+        /// <summary>
+        /// プラグインプロパティを読み込む
+        /// </summary>
+        /// <param name="api"></param>
+        private bool ReadProperties(ISusiePluginApi api)
+        {
+            if (_propertiesInitialized) return true;
+            _propertiesInitialized = true;
+
+            Trace.WriteLine($"SusiePlugin.ReadProperties: FileName={FileName}");
+
             try
             {
-                using (var api = SusiePluginApi.Create(FileName))
+                ApiVersion = api.GetPluginInfo(0);
+                PluginVersion = api.GetPluginInfo(1);
+
+                if (string.IsNullOrEmpty(PluginVersion))
                 {
-                    ApiVersion = api.GetPluginInfo(0);
-                    PluginVersion = api.GetPluginInfo(1);
-
-                    if (string.IsNullOrEmpty(PluginVersion))
-                    {
-                        PluginVersion = Path.GetFileName(FileName);
-                    }
-
-                    UpdateDefaultExtensions(api);
-
-                    HasConfigurationDlg = api.IsExistFunction("ConfigurationDlg");
+                    PluginVersion = Path.GetFileName(FileName);
                 }
+
+                UpdateDefaultExtensions(api);
+
+                HasConfigurationDlg = api.IsExistFunction("ConfigurationDlg");
 
                 return true;
             }
@@ -168,7 +204,7 @@ namespace NeeView.Susie.Server
         /// 標準拡張子の更新
         /// </summary>
         /// <param name="api"></param>
-        private void UpdateDefaultExtensions(SusiePluginApi api)
+        private void UpdateDefaultExtensions(ISusiePluginApi api)
         {
             var extensions = new List<string>();
             for (int index = 2; ; index += 2)
@@ -188,44 +224,6 @@ namespace NeeView.Susie.Server
             DefaultExtensions = new FileExtensionCollection(extensions);
         }
 
-
-        // API使用開始
-        private SusiePluginApi BeginSection()
-        {
-            if (FileName == null) throw new InvalidOperationException();
-
-            if (_module == null)
-            {
-                _module = SusiePluginApi.Create(FileName);
-            }
-
-            return _module;
-        }
-
-        // API使用終了
-        private void EndSection()
-        {
-            // reset FPU
-            NativeMethods._fpreset();
-
-            if (IsCacheEnabled)
-            {
-                return;
-            }
-
-            UnloadModule();
-        }
-
-        // DLL開放
-        private void UnloadModule()
-        {
-            if (_module != null)
-            {
-                _module.Dispose();
-                _module = null;
-            }
-        }
-
         /// <summary>
         /// 情報ダイアログを開く
         /// </summary>
@@ -239,17 +237,16 @@ namespace NeeView.Susie.Server
             {
                 try
                 {
-                    var api = BeginSection();
+                    using var api = _apiCache.Lock();
                     return api.ConfigurationDlg(hwnd, 0);
                 }
                 finally
                 {
-                    EndSection();
-                    UnloadModule();
+                    // 設定変更を確実時反映させるために再読み込みさせる
+                    _apiCache.UnloadModule();
                 }
             }
         }
-
 
         /// <summary>
         /// 設定ダイアログを開く
@@ -264,15 +261,15 @@ namespace NeeView.Susie.Server
             {
                 try
                 {
-                    var api = BeginSection();
+                    using var api = _apiCache.Lock();
                     var result = api.ConfigurationDlg(hwnd, 1);
                     UpdateDefaultExtensions(api);
                     return result;
                 }
                 finally
                 {
-                    EndSection();
-                    UnloadModule();
+                    // 設定変更を確実時反映させるために再読み込みさせる
+                    _apiCache.UnloadModule();
                 }
             }
         }
@@ -305,8 +302,6 @@ namespace NeeView.Susie.Server
             }
         }
 
-
-
         /// <summary>
         /// プラグイン対応判定
         /// </summary>
@@ -323,16 +318,9 @@ namespace NeeView.Susie.Server
 
             lock (_lock)
             {
-                try
-                {
-                    var api = BeginSection();
-                    string shortPath = GetLegacyPathName(fileName);
-                    return api.IsSupported(shortPath, head);
-                }
-                finally
-                {
-                    EndSection();
-                }
+                using var api = _apiCache.Lock();
+                string shortPath = GetLegacyPathName(fileName);
+                return api.IsSupported(shortPath, head);
             }
         }
 
@@ -345,18 +333,11 @@ namespace NeeView.Susie.Server
         {
             lock (_lock)
             {
-                try
-                {
-                    var api = BeginSection();
-                    string shortPath = GetLegacyPathName(fileName);
-                    var entries = api.GetArchiveInfo(shortPath);
-                    if (entries == null) throw new SusieException($"{this.Name}: Failed to read archive information.");
-                    return new ArchiveEntryCollection(this, fileName, entries);
-                }
-                finally
-                {
-                    EndSection();
-                }
+                using var api = _apiCache.Lock();
+                string shortPath = GetLegacyPathName(fileName);
+                var entries = api.GetArchiveInfo(shortPath);
+                if (entries == null) throw new SusieException($"{this.Name}: Failed to read archive information.");
+                return new ArchiveEntryCollection(this, fileName, entries);
             }
         }
 
@@ -375,22 +356,14 @@ namespace NeeView.Susie.Server
 
             lock (_lock)
             {
-                try
-                {
-                    var api = BeginSection();
-                    string shortPath = GetLegacyPathName(fileName);
-                    if (!api.IsSupported(shortPath, head)) return null;
-                    var entries = api.GetArchiveInfo(shortPath);
-                    if (entries == null) throw new SusieException($"{this.Name}: Failed to read archive information.");
-                    return new ArchiveEntryCollection(this, fileName, entries);
-                }
-                finally
-                {
-                    EndSection();
-                }
+                using var api = _apiCache.Lock();
+                string shortPath = GetLegacyPathName(fileName);
+                if (!api.IsSupported(shortPath, head)) return null;
+                var entries = api.GetArchiveInfo(shortPath);
+                if (entries == null) throw new SusieException($"{this.Name}: Failed to read archive information.");
+                return new ArchiveEntryCollection(this, fileName, entries);
             }
         }
-
 
         /// <summary>
         /// 画像取得(メモリ版)
@@ -409,17 +382,10 @@ namespace NeeView.Susie.Server
 
             lock (_lock)
             {
-                try
-                {
-                    var api = BeginSection();
-                    // string shortPath = GetLegacyPathName(fileName);
-                    if (!api.IsSupported(fileName, buff)) return null;
-                    return api.GetPicture(buff);
-                }
-                finally
-                {
-                    EndSection();
-                }
+                using var api = _apiCache.Lock();
+                // string shortPath = GetLegacyPathName(fileName);
+                if (!api.IsSupported(fileName, buff)) return null;
+                return api.GetPicture(buff);
             }
         }
 
@@ -440,17 +406,10 @@ namespace NeeView.Susie.Server
 
             lock (_lock)
             {
-                try
-                {
-                    var api = BeginSection();
-                    string shortPath = GetLegacyPathName(fileName);
-                    if (!api.IsSupported(shortPath, head)) return null;
-                    return api.GetPicture(shortPath);
-                }
-                finally
-                {
-                    EndSection();
-                }
+                using var api = _apiCache.Lock();
+                string shortPath = GetLegacyPathName(fileName);
+                if (!api.IsSupported(shortPath, head)) return null;
+                return api.GetPicture(shortPath);
             }
         }
 
@@ -458,7 +417,6 @@ namespace NeeView.Susie.Server
         {
             return "." + s.Split('.').Last().ToLowerInvariant();
         }
-
 
         /// <summary>
         /// アーカイブエントリをメモリにロード
@@ -477,17 +435,10 @@ namespace NeeView.Susie.Server
 
             lock (_lock)
             {
-                try
-                {
-                    var api = BeginSection();
-                    var buff = api.GetFile(archiveFileName, position);
-                    if (buff == null) throw new SusieException("Susie extraction failed (Type.M)", this.Name);
-                    return buff;
-                }
-                finally
-                {
-                    EndSection();
-                }
+                using var api = _apiCache.Lock();
+                var buff = api.GetFile(archiveFileName, position);
+                if (buff == null) throw new SusieException("Susie extraction failed (Type.M)", this.Name);
+                return buff;
             }
         }
 
@@ -509,81 +460,44 @@ namespace NeeView.Susie.Server
 
             lock (_lock)
             {
-                try
-                {
-                    var api = BeginSection();
-                    int ret = api.GetFile(archiveFileName, position, extractFolder);
-                    if (ret != 0) throw new SusieException("Susie extraction failed (Type.F)", this.Name);
-                }
-                finally
-                {
-                    EndSection();
-                }
+                using var api = _apiCache.Lock();
+                int ret = api.GetFile(archiveFileName, position, extractFolder);
+                if (ret != 0) throw new SusieException("Susie extraction failed (Type.F)", this.Name);
             }
         }
 
-        #region IDisposable Support
-        private bool _isDisposed = false;
-
-        protected virtual void Dispose(bool disposing)
+        public void Restore(SusiePluginInfo info)
         {
-            if (!_isDisposed)
+            if (info == null) return;
+
+            if (!_propertiesInitialized)
             {
-                if (disposing)
-                {
-                    UnloadModule();
-                }
-
-                _isDisposed = true;
+                this.ApiVersion = info.ApiVersion;
+                this.PluginVersion = info.PluginVersion;
+                this.HasConfigurationDlg = info.HasConfigurationDlg;
+                this.DefaultExtensions = info.DefaultExtensions?.Clone();
             }
-        }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        #endregion
-
-
-        public void Restore(SusiePluginSetting setting)
-        {
-            if (setting == null) return;
-            this.IsEnabled = setting.IsEnabled;
-            this.IsCacheEnabled = setting.IsCacheEnabled;
-            this.IsPreExtract = setting.IsPreExtract;
-            this.UserExtensions = setting.UserExtensions != null ? new FileExtensionCollection(setting.UserExtensions) : null;
+            this.IsEnabled = info.IsEnabled;
+            this.IsCacheEnabled = info.IsCacheEnabled;
+            this.IsPreExtract = info.IsPreExtract;
+            this.UserExtensions = info.UserExtensions?.Clone();
         }
 
         public SusiePluginInfo ToSusiePluginInfo()
         {
             var info = new SusiePluginInfo(this.Name);
-
-            info.FileName = this.FileName;
             info.ApiVersion = this.ApiVersion;
             info.PluginVersion = this.PluginVersion;
-            info.PluginType = this.PluginType;
-            info.DetailText = this.DetailText;
             info.HasConfigurationDlg = this.HasConfigurationDlg;
             info.IsEnabled = this.IsEnabled;
             info.IsCacheEnabled = this.IsCacheEnabled;
             info.IsPreExtract = this.IsPreExtract;
-            info.DefaultExtension = this.DefaultExtensions;
-            info.UserExtension = this.UserExtensions;
+            info.DefaultExtensions = this.DefaultExtensions?.Clone();
+            info.UserExtensions = this.UserExtensions?.Clone();
 
             return info;
         }
-
-        public SusiePluginSetting ToSusiePluginSetting()
-        {
-            var setting = new SusiePluginSetting(this.Name);
-            setting.IsEnabled = this.IsEnabled;
-            setting.IsCacheEnabled = this.IsCacheEnabled;
-            setting.IsPreExtract = this.IsPreExtract;
-            setting.UserExtensions = this.UserExtensions?.ToOneLine();
-            return setting;
-        }
-
 
         /// <summary>
         /// Susieプラグインがアクセス可能な形のパスに変換

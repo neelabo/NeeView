@@ -139,21 +139,21 @@ namespace NeeView.Susie.Client
 
 
 
-        public void Initialize(string pluginFolder, List<SusiePluginSetting> settings)
+        public void Initialize(string pluginFolder, List<SusiePluginInfo> plugins)
         {
             _remote.Connect();
-            Call(SusiePluginCommandId.Initialize, new SusiePluginCommandInitialize(pluginFolder, settings));
+            Call(SusiePluginCommandId.Initialize, new SusiePluginCommandInitialize(pluginFolder, plugins));
         }
 
         public List<SusiePluginInfo> GetPlugin(List<string>? pluginNames)
         {
             var chunks = Call(SusiePluginCommandId.GetPlugin, new SusiePluginCommandGetPlugin(pluginNames));
-            return DeserializeChunk<SusiePluginCommandGetPluginResult>(chunks[0]).PluginInfoList;
+            return DeserializeChunk<SusiePluginCommandGetPluginResult>(chunks[0]).Plugins;
         }
 
-        public void SetPlugin(List<SusiePluginSetting> settings)
+        public void SetPlugin(List<SusiePluginInfo> plugins)
         {
-            Call(SusiePluginCommandId.SetPlugin, new SusiePluginCommandSetPlugin(settings));
+            Call(SusiePluginCommandId.SetPlugin, new SusiePluginCommandSetPlugin(plugins));
         }
 
         public void SetPluginOrder(List<string> order)
@@ -169,13 +169,13 @@ namespace NeeView.Susie.Client
         public SusiePluginInfo? GetArchivePlugin(string fileName, byte[]? buff, bool isCheckExtension)
         {
             var chunks = Call(SusiePluginCommandId.GetArchivePlugin, new SusiePluginCommandGetArchivePlugin(fileName, isCheckExtension), buff);
-            return DeserializeChunk<SusiePluginCommandGetArchivePluginResult>(chunks[0]).PluginInfo;
+            return DeserializeChunk<SusiePluginCommandGetArchivePluginResult>(chunks[0]).Plugin;
         }
 
         public SusiePluginInfo? GetImagePlugin(string fileName, byte[] buff, bool isCheckExtension)
         {
             var chunks = Call(SusiePluginCommandId.GetImage, new SusiePluginCommandGetImagePlugin(fileName, isCheckExtension), buff);
-            return DeserializeChunk<SusiePluginCommandGetImagePluginResult>(chunks[0]).PluginInfo;
+            return DeserializeChunk<SusiePluginCommandGetImagePluginResult>(chunks[0]).Plugin;
         }
 
         public SusieImage? GetImage(string? pluginName, string fileName, byte[]? buff, bool isCheckExtension)
@@ -183,7 +183,7 @@ namespace NeeView.Susie.Client
             var chunks = Call(SusiePluginCommandId.GetImage, new SusiePluginCommandGetImage(pluginName, fileName, isCheckExtension), buff);
             if (chunks[1].Data is null) return null;
 
-            return new SusieImage(DeserializeChunk<SusiePluginCommandGetImageResult>(chunks[0]).PluginInfo, chunks[1].Data);
+            return new SusieImage(DeserializeChunk<SusiePluginCommandGetImageResult>(chunks[0]).Plugin, chunks[1].Data);
         }
 
         public List<SusieArchiveEntry> GetArchiveEntries(string pluginName, string fileName)

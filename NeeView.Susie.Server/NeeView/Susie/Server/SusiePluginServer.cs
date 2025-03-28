@@ -38,14 +38,14 @@ namespace NeeView.Susie.Server
         #endregion
 
 
-        public void Initialize(string pluginFolder, List<SusiePluginSetting> settings)
+        public void Initialize(string pluginFolder, List<SusiePluginInfo> plugins)
         {
             _pluginCollection?.Dispose();
 
             _pluginCollection = new SusiePluginCollection();
-            _pluginCollection.Initialize(pluginFolder);
-            _pluginCollection.SetPluginSetting(settings);
-            _pluginCollection.SortPlugins(settings.Select(e => e.Name).ToList());
+
+            _pluginCollection.Initialize(pluginFolder, plugins);
+            _pluginCollection.SortPlugins(plugins.Select(e => e.Name).ToList());
         }
 
 
@@ -128,7 +128,6 @@ namespace NeeView.Susie.Server
             return plugins.Select(e => e.ToSusiePluginInfo()).ToList();
         }
 
-
         public byte[] ExtractArchiveEntry(string pluginName, string fileName, int position)
         {
             var plugin = _pluginCollection.AMPluginList.FirstOrDefault(e => e.Name == pluginName);
@@ -137,10 +136,10 @@ namespace NeeView.Susie.Server
             return plugin.LoadArchiveEntry(fileName, position);
         }
 
-        public void SetPlugin(List<SusiePluginSetting> settings)
+        public void SetPlugin(List<SusiePluginInfo> plugins)
         {
-            if (settings == null || !settings.Any()) return;
-            _pluginCollection.SetPluginSetting(settings);
+            if (plugins == null || !plugins.Any()) return;
+            _pluginCollection.SetPluginSetting(plugins);
         }
 
         public void SetPluginOrder(List<string> order)
