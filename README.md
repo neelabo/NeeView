@@ -60,8 +60,9 @@ When development of the next major version begins on the master branch, a branch
 
 ### feature-XX
 
-Working branches for feature development.
+Branches for feature development.
 It will be removed when merged into the master branch.
+These branches are working branches and are not guaranteed in any way.
 
 ## Versioning Strategy
 
