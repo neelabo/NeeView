@@ -5,7 +5,7 @@ namespace NeeView
 {
     public abstract class PdfArchive : Archive
     {
-        protected PdfArchive(string path, ArchiveEntry? source) : base(path, source)
+        protected PdfArchive(string path, ArchiveEntry? source, ArchiveHint archiveHint) : base(path, source, archiveHint)
         {
         }
 

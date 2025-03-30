@@ -24,7 +24,7 @@ namespace NeeView
             }
 #endif
 
-            var book = new Book(address, bookSource, memento, setting.LoadOption, setting.IsNew);
+            var book = new Book(address, bookSource, memento, setting.LoadOption, setting.IsNew, setting.ArchiveHint);
 
             // HACK: Start() で行いたい
             book.SetStartPage(sender, setting.StartPage);

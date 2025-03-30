@@ -45,8 +45,9 @@ namespace NeeView.Susie
         /// <param name="fileName">書庫ファイル名</param>
         /// <param name="buff">ヘッダ(2KB)。nullの場合はファイルから読み込む</param>
         /// <param name="isCheckExtension">プラグインに設定されている拡張子でも判定を行う</param>
+        /// <param name="pluginName">プラグイン名指定。指定しないのならば null</param>
         /// <returns>対応したプラグイン情報。見つからなければ null</returns>
-        SusiePluginInfo? GetArchivePlugin(string fileName, byte[] buff, bool isCheckExtension);
+        SusiePluginInfo? GetArchivePlugin(string fileName, byte[] buff, bool isCheckExtension, string? pluginName);
 
         /// <summary>
         /// 設定ダイアログを開く

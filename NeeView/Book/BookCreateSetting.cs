@@ -45,6 +45,10 @@
         /// </summary>
         public BookLoadOption LoadOption { get; set; }
 
+        /// <summary>
+        /// アーカイバ指定
+        /// </summary>
+        public ArchiveHint ArchiveHint { get; set; } = ArchiveHint.None;
     }
 
 }

@@ -33,7 +33,7 @@ namespace NeeView
 
             try
             {
-                _collection = new ArchiveEntryCollection(this.Place.SimplePath, ArchiveEntryCollectionMode.CurrentDirectory, _mode, ArchiveEntryCollectionOption.None);
+                _collection = new ArchiveEntryCollection(this.Place.SimplePath, ArchiveEntryCollectionMode.CurrentDirectory, _mode, ArchiveEntryCollectionOption.None, ArchiveHint.None);
             }
             catch
             {

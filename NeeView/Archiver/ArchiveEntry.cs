@@ -1,6 +1,7 @@
 ﻿using NeeLaboratory.Generators;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -24,7 +25,9 @@ namespace NeeView
         public object? _data;
         private PreExtractMemory.Key? _preExtractMemoryKey;
         private bool _disposedValue;
-        private readonly System.Threading.Lock _lock = new();
+        private readonly Lock _lock = new();
+        private ArchiveHint? _archiveHint;
+
 
         /// <summary>
         /// コンストラクタ
@@ -223,6 +226,19 @@ namespace NeeView
         /// 内部エントリがあればそれを優先して返す
         /// </remarks>
         public virtual ArchiveEntry TargetArchiveEntry => this;
+
+        /// <summary>
+        /// アーカイブヒント
+        /// </summary>
+        /// <remarks>
+        /// このエントリからアーカイブを開くときに使用されます。
+        /// </remarks>
+        [NotNull]
+        public ArchiveHint? ArchiveHint
+        {
+            get => _archiveHint ?? Archive.ArchiveHint;
+            set => _archiveHint = value;
+        }
 
 
         protected virtual void Dispose(bool disposing)

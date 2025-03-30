@@ -41,7 +41,7 @@ namespace NeeView
         /// クエリからFolderItemを作成
         /// </summary>
         /// <param name="path">パス</param>
-        /// <returns>FolderItem。生成できなかった場合はnull</returns>
+        /// <returns>FolderItem。生成できなかった場合は null</returns>
         public FolderItem? CreateFolderItem(QueryPath path)
         {
             if (path.Scheme == QueryScheme.File)
@@ -59,7 +59,7 @@ namespace NeeView
         /// パスからFolderItemを作成
         /// </summary>
         /// <param name="path">パス</param>
-        /// <returns>FolderItem。生成できなかった場合はnull</returns>
+        /// <returns>FolderItem。生成できなかった場合は null</returns>
         public FolderItem? CreateFolderItem(string path)
         {
             var directory = new DirectoryInfo(path);
@@ -249,7 +249,7 @@ namespace NeeView
 
             return new FileFolderItem(_isOverlayEnabled)
             {
-                Type = FolderItemType.File,
+                Type = entry.IsDirectory ? FolderItemType.Directory : FolderItemType.File,
                 Place = _place,
                 Name = name,
                 TargetPath = new QueryPath(entry.SystemPath),

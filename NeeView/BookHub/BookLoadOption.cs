@@ -95,6 +95,14 @@ namespace NeeView
         /// ブック読み込み後にフォーカスを移動する
         /// </summary>
         FocusOnLoaded = 0x0001_0000,
+
+        /// <summary>
+        /// 前のブックと同じなら ArchiveHint を引き継ぐ
+        /// </summary>
+        /// <remarks>
+        /// ArchiveHint 指定されている場合はそちらが優先される
+        /// </remarks>
+        KeepArchiveHint = 0x0002_0000,
     };
 
 

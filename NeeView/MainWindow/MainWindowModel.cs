@@ -2,50 +2,18 @@
 using NeeLaboratory;
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.IO.Search;
-using NeeLaboratory.Windows.Input;
 using NeeView.Setting;
-using NeeView.Windows.Property;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media;
 
 namespace NeeView
 {
-    /// <summary>
-    /// Load command.
-    /// </summary>
-    public class LoadCommand : ICommand
-    {
-        public static LoadCommand Command { get; } = new LoadCommand();
-
-        public event EventHandler? CanExecuteChanged;
-
-        public bool CanExecute(object? parameter)
-        {
-            return !BookHub.Current.IsLoading;
-        }
-
-        public void Execute(object? parameter)
-        {
-            var path = parameter as string;
-            if (parameter == null) return;
-            BookHub.Current.RequestLoad(this, path, null, BookLoadOption.None, true);
-        }
-
-        public void RaiseCanExecuteChanged()
-        {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-        }
-    }
-
     /// <summary>
     /// MainWindow : Model
     /// </summary>

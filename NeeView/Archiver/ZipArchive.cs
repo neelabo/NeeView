@@ -25,7 +25,7 @@ namespace NeeView
         private Encoding? _encoding;
 
 
-        public ZipArchive(string path, ArchiveEntry? source) : base(path, source)
+        public ZipArchive(string path, ArchiveEntry? source, ArchiveHint archiveHint) : base(path, source, archiveHint)
         {
         }
 

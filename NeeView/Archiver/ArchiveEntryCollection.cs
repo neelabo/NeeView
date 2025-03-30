@@ -18,6 +18,7 @@ namespace NeeView
         private readonly ArchiveEntryCollectionMode _mode;
         private readonly ArchiveEntryCollectionMode _modeIfArchive;
         private readonly bool _ignoreCache;
+        private readonly ArchiveHint _archiveHint;
         private List<ArchiveEntryNode>? _entries;
 
         /// <summary>
@@ -27,13 +28,14 @@ namespace NeeView
         /// <param name="mode">標準再帰モード</param>
         /// <param name="modeIfArchive">圧縮ファイルの再帰モード</param>
         /// <param name="option"></param>
-        public ArchiveEntryCollection(string path, ArchiveEntryCollectionMode mode, ArchiveEntryCollectionMode modeIfArchive, ArchiveEntryCollectionOption option)
+        public ArchiveEntryCollection(string path, ArchiveEntryCollectionMode mode, ArchiveEntryCollectionMode modeIfArchive, ArchiveEntryCollectionOption option, ArchiveHint archiveHint)
         {
             Path = LoosePath.TrimEnd(path);
             Mode = mode;
             _mode = mode;
             _modeIfArchive = modeIfArchive;
             _ignoreCache = option.HasFlag(ArchiveEntryCollectionOption.IgnoreCache);
+            _archiveHint = archiveHint;
         }
 
         public string Path { get; }
@@ -48,7 +50,7 @@ namespace NeeView
         {
             if (_entries != null) return _entries;
 
-            var rootEntry = await ArchiveEntryUtility.CreateAsync(Path, token);
+            var rootEntry = await ArchiveEntryUtility.CreateAsync(Path, _archiveHint, token);
 
             Archive? rootArchive;
             string rootArchivePath;
@@ -57,7 +59,7 @@ namespace NeeView
             {
                 if (rootEntry.IsDirectory)
                 {
-                    rootArchive = await ArchiveManager.Current.CreateArchiveAsync(StaticFolderArchive.Default.CreateArchiveEntry(Path), _ignoreCache, token);
+                    rootArchive = await ArchiveManager.Current.CreateArchiveAsync(StaticFolderArchive.Default.CreateArchiveEntry(Path, _archiveHint), _ignoreCache, token);
                     rootArchivePath = "";
                 }
                 else

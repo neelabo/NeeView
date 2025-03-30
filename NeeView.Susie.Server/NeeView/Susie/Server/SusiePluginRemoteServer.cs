@@ -111,7 +111,7 @@ namespace NeeView.Susie.Server
             var args = DeserializeChunk<SusiePluginCommandGetArchivePlugin>(command[0]);
             Trace.WriteLine($"Remote.GetArchivePlugin: {args.FileName}");
             var buff = command[1].Data;
-            var pluginInfo = _process.GetArchivePlugin(args.FileName, buff, args.IsCheckExtension);
+            var pluginInfo = _process.GetArchivePlugin(args.FileName, buff, args.IsCheckExtension, args.PluginName);
             return CreateResult(SusiePluginCommandId.GetArchivePlugin, new SusiePluginCommandGetArchivePluginResult(pluginInfo));
         }
 

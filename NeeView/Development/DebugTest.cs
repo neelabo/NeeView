@@ -90,7 +90,7 @@ namespace NeeView
                 //var path = @"E:\Work\Labo\サンプル\サブフォルダテストX.zip\圧縮再帰♥.zip\root";
                 //var path = @"E:\Work\Labo\サンプル\サブフォルダテストX.zip\圧縮再帰♥.zip\root\dir2?.zip";
 
-                var collection = new ArchiveEntryCollection(path, ArchiveEntryCollectionMode.IncludeSubArchives, ArchiveEntryCollectionMode.IncludeSubArchives, ArchiveEntryCollectionOption.None);
+                var collection = new ArchiveEntryCollection(path, ArchiveEntryCollectionMode.IncludeSubArchives, ArchiveEntryCollectionMode.IncludeSubArchives, ArchiveEntryCollectionOption.None, ArchiveHint.None);
 
                 Debug.WriteLine($"\n> {collection.Path}");
 

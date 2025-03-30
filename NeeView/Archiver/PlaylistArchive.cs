@@ -20,7 +20,7 @@ namespace NeeView
         public const string Extension = ".nvpls";
 
 
-        public PlaylistArchive(string path, ArchiveEntry? source) : base(path, source)
+        public PlaylistArchive(string path, ArchiveEntry? source, ArchiveHint archiveHint) : base(path, source, archiveHint)
         {
         }
 

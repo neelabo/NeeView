@@ -12,7 +12,7 @@ namespace NeeView
 {
     public class MediaArchive : Archive
     {
-        public MediaArchive(string path, ArchiveEntry? source) : base(path, source)
+        public MediaArchive(string path, ArchiveEntry? source, ArchiveHint archiveHint) : base(path, source, archiveHint)
         {
         }
 

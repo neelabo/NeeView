@@ -19,7 +19,7 @@ namespace NeeView
     /// </summary>
     public class PdfPdfiumArchive : PdfArchive
     {
-        public PdfPdfiumArchive(string path, ArchiveEntry? source) : base(path, source)
+        public PdfPdfiumArchive(string path, ArchiveEntry? source, ArchiveHint archiveHint) : base(path, source, archiveHint)
         {
         }
 

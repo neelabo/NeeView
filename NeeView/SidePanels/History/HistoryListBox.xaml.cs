@@ -120,22 +120,22 @@ namespace NeeView
         {
             if (_vm is null) return;
 
-            var item = this.ListBox.SelectedItem as BookHistory;
-            if (item?.Path == null) return;
-
-            _vm.Load(item.Path);
-            e.Handled = true;
+            if (sender is ListBox { SelectedItem: BookHistory item } && item.Path != null)
+            {
+                _vm.Load(item.Path);
+                e.Handled = true;
+            }
         }
 
         public void Remove_Exec(object? sender, ExecutedRoutedEventArgs e)
         {
             if (_vm is null) return;
 
-            var items = this.ListBox.SelectedItems?.Cast<BookHistory>().ToList();
-            if (items == null || !items.Any()) return;
-
-            _vm.Remove(items);
-            FocusSelectedItem(true);
+            if (sender is ListBox { SelectedItems: System.Collections.IList items } && items.Count > 0)
+            {
+                _vm.Remove(items.Cast<BookHistory>().ToList());
+                FocusSelectedItem(true);
+            }
         }
 
         #endregion
@@ -235,6 +235,32 @@ namespace NeeView
                     e.Handled = true;
                 }
             }
+        }
+
+        // 項目コンテキストメニュー
+        private void HistoryListItem_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            if (sender is not ListBoxItem container)
+            {
+                return;
+            }
+
+            if (container.Content is not BookHistory item)
+            {
+                return;
+            }
+
+            // コンテキストメニュー生成
+            var contextMenu = container.ContextMenu;
+            if (contextMenu == null)
+            {
+                return;
+            }
+
+            contextMenu.Items.Clear();
+            contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@HistoryItem.Menu.OpenBook"), Command = OpenBookCommand });
+            contextMenu.Items.Add(new Separator());
+            contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@HistoryItem.Menu.Delete"), Command = RemoveCommand });
         }
 
         // リストのキ入力
@@ -340,6 +366,7 @@ namespace NeeView
         }
 
         #endregion UI Accessor
+
     }
 
 

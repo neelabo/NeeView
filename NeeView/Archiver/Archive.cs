@@ -32,9 +32,10 @@ namespace NeeView
         /// </summary>
         /// <param name="path">アーカイブ実体へのパス</param>
         /// <param name="source">基となるエントリ</param>
-        public Archive(string path, ArchiveEntry? source)
+        public Archive(string path, ArchiveEntry? source, ArchiveHint archiveHint)
         {
             Path = path;
+            ArchiveHint = archiveHint;
 
             if (source != null)
             {
@@ -145,6 +146,11 @@ namespace NeeView
         /// 識別名
         /// </summary>
         public string Ident => (Parent == null || Parent is FolderArchive) ? Path : LoosePath.Combine(Parent.Ident, $"{Id}.{EntryName}");
+
+        /// <summary>
+        /// アーカイブのヒント
+        /// </summary>
+        public ArchiveHint ArchiveHint { get; private set; }
 
 
         protected virtual void OnCreated(FileSystemEventArgs e)

@@ -337,13 +337,13 @@ namespace NeeView
             }
         }
 
-        public SusieArchivePluginAccessor? GetArchivePluginAccessor(string fileName, byte[]? buff, bool isCheckExtension)
+        public SusieArchivePluginAccessor? GetArchivePluginAccessor(string fileName, byte[]? buff, bool isCheckExtension, string? pluginName)
         {
             lock (_lock)
             {
                 if (_client is null) throw new InvalidOperationException("Client is null");
 
-                var plugin = _client.GetArchivePlugin(fileName, buff, isCheckExtension);
+                var plugin = _client.GetArchivePlugin(fileName, buff, isCheckExtension, pluginName);
                 if (plugin is null) return null;
 
                 return new SusieArchivePluginAccessor(_client, plugin);
@@ -382,6 +382,26 @@ namespace NeeView
             {
                 UpdateSusiePluginCollection();
             }
+        }
+
+        public List<string> GetSupportedPluginList(SusiePluginType pluginType, string ext)
+        {
+            return GetPluginCollection(pluginType).Where(e => e.IsEnabled && e.Extensions.Contains(ext)).Select(e => e.Name).ToList();
+        }
+
+        public bool IsSupportedPlugin(SusiePluginType pluginType, string ext, string pluginName)
+        {
+            return GetPluginCollection(pluginType).FirstOrDefault(e => e.Name == pluginName)?.Extensions.Contains(ext) ?? false;
+        }
+
+        private ObservableCollection<SusiePluginInfo> GetPluginCollection(SusiePluginType pluginType)
+        {
+            return pluginType switch
+            {
+                SusiePluginType.Image => INPlugins,
+                SusiePluginType.Archive => AMPlugins,
+                _ => throw new ArgumentOutOfRangeException(nameof(pluginType)),
+            };
         }
 
         #endregion Memento

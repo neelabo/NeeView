@@ -32,7 +32,7 @@ namespace NeeView
         {
             token.ThrowIfCancellationRequested();
 
-            _collection = new ArchiveEntryCollection(this.Place.SimplePath, ArchiveEntryCollectionMode.CurrentDirectory, ArchiveEntryCollectionMode.CurrentDirectory, ArchiveEntryCollectionOption.None);
+            _collection = new ArchiveEntryCollection(this.Place.SimplePath, ArchiveEntryCollectionMode.CurrentDirectory, ArchiveEntryCollectionMode.CurrentDirectory, ArchiveEntryCollectionOption.None, ArchiveHint.None);
 
             var entries = (await _collection.GetEntriesAsync(token)).ToArchiveEntryCollection();
 

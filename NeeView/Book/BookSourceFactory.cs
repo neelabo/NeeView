@@ -14,7 +14,7 @@ namespace NeeView
         public static async Task<BookSource> CreateAsync(BookAddress address, BookCreateSetting setting, CancellationToken token)
         {
             // ページ生成
-            var archiveEntryCollection = CreateArchiveEntryCollection(address.TargetPath.SimplePath, setting.IsRecursiveFolder, setting.ArchiveRecursiveMode, setting.IsIgnoreCache);
+            var archiveEntryCollection = CreateArchiveEntryCollection(address.TargetPath.SimplePath, setting.IsRecursiveFolder, setting.ArchiveRecursiveMode, setting.IsIgnoreCache, setting.ArchiveHint);
             var bookMemoryService = new BookMemoryService();
             var pages = await CreatePageCollection(archiveEntryCollection, setting.BookPageCollectMode, new PageContentFactory(bookMemoryService, true), token);
 
@@ -52,12 +52,12 @@ namespace NeeView
             return pageSortModeClass.ValidatePageSortMode(sortMode);
         }
 
-        private static ArchiveEntryCollection CreateArchiveEntryCollection(string place, bool isRecursive, ArchiveEntryCollectionMode archiveRecursiveMode, bool isIgnoreCache)
+        private static ArchiveEntryCollection CreateArchiveEntryCollection(string place, bool isRecursive, ArchiveEntryCollectionMode archiveRecursiveMode, bool isIgnoreCache, ArchiveHint archiveHint)
         {
             var collectMode = isRecursive ? ArchiveEntryCollectionMode.IncludeSubArchives : ArchiveEntryCollectionMode.CurrentDirectory;
             var collectModeIfArchive = isRecursive ? ArchiveEntryCollectionMode.IncludeSubArchives : archiveRecursiveMode;
             var collectOption = isIgnoreCache ? ArchiveEntryCollectionOption.IgnoreCache : ArchiveEntryCollectionOption.None;
-            return new ArchiveEntryCollection(place, collectMode, collectModeIfArchive, collectOption);
+            return new ArchiveEntryCollection(place, collectMode, collectModeIfArchive, collectOption, archiveHint);
         }
 
         /// <summary>

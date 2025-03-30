@@ -21,7 +21,7 @@ namespace NeeView
         private bool _isSolid;
 
 
-        public SevenZipArchive(string path, ArchiveEntry? source) : base(path, source)
+        public SevenZipArchive(string path, ArchiveEntry? source, ArchiveHint archiveHint) : base(path, source, archiveHint)
         {
             _accessor = new SevenZipAccessor(Path);
         }

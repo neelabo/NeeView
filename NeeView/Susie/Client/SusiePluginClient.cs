@@ -166,9 +166,9 @@ namespace NeeView.Susie.Client
             Call(SusiePluginCommandId.ShowConfigurationDlg, new SusiePluginCommandShowConfigurationDlg(pluginName, hwnd));
         }
 
-        public SusiePluginInfo? GetArchivePlugin(string fileName, byte[]? buff, bool isCheckExtension)
+        public SusiePluginInfo? GetArchivePlugin(string fileName, byte[]? buff, bool isCheckExtension, string? pluginName)
         {
-            var chunks = Call(SusiePluginCommandId.GetArchivePlugin, new SusiePluginCommandGetArchivePlugin(fileName, isCheckExtension), buff);
+            var chunks = Call(SusiePluginCommandId.GetArchivePlugin, new SusiePluginCommandGetArchivePlugin(fileName, isCheckExtension, pluginName), buff);
             return DeserializeChunk<SusiePluginCommandGetArchivePluginResult>(chunks[0]).Plugin;
         }
 

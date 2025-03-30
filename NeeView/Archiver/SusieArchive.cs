@@ -19,7 +19,7 @@ namespace NeeView
         private static readonly AsyncLock _asyncLock = new();
 
 
-        public SusieArchive(string path, ArchiveEntry? source) : base(path, source)
+        public SusieArchive(string path, ArchiveEntry? source, ArchiveHint archiveHint) : base(path, source, archiveHint)
         {
         }
 
@@ -40,9 +40,19 @@ namespace NeeView
         {
             if (_susiePlugin == null)
             {
-                _susiePlugin = SusiePluginManager.Current.GetArchivePluginAccessor(Path, null, true);
+                _susiePlugin = SusiePluginManager.Current.GetArchivePluginAccessor(Path, null, true, GetPluginNameHint());
             }
             return _susiePlugin;
+        }
+
+        // アーカイブヒントで指定されたプラグイン名を取得
+        private string? GetPluginNameHint()
+        {
+            if (ArchiveHint.Archiver.ArchiveType == ArchiveType.SusieArchive)
+            {
+                return ArchiveHint.Archiver.PluginName;
+            }
+            return null;
         }
 
         // エントリーリストを得る
@@ -274,6 +284,16 @@ namespace NeeView
         {
             var filename = $"{entry.Id:000000}{System.IO.Path.GetExtension(entry.EntryName)}";
             return System.IO.Path.Combine(directory, filename);
+        }
+
+        public static List<string> GetSupportedPluginList(string ext)
+        {
+            return SusiePluginManager.Current.GetSupportedPluginList(Susie.SusiePluginType.Archive, ext);
+        }
+
+        public static bool IsSupportedPlugin(string ext, string pluginName)
+        {
+            return SusiePluginManager.Current.IsSupportedPlugin(Susie.SusiePluginType.Archive, ext, pluginName);
         }
     }
 

@@ -88,14 +88,11 @@
             <EventSetter Event="PreviewMouseLeftButtonDown" Handler="HistoryListItem_MouseLeftButtonDown" />
             <EventSetter Event="PreviewMouseDoubleClick" Handler="HistoryListItem_MouseDoubleClick" />
             <EventSetter Event="KeyDown" Handler="HistoryListItem_KeyDown" />
+            <EventSetter Event="ContextMenuOpening" Handler="HistoryListItem_ContextMenuOpening" />
             <Setter Property="FocusVisualStyle" Value="{StaticResource NVListItemFocusVisual}" />
             <Setter Property="ContextMenu">
                 <Setter.Value>
-                    <ContextMenu>
-                        <MenuItem Header="{properties:TextBinding HistoryItem.Menu.OpenBook}" Command="{x:Static local:HistoryListBox.OpenBookCommand}" />
-                        <Separator />
-                        <MenuItem Header="{properties:TextBinding HistoryItem.Menu.Delete}" Command="{x:Static local:HistoryListBox.RemoveCommand}" />
-                    </ContextMenu>
+                    <ContextMenu />
                 </Setter.Value>
             </Setter>
         </Style>

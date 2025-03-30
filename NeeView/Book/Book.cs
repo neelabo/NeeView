@@ -22,7 +22,7 @@ namespace NeeView
         private List<Page> _currentPages = new();
 
 
-        public Book(BookAddress address, BookSource source, BookMemento memento, BookLoadOption option, bool isNew)
+        public Book(BookAddress address, BookSource source, BookMemento memento, BookLoadOption option, bool isNew, ArchiveHint archiveHint)
         {
             Book.Default = this;
 
@@ -43,6 +43,7 @@ namespace NeeView
             _source.Pages.PagesSorted += (s, e) => PagesChanged?.Invoke(s, e);
 
             IsNew = isNew;
+            ArchiveHint = archiveHint;
         }
 
 
@@ -99,6 +100,11 @@ namespace NeeView
         /// 設定
         /// </summary>
         public BookSettingConfig Setting => _setting;
+
+        /// <summary>
+        /// アーカイブヒント。再読み込みのときに使用される
+        /// </summary>
+        public ArchiveHint ArchiveHint { get; private set; }
 
 
         public void AttachBookSetting(BookSettingConfig setting)

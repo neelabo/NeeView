@@ -208,6 +208,11 @@ namespace NeeView
         /// <returns></returns>
         public BookHubCommandLoad? RequestLoad(object? sender, string? path, string? start, BookLoadOption option, bool isRefreshFolderList)
         {
+            return RequestLoad(sender, path, start, option, isRefreshFolderList, ArchiveHint.None); 
+        }
+
+        public BookHubCommandLoad? RequestLoad(object? sender, string? path, string? start, BookLoadOption option, bool isRefreshFolderList, ArchiveHint archiveHint)
+        {
             if (path == null) return null;
 
             if (_disposedValue) return null;
@@ -225,11 +230,22 @@ namespace NeeView
                 query = new QueryPath(Config.Current.Playlist.PagemarkPlaylist);
             }
 
+            if (_address == query.SimplePath && option.HasFlag(BookLoadOption.KeepArchiveHint) && archiveHint == ArchiveHint.None)
+            {
+                archiveHint = _book?.ArchiveHint ?? archiveHint;
+            }
+
             ////DebugTimer.Start($"\nStart: {path}");
-            if (this.Address == query.SimplePath && option.HasFlag(BookLoadOption.SkipSamePlace)) return null;
+            if (_address == query.SimplePath && option.HasFlag(BookLoadOption.SkipSamePlace) && _book?.ArchiveHint == archiveHint)
+            {
+                return null;
+            }
 
             // ブック固定ならば同じアドレスでのみ有効
-            if (this.IsBookLocked && this.Address != query.SimplePath) return null;
+            if (this.IsBookLocked && _address != query.SimplePath)
+            {
+                return null;
+            }
 
             this.Address = query.SimplePath;
 
@@ -242,7 +258,8 @@ namespace NeeView
                 //SourcePath = sourcePath,
                 StartEntry = start,
                 Option = option,
-                IsRefreshFolderList = isRefreshFolderList
+                IsRefreshFolderList = isRefreshFolderList,
+                ArchiveHint = archiveHint
             });
 
             command.Completed += JobCommand_Completed;
@@ -303,13 +320,15 @@ namespace NeeView
         /// </summary>
         public void RequestReLoad(object sender)
         {
-            RequestReLoad(sender, null);
+            RequestReLoad(sender, null, null);
         }
 
-        /// <summary>
-        /// リクエスト：再読込
-        /// </summary>
         public void RequestReLoad(object sender, string? start)
+        {
+            RequestReLoad(sender, start, null);
+        }
+
+        public void RequestReLoad(object sender, string? start, ArchiveHint? hint)
         {
             if (_disposedValue) return;
 
@@ -317,9 +336,10 @@ namespace NeeView
 
             var book = _book;
             BookLoadOption options = book != null ? (book.LoadOption & BookLoadOption.KeepHistoryOrder) | BookLoadOption.Resume : BookLoadOption.None;
+            ArchiveHint archiveHint = hint ?? (book != null ? book.ArchiveHint : ArchiveHint.None);
 
-            var query = new QueryPath(Address, _book?.Pages.SearchKeyword);
-            RequestLoad(sender, query.SimpleQuery, start, options | BookLoadOption.IsBook | BookLoadOption.IgnoreCache, false);
+            var query = new QueryPath(Address, book?.Pages.SearchKeyword);
+            RequestLoad(sender, query.SimpleQuery, start, options | BookLoadOption.IsBook | BookLoadOption.IgnoreCache, false, archiveHint);
         }
 
         // 上の階層に移動可能？
@@ -441,7 +461,7 @@ namespace NeeView
 
                 // Load本体
                 var loadOption = args.Option | (isResetLastPage ? BookLoadOption.ResetLastPage : BookLoadOption.None);
-                var book = await LoadAsyncCore(args.Sender, address, loadOption, setting, isNew, token);
+                var book = await LoadAsyncCore(args.Sender, address, loadOption, setting, isNew, args.ArchiveHint, token);
 
                 //_historyEntry = false;
                 //_historyRemoved = false;
@@ -578,7 +598,7 @@ namespace NeeView
         /// <summary>
         /// ブックを読み込む(本体)
         /// </summary>
-        private static async Task<Book> LoadAsyncCore(object? sender, BookAddress address, BookLoadOption option, BookMemento setting, bool isNew, CancellationToken token)
+        private static async Task<Book> LoadAsyncCore(object? sender, BookAddress address, BookLoadOption option, BookMemento setting, bool isNew, ArchiveHint archiveHint, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -594,6 +614,7 @@ namespace NeeView
                 IsIgnoreCache = option.HasFlag(BookLoadOption.IgnoreCache),
                 IsNew = isNew,
                 LoadOption = option,
+                ArchiveHint = archiveHint,
             };
 
             var book = await BookFactory.CreateAsync(sender, address, bookSetting, memento, token);
@@ -759,6 +780,11 @@ namespace NeeView
                 await eventFlag.WaitHandle.AsTask().WaitAsync(token);
             }
         }
+
+
     }
+
+
+    
 }
 

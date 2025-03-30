@@ -30,6 +30,12 @@ namespace NeeView
             _contextMenu.IsOpen = true;
         }
 
+        public void OpenSelectArchiverMenu()
+        {
+            BookCommandTools.UpdateSelectArchiverMenu(_contextMenu.Items);
+            _contextMenu.IsOpen = true;
+        }
+
         public void Close()
         {
             _contextMenu.IsOpen = false;

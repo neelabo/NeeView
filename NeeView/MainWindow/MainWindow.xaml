@@ -57,6 +57,14 @@
                 <Setter Property="InputGestureText" Value="" />
             </Style>
 
+            <!-- MenuItem SelectArchiver -->
+            <Style x:Key="SelectArchiverMenuItemContainerStyle" TargetType="MenuItem" BasedOn="{StaticResource NVMenuItem}">
+                <Setter Property="Header" Value="{Binding .}" />
+                <Setter Property="Command" Value="{x:Static local:ReloadWithCommand.Command}" />
+                <Setter Property="CommandParameter" Value="{Binding .}" />
+                <Setter Property="InputGestureText" Value="" />
+            </Style>
+
         </ResourceDictionary>
 
     </Window.Resources>

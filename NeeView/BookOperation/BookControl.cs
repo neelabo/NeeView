@@ -87,7 +87,7 @@ namespace NeeView
                 }
                 else if (FileIO.ExistsPath(bookAddress))
                 {
-                    var entry = StaticFolderArchive.Default.CreateArchiveEntry(bookAddress);
+                    var entry = StaticFolderArchive.Default.CreateArchiveEntry(bookAddress, ArchiveHint.None);
                     await ConfirmFileIO.DeleteAsync(entry, Properties.TextResources.GetString("FileDeleteBookDialog.Title"), null);
                 }
             }

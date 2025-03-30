@@ -229,7 +229,7 @@ namespace NeeView
 
             // サブフォルダー読み込み状態を反転する
             var option = item.IsRecursived ? BookLoadOption.NotRecursive : BookLoadOption.Recursive;
-            _vm.Model.LoadBook(item, option);
+            _vm.Model.LoadBook(item, option, ArchiveHint.None);
         }
 
         /// <summary>
@@ -1191,7 +1191,7 @@ namespace NeeView
                     return new() { _vm.Model.SelectedItem };
                 }
             }
-            
+
             return this.ListBox.SelectedItems.Cast<FolderItem>().ToList();
         }
 

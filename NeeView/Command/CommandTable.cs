@@ -119,6 +119,8 @@ namespace NeeView
                 new CopyToFolderAsCommand(),
                 new MoveToFolderAsCommand(),
 
+                new SelectArchiverCommand(),
+
                 new ClearHistoryCommand(),
                 new ClearHistoryInPlaceCommand(),
                 new RemoveUnlinkedHistoryCommand(),

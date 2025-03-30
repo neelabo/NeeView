@@ -25,7 +25,7 @@ namespace NeeView
     {
         private FileSystemWatcher? _fileSystemWatcher;
 
-        public FolderArchive(string path, ArchiveEntry? source) : base(path, source)
+        public FolderArchive(string path, ArchiveEntry? source, ArchiveHint archiveHint) : base(path, source, archiveHint)
         {
         }
 

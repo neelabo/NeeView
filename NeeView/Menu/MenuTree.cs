@@ -593,6 +593,8 @@ namespace NeeView
                         new MenuTree(MenuElementType.Command) { CommandName = "Unload" },
                         new MenuTree(MenuElementType.History),
                         new MenuTree(MenuElementType.Separator),
+                        new MenuTree(MenuElementType.Command) { CommandName = "TogglePlaylistItem" },
+                        new MenuTree(MenuElementType.Separator),
                         new MenuTree(MenuElementType.Command) { CommandName = "OpenExplorer" },
                         new MenuTree(MenuElementType.Command) { CommandName = "OpenExternalAppAs" },
                         new MenuTree(MenuElementType.Separator),
@@ -669,9 +671,14 @@ namespace NeeView
                         new MenuTree(MenuElementType.Command) { CommandName = "NextSizePage" },
                         new MenuTree(MenuElementType.Command) { CommandName = "FirstPage" },
                         new MenuTree(MenuElementType.Command) { CommandName = "LastPage" },
+                        new MenuTree(MenuElementType.Command) { CommandName = "PrevPlaylistItemInBook"},
+                        new MenuTree(MenuElementType.Command) { CommandName = "NextPlaylistItemInBook" },
                         new MenuTree(MenuElementType.Separator),
                         new MenuTree(MenuElementType.Command) { CommandName = "PrevBook" },
                         new MenuTree(MenuElementType.Command) { CommandName = "NextBook" },
+                        new MenuTree(MenuElementType.Separator),
+                        new MenuTree(MenuElementType.Command) { CommandName = "PrevPlaylistItem"},
+                        new MenuTree(MenuElementType.Command) { CommandName = "NextPlaylistItem" },
                     }},
                     new MenuTree(MenuElementType.Group) { Name=Properties.TextResources.GetString("MenuTree.Page"), Children = new ObservableCollection<MenuTree>()
                     {
@@ -711,15 +718,11 @@ namespace NeeView
                         new MenuTree(MenuElementType.Separator),
                         new MenuTree(MenuElementType.Command) { CommandName = "SetDefaultPageSetting" },
                     }},
-                    new MenuTree(MenuElementType.Group) { Name=Properties.TextResources.GetString("MenuTree.Bookmark"), Children = new ObservableCollection<MenuTree>()
+                    new MenuTree(MenuElementType.Group) { Name=Properties.TextResources.GetString("MenuTree.Book"), Children = new ObservableCollection<MenuTree>()
                     {
                         new MenuTree(MenuElementType.Command) { CommandName = "ToggleBookmark" },
                         new MenuTree(MenuElementType.Separator),
-                        new MenuTree(MenuElementType.Command) { CommandName = "TogglePlaylistItem" },
-                        new MenuTree(MenuElementType.Command) { CommandName = "PrevPlaylistItem"},
-                        new MenuTree(MenuElementType.Command) { CommandName = "NextPlaylistItem" },
-                        new MenuTree(MenuElementType.Command) { CommandName = "PrevPlaylistItemInBook"},
-                        new MenuTree(MenuElementType.Command) { CommandName = "NextPlaylistItemInBook" },
+                        new MenuTree(MenuElementType.Command) { CommandName = "SelectArchiver" },
                     }},
                     new MenuTree(MenuElementType.Group) { Name=Properties.TextResources.GetString("MenuTree.Option"), Children = new ObservableCollection<MenuTree>()
                     {

@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace NeeView.Susie.Server
 {
@@ -160,25 +161,32 @@ namespace NeeView.Susie.Server
         }
 
         // 対応アーカイブプラグイン取得
-        public SusiePlugin? GetArchivePlugin(string fileName, byte[] buff, bool isCheckExtension)
+        public SusiePlugin? GetArchivePlugin(string fileName, byte[] buff, bool isCheckExtension, string? pluginName)
         {
-            return GetPlugin(AMPluginList, fileName, buff, isCheckExtension);
+            return GetPlugin(AMPluginList, fileName, buff, isCheckExtension, pluginName);
         }
 
 
         // 対応画像プラグイン取得
         public SusiePlugin? GetImagePlugin(string fileName, byte[] buff, bool isCheckExtension)
         {
-            return GetPlugin(INPluginList, fileName, buff, isCheckExtension);
+            return GetPlugin(INPluginList, fileName, buff, isCheckExtension, null);
         }
 
         /// <summary>
         /// 対応プラグインを取得
         /// </summary>
-        public SusiePlugin? GetPlugin(List<SusiePlugin> plugins, string fileName, byte[] buff, bool isCheckExtension)
+        public SusiePlugin? GetPlugin(List<SusiePlugin> plugins, string fileName, byte[] buff, bool isCheckExtension, string? pluginName)
         {
             plugins = plugins ?? PluginCollection.ToList();
             buff = buff ?? SusiePlugin.LoadHead(fileName);
+
+            // プラグイン指定
+            if (pluginName != null)
+            {
+                var plugin = plugins.FirstOrDefault(e => e.Name == pluginName);
+                if (plugin is not null) return plugin;
+            }
 
             foreach (var plugin in plugins)
             {

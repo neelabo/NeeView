@@ -238,25 +238,115 @@ namespace NeeView
         // サポートしているアーカイバーを取得
         public ArchiveType GetSupportedType(string fileName, bool isArrowFileSystem = true, bool isAllowMedia = true)
         {
-            if (_disposedValue) return ArchiveType.None;
-            if (string.IsNullOrEmpty(fileName)) return ArchiveType.None;
+            return GetSupportedType(fileName, ArchiveHint.None, isArrowFileSystem, isAllowMedia).ArchiveType;
+        }
+
+        /// <summary>
+        /// サポートしているアーカイバーを取得
+        /// </summary>
+        /// <remarks>
+        /// ファイル名からアーカイバーを判定する。実在を問わない
+        /// </remarks>
+        public ArchiverIdentifier GetSupportedType(string fileName, ArchiveHint archiveHint, bool isArrowFileSystem = true, bool isAllowMedia = true)
+        {
+            if (_disposedValue) return ArchiverIdentifier.None;
+            if (string.IsNullOrEmpty(fileName)) return ArchiverIdentifier.None;
 
             if (isArrowFileSystem && (fileName.Last() == '\\' || fileName.Last() == '/'))
             {
-                return ArchiveType.FolderArchive;
+                return ArchiverIdentifier.FolderArchive;
             }
 
+            string ext = LoosePath.GetExtension(fileName);
+
+            // 優先アーカイブを検証
+            if (archiveHint != ArchiveHint.None)
+            {
+                var archiver = archiveHint.Archiver;
+                if (_supportedFileTypes[archiver.ArchiveType].Contains(ext))
+                {
+                    switch (archiver.ArchiveType)
+                    {
+                        case ArchiveType.MediaArchive:
+                            if (isAllowMedia)
+                            {
+                                return ArchiverIdentifier.MediaArchive;
+                            }
+                            break;
+                        case ArchiveType.SusieArchive:
+                            if (archiver.PluginName is not null && SusieArchive.IsSupportedPlugin(ext, archiver.PluginName))
+                            {
+                                return new ArchiverIdentifier(ArchiveType.SusieArchive, archiver.PluginName);
+                            }
+                            break;
+                        default:
+                            return new ArchiverIdentifier(archiver.ArchiveType);
+                    }
+                }
+            }
+
+            // 優先リスト順に検索
+            foreach (var type in this.OrderList)
+            {
+                if (_supportedFileTypes[type].Contains(ext))
+                {
+                    return (isAllowMedia || type != ArchiveType.MediaArchive) ? new ArchiverIdentifier(type) : ArchiverIdentifier.None;
+                }
+            }
+
+            return ArchiverIdentifier.None;
+        }
+
+        /// <summary>
+        /// サポートしているアーカイバーリストを取得
+        /// </summary>
+        /// <remarks>
+        /// 実在ファイルに対してのみ判定を行う。
+        /// </remarks>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        public List<ArchiverIdentifier> GetSupportedArchiverList(string fileName)
+        {
+            if (_disposedValue) return [];
+            if (string.IsNullOrEmpty(fileName)) return [];
+
+            if (Directory.Exists(fileName))
+            {
+                return [new ArchiverIdentifier(ArchiveType.FolderArchive)];
+            }
+
+            if (!File.Exists(fileName))
+            {
+                return [];
+            }
+
+            var list = new List<ArchiverIdentifier>();
             string ext = LoosePath.GetExtension(fileName);
 
             foreach (var type in this.OrderList)
             {
                 if (_supportedFileTypes[type].Contains(ext))
                 {
-                    return (isAllowMedia || type != ArchiveType.MediaArchive) ? type : ArchiveType.None;
+                    switch (type)
+                    {
+                        case ArchiveType.MediaArchive:
+                            // TODO: MediaPlayer もしくは VlcPlayer を選択可能にする？
+                            list.Add(ArchiverIdentifier.MediaArchive);
+                            break;
+                        case ArchiveType.SusieArchive:
+                            foreach (var plugin in SusieArchive.GetSupportedPluginList(ext))
+                            {
+                                list.Add(new ArchiverIdentifier(ArchiveType.SusieArchive, plugin));
+                            }
+                            break;
+                        default:
+                            list.Add(new ArchiverIdentifier(type));
+                            break;
+                    }
                 }
             }
 
-            return ArchiveType.None;
+            return list;
         }
 
         /// <summary>
@@ -271,7 +361,6 @@ namespace NeeView
             return Config.Current.Book.Excludes.Contains(LoosePath.GetFileName(path));
         }
 
-
         /// <summary>
         /// アーカイバー作成
         /// stream に null 以外を指定すると、そのストリームを使用してアーカイブを開きます。
@@ -282,32 +371,37 @@ namespace NeeView
         /// <param name="source">元となったアーカイブエントリ</param>
         /// <param name="isRoot">ルートアーカイブとする</param>
         /// <returns>作成されたアーカイバー</returns>
-        private Archive CreateArchive(ArchiveType type, string path, ArchiveEntry? source)
+        private Archive CreateArchive(ArchiveType type, string path, ArchiveEntry? source, ArchiveHint archiveHint)
         {
-            Archive archiver;
+            return CreateArchive(new ArchiverIdentifier(type), path, source, archiveHint);
+        }
 
-            switch (type)
+        private Archive CreateArchive(ArchiverIdentifier identifier, string path, ArchiveEntry? source, ArchiveHint archiveHint)
+        {
+            Archive archive;
+
+            switch (identifier.ArchiveType)
             {
                 case ArchiveType.FolderArchive:
-                    archiver = new FolderArchive(path, source);
+                    archive = new FolderArchive(path, source, archiveHint);
                     break;
                 case ArchiveType.ZipArchive:
-                    archiver = new ZipArchive(path, source);
+                    archive = new ZipArchive(path, source, archiveHint);
                     break;
                 case ArchiveType.SevenZipArchive:
-                    archiver = new SevenZipArchive(path, source);
+                    archive = new SevenZipArchive(path, source, archiveHint);
                     break;
                 case ArchiveType.PdfArchive:
-                    archiver = PdfArchiveFactory.Create(path, source);
+                    archive = PdfArchiveFactory.Create(path, source, archiveHint);
                     break;
                 case ArchiveType.MediaArchive:
-                    archiver = new MediaArchive(path, source);
+                    archive = new MediaArchive(path, source, archiveHint);
                     break;
                 case ArchiveType.SusieArchive:
-                    archiver = new SusieArchive(path, source);
+                    archive = new SusieArchive(path, source, archiveHint);
                     break;
                 case ArchiveType.PlaylistArchive:
-                    archiver = new PlaylistArchive(path, source);
+                    archive = new PlaylistArchive(path, source, archiveHint);
                     break;
                 default:
                     ////throw new ArgumentException("Not support archive type.");
@@ -315,21 +409,22 @@ namespace NeeView
                     throw new NotSupportedFileTypeException(extension);
             }
 
-            _cache.Add(archiver);
+            _cache.Add(archive);
 
-            return archiver;
+            return archive;
         }
 
         // アーカイバー作成
-        private Archive CreateArchive(string path, ArchiveEntry? source)
+        private Archive CreateArchive(string path, ArchiveEntry? source, ArchiveHint archiveHint)
         {
+            // TODO: source が null のときに archiveHint が archive に記録されない
             if (Directory.Exists(path))
             {
-                return CreateArchive(ArchiveType.FolderArchive, path, source);
+                return CreateArchive(ArchiveType.FolderArchive, path, source, archiveHint);
             }
             else
             {
-                return CreateArchive(GetSupportedType(path), path, source);
+                return CreateArchive(GetSupportedType(path, archiveHint), path, source, archiveHint);
             }
         }
 
@@ -346,13 +441,13 @@ namespace NeeView
 
             // キャッシュがあればそれを返す。
             var targetPath = source.TargetPath;
-            if (!ignoreCache && _cache.TryGetValue(targetPath, out var archiver))
+            if (!ignoreCache && _cache.TryGetValue(targetPath, out var archive))
             {
-                // 更新日、サイズを比較して再利用するかを判定
-                if (archiver is not null && archiver.LastWriteTime == source.LastWriteTime && archiver.Length == source.Length)
+                // 更新日、サイズ、アーカイブヒントを比較して再利用するかを判定
+                if (archive is not null && archive.LastWriteTime == source.LastWriteTime && archive.Length == source.Length && archive.ArchiveHint == source.ArchiveHint)
                 {
                     ////Debug.WriteLine($"Archive: Find cache: {targetPath}");
-                    return archiver;
+                    return archive;
                 }
                 else
                 {
@@ -373,13 +468,13 @@ namespace NeeView
 
             if (source.IsFileSystem)
             {
-                return CreateArchive(targetPath, null);
+                return CreateArchive(targetPath, null, source.ArchiveHint);
             }
             else
             {
                 // TODO: テンポラリファイルの指定方法をスマートに。
                 var proxyFile = await ArchiveEntryExtractorService.Current.ExtractAsync(source, token);
-                var archiverTemp = CreateArchive(proxyFile.Path, source);
+                var archiverTemp = CreateArchive(proxyFile.Path, source, source.ArchiveHint);
                 ////Debug.WriteLine($"Archive: {archiverTemp.SystemPath} => {tempFile.Path}");
                 Debug.Assert(archiverTemp.ProxyFile == null);
                 archiverTemp.ProxyFile = proxyFile;

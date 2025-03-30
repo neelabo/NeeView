@@ -1487,17 +1487,28 @@ namespace NeeView
         // ブックの読み込み
         public void LoadBook(FolderItem item)
         {
+            LoadBook(item, ArchiveHint.None);
+        }
+
+        // ブックの読み込み
+        public void LoadBook(FolderItem item, ArchiveHint archiveHint)
+        {
             if (_disposedValue) return;
 
             if (item == null) return;
             if (_folderCollection is null) return;
 
-            BookLoadOption option = BookLoadOption.SkipSamePlace | (_folderCollection.FolderParameter.IsFolderRecursive ? BookLoadOption.DefaultRecursive : BookLoadOption.None);
-            LoadBook(item, option);
+            BookLoadOption option = BookLoadOption.SkipSamePlace;
+            if (_folderCollection.FolderParameter.IsFolderRecursive)
+            {
+                option |= BookLoadOption.DefaultRecursive;
+            }
+
+            LoadBook(item, option, archiveHint);
         }
 
         // ブックの読み込み
-        public void LoadBook(FolderItem item, BookLoadOption option)
+        public void LoadBook(FolderItem item, BookLoadOption option, ArchiveHint archiveHint)
         {
             if (_disposedValue) return;
 
@@ -1513,8 +1524,8 @@ namespace NeeView
             }
 
             var query = item.TargetPath;
-            var additionalOption = BookLoadOption.IsBook | (item.CanRemove() ? BookLoadOption.None : BookLoadOption.Undeletable);
-            BookHub.Current.RequestLoad(this, query.SimplePath, null, option | additionalOption, IsSyncBookshelfEnabled);
+            var additionalOption = BookLoadOption.IsBook | BookLoadOption.KeepArchiveHint | (item.CanRemove() ? BookLoadOption.None : BookLoadOption.Undeletable);
+            BookHub.Current.RequestLoad(this, query.SimplePath, null, option | additionalOption, IsSyncBookshelfEnabled, archiveHint);
         }
 
         /// <summary>

@@ -115,15 +115,18 @@ namespace NeeView.Susie
 
     public class SusiePluginCommandGetArchivePlugin
     {
-        public SusiePluginCommandGetArchivePlugin(string fileName, bool isCheckExtension)
+        public SusiePluginCommandGetArchivePlugin(string fileName, bool isCheckExtension, string? pluginName)
         {
             FileName = fileName;
             IsCheckExtension = isCheckExtension;
+            PluginName = pluginName;
         }
 
         public string FileName { get; set; }
 
         public bool IsCheckExtension { get; set; }
+
+        public string? PluginName { get; set; }
     }
 
     public class SusiePluginCommandGetArchivePluginResult

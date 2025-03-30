@@ -100,13 +100,13 @@ namespace NeeView.Setting
             Decide();
         }
 
-        private ObservableCollection<MenuTree>? GetParentCollection(ObservableCollection<MenuTree> collection, MenuTree target)
+        private static ObservableCollection<MenuTree>? GetParentCollection(ObservableCollection<MenuTree> collection, MenuTree target)
         {
             if (collection.Contains(target)) return collection;
 
-            foreach (var chldren in collection.Select(e => e.Children).WhereNotNull())
+            foreach (var children in collection.Select(e => e.Children).WhereNotNull())
             {
-                var parent = GetParentCollection(chldren, target);
+                var parent = GetParentCollection(children, target);
                 if (parent != null) return parent;
             }
 

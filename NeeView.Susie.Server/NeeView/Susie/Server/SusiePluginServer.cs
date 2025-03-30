@@ -66,7 +66,7 @@ namespace NeeView.Susie.Server
             return collection.Select(e => e.ToSusieArchiveEntry()).ToList();
         }
 
-        public SusiePluginInfo? GetArchivePlugin(string fileName, byte[]? buff, bool isCheckExtension)
+        public SusiePluginInfo? GetArchivePlugin(string fileName, byte[]? buff, bool isCheckExtension, string? pluginName)
         {
             // buff==nullのときの処理。ヘッダ2KBを読み込む
             if (buff == null)
@@ -78,7 +78,7 @@ namespace NeeView.Susie.Server
                 }
             }
 
-            var plugin = _pluginCollection.GetArchivePlugin(fileName, buff, isCheckExtension);
+            var plugin = _pluginCollection.GetArchivePlugin(fileName, buff, isCheckExtension, pluginName);
             if (plugin is null) return null;
 
             return plugin.ToSusiePluginInfo();
