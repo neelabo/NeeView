@@ -126,11 +126,11 @@ namespace NeeView
             }
 
             // Register the file name extension for the file type
-            // [HKCU\Software\Classes\.xxx]
-            using (var extKey = Registry.CurrentUser.CreateSubKey($@"Software\Classes\{_extension}", true))
+            // [HKCU\Software\Classes\.xxx\OpenWithProgids]
+            using (var extKey = Registry.CurrentUser.CreateSubKey($@"Software\Classes\{_extension}\OpenWithProgids", true))
             {
-                LocalDebug.WriteLine($"Set registry value: [{extKey}] (default)={_progId}");
-                extKey.SetValue("", _progId);
+                LocalDebug.WriteLine($"Set registry value: [{extKey}] {_progId}=[]");
+                extKey.SetValue(_progId, "");
             }
 
             Debug.WriteLine($"FileAssociate: ON: {Extension}");
@@ -138,97 +138,22 @@ namespace NeeView
 
         private void Unassociate()
         {
-            // No touch [HKCU\Software\Classes\.xxx]
-            // https://learn.microsoft.com/en-us/windows/win32/shell/fa-file-types#deleting-registry-information-during-uninstallation
+            // Unregister the file name extension for the file type
+            // [HKCU\Software\Classes\.xxx\OpenWithProgids]
+            using (var extKey = Registry.CurrentUser.CreateSubKey($@"Software\Classes\{_extension}\OpenWithProgids", true))
+            {
+                LocalDebug.WriteLine($"Delete registry value: [{extKey}] {_progId}");
+                extKey.DeleteValue(_progId, false);
+            }
 
             // Unregister the ProgID
             LocalDebug.WriteLine(@$"Delete registry: [HKEY_CURRENT_USER\Software\Classes\{_progId}]");
             Registry.CurrentUser.DeleteSubKeyTree(@$"Software\Classes\{_progId}");
 
-            // Explorer の UserChoice を削除しないと、例えば ".jpg" の場合は既定のアプリではないマイナーなアプリに切り替わってしまう問題がある。
-            // 通常、UserChoice は編集できないようになっており、Microsoft はこれを編集することを拒否しているようだ。
-            // このため、複数のプログラムが登録されている拡張子のように、必要な場合に限り慎重に削除するようにしている。
-            // TODO: この方法で良いのか？さらなる調査が必要。
-
-            // 1. Check if more than one program is registered
-            // [HKCR\Software\Classes\.xxx\OpenWithProgids]
-            using (var progIdsKey = Registry.ClassesRoot.OpenSubKey(@$"{_extension}\OpenWithProgids", false))
-            {
-                if (progIdsKey is not null)
-                {
-                    var names = progIdsKey.GetValueNames().Where(e => e != _progId).ToList();
-                    LocalDebug.WriteLine(@$"Check associate entries: [{progIdsKey}], Count={names.Count}");
-                    if (names.Count > 0)
-                    {
-                        // 2. Remove Explorer UserChoice.
-                        RemoveUserChoiceIfProgId(_extension, _progId);
-                    }
-                }
-            }
-
             Debug.WriteLine($"FileAssociate: OFF: {Extension}");
         }
-
-        /// <summary>
-        /// Remove [HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.xxx\UserChoice]
-        /// </summary>
-        /// <param name="extension">.xxx</param>
-        /// <param name="progId">Remove only if the choice is this ProgId</param>
-        private static void RemoveUserChoiceIfProgId(string extension, string progId)
-        {
-            try
-            {
-                // [HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.xxx]
-                using var extKey = Registry.CurrentUser.OpenSubKey($@"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FileExts\{extension}", true);
-                if (extKey is null) return;
-
-                // check UserChoice.ProgID
-                using (var userChoiceKey = extKey.OpenSubKey("UserChoice", false))
-                {
-                    if (userChoiceKey is null) return;
-                    var choice = userChoiceKey.GetValue("ProgId") as string;
-                    if (choice != progId)
-                    {
-                        LocalDebug.WriteLine(@$"Cancel remove registry: [{extKey}\UserChoice]={choice}, not {progId}");
-                        return;
-                    }
-                }
-
-                // remove UserChoice 'Deny' permission
-                // from https://stackoverflow.com/questions/6108128/remove-a-deny-rule-permission-from-the-userchoice-key-in-the-registry-via
-                using (var userChoiceKey = extKey.OpenSubKey("UserChoice", RegistryKeyPermissionCheck.ReadWriteSubTree, RegistryRights.ChangePermissions))
-                {
-                    if (userChoiceKey == null) return;
-
-                    string userName = WindowsIdentity.GetCurrent().Name;
-                    RegistrySecurity security = userChoiceKey.GetAccessControl();
-
-                    AuthorizationRuleCollection accRules = security.GetAccessRules(true, true, typeof(NTAccount));
-
-                    foreach (RegistryAccessRule ar in accRules)
-                    {
-                        if (ar.IdentityReference.Value == userName && ar.AccessControlType == AccessControlType.Deny)
-                        {
-                            // remove the 'Deny' permission
-                            security.RemoveAccessRuleSpecific(ar);
-                        }
-                    }
-
-                    // restore all original permissions *except* for the 'Deny' permission
-                    userChoiceKey.SetAccessControl(security);
-                }
-
-                // remove UserChoice
-                LocalDebug.WriteLine(@$"Remove registry: [{extKey}\UserChoice]");
-                extKey.DeleteSubKeyTree("UserChoice");
-            }
-            catch (Exception ex)
-            {
-                // 削除できなくても致命的な問題ではないので例外は無視する
-                Debug.WriteLine(ex.Message);
-            }
-        }
     }
+
 
     public class FileAssociationException : Exception
     {
