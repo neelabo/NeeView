@@ -1,4 +1,6 @@
-﻿using NeeLaboratory.Collection;
+﻿//#define ENABLE_EXTENSIONS
+
+using NeeLaboratory.Collection;
 using NeeLaboratory.Windows.Input;
 using NeeView.Data;
 using NeeView.Windows.Property;
@@ -29,10 +31,12 @@ namespace NeeView.Setting
                 new SettingPageNotify(),
             };
 
+#if ENABLE_EXTENSIONS
             if (!Environment.IsAppxPackage)
             {
                 this.Children.Add(new SettingPageExplorer());
             }
+#endif
 
             this.Items = new List<SettingItem>();
 
@@ -65,6 +69,12 @@ namespace NeeView.Setting
             {
                 section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.IsNetworkEnabled))));
             }
+#if !ENABLE_EXTENSIONS
+            if (Environment.IsZipLikePackage)
+            {
+                section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(ExplorerContextMenu.Current, nameof(ExplorerContextMenu.IsEnabled))));
+            }
+#endif
             this.Items.Add(section);
 
             section = new SettingItemSection(ResourceService.GetString("@SettingPage.General.WebBrowser"));
@@ -317,7 +327,7 @@ namespace NeeView.Setting
         }
     }
 
-
+#if ENABLE_EXTENSIONS
     public class SettingPageExplorer : SettingPage
     {
         public SettingPageExplorer() : base(Properties.TextResources.GetString("SettingPage.Explorer"))
@@ -333,5 +343,6 @@ namespace NeeView.Setting
             this.Items.Add(section);
         }
     }
+#endif
 
 }

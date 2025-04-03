@@ -1,7 +1,7 @@
 # Changelog
 
 ## 43.0
-(2025-03-20)
+(2025-04-03)
 
 > [!WARNING] This is still a beta version.
 
@@ -9,13 +9,6 @@
 
 - Minimal settings, such as the selection of command presets, are made at initial startup.
 - This setting can be changed later.
-
-####  Extension associations
-
-- You can now manage extension associations on the “Explorer” page of the settings.
-- The Explorer context menu registration in the installer version has also been changed to be done here.
-
-> [!NOTE] This feature is not available in the Store App version.
 
 #### Added
 
