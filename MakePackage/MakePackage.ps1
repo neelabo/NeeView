@@ -888,14 +888,9 @@ function Export-Current {
 }
 
 function Update-Version {
-
-	<#
-	Write-Host "`n`[Update NeeLaboratory Libraries Version] ...`n" -fore Cyan
-	..\NeeLaboratory\CreateVersionProps.ps1
-
+	
 	Write-Host "`n`[Update NeeLaboratory.IO.Search Version] ...`n" -fore Cyan
 	..\NeeLaboratory.IO.Search\CreateVersionProps.ps1
-	#>
 	
 	Write-Host "`n`[Update NeeView Version] ...`n" -fore Cyan
 	$versionSuffix = switch ( $Target ) {
