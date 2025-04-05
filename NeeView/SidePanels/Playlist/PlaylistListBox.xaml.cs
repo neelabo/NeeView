@@ -167,7 +167,7 @@ namespace NeeView
             if (this.ListBox.SelectedItem is not PlaylistItem item) return;
             _vm.Open(item);
         }
-        
+
         private void OpenSourceCommand_CanExecute(object? sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
@@ -358,6 +358,22 @@ namespace NeeView
                 return;
             }
 
+            // 現在開いているブックの暗号化ページであれば受け入れを拒否する
+            var book = BookOperation.Current.Book;
+            if (book is not null)
+            {
+                foreach (var query in queries)
+                {
+                    var page = book.Pages.FirstOrDefault(x => x.EntryFullName == query.SimplePath);
+                    if (page is not null && page.ArchiveEntry.Archive.Encrypted)
+                    {
+                        e.Effects = DragDropEffects.None;
+                        e.Handled = true;
+                        return;
+                    }
+                }
+            }
+
             if (isDrop)
             {
                 AppDispatcher.BeginInvoke(async () =>
@@ -385,6 +401,21 @@ namespace NeeView
             if ((e.AllowedEffects & DragDropEffects.Copy) != DragDropEffects.Copy)
             {
                 return;
+            }
+
+            var book = BookOperation.Current.Book;
+            if (book is not null)
+            {
+                foreach (var fileName in fileNames)
+                {
+                    var page = book.Pages.FirstOrDefault(x => x.EntryFullName == fileName);
+                    if (page is not null && page.ArchiveEntry.Archive.Encrypted)
+                    {
+                        e.Effects = DragDropEffects.None;
+                        e.Handled = true;
+                        return;
+                    }
+                }
             }
 
             if (isDrop)
@@ -509,7 +540,7 @@ namespace NeeView
         }
 
         private void ClickToOpen(PlaylistItem item)
-        { 
+        {
             if (Keyboard.Modifiers != ModifierKeys.None) return;
 
             if (!Config.Current.Panels.OpenWithDoubleClick)
@@ -711,7 +742,7 @@ namespace NeeView
             return result;
         }
 
-#endregion UI Accessor
+        #endregion UI Accessor
     }
 
 

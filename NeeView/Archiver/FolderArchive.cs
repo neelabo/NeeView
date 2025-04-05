@@ -52,7 +52,7 @@ namespace NeeView
         }
 
         // リスト取得
-        protected override async Task<List<ArchiveEntry>> GetEntriesInnerAsync(CancellationToken token)
+        protected override async Task<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token)
         {
             // Pathがない場合は汎用アーカイブなのでリスト作成は行わない
             if (string.IsNullOrEmpty(Path))
@@ -160,7 +160,7 @@ namespace NeeView
         }
 
         // ストリームを開く
-        protected override async Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, CancellationToken token)
+        protected override async Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
         {
             Debug.Assert(entry.Archive == this);
             Debug.Assert(entry.EntityPath is not null);

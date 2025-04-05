@@ -53,7 +53,7 @@ namespace NeeView
         {
             token.ThrowIfCancellationRequested();
 
-            using (var stream = await ArchiveEntry.OpenEntryAsync(token))
+            using (var stream = await ArchiveEntry.OpenEntryAsync(Decrypt, token))
             {
                 var settings = new WpfDrawingSettings();
                 settings.IncludeRuntime = false;

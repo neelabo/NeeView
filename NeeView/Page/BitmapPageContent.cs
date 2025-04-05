@@ -20,7 +20,7 @@ namespace NeeView
             NVDebug.AssertMTA();
             token.ThrowIfCancellationRequested();
 
-            var streamSource = new ArchiveEntryStreamSource(ArchiveEntry);
+            var streamSource = new ArchiveEntryStreamSource(ArchiveEntry, Decrypt);
             var imageData = await _loader.LoadAsync(streamSource, true, false, token);
             return imageData.PictureInfo;
         }
@@ -44,8 +44,8 @@ namespace NeeView
 #endif
 #endif
 
-                var streamSource = new ArchiveEntryStreamSource(ArchiveEntry);
-                await streamSource.CreateCacheAsync(token);
+                var streamSource = new ArchiveEntryStreamSource(ArchiveEntry, Decrypt);
+                await streamSource.CreateCacheAsync(Decrypt, token);
 
                 var createPictureInfo = PictureInfo is null;
                 var imageData = await _loader.LoadAsync(streamSource, createPictureInfo, true, token);

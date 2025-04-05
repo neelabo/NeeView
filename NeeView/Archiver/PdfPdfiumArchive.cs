@@ -36,7 +36,7 @@ namespace NeeView
         }
 
         // エントリーリストを得る
-        protected override async Task<List<ArchiveEntry>> GetEntriesInnerAsync(CancellationToken token)
+        protected override async Task<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token)
         {
             var list = new List<ArchiveEntry>();
 
@@ -70,7 +70,7 @@ namespace NeeView
 
         // エントリーのストリームを得る
         // PDFは画像化したものをストリームにして返す
-        protected override async Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, CancellationToken token)
+        protected override async Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
         {
             using (var stream = new FileStream(Path, FileMode.Open, FileAccess.Read))
             using (var pdfDocument = PdfDocument.Load(stream))

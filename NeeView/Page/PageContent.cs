@@ -78,6 +78,7 @@ namespace NeeView
 
         public Color Color => PictureInfo?.Color ?? Colors.Black;
 
+        public bool Decrypt { get; set; } = true;
 
 
         /// <summary>

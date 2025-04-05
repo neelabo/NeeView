@@ -56,7 +56,7 @@ namespace NeeView
 
             if (entry.IsDirectory)
             {
-                await ExtractDirectoryEntry(entry, exportFileName, isOverwrite, token);
+                await ExtractDirectoryEntry(entry, exportFileName, isOverwrite, true, token);
             }
             else
             {
@@ -79,7 +79,7 @@ namespace NeeView
         /// <summary>
         /// ディレクトリエントリのエクスポート
         /// </summary>
-        private async Task ExtractDirectoryEntry(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
+        private async Task ExtractDirectoryEntry(ArchiveEntry entry, string exportFileName, bool isOverwrite, bool decrypt, CancellationToken token)
         {
             if (!entry.IsDirectory) throw new InvalidOperationException("Not archive directory: " + entry.EntryName);
 
@@ -87,7 +87,7 @@ namespace NeeView
 
             var prefix = CreateEntryPrefix(entry);
 
-            var entries = await CollectEntriesAsync(prefix, token);
+            var entries = await CollectEntriesAsync(prefix, decrypt, token);
             if (entries.Count == 0) throw new InvalidOperationException();
 
             foreach (var child in entries)
@@ -143,9 +143,9 @@ namespace NeeView
         /// <param name="entryPrefix"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task<List<ArchiveEntry>> CollectEntriesAsync(string entryPrefix, CancellationToken token)
+        public async Task<List<ArchiveEntry>> CollectEntriesAsync(string entryPrefix, bool decrypt, CancellationToken token)
         {
-            return (await _archive.GetEntriesAsync(token)).Where(e => e.EntryName.StartsWith(entryPrefix, StringComparison.Ordinal)).ToList();
+            return (await _archive.GetEntriesAsync(decrypt, token)).Where(e => e.EntryName.StartsWith(entryPrefix, StringComparison.Ordinal)).ToList();
         }
     }
 }

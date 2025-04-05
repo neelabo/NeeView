@@ -19,7 +19,8 @@ namespace NeeView
             token.ThrowIfCancellationRequested();
             NVDebug.AssertMTA();
 
-            var pageContent = await ArchivePageUtility.GetSelectedPageContentAsync(_content.ArchiveEntry, token);
+            var pageContent = await ArchivePageUtility.GetSelectedPageContentAsync(_content.ArchiveEntry, false, token);
+            pageContent.Decrypt = false;
             if (pageContent is ArchivePageContent)
             {
                 if (pageContent.ArchiveEntry.IsMedia())

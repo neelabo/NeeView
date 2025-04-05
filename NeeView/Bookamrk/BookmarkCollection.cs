@@ -247,7 +247,7 @@ namespace NeeView
             foreach (var node in nodes)
             {
                 var bookmark = (Bookmark)node.Value;
-                if (!await ArchiveEntryUtility.ExistsAsync(bookmark.Path, token))
+                if (!await ArchiveEntryUtility.ExistsAsync(bookmark.Path, false, token))
                 {
                     unlinked.Add(node);
                 }

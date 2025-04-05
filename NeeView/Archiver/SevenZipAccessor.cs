@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace NeeView
 {
+
     /// <summary>
     /// SevenZipSharpのインスタンスアクセサ。
     /// 一時的にファイルロックを解除できるようにしている。
@@ -42,13 +43,17 @@ namespace NeeView
 
         private readonly string _fileName;
         private SevenZipExtractor? _extractor;
-        private readonly System.Threading.Lock _lock = new();
+        private readonly Lock _lock = new();
+        private readonly ArchiveKey _archiveKey;
 
 
         public SevenZipAccessor(string fileName)
         {
             InitializeLibrary();
             _fileName = fileName;
+
+            _archiveKey = new ArchiveKey(fileName);
+            _archiveKey.KeyChanged += (s, e) => UnlockCore();
         }
 
 
@@ -102,7 +107,14 @@ namespace NeeView
 
                 if (_extractor is null)
                 {
-                    _extractor = new SevenZipExtractor(_fileName);
+                    if (string.IsNullOrEmpty(_archiveKey.Key))
+                    {
+                        _extractor = new SevenZipExtractor(_fileName);
+                    }
+                    else
+                    {
+                        _extractor = new SevenZipExtractor(_fileName, _archiveKey.Key);
+                    }
                 }
 
                 return _extractor;
@@ -116,44 +128,51 @@ namespace NeeView
         {
             using (_asyncLock.Lock())
             {
-                if (_disposedValue) return;
-                lock (_lock)
-                {
-                    _extractor?.Dispose();
-                    _extractor = null;
-                }
+                UnlockCore();
             }
         }
 
-#if false
-        /// <summary>
-        /// アーカイブ初期化 (未使用)
-        /// </summary>
-        /// <remarks>
-        /// 他のアクセス時に自動的に呼ばれるアーカイブ情報収集を明示的に行う。
-        /// IArchiveOpenCallback をうまく使えば進捗を取得できる。7zはなぜか取得できない。
-        /// </remarks>
-        public void GetArchiveInfo()
+        private void UnlockCore()
         {
-            using (_asyncLock.Lock())
+            if (_disposedValue) return;
+            lock (_lock)
             {
-                if (_disposedValue) return;
-                GetExtractor().GetArchiveInfo(); // 未定義。IArchiveOpenCallback を使用する改造を行う場合にまとめて実装
+                _extractor?.Dispose();
+                _extractor = null;
             }
         }
-#endif
 
         /// <summary>
         /// アーカイブ情報をまとめて取得
         /// </summary>
         /// <returns></returns>
-        public ArchiveInfo GetArchiveInfo()
+        public (SevenZipArchiveInfo Info, ReadOnlyCollection<ArchiveFileInfo> Entries) GetArchiveInfo(bool decrypt)
         {
             using (_asyncLock.Lock())
             {
                 if (_disposedValue) return new();
-                var extractor = GetExtractor();
-                return new(extractor.IsSolid, extractor.Format.ToString(), extractor.ArchiveFileData);
+                SevenZipExtractor? extractor = null;
+
+                while (true)
+                {
+                    try
+                    {
+                        extractor = GetExtractor();
+                        return new (new SevenZipArchiveInfo(extractor.Format.ToString(), extractor.IsSolid, extractor.PasswordRequired), extractor.ArchiveFileData);
+                    }
+                    catch (SevenZipArchiveException) when (decrypt)
+                    {
+                        if (extractor is not null && extractor.PasswordRequired)
+                        {
+                            if (_archiveKey.UpdateArchiveKeyByUser())
+                            {
+                                continue;
+                            }
+                        }
+
+                        throw;
+                    }
+                }
             }
         }
 
@@ -162,12 +181,35 @@ namespace NeeView
         /// </summary>
         /// <param name="index">エントリ番号</param>
         /// <param name="extractStream">出力ストリーム</param>
-        public void ExtractFile(int index, Stream extractStream)
+        /// <param name="decrypt">暗号解除</param>
+        public void ExtractFile(SevenZipFileInfo info, Stream extractStream, bool decrypt)
         {
             using (_asyncLock.Lock())
             {
                 if (_disposedValue) return;
-                GetExtractor().ExtractFile(index, extractStream);
+
+                while (true)
+                {
+                    try
+                    {
+                        GetExtractor().ExtractFile(info.Index, extractStream);
+                        break;
+                    }
+                    catch (ExtractionFailedException ex) when (decrypt && (ex.OperationResult == OperationResult.DataError || ex.OperationResult == OperationResult.WrongPassword))
+                    {
+                        if (!info.Encrypted)
+                        {
+                            throw;
+                        }
+
+                        if (_archiveKey.UpdateArchiveKeyByUser())
+                        {
+                            continue;
+                        }
+
+                        throw;
+                    }
+                }
             }
         }
 
@@ -182,15 +224,37 @@ namespace NeeView
         /// <param name="fileExtraction">エントリの出力定義</param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task PreExtractAsync(string directory, SevenZipFileExtraction fileExtraction, CancellationToken token)
+        public async Task PreExtractAsync(bool encryptedMaybe, string directory, SevenZipFileExtraction fileExtraction, bool decrypt, CancellationToken token)
         {
             Debug.Assert(!string.IsNullOrEmpty(directory));
 
             using (await _asyncLock.LockAsync(token))
             {
                 if (_disposedValue) return;
-                var preExtractor = new SevenZipHybridExtractor(GetExtractor(), directory, fileExtraction);
-                await preExtractor.ExtractAsync(token);
+
+                while (true)
+                {
+                    try
+                    {
+                        var preExtractor = new SevenZipHybridExtractor(GetExtractor(), directory, fileExtraction);
+                        await preExtractor.ExtractAsync(token);
+                        break;
+                    }
+                    catch (ExtractionFailedException ex) when (decrypt && (ex.OperationResult == OperationResult.DataError || ex.OperationResult == OperationResult.WrongPassword))
+                    {
+                        if (!encryptedMaybe)
+                        {
+                            throw;
+                        }
+
+                        if (_archiveKey.UpdateArchiveKeyByUser())
+                        {
+                            continue;
+                        }
+
+                        throw;
+                    }
+                }
             }
         }
 
@@ -236,10 +300,15 @@ namespace NeeView
     }
 
 
+    public readonly record struct  SevenZipArchiveInfo(string? Format, bool IsSolid, bool Encrypted);
 
-    public record ArchiveInfo(bool IsSolid, string Format, ReadOnlyCollection<ArchiveFileInfo> ArchiveFileData)
+    public readonly record struct SevenZipFileInfo(int Index, bool Encrypted);
+
+    public static partial class ArchiveEntryExtensions
     {
-        public ArchiveInfo() : this(false, "", new List<ArchiveFileInfo>().AsReadOnly()) { }
+        public static SevenZipFileInfo ToSevenZipFileInfo(this ArchiveEntry entry)
+        {
+            return new SevenZipFileInfo(entry.Id, entry.Encrypted);
+        }
     }
-
 }

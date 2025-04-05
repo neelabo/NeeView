@@ -56,7 +56,7 @@ namespace NeeView
         }
 
         // エントリーリストを得る
-        protected override async Task<List<ArchiveEntry>> GetEntriesInnerAsync(CancellationToken token)
+        protected override async Task<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -106,7 +106,7 @@ namespace NeeView
 
 
         // エントリーのストリームを得る
-        protected override async Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, CancellationToken token)
+        protected override async Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
         {
             if (entry.Id < 0) throw new ApplicationException("Cannot open this entry: " + entry.EntryName);
 
@@ -247,11 +247,11 @@ namespace NeeView
         /// 事前展開
         /// </summary>
         /// <param name="directory">事前展開ファイル用フォルダ</param>
-        public override async Task PreExtractAsync(string directory, CancellationToken token)
+        public override async Task PreExtractAsync(string directory, bool decrypt, CancellationToken token)
         {
             using (await _asyncLock.LockAsync(token))
             {
-                var entries = await GetEntriesAsync(token);
+                var entries = await GetEntriesAsync(decrypt, token);
                 foreach (var entry in entries)
                 {
                     token.ThrowIfCancellationRequested();

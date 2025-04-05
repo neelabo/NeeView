@@ -17,9 +17,7 @@ namespace NeeView
     public class SevenZipArchive : Archive
     {
         private readonly SevenZipAccessor _accessor;
-        private string? _format;
-        private bool _isSolid;
-
+        private SevenZipArchiveInfo _archiveInfo;
 
         public SevenZipArchive(string path, ArchiveEntry? source, ArchiveHint archiveHint) : base(path, source, archiveHint)
         {
@@ -27,9 +25,14 @@ namespace NeeView
         }
 
 
+        public bool IsSolid => _archiveInfo.IsSolid;
+
+        public string? Format => _archiveInfo.Format;
+
+
         public override string ToString()
         {
-            return Properties.TextResources.GetString("Archiver.SevenZip") + (_format != null ? $" ({_format})" : null);
+            return Properties.TextResources.GetString("Archiver.SevenZip") + (Format != null ? $" ({Format})" : null);
         }
 
         public override void Unlock()
@@ -50,10 +53,10 @@ namespace NeeView
         }
 
         // [開発用] 初期化済？
-        public bool Initialized() => _format != null;
+        public bool Initialized() => Format != null;
 
         // エントリーリストを得る
-        protected override async Task<List<ArchiveEntry>> GetEntriesInnerAsync(CancellationToken token)
+        protected override async Task<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token)
         {
             NVDebug.AssertMTA();
             token.ThrowIfCancellationRequested();
@@ -65,13 +68,16 @@ namespace NeeView
 
             // NOTE: 最初のアーカイブ初期化に時間がかかることがあるが、外部DLL内なのでキャンセルできない。
             // NOTE: アーカイブの種類によっては進捗が取得できるようだ。
-            (_isSolid, _format, var entries) = _accessor.GetArchiveInfo();
+            (_archiveInfo, var entries) = _accessor.GetArchiveInfo(decrypt);
+
+            Encrypted = _archiveInfo.Encrypted || entries.Any(e => e.Encrypted);
 
             for (int id = 0; id < entries.Count; ++id)
             {
                 token.ThrowIfCancellationRequested();
 
                 var entry = entries[id];
+                Debug.Assert(entry.Index == id);
 
                 var archiveEntry = new ArchiveEntry(this)
                 {
@@ -81,6 +87,7 @@ namespace NeeView
                     Length = (long)entry.Size,
                     CreationTime = entry.CreationTime,
                     LastWriteTime = entry.LastWriteTime,
+                    Encrypted = entry.Encrypted,
                 };
 
                 if (!entry.IsDirectory)
@@ -103,7 +110,7 @@ namespace NeeView
         }
 
         // エントリーのストリームを得る
-        protected override async Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, CancellationToken token)
+        protected override async Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
         {
             NVDebug.AssertMTA();
             Debug.Assert(entry is not null);
@@ -113,15 +120,17 @@ namespace NeeView
 
             ThrowIfDisposed();
 
+#if DEBUG
             var archiveEntry = _accessor.ArchiveFileData[entry.Id];
             if (archiveEntry.FileName != entry.RawEntryName)
             {
                 throw new ApplicationException(Properties.TextResources.GetString("InconsistencyException.Message"));
             }
+#endif
 
             var ms = new MemoryStream((int)entry.Length);
             token.ThrowIfCancellationRequested();
-            await Task.Run(() => _accessor.ExtractFile(entry.Id, ms));
+            await Task.Run(() => _accessor.ExtractFile(entry.ToSevenZipFileInfo(), ms, decrypt));
             ms.Seek(0, SeekOrigin.Begin);
             return ms;
         }
@@ -159,7 +168,7 @@ namespace NeeView
             var mode = isOverwrite ? FileMode.Create : FileMode.CreateNew;
             using (Stream fs = new FileStream(exportFileName, mode, FileAccess.Write))
             {
-                _accessor.ExtractFile(entry.Id, fs);
+                _accessor.ExtractFile(entry.ToSevenZipFileInfo(), fs, true);
             }
             WriteZoneIdentifier(exportFileName);
         }
@@ -171,22 +180,22 @@ namespace NeeView
         {
             if (_disposedValue) return false;
             Debug.Assert(Initialized());
-            return _isSolid;
+            return IsSolid;
         }
 
         /// <summary>
         /// 事前展開処理
         /// </summary>
-        public override async Task PreExtractAsync(string directory, CancellationToken token)
+        public override async Task PreExtractAsync(string directory, bool decrypt, CancellationToken token)
         {
             Debug.Assert(!string.IsNullOrEmpty(directory));
 
             if (_disposedValue) return;
 
-            var entries = await GetEntriesAsync(token);
+            var entries = await GetEntriesAsync(decrypt, token);
             token.ThrowIfCancellationRequested();
 
-            await _accessor.PreExtractAsync(directory, new SevenZipFileExtraction(entries), token);
+            await _accessor.PreExtractAsync(Encrypted, directory, new SevenZipFileExtraction(entries), decrypt, token);
             token.ThrowIfCancellationRequested();
         }
 

@@ -232,7 +232,7 @@ namespace NeeView
             var unlinked = new List<BookHistory>();
             foreach (var item in this.ToList())
             {
-                if (!await ArchiveEntryUtility.ExistsAsync(item.Path, token))
+                if (!await ArchiveEntryUtility.ExistsAsync(item.Path, false, token))
                 {
                     unlinked.Add(item);
                 }

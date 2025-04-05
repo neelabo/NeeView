@@ -134,7 +134,7 @@ namespace NeeView
             var entries = new List<ArchiveEntry>();
             foreach (var path in paths)
             {
-                entries.Add(await ArchiveEntryUtility.CreateAsync(path, token));
+                entries.Add(await ArchiveEntryUtility.CreateAsync(path, ArchiveHint.None, true, token));
             }
             return entries;
         }

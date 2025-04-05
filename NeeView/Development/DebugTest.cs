@@ -94,17 +94,19 @@ namespace NeeView
 
                 Debug.WriteLine($"\n> {collection.Path}");
 
-                var entries = await collection.GetEntriesAsync(token);
+                var decrypt = false;
+
+                var entries = await collection.GetEntriesAsync(decrypt, token);
 
                 var prefix = LoosePath.TrimDirectoryEnd(collection.Path);
                 DumpEntries("Raw", entries, prefix);
 
                 // filter: ページとして画像ファイルのみリストアップ
-                var p1 = await collection.GetEntriesWhereImageAsync(token);
+                var p1 = await collection.GetEntriesWhereImageAsync(decrypt, token);
                 DumpEntries("ImageFilter", p1, prefix);
 
                 // filter: ページとしてすべてのファイルをリストアップ。フォルダーはk空フォルダーのみリストアップ
-                var p2 = await collection.GetEntriesWherePageAllAsync(token);
+                var p2 = await collection.GetEntriesWherePageAllAsync(decrypt, token);
                 DumpEntries("AllPageFilter", p2, prefix);
 
                 // filter: アーカイブのみリストアップ。以前の動作

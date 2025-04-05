@@ -27,15 +27,11 @@ namespace NeeView
             return StaticFolderArchive.Default.CreateArchiveEntry(path, ArchiveHint.None, true);
         }
 
-        public static async Task<ArchiveEntry> CreateAsync(string path, CancellationToken token)
-        {
-            return await CreateAsync(path, ArchiveHint.None, token);
-        }
 
         /// <summary>
         /// パスから完全なArchiveEntryを作成
         /// </summary>
-        public static async Task<ArchiveEntry> CreateAsync(string path, ArchiveHint archiveHint, CancellationToken token)
+        public static async Task<ArchiveEntry> CreateAsync(string path, ArchiveHint archiveHint, bool decrypt, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -59,7 +55,7 @@ namespace NeeView
                         if (File.Exists(archivePath))
                         {
                             var archive = await ArchiveManager.Current.CreateArchiveAsync(StaticFolderArchive.Default.CreateArchiveEntry(archivePath, archiveHint), false, token);
-                            var entries = await archive.GetEntriesAsync(token);
+                            var entries = await archive.GetEntriesAsync(decrypt, token);
 
                             // メディア アーカイブの場合、ページ指定は無効
                             if (archive is MediaArchive)
@@ -75,7 +71,7 @@ namespace NeeView
                             }
                             else
                             {
-                                return await CreateInnerAsync(archive, entryName, token);
+                                return await CreateInnerAsync(archive, entryName, decrypt, token);
                             }
                         }
                     }
@@ -93,11 +89,11 @@ namespace NeeView
         /// アーカイブ内のエントリーを返す。
         /// 入れ子になったアーカイブの場合、再帰処理する。
         /// </summary>
-        private static async Task<ArchiveEntry> CreateInnerAsync(Archive archive, string entryName, CancellationToken token)
+        private static async Task<ArchiveEntry> CreateInnerAsync(Archive archive, string entryName, bool decrypt, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
-            var entries = await archive.GetEntriesAsync(token);
+            var entries = await archive.GetEntriesAsync(decrypt, token);
 
             var entry = entries.FirstOrDefault(e => e.EntryName == entryName);
             if (entry != null) return entry;
@@ -114,7 +110,7 @@ namespace NeeView
                 {
                     var subArchive = await ArchiveManager.Current.CreateArchiveAsync(entry, false, token);
                     var subEntryName = entryName[archivePath.Length..].TrimStart(LoosePath.Separators);
-                    return await CreateInnerAsync(subArchive, subEntryName, token);
+                    return await CreateInnerAsync(subArchive, subEntryName, decrypt, token);
                 }
             }
 
@@ -126,7 +122,7 @@ namespace NeeView
         /// </summary>
         /// <param name="source">対象のエントリ</param>
         /// <param name="depth">検索範囲</param>
-        public static async Task<ArchiveEntry?> CreateFirstImageArchiveEntryAsync(ArchiveEntry source, int depth, CancellationToken token)
+        public static async Task<ArchiveEntry?> CreateFirstImageArchiveEntryAsync(ArchiveEntry source, int depth, bool decrypt, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -135,7 +131,7 @@ namespace NeeView
                 List<ArchiveEntry> entries;
                 if (!source.IsFileSystem && source.IsDirectory)
                 {
-                    entries = (await source.Archive.GetEntriesAsync(token))
+                    entries = (await source.Archive.GetEntriesAsync(decrypt, token))
                         .Where(e => e.EntryName.StartsWith(LoosePath.TrimDirectoryEnd(source.EntryName), StringComparison.Ordinal))
                         .ToList();
                 }
@@ -143,7 +139,7 @@ namespace NeeView
                 {
                     var archiver = await ArchiveManager.Current.CreateArchiveAsync(source, false, token);
                     await archiver.WaitFileReadableAsync(TimeSpan.FromMilliseconds(1000), token);
-                    entries = await archiver.GetEntriesAsync(token);
+                    entries = await archiver.GetEntriesAsync(decrypt, token);
                 }
 
                 // NOTE: ToList()で確定させる。もともとList<>であるが、これがないと次の行以降で Collection was modified; enumeration operation may not execute が発生することがある
@@ -162,7 +158,7 @@ namespace NeeView
                     // NOTE: 検索サブディレクトリ数も depth で制限
                     foreach (var entry in entries.Where(e => e.IsArchive()).Take(depth))
                     {
-                        select = await CreateFirstImageArchiveEntryAsync(entry, depth - 1, token);
+                        select = await CreateFirstImageArchiveEntryAsync(entry, depth - 1, decrypt, token);
                         if (select != null)
                         {
                             return select;
@@ -188,13 +184,13 @@ namespace NeeView
         /// <param name="path"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static async Task<bool> ExistsAsync(string path, CancellationToken token)
+        public static async Task<bool> ExistsAsync(string path, bool decrypt, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
             try
             {
-                var entry = await CreateAsync(path, ArchiveHint.None, token);
+                var entry = await CreateAsync(path, ArchiveHint.None, decrypt, token);
                 return entry != null;
             }
             catch (FileNotFoundException)

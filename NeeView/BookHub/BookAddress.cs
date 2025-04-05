@@ -105,7 +105,7 @@ namespace NeeView
             }
 
             // アーカイブエントリを取得
-            var entry = await ArchiveEntryUtility.CreateAsync(query.SimplePath, token);
+            var entry = await ArchiveEntryUtility.CreateAsync(query.SimplePath, ArchiveHint.None, true, token);
 
             // ページ名が指定されているなら入力そのまま
             if (entryName != null)
@@ -160,7 +160,7 @@ namespace NeeView
                         }
                     }
                     this.EntryName = GetEntryName(query, this.ArchivePath);
-                    entry = await ArchiveEntryUtility.CreateAsync(TargetPath.SimplePath, token);
+                    entry = await ArchiveEntryUtility.CreateAsync(TargetPath.SimplePath, ArchiveHint.None, true, token);
                 }
                 catch (Exception ex)
                 {
@@ -168,7 +168,7 @@ namespace NeeView
                     this.TargetPath = query.GetParent();
                     this.ArchivePath = query.GetParent();
                     this.EntryName = query.FileName;
-                    entry = await ArchiveEntryUtility.CreateAsync(TargetPath.SimplePath, token);
+                    entry = await ArchiveEntryUtility.CreateAsync(TargetPath.SimplePath, ArchiveHint.None, true, token);
                 }
             }
 

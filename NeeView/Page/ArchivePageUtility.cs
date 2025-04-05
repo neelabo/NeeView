@@ -13,10 +13,10 @@ namespace NeeView
         /// <param name="archiveEntry">基準となるエントリ</param>
         /// <param name="token"></param>
         /// <returns>代表エントリの PageContent. 代表エントリが入力と同じである場合は null</returns>
-        public static async Task<PageContent> GetSelectedPageContentAsync(ArchiveEntry archiveEntry, CancellationToken token)
+        public static async Task<PageContent> GetSelectedPageContentAsync(ArchiveEntry archiveEntry, bool decrypt, CancellationToken token)
         {
-            var entry = await CreateRegularEntryAsync(archiveEntry, token);
-            var selectedEntry = await SelectAlternativeEntry(entry, token);
+            var entry = await CreateRegularEntryAsync(archiveEntry, decrypt, token);
+            var selectedEntry = await SelectAlternativeEntry(entry, decrypt, token);
             var factory = new PageContentFactory(null, false);
             var selectedContent = factory.CreatePageContent(selectedEntry, token);
             return selectedContent;
@@ -28,7 +28,7 @@ namespace NeeView
         /// <param name="entry"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        private static async Task<ArchiveEntry> SelectAlternativeEntry(ArchiveEntry entry, CancellationToken token)
+        private static async Task<ArchiveEntry> SelectAlternativeEntry(ArchiveEntry entry, bool decrypt, CancellationToken token)
         {
             if (System.IO.Directory.Exists(entry.SystemPath) || entry.IsBook())
             {
@@ -37,7 +37,7 @@ namespace NeeView
                     return entry;
                 }
 
-                return await ArchiveEntryUtility.CreateFirstImageArchiveEntryAsync(entry, 2, token) ?? entry;
+                return await ArchiveEntryUtility.CreateFirstImageArchiveEntryAsync(entry, 2, decrypt, token) ?? entry;
             }
             else
             {
@@ -51,7 +51,7 @@ namespace NeeView
         /// <param name="entry"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        private static async Task<ArchiveEntry> CreateRegularEntryAsync(ArchiveEntry entry, CancellationToken token)
+        private static async Task<ArchiveEntry> CreateRegularEntryAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
         {
             if (!entry.IsTemporary) return entry;
 
@@ -59,7 +59,7 @@ namespace NeeView
             query = query.ResolvePath();
             try
             {
-                return await ArchiveEntryUtility.CreateAsync(query.SimplePath, token);
+                return await ArchiveEntryUtility.CreateAsync(query.SimplePath, ArchiveHint.None, decrypt, token);
             }
             catch (Exception ex)
             {

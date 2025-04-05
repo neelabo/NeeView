@@ -16,7 +16,7 @@ namespace NeeView
             // ページ生成
             var archiveEntryCollection = CreateArchiveEntryCollection(address.TargetPath.SimplePath, setting.IsRecursiveFolder, setting.ArchiveRecursiveMode, setting.IsIgnoreCache, setting.ArchiveHint);
             var bookMemoryService = new BookMemoryService();
-            var pages = await CreatePageCollection(archiveEntryCollection, setting.BookPageCollectMode, new PageContentFactory(bookMemoryService, true), token);
+            var pages = await CreatePageCollection(archiveEntryCollection, setting.BookPageCollectMode, new PageContentFactory(bookMemoryService, true), setting.Decrypt, token);
 
             // 再起判定は通常のディレクトリーのみ適用
             var canAutoRecursive = System.IO.Directory.Exists(address.TargetPath.SimplePath);
@@ -25,7 +25,7 @@ namespace NeeView
             int subFolderCount = 0;
             if (canAutoRecursive && archiveEntryCollection.Mode != ArchiveEntryCollectionMode.IncludeSubArchives && !pages.Where(e => e.PageType == PageType.File).Any())
             {
-                var entries = await archiveEntryCollection.GetEntriesWhereBookAsync(token);
+                var entries = await archiveEntryCollection.GetEntriesWhereBookAsync(setting.Decrypt, token);
                 subFolderCount = entries.Count;
             }
 
@@ -63,13 +63,13 @@ namespace NeeView
         /// <summary>
         /// ページ生成
         /// </summary>
-        private static async Task<List<Page>> CreatePageCollection(ArchiveEntryCollection archiveEntryCollection, BookPageCollectMode bookPageCollectMode, PageContentFactory contentFactory, CancellationToken token)
+        private static async Task<List<Page>> CreatePageCollection(ArchiveEntryCollection archiveEntryCollection, BookPageCollectMode bookPageCollectMode, PageContentFactory contentFactory, bool decrypt, CancellationToken token)
         {
             List<ArchiveEntryNode> entries = bookPageCollectMode switch
             {
-                BookPageCollectMode.Image => await archiveEntryCollection.GetEntriesWhereImageAsync(token),
-                BookPageCollectMode.ImageAndBook => await archiveEntryCollection.GetEntriesWhereImageAndArchiveAsync(token),
-                _ => await archiveEntryCollection.GetEntriesWherePageAllAsync(token),
+                BookPageCollectMode.Image => await archiveEntryCollection.GetEntriesWhereImageAsync(decrypt, token),
+                BookPageCollectMode.ImageAndBook => await archiveEntryCollection.GetEntriesWhereImageAndArchiveAsync(decrypt, token),
+                _ => await archiveEntryCollection.GetEntriesWherePageAllAsync(decrypt, token),
             };
 
             Debug.Assert(entries.Count == 0 || entries[0].RootSystemPath == archiveEntryCollection.Path);

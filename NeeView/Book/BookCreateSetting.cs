@@ -49,6 +49,11 @@
         /// アーカイバ指定
         /// </summary>
         public ArchiveHint ArchiveHint { get; set; } = ArchiveHint.None;
+
+        /// <summary>
+        /// 保護されたアーカイブの復号化
+        /// </summary>
+        public bool Decrypt { get; set; } = true;
     }
 
 }

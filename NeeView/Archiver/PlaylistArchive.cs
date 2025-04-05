@@ -42,7 +42,7 @@ namespace NeeView
         }
 
         // リスト取得
-        protected override async Task<List<ArchiveEntry>> GetEntriesInnerAsync(CancellationToken token)
+        protected override async Task<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -86,7 +86,7 @@ namespace NeeView
                 }
             }
 
-            var innerEntry = await ArchiveEntryUtility.CreateAsync(targetPath, token);
+            var innerEntry = await ArchiveEntryUtility.CreateAsync(targetPath, ArchiveHint.None, false, token);
 
             var entry = new PlaylistArchiveEntry(this)
             {
@@ -104,11 +104,11 @@ namespace NeeView
 
 
         // ストリームを開く
-        protected override async Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, CancellationToken token)
+        protected override async Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
         {
             Debug.Assert(entry.Archive == this);
             if (entry is not PlaylistArchiveEntry e) throw new InvalidCastException();
-            return await e.InnerEntry.OpenEntryAsync(token);
+            return await e.InnerEntry.OpenEntryAsync(decrypt, token);
         }
 
         // ファイル出力

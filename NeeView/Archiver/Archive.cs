@@ -152,6 +152,11 @@ namespace NeeView
         /// </summary>
         public ArchiveHint ArchiveHint { get; private set; }
 
+        /// <summary>
+        /// アーカイブ全体が暗号化されているか
+        /// </summary>
+        public bool Encrypted { get; protected set; }
+
 
         protected virtual void OnCreated(FileSystemEventArgs e)
         {
@@ -253,12 +258,12 @@ namespace NeeView
         /// <summary>
         /// エントリリストを取得 (Archive内でのみ使用)
         /// </summary>
-        protected abstract Task<List<ArchiveEntry>> GetEntriesInnerAsync(CancellationToken token);
+        protected abstract Task<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token);
 
         /// <summary>
         /// エントリリストを取得
         /// </summary>
-        public async ValueTask<List<ArchiveEntry>> GetEntriesAsync(CancellationToken token)
+        public async ValueTask<List<ArchiveEntry>> GetEntriesAsync(bool decrypt, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -270,7 +275,7 @@ namespace NeeView
             // NOTE: MTAスレッドで実行。SevenZipSharpのCOM例外対策
             _entries = await Task.Run(async () =>
             {
-                return (await GetEntriesInnerAsync(token))
+                return (await GetEntriesInnerAsync(decrypt, token))
                     .Where(e => !IsExcludedPath(e.EntryName))
                     .ToList();
             });
@@ -305,11 +310,11 @@ namespace NeeView
         /// <summary>
         /// 指定階層のエントリのみ取得
         /// </summary>
-        public async Task<List<ArchiveEntry>> GetEntriesAsync(string path, bool isRecursive, CancellationToken token)
+        public async Task<List<ArchiveEntry>> GetEntriesAsync(string path, bool isRecursive, bool decrypt, CancellationToken token)
         {
             path = LoosePath.TrimDirectoryEnd(path);
 
-            var entries = (await GetEntriesAsync(token))
+            var entries = (await GetEntriesAsync(decrypt, token))
                 .Where(e => path.Length < e.EntryName.Length && e.EntryName.StartsWith(path, StringComparison.Ordinal));
 
             if (!isRecursive)
@@ -323,7 +328,7 @@ namespace NeeView
         /// <summary>
         /// エントリーのストリームを取得
         /// </summary>
-        public async Task<Stream> OpenStreamAsync(ArchiveEntry entry, CancellationToken token)
+        public async Task<Stream> OpenStreamAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
         {
             if (entry.Id < 0) throw new ApplicationException("Cannot open this entry: " + entry.EntryName);
 
@@ -339,14 +344,14 @@ namespace NeeView
             }
             else
             {
-                return await OpenStreamInnerAsync(entry, token);
+                return await OpenStreamInnerAsync(entry, decrypt, token);
             }
         }
 
         /// <summary>
         /// エントリのストリームを取得 (Inner)
         /// </summary>
-        protected abstract Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, CancellationToken token);
+        protected abstract Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token);
 
         /// <summary>
         /// エントリーをファイルとして出力
@@ -446,7 +451,7 @@ namespace NeeView
         /// <summary>
         /// 事前展開
         /// </summary>
-        public virtual Task PreExtractAsync(string directory, CancellationToken token)
+        public virtual Task PreExtractAsync(string directory, bool decrypt, CancellationToken token)
         {
             throw new NotImplementedException("This archiver does not support pre-extract");
         }

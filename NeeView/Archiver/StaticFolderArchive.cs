@@ -20,7 +20,7 @@ namespace NeeView
         }
 
 
-        protected override async Task<List<ArchiveEntry>> GetEntriesInnerAsync(CancellationToken token)
+        protected override async Task<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token)
         {
             return await Task.FromResult(new List<ArchiveEntry>());
         }

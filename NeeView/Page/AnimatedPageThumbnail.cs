@@ -59,7 +59,7 @@ namespace NeeView
             }
             else
             {
-                return await _content.ArchiveEntry.OpenEntryAsync(token);
+                return await _content.ArchiveEntry.OpenEntryAsync(_content.Decrypt, token);
             }
         }
     }

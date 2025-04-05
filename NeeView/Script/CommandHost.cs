@@ -214,7 +214,7 @@ namespace NeeView
             {
                 try
                 {
-                    var entry = await ArchiveEntryUtility.CreateAsync(source, _cancellationToken);
+                    var entry = await ArchiveEntryUtility.CreateAsync(source, ArchiveHint.None, true, _cancellationToken);
                     var path = await entry.RealizeAsync(_cancellationToken);
                     if (path is not null)
                     {

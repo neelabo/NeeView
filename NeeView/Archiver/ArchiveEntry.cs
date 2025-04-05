@@ -240,6 +240,11 @@ namespace NeeView
             set => _archiveHint = value;
         }
 
+        /// <summary>
+        /// 暗号化されたエントリ
+        /// </summary>
+        public bool Encrypted { get; init; }
+
 
         protected virtual void Dispose(bool disposing)
         {
@@ -307,9 +312,9 @@ namespace NeeView
         /// ストリームを開く
         /// </summary>
         /// <returns>Stream</returns>
-        public async Task<Stream> OpenEntryAsync(CancellationToken token)
+        public async Task<Stream> OpenEntryAsync(bool decrypt, CancellationToken token)
         {
-            return await Archive.OpenStreamAsync(this, token);
+            return await Archive.OpenStreamAsync(this, decrypt, token);
         }
 
         /// <summary>

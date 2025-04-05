@@ -10,6 +10,8 @@ namespace NeeView
     /// </summary>
     public interface IStreamSource
     {
+        public bool Decrypt { get; }
+
         // TODO: PageContent保持メモリサイズ用。本来の用途ではないのでどうにかする
         long Length => throw new NotSupportedException();
 

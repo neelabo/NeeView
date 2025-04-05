@@ -46,11 +46,11 @@ namespace NeeView
         /// <summary>
         /// ArchiveEntry収集
         /// </summary>
-        public async Task<List<ArchiveEntryNode>> GetEntriesAsync(CancellationToken token)
+        public async Task<List<ArchiveEntryNode>> GetEntriesAsync(bool decrypt, CancellationToken token)
         {
             if (_entries != null) return _entries;
 
-            var rootEntry = await ArchiveEntryUtility.CreateAsync(Path, _archiveHint, token);
+            var rootEntry = await ArchiveEntryUtility.CreateAsync(Path, _archiveHint, decrypt, token);
 
             Archive? rootArchive;
             string rootArchivePath;
@@ -92,12 +92,12 @@ namespace NeeView
             Mode = (Archive is FolderArchive || Archive is PlaylistArchive) ? _mode : _modeIfArchive;
 
             var includeSubDirectories = Mode == ArchiveEntryCollectionMode.IncludeSubDirectories || Mode == ArchiveEntryCollectionMode.IncludeSubArchives;
-            var entries = (await rootArchive.GetEntriesAsync(rootArchivePath, includeSubDirectories, token)).Select(e => new ArchiveEntryNode(null, e, rootArchivePath)).ToList();
+            var entries = (await rootArchive.GetEntriesAsync(rootArchivePath, includeSubDirectories, decrypt, token)).Select(e => new ArchiveEntryNode(null, e, rootArchivePath)).ToList();
 
             var includeAllSubDirectories = Mode == ArchiveEntryCollectionMode.IncludeSubArchives;
             if (includeAllSubDirectories)
             {
-                entries = await GetSubArchivesEntriesAsync(entries, token);
+                entries = await GetSubArchivesEntriesAsync(entries, decrypt, token);
             }
 
             _entries = entries;
@@ -105,7 +105,7 @@ namespace NeeView
         }
 
 
-        private async Task<List<ArchiveEntryNode>> GetSubArchivesEntriesAsync(List<ArchiveEntryNode> entries, CancellationToken token)
+        private async Task<List<ArchiveEntryNode>> GetSubArchivesEntriesAsync(List<ArchiveEntryNode> entries, bool decrypt, CancellationToken token)
         {
             var result = new List<ArchiveEntryNode>();
 
@@ -125,8 +125,8 @@ namespace NeeView
                     {
                         var entityEntry = entry.ArchiveEntry.TargetArchiveEntry;
                         var subArchive = await ArchiveManager.Current.CreateArchiveAsync(entityEntry, _ignoreCache, token);
-                        var subEntries = (await subArchive.GetEntriesAsync(token)).Select(e => new ArchiveEntryNode(entry, e)).ToList();
-                        result.AddRange(await GetSubArchivesEntriesAsync(subEntries, token));
+                        var subEntries = (await subArchive.GetEntriesAsync(decrypt, token)).Select(e => new ArchiveEntryNode(entry, e)).ToList();
+                        result.AddRange(await GetSubArchivesEntriesAsync(subEntries, decrypt, token));
                     }
                     catch (OperationCanceledException)
                     {
@@ -145,16 +145,16 @@ namespace NeeView
 
 
         // filter: ページとして画像ファイルのみリストアップ
-        public async Task<List<ArchiveEntryNode>> GetEntriesWhereImageAsync(CancellationToken token)
+        public async Task<List<ArchiveEntryNode>> GetEntriesWhereImageAsync(bool decrypt, CancellationToken token)
         {
-            var entries = await GetEntriesAsync(token);
+            var entries = await GetEntriesAsync(decrypt, token);
             return entries.Where(e => e.ArchiveEntry.IsImage()).ToList();
         }
 
         // filter: ページとして画像ファイルとアーカイブをリストアップ
-        public async Task<List<ArchiveEntryNode>> GetEntriesWhereImageAndArchiveAsync(CancellationToken token)
+        public async Task<List<ArchiveEntryNode>> GetEntriesWhereImageAndArchiveAsync(bool decrypt, CancellationToken token)
         {
-            var entries = await GetEntriesAsync(token);
+            var entries = await GetEntriesAsync(decrypt, token);
             if (Mode == ArchiveEntryCollectionMode.CurrentDirectory)
             {
                 return entries.Where(e => e.ArchiveEntry.IsImage() || e.ArchiveEntry.IsBook()).ToList();
@@ -166,23 +166,23 @@ namespace NeeView
         }
 
         // filter: ページとしてすべてのファイルをリストアップ。フォルダーは空きフォルダーのみリストアップ
-        public async Task<List<ArchiveEntryNode>> GetEntriesWherePageAllAsync(CancellationToken token)
+        public async Task<List<ArchiveEntryNode>> GetEntriesWherePageAllAsync(bool decrypt, CancellationToken token)
         {
-            var entries = await GetEntriesAsync(token);
+            var entries = await GetEntriesAsync(decrypt, token);
             return entries.WherePageAll().ToList();
         }
 
         // filter: 含まれるサブアーカイブのみ抽出
-        public async Task<List<ArchiveEntryNode>> GetEntriesWhereSubArchivesAsync(CancellationToken token)
+        public async Task<List<ArchiveEntryNode>> GetEntriesWhereSubArchivesAsync(bool decrypt, CancellationToken token)
         {
-            var entries = await GetEntriesAsync(token);
+            var entries = await GetEntriesAsync(decrypt, token);
             return entries.Where(e => e.ArchiveEntry.IsArchive() || e.ArchiveEntry.IsMedia()).ToList();
         }
 
         // filter: 含まれるブックを抽出
-        public async Task<List<ArchiveEntryNode>> GetEntriesWhereBookAsync(CancellationToken token)
+        public async Task<List<ArchiveEntryNode>> GetEntriesWhereBookAsync(bool decrypt, CancellationToken token)
         {
-            var entries = await GetEntriesAsync(token);
+            var entries = await GetEntriesAsync(decrypt, token);
             if (Mode == ArchiveEntryCollectionMode.CurrentDirectory)
             {
                 return entries.Where(e => e.ArchiveEntry.IsBook()).ToList();

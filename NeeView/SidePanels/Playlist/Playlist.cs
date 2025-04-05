@@ -329,7 +329,7 @@ namespace NeeView
             var unlinked = new List<PlaylistItem>();
             foreach (var node in _items)
             {
-                if (!await ArchiveEntryUtility.ExistsAsync(node.Path, token))
+                if (!await ArchiveEntryUtility.ExistsAsync(node.Path, false, token))
                 {
                     unlinked.Add(node);
                 }

@@ -14,20 +14,24 @@ namespace NeeView
     {
         private ArraySegment<byte> _cache;
 
-        public ArchiveEntryStreamSource(ArchiveEntry archiveEntry)
+        public ArchiveEntryStreamSource(ArchiveEntry archiveEntry, bool decrypt)
         {
             ArchiveEntry = archiveEntry;
+            Decrypt = decrypt;
         }
 
         public ArchiveEntry ArchiveEntry { get; }
+
+        public bool Decrypt { get; init; }
 
         public long Length => ArchiveEntry.Length;
 
         public long CacheSize => _cache.Count;
 
+
         public async Task<Stream> OpenStreamAsync(CancellationToken token)
         {
-            await CreateCacheAsync(token);
+            await CreateCacheAsync(Decrypt, token);
 
             if (_cache.Array is not null)
             {
@@ -35,16 +39,16 @@ namespace NeeView
             }
             else
             {
-                return await ArchiveEntry.OpenEntryAsync(token);
+                return await ArchiveEntry.OpenEntryAsync(Decrypt, token);
             }
         }
 
-        public async Task CreateCacheAsync(CancellationToken token)
+        public async Task CreateCacheAsync(bool decrypt, CancellationToken token)
         {
             // 展開処理の重複を避けるため、ファイルシステムエントリ以外はキャッシュを作る
             if (_cache.Array is not null || ArchiveEntry.HasCache || ArchiveEntry.IsFileSystem) return;
 
-            using var stream = await ArchiveEntry.OpenEntryAsync(token);
+            using var stream = await ArchiveEntry.OpenEntryAsync(decrypt, token);
 
             // メモリストリームであればバッファを直接取得
             if (stream is MemoryStream memoryStream)

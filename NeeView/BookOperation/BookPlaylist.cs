@@ -33,6 +33,11 @@ namespace NeeView
                 return false;
             }
 
+            if (page.ArchiveEntry.Archive.Encrypted)
+            {
+                return false;
+            }
+
             return true;
         }
 

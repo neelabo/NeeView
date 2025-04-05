@@ -28,7 +28,7 @@ namespace NeeView
             NVDebug.AssertMTA();
             token.ThrowIfCancellationRequested();
 
-            var streamSource = new ArchiveEntryStreamSource(ArchiveEntry);
+            var streamSource = new ArchiveEntryStreamSource(ArchiveEntry, Decrypt);
             using (var stream = await streamSource.OpenStreamAsync(token))
             {
                 var bitmapInfo = BitmapInfo.Create(stream); // TODO: async
@@ -43,8 +43,8 @@ namespace NeeView
 
             try
             {
-                var streamSource = new ArchiveEntryStreamSource(ArchiveEntry);
-                await streamSource.CreateCacheAsync(token);
+                var streamSource = new ArchiveEntryStreamSource(ArchiveEntry, Decrypt);
+                await streamSource.CreateCacheAsync(Decrypt, token);
 
                 // 初回アニメーション判定
                 if (_contentType == PageContentType.None)

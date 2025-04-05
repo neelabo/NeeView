@@ -61,7 +61,7 @@ namespace NeeView
 
 
         // エントリーリストを得る
-        protected override async Task<List<ArchiveEntry>> GetEntriesInnerAsync(CancellationToken token)
+        protected override async Task<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token)
         {
             var list = new List<ArchiveEntry>();
             var directories = new List<ArchiveEntry>();
@@ -147,7 +147,7 @@ namespace NeeView
             return list;
         }
 
-        protected override async Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, CancellationToken token)
+        protected override async Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
         {
             if (entry.Id < 0) throw new ArgumentException("Cannot open this entry: " + entry.EntryName);
             if (entry.IsDirectory) throw new InvalidOperationException("Cannot open directory: " + entry.EntryName);
@@ -257,7 +257,7 @@ namespace NeeView
             var directories = entries.Where(e => e.IsDirectory);
             if (directories.Any())
             {
-                var all = await entries.First().Archive.GetEntriesAsync(CancellationToken.None);
+                var all = await entries.First().Archive.GetEntriesAsync(true, CancellationToken.None);
                 var children = directories.SelectMany(d => all.Where(e => e.Id >= 0 && e.EntryName.StartsWith(LoosePath.TrimDirectoryEnd(d.EntryName), StringComparison.Ordinal)));
                 removes = entries.Concat(children).Where(e => e.Id >= 0).Distinct().ToList();
             }

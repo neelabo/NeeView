@@ -18,6 +18,8 @@ namespace NeeView
 
         public byte[] Bytes { get; }
 
+        public bool Decrypt => false;
+
         public async Task<Stream> OpenStreamAsync(CancellationToken token)
         {
             return await Task.FromResult(new MemoryStream(Bytes));

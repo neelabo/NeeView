@@ -132,7 +132,7 @@ namespace NeeView
         /// <param name="token"></param>
         /// <returns>事前展開が実行され完了すれば true, 実行されなければ false</returns>
         /// <exception cref="ObjectDisposedException"></exception>
-        /// <exception cref="InvalidOperationException">スリープ状態です</exception>
+        /// <exception cref="PreExtractException">スリープ状態です</exception>
         private async Task<bool> PreExtractAsync(CancellationToken token)
         {
             if (_disposedValue) throw new ObjectDisposedException(GetType().FullName);
@@ -144,7 +144,7 @@ namespace NeeView
             // NOTE: 実行は同時に１つのみ
             lock (_lock)
             {
-                if (sleepToken.IsCancellationRequested) throw new InvalidOperationException("PreExtractor is asleep");
+                if (sleepToken.IsCancellationRequested) throw new PreExtractException("PreExtractor is asleep");
                 if (!State.IsReady()) return false;
                 SetState(ArchivePreExtractState.Extracting, sleepToken);
             }
@@ -163,7 +163,8 @@ namespace NeeView
                     LocalWriteLine($"PreExtract create directory. {sw.ElapsedMilliseconds}ms");
                 }
 
-                await _archiver.PreExtractAsync(_extractDirectory.Path, linked.Token);
+                // NOTE: 事前展開は常にパスワード要求。コレ大丈夫？
+                await _archiver.PreExtractAsync(_extractDirectory.Path, true, linked.Token);
                 sw.Stop();
                 LocalWriteLine($"PreExtract done. {sw.ElapsedMilliseconds}ms");
                 SetState(ArchivePreExtractState.Done, sleepToken);
@@ -192,7 +193,7 @@ namespace NeeView
             // 実行は同時に１つのみ
             lock (_lock)
             {
-                if (State == ArchivePreExtractState.Sleep) throw new InvalidOperationException("PreExtractor is asleep");
+                if (State == ArchivePreExtractState.Sleep) throw new PreExtractException("PreExtractor is asleep");
                 if (!State.IsReady()) return;
             }
 
@@ -255,7 +256,8 @@ namespace NeeView
 
             if (entry.Data is null)
             {
-                throw new InvalidOperationException($"Could not pre extract: {entry}");
+                
+                throw new PreExtractException($"Could not pre extract: {entry}");
             }
 
             LocalWriteLine($"WaitPreExtract: {entry} done.");
@@ -285,6 +287,12 @@ namespace NeeView
     public class PreExtractExceptionEventArgs(Exception exception) : EventArgs
     {
         public Exception Exception { get; } = exception;
+    }
+
+    public class PreExtractException : Exception
+    {
+        public PreExtractException(string message) : base(message) { }
+        public PreExtractException(string message, Exception innerException) : base(message, innerException) { }
     }
 }
 
