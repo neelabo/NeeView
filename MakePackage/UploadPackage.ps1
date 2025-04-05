@@ -1,8 +1,11 @@
+
 # Canary, Beta のアップロード
 
 param (
+    [string]$log = "_UploadPackage.log",
     [switch]$SkipCheckRepository
 )
+
 
 # error to break
 trap { break }
@@ -13,8 +16,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 
 # csproj から .NET バージョンを取得する
-function Get-DotNetVersion
-{
+function Get-DotNetVersion {
     param ($csproj)
 
     $xml = [xml](Get-Content $csproj)
@@ -83,6 +85,7 @@ function Upload-Asset {
     param (
         $release_id,
         $package,
+        $content_type,
         [switch]$Confirm 
     )
     
@@ -97,16 +100,18 @@ function Upload-Asset {
         Read-Host "Press Enter to upload $file_name"
     }
 
+    "> Upload $file_name ..." | Out-File -FilePath $log -Append
+
     # GitHub REST API:  Upload a release asset
     Write-Host "REST API: Upload $file_name" -fore Green
     $upload_response = Invoke-RestMethod -Uri $upload_url -Method Post -Headers @{
         Accept         = "application/vnd.github+json"
         Authorization  = "token $token"
-        "Content-Type" = "application/zip"
+        "Content-Type" = $content_type
     } -InFile $file_path
 
-    $upload_response | Format-List
-    
+    $upload_response | Format-List  | Out-File -FilePath $log -Append
+
     # NOTE: Content-Type
     # .zip -> application/zip
     # .msi -> application/x-msi or application/octet-stream
@@ -118,10 +123,10 @@ function Upload-Asset {
 #================================
 
 # アップロードするファイルを選択
-$packages = Get-ChildItem -File | Where-Object Name -match "(Canary|Beta)\d+\.zip$"
+$packages = Get-ChildItem -File | Where-Object Name -match "^NeeView(\d+\.\d+)(-Canary\d+|-Beta\d+)?\.zip$"
 
 if ($packages.Count -eq 0) {
-    throw "Prerelease version file not found."
+    throw "Version file not found."
 }
 elseif ($packages.Count -eq 1) {
     $package = $packages[0]
@@ -134,13 +139,18 @@ if ($package -match "(Canary|Beta)") {
     $package_type = $Matches[1]
 }
 else {
-    throw "Cannot found package type"
+    $package_type = "Product"
 }
 
 # get ZIP-fd package
 $name_fd = $package.Name -replace "\.zip$", "-fd.zip"
 $package_fd = Get-ChildItem -File -Path $name_fd
 
+#get MSI package
+if ($package_type -eq "Product") {
+    $name_msi = $package.Name -replace "\.zip$", ".msi"
+    $package_msi = Get-CHildItem -File -Path $name_msi
+}
 
 # タグ名生成
 if ($package.Name -match "^[^\d]+(.+)\.zip$") {
@@ -191,8 +201,9 @@ if (-not $SkipCheckRepository) {
 
 # 開始確認
 Write-Host
-Write-Host "[Upload Prerelease Package]" -fore Cyan
-Write-Host $package.Name
+Write-Host "[Upload Package]" -fore Cyan
+Write-Host PackageType: $package_type
+Write-Host PackageName: $package.Name
 Write-Host 
 Read-Host "Press Enter to continue"
 
@@ -208,6 +219,18 @@ $dotNetVersion = Get-DotNetVersion  ..\NeeView\NeeView.csproj
 
 
 # リリースを作成
+
+$product_body = @"
+This is the official version of NeeView $version.
+This version runs on .NET $dotNetVersion.
+
+### Main changes
+
+- Item 1
+- Item 2
+
+Changelog: [Version $version](https://neelabo.github.io/NeeView/changelog.html#$version_id)
+"@
 
 $canary_body = @"
 ## Canary Version
@@ -233,24 +256,32 @@ See also: [About Beta Version](https://neelabo.github.io/NeeView/package-beta.ht
 Changelog: [Version $version](https://neelabo.github.io/NeeView/changelog.html#$version_id)
 "@
 
+
 $date = (Get-Date).ToString("yyyy-MM-dd") 
 $release_body = "($date)`r`n"
-if ($package_type -eq "Canary") {
+if ($package_type -eq "Product") {
+    $release_body += $product_body
+    $prerelease = $false
+}
+elseif ($package_type -eq "Canary") {
     $release_body += $canary_body
+    $prerelease = $true
 }
 elseif ($package_type -eq "Beta") {
     $release_body += $beta_body
+    $prerelease = $true
 }
 else {
     throw "Not supported package type: $package_type"
 }
+
 
 $release_data = @{
     tag_name   = $tag_name
     name       = $release_name
     body       = $release_body
     draft      = $true
-    prerelease = $true
+    prerelease = $prerelease
 } | ConvertTo-Json
 
 Write-Host
@@ -260,7 +291,9 @@ Write-Host ”Title: $release_name"
 Write-Host
 Write-Host $release_body
 Write-Host
-Read-Host "Press Enter to create"
+Read-Host "Press Enter to upload"
+
+"Upload $($package.Name) ..." | Out-File -FilePath $log
 
 # GitHub REST API: Create a release
 Write-Host "REST API: Create $release_name" -fore Green
@@ -269,12 +302,15 @@ $release_response = Invoke-RestMethod -Uri $release_url -Method Post -Headers @{
     "Content-Type" = "application/json"
 } -Body $release_data
 
-$release_response | Format-List
+$release_response | Format-List  | Out-File -FilePath $log -Append
 
 # ファイルのアップロード
 $release_id = $release_response.id
-Upload-Asset $release_id $package -Confirm
-Upload-Asset $release_id $package_fd
+Upload-Asset $release_id $package "application/zip"
+Upload-Asset $release_id $package_fd "application/zip"
+if ($package_type -eq "Product") {
+    Upload-Asset $release_id $package_msi "application/x-msi"
+}
 
 Write-Host 
 Write-Host "done. "
