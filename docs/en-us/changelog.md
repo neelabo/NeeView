@@ -1,9 +1,7 @@
 # Changelog
 
 ## 43.0
-(2025-04-03)
-
-> [!WARNING] This is still a beta version.
+(2025-04-05)
 
 #### Welcome Dialogue
 
