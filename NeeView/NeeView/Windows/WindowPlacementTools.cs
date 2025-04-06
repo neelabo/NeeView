@@ -46,11 +46,6 @@ namespace NeeView.Windows
                 }
             }
 
-            // NOTE: Window 生成時の SetWindowPlacement() でWindowサイズにのみDPI補正が適用されるようなので、サイズは論理サイズで保存する
-            var dpi = window.GetDpiScale();
-            raw.normalPosition.Width = (int)(raw.normalPosition.Width / dpi.DpiScaleX);
-            raw.normalPosition.Height = (int)(raw.normalPosition.Height / dpi.DpiScaleY);
-
             var placement = ConvertToWindowPlacement(raw);
             LocalDebug.WriteLine($"Store: Placement={placement}");
             return placement;
@@ -111,6 +106,9 @@ namespace NeeView.Windows
             var hwnd = new WindowInteropHelper(window).Handle;
             var raw = ConvertToNativeWindowPlacement(placement);
             raw.ShowCmd = ShowWindowCommands.SW_HIDE; // 設定のみ
+            // １度目でウィンドウ位置が反映され表示するディスプレイが決定される
+            NativeMethods.SetWindowPlacement(hwnd, ref raw);
+            // ２度目でそのディスプレイDPIがウィンドウサイズに反映される
             NativeMethods.SetWindowPlacement(hwnd, ref raw);
 
             // WindowState を設定
