@@ -10,7 +10,7 @@ body:
       label: Version
       description: >
         NeeView version.
-      placeholder: "e.g., 42.6"
+      placeholder: "e.g., 43.1"
 
   - type: textarea
     id: problem
@@ -24,7 +24,7 @@ body:
   - type: textarea
     id: reproduce
     attributes:
-      label: How to reproduce the problem
+      label: Reproduction Steps
       description: >
         If you know how to reproduce the problem, please describe it here.
 

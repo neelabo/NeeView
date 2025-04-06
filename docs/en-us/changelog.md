@@ -1,5 +1,14 @@
 # Changelog
 
+## 43.1
+(2025-04-07)
+
+#### Fixed
+
+- System: Fixed a bug that window size could not be restored correctly. (#1698)
+- System: Fixed a bug in which commands were sometimes not restored correctly on import. (#1699)
+
+
 ## 43.0
 (2025-04-05)
 
@@ -533,7 +542,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 - Playlist items can also be used to copy files.
 - Script: Levels were introduced for compatibility. Changes that do not affect the operation, such as parameter name changes, are now only notified in the console.
 - Script: nv.Playlist.Name Add. The name of the current playlist can be changed by assigning.
-- Scrpit: Added GetMetaValue method to PageAccessor. You can get the meta information of an image.
+- Script: Added GetMetaValue method to PageAccessor. You can get the meta information of an image.
 
 
 
@@ -800,7 +809,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 - Transparent side panel grip.
 - Disable IME except for text boxes.
 - Backup file generation is limited to once per startup.
-- Moved the data storage folder for the store app version from "NeeLaboratory\NeeView.a" to "NeeLavoratory-NeeView". To solve the problem that the data may not be deleted even if it is uninstalled.
+- Moved the data storage folder for the store app version from "NeeLaboratory\NeeView.a" to "NeeLaboratory-NeeView". To solve the problem that the data may not be deleted even if it is uninstalled.
 - To solve the problem that the upper folder of the opened file cannot be changed, the current directory is always in the same location as the exe.
 - Changed the order of kanji in natural sort to read aloud.
 - Changed to generate a default script folder only when scripts are enabled. If a non-default folder is specified, it will not be generated.
@@ -944,7 +953,7 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 - History: Added a setting to display only the history of the current book location. (HistoryPanel menu> Current folder only)
 - History: Added a setting to automatically delete invalid history at startup. (Options> History> Delete invalid history automatically)
 - Effects: Trimming settings added to the effects panel.
-- Effects: Added application magnification setting of "Scake threshold for Keep dot". (Options> Effect panel)
+- Effects: Added application magnification setting of "Scale threshold for Keep dot". (Options> Effect panel)
 - Loupe: Added setting to center the start cursor on the screen. (Options> Loupe> At the start, move the cursor position to the screen center)
 - Book: Pre-reading at the end of the book is also performed in the reverse direction of page feed.
 - Book: Added "Select in dialog" to end page behavior. (Options> Move> Behavior when trying to move past the end of the page)

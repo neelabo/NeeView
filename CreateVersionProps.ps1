@@ -1,7 +1,7 @@
 # コミット数をビルドバージョンにして _Version.props を作成する
 
 param (
-    [string]$baseVersion = "43.0",
+    [string]$baseVersion = "43.1",
     [string]$suffix = ""
 )
 
