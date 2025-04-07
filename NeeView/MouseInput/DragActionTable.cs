@@ -149,12 +149,14 @@ namespace NeeView
         {
             if (collection == null) return;
 
-            foreach (var pair in collection)
-            {
-                if (_elements.ContainsKey(pair.Key))
-                {
+            // collection は差分の可能性があるので、不足分をデフォルトから補完する
+            var reconstruct = collection.UnionBy(_defaultMemento, e => e.Key);
 
-                    _elements[pair.Key].Restore(pair.Value);
+            foreach (var pair in reconstruct)
+            {
+                if (_elements.TryGetValue(pair.Key, out DragAction? element))
+                {
+                    element.Restore(pair.Value);
                 }
             }
         }

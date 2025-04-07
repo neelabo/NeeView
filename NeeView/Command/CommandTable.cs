@@ -720,11 +720,14 @@ namespace NeeView
 
             ScriptManager.Current.UpdateScriptCommands(isForce: false, isReplace: false);
 
-            foreach (var pair in collection)
+            // collection は差分の可能性がるので、不足分をデフォルトから補完する
+            var reconstruct = collection.UnionBy(DefaultMemento, e => e.Key);
+
+            foreach (var pair in reconstruct)
             {
-                if (_elements.ContainsKey(pair.Key))
+                if (_elements.TryGetValue(pair.Key, out CommandElement? element))
                 {
-                    _elements[pair.Key].Restore(pair.Value);
+                    element.Restore(pair.Value);
                 }
                 else
                 {
