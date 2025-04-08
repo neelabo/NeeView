@@ -1194,7 +1194,7 @@
         <Setter Property="CheckedThumbBrush" Value="{DynamicResource Control.AccentText}" />
         <Setter Property="DisableBrush" Value="{DynamicResource Control.GrayText}" />
         <Setter Property="Margin" Value="5,0" />
-        <Setter Property="Height" Value="30" />
+        <Setter Property="MinHeight" Value="30" />
     </Style>
 
     <!--#endregion NVCheckBox-->

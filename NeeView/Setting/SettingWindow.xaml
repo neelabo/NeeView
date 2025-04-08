@@ -47,7 +47,7 @@
 
             <DataTemplate DataType="{x:Type nvp:PropertyValue_Boolean}">
                 <StackPanel Orientation="Horizontal" Style="{StaticResource DisableStyle}">
-                    <nvc:ToggleSwitch IsChecked="{Binding Value}" Height="20" HorizontalAlignment="Left" ShowState="True" />
+                    <nvc:ToggleSwitch IsChecked="{Binding Value}" MinHeight="20" HorizontalAlignment="Left" ShowState="True" />
                 </StackPanel>
             </DataTemplate>
 
