@@ -12,6 +12,18 @@ body:
         NeeView version.
       placeholder: "e.g., 43.1"
 
+  - type: dropdown
+    id: package
+    attributes:
+      label: Package Type
+      description: >
+        Type of package in which the problem was identified.
+      options:
+        - ZIP
+        - ZIP-fd
+        - Installer (.msi)
+        - Store App
+
   - type: textarea
     id: problem
     attributes:
