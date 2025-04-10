@@ -8,6 +8,7 @@
     <Platforms>x86</Platforms>
     <Nullable>enable</Nullable>
     <ApplicationIcon>App.ico</ApplicationIcon>
+    <CETCompat>false</CETCompat>
   </PropertyGroup>
 
   <PropertyGroup>

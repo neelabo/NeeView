@@ -11,6 +11,7 @@
     <ApplicationIcon>Resources\App.ico</ApplicationIcon>
     <Platforms>AnyCPU;x64;x86</Platforms>
     <Configurations>Debug;Release;Remote</Configurations>
+    <CETCompat>false</CETCompat>
   </PropertyGroup>
 
   <PropertyGroup>
