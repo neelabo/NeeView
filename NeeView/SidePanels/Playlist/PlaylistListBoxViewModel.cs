@@ -187,6 +187,9 @@ namespace NeeView
 
         private void UpdateFilter(bool isForce)
         {
+            if (_model is null) return;
+            if (this.CollectionViewSource.View is null) return;
+
             if (isForce || Config.Current.Playlist.IsCurrentBookFilterEnabled)
             {
                 this.CollectionViewSource.View.Refresh();
@@ -214,9 +217,13 @@ namespace NeeView
 
         private void EnsureSelectedItem()
         {
-            if (this.SelectedItem is null)
+            if (_model is null) return;
+            if (this.CollectionViewSource.View is null) return;
+
+            var items = this.CollectionViewSource.View.Cast<PlaylistItem>();
+            if (this.SelectedItem is null || !items.Contains(this.SelectedItem))
             {
-                this.SelectedItem = this.CollectionViewSource.View.Cast<PlaylistItem>().FirstOrDefault();
+                this.SelectedItem = items.FirstOrDefault();
             }
         }
 
@@ -408,6 +415,7 @@ namespace NeeView
         public bool MovePrevious()
         {
             if (_model is null) return false;
+            if (this.CollectionViewSource.View is null) return false;
 
             this.CollectionViewSource.View.MoveCurrentTo(this.SelectedItem);
             this.CollectionViewSource.View.MoveCurrentToPrevious();
@@ -431,6 +439,7 @@ namespace NeeView
         public bool MoveNext()
         {
             if (_model is null) return false;
+            if (this.CollectionViewSource.View is null) return false;
 
             this.CollectionViewSource.View.MoveCurrentTo(this.SelectedItem);
             this.CollectionViewSource.View.MoveCurrentToNext();
@@ -448,6 +457,9 @@ namespace NeeView
 
         public List<PlaylistItem> GetViewItems()
         {
+            if (_model is null) return [];
+            if (this.CollectionViewSource.View is null) return [];
+
             var collectionView = (CollectionView)CollectionViewSource.View;
             if (collectionView.NeedsRefresh)
             {
