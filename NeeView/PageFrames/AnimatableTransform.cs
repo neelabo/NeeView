@@ -64,12 +64,12 @@ namespace NeeView.PageFrames
             var changeY = _point.Y != value.Y;
             _point = value;
 
-            // 変化のある項目だけアニメーション適用
-            if (changeX)
+            // 変化がある、もしくはリセットするときにアニメーション適用
+            if (changeX || span <= TimeSpan.Zero)
             {
                 SetPropertyValue(_translateTransform, TranslateTransform.XProperty, value.X, span, easeX);
             }
-            if (changeY)
+            if (changeY || span <= TimeSpan.Zero)
             {
                 SetPropertyValue(_translateTransform, TranslateTransform.YProperty, value.Y, span, easeY);
             }
