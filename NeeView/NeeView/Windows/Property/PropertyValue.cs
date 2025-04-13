@@ -16,7 +16,6 @@ using System.Windows.Media;
 
 namespace NeeView.Windows.Property
 {
-    //
     public abstract class PropertyValue : BindableBase
     {
         public virtual string GetValueString()
@@ -41,7 +40,6 @@ namespace NeeView.Windows.Property
     }
 
 
-    //
     public class PropertyValue<T> : PropertyValue
     {
         public IValueSetter Setter { get; set; }
@@ -88,7 +86,7 @@ namespace NeeView.Windows.Property
         }
     }
 
-    //
+
     public class PropertyValue_Object : PropertyValue<object>
     {
         public PropertyValue_Object(PropertyMemberElement setter) : base(setter)
@@ -96,7 +94,7 @@ namespace NeeView.Windows.Property
         }
     }
 
-    //
+
     public class PropertyValue_Boolean : PropertyValue<bool>
     {
         public PropertyValue_Boolean(PropertyMemberElement setter) : base(setter)
@@ -109,7 +107,7 @@ namespace NeeView.Windows.Property
         }
     }
 
-    //
+
     public class PropertyValue_String : PropertyValue<string>
     {
         private readonly PropertyMemberElement _setter;
@@ -140,6 +138,7 @@ namespace NeeView.Windows.Property
             Value = value;
         }
     }
+
 
     public class PropertyValue_StringMap : PropertyValue<string>
     {
@@ -183,7 +182,7 @@ namespace NeeView.Windows.Property
         }
     }
 
-    //
+
     public class PropertyValue_Integer : PropertyValue<int>
     {
         public PropertyValue_Integer(PropertyMemberElement setter) : base(setter)
@@ -196,7 +195,7 @@ namespace NeeView.Windows.Property
         }
     }
 
-    //
+
     public class PropertyValue_Double : PropertyValue<double>
     {
         public PropertyValue_Double(PropertyMemberElement setter) : base(setter)
@@ -209,7 +208,7 @@ namespace NeeView.Windows.Property
         }
     }
 
-    //
+
     public class PropertyValue_DoubleFloat : PropertyValue_Double
     {
         public PropertyValue_DoubleFloat(PropertyMemberElement setter) : base(setter)
@@ -217,7 +216,7 @@ namespace NeeView.Windows.Property
         }
     }
 
-    //
+
     public class PropertyValue_Enum : PropertyValue<object>
     {
         private readonly Type _type;
@@ -243,7 +242,6 @@ namespace NeeView.Windows.Property
     }
 
 
-    //
     public class PropertyValue_Point : PropertyValue<Point>
     {
         public PropertyValue_Point(PropertyMemberElement setter) : base(setter)
@@ -256,7 +254,7 @@ namespace NeeView.Windows.Property
         }
     }
 
-    //
+
     public class PropertyValue_Color : PropertyValue<Color>
     {
         public PropertyValue_Color(PropertyMemberElement setter) : base(setter)
@@ -269,7 +267,7 @@ namespace NeeView.Windows.Property
         }
     }
 
-    //
+
     public class PropertyValue_Size : PropertyValue<Size>
     {
         public PropertyValue_Size(PropertyMemberElement setter) : base(setter)
@@ -287,7 +285,7 @@ namespace NeeView.Windows.Property
         }
     }
 
-    //
+
     public class PropertyValue_TimeSpan : PropertyValue<TimeSpan>
     {
         public PropertyValue_TimeSpan(PropertyMemberElement setter) : base(setter)
@@ -371,6 +369,7 @@ namespace NeeView.Windows.Property
         }
     }
 
+
     public class RangeProfile_Double : RangeProfile<double>
     {
         public RangeProfile_Double(IValueSetter setter, double min, double max, double tickFrequency, bool isEditable, string? format, bool hasDecimalPoint) : base(setter, min, max, tickFrequency, isEditable, FixDoubleFormat(format, hasDecimalPoint))
@@ -383,6 +382,7 @@ namespace NeeView.Windows.Property
         }
     }
 
+
     public class RangeProfile_Integer : RangeProfile<int>
     {
         public RangeProfile_Integer(IValueSetter setter, double min, double max, double tickFrequency, bool isEditable, string? format) : base(setter, min, max, tickFrequency, isEditable, format)
@@ -390,7 +390,7 @@ namespace NeeView.Windows.Property
         }
     }
 
-    //
+
     public class PropertyValue_IntegerRange : PropertyValue_Integer
     {
         public RangeProfile_Integer Range { get; private set; }
@@ -401,7 +401,7 @@ namespace NeeView.Windows.Property
         }
     }
 
-    //
+
     public class PropertyValue_EditableIntegerRange : PropertyValue_Integer
     {
         public RangeProfile_Integer Range { get; private set; }
@@ -412,7 +412,7 @@ namespace NeeView.Windows.Property
         }
     }
 
-    //
+
     public class PropertyValue_DoubleRange : PropertyValue_Double
     {
         public RangeProfile_Double Range { get; private set; }
@@ -423,7 +423,7 @@ namespace NeeView.Windows.Property
         }
     }
 
-    //
+
     public class PropertyValue_EditableDoubleRange : PropertyValue_Double
     {
         public RangeProfile_Double Range { get; private set; }
@@ -434,7 +434,7 @@ namespace NeeView.Windows.Property
         }
     }
 
-    //
+
     public class PropertyValue_Percent : PropertyValue_Double
     {
         public RangeProfile_Double Range { get; private set; }
@@ -445,7 +445,23 @@ namespace NeeView.Windows.Property
         }
     }
 
-    //
+
+    public class PropertyValue_PercentMessageFontSize : PropertyValue_Percent
+    {
+        public PropertyValue_PercentMessageFontSize(PropertyMemberElement setter, RangeProfile_Double range) : base(setter, range)
+        {
+        }
+    }
+
+
+    public class PropertyValue_PercentMenuFontSize : PropertyValue_Percent
+    {
+        public PropertyValue_PercentMenuFontSize(PropertyMemberElement setter, RangeProfile_Double range) : base(setter, range)
+        {
+        }
+    }
+
+
     public class PropertyValue_FilePath : PropertyValue_String
     {
         public FileDialogType FileDialogType { get; set; }

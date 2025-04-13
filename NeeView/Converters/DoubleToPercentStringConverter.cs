@@ -11,7 +11,7 @@ namespace NeeView
         {
             if (value is double v)
             {
-                return v.ToString("P0", CultureInfo.InvariantCulture);
+                return $"{v:P0}";
             }
 
             return value;

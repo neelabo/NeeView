@@ -91,6 +91,10 @@ namespace NeeView.Windows.Property
 
             switch (attribute)
             {
+                case PropertyPercentFontSizeAttribute percentFontSizeAttribute:
+                    InitializeByPercentFontSizeAttribute(percentFontSizeAttribute);
+                    break;
+
                 case PropertyPercentAttribute percentAttribute:
                     InitializeByPercentAttribute(percentAttribute);
                     break;
@@ -266,6 +270,24 @@ namespace NeeView.Windows.Property
             this.TypeValue = typeCode switch
             {
                 TypeCode.Double => new PropertyValue_Percent(this, new RangeProfile_Double(value, attribute.Minimum, attribute.Maximum, attribute.TickFrequency, attribute.IsEditable, attribute.Format, attribute.HasDecimalPoint)),
+                _ => throw new NotSupportedException(),
+            };
+        }
+
+        [MemberNotNull(nameof(TypeValue))]
+        private void InitializeByPercentFontSizeAttribute(PropertyPercentFontSizeAttribute attribute)
+        {
+            IValueSetter value = attribute.RangeProperty != null ? (IValueSetter)new PropertyValueSource(this.Source, attribute.RangeProperty) : this;
+
+            TypeCode typeCode = Type.GetTypeCode(_info.PropertyType);
+            if (typeCode != TypeCode.Double) throw new NotSupportedException();
+
+            var rangeProfile = new RangeProfile_Double(value, attribute.Minimum, attribute.Maximum, attribute.TickFrequency, attribute.IsEditable, attribute.Format, attribute.HasDecimalPoint);
+
+            this.TypeValue = attribute.FontType switch
+            {
+                FontType.Message => new PropertyValue_PercentMessageFontSize(this, rangeProfile),
+                FontType.Menu => new PropertyValue_PercentMenuFontSize(this, rangeProfile),
                 _ => throw new NotSupportedException(),
             };
         }

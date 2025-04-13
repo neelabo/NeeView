@@ -57,6 +57,24 @@ namespace NeeView.Windows.Property
 
 
     [AttributeUsage(AttributeTargets.Property)]
+    public class PropertyPercentFontSizeAttribute : PropertyPercentAttribute
+    {
+        public FontType FontType;
+
+        public PropertyPercentFontSizeAttribute(FontType fontType) : base(0.0, 1.0)
+        {
+            FontType = fontType;
+        }
+
+        public PropertyPercentFontSizeAttribute(FontType fontType, double min, double max) : base(min, max)
+        {
+            FontType = fontType;
+        }
+    }
+
+
+
+    [AttributeUsage(AttributeTargets.Property)]
     public class PropertyPathAttribute : PropertyMemberAttribute
     {
         public FileDialogType FileDialogType;

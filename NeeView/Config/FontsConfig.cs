@@ -6,10 +6,10 @@ namespace NeeView
 {
     public class FontsConfig : BindableBase
     {
-        private double _fontScale;
-        private double _menuFontScale;
-        private double _folderTreeFontScale;
-        private double _panelFontScale;
+        private double _fontScale = 1.25;
+        private double _menuFontScale = 1.0;
+        private double _folderTreeFontScale = 1.0;
+        private double _panelFontScale = 1.25;
         private bool _isClearTypeEnabled = true;
 
         [JsonPropertyName(nameof(FontName))]
@@ -30,17 +30,17 @@ namespace NeeView
         /// <summary>
         /// 標準フォントスケール
         /// </summary>
-        [PropertyPercent(1.0, 2.0, TickFrequency = 0.05, IsEditable = true)]
+        [PropertyPercentFontSize(FontType.Message, 1.0, 2.0, TickFrequency = 0.05, IsEditable = true)]
         public double FontScale
         {
-            get { return _fontScale <= 0.0 ? 15.0 / SystemVisualParameters.Current.MessageFontSize : _fontScale ; }
+            get { return _fontScale <= 0.0 ? 1.25 : _fontScale; }
             set { SetProperty(ref _fontScale, value); }
         }
 
         /// <summary>
         /// メニューフォントスケール
         /// </summary>
-        [PropertyPercent(1.0, 2.0, TickFrequency = 0.05, IsEditable = true)]
+        [PropertyPercentFontSize(FontType.Menu, 1.0, 2.0, TickFrequency = 0.05, IsEditable = true)]
         public double MenuFontScale
         {
             get { return _menuFontScale <= 0.0 ? 1.0 : _menuFontScale; }
@@ -50,20 +50,20 @@ namespace NeeView
         /// <summary>
         /// フォルダーツリーのフォントスケール
         /// </summary>
-        [PropertyPercent(1.0, 2.0, TickFrequency = 0.05, IsEditable = true)]
+        [PropertyPercentFontSize(FontType.Message, 1.0, 2.0, TickFrequency = 0.05, IsEditable = true)]
         public double FolderTreeFontScale
         {
-            get { return _folderTreeFontScale <= 0.0 ? 12.0 / SystemVisualParameters.Current.MessageFontSize : _folderTreeFontScale; }
+            get { return _folderTreeFontScale <= 0.0 ? 1.0 : _folderTreeFontScale; }
             set { SetProperty(ref _folderTreeFontScale, value); }
         }
 
         /// <summary>
         /// パネルフォントスケール
         /// </summary>
-        [PropertyPercent(1.0, 2.0, TickFrequency = 0.05, IsEditable = true)]
+        [PropertyPercentFontSize(FontType.Message, 1.0, 2.0, TickFrequency = 0.05, IsEditable = true)]
         public double PanelFontScale
         {
-            get { return _panelFontScale <= 0.0 ? 15.0 / SystemVisualParameters.Current.MessageFontSize : _panelFontScale; }
+            get { return _panelFontScale <= 0.0 ? 1.25 : _panelFontScale; }
             set { SetProperty(ref _panelFontScale, value); }
         }
 

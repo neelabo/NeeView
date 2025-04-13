@@ -31,6 +31,8 @@
             <nvd:NotBoolToVisiblityConverter x:Key="NotBoolToVisiblityConverter" />
             <nv:BooleanToVisibilityConverter x:Key="NotBoolToHideVisiblityConverter" True="Hidden" False="Visible" />
             <nv:DoubleToPercentStringConverter x:Key="DoubleToPercentStringConverter" />
+            <nv:DoubleToPercentMessageFontSizeStringConverter x:Key="DoubleToPercentMessageFontSizeStringConverter" />
+            <nv:DoubleToPercentMenuFontSizeStringConverter x:Key="DoubleToPercentMenuFontSizeStringConverter" />
             <nvd:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
 
             <Style TargetType="{x:Type nvc:FormattedTextBox}" BasedOn="{StaticResource NVTextBox}" />
@@ -43,6 +45,12 @@
                         <Setter Property="Opacity" Value="0.5" />
                     </Trigger>
                 </Style.Triggers>
+            </Style>
+
+            <Style x:Key="AppendTextBlockStyle" TargetType="TextBlock">
+                <Setter Property="HorizontalAlignment" Value="Right" />
+                <Setter Property="Margin" Value="5,0" />
+                <Setter Property="Foreground" Value="{DynamicResource Control.GrayText}" />
             </Style>
 
             <DataTemplate DataType="{x:Type nvp:PropertyValue_Boolean}">
@@ -79,6 +87,53 @@
                 </StackPanel>
             </DataTemplate>
 
+            <DataTemplate x:Key="PercentMessageFontSizeValueDataTemplate">
+                <StackPanel>
+                    <StackPanel>
+                        <Grid Visibility="{Binding Range.IsEditable, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <Grid Visibility="{Binding ElementName=RangeSlider, Path=IsMouseCaptureWithin, Converter={StaticResource NotBoolToVisiblityConverter}}">
+                                <nvc:EnterTriggerTextBox Text="{Binding Path=Value, Converter={StaticResource DoubleToPercentMessageFontSizeStringConverter}}"/>
+                                <TextBlock Style="{StaticResource AppendTextBlockStyle}" Text="{Binding Path=Value, Converter={StaticResource DoubleToPercentMessageFontSizeStringConverter}, ConverterParameter=pt}" />
+                            </Grid>
+                            <Grid Visibility="{Binding ElementName=RangeSlider, Path=IsMouseCaptureWithin, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <TextBox Text="{Binding ElementName=RangeSlider, Path=Value, Converter={StaticResource DoubleToPercentMessageFontSizeStringConverter}}"/>
+                                <TextBlock Style="{StaticResource AppendTextBlockStyle}" Text="{Binding ElementName=RangeSlider, Path=Value, Converter={StaticResource DoubleToPercentMessageFontSizeStringConverter}, ConverterParameter=pt}" />
+                            </Grid>
+                        </Grid>
+                        <Grid Visibility="{Binding Range.IsEditable, Converter={StaticResource NotBoolToVisiblityConverter}}">
+                            <TextBlock Text="{Binding ElementName=RangeSlider, Path=Value, Converter={StaticResource DoubleToPercentMessageFontSizeStringConverter}}"/>
+                            <TextBlock Style="{StaticResource AppendTextBlockStyle}" Text="{Binding ElementName=RangeSlider, Path=Value, Converter={StaticResource DoubleToPercentMessageFontSizeStringConverter}, ConverterParameter=pt}" />
+                        </Grid>
+                    </StackPanel>
+                    <nvc:DragCompletedTriggerSlider x:Name="RangeSlider" Value="{Binding Value, UpdateSourceTrigger=Explicit}" Minimum="{Binding Range.Minimum}" Maximum="{Binding Range.Maximum}"
+                            SmallChange="{Binding Range.SmallChange}" LargeChange="{Binding Range.LargeChange}" TickFrequency="{Binding Range.TickFrequency}" IsSnapToTickEnabled="True"
+                            Margin="0,5,0,0" />
+                </StackPanel>
+            </DataTemplate>
+
+            <DataTemplate x:Key="PercentMenuFontSizeValueDataTemplate">
+                <StackPanel>
+                    <StackPanel>
+                        <Grid Visibility="{Binding Range.IsEditable, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <Grid Visibility="{Binding ElementName=RangeSlider, Path=IsMouseCaptureWithin, Converter={StaticResource NotBoolToVisiblityConverter}}">
+                                <nvc:EnterTriggerTextBox Text="{Binding Path=Value, Converter={StaticResource DoubleToPercentMenuFontSizeStringConverter}}"/>
+                                <TextBlock Style="{StaticResource AppendTextBlockStyle}" Text="{Binding Path=Value, Converter={StaticResource DoubleToPercentMenuFontSizeStringConverter}, ConverterParameter=pt}" />
+                            </Grid>
+                            <Grid Visibility="{Binding ElementName=RangeSlider, Path=IsMouseCaptureWithin, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <TextBox Text="{Binding ElementName=RangeSlider, Path=Value, Converter={StaticResource DoubleToPercentMenuFontSizeStringConverter}}"/>
+                                <TextBlock Style="{StaticResource AppendTextBlockStyle}" Text="{Binding ElementName=RangeSlider, Path=Value, Converter={StaticResource DoubleToPercentMenuFontSizeStringConverter}, ConverterParameter=pt}" />
+                            </Grid>
+                        </Grid>
+                        <Grid Visibility="{Binding Range.IsEditable, Converter={StaticResource NotBoolToVisiblityConverter}}">
+                            <TextBlock Text="{Binding ElementName=RangeSlider, Path=Value, Converter={StaticResource DoubleToPercentMenuFontSizeStringConverter}}"/>
+                            <TextBlock Style="{StaticResource AppendTextBlockStyle}" Text="{Binding ElementName=RangeSlider, Path=Value, Converter={StaticResource DoubleToPercentMenuFontSizeStringConverter}, ConverterParameter=pt}" />
+                        </Grid>
+                    </StackPanel>
+                    <nvc:DragCompletedTriggerSlider x:Name="RangeSlider" Value="{Binding Value, UpdateSourceTrigger=Explicit}" Minimum="{Binding Range.Minimum}" Maximum="{Binding Range.Maximum}"
+                            SmallChange="{Binding Range.SmallChange}" LargeChange="{Binding Range.LargeChange}" TickFrequency="{Binding Range.TickFrequency}" IsSnapToTickEnabled="True"
+                            Margin="0,5,0,0" />
+                </StackPanel>
+            </DataTemplate>
 
             <DataTemplate x:Key="PercentValueDataTemplate">
                 <StackPanel>
@@ -114,6 +169,14 @@
                 <ContentControl Content="{Binding}" ContentTemplate="{StaticResource EditableRangeValueDataTemplate}" IsTabStop="False" />
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type nvp:PropertyValue_PercentMessageFontSize}">
+                <ContentControl Content="{Binding}" ContentTemplate="{StaticResource PercentMessageFontSizeValueDataTemplate}" IsTabStop="False" />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type nvp:PropertyValue_PercentMenuFontSize}">
+                <ContentControl Content="{Binding}" ContentTemplate="{StaticResource PercentMenuFontSizeValueDataTemplate}" IsTabStop="False" />
+            </DataTemplate>
+            
             <DataTemplate DataType="{x:Type nvp:PropertyValue_Percent}">
                 <ContentControl Content="{Binding}" ContentTemplate="{StaticResource PercentValueDataTemplate}" IsTabStop="False" />
             </DataTemplate>
