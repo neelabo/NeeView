@@ -1,5 +1,21 @@
 # Changelog
 
+
+## 43.2
+(2025-04-13)
+
+#### Fixed
+
+- System: Fixed a bug in the toggle switch when changing font size. (#1701)
+- System: Fixed a bug that could cause a crash in the file selection dialog. (#1707)
+- Playlist: Fixed a bug that could cause a crash when “Current book only” was turned on. (#1708)
+- View: Fixed a problem with animated scrolling when changing the order of pages. (#1709)
+
+#### Changed
+
+- Language: pt-BR Updated.
+
+
 ## 43.1
 (2025-04-07)
 
