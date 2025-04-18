@@ -220,6 +220,8 @@ namespace NeeView
         /// <param name="e"></param>
         public override void OnKeyDown(object? sender, KeyEventArgs e)
         {
+            if (e.IsRepeat) return;
+
             ResetState();
         }
 
