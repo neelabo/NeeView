@@ -121,6 +121,9 @@ namespace NeeView
         public static QueryPath Empty { get; } = new QueryPath(QueryScheme.Root);
 
 
+        private string? _search;
+
+
         public QueryPath(string? source)
         {
             var rest = source;
@@ -132,14 +135,14 @@ namespace NeeView
         public QueryPath(string? source, string? search)
         {
             var rest = source;
-            Search = string.IsNullOrWhiteSpace(search) ? null : search;
+            Search = search;
             (rest, Scheme) = TakeScheme(rest);
             Path = GetValidatePath(rest, Scheme);
         }
 
         public QueryPath(QueryScheme scheme, string? path, string? search)
         {
-            Search = string.IsNullOrWhiteSpace(search) ? null : search;
+            Search = search;
             Scheme = scheme;
             Path = GetValidatePath(path, Scheme);
         }
@@ -163,7 +166,11 @@ namespace NeeView
 
         public string? Path { get; init; }
 
-        public string? Search { get; init; }
+        public string? Search
+        {
+            get => _search;
+            init => _search = string.IsNullOrWhiteSpace(value) ? null : value;
+        }
 
         public bool IsEmpty => Path is null;
 
