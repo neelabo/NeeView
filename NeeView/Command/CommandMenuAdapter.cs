@@ -36,6 +36,12 @@ namespace NeeView
             _contextMenu.IsOpen = true;
         }
 
+        public void OpenRecentBookMenu()
+        {
+            RecentBookTools.UpdateRecentBookMenu(_contextMenu.Items);
+            _contextMenu.IsOpen = true;
+        }
+
         public void Close()
         {
             _contextMenu.IsOpen = false;

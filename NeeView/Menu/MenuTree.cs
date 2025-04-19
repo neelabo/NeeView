@@ -8,7 +8,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -35,6 +34,7 @@ namespace NeeView
         Separator,
     }
 
+
     /// <summary>
     /// コマンドパラメータとして渡すオブジェクト。メニューからのコマンドであることを示す
     /// </summary>
@@ -50,7 +50,6 @@ namespace NeeView
         private bool _isSelected;
 
 
-
         public MenuTree()
         {
         }
@@ -59,7 +58,6 @@ namespace NeeView
         {
             MenuElementType = type;
         }
-
 
 
         public bool IsExpanded
@@ -82,11 +80,11 @@ namespace NeeView
                 {
                     MenuElementType.None => false,
                     MenuElementType.Command => IsCommandEnabled(CommandName),
+                    MenuElementType.History => IsCommandEnabled(CommandElementTools.CreateCommandName< LoadRecentBookCommand>()),
                     _ => true,
                 };
             }
         }
-
 
         public string? Name { get; set; }
 
@@ -95,7 +93,6 @@ namespace NeeView
         public string? CommandName { get; set; }
 
         public ObservableCollection<MenuTree>? Children { get; set; }
-
 
         public string Label
         {
@@ -113,6 +110,7 @@ namespace NeeView
                 {
                     MenuElementType.None => $"({MenuElementType.ToAliasName()})",
                     MenuElementType.Command => GetCommandText(CommandName, (CommandElement e) => e.LongText),
+                    MenuElementType.History => GetCommandText(CommandElementTools.CreateCommandName<LoadRecentBookCommand>(), (CommandElement e) => e.LongText),
                     _ => $"《{MenuElementType.ToAliasName()}》",
                 };
             }
@@ -126,11 +124,26 @@ namespace NeeView
                 {
                     MenuElementType.None => $"({MenuElementType.ToAliasName()})",
                     MenuElementType.Command => GetCommandText(CommandName, (CommandElement e) => e.Menu),
+                    MenuElementType.History => GetCommandText(CommandElementTools.CreateCommandName<LoadRecentBookCommand>(), (CommandElement e) => e.Menu),
                     _ => MenuElementType.ToAliasName(),
                 };
             }
         }
 
+        public string Note
+        {
+            get
+            {
+                return MenuElementType switch
+                {
+                    MenuElementType.Group => "",
+                    MenuElementType.Command => CommandTable.Current.GetElement(CommandName).Remarks,
+                    MenuElementType.History => CommandTable.Current.GetElement<LoadRecentBookCommand>().Remarks,
+                    MenuElementType.Separator => "",
+                    _ => "",
+                };
+            }
+        }
 
 
         /// <summary>
@@ -215,7 +228,6 @@ namespace NeeView
             return "(none)";
         }
 
-
         public MenuTree Clone()
         {
             var clone = (MenuTree)this.MemberwiseClone();
@@ -284,7 +296,6 @@ namespace NeeView
             }
         }
 
-        //
         public static MenuTree Create(MenuTree source)
         {
             var element = new MenuTree();
@@ -300,8 +311,6 @@ namespace NeeView
             return element;
         }
 
-
-        //
         public MenuTree? GetParent(MenuTree root)
         {
             if (root.Children == null) return null;
@@ -315,7 +324,6 @@ namespace NeeView
             return null;
         }
 
-        //
         public MenuTree? GetNext(MenuTree root, bool isUseExpand = true)
         {
             var parent = this.GetParent(root);
@@ -344,8 +352,6 @@ namespace NeeView
             return this.Children.Last().GetLastChild();
         }
 
-
-        //
         public MenuTree? GetPrev(MenuTree root)
         {
             var parent = this.GetParent(root);
@@ -364,7 +370,6 @@ namespace NeeView
             }
         }
 
-        //
         public bool IsEqual(MenuTree target)
         {
             if (this.MenuElementType != target.MenuElementType) return false;
@@ -383,55 +388,19 @@ namespace NeeView
             return true;
         }
 
-
-        //
         public object? CreateMenuControl(bool isDefault)
         {
             switch (this.MenuElementType)
             {
                 case MenuElementType.Command:
+                    if (this.CommandName is not null && CommandTable.Current.TryGetValue(this.CommandName, out var command))
                     {
-                        var item = new MenuItem();
-
-                        if (this.CommandName is not null && CommandTable.Current.TryGetValue(this.CommandName, out var command))
-                        {
-                            var menuItem = command.CreateMenuItem(isDefault);
-                            if (menuItem is not null)
-                            {
-                                item = menuItem;
-                            }
-                            else
-                            {
-                                item.Command = RoutedCommandTable.Current.Commands[this.CommandName ?? "None"];
-                                item.CommandParameter = MenuCommandTag.Tag; // コマンドがメニューからであることをパラメータで伝えてみる
-                            }
-
-                            item.Header = this.Label;
-                            item.Tag = this.CommandName;
-                            var binding = command.CreateIsCheckedBinding();
-                            if (binding != null)
-                            {
-                                item.SetBinding(MenuItem.IsCheckedProperty, binding);
-                            }
-
-                            //  右クリックでコマンドパラメーターの設定ウィンドウを開く
-                            item.MouseRightButtonUp += (s, e) =>
-                            {
-                                if (s is MenuItem menuItem && menuItem.Tag is string command)
-                                {
-                                    e.Handled = true;
-                                    MainWindowModel.Current.OpenCommandParameterDialog(command);
-                                }
-                            };
-                        }
-                        else
-                        {
-                            Debug.WriteLine($"Command {this.CommandName} is not defined.");
-                            item.Header = this.Label;
-                            item.IsEnabled = false;
-                        }
-
-                        return item;
+                        return CreateCommandMenuControl(command, isDefault);
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"Command {this.CommandName} is not defined.");
+                        return CreateInvalidMenuControl();
                     }
 
                 case MenuElementType.Separator:
@@ -452,14 +421,7 @@ namespace NeeView
                     }
 
                 case MenuElementType.History:
-                    {
-                        var item = new MenuItem();
-                        item.Header = this.Label;
-                        item.SetBinding(MenuItem.ItemsSourceProperty, new Binding(nameof(RecentBooks.LastFiles)) { Source = RecentBooks.Current });
-                        item.SetBinding(MenuItem.IsEnabledProperty, new Binding(nameof(RecentBooks.IsEnableLastFiles)) { Source = RecentBooks.Current });
-                        item.ItemContainerStyle = App.Current.MainWindow.Resources["HistoryMenuItemContainerStyle"] as Style;
-                        return item;
-                    }
+                    return CreateCommandMenuControl(CommandTable.Current.GetElement<LoadRecentBookCommand>(), isDefault);
 
                 case MenuElementType.None:
                     return null;
@@ -469,7 +431,50 @@ namespace NeeView
             }
         }
 
-        //
+        private MenuItem CreateCommandMenuControl(CommandElement command, bool isDefault)
+        {
+            var item = new MenuItem();
+
+            var menuItem = command.CreateMenuItem(isDefault);
+            if (menuItem is not null)
+            {
+                item = menuItem;
+            }
+            else
+            {
+                item.Command = RoutedCommandTable.Current.Commands[this.CommandName ?? "None"];
+                item.CommandParameter = MenuCommandTag.Tag; // コマンドがメニューからであることをパラメータで伝えてみる
+            }
+
+            item.Header = this.Label;
+            item.Tag = this.CommandName;
+            var binding = command.CreateIsCheckedBinding();
+            if (binding != null)
+            {
+                item.SetBinding(MenuItem.IsCheckedProperty, binding);
+            }
+
+            //  右クリックでコマンドパラメーターの設定ウィンドウを開く
+            item.MouseRightButtonUp += (s, e) =>
+            {
+                if (s is MenuItem menuItem && menuItem.Tag is string command)
+                {
+                    e.Handled = true;
+                    MainWindowModel.Current.OpenCommandParameterDialog(command);
+                }
+            };
+
+            return item;
+        }
+
+        private MenuItem CreateInvalidMenuControl()
+        {
+            var item = new MenuItem();
+            item.Header = this.Label;
+            item.IsEnabled = false;
+            return item;
+        }
+
         public ContextMenu? CreateContextMenu()
         {
             if (this.Children == null) return null;
@@ -496,7 +501,6 @@ namespace NeeView
             return children;
         }
 
-        //
         public Menu? CreateMenu(bool isDefault)
         {
             var menu = new Menu();
@@ -508,7 +512,6 @@ namespace NeeView
             return menu.Items.Count > 0 ? menu : null;
         }
 
-        //
         public List<object> CreateMenuItems(bool isDefault)
         {
             var collection = new List<object>();
@@ -525,36 +528,7 @@ namespace NeeView
             return collection;
         }
 
-        //
-        public class TableData
-        {
-            public int Depth { get; set; }
-            public MenuTree Element { get; set; }
-
-            public TableData(int depth, MenuTree element)
-            {
-                Depth = depth;
-                Element = element;
-            }
-        }
-
-        //
-        public string Note
-        {
-            get
-            {
-                return MenuElementType switch
-                {
-                    MenuElementType.Group => "",
-                    MenuElementType.Command => CommandTable.Current.GetElement(CommandName).Remarks,
-                    MenuElementType.History => Properties.TextResources.GetString("MenuTree.History"),
-                    MenuElementType.Separator => "",
-                    _ => "",
-                };
-            }
-        }
-
-        //
+        
         public List<TableData> GetTable(int depth)
         {
             var list = new List<TableData>();
@@ -578,8 +552,6 @@ namespace NeeView
             return list;
         }
 
-
-        // 
         public static MenuTree CreateDefault()
         {
             var tree = new MenuTree()
@@ -591,7 +563,7 @@ namespace NeeView
                     {
                         new MenuTree(MenuElementType.Command) { CommandName = "LoadAs" },
                         new MenuTree(MenuElementType.Command) { CommandName = "Unload" },
-                        new MenuTree(MenuElementType.History),
+                        new MenuTree(MenuElementType.Command) { CommandName = "LoadRecentBook"},
                         new MenuTree(MenuElementType.Separator),
                         new MenuTree(MenuElementType.Command) { CommandName = "TogglePlaylistItem" },
                         new MenuTree(MenuElementType.Separator),
@@ -825,7 +797,6 @@ namespace NeeView
 
         #endregion
 
-
         public MenuNode CreateMenuNode()
         {
             var node = new MenuNode(this.Name, this.MenuElementType, this.CommandName);
@@ -860,5 +831,19 @@ namespace NeeView
 
             return tree;
         }
+
+
+        public class TableData
+        {
+            public int Depth { get; set; }
+            public MenuTree Element { get; set; }
+
+            public TableData(int depth, MenuTree element)
+            {
+                Depth = depth;
+                Element = element;
+            }
+        }
+
     }
 }

@@ -102,6 +102,7 @@ namespace NeeView
             var list = new List<CommandElement>()
             {
                 new LoadAsCommand(),
+                new LoadRecentBookCommand(),
                 new ReLoadCommand(),
                 new UnloadCommand(),
                 new OpenExternalAppCommand(),

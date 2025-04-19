@@ -20,7 +20,7 @@ namespace NeeView
             var item = new MenuItem();
             item.Header = header;
             item.SetBinding(MenuItem.ItemsSourceProperty, new Binding(nameof(SelectableArchiverList.Archivers)) { Source = SelectableArchiverList.Current });
-            item.SetBinding(MenuItem.IsEnabledProperty, new Binding(nameof(SelectableArchiverList.IsEnableArchives)) { Source = SelectableArchiverList.Current });
+            item.SetBinding(MenuItem.IsEnabledProperty, new Binding(nameof(SelectableArchiverList.IsEnabled)) { Source = SelectableArchiverList.Current });
             item.ItemContainerStyle = App.Current.MainWindow.Resources["SelectArchiverMenuItemContainerStyle"] as Style;
             item.IsVisibleChanged += (s, e) =>
             {

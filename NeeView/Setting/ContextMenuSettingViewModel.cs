@@ -70,7 +70,6 @@ namespace NeeView.Setting
 
             list.Insert(0, new MenuTree() { MenuElementType = MenuElementType.Group });
             list.Insert(1, new MenuTree() { MenuElementType = MenuElementType.Separator });
-            list.Insert(2, new MenuTree() { MenuElementType = MenuElementType.History });
 
             return list;
         }

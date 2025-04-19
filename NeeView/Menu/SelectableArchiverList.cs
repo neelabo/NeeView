@@ -23,10 +23,16 @@ namespace NeeView
         public List<ArchiverIdentifier> Archivers
         {
             get { return _archivers; }
-            set { if (SetProperty(ref _archivers, value)) { RaisePropertyChanged(nameof(IsEnableArchives)); } }
+            set
+            {
+                if (SetProperty(ref _archivers, value))
+                {
+                    RaisePropertyChanged(nameof(IsEnabled));
+                }
+            }
         }
 
-        public bool IsEnableArchives
+        public bool IsEnabled
         {
             get { return Archivers.Count > 0; }
         }

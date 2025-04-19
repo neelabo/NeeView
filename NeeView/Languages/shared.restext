@@ -250,6 +250,7 @@ MagnifyEffectUnit.Center=@Word.Center
 MediaPlayerAccessor.IsDisposed=@Word.DisposedInstance
 MediaPlayerAccessor.Rate=@MediaControl.Speed
 MenuElementType.Command=@Word.Command
+MenuElementType.History=@LoadRecentBookCommand
 MenuElementType.None=@Word.None
 MouseDragList.Header.Command=@Word.Command
 MovePlaylistItemInBookCommandParameter.IsLoop=@Word.Loop
