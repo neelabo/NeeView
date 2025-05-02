@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 
 namespace NeeView
 {
-    public class BookmarkFolder : BindableBase, IBookmarkEntry
+    public class BookmarkFolder : BindableBase, IBookmarkEntry, ICloneable
     {
         private string? _name;
 
@@ -21,6 +21,11 @@ namespace NeeView
             return name.Trim().Replace('/', '_').Replace('\\', '_');
         }
 
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
+
         public bool IsEqual(IBookmarkEntry entry)
         {
             return entry is BookmarkFolder folder && this.Name == folder.Name;
@@ -28,8 +33,13 @@ namespace NeeView
     }
 
 
-    public class BookmarkEmpty : IBookmarkEntry
+    public class BookmarkEmpty : IBookmarkEntry, ICloneable
     {
         public string? Name => "";
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

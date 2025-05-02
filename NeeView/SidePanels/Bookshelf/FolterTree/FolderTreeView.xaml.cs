@@ -871,12 +871,18 @@ namespace NeeView
                 return;
             }
 
-
-            e.Effects = bookmarkEntries.All(x => CanDropToBookmark(bookmarkFolderTarget, x)) ? DragDropEffects.Move : DragDropEffects.None;
+            e.Effects = bookmarkEntries.All(x => CanDropToBookmark(bookmarkFolderTarget, x))
+                ? (Keyboard.Modifiers == ModifierKeys.Control ? DragDropEffects.Copy : DragDropEffects.Move)
+                : DragDropEffects.None;
             e.Handled = true;
 
-            if (isDrop && e.Effects == DragDropEffects.Move)
+            if (isDrop && e.Effects != DragDropEffects.None)
             {
+                if (e.Effects == DragDropEffects.Copy)
+                {
+                    bookmarkEntries = bookmarkEntries.Select(e => e.Clone());
+                }
+
                 foreach (var bookmarkEntry in bookmarkEntries)
                 {
                     DropToBookmarkExecute(bookmarkFolderTarget, bookmarkEntry);

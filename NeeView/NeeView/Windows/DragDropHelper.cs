@@ -21,7 +21,7 @@ namespace NeeView.Windows
         /// <summary>
         /// ドラッグが端にある時に自動スクロールさせる.
         /// </summary>
-        public static void AutoScroll(object? sender, DragEventArgs e)
+        public static bool AutoScroll(object? sender, DragEventArgs e)
         {
             // NOTE: エクスプローラーからのドラッグにはScrollフラグがついていないので判定しない
             ////if ((e.AllowedEffects & DragDropEffects.Scroll) == 0)
@@ -31,31 +31,40 @@ namespace NeeView.Windows
 
             if (sender is not FrameworkElement container)
             {
-                return;
+                return false;
             }
 
             ScrollViewer? scrollViewer = VisualTreeUtility.FindVisualChild<ScrollViewer>(container);
             if (scrollViewer == null)
             {
-                return;
+                return false;
             }
 
             var point = e.GetPosition(scrollViewer);
             if (double.IsNaN(point.X))
             {
-                return;
+                return false;
             }
 
             double margin = 32.0;
             double offset = VirtualizingPanel.GetScrollUnit(container) == ScrollUnit.Pixel ? 32.0 : 1.0;
+            double oldVerticalOffset = scrollViewer.VerticalOffset;
 
             if (point.Y < 0.0 + margin)
             {
                 scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - offset);
+                scrollViewer.UpdateLayout();
+                return oldVerticalOffset != scrollViewer.VerticalOffset;
             }
             else if (point.Y > scrollViewer.ActualHeight - margin)
             {
                 scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset + offset);
+                scrollViewer.UpdateLayout();
+                return oldVerticalOffset != scrollViewer.VerticalOffset;
+            }
+            else
+            {
+                return false;
             }
         }
 

@@ -102,5 +102,38 @@ namespace NeeView
 
             return false;
         }
+
+        /// <summary>
+        /// Query から BookmarkNode を生成する。親ノードはまだ未定。
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public static TreeListNode<IBookmarkEntry>? CreateBookmarkNode(QueryPath query)
+        {
+            if (!IsBookPath(query)) return null;
+
+            var unit = BookMementoCollection.Current.Set(query.SimplePath);
+            var bookmark = new Bookmark(unit);
+            return new TreeListNode<IBookmarkEntry>(bookmark);
+        }
+
+        /// <summary>
+        /// 有効なブックパスであるかを判定する
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public static bool IsBookPath(QueryPath query)
+        {
+            if (query.Search != null)
+            {
+                return false;
+            }
+
+            return query.Scheme switch
+            {
+                QueryScheme.File => ArchiveManager.Current.IsSupported(query.SimplePath, true, true) || System.IO.Directory.Exists(query.SimplePath),
+                _ => false,
+            };
+        }
     }
 }

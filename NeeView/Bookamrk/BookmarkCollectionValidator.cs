@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace NeeView
@@ -23,7 +24,47 @@ namespace NeeView
                 }
             }
 
+            // ver 44.0
+            if (self.Format.CompareTo(new FormatVersion(BookmarkCollection.Memento.FormatName, 44, 0, 0)) < 0)
+            {
+                // 登録順でソート
+                if (self.Nodes is not null)
+                {
+                    self.Nodes.Children = SortEntryTime(self.Nodes.Children);
+                }
+            }
+
             return self;
+        }
+
+
+        private static List<BookmarkNode>? SortEntryTime(List<BookmarkNode>? source)
+        {
+            if (source is null) return null;
+
+            foreach (var folder in source.Where(e => e.IsFolder))
+            {
+                folder.Children = SortEntryTime(folder.Children);
+            }
+
+            IOrderedEnumerable<BookmarkNode> nodes;
+            if (Config.Current.Bookshelf.IsOrderWithoutFileType)
+            {
+                nodes = source.OrderBy(e => 0);
+            }
+            else
+            {
+                nodes = source.OrderBy(e => e.IsFolder);
+            }
+            return nodes.ThenBy(e => e.EntryTime).ThenBy(e => e, new ComparerTaskNodeName()).ToList();
+        }
+
+        private class ComparerTaskNodeName : IComparer<BookmarkNode>
+        {
+            public int Compare(BookmarkNode? x, BookmarkNode? y)
+            {
+                return NaturalSort.Compare(x?.Name, y?.Name);
+            }
         }
     }
 }

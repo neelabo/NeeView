@@ -47,7 +47,7 @@ namespace NeeView
 
             // 重複名はターゲットで区別する
             var index = parent.Children.FindIndex(e => e.Name == content.Name && e.Content?.TargetPath == content.TargetPath);
-            if (index < 0) throw new ArgumentException("collection dont have content");
+            if (index < 0) throw new ArgumentException("collection don't have content");
 
             this.Parent = parent;
             this.Place = collection.Place.FullPath;

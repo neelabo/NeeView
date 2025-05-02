@@ -267,7 +267,7 @@ namespace NeeView
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        protected List<FolderItem> Sort(IEnumerable<FolderItem> source, CancellationToken token)
+        protected virtual List<FolderItem> Sort(IEnumerable<FolderItem> source, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -302,9 +302,9 @@ namespace NeeView
                 FolderOrder.TimeStampDescending
                     => orderSource.ThenByDescending(e => e.LastWriteTime).ThenBy(e => e, new ComparerFileName(token)),
                 FolderOrder.EntryTime
-                    => orderSource.ThenBy(e => e.EntryTime).ThenBy(e => e, new ComparerFileName(token)),
+                    => source,
                 FolderOrder.EntryTimeDescending
-                    => orderSource.ThenByDescending(e => e.EntryTime).ThenBy(e => e, new ComparerFileName(token)),
+                    => source.Reverse(),
                 FolderOrder.Size
                     => orderSource.ThenBy(e => e.Length).ThenBy(e => e, new ComparerFileName(token)),
                 FolderOrder.SizeDescending
@@ -497,7 +497,7 @@ namespace NeeView
                 {
                     this.Items.Add(item);
                 }
-                else if (Config.Current.Bookshelf.IsInsertItem)
+                else if (FolderOrder.IsEntryCategory() || Config.Current.Bookshelf.IsInsertItem)
                 {
                     // 別にリストを作ってソートを実行し、それで挿入位置を決める
                     var list = Sort(this.Items.Concat(new List<FolderItem>() { item }), CancellationToken.None);
@@ -518,7 +518,6 @@ namespace NeeView
                 }
             }
         }
-
 
         public void DeleteItem(QueryPath path)
         {
@@ -545,6 +544,32 @@ namespace NeeView
             }
 
             CollectionChanged?.Invoke(this, new FolderCollectionChangedEventArgs(CollectionChangeAction.Remove, item));
+        }
+
+        protected void MoveItem(FolderItem item, int oldIndex, int newIndex)
+        {
+            if (item == null) return;
+            if (!FolderOrder.IsEntryCategory()) return;
+
+            CollectionChanging?.Invoke(this, new FolderCollectionChangedEventArgs(CollectionChangeAction.Refresh, item));
+
+            lock (_lock)
+            {
+                //_bookmarkPlace.Children.Contains(item);
+
+
+                // Observable なので Move() 命令が使える
+                this.Items.Move(oldIndex, newIndex);
+
+#if false
+                this.Items.Remove(item);
+
+                // TODO: 逆順の挿入位置に対応
+                this.Items.Insert(newIndex, item);
+#endif
+            }
+
+            CollectionChanged?.Invoke(this, new FolderCollectionChangedEventArgs(CollectionChangeAction.Refresh, item));
         }
 
 

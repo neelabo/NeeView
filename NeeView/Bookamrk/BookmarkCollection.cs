@@ -7,14 +7,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Data;
-using System.Xml;
 using NeeLaboratory.Generators;
 
 namespace NeeView
@@ -24,9 +20,9 @@ namespace NeeView
         static BookmarkCollection() => Current = new BookmarkCollection();
         public static BookmarkCollection Current { get; }
 
+        private TreeListNode<IBookmarkEntry> _items;
         private Lock _lock = new();
 
-        // Constructors
 
         private BookmarkCollection()
         {
@@ -34,23 +30,16 @@ namespace NeeView
         }
 
 
-        // Events
         [Subscribable]
         public event EventHandler<BookmarkCollectionChangedEventArgs>? BookmarkChanged;
 
 
-
-        // Properties
-
-        private TreeListNode<IBookmarkEntry> _items;
         public TreeListNode<IBookmarkEntry> Items
         {
             get { return _items; }
             set { SetProperty(ref _items, value); }
         }
 
-
-        // Methods
 
         public void RaiseBookmarkChangedEvent(BookmarkCollectionChangedEventArgs e)
         {
@@ -172,7 +161,6 @@ namespace NeeView
 
             lock (_lock)
             {
-                node.UpdateEntryTime();
                 Items.Root.Insert(0, node);
                 BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Add, node.Parent, node));
             }
@@ -187,12 +175,10 @@ namespace NeeView
             {
                 parent = parent ?? Items.Root;
 
-                node.UpdateEntryTime();
                 parent.Add(node);
                 BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Add, node.Parent, node));
             }
         }
-
 
         public void Restore(TreeListNodeMemento<IBookmarkEntry> memento)
         {
@@ -212,10 +198,10 @@ namespace NeeView
             }
         }
 
-
         public bool Remove(TreeListNode<IBookmarkEntry>? node)
         {
             if (node == null) return false;
+            if (node.Parent is null) return false;
             if (node.Root != Items.Root) throw new InvalidOperationException();
 
             lock (_lock)
@@ -270,7 +256,6 @@ namespace NeeView
             }
         }
 
-
         public TreeListNode<IBookmarkEntry>? AddNewFolder(TreeListNode<IBookmarkEntry> target, string? name)
         {
             if (target == Items || target.Value is BookmarkFolder)
@@ -292,116 +277,146 @@ namespace NeeView
             return null;
         }
 
-
-        public void Move(TreeListNode<IBookmarkEntry> item, TreeListNode<IBookmarkEntry> target, int direction)
+        /// <summary>
+        /// 移動 (汎用)
+        /// </summary>
+        /// <remarks>
+        /// 同階層の移動だけでなく、異なる階層の移動や新規挿入にも対応している。
+        /// </remarks>
+        /// <param name="parent">移動先階層</param>
+        /// <param name="item">移動元項目</param>
+        /// <param name="newIndex">移動位置</param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public bool Move(TreeListNode<IBookmarkEntry> parent, TreeListNode<IBookmarkEntry> item, int newIndex)
         {
             lock (_lock)
             {
-                if (item.Value is BookmarkFolder && item.Parent != target.Parent)
+                newIndex = Math.Clamp(newIndex, 0, parent.Children.Count);
+
+                // 親がいないときは挿入
+                if (item.Parent is null)
                 {
-                    var conflict = target.Parent?.Children.FirstOrDefault(e => e.Value is BookmarkFolder && e.Value.Name == item.Value.Name);
-                    if (conflict != null)
+                    // 親がいないのは新しいエントリなので重複を除外する
+                    var itemPath = (item.Value as Bookmark)?.Path;
+                    if (itemPath is null)
                     {
-                        Merge(item, conflict);
-                        return;
+                        return false;
                     }
+                    var node = parent.Children.FirstOrDefault(e => e.Value is Bookmark bookmark && bookmark.Path == itemPath);
+                    if (node is not null)
+                    {
+                        return false;
+                    }
+
+                    // 新しい項目として挿入する
+                    parent.Insert(newIndex, item);
+                    BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Add, item.Parent, item) { NewIndex = item.GetIndex() });
+                    return true;
                 }
 
-                MoveInner(item, target, direction);
+                if (parent == item || parent.ParentContains(item))
+                {
+                    // 親を子には移動できない
+                    throw new InvalidOperationException("Can't move a parent to a child.");
+                }
+
+                var isChangeDirectory = item.Parent != parent;
+                if (isChangeDirectory)
+                {
+                    var oldParent = item.Parent;
+                    item.RemoveSelf();
+                    BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Remove, oldParent, item));
+                    parent.Insert(newIndex, item);
+                    BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Add, item.Parent, item) { NewIndex = item.GetIndex() });
+                    return true;
+                }
+                else
+                {
+                    var oldIndex = item.GetIndex();
+                    Move(parent, oldIndex, newIndex);
+                    return true;
+                }
             }
         }
 
-        private void MoveInner(TreeListNode<IBookmarkEntry> item, TreeListNode<IBookmarkEntry> target, int direction)
+        private void Move(TreeListNode<IBookmarkEntry> parent, int oldIndex, int newIndex)
         {
-            if (item == target) return;
-            if (item.Parent is null || target.Parent is null) return;
-            if (target.ParentContains(item)) return; // TODO: 例外にすべき？
+            Debug.Assert(parent.Children is not null);
+            if (oldIndex == newIndex) return;
 
-            bool isChangeDirectory = item.Parent != target.Parent;
+            var item = parent.Children[oldIndex];
+            var target = parent.Children[newIndex];
+            parent.Children.Move(oldIndex, newIndex);
 
-            var parent = item.Parent;
-            var oldIndex = parent.Children.IndexOf(item);
-            item.RemoveSelf();
-            if (isChangeDirectory)
-            {
-                BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Remove, parent, item));
-            }
-
-            item.UpdateEntryTime();
-            target.Parent.Insert(target, direction, item);
-            if (isChangeDirectory)
-            {
-                BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Add, item.Parent, item));
-            }
-            else
-            {
-                BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Move, item.Parent, item) { OldIndex = oldIndex });
-            }
+            BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Move, item.Parent, item) { Target = target, OldIndex = oldIndex, NewIndex = newIndex });
         }
 
-        public void MoveToChild(TreeListNode<IBookmarkEntry> item, TreeListNode<IBookmarkEntry> target)
+        public bool MoveToChild(TreeListNode<IBookmarkEntry> item, TreeListNode<IBookmarkEntry> target)
         {
             lock (_lock)
             {
                 if (target != Items && target.Value is not BookmarkFolder)
                 {
-                    return;
+                    return false;
                 }
                 if (item.Parent == target)
                 {
-                    return;
+                    return false;
                 }
 
                 if (item.Value is BookmarkFolder folder)
                 {
                     if (target.ParentContains(item))
                     {
-                        return;
+                        return false;
                     }
 
                     var conflict = target.Children.FirstOrDefault(e => folder.IsEqual(e.Value));
                     if (conflict != null)
                     {
-                        Merge(item, conflict);
+                        return Merge(item, conflict);
                     }
                     else
                     {
-                        MoveToChildInner(item, target);
+                        return MoveToChildInner(item, target);
                     }
                 }
-
                 else if (item.Value is Bookmark bookmark)
                 {
                     var conflict = target.Children.FirstOrDefault(e => bookmark.IsEqual(e.Value));
                     if (conflict != null)
                     {
-                        Remove(item);
+                        return Remove(item);
                     }
                     else
                     {
-                        MoveToChildInner(item, target);
+                        return MoveToChildInner(item, target);
                     }
                 }
+
+                return false;
             }
         }
 
-        private void MoveToChildInner(TreeListNode<IBookmarkEntry> item, TreeListNode<IBookmarkEntry> target)
+        private bool MoveToChildInner(TreeListNode<IBookmarkEntry> item, TreeListNode<IBookmarkEntry> target)
         {
-            if (item == target) return;
-            if (target.ParentContains(item)) return; // TODO: 例外にすべき？
+            if (item == target) return false;
+            if (target.ParentContains(item)) return false; // TODO: 例外にすべき？
 
             var parent = item.Parent;
             item.RemoveSelf();
             BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Remove, parent, item));
 
-            item.UpdateEntryTime();
             target.Insert(0, item);
             target.IsExpanded = true;
             BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Add, item.Parent, item));
+
+            return true;
         }
 
 
-        public void Merge(TreeListNode<IBookmarkEntry> item, TreeListNode<IBookmarkEntry> target)
+        public bool Merge(TreeListNode<IBookmarkEntry> item, TreeListNode<IBookmarkEntry> target)
         {
             if (item?.Value is not BookmarkFolder) throw new ArgumentException("item must be BookmarkFolder");
             if (target?.Value is not BookmarkFolder) throw new ArgumentException("target must be BookmarkFolder");
@@ -438,6 +453,8 @@ namespace NeeView
                     target.Add(child);
                     BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Add, target, child));
                 }
+
+                return true;
             }
         }
 
@@ -680,10 +697,11 @@ namespace NeeView
         }
     }
 
+
     public static class TreeListNodeExtensions
     {
         public static QueryPath CreateQuery<T>(this TreeListNode<T> node, QueryScheme scheme)
-            where T : IHasName
+            where T : IHasName, ICloneable
         {
             var path = string.Join("\\", node.Hierarchy.Select(e => e.Value).Skip(1).OfType<T>().Select(e => e.Name));
             return new QueryPath(scheme, path, null);
@@ -715,22 +733,12 @@ namespace NeeView
         }
     }
 
+
     /// <summary>
     /// TreeListNode&lt;IBookmarkEntry&rt; 拡張関数
     /// </summary>
     public static class BookmarkTreeListNodeExtensions
     {
-        /// <summary>
-        /// 登録日を現在日時で更新
-        /// </summary>
-        public static void UpdateEntryTime(this TreeListNode<IBookmarkEntry> node)
-        {
-            if (node.Value is Bookmark bookmark)
-            {
-                bookmark.EntryTime = DateTime.Now;
-            }
-        }
-
         /// <summary>
         /// Query生成
         /// </summary>

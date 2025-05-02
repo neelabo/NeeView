@@ -8,12 +8,12 @@ using System.Runtime.Serialization;
 
 namespace NeeView
 {
-    public interface IBookmarkEntry : IHasName 
+    public interface IBookmarkEntry : IHasName, ICloneable 
     {
     }
 
 
-    public class Bookmark : BindableBase, IBookmarkEntry
+    public class Bookmark : BindableBase, IBookmarkEntry, ICloneable
     {
         private string _path;
         private BookMementoUnit? _unit;
@@ -44,7 +44,8 @@ namespace NeeView
             }
         }
 
-        public DateTime EntryTime { get; set; }
+        // NOTE: ver44.0 以降では未使用ですが、フォーマット互換性のために保持している。
+        public DateTime EntryTime { get; set; } = DateTime.Now;
 
         public string Name => Unit.Memento.Name;
 
@@ -52,6 +53,11 @@ namespace NeeView
         {
             get { return _unit = _unit ?? BookMementoCollection.Current.Set(Path); }
             private set { _unit = value; }
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
 
         public bool IsEqual(IBookmarkEntry entry)

@@ -124,7 +124,56 @@ namespace NeeView
 
 
                 case EntryCollectionChangedAction.Move:
-                    // nop.
+
+                    if (e.Item is null) throw new InvalidOperationException();
+
+                    // 並びが登録順の場合のみ反映
+                    if (FolderOrder.IsEntryCategory())
+                    {
+                        var item = Items.FirstOrDefault(i => e.Item == i.Source);
+                        var target = Items.FirstOrDefault(i => e.Target == i.Source);
+                        if (item != null)
+                        {
+                            // いろいろここで吸収せんとあかん
+                            var oldIndex = Items.IndexOf(item);
+                            var newIndex = -1;
+
+                            // e.Target が null ならば、終端に移動。ソート方向に注意。
+                            if (e.Target is null)
+                            {
+                                // Move では常に対象が存在するため、この状態にはならない？
+                                newIndex = FolderOrder.IsDescending() ? 0 : Items.Count - 1;
+                            }
+                            // e.Target が存在し target が null ならば適切な候補を検索する必要あり
+                            else if (target is null)
+                            {
+                                newIndex = Items.Count - 1;
+                                for (int i = 0; i < Items.Count; i++)
+                                {
+                                    if (Items[i] == item) continue;
+                                    if (Items[i].Source is TreeListNode<IBookmarkEntry> it)
+                                    {
+                                        var index = it.GetIndex();
+                                        if (index >= e.NewIndex)
+                                        {
+                                            newIndex = i;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            // target が存在するならばその位置に移動
+                            else
+                            {
+                                newIndex = Items.IndexOf(target);
+                            }
+
+                            if (oldIndex != newIndex && newIndex >= 0)
+                            {
+                                MoveItem(item, oldIndex, newIndex);
+                            }
+                        }
+                    }
                     break;
 
                 case EntryCollectionChangedAction.Replace:
@@ -223,6 +272,24 @@ namespace NeeView
             }
 
             return item;
+        }
+
+        protected override List<FolderItem> Sort(IEnumerable<FolderItem> source, CancellationToken token)
+        {
+            return FolderOrder switch
+            {
+                FolderOrder.EntryTime
+                    => source.OrderBy(e => GetIndex(e)).ToList(),
+                FolderOrder.EntryTimeDescending
+                    => source.OrderBy(e => GetIndex(e)).Reverse().ToList(),
+                _
+                    => base.Sort(source, token)
+            };
+
+            static int GetIndex(FolderItem item)
+            {
+                return item.Source is TreeListNode<IBookmarkEntry> node ? node.GetIndex() : 0;
+            }
         }
 
         #region IDisposable Support

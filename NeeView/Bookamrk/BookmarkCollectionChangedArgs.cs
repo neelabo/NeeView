@@ -20,8 +20,10 @@ namespace NeeView
         public EntryCollectionChangedAction Action { get; set; }
         public TreeListNode<IBookmarkEntry>? Parent { get; set; }
         public TreeListNode<IBookmarkEntry>? Item { get; set; }
+        public TreeListNode<IBookmarkEntry>? Target { get; set; }
 
         public int OldIndex { get; set; } = -1;
+        public int NewIndex { get; set; } = -1;
         public string? OldName { get; set; }
 
         public BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction action)

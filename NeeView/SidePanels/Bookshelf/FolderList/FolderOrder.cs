@@ -71,6 +71,20 @@ namespace NeeView
                 _ => false,
             };
         }
+
+        public static bool IsDescending(this FolderOrder mode)
+        {
+            return mode switch
+            {
+                FolderOrder.FileNameDescending => true,
+                FolderOrder.PathDescending => true,
+                FolderOrder.FileTypeDescending => true,
+                FolderOrder.TimeStampDescending => true,
+                FolderOrder.SizeDescending => true,
+                FolderOrder.EntryTimeDescending => true,
+                _ => false,
+            };
+        }
     }
 
 }

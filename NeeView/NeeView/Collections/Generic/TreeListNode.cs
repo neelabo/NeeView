@@ -10,6 +10,7 @@ using System.Runtime.Serialization;
 namespace NeeView.Collections.Generic
 {
     public class TreeListNode<T> : BindableBase, IEnumerable<TreeListNode<T>>, IHasValue<T>
+        where T : ICloneable
     {
         private TreeListNode<T>? _parent;
         private ObservableCollection<TreeListNode<T>> _children;
@@ -241,6 +242,17 @@ namespace NeeView.Collections.Generic
             return parentsX.Count < parentsY.Count;
         }
 
+        public TreeListNode<T> Clone()
+        {
+            var node = new TreeListNode<T>((T)this.Value.Clone());
+
+            foreach(var child in _children)
+            {
+                node.Add(child.Clone());
+            }
+
+            return node;
+        }
 
         #region IEnumerable support
 
@@ -270,6 +282,7 @@ namespace NeeView.Collections.Generic
 
 
     public class TreeListNodeMemento<T>
+        where T : ICloneable
     {
         public TreeListNodeMemento(TreeListNode<T> node)
         {

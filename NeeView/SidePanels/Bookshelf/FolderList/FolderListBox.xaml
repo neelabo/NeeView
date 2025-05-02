@@ -198,9 +198,6 @@
                 IsSimpleTextSearchEnabled="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsTextSearchEnabled}"
                 UseLayoutRounding="True"
                 AllowDrop="True"
-                PreviewDragEnter="FolderList_PreviewDragEnter"
-                PreviewDragOver="FolderList_PreviewDragOver"
-                Drop="FolderList_Drop"
                 VirtualizingPanel.IsVirtualizing="True"
                 VirtualizingPanel.ScrollUnit="{StaticResource PanelScrollUnit}"
                 VirtualizingPanel.VirtualizationMode="Recycling">
