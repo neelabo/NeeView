@@ -57,7 +57,7 @@ namespace NeeView.Windows
         /// DoDragDropのフック
         /// </summary>
         /// <remarks>
-        /// saticなオブジェクトになることがあるので標準のプロパティにしている
+        /// staticなオブジェクトになることがあるので標準のプロパティにしている
         /// </remarks>
         public IDragDropHook? DragDropHook { get; set; }
 
@@ -150,6 +150,7 @@ namespace NeeView.Windows
             this.AssociatedObject.PreviewMouseMove += PreviewMouseMoveHandler;
             this.AssociatedObject.PreviewMouseUp += PreviewMouseUpHandler;
             this.AssociatedObject.QueryContinueDrag += QueryContinueDragHandler;
+            this.AssociatedObject.IsMouseCapturedChanged += IsMouseCapturedChangedHandler;
             base.OnAttached();
         }
 
@@ -162,9 +163,20 @@ namespace NeeView.Windows
             this.AssociatedObject.PreviewMouseMove -= PreviewMouseMoveHandler;
             this.AssociatedObject.PreviewMouseUp -= PreviewMouseUpHandler;
             this.AssociatedObject.QueryContinueDrag -= QueryContinueDragHandler;
+            this.AssociatedObject.IsMouseCapturedChanged -= IsMouseCapturedChangedHandler;
             base.OnDetaching();
         }
 
+        /// <summary>
+        /// マウスボタン押したままの移動で選択項目が変更される機能を抑制
+        /// </summary>
+        private void IsMouseCapturedChangedHandler(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (this.AssociatedObject.IsMouseCaptured)
+            {
+                this.AssociatedObject.ReleaseMouseCapture();
+            }
+        }
 
         /// <summary>
         /// マウスボタン押下処理
@@ -369,7 +381,7 @@ namespace NeeView.Windows
                     var point = CursorInfo.GetNowPosition(visual);
                     if (double.IsNaN(point.X))
                     {
-                        Debug.WriteLine("_dragItem does not exist in virual tree.");
+                        Debug.WriteLine("_dragItem does not exist in virtual tree.");
                         e.Action = System.Windows.DragAction.Cancel;
                         e.Handled = true;
                         return;
@@ -409,7 +421,7 @@ namespace NeeView.Windows
 
             if (Window.GetWindow(container)?.Content is not FrameworkElement root)
             {
-                // container does not exist in virual tree.
+                // container does not exist in virtual tree.
                 return;
             }
             var cursor = CursorInfo.GetNowPosition(root);
