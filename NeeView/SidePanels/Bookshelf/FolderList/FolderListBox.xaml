@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:NeeView"
              xmlns:properties="clr-namespace:NeeView.Properties"
              xmlns:nw="clr-namespace:NeeView.Windows"
-             xmlns:osc="clr-namespace:OpenSourceControls"
+             xmlns:vwp="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance local:FolderListDataContext_Design, IsDesignTimeCreatable=True}"
              d:DesignHeight="300" d:DesignWidth="300"
@@ -230,7 +230,10 @@
                             <Setter Property="ItemsPanel">
                                 <Setter.Value>
                                     <ItemsPanelTemplate>
-                                        <osc:VirtualizingWrapPanel IsItemsHost="True" MouseWheelRate="{Binding Source={x:Static local:Config.Current}, Path=Panels.MouseWheelSpeedRate}" />
+                                        <vwp:VirtualizingWrapPanel IsItemsHost="True"
+                                                                   ItemSize="{Binding ThumbnailItemSize}"
+                                                                   MouseWheelDelta="{Binding Source={x:Static local:Config.Current}, Path=Panels.MouseWheelDelta}"
+                                                                   />
                                     </ItemsPanelTemplate>
                                 </Setter.Value>
                             </Setter>

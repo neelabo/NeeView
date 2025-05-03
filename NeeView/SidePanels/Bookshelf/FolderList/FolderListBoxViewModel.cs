@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -12,7 +13,8 @@ namespace NeeView
 {
     public class FolderListBoxViewModel : BindableBase
     {
-        private FolderList _model;
+        private readonly FolderList _model;
+        private readonly PanelThumbnailItemSize _thumbnailItemSize;
 
 
         public FolderListBoxViewModel(FolderList folderList)
@@ -30,6 +32,9 @@ namespace NeeView
 
             _model.SelectedChanged +=
                 (s, e) => AppDispatcher.Invoke(() => Model_SelectedChanged(s, e));
+
+            _thumbnailItemSize = new PanelThumbnailItemSize(Config.Current.Panels.ThumbnailItemProfile, 5.0 + 1.0, 4.0 + 1.0, new Size(18.0, 18.0));
+            _thumbnailItemSize.SubscribePropertyChanged(nameof(_thumbnailItemSize.ItemSize), (s, e) => RaisePropertyChanged(nameof(ThumbnailItemSize)));
         }
 
 
@@ -48,14 +53,12 @@ namespace NeeView
             set => _model.IsFocusAtOnce = value;
         }
 
-        public FolderList Model
-        {
-            get { return _model; }
-            set { if (_model != value) { _model = value; RaisePropertyChanged(); } }
-        }
+        public FolderList Model => _model;
 
         // サムネイルが表示されている？
         public bool IsThumbnailVisible => _model.IsThumbnailVisible;
+
+        public Size ThumbnailItemSize => _thumbnailItemSize.ItemSize;
 
 
         #region RelayCommands

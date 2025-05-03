@@ -113,7 +113,13 @@ namespace NeeView
         public double MouseWheelSpeedRate
         {
             get { return _mouseWheelSpeedRate; }
-            set { SetProperty(ref _mouseWheelSpeedRate, Math.Max(value, 0.1)); }
+            set
+            {
+                if (SetProperty(ref _mouseWheelSpeedRate, Math.Max(value, 0.1)))
+                {
+                    RaisePropertyChanged(nameof(MouseWheelDelta));
+                }
+            }
         }
 
         /// <summary>
@@ -154,6 +160,13 @@ namespace NeeView
 
 
         #region HiddenParameters
+
+        [PropertyMapIgnore]
+        [ObjectMergeIgnore]
+        public double MouseWheelDelta
+        {
+            get => MouseWheelSpeedRate * SystemParameters.ScrollHeight * SystemParameters.WheelScrollLines;
+        }
 
         [PropertyMapIgnore]
         [ObjectMergeIgnore]

@@ -1,7 +1,7 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System;
-using System.ComponentModel;
+using System.Diagnostics;
 using System.Text.Json.Serialization;
 using System.Windows;
 using System.Windows.Controls;
@@ -43,8 +43,8 @@ namespace NeeView
         private bool _isImagePopupEnabled;
         private bool _isTextVisible;
         private bool _isTextWrapped;
-        private bool _isTextheightDirty = true;
-        private double _textHeight = double.NaN;
+        private bool _isTextHeightDirty = true;
+        private double _textHeight;
 
 
         public PanelListItemProfile()
@@ -220,10 +220,11 @@ namespace NeeView
         {
             get
             {
-                if (_isTextheightDirty)
+                if (_isTextHeightDirty)
                 {
-                    _isTextheightDirty = false;
+                    _isTextHeightDirty = false;
                     _textHeight = CalcTextHeight();
+                    Debug.Assert(double.IsNormal(_textHeight));
                 }
                 return _textHeight;
             }
@@ -241,39 +242,31 @@ namespace NeeView
         // TextHeightの更新要求
         public void UpdateTextHeight()
         {
-            _isTextheightDirty = true;
+            _isTextHeightDirty = true;
             RaisePropertyChanged(nameof(TextHeight));
         }
 
-        // calc 2 line textbox height
+        // calc textbox height
         private double CalcTextHeight()
         {
-            if (IsTextWrapped)
+            // 実際にTextBlockを作成して計算する
+            var textBlock = new TextBlock()
             {
-                // 実際にTextBlockを作成して計算する
-                var textBlock = new TextBlock()
-                {
-                    Text = "Age\nBusy",
-                    FontSize = FontParameters.Current.PaneFontSize,
-                };
-                if (FontParameters.Current.DefaultFontName != null)
-                {
-                    textBlock.FontFamily = new FontFamily(FontParameters.Current.DefaultFontName);
-                };
-                var panel = new StackPanel();
-                panel.Children.Add(textBlock);
-                var area = new Size(256, 256);
-                panel.Measure(area);
-                panel.Arrange(new Rect(area));
-                //panel.UpdateLayout();
-                double height = (int)textBlock.ActualHeight + 1.0;
+                Text = IsTextWrapped ? "Age\nBusy" : "Age Busy",
+                FontSize = FontParameters.Current.PaneFontSize,
+            };
+            if (FontParameters.Current.DefaultFontName != null)
+            {
+                textBlock.FontFamily = new FontFamily(FontParameters.Current.DefaultFontName);
+            }
+            var panel = new Canvas();
+            panel.Children.Add(textBlock);
+            var area = new Size(0, 0);
+            panel.Measure(area);
+            panel.Arrange(new Rect(area));
+            double height = (int)textBlock.ActualHeight + 1.0;
 
-                return height;
-            }
-            else
-            {
-                return double.NaN;
-            }
+            return height;
         }
     }
 }

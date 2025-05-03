@@ -164,3 +164,10 @@ DLL: AnimatedImage.dll, AnimatedImage.Wpf.dll
 * URL: [NetBeauty2](https://github.com/nulastudio/NetBeauty2)
 * License: [MIT License](https://github.com/nulastudio/NetBeauty2/blob/master/LICENSE)
 
+### VirtualizingWrapPanel
+
+DLL: VirtualizingWrapPanel.dll
+
+* Copyright (c) 2019 S. B?umlisberger
+* URL: [VirtualizingWrapPanel](https://github.com/sbaeumlisberger/VirtualizingWrapPanel)
+* License: [MIT License](https://github.com/sbaeumlisberger/VirtualizingWrapPanel/blob/master/LICENSE)
