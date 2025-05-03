@@ -20,6 +20,8 @@ namespace NeeView
 
             SplitBrush = _listBox.Foreground;
 
+            Orientation = _vm.Model.PanelListItemStyle == PanelListItemStyle.Thumbnail ? Orientation.Horizontal : Orientation.Vertical;
+
             if (_vm.FolderOrder.IsEntryCategory())
             {
                 AllowInsert = true;

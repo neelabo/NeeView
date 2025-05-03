@@ -1,16 +1,12 @@
-﻿using System;
+﻿using NeeView.Windows.Media;
+using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace NeeView.Windows
 {
-    //public enum ListBoxDragReceiverMode
-    //{
-    //    Insert,
-    //    Folder,
-    //}
-
     public enum ListBoxDragReceiveItemType
     {
         None = 0,
@@ -35,21 +31,31 @@ namespace NeeView.Windows
             _listBox.Drop += OnDrop;
         }
 
+
         public event DragEventHandler? PreviewDragOver;
         public event EventHandler<ListBoxDropEventArgs>? DragOver;
         public event EventHandler<ListBoxDropEventArgs>? Drop;
 
 
-
-        protected RectangleAdorner Adorner => _adorner ??= new RectangleAdorner(_listBox);
-        public Brush ShapeBrush { get; set; } = new SolidColorBrush(Color.FromArgb(0x40, 0x80, 0x80, 0x80));
+        protected RectangleAdorner Adorner => EnsureAdorner();
+        public Brush ShapeBrush { get; set; } = new SolidColorBrush(Color.FromArgb(0x80, 0x80, 0x80, 0x80));
         public Brush SplitBrush { get; set; } = new SolidColorBrush(Colors.Black);
         public Orientation Orientation { get; set; } = Orientation.Vertical;
-        //public ListBoxDragReceiverMode Mode { get; set; } = ListBoxDragReceiverMode.Insert;
-
         public bool AllowInsert { get; set; } = true;
         public ListBoxDragReceiveItemType ReceiveItemType { get; set; } = ListBoxDragReceiveItemType.All;
 
+
+        private RectangleAdorner EnsureAdorner()
+        {
+            if (_adorner is null)
+            {
+                // NOTE: ClipToBounds 効果のあるコントロールに関連付ける
+                var presenter = VisualTreeUtility.GetChildElement<ScrollContentPresenter>(_listBox);
+                Debug.Assert(presenter != null);
+                _adorner = new RectangleAdorner(presenter) { IsClipEnabled = true };
+            }
+            return _adorner;
+        }
 
         protected virtual void OnPreviewDragEnter(object sender, DragEventArgs e)
         {
@@ -212,36 +218,70 @@ namespace NeeView.Windows
             Adorner.Brush = ShapeBrush;
         }
 
-        private void SetAdornerVerticalSplit(FrameworkElement element, VerticalAlignment vertical)
+        private void SetAdornerVerticalSplit(ListBoxItem item, VerticalAlignment vertical)
         {
-            (var p0, var p1) = GetElementRect(element);
-            if (vertical == VerticalAlignment.Top)
+            var next = GetVerticalItem(item, vertical);
+            if (next is not null)
             {
-                Adorner.Start = new Point(p0.X, p0.Y - 1);
-                Adorner.End = new Point(p1.X, p0.Y + 1);
+                var p0 = GetElementCenter(item);
+                var p1 = GetElementCenter(next);
+                var x0 = p0.X - item.ActualWidth * 0.5;
+                var x1 = p0.X + item.ActualWidth * 0.5;
+                var y = (p0.Y + p1.Y) * 0.5;
+                Adorner.Start = new Point(x0, y - 1.0);
+                Adorner.End = new Point(x1, y + 1.0);
             }
             else
             {
-                Adorner.Start = new Point(p0.X, p1.Y - 1);
-                Adorner.End = new Point(p1.X, p1.Y + 1);
+                var direction = vertical.Direction();
+                var p0 = GetElementCenter(item);
+                var x0 = p0.X - item.ActualWidth * 0.5;
+                var x1 = p0.X + item.ActualWidth * 0.5;
+                var y = p0.Y + item.ActualHeight * 0.5 * direction;
+                Adorner.Start = new Point(x0, y - 1.0 - direction);
+                Adorner.End = new Point(x1, y + 1.0 - direction);
             }
             Adorner.Brush = SplitBrush;
         }
 
-        private void SetAdornerHorizontalSplit(FrameworkElement element, HorizontalAlignment horizontal)
+        private void SetAdornerHorizontalSplit(ListBoxItem item, HorizontalAlignment horizontal)
         {
-            (var p0, var p1) = GetElementRect(element);
-            if (horizontal == HorizontalAlignment.Left)
+            var next = GetHorizontalItem(item, horizontal);
+            if (next is not null)
             {
-                Adorner.Start = new Point(p0.X - 1, p0.Y);
-                Adorner.End = new Point(p0.X + 1, p1.Y);
+                var p0 = GetElementCenter(item);
+                var p1 = GetElementCenter(next);
+                var x = (p0.X + p1.X) * 0.5;
+                var y0 = p0.Y - item.ActualHeight * 0.5;
+                var y1 = p0.Y + item.ActualHeight * 0.5;
+                Adorner.Start = new Point(x - 1, y0);
+                Adorner.End = new Point(x + 1, y1);
             }
             else
             {
-                Adorner.Start = new Point(p1.X - 1, p0.Y);
-                Adorner.End = new Point(p1.X + 1, p1.Y);
+                var direction = horizontal.Direction();
+                var p0 = GetElementCenter(item);
+                var x = p0.X + item.ActualWidth * 0.5 * direction;
+                var y0 = p0.Y - item.ActualHeight * 0.5;
+                var y1 = p0.Y + item.ActualHeight * 0.5;
+                Adorner.Start = new Point(x - 1.0 - direction, y0);
+                Adorner.End = new Point(x + 1.0 - direction, y1);
             }
             Adorner.Brush = SplitBrush;
+        }
+
+        private ListBoxItem? GetVerticalItem(ListBoxItem item, VerticalAlignment vertical)
+        {
+            var point = GetElementCenter(item);
+            point.Y += item.ActualHeight * vertical.Direction() * 1.0;
+            return VisualTreeUtility.HitTest<ListBoxItem>(_listBox, point);
+        }
+
+        private ListBoxItem? GetHorizontalItem(ListBoxItem item, HorizontalAlignment horizontal)
+        {
+            var point = GetElementCenter(item);
+            point.X += item.ActualWidth * horizontal.Direction() * 1.0;
+            return VisualTreeUtility.HitTest<ListBoxItem>(_listBox, point);
         }
 
         private (Point p0, Point p1) GetElementRect(FrameworkElement element)
@@ -250,5 +290,39 @@ namespace NeeView.Windows
             var p1 = p0 + new Vector(element.ActualWidth, element.ActualHeight);
             return (p0, p1);
         }
+
+        private Point GetElementCenter(FrameworkElement element)
+        {
+            return element.TranslatePoint(new Point(element.ActualWidth * 0.5, element.ActualHeight * 0.5), _listBox);
+        }
     }
+
+
+    public static class VerticalAlignmentExtensions
+    {
+        public static double Direction(this VerticalAlignment vertical)
+        {
+            return vertical switch
+            {
+                VerticalAlignment.Top => -1.0,
+                VerticalAlignment.Bottom => 1.0,
+                _ => 0.0
+            };
+        }
+    }
+
+
+    public static class HorizontalAlignmentExtensions
+    {
+        public static double Direction(this HorizontalAlignment horizontal)
+        {
+            return horizontal switch
+            {
+                HorizontalAlignment.Left => -1.0,
+                HorizontalAlignment.Right => 1.0,
+                _ => 0.0
+            };
+        }
+    }
+
 }
