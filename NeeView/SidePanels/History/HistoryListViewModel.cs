@@ -58,6 +58,7 @@ namespace NeeView
                 menu.Items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleList"), PanelListItemStyle.Normal));
                 menu.Items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleContent"), PanelListItemStyle.Content));
                 menu.Items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleBanner"), PanelListItemStyle.Banner));
+                menu.Items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleThumbnail"), PanelListItemStyle.Thumbnail));
                 menu.Items.Add(new Separator());
                 menu.Items.Add(CreateCheckMenuItem(Properties.TextResources.GetString("History.MoreMenu.GroupBy"), new Binding(nameof(HistoryConfig.IsGroupBy)) { Source = Config.Current.History }));
                 menu.Items.Add(CreateCheckMenuItem(Properties.TextResources.GetString("History.MoreMenu.IsCurrentFolder"), new Binding(nameof(HistoryConfig.IsCurrentFolder)) { Source = Config.Current.History }));

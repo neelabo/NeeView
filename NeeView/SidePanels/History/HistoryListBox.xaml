@@ -5,6 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:local="clr-namespace:NeeView"
         xmlns:nw="clr-namespace:NeeView.Windows" 
+        xmlns:vwp="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
         xmlns:properties="clr-namespace:NeeView.Properties" 
         mc:Ignorable="d" 
         d:DesignHeight="300" d:DesignWidth="300"
@@ -44,6 +45,12 @@
             <Setter Property="Height" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.BannerItemProfile.TextHeight}" />
         </Style>
 
+        <Style x:Key="ThumbnailNameStyle" TargetType="TextBlock"  BasedOn="{StaticResource NameStyle}">
+            <Setter Property="TextWrapping" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.IsTextWrapped, Converter={StaticResource BooleanToTextWrappingConverter}}"/>
+            <Setter Property="Height" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.TextHeight}"/>
+            <Setter Property="Visibility" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.IsTextVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
 
         <Style x:Key="NoteTextStyle" TargetType="TextBlock">
             <Setter Property="Margin" Value="5,0" />
@@ -53,6 +60,17 @@
             <Setter Property="Visibility" Value="{Binding Foreground, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource BrushAlphaToVisibilityConverter}}" />
         </Style>
 
+        <Style x:Key="ThumbnailStackPanelStyle" TargetType="StackPanel" >
+            <Setter Property="ToolTip" Value="{Binding Detail}"/>
+            <Setter Property="ToolTipService.InitialShowDelay" Value="1000"/>
+            <Setter Property="ToolTipService.BetweenShowDelay" Value="1000" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:HistoryListBox}, Path=IsToolTipEnabled}" Value="False">
+                    <Setter Property="ToolTip" Value="{x:Null}"/>
+                    <Setter Property="ToolTipService.IsEnabled" Value="False"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
 
         <DataTemplate x:Key="NormalTemplate">
             <Grid MinHeight="20">
@@ -65,9 +83,6 @@
                 <DockPanel>
                     <local:PanelListContentImage Thumbnail="{Binding Thumbnail}" />
                     <StackPanel VerticalAlignment="Center">
-                        <!--
-                        <TextBlock x:Name="Place" Style="{StaticResource NoteTextStyle}" Text="{Binding ArchivePage.ArchiveEntry, Converter={StaticResource ArchiveEntryToDecoratePlaceNameConverter}}" />
-                        -->
                         <TextBlock x:Name="DateTime" Style="{StaticResource NoteTextStyle}" Text="{Binding LastAccessTime, Converter={StaticResource DateTimeToStringConverter}}"/>
                         <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource ContentNameStyle}" />
                     </StackPanel>
@@ -82,6 +97,16 @@
                 </DockPanel>
                 <local:PanelListBannerImage Thumbnail="{Binding Thumbnail}" />
             </DockPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ThumbnailTemplate">
+            <StackPanel Margin="5" Width="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.ShapeWidth}" Style="{StaticResource ThumbnailStackPanelStyle}">
+                <local:PanelListThumbnailImage Thumbnail="{Binding Thumbnail}" />
+                <Rectangle DockPanel.Dock="Bottom" Margin="-5,0,-5,1" Height="4" Visibility="Hidden" />
+                <DockPanel>
+                    <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource ThumbnailNameStyle}" />
+                </DockPanel>
+            </StackPanel>
         </DataTemplate>
 
         <Style x:Key="ListBoxItemStyle" TargetType="ListBoxItem" BasedOn="{StaticResource NVListBoxItem}">
@@ -101,7 +126,11 @@
         <Style x:Key="ListBoxItemBorderStyle" TargetType="ListBoxItem" BasedOn="{StaticResource ListBoxItemStyle}">
             <Setter Property="BorderBrush" Value="{DynamicResource Item.Separator}" />
         </Style>
-
+        
+        <Style x:Key="ListBoxItemThumbnailStyle" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource ListBoxItemStyle}">
+            <Setter Property="local:ListBoxItemTools.InnerMargin" Value="0" />
+        </Style>
+        
     </UserControl.Resources>
 
 
@@ -120,7 +149,7 @@
                         IsVisibleChanged="HistoryListBox_IsVisibleChanged"
                         VirtualizingPanel.IsVirtualizing="True"
                         VirtualizingPanel.ScrollUnit="{StaticResource PanelScrollUnit}"
-                        VirtualizingStackPanel.VirtualizationMode="Recycling"
+                        VirtualizingPanel.VirtualizationMode="Recycling"
                         VirtualizingPanel.IsVirtualizingWhenGrouping="True"
                         IsSimpleTextSearchEnabled="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsTextSearchEnabled}">
 
@@ -128,6 +157,13 @@
             <Style TargetType="ListBox" BasedOn="{StaticResource NVListBox}">
                 <Setter Property="ItemTemplate" Value="{StaticResource NormalTemplate}" />
                 <Setter Property="ItemContainerStyle" Value="{StaticResource ListBoxItemStyle}" />
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel/>
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Source={x:Static local:Config.Current}, Path=History.PanelListItemStyle}" Value="Content">
                         <Setter Property="ItemTemplate" Value="{StaticResource ContentTemplace}" />
@@ -136,6 +172,20 @@
                     <DataTrigger Binding="{Binding Source={x:Static local:Config.Current}, Path=History.PanelListItemStyle}" Value="Banner">
                         <Setter Property="ItemTemplate" Value="{StaticResource BannerTemplate}" />
                         <Setter Property="ItemContainerStyle" Value="{StaticResource ListBoxItemBorderStyle}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Source={x:Static local:Config.Current}, Path=History.PanelListItemStyle}" Value="Thumbnail">
+                        <Setter Property="ItemTemplate" Value="{StaticResource ThumbnailTemplate}"/>
+                        <Setter Property="ItemContainerStyle" Value="{StaticResource ListBoxItemThumbnailStyle}" />
+                        <Setter Property="ItemsPanel">
+                            <Setter.Value>
+                                <ItemsPanelTemplate>
+                                    <vwp:VirtualizingWrapPanel 
+                                                                   ItemSize="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=DataContext.ThumbnailItemSize}"
+                                                                   MouseWheelDelta="{Binding Source={x:Static local:Config.Current}, Path=Panels.MouseWheelDelta}"
+                                                                   />
+                                </ItemsPanelTemplate>
+                            </Setter.Value>
+                        </Setter>
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
@@ -150,6 +200,11 @@
                         </Border>
                     </DataTemplate>
                 </GroupStyle.HeaderTemplate>
+                <GroupStyle.Panel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </GroupStyle.Panel>
             </GroupStyle>
         </ListBox.GroupStyle>
 

@@ -89,7 +89,7 @@
     <PackageReference Include="PhotoSauce.MagicScaler" Version="0.15.0" />
     <PackageReference Include="SharpVectors" Version="1.8.4.2" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.113.7" />
-    <PackageReference Include="VirtualizingWrapPanel" Version="2.1.1" />
+    <PackageReference Include="VirtualizingWrapPanel" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>

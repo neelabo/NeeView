@@ -17,7 +17,7 @@ namespace NeeView
     public partial class HistoryListBoxViewModel : INotifyPropertyChanged
     {
         private readonly HistoryList _model;
-
+        private readonly PanelThumbnailItemSize _thumbnailItemSize;
 
         public HistoryListBoxViewModel(HistoryList model)
         {
@@ -25,6 +25,9 @@ namespace NeeView
 
             _model.AddPropertyChanged(nameof(HistoryList.SelectedItem),
                 (s, e) => RaisePropertyChanged(nameof(SelectedItem)));
+
+            _thumbnailItemSize = new PanelThumbnailItemSize(Config.Current.Panels.ThumbnailItemProfile, 5.0 + 1.0, 4.0 + 1.0, new Size(18.0, 18.0));
+            _thumbnailItemSize.AddPropertyChanged(nameof(PanelThumbnailItemSize.ItemSize), (s, e) => RaisePropertyChanged(nameof(ThumbnailItemSize)));
         }
 
 
@@ -34,6 +37,8 @@ namespace NeeView
 
         public bool IsThumbnailVisible => _model.IsThumbnailVisible;
 
+        public Size ThumbnailItemSize => _thumbnailItemSize.ItemSize;
+
         public CollectionViewSource CollectionViewSource => _model.CollectionViewSource;
 
         public BookHistory? SelectedItem
@@ -41,6 +46,7 @@ namespace NeeView
             get => _model.SelectedItem;
             set => _model.SelectedItem = value;
         }
+
 
         public void Remove(IEnumerable<BookHistory> items)
         {

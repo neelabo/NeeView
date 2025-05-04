@@ -71,6 +71,17 @@ namespace NeeView
             _disposables.Add(Config.Current.Panels.ThumbnailItemProfile.SubscribePropertyChanged(PanelListItemProfile_PropertyChanged));
         }
 
+
+        public bool IsToolTipEnabled
+        {
+            get { return (bool)GetValue(IsToolTipEnabledProperty); }
+            set { SetValue(IsToolTipEnabledProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsToolTipEnabledProperty =
+            DependencyProperty.Register("IsToolTipEnabled", typeof(bool), typeof(HistoryListBox), new PropertyMetadata(true));
+
+
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposedValue)
