@@ -139,6 +139,7 @@
 
             <Style x:Key="ListBoxItemStyle" TargetType="ListBoxItem" BasedOn="{StaticResource NVListBoxItem}">
                 <EventSetter Event="PreviewMouseLeftButtonDown" Handler="PlaylistListItem_MouseLeftButtonDown" />
+                <EventSetter Event="MouseLeftButtonUp" Handler="PlaylistListItem_MouseLeftButtonUp" />
                 <EventSetter Event="PreviewMouseDoubleClick" Handler="PlaylistListItem_MouseDoubleClick" />
                 <EventSetter Event="KeyDown" Handler="PlaylistListItem_KeyDown" />
                 <EventSetter Event="ContextMenuOpening" Handler="PlaylistItem_ContextMenuOpening" />

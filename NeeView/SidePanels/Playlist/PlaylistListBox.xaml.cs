@@ -34,6 +34,7 @@ namespace NeeView
         private ListBoxThumbnailLoader? _thumbnailLoader;
         private PageThumbnailJobClient? _jobClient;
         private bool _focusRequest;
+        private PlaylistItem? _clickItem;
 
         static PlaylistListBox()
         {
@@ -602,8 +603,20 @@ namespace NeeView
         {
             if (sender is ListBoxItem { Content: PlaylistItem item })
             {
-                ClickToOpen(item);
+                _clickItem = item;
             }
+        }
+
+        private void PlaylistListItem_MouseLeftButtonUp(object? sender, MouseButtonEventArgs e)
+        {
+            if (sender is ListBoxItem { Content: PlaylistItem item })
+            {
+                if (_clickItem == item)
+                {
+                    ClickToOpen(item);
+                }
+            }
+            _clickItem = null;
         }
 
         private void ClickToOpen(PlaylistItem item)

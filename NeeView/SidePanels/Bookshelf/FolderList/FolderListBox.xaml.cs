@@ -30,6 +30,8 @@ namespace NeeView
         private readonly FolderListBoxDragReceiver _dragReceiver;
         private ListBoxThumbnailLoader? _thumbnailLoader;
         private PageThumbnailJobClient? _jobClient;
+        private FolderItem? _clickItem;
+
 
         static FolderListBox()
         {
@@ -107,7 +109,6 @@ namespace NeeView
 
         #region IPanelListBox Support
 
-        //
         public ListBox PageCollectionListBox => this.ListBox;
 
         // サムネイルが表示されている？
@@ -1048,8 +1049,20 @@ namespace NeeView
         {
             if (sender is ListBoxItem { Content: FolderItem item })
             {
-                ClickToLoadBook(item);
+                _clickItem = item;
             }
+        }
+
+        private void FolderListItem_MouseLeftButtonUp(object? sender, MouseButtonEventArgs e)
+        {
+            if (sender is ListBoxItem { Content: FolderItem item })
+            {
+                if (_clickItem == item)
+                {
+                    ClickToLoadBook(item);
+                }
+            }
+            _clickItem = null;
         }
 
         private void ClickToLoadBook(FolderItem item)

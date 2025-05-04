@@ -86,6 +86,7 @@
 
         <Style x:Key="ListBoxItemStyle" TargetType="ListBoxItem" BasedOn="{StaticResource NVListBoxItem}">
             <EventSetter Event="PreviewMouseLeftButtonDown" Handler="HistoryListItem_MouseLeftButtonDown" />
+            <EventSetter Event="MouseLeftButtonUp" Handler="HistoryListItem_MouseLeftButtonUp" />
             <EventSetter Event="PreviewMouseDoubleClick" Handler="HistoryListItem_MouseDoubleClick" />
             <EventSetter Event="KeyDown" Handler="HistoryListItem_KeyDown" />
             <EventSetter Event="ContextMenuOpening" Handler="HistoryListItem_ContextMenuOpening" />

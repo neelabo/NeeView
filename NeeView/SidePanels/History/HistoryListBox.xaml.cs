@@ -38,6 +38,7 @@ namespace NeeView
         private bool _disposedValue = false;
         private readonly DisposableCollection _disposables = new();
         private SelectorMemento _selectorMemento = new();
+        private BookHistory? _clickItem;
 
 
         static HistoryListBox()
@@ -189,16 +190,29 @@ namespace NeeView
         private void HistoryListItem_MouseLeftButtonDown(object? sender, MouseButtonEventArgs e)
         {
             if (_vm is null) return;
+            
+            if (Keyboard.Modifiers != ModifierKeys.None) return;
+
+            if (sender is ListBoxItem { Content: BookHistory item } && item.Path is not null)
+            {
+                _clickItem = item;
+            }
+        }
+
+        private void HistoryListItem_MouseLeftButtonUp(object? sender, MouseButtonEventArgs e)
+        {
+            if (_vm is null) return;
 
             if (Keyboard.Modifiers != ModifierKeys.None) return;
 
-            var item = ((sender as ListBoxItem)?.Content as BookHistory);
-            if (item?.Path is null) return;
-
-            if (!Config.Current.Panels.OpenWithDoubleClick)
+            if (sender is ListBoxItem { Content: BookHistory item } && item.Path is not null)
             {
-                _vm.Load(item.Path);
+                if (_clickItem == item && !Config.Current.Panels.OpenWithDoubleClick)
+                {
+                    _vm.Load(item.Path);
+                }
             }
+            _clickItem = null;
         }
 
         private void HistoryListItem_MouseDoubleClick(object? sender, System.Windows.Input.MouseButtonEventArgs e)
