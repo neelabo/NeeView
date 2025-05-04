@@ -1,4 +1,6 @@
-﻿using NeeView.Windows;
+﻿using NeeLaboratory.Linq;
+using NeeView.Collections.Generic;
+using NeeView.Windows;
 using NeeView.Windows.Media;
 using System;
 using System.Collections.Generic;
@@ -28,6 +30,7 @@ namespace NeeView
     public partial class PlaylistListBox : UserControl, IPageListPanel, IDisposable, IToolTipService
     {
         private readonly PlaylistListBoxViewModel _vm;
+        private readonly PlaylistListBoxDragReceiver _dragReceiver;
         private ListBoxThumbnailLoader? _thumbnailLoader;
         private PageThumbnailJobClient? _jobClient;
         private bool _focusRequest;
@@ -51,6 +54,11 @@ namespace NeeView
 
             this.Loaded += PlaylistListBox_Loaded;
             this.Unloaded += PlaylistListBox_Unloaded;
+
+            _dragReceiver = new PlaylistListBoxDragReceiver(this.ListBox, _vm);
+            _dragReceiver.PreviewDragOver += PlaylistListBoxDragReceiver_PreviewDragOver;
+            _dragReceiver.DragOver += PlaylistListBoxDragReceiver_DragOver;
+            _dragReceiver.Drop += PlaylistListBoxDragReceiver_Drop;
         }
 
 
@@ -282,178 +290,237 @@ namespace NeeView
             await Task.CompletedTask;
         }
 
-        private void FolderList_PreviewDragEnter(object? sender, DragEventArgs e)
+        private void PlaylistListBoxDragReceiver_PreviewDragOver(object sender, DragEventArgs e)
         {
-            FolderList_PreviewDragOver(sender, e);
-        }
+            if (e.Handled) return;
 
-        private void FolderList_PreviewDragOver(object? sender, DragEventArgs e)
-        {
-            FolderList_DragDrop(sender, e, false);
-            DragDropHelper.AutoScroll(sender, e);
-        }
-
-        private void FolderList_Drop(object? sender, DragEventArgs e)
-        {
-            FolderList_DragDrop(sender, e, true);
-        }
-
-        private void FolderList_DragDrop(object? sender, DragEventArgs e, bool isDrop)
-        {
-            var (item, distance) = PointToViewItem(this.ListBox, e.GetPosition(this.ListBox));
-
-            var targetItem = item?.Content as PlaylistItem;
-            if (distance > 0.0 && _vm.Items?.LastOrDefault() == targetItem)
+            var scrolled = DragDropHelper.AutoScroll(sender, e);
+            if (scrolled)
             {
-                targetItem = null;
+                e.Effects = DragDropEffects.None;
+                e.Handled = true;
+            }
+        }
+
+        private void PlaylistListBoxDragReceiver_DragOver(object? sender, ListBoxDropEventArgs e)
+        {
+            HandleDropEvent(e);
+        }
+
+        private void PlaylistListBoxDragReceiver_Drop(object? sender, ListBoxDropEventArgs e)
+        {
+            HandleDropEvent(e);
+
+            if (e.DragEventArgs.Effects == DragDropEffects.None)
+            {
+                return;
             }
 
-            DropToPlaylist(sender, e, isDrop, targetItem, e.Data.GetData<PlaylistListBoxItemCollection>());
-            if (e.Handled) return;
+            var targetItem = e.Item?.Content as PlaylistItem;
+            var delta = e.Delta;
+            if (targetItem is null)
+            {
+                delta = 0;
+            }
 
-            DropToPlaylist(sender, e, isDrop, targetItem, e.Data.GetQueryPathCollection());
-            if (e.Handled) return;
-
-            DropToPlaylist(sender, e, isDrop, targetItem, e.Data.GetFileDrop());
-            if (e.Handled) return;
+            AppDispatcher.BeginInvoke(async () =>
+            {
+                var copyMaybe = e.DragEventArgs.Effects.HasFlag(DragDropEffects.Copy);
+                var dropItems = await GetPlaylistItemsAsync(e.DragEventArgs, copyMaybe, CancellationToken.None);
+                if (dropItems is not null)
+                {
+                    DropToPlaylist(sender, e.DragEventArgs, dropItems, targetItem, delta);
+                }
+            });
         }
 
-#pragma warning disable IDE0060 // 未使用のパラメーターを削除します
-        private void DropToPlaylist(object? sender, DragEventArgs e, bool isDrop, PlaylistItem? targetItem, IEnumerable<PlaylistItem>? dropItems)
+        private void HandleDropEvent(ListBoxDropEventArgs e)
         {
+            if (!AcceptDrop(e))
+            {
+                e.DragEventArgs.Effects = DragDropEffects.None;
+            }
+            e.DragEventArgs.Handled = true;
+        }
+
+        private bool AcceptDrop(ListBoxDropEventArgs e)
+        {
+            if (!_vm.IsEditable)
+            {
+                return false;
+            }
+
+            var entries = e.DragEventArgs.Data.GetData<PlaylistListBoxItemCollection>();
+            if (entries is not null)
+            {
+                //e.DragEventArgs.Effects = Keyboard.Modifiers == ModifierKeys.Control ? DragDropEffects.Copy : DragDropEffects.Move;
+                e.DragEventArgs.Effects = DragDropEffects.Move;
+
+                if (!entries.Any())
+                {
+                    return false;
+                }
+
+                var destination = e.Item?.Content as PlaylistItem;
+
+                if (_vm.IsGroupBy)
+                {
+                    if (destination is null)
+                    {
+                        return false;
+                    }
+                    if (entries.Select(x => x.Place).Any(x => x != destination.Place))
+                    {
+                        return false;
+                    }
+                    return !entries.Contains(destination);
+                }
+                else
+                {
+                    if (destination is null)
+                    {
+                        return _vm.Items is not null;
+                    }
+                    return !entries.Contains(destination);
+                }
+            }
+
+            var queries = e.DragEventArgs.Data.GetQueryPathCollection();
+            if (queries is not null)
+            {
+                e.DragEventArgs.Effects = DragDropEffects.Copy;
+                return queries.Any();
+            }
+
+            var files = e.DragEventArgs.Data.GetFileDrop();
+            if (files is not null)
+            {
+                e.DragEventArgs.Effects = DragDropEffects.Copy;
+                return files.Any();
+            }
+
+            return false;
+        }
+
+        private async Task<List<PlaylistItem>?> GetPlaylistItemsAsync(DragEventArgs e, bool copyMaybe, CancellationToken token)
+        {
+            var entries = e.Data.GetData<PlaylistListBoxItemCollection>();
+            if (entries is not null)
+            {
+                if (copyMaybe)
+                {
+                    throw new NotImplementedException();
+                    //return entries.Select(e => e.Clone()).ToList();
+                }
+                else
+                {
+                    return entries;
+                }
+            }
+
+            var queries = e.Data.GetQueryPathCollection();
+            if (queries is not null)
+            {
+                var paths = queries.Where(x => x.Scheme == QueryScheme.File).Select(x => x.SimplePath);
+                return await CreatePlaylistItems(paths, token);
+            }
+
+            var files = e.Data.GetFileDrop();
+            if (files is not null)
+            {
+                return await CreatePlaylistItems(files, token);
+            }
+
+            return null;
+        }
+
+        private async Task<List<PlaylistItem>?> CreatePlaylistItems(IEnumerable<string> paths, CancellationToken token)
+        {
+            var validPaths = await _vm.ValidatePlaylistItemPath(paths, token);
+            var collection = _vm.Items;
+            return validPaths.Distinct().Where(e => collection is null || collection.All(x => x.Path != e)).Select(e => new PlaylistItem(e)).ToList();
+        }
+
+        private void DropToPlaylist(object? sender, DragEventArgs e, IEnumerable<PlaylistItem>? dropItems, PlaylistItem? targetItem, int delta)
+        {
+            if (_vm.Items is null)
+            {
+                return;
+            }
+
             if (dropItems == null || !dropItems.Any())
             {
                 return;
             }
 
-            if (_vm.IsGroupBy)
+            // 複数の移動では順番を維持する
+            if (dropItems.Count() > 1)
             {
-                if (targetItem is null || dropItems.Select(x => x.Place).Any(x => x != targetItem.Place))
+                // NOTE: 新規のエントリの場合は Index=-1 なのでソートされない
+                dropItems = dropItems.OrderBy(e => _vm.Items.IndexOf(e)).ToList();
+            }
+
+            // Drop 実行
+            foreach (var dropItem in dropItems)
+            {
+                var isSuccess = DropToPlaylist(dropItem, targetItem, delta);
+                if (isSuccess)
                 {
-                    e.Effects = DragDropEffects.None;
-                    e.Handled = true;
-                    return;
+                    // 複数登録の場合の整列
+                    targetItem = dropItem;
+                    delta = +1;
                 }
             }
 
-            e.Effects = dropItems.All(x => x != targetItem) ? DragDropEffects.Move : DragDropEffects.None;
-            e.Handled = true;
-
-            if (isDrop && e.Effects == DragDropEffects.Move)
+            // フォーカス調整
+            var selectedItems = dropItems.Select(e => FindPlaylistItem(e)).WhereNotNull().ToList();
+            if (selectedItems.Any())
             {
-                _vm.Move(dropItems, targetItem);
+                this.ListBox.SetSelectedItems(selectedItems);
             }
         }
 
-        private void DropToPlaylist(object? sender, DragEventArgs e, bool isDrop, PlaylistItem? targetItem, IEnumerable<QueryPath>? queries)
+        private bool DropToPlaylist(PlaylistItem dropItems, PlaylistItem? targetItem, int delta)
         {
-            if (queries == null || !queries.Any())
-            {
-                return;
-            }
+            Debug.Assert(targetItem is null || delta is (-1) or (+1));
 
-            var paths = queries.Where(x => x.Scheme == QueryScheme.File).Select(x => x.SimplePath);
-            if (!paths.Any())
-            {
-                return;
-            }
+            if (dropItems == targetItem) return false;
 
-            // 現在開いているブックの暗号化ページであれば受け入れを拒否する
-            var book = BookOperation.Current.Book;
-            if (book is not null)
-            {
-                foreach (var query in queries)
-                {
-                    var page = book.Pages.FirstOrDefault(x => x.EntryFullName == query.SimplePath);
-                    if (page is not null && page.ArchiveEntry.Archive.Encrypted)
-                    {
-                        e.Effects = DragDropEffects.None;
-                        e.Handled = true;
-                        return;
-                    }
-                }
-            }
-
-            if (isDrop)
-            {
-                AppDispatcher.BeginInvoke(async () =>
-                {
-                    var items = await _vm.InsertAsync(paths, targetItem, CancellationToken.None);
-                    if (items != null)
-                    {
-                        this.ListBox.SetSelectedItems(items);
-                        this.ListBox.ScrollItemsIntoView(items);
-                    }
-                });
-            }
-
-            e.Effects = DragDropEffects.Copy;
-            e.Handled = true;
+            var index = GetDeltaNodeIndex(dropItems, targetItem, delta);
+            return _vm.Drop(index, dropItems);
         }
 
-        private void DropToPlaylist(object? sender, DragEventArgs e, bool isDrop, PlaylistItem? targetItem, string[] fileNames)
+        private PlaylistItem? FindPlaylistItem(PlaylistItem node)
         {
-            if (fileNames == null || fileNames.Length == 0)
-            {
-                return;
-            }
+            var collection = _vm.Items;
+            if (collection is null) return null;
 
-            if ((e.AllowedEffects & DragDropEffects.Copy) != DragDropEffects.Copy)
-            {
-                return;
-            }
+            var item = collection.FirstOrDefault(e => e == node);
+            if (item is not null) return item;
 
-            var book = BookOperation.Current.Book;
-            if (book is not null)
-            {
-                foreach (var fileName in fileNames)
-                {
-                    var page = book.Pages.FirstOrDefault(x => x.EntryFullName == fileName);
-                    if (page is not null && page.ArchiveEntry.Archive.Encrypted)
-                    {
-                        e.Effects = DragDropEffects.None;
-                        e.Handled = true;
-                        return;
-                    }
-                }
-            }
-
-            if (isDrop)
-            {
-                AppDispatcher.BeginInvoke(async () =>
-                {
-                    var items = await _vm.InsertAsync(fileNames, targetItem, CancellationToken.None);
-                    if (items != null)
-                    {
-                        this.ListBox.SetSelectedItems(items);
-                        this.ListBox.ScrollItemsIntoView(items);
-                    }
-                });
-            }
-
-            e.Effects = DragDropEffects.Copy;
-            e.Handled = true;
+            return collection.FirstOrDefault(e => e.Path == node.Path);
         }
-#pragma warning restore IDE0060 // 未使用のパラメーターを削除します
 
-
-        private static (ListBoxItem? item, double distance) PointToViewItem(ListBox listBox, Point point)
+        private int GetDeltaNodeIndex(PlaylistItem dropItem, PlaylistItem? targetItem, int delta)
         {
-            // ポイントされている項目を取得
-            var element = VisualTreeUtility.HitTest<ListBoxItem>(listBox, point);
-            if (element != null)
+            if (_vm.Items is null) throw new InvalidOperationException();
+
+            if (targetItem is null) return -1;
+
+            var index = _vm.Items.IndexOf(targetItem);
+
+            //var direction = _vm.FolderOrder.IsDescending() ? -delta : delta;
+            var direction = delta;
+
+            var entryIndex = _vm.Items.IndexOf(dropItem);
+            if (entryIndex < index)
             {
-                return (element, 0.0);
+                return (direction < 0 && index > 0) ? index - 1 : index;
             }
-
-            // ポイントに最も近い項目を取得
-            var nearest = VisualTreeUtility.FindVisualChildren<ListBoxItem>(listBox)?
-                .Where(e => e.IsVisible)
-                .Select(e => (item: e, disatance: point.Y - e.TranslatePoint(new Point(0, 0), listBox).Y))
-                .OrderBy(e => Math.Abs(e.disatance))
-                .FirstOrDefault();
-
-            return nearest ?? (null, 0.0);
+            else
+            {
+                return (direction > 0) ? index + 1 : index;
+            }
         }
 
         #endregion DragDrop

@@ -74,23 +74,6 @@ namespace NeeView
             return _playlist.Add(paths);
         }
 
-        public PlaylistItem? Insert(Page page, PlaylistItem? targetItem)
-        {
-            if (_playlist is null) return null;
-            if (page is null) return null;
-
-            return Insert(new List<Page> { page }, targetItem)?.FirstOrDefault();
-        }
-
-        public List<PlaylistItem>? Insert(IEnumerable<Page> pages, PlaylistItem? targetItem)
-        {
-            if (_playlist is null) return null;
-            if (pages is null) return null;
-
-            var paths = pages.Select(e => e.ArchiveEntry.SystemPath).ToList();
-            return _playlist.Insert(paths, targetItem);
-        }
-
         public bool Remove(Page page)
         {
             if (_playlist is null) return false;

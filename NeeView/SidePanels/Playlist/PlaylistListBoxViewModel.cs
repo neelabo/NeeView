@@ -40,6 +40,9 @@ namespace NeeView
             Config.Current.Playlist.AddPropertyChanged(nameof(PlaylistConfig.IsFirstIn),
                 (s, e) => UpdateIsFirstIn());
 
+            Config.Current.Playlist.AddPropertyChanged(nameof(PlaylistConfig.PanelListItemStyle),
+                (s, e) => RaisePropertyChanged(nameof(PanelListItemStyle)));
+
             BookOperation.Current.BookChanged +=
                 (s, e) => UpdateFilter(false);
 
@@ -110,6 +113,12 @@ namespace NeeView
         }
 
         public string? ErrorMessage => _model?.ErrorMessage;
+
+        public PanelListItemStyle PanelListItemStyle
+        {
+            get { return Config.Current.Playlist.PanelListItemStyle; }
+            set { Config.Current.Playlist.PanelListItemStyle = value; }
+        }
 
 
         private void UpdateIsFirstIn()
@@ -333,7 +342,7 @@ namespace NeeView
             if (!_model.IsEditable) return null;
 
             var fixedPaths = await ValidatePlaylistItemPath(paths, token);
-            var items = _model.Insert(fixedPaths, targetItem);
+            var items = _model.Insert(targetItem, fixedPaths);
             return items;
         }
 
@@ -361,12 +370,12 @@ namespace NeeView
             SetSelectedIndex(index);
         }
 
-        public void Move(IEnumerable<PlaylistItem> items, PlaylistItem? targetItem)
+        public bool Drop(int index, PlaylistItem item)
         {
-            if (_model is null) return;
-            if (!_model.IsEditable) return;
+            if (_model is null) return false;
+            if (!_model.IsEditable) return false;
 
-            _model.Move(items, targetItem);
+            return _model.Drop(index, item);
         }
 
         public List<string> CollectAnotherPlaylists()

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -22,7 +23,7 @@ namespace NeeView
         private ObservableCollection<PlaylistItem> _items = new();
         private MultiMap<string, PlaylistItem> _itemsMap = new();
         private string _playlistPath;
-        private readonly System.Threading.Lock _lock = new();
+        private readonly Lock _lock = new();
         private bool _isDirty;
         private bool _isEditable;
         private bool _isNew;
@@ -163,7 +164,7 @@ namespace NeeView
                     foreach (PlaylistItem item in oldItems)
                     {
                         _itemsMap.Remove(item.Path, item);
-                    };
+                    }
                     break;
 
                 case NotifyCollectionChangedAction.Move:
@@ -214,6 +215,14 @@ namespace NeeView
             return null;
         }
 
+        public bool TryGetValue(string path, [MaybeNullWhen(false)] out PlaylistItem? item)
+        {
+            lock (_lock)
+            {
+                return _itemsMap.TryGetValue(path, out item);
+            }
+        }
+
         public List<PlaylistItem> Collect(IEnumerable<string> paths)
         {
             if (paths is null) return new List<PlaylistItem>();
@@ -228,66 +237,142 @@ namespace NeeView
 
         public List<PlaylistItem>? Add(IEnumerable<string> paths)
         {
-            var targetItem = Config.Current.Playlist.IsFirstIn ? _items?.FirstOrDefault() : null;
-            return Insert(paths, targetItem);
+            var items = paths.Select(e => new PlaylistItem(e)).ToList();
+            return Add(items);
         }
 
-        public PlaylistItem? Insert(string path, PlaylistItem? targetItem)
+        public PlaylistItem? Add(string path)
         {
-            if (!IsEditable) return null;
-            if (path is null) return null;
-
-            var item = Find(path);
-            if (item != null)
-            {
-                return item;
-            }
-
-            var index = targetItem != null ? _items.IndexOf(targetItem) : _items.Count;
-            if (index < 0) return null;
-            item = new PlaylistItem(path);
-            _items.Insert(index, item);
-
-            _isDirty = true;
-
-            return item;
+            var item = new PlaylistItem(path);
+            return Add(item);
         }
 
-        public List<PlaylistItem>? Insert(IEnumerable<string> paths, PlaylistItem? targetItem)
+        public List<PlaylistItem>? Add(IEnumerable<PlaylistItem> items)
         {
             if (!IsEditable) return null;
-            if (paths is null || !paths.Any()) return null;
-
-            if (paths.Count() == 1)
-            {
-                var result = Insert(paths.First(), targetItem);
-                return result is null ? null : new List<PlaylistItem> { result };
-            }
-
-            var news = new List<PlaylistItem>();
+            if (items is null) return null;
 
             lock (_lock)
             {
-                var oldCount = _items.Count;
+                var results = new List<PlaylistItem>();
+                foreach (var item in items)
+                {
+                    var result = Add(item);
+                    if (result is not null)
+                    {
+                        results.Add(result);
+                    }
+                }
+                return results;
+            }
+        }
 
+        public PlaylistItem? Add(PlaylistItem item)
+        {
+            if (!IsEditable) return null;
+            if (item is null) return null;
+
+            lock (_lock)
+            {
+                // already exists
+                if (TryGetValue(item.Path, out var exists))
+                {
+                    return exists;
+                }
+
+                _items.Add(item);
+                _isDirty = true;
+                return item;
+            }
+        }
+
+        public List<PlaylistItem>? Insert(PlaylistItem? targetItem, IEnumerable<string> paths)
+        {
+            var items = paths.Select(e => new PlaylistItem(e)).ToList();
+            return Insert(targetItem, items);
+        }
+
+        public PlaylistItem? Insert(PlaylistItem? targetItem, string path)
+        {
+            var item = new PlaylistItem(path);
+            return Insert(targetItem, item);
+        }
+
+        public List<PlaylistItem>? Insert(PlaylistItem? targetItem, IEnumerable<PlaylistItem> items)
+        {
+            lock (_lock)
+            {
                 var index = targetItem != null ? _items.IndexOf(targetItem) : _items.Count;
+                if (index < 0) return null;
+                return Insert(index, items);
+            }
+        }
 
-                var pathList = paths.ToList();
+        public PlaylistItem? Insert(PlaylistItem? targetItem, PlaylistItem item)
+        {
+            lock (_lock)
+            {
+                var index = targetItem != null ? _items.IndexOf(targetItem) : _items.Count;
+                if (index < 0) return null;
+                return Insert(index, item);
+            }
+        }
 
-                var entries = _items.Select(e => e.Path).ToList();
-                var keepEntries = pathList.Intersect(entries).ToList();
-                var newEntries = pathList.Except(entries).Select(e => new PlaylistItem(e)).ToList();
+        public List<PlaylistItem>? Insert(int index, IEnumerable<PlaylistItem> items)
+        {
+            if (!IsEditable) return null;
+            if (items is null) return null;
 
-                this.Items = new ObservableCollection<PlaylistItem>(_items.Take(index).Concat(newEntries.Concat(_items.Skip(index))));
-                Debug.Assert(_items.Count == oldCount + newEntries.Count);
+            lock (_lock)
+            {
+                var current = Math.Clamp(index, 0, _items.Count);
+                var results = new List<PlaylistItem>();
+                foreach (var item in items)
+                {
+                    var result = Insert(current, item);
+                    if (result is not null)
+                    {
+                        results.Add(result);
+                        current++;
+                    }
+                }
+                return results;
+            }
+        }
 
-                var already = Collect(keepEntries);
-                news = newEntries.Concat(already).ToList();
+        public PlaylistItem? Insert(int index, PlaylistItem item)
+        {
+            if (!IsEditable) return null;
+            if (item is null) return null;
 
+            lock (_lock)
+            {
+                // already exists
+                if (TryGetValue(item.Path, out var exists))
+                {
+                    return exists;
+                }
+
+                index = Math.Clamp(index, 0, _items.Count);
+                _items.Insert(index, item);
+                _isDirty = true;
+                return item;
+            }
+        }
+
+        public void Remove(IEnumerable<PlaylistItem> items)
+        {
+            if (!IsEditable) return;
+            if (items is null) return;
+
+            lock (_lock)
+            {
+                foreach (var item in items)
+                {
+                    _items.Remove(item);
+                }
                 _isDirty = true;
             }
-
-            return news;
         }
 
         public void Remove(PlaylistItem item)
@@ -298,25 +383,6 @@ namespace NeeView
             lock (_lock)
             {
                 _items.Remove(item);
-
-                _isDirty = true;
-            }
-        }
-
-        public void Remove(IEnumerable<PlaylistItem> items)
-        {
-            if (!IsEditable) return;
-            if (items is null || !items.Any()) return;
-
-            if (items.Count() == 1)
-            {
-                Remove(items.First());
-            }
-
-            lock (_lock)
-            {
-                this.Items = new ObservableCollection<PlaylistItem>(_items.Except(items));
-
                 _isDirty = true;
             }
         }
@@ -340,6 +406,39 @@ namespace NeeView
             ToastService.Current.Show(new Toast(Properties.TextResources.GetFormatString("Playlist.DeleteItemsMessage", unlinked.Count)));
         }
 
+        public bool Drop(int index, PlaylistItem item)
+        {
+            if (!IsEditable) return false;
+            if (item is null) return false;
+
+            lock (_lock)
+            {
+                if (index < 0)
+                {
+                    // Add
+                    _items.Add(item);
+                    _isDirty = true;
+                    return true;
+                }
+                var newIndex = Math.Clamp(index, 0, _items.Count);
+                var oldIndex = _items.IndexOf(item);
+                if (oldIndex < 0)
+                {
+                    // Insert
+                    _items.Insert(newIndex, item);
+                    _isDirty = true;
+                    return true;
+                }
+                else
+                {
+                    // Move
+                    _items.Move(oldIndex, newIndex);
+                    _isDirty = true;
+                    return true;
+                }
+            }
+        }
+
         public void Move(PlaylistItem item, PlaylistItem? targetItem)
         {
             if (!IsEditable) return;
@@ -352,46 +451,11 @@ namespace NeeView
                 if (oldIndex < 0) return;
                 var newIndex = targetItem is null ? _items.Count - 1 : _items.IndexOf(targetItem);
                 _items.Move(oldIndex, newIndex);
-
                 _isDirty = true;
             }
         }
 
-        public void Move(IEnumerable<PlaylistItem> items, PlaylistItem? targetItem)
-        {
-            if (!IsEditable) return;
-            if (items is null || !items.Any()) return;
-            if (items.Contains(targetItem)) return;
-
-            if (items.Count() == 1)
-            {
-                Move(items.First(), targetItem);
-                return;
-            }
-
-            lock (_lock)
-            {
-                var oldCount = _items.Count;
-
-                var itemsA = items
-                    .Select(e => (value: e, index: _items.IndexOf(e)))
-                    .Where(e => e.index >= 0)
-                    .OrderBy(e => e.index)
-                    .Select(e => e.value)
-                    .ToList();
-
-                var itemsB = _items.Except(itemsA).ToList();
-
-                var isMoveDown = targetItem is null || _items.IndexOf(itemsA.First()) < _items.IndexOf(targetItem);
-                var index = targetItem is null ? itemsB.Count : itemsB.IndexOf(targetItem) + (isMoveDown ? 1 : 0);
-
-                this.Items = new ObservableCollection<PlaylistItem>(itemsB.Take(index).Concat(itemsA.Concat(itemsB.Skip(index))));
-                Debug.Assert(_items.Count == oldCount);
-
-                _isDirty = true;
-            }
-        }
-
+        // TODO: ソートオーダーの導入で不要になるかも？
         public void Sort()
         {
             if (!IsEditable) return;

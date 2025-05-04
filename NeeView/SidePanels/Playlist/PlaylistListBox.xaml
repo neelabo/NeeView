@@ -185,7 +185,7 @@
                     </ContextMenu>
                 </Button.ContextMenu>
             </Button>
-            
+
             <nwc:ModifierRepeatButton x:Name="MoveUpButton" Style="{StaticResource RepeatButtonStyle}" Command="{x:Static local:PlaylistListBox.MoveUpCommand}" TabIndex="1">
                 <Image>
                     <Image.Style>
@@ -203,7 +203,7 @@
                     <ToolTip Content="{properties:TextBinding Playlist.MoveUpButtonTips}"/>
                 </RepeatButton.ToolTip>
             </nwc:ModifierRepeatButton>
-            
+
             <nwc:ModifierRepeatButton x:Name="MoveDownButton" Style="{StaticResource RepeatButtonStyle}" Command="{x:Static local:PlaylistListBox.MoveDownCommand}" TabIndex="1" >
                 <Image>
                     <Image.Style>
@@ -228,12 +228,21 @@
         </DockPanel>
 
         <Grid>
-            <nw:ListBoxExtended x:Name="ListBox" Focusable="True" FontSize="{DynamicResource PanelFontSize}" Background="Transparent" TabIndex="2"
-                    Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                    ItemsSource="{Binding CollectionViewSource.View, NotifyOnTargetUpdated=True}" SelectedItem="{Binding SelectedItem}" TargetUpdated="PlaylistListBox_TargetUpdated"
-                    KeyDown="PlaylistListBox_KeyDown" SelectionChanged="PlaylistListBox_SelectionChanged" IsVisibleChanged="PlaylistListBox_IsVisibleChanged" AllowDrop="{Binding IsEditable}"
-                    PreviewDragEnter="FolderList_PreviewDragEnter" PreviewDragOver="FolderList_PreviewDragOver" Drop="FolderList_Drop"
-                    IsSimpleTextSearchEnabled="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsTextSearchEnabled}">
+            <nw:ListBoxExtended x:Name="ListBox"
+                                Focusable="True"
+                                FontSize="{DynamicResource PanelFontSize}"
+                                Background="Transparent"
+                                TabIndex="2"
+                                Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                ItemsSource="{Binding CollectionViewSource.View, NotifyOnTargetUpdated=True}"
+                                SelectedItem="{Binding SelectedItem}"
+                                TargetUpdated="PlaylistListBox_TargetUpdated"
+                                KeyDown="PlaylistListBox_KeyDown"
+                                SelectionChanged="PlaylistListBox_SelectionChanged"
+                                IsVisibleChanged="PlaylistListBox_IsVisibleChanged"
+                                AllowDrop="{Binding IsEditable}"
+                                IsSimpleTextSearchEnabled="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsTextSearchEnabled}">
 
                 <ListBox.Style>
                     <Style TargetType="ListBox" BasedOn="{StaticResource NVListBox}">

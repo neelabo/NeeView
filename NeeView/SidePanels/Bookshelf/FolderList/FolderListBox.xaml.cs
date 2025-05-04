@@ -647,6 +647,7 @@ namespace NeeView
             var scrolled = DragDropHelper.AutoScroll(sender, e);
             if (scrolled)
             {
+                e.Effects = DragDropEffects.None;
                 e.Handled = true;
             }
         }
@@ -683,7 +684,7 @@ namespace NeeView
             var entries = GetBookmarkEntryCollection(e.DragEventArgs, copyMaybe);
             if (entries is not null)
             {
-                DropToBookmark(sender, e.DragEventArgs, bookmarkNode, entries, delta);
+                DropToBookmark(sender, e.DragEventArgs, entries, bookmarkNode, delta);
             }
         }
 
@@ -764,18 +765,18 @@ namespace NeeView
             return null;
         }
 
-        private void DropToBookmark(object? sender, DragEventArgs e, TreeListNode<IBookmarkEntry> node, IEnumerable<TreeListNode<IBookmarkEntry>>? bookmarkEntries, int delta)
+        private void DropToBookmark(object? sender, DragEventArgs e, IEnumerable<TreeListNode<IBookmarkEntry>>? dropItems, TreeListNode<IBookmarkEntry> targetItem, int delta)
         {
-            if (bookmarkEntries == null || !bookmarkEntries.Any())
+            if (dropItems == null || !dropItems.Any())
             {
                 return;
             }
 
             // 複数の移動では順番を維持する
-            if (bookmarkEntries.Count() > 1)
+            if (dropItems.Count() > 1)
             {
                 // NOTE: 新規のエントリの場合は Index=0 なのでソートされない
-                bookmarkEntries = bookmarkEntries.OrderBy(e => e.GetIndex()).ToList();
+                dropItems = dropItems.OrderBy(e => e.GetIndex()).ToList();
             }
 
             // 処理後の選択項目
@@ -784,35 +785,35 @@ namespace NeeView
             // フォルダーに移動/登録
             if (delta == 0)
             {
-                if (node.Value is not BookmarkFolder)
+                if (targetItem.Value is not BookmarkFolder)
                 {
                     // 対象がフォルダーでない場合は現在の場所への移動とみなす
-                    node = node.Parent ?? throw new InvalidOperationException("No parent");
+                    targetItem = targetItem.Parent ?? throw new InvalidOperationException("No parent");
                 }
 
-                foreach (var bookmarkEntry in bookmarkEntries)
+                foreach (var dropItem in dropItems)
                 {
-                    DropToBookmark(node, bookmarkEntry, 0);
+                    DropToBookmark(dropItem, targetItem, 0);
                 }
 
-                selectedItems = new[] { FindFolderItem(node) }.WhereNotNull().ToList();
+                selectedItems = new[] { FindFolderItem(targetItem) }.WhereNotNull().ToList();
             }
 
             // ドロップ位置に移動/登録
             else
             {
-                foreach (var bookmarkEntry in bookmarkEntries)
+                foreach (var dropItem in dropItems)
                 {
-                    var isSuccess = DropToBookmark(node, bookmarkEntry, delta);
+                    var isSuccess = DropToBookmark(dropItem, targetItem, delta);
                     if (isSuccess)
                     {
                         // 複数登録の場合の整列
-                        Debug.Assert(bookmarkEntry.Parent == node.Parent);
-                        node = bookmarkEntry;
+                        Debug.Assert(dropItem.Parent == targetItem.Parent);
+                        targetItem = dropItem;
                         delta = +1;
                     }
                 }
-                selectedItems = bookmarkEntries.Select(e => FindFolderItem(e)).WhereNotNull().ToList();
+                selectedItems = dropItems.Select(e => FindFolderItem(e)).WhereNotNull().ToList();
             }
 
             // フォーカス調整
@@ -822,20 +823,20 @@ namespace NeeView
             }
         }
 
-        private bool DropToBookmark(TreeListNode<IBookmarkEntry> node, TreeListNode<IBookmarkEntry> bookmarkEntry, int delta)
+        private bool DropToBookmark(TreeListNode<IBookmarkEntry> dropItem, TreeListNode<IBookmarkEntry> targetItem, int delta)
         {
             if (delta == 0)
             {
-                _vm.Model.SelectBookmark(node, true);
-                return BookmarkCollection.Current.MoveToChild(bookmarkEntry, node);
+                _vm.Model.SelectBookmark(targetItem, true);
+                return BookmarkCollection.Current.MoveToChild(dropItem, targetItem);
             }
             else if (CanInsertBookmark())
             {
-                if (bookmarkEntry == node) return false;
-                if (node.Parent is null) return false;
+                if (dropItem == targetItem) return false;
+                if (targetItem.Parent is null) return false;
 
-                var index = GetDeltaNodeIndex(node, bookmarkEntry, delta);
-                return BookmarkCollection.Current.Move(node.Parent, bookmarkEntry, index);
+                var index = GetDeltaNodeIndex(dropItem, targetItem, delta);
+                return BookmarkCollection.Current.Move(targetItem.Parent, dropItem, index);
             }
 
             return false;
@@ -846,26 +847,26 @@ namespace NeeView
             return _vm.FolderCollection is BookmarkFolderCollection bookmarkFolderCollection && bookmarkFolderCollection.FolderOrder.IsEntryCategory();
         }
 
-        private FolderItem? FindFolderItem(TreeListNode<IBookmarkEntry> node)
+        private FolderItem? FindFolderItem(TreeListNode<IBookmarkEntry> items)
         {
             var collection = _vm.FolderCollection;
             if (collection is null) return null;
 
-            var item = collection.FirstOrDefault(e => e.Source == node);
+            var item = collection.FirstOrDefault(e => e.Source == items);
             if (item is not null) return item;
 
-            if (node.Value is not Bookmark bookmark) return null;
+            if (items.Value is not Bookmark bookmark) return null;
             return collection.FirstOrDefault(e => ((e.Source as TreeListNode<IBookmarkEntry>)?.Value as Bookmark)?.Path == bookmark.Path);
         }
 
-        private int GetDeltaNodeIndex(TreeListNode<IBookmarkEntry> node, TreeListNode<IBookmarkEntry> bookmarkEntry, int delta)
+        private int GetDeltaNodeIndex(TreeListNode<IBookmarkEntry> dropItems, TreeListNode<IBookmarkEntry> targetItem, int delta)
         {
-            var index = node.GetIndex();
+            var index = targetItem.GetIndex();
             var direction = _vm.FolderOrder.IsDescending() ? -delta : delta;
 
-            if (bookmarkEntry.Parent == node.Parent && bookmarkEntry.GetIndex() < index)
+            if (dropItems.Parent == targetItem.Parent && dropItems.GetIndex() < index)
             {
-                return (direction < 0 && node.Previous is not null) ? index - 1 : index;
+                return (direction < 0 && targetItem.Previous is not null) ? index - 1 : index;
             }
             else
             {

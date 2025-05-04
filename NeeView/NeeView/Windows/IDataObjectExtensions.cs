@@ -15,6 +15,19 @@ namespace NeeView.Windows
             data.SetData(_preferredDropEffectFormat, new System.IO.MemoryStream(bytes));
         }
 
+        public static bool GetDataPresent<T>(this IDataObject data)
+            where T : class
+        {
+            try
+            {
+                return data.GetDataPresent(typeof(T));
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public static T? GetData<T>(this IDataObject data)
             where T : class
         {
