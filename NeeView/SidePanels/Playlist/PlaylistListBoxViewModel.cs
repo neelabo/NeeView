@@ -21,7 +21,7 @@ namespace NeeView
         private ObservableCollection<PlaylistItem>? _items;
         private PlaylistItem? _selectedItem;
         private Visibility _visibility = Visibility.Hidden;
-
+        private readonly PanelThumbnailItemSize _thumbnailItemSize;
 
         public PlaylistListBoxViewModel()
         {
@@ -48,10 +48,15 @@ namespace NeeView
 
             PageFrameBoxPresenter.Current.ViewPageChanged +=
                 (s, e) => RaisePropertyChanged(nameof(IsAddButtonEnabled));
+
+            _thumbnailItemSize = new PanelThumbnailItemSize(Config.Current.Panels.ThumbnailItemProfile, 5.0 + 1.0, 4.0 + 1.0, new Size(18.0, 18.0));
+            _thumbnailItemSize.AddPropertyChanged(nameof(PanelThumbnailItemSize.ItemSize), (s, e) => RaisePropertyChanged(nameof(ThumbnailItemSize)));
         }
 
 
         public bool IsThumbnailVisible => _model is not null && _model.IsThumbnailVisible;
+
+        public Size ThumbnailItemSize => _thumbnailItemSize.ItemSize;
 
         public bool IsCurrentPlaylistBookOpened => _model is not null && _model.IsCurrentPlaylistBookOpened;
 

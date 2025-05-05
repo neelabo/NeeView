@@ -24,9 +24,9 @@ namespace NeeView
             AllowInsert = true;
             ReceiveItemType = ListBoxDragReceiveItemType.All;
 
-#if false
             Orientation = _vm.PanelListItemStyle == PanelListItemStyle.Thumbnail ? Orientation.Horizontal : Orientation.Vertical;
 
+#if false
             if (_vm.FolderOrder.IsEntryCategory())
             {
                 AllowInsert = true;

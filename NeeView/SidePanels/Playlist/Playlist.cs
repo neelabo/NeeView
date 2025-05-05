@@ -122,6 +122,7 @@ namespace NeeView
             {
                 return Config.Current.Playlist.PanelListItemStyle switch
                 {
+                    PanelListItemStyle.Thumbnail => true,
                     PanelListItemStyle.Content => Config.Current.Panels.ContentItemProfile.ImageWidth > 0.0,
                     PanelListItemStyle.Banner => Config.Current.Panels.BannerItemProfile.ImageWidth > 0.0,
                     _ => false,

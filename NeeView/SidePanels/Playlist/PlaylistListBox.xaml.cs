@@ -514,7 +514,7 @@ namespace NeeView
             var direction = delta;
 
             var entryIndex = _vm.Items.IndexOf(dropItem);
-            if (entryIndex < index)
+            if (entryIndex >= 0 && entryIndex < index)
             {
                 return (direction < 0 && index > 0) ? index - 1 : index;
             }

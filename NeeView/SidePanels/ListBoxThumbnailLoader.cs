@@ -2,6 +2,7 @@
 using NeeView.Windows.Media;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -27,6 +28,7 @@ namespace NeeView
             _panel.PageCollectionListBox.Loaded += ListBox_Loaded; ;
             _panel.PageCollectionListBox.IsVisibleChanged += ListBox_IsVisibleChanged;
             _panel.PageCollectionListBox.AddHandler(ScrollViewer.ScrollChangedEvent, new ScrollChangedEventHandler(ListBox_ScrollChanged));
+            ((INotifyCollectionChanged)_panel.PageCollectionListBox.Items).CollectionChanged += ListBox_CollectionChanged;
         }
 
         private void ListBox_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -49,6 +51,20 @@ namespace NeeView
         public void ListBox_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             Load();
+        }
+
+        private void ListBox_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            // コレクションが変更されてもスクロールビュー位置が変更されないことがある問題の対処
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangedAction.Move:
+                case NotifyCollectionChangedAction.Replace:
+                    _panel.PageCollectionListBox.UpdateLayout();
+                    Load();
+                    break;
+            }
         }
 
         public void Load()
