@@ -1,9 +1,5 @@
 ﻿//#define LOCAL_DEBUG
 
-// Window.BorderThickness を使った最大化ウィンドウサイズ調整を行う。
-// 未定義のときは Windows イベントレベルでクライアント領域サイズ調整を行う。
-#define USE_WINDOW_BORDER
-
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -171,18 +167,30 @@ namespace NeeView.Windows
                 return IntPtr.Zero;
             }
 
-#if USE_WINDOW_BORDER
-            SetWindowBorder(nonClientCalcSize.rgrc[0], workArea);
-            return IntPtr.Zero;
-#else
-            nonClientCalcSize.rgrc[0] = workArea;
-            nonClientCalcSize.rgrc[1] = workArea;
-            nonClientCalcSize.rgrc[2] = workArea;
-            Marshal.StructureToPtr(nonClientCalcSize, lParam, true);
+            // タスクバーが自動的に隠れる場合は、Windows イベントレベルでクライアント領域サイズ調整を行う。
+            // これはカーソル位置によるタスクバーの自動表示を機能させるための処理です。
+            if (AppBar.IsAutoHideAppBar())
+            {
+                LocalDebug.WriteLine("IsAutoHideAppBar=true, update row level client size.");
+            
+                ResetWindowBorder();
 
-            handled = true;
-            return (IntPtr)(WindowValidRects.WVR_ALIGNTOP | WindowValidRects.WVR_ALIGNLEFT | WindowValidRects.WVR_VALIDRECTS);
-#endif
+                nonClientCalcSize.rgrc[0] = workArea;
+                nonClientCalcSize.rgrc[1] = workArea;
+                nonClientCalcSize.rgrc[2] = workArea;
+                Marshal.StructureToPtr(nonClientCalcSize, lParam, true);
+
+                handled = true;
+                return (IntPtr)(WindowValidRects.WVR_ALIGNTOP | WindowValidRects.WVR_ALIGNLEFT | WindowValidRects.WVR_VALIDRECTS);
+            }
+            // タスクバーが常に表示されている場合は、Window.BorderThickness を使った最大化ウィンドウサイズ調整を行う。
+            else
+            {
+                LocalDebug.WriteLine("IsAutoHideAppBar=false, keep row level client size. adjust window border.");
+
+                SetWindowBorder(nonClientCalcSize.rgrc[0], workArea);
+                return IntPtr.Zero;
+            }
         }
 
         /// <summary>
@@ -197,6 +205,15 @@ namespace NeeView.Windows
             var right = Math.Max(clientSize.right - screenSize.right, 0.0);
             var bottom = Math.Max(clientSize.bottom - screenSize.bottom, 0.0);
             _windowBorderThickness = new Thickness(left, top, right, bottom);
+            AppDispatcher.BeginInvoke(() => UpdateWindowBorder());
+        }
+
+        /// <summary>
+        /// 最大化 Window のボーダーサイズを初期化
+        /// </summary>
+        private void ResetWindowBorder()
+        {
+            _windowBorderThickness = default;
             AppDispatcher.BeginInvoke(() => UpdateWindowBorder());
         }
 

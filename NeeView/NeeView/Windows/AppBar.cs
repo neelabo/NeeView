@@ -19,7 +19,7 @@ namespace NeeView.Windows
         private const int _hideAppbarSpace = 2;
 
 
-        private static bool IsAutoHideAppBar()
+        public static bool IsAutoHideAppBar()
         {
             var appBarData = APPBARDATA.Create();
             var result = NativeMethods.SHAppBarMessage(AppBarMessages.ABM_GETSTATE, ref appBarData);
