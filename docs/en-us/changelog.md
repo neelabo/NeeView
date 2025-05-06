@@ -1,5 +1,15 @@
 # Changelog
 
+## 43.3
+(2025-05-09)
+
+#### Fixed
+
+- System: Fixed an issue where the taskbar was not displayed when maximizing the window when the taskbar was set to hide automatically.  (#1721)
+- Bookshelf: Fixed a bug that the bookshelf location icon remained a magnifying glass even after deleting the search key. (#1714)
+- Bookshelf: Fixed a bug that bookshelf sometimes becomes empty list when moving bookmarks. (#1720)
+- View: Fixed a bug when a modifier key shortcut was assigned to auto scroll. (#1713)
+
 
 ## 43.2
 (2025-04-13)
