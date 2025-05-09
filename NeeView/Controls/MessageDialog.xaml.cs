@@ -205,11 +205,11 @@ namespace NeeView
 
             if (Commands.Any())
             {
-                var defaultComamnd = GetDefaultCommand();
+                var defaultCommand = GetDefaultCommand();
 
                 foreach (var command in Commands)
                 {
-                    var button = CreateButton(command, command == defaultComamnd);
+                    var button = CreateButton(command, command == defaultCommand);
                     if (command.Alignment == UICommandAlignment.Left)
                     {
                         this.SubButtonPanel.Children.Add(button);
@@ -223,7 +223,7 @@ namespace NeeView
             else
             {
                 var button = CreateButton(UICommands.OK, true);
-                button.CommandParameter = null; // 設定されていなボタンなので結果がnullになるようにする
+                button.CommandParameter = null; // 設定されていなボタンなので結果が null になるようにする
                 this.ButtonPanel.Children.Add(button);
             }
 
@@ -247,7 +247,7 @@ namespace NeeView
             return button;
         }
 
-        private void MesageDialog_KeyDown(object sender, KeyEventArgs e)
+        private void MessageDialog_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape && Keyboard.Modifiers == ModifierKeys.None)
             {

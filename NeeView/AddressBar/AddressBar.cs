@@ -53,10 +53,9 @@ namespace NeeView
             set => BookHub.Current.IsBookLocked = value;
         }
 
-        public bool IsBookmark
-        {
-            get { return BookmarkCollection.Current.Contains(Address); }
-        }
+        public bool CanBookmark => BookTools.CanBookmark(_address);
+
+        public bool IsBookmark => BookmarkCollection.Current.Contains(_address);
 
         public string BookName => LoosePath.GetFileName(_address);
 

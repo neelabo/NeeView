@@ -98,7 +98,7 @@ namespace NeeView
         // ブックマーク登録可能？
         public bool CanBookmark()
         {
-            return !_book.Path.StartsWith(Temporary.Current.TempDirectory, StringComparison.Ordinal);
+            return BookTools.CanBookmark(_book.Path);
         }
 
         // ブックマーク設定

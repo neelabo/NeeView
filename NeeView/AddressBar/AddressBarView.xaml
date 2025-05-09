@@ -23,6 +23,8 @@
             <local:BooleanToVisibilityConverter x:Key="BooleanToInverseVisibilityConverter" True="Collapsed" False="Visible" />
             <local:SortModeToStringConverter x:Key="SortModeToStringConverter" />
             <local:SortModeToVisibilityConverter x:Key="SortModeToVisibilityConverter" />
+            <local:MultiBooleanOrConverter x:Key="MultiBooleanOrConverter" />
+            <local:IsNotNullConverter x:Key="IsNotNullConverter" />
 
             <Style x:Key="HistoryMenuItemContainerStyle" TargetType="MenuItem" BasedOn="{StaticResource NVMenuItem}">
                 <Setter Property="HeaderTemplate">
@@ -130,7 +132,12 @@
                         <local:PageSortModeIcon PageSortMode="{Binding BookSetting.SortMode}" />
                     </Grid>
                 </Button>
-                <Popup x:Name="PageSortModePopup" PlacementTarget="{Binding ElementName=PageSortModeButton}" StaysOpen="False" AllowsTransparency="True" Opened="Popup_Opened" Closed="Popup_Closed" PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}">
+                <Popup x:Name="PageSortModePopup"
+                       PlacementTarget="{Binding ElementName=PageSortModeButton}"
+                       Placement="Left"
+                       HorizontalOffset="{Binding ElementName=PageSortModeButton, Path=ActualWidth}"
+                       VerticalOffset="{Binding ElementName=PageSortModeButton, Path=ActualHeight}"
+                       StaysOpen="False" AllowsTransparency="True" Opened="Popup_Opened" Closed="Popup_Closed" PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}">
                     <Grid Margin="5">
                         <Grid.Effect>
                             <DropShadowEffect Opacity="0.5" ShadowDepth="2"/>
@@ -198,14 +205,20 @@
                     </Style>
                 </Border.Style>
                 <DockPanel Margin="0">
-                    <Button DockPanel.Dock="Right" Style="{StaticResource AddressIconButton}" Margin="0" Command="{Binding ToggleBookmarkCommand}" TabIndex="13">
+                    <Button x:Name="BookmarkButton" DockPanel.Dock="Right" Style="{StaticResource AddressIconButton}" Margin="0" Click="BookmarkButton_Click" IsEnabled="{Binding Model.CanBookmark}" TabIndex="13">
                         <TextBlock FontSize="20" FontFamily="Meyrio">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Text" Value="☆"/>
                                     <Setter Property="Foreground" Value="{DynamicResource MenuBar.Foreground}"/>
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Model.IsBookmark}" Value="True">
+                                        <DataTrigger Value="True">
+                                            <DataTrigger.Binding>
+                                                <MultiBinding Converter="{StaticResource MultiBooleanOrConverter}">
+                                                    <Binding Path="Model.IsBookmark" />
+                                                    <Binding ElementName="BookmarkPopupSocket" Path="Content" Converter="{StaticResource IsNotNullConverter}" />
+                                                </MultiBinding>
+                                            </DataTrigger.Binding>
                                             <Setter Property="Text" Value="★"/>
                                             <Setter Property="Foreground" Value="{DynamicResource BookmarkIcon.Foreground}"/>
                                         </DataTrigger>
@@ -256,6 +269,22 @@
                 <local:BookPopupContent DataContext="{Binding Model}" ParentPopup="{Binding ElementName=BookPopup}" SelfClosed="BookPopup_SelfClosed"
                         RenderOptions.ClearTypeHint="{DynamicResource Window.ClearTypeHint}" />
             </Border>
+        </Popup>
+
+        <Popup x:Name="BookmarkPopup"
+               PlacementTarget="{Binding ElementName=BookmarkButton}"
+               Placement="Left"
+               HorizontalOffset="{Binding ElementName=BookmarkButton, Path=ActualWidth}"
+               VerticalOffset="{Binding ElementName=BookmarkButton, Path=ActualHeight}"
+               StaysOpen="False" AllowsTransparency="True"
+               Opened="BookmarkPopup_Opened" Closed="BookmarkPopup_Closed"
+               PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}" >
+            <Grid x:Name="BookmarkPopupRoot" Margin="5" >
+                <Grid.Effect>
+                    <DropShadowEffect Opacity="0.5" ShadowDepth="2"/>
+                </Grid.Effect>
+                <UserControl x:Name="BookmarkPopupSocket" Focusable="False" IsTabStop="False"/>
+            </Grid>
         </Popup>
     </Grid>
 

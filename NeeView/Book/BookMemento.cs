@@ -15,7 +15,7 @@ namespace NeeView
         public string Path { get; set; } = "";
 
         // 名前
-        public string Name => Path.EndsWith(@":\", StringComparison.Ordinal) ? Path : System.IO.Path.GetFileName(Path);
+        public string Name => BookTools.PathToBookName(Path);
 
         // 現在ページ
         public string Page { get; set; } = "";

@@ -354,6 +354,22 @@ namespace NeeView
         {
             return DisplayName;
         }
+
+        public IEnumerable<FolderTreeNodeBase> GetExpandedCollection()
+        {
+            if (Children is not null)
+            {
+                foreach (var child in Children)
+                {
+                    yield return child;
+                    foreach (var subChild in child.GetExpandedCollection())
+                    {
+                        yield return subChild;
+                    }
+                }
+            }
+        }
+
     }
 
 }

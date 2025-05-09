@@ -18,11 +18,11 @@ namespace NeeView
         {
             if (!BookmarkFolderList.Current.AddBookmark(query, false))
             {
-                AddToChild(BookmarkCollection.Current.Items, query);
+                AddToChild(query, BookmarkCollection.Current.Items);
             }
         }
 
-        public static TreeListNode<IBookmarkEntry>? AddToChild(TreeListNode<IBookmarkEntry> parent, QueryPath query)
+        public static TreeListNode<IBookmarkEntry>? AddToChild(QueryPath query, TreeListNode<IBookmarkEntry> parent)
         {
             if (query.Scheme != QueryScheme.File)
             {
@@ -59,6 +59,68 @@ namespace NeeView
             return BookmarkCollection.Current.Remove(BookmarkCollection.Current.FindNode(query));
         }
 
+        /// <summary>
+        /// フォルダーを指定してブックマークを削除する
+        /// </summary>
+        public static bool Remove(QueryPath query, TreeListNode<IBookmarkEntry> parent)
+        {
+            var node = FindChildBookmark(query, parent);
+            if (node != null)
+            {
+                return BookmarkCollection.Current.Remove(node);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// ブックマークを削除
+        /// </summary>
+        /// <param name="node"></param>
+        public static void Remove(TreeListNode<IBookmarkEntry> node)
+        {
+            BookmarkCollection.Current.Remove(node);
+        }
+
+        /// <summary>
+        /// ブックマークを他のフォルダーに移動
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="parent"></param>
+        public static void MoveToChild(TreeListNode<IBookmarkEntry> node, TreeListNode<IBookmarkEntry> parent)
+        {
+            BookmarkCollection.Current.MoveToChild(node, parent);
+        }
+
+        /// <summary>
+        /// フォルダー内でブックマークを検索する
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="parent"></param>
+        /// <returns></returns>
+        public static TreeListNode<IBookmarkEntry>? FindChildBookmark(QueryPath path, TreeListNode<IBookmarkEntry> parent)
+        {
+            if (path is null)
+            {
+                return null;
+            }
+
+            if (parent is null)
+            {
+                return null;
+            }
+
+            if (path.Scheme == QueryScheme.File)
+            {
+                return parent.Children.FirstOrDefault(e => e.Value is Bookmark bookmark && bookmark.Path == path.SimplePath);
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         /// <summary>
         /// ブックマークの名前変更とそれに伴う統合を行う

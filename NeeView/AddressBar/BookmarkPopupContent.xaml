@@ -1,0 +1,159 @@
+﻿<UserControl x:Class="NeeView.BookmarkPopupContent"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NeeView"
+             xmlns:properties="clr-namespace:NeeView.Properties"
+             mc:Ignorable="d" 
+             MinWidth="300" MaxWidth="600"
+             FontSize="{DynamicResource DefaultFontSize}"
+             Foreground="{DynamicResource Menu.Foreground}"
+             d:DesignHeight="450" d:DesignWidth="300">
+
+    <UserControl.Resources>
+
+        <DrawingImage x:Key="ic_keyboard_arrow_down_24px">
+            <DrawingImage.Drawing>
+                <DrawingGroup>
+                    <GeometryDrawing Brush="Transparent" Geometry="{StaticResource g_rect24x24}" />
+                    <GeometryDrawing Brush="{DynamicResource Control.Accent}" Pen="{x:Null}" Geometry="{StaticResource g_keyboard_arrow_down_24px}" />
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+
+        <DrawingImage x:Key="ic_keyboard_arrow_up_24px">
+            <DrawingImage.Drawing>
+                <DrawingGroup>
+                    <GeometryDrawing Brush="Transparent" Geometry="{StaticResource g_rect24x24}" />
+                    <GeometryDrawing Brush="{DynamicResource Control.Accent}" Pen="{x:Null}" Geometry="{StaticResource g_keyboard_arrow_up_24px}" />
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+
+        <Style x:Key="IconImageStyle" TargetType="{x:Type Image}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Width" Value="16" />
+            <Setter Property="Height" Value="16" />
+            <Setter Property="Margin" Value="0,0,0,1"/>
+        </Style>
+
+        <Style x:Key="NodeTextBlockStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="Foreground" Value="{DynamicResource Panel.Foreground}"/>
+            <Setter Property="FontSize" Value="{DynamicResource FolderTreeFontSize}"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        </Style>
+
+        <Style TargetType="{x:Type Separator}">
+            <Setter Property="Background" Value="{DynamicResource Menu.Separator}" />
+        </Style>
+
+        <local:ImageSourceCollectionToImageSourceConverter x:Key="ImageSourceCollectionToImageSourceConverter" Width="16.0" />
+        <local:PathToBookNameConverter x:Key="PathToBookNameConverter"/>
+
+    </UserControl.Resources>
+
+    <Border x:Name="Root"
+            Background="{DynamicResource Menu.Background}"
+            BorderBrush="{DynamicResource Menu.Border}"
+            BorderThickness="1">
+
+        <StackPanel Margin="10" MinWidth="160" >
+            <TextBlock FontWeight="Bold" Text="{Binding TitleText}" Margin="5" />
+            <Separator/>
+
+            <StackPanel Margin="5">
+                <TextBlock Grid.Row="0" Grid.Column="0" Margin="2" Text="{properties:TextBinding Word.Name}" />
+                <TextBlock Grid.Row="0" Grid.Column="1" Margin="2" Text="{Binding BookPath, Converter={StaticResource PathToBookNameConverter}}" TextTrimming="CharacterEllipsis"/>
+            </StackPanel>
+
+            <StackPanel x:Name="BookmarkFolderSelector" Margin="5">
+                <TextBlock Grid.Row="1" Grid.Column="0" Margin="2" Text="{properties:TextBinding Word.Folder}" />
+
+                <Grid Margin="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <ComboBox Grid.Column="0"
+                              BorderThickness="1"
+                              ItemsSource="{Binding ComboBoxItems}"
+                              SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" TextTrimming="CharacterEllipsis"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <ToggleButton x:Name="FolderTreeViewToggleButton" Grid.Column="1" Style="{StaticResource IconToggleButton}" VerticalAlignment="Stretch" IsChecked="{Binding IsTreeViewVisible}" Margin="4,0,0,0" >
+                        <Image>
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Setter Property="Source" Value="{StaticResource ic_keyboard_arrow_down_24px}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsTreeViewVisible}" Value="True">
+                                            <Setter Property="Source" Value="{StaticResource ic_keyboard_arrow_up_24px}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                    </ToggleButton>
+                </Grid>
+
+                <StackPanel Visibility="{Binding ElementName=FolderTreeViewToggleButton, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Border BorderThickness="1" BorderBrush="{DynamicResource Menu.Border}" Margin="2">
+                        <TreeView x:Name="FolderTreeView" 
+                                Style="{StaticResource NVTreeView}"
+                                Height="128"
+                                Margin="5"
+                                ItemsSource="{Binding TreeViewItems}"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                IsVisibleChanged="FolderTreeView_IsVisibleChanged"
+                                VirtualizingStackPanel.ScrollUnit="Item"
+                                VirtualizingStackPanel.IsVirtualizing="True"
+                                VirtualizingStackPanel.VirtualizationMode="Recycling">
+                            <TreeView.ItemContainerStyle>
+                                <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource NVTreeViewItem}">
+                                    <Setter Property="ItemsPanel">
+                                        <Setter.Value>
+                                            <ItemsPanelTemplate>
+                                                <local:CustomVirtualizingStackPanel/>
+                                            </ItemsPanelTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                                </Style>
+                            </TreeView.ItemContainerStyle>
+                            <TreeView.ItemTemplate>
+                                <HierarchicalDataTemplate DataType= "local:FolderTreeNodeBase" ItemsSource="{Binding Children}">
+                                    <DockPanel>
+                                        <Image Style="{StaticResource IconImageStyle}">
+                                            <Image.Source>
+                                                <MultiBinding Converter="{StaticResource ImageSourceCollectionToImageSourceConverter}">
+                                                    <Binding Path="Icon" />
+                                                    <Binding Path="DpiScale" RelativeSource="{RelativeSource AncestorType=local:BookmarkPopupContent}" />
+                                                </MultiBinding>
+                                            </Image.Source>
+                                        </Image>
+                                        <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource NodeTextBlockStyle}" Text="{Binding DisplayName}"/>
+                                    </DockPanel>
+                                </HierarchicalDataTemplate>
+                            </TreeView.ItemTemplate>
+                        </TreeView>
+                    </Border>
+                </StackPanel>
+                
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                <Button x:Name="OKButton" Style="{StaticResource NVAccentButton}" Content="{Binding OKButtonText}" Click="OKButton_Click"/>
+                <Button x:Name="DeleteButton" Style="{StaticResource NVButton}" Content="{Binding DeleteButtonText}" Click="DeleteButton_Click"/>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+
+</UserControl>

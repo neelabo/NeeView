@@ -34,7 +34,7 @@ namespace NeeView
                     break;
 
                 case EntryCollectionChangedAction.Add:
-                    Directory_Creaded(e.Parent, e.Item);
+                    Directory_Created(e.Parent, e.Item);
                     break;
 
                 case EntryCollectionChangedAction.Remove:
@@ -47,7 +47,7 @@ namespace NeeView
             }
         }
 
-        private void Directory_Creaded(TreeListNode<IBookmarkEntry>? parent, TreeListNode<IBookmarkEntry>? item)
+        private void Directory_Created(TreeListNode<IBookmarkEntry>? parent, TreeListNode<IBookmarkEntry>? item)
         {
             if (parent is null) return;
             if (item is null) return;

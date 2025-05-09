@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         Style="{StaticResource ChromeDialogStyle}" 
         UseLayoutRounding="True"
-        KeyDown="MesageDialog_KeyDown"
+        KeyDown="MessageDialog_KeyDown"
         Title="NeeView" SizeToContent="Height" Width="600" ResizeMode="NoResize">
 
     <DockPanel Margin="30,20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">

@@ -121,13 +121,33 @@ namespace NeeView
 
         private void PageSortModeButton_Click(object sender, RoutedEventArgs e)
         {
-            PageSortModePopup.IsOpen = true;
+            if (CanOpenPopup(this.PageSortModePopup))
+            {
+                this.PageSortModePopup.IsOpen = true;
+            }
         }
 
         private void BookButton_Click(object sender, RoutedEventArgs e)
         {
-            this.BookPopup.IsOpen = true;
+            if (CanOpenPopup(this.BookPopup))
+            {
+                this.BookPopup.IsOpen = true;
+            }
         }
+
+        private void BookmarkButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (CanOpenPopup(this.BookmarkPopup))
+            {
+                this.BookmarkPopup.IsOpen = true;
+            }
+        }
+
+        private bool CanOpenPopup(UIElement popupElement)
+        {
+            return PopupWatcher.PopupElement != popupElement;
+        }
+
         private void Popup_Opened(object sender, EventArgs e)
         {
             PopupWatcher.SetPopupElement(sender, (UIElement)sender);
@@ -148,6 +168,34 @@ namespace NeeView
         private void BookPopup_SelfClosed(object sender, EventArgs e)
         {
             _popupClosedFocusElement = this.BookButton;
+        }
+
+        private void BookmarkPopup_SelfClosed(object? sender, EventArgs e)
+        {
+            _popupClosedFocusElement = this.BookmarkButton;
+        }
+
+        private void BookmarkPopup_Opened(object sender, EventArgs e)
+        {
+            Popup_Opened(sender, e);
+
+            var content = new BookmarkPopupContent(_vm?.Model.Address ?? "");
+            content.ParentPopup = this.BookmarkPopup;
+            content.SelfClosed += BookmarkPopup_SelfClosed;
+
+            this.BookmarkPopupSocket.Content = content;
+        }
+
+        private void BookmarkPopup_Closed(object sender, EventArgs e)
+        {
+            Popup_Closed(sender, e);
+
+            if (this.BookmarkPopupSocket.Content is BookmarkPopupContent content)
+            {
+                content.Decide();
+                content.SelfClosed -= BookmarkPopup_SelfClosed;
+            }
+            this.BookmarkPopupSocket.Content = null;
         }
 
         #region DragDrop

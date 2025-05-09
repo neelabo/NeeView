@@ -74,6 +74,17 @@ namespace NeeView
             BookmarkCollectionService.Rename(this.BookmarkSource, name);
             return true;
         }
+
+        public virtual bool ContainsBookmark(string path)
+        {
+            return BookmarkSource.Children.Any(e => e.Value is Bookmark bookmark && bookmark.Path == path);
+        }
+
+        public virtual DateTime GetLastEntryTime()
+        {
+            if (!BookmarkSource.Children.Any()) return default;
+            return BookmarkSource.Children.Select(e => e.Value is Bookmark bookmark ? bookmark.EntryTime : default).Max();
+        }
     }
 
 }

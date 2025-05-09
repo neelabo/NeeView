@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeView.Collections.Generic;
 using System;
 using System.ComponentModel;
 using System.Globalization;
@@ -86,6 +87,11 @@ namespace NeeView
             _removeUnlinkedCancellationTokenSource?.Cancel();
             _removeUnlinkedCancellationTokenSource = new CancellationTokenSource();
             await BookmarkCollection.Current.RemoveUnlinkedAsync(_removeUnlinkedCancellationTokenSource.Token);
+        }
+
+        public TreeListNode<IBookmarkEntry>? GetBookmarkPlace()
+        {
+            return (FolderCollection as BookmarkFolderCollection)?.BookmarkPlace;
         }
 
         #region IDisposable support

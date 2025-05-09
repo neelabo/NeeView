@@ -21,12 +21,19 @@ namespace NeeView
                 return DependencyProperty.UnsetValue;
             }
 
-            if (values[1] is not double dpiScale)
+            if (values[1] is double scale)
+            {
+            }
+            else if (values[1] is DpiScale dpiScale)
+            {
+                scale = dpiScale.DpiScaleX;
+            }
+            else
             {
                 return DependencyProperty.UnsetValue;
             }
 
-            return frames.GetImageSource(Width * dpiScale);
+            return frames.GetImageSource(Width * scale);
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
