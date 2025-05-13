@@ -1,8 +1,10 @@
-﻿using System;
+﻿using NeeLaboratory.Linq;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace NeeView
@@ -11,7 +13,7 @@ namespace NeeView
     /// ファイルシステム規約に依存しないパス文字列ユーティリティ
     /// ファイル名に使用できない文字を含んだパスの解析用
     /// </summary>
-    public static class LoosePath
+    public static partial class LoosePath
     {
         public const char DefaultSeparator = '\\';
         public static readonly char[] Separators = new char[] { '\\', '/' };
@@ -24,6 +26,10 @@ namespace NeeView
             '\u000D',  // CARRIAGE RETURN
             '\u0020',  // SPACE
         };
+
+        [GeneratedRegex(@"^[a-zA-Z]{2,}:$")]
+        private static partial Regex _schemeRegex { get; }
+
 
         /// <summary>
         /// 末尾のセパレート記号を削除。
@@ -152,15 +158,48 @@ namespace NeeView
             return s[..^ext.Length];
         }
 
-        //
         public static string Combine(string? s1, string? s2, char separator = DefaultSeparator)
         {
             if (string.IsNullOrEmpty(s1))
                 return s2 ?? "";
             else if (string.IsNullOrEmpty(s2))
                 return s1;
+            else if (_schemeRegex.IsMatch(s1))
+                return s1 + s2;
             else
                 return s1.TrimEnd(Separators) + separator + s2.TrimStart(Separators);
+        }
+
+        public static string Combine(params IEnumerable<string?> tokens)
+        {
+            if (!tokens.Any())
+            {
+                return "";
+            }
+
+            var hasStartSeparator = tokens.Last()?.StartsWith(DefaultSeparator) ?? false;
+            var hasEndSeparator = tokens.Last()?.EndsWith(DefaultSeparator) ?? false;
+            var items = tokens.Select(e => e?.Trim(Separators)).WhereNotNull().ToList();
+
+            if (items.Count == 0)
+            {
+                return "";
+            }
+
+            if (!hasStartSeparator && _schemeRegex.IsMatch(items[0]))
+            {
+                var s = items[0]
+                    + string.Join(DefaultSeparator, items.Skip(1))
+                    + (hasEndSeparator ? DefaultSeparator.ToString() : "");
+                return s;
+            }
+            else
+            {
+                var s = (hasStartSeparator ? DefaultSeparator.ToString() : "")
+                    + string.Join(DefaultSeparator, items)
+                    + (hasEndSeparator ? DefaultSeparator.ToString() : "");
+                return s;
+            }
         }
 
         // ファイル名として使えない文字を置換
@@ -261,7 +300,7 @@ namespace NeeView
                 return name + " (" + parent + ")";
             }
         }
-        
+
         /// <summary>
         /// ファイル名変更。ディレクトリはそのまま。
         /// </summary>

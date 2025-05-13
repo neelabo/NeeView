@@ -38,7 +38,11 @@ namespace NeeView
                 (s, e) => MoveToUp.RaiseCanExecuteChanged();
 
             _model.CollectionChanged +=
-                (s, e) => RaisePropertyChanged(nameof(FolderCollection));
+                (s, e) =>
+                {
+                    RaisePropertyChanged(nameof(FolderCollection));
+                    RaisePropertyChanged(nameof(FullPath));
+                };
 
             _dpiProvider.DpiChanged +=
                 (s, e) => RaisePropertyChanged(nameof(DpiScale));
@@ -60,6 +64,12 @@ namespace NeeView
 
 
         public FolderCollection? FolderCollection => _model.FolderCollection;
+
+        public string FullPath
+        {
+            get { return _model.FolderCollection?.Place.FullPath ?? ""; }
+            set { _model.MoveTo(new QueryPath(value)); }
+        }
 
         public FolderList Model => _model;
 

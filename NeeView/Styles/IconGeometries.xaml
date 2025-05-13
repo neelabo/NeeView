@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <RectangleGeometry x:Key="g_rect16x16" Rect="0,0,16,16" />
     <RectangleGeometry x:Key="g_rect24x24" Rect="0,0,24,24" />
     <RectangleGeometry x:Key="g_rect48x48" Rect="0,0,48,48" />
     <RectangleGeometry x:Key="g_rect1000x1000" Rect="-200,-200,1400,1400" />

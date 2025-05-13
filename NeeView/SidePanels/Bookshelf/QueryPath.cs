@@ -1,4 +1,5 @@
-﻿using NeeView.IO;
+﻿using NeeLaboratory.Linq;
+using NeeView.IO;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -123,6 +124,8 @@ namespace NeeView
 
         private string? _search;
 
+        private string[]? _tokens;
+
 
         public QueryPath(string? source)
         {
@@ -201,6 +204,8 @@ namespace NeeView
 
         public string DisplayPath => (Path == null) ? Scheme.ToAliasName() : SimplePath;
 
+        public string[] Tokens => _tokens ??= CreateTokens();
+
 
         private static (string? RestSource, string? SearchWord) TakeQuerySearch(string? source)
         {
@@ -213,7 +218,7 @@ namespace NeeView
                 }
             }
 
-            return(source, null);
+            return (source, null);
         }
 
         private static (string? RestSource, QueryScheme Scheme) TakeScheme(string? source)
@@ -358,5 +363,27 @@ namespace NeeView
             return this;
         }
 
+        /// <summary>
+        /// スキームを含むフルパスをトークン単位に分割する
+        /// </summary>
+        /// <returns></returns>
+        private string[] CreateTokens()
+        {
+            // NOTE: Path の先頭に区切り記号が来ることは想定していません。
+            var scheme = Scheme.ToSchemeString();
+            var tokens = string.IsNullOrEmpty(Path) ? [] : Path.Split(LoosePath.DefaultSeparator);
+            return tokens.Prepend(scheme).WhereNotNull().ToArray();
+        }
+
+        /// <summary>
+        /// トークン列から部分パスを取得する
+        /// </summary>
+        /// <param name="startIndex"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public QueryPath Substring(int startIndex, int length)
+        {
+            return new QueryPath(LoosePath.Combine(Tokens.Skip(startIndex).Take(length)));
+        }
     }
 }

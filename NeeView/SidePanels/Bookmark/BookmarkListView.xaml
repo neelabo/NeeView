@@ -39,6 +39,8 @@
             <local:FolderCollectionToFolderRecursiveVisibilityConverter x:Key="FolderCollectionToFolderRecursiveVisibilityConverter" />
             <local:FolderTreeLayoutToBooleanConverter x:Key="FolderTreeLayoutToBooleanConverter" />
             <local:PathToPlaceIconConverter x:Key="PathToPlaceIconConverter" />
+            
+            <local:BookmarkBreadcrumbProfile x:Key="BookmarkBreadcrumbProfile" />
 
             <Style x:Key="FolderListButtonStyle" TargetType="Button" BasedOn="{StaticResource IconButton}">
                 <Setter Property="Width" Value="28" />
@@ -68,7 +70,7 @@
                 <TextBlock DockPanel.Dock="Right" Text="{Binding FolderCollection.ValidCount, StringFormat={}{0}}" Foreground="{DynamicResource Panel.Foreground}" Margin="5,0"
                                     Visibility="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsVisibleItemsCount, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 <Border x:Name="PlaceGrid" Margin="1,0">
-                    <nwc:LeftTrimmingTextBlock TextSource="{Binding FolderCollection.Place.Path}" ToolTip="{Binding FolderCollection.Place.Path}" VerticalAlignment="Center" />
+                    <local:BreadcrumbBar Profile="{StaticResource BookmarkBreadcrumbProfile}" Path="{Binding FullPath}" VerticalAlignment="Center" />
                 </Border>
             </DockPanel>
 
