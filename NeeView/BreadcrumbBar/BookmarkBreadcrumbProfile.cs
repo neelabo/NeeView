@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 
 namespace NeeView
@@ -20,23 +21,28 @@ namespace NeeView
             }
         }
 
-        public List<string> GetDirectories(string path)
+        public List<BreadcrumbToken> GetChildren(string path, int index, CancellationToken token)
         {
-            try
-            {
-                var query = new QueryPath(path);
-                if (query.Scheme != QueryScheme.Bookmark) return new();
+            var query = new QueryPath(path);
+            if (query.Scheme != QueryScheme.Bookmark) return new();
 
-                var node = BookmarkCollection.Current.FindNode(query);
-                if (node is null) return new();
+            var node = BookmarkCollection.Current.FindNode(query);
+            if (node is null) return new();
 
-                var list = node.Children.Select(e => e.Value).OfType<BookmarkFolder>().Select(e => e.Name).WhereNotNull().ToList();
-                return list;
-            }
-            catch
-            {
-                return new();
-            }
+            var list = node.Children
+                .Select(e => e.Value)
+                .OfType<BookmarkFolder>()
+                .Select(e => e.Name)
+                .WhereNotNull()
+                .Select(e => new BreadcrumbToken(path, e, null))
+                .ToList();
+
+            return list;
+        }
+
+        public bool CanHasChild(string path, int index)
+        {
+            return true;
         }
     }
 

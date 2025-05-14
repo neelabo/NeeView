@@ -39,6 +39,7 @@ namespace NeeView.IO
         public string? TargetPath => _target?.FullName;
 
         // 有効？
+        [MemberNotNullWhen(true, nameof(Target), nameof(TargetPath))]
         public bool IsValid => _target != null && _target.Exists;
 
 

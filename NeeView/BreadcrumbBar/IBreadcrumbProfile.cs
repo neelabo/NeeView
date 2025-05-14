@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 
 
 namespace NeeView
@@ -10,7 +11,12 @@ namespace NeeView
             return s;
         }
 
-        List<string> GetDirectories(string path);
+        List<BreadcrumbToken> GetChildren(string path, int index, CancellationToken token);
+
+        bool CanHasChild(string path, int index)
+        {
+            return true;
+        }
     }
 
 }

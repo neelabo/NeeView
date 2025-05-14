@@ -369,10 +369,20 @@ namespace NeeView
         /// <returns></returns>
         private string[] CreateTokens()
         {
-            // NOTE: Path の先頭に区切り記号が来ることは想定していません。
             var scheme = Scheme.ToSchemeString();
-            var tokens = string.IsNullOrEmpty(Path) ? [] : Path.Split(LoosePath.DefaultSeparator);
-            return tokens.Prepend(scheme).WhereNotNull().ToArray();
+            if (string.IsNullOrEmpty(Path))
+            {
+                return [scheme];
+            }
+
+            var hearSeparatorCount = LoosePath.CountLeadingSeparator(Path);
+            var tokens = Path.Trim(LoosePath.DefaultSeparator).Split(LoosePath.DefaultSeparator);
+            var array = tokens.Prepend(scheme).WhereNotNull().ToArray();
+            if (hearSeparatorCount > 0)
+            {
+                array[1] = new string(LoosePath.DefaultSeparator, hearSeparatorCount) + array[1];
+            }
+            return array;
         }
 
         /// <summary>

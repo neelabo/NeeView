@@ -25,6 +25,9 @@
             <local:SortModeToVisibilityConverter x:Key="SortModeToVisibilityConverter" />
             <local:MultiBooleanOrConverter x:Key="MultiBooleanOrConverter" />
             <local:IsNotNullConverter x:Key="IsNotNullConverter" />
+            <local:VisibilityInverseConverter x:Key="VisibilityInverseConverter" />
+
+            <local:AddressBreadcrumbProfile x:Key="AddressBreadcrumbProfile" />
 
             <Style x:Key="HistoryMenuItemContainerStyle" TargetType="MenuItem" BasedOn="{StaticResource NVMenuItem}">
                 <Setter Property="HeaderTemplate">
@@ -251,9 +254,28 @@
                                 QueryContinueDrag="BookButton_QueryContinueDrag">
                             <Image Source="{StaticResource ic_info_outline_24px}" />
                         </Button>
-                        <TextBox x:Name="AddressTextBox" Style="{StaticResource NVTextBoxWithoutEffect}"
+                        <Grid VerticalAlignment="Center">
+                            <local:BreadcrumbBar x:Name="AddressBreadcrumbBar" VerticalAlignment="Center" TabIndex="12"       
+                                                 KeyboardNavigation.TabNavigation="Local"
+                                                 Profile="{StaticResource AddressBreadcrumbProfile}"
+                                                 Path="{Binding Model.Address}"
+                                                 IsReadOnly="{Binding Model.IsBookLocked}"
+                                                 IsPaddingVisible="True" PaddingWidth="64"
+                                                 Visibility="{Binding ElementName=AddressTextBox, Path=Visibility, Converter={StaticResource VisibilityInverseConverter}}"
+                                                 PaddingFocused="AddressBreadcrumbBar_PaddingFocused">
+                                <local:BreadcrumbBar.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="{properties:TextBinding Menu.Copy}" Click="CopyMenuItem_Click"/>
+                                        <MenuItem Header="{properties:TextBinding Menu.Edit}" Click="EditMenuItem_Click"/>
+                                    </ContextMenu>
+                                </local:BreadcrumbBar.ContextMenu>
+                            </local:BreadcrumbBar>
+                            <TextBox x:Name="AddressTextBox" Style="{StaticResource NVTextBoxWithoutEffect}"
+                                     Visibility="Collapsed"
                                  Text="{Binding Model.Address}" BorderThickness="0" VerticalAlignment="Center" TabIndex="12" KeyDown="AddressTextBox_KeyDown"
+                                     LostFocus="AddressTextBox_LostFocus"
                                  Background="Transparent" IsReadOnly="{Binding Model.IsBookLocked}"/>
+                        </Grid>
                     </DockPanel>
 
                 </DockPanel>

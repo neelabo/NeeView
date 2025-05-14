@@ -95,16 +95,16 @@ namespace NeeView
             }
         }
 
-        public double MinPadding
+        public double PaddingWidth
         {
-            get { return (double)GetValue(MinPaddingProperty); }
-            set { SetValue(MinPaddingProperty, value); }
+            get { return (double)GetValue(PaddingWidthProperty); }
+            set { SetValue(PaddingWidthProperty, value); }
         }
 
-        public static readonly DependencyProperty MinPaddingProperty =
-            DependencyProperty.Register("MinPadding", typeof(double), typeof(BreadcrumbBar), new PropertyMetadata(0.0, MinPaddingProperty_Changed));
+        public static readonly DependencyProperty PaddingWidthProperty =
+            DependencyProperty.Register("PaddingWidth", typeof(double), typeof(BreadcrumbBar), new PropertyMetadata(0.0, PaddingWidthProperty_Changed));
 
-        private static void MinPaddingProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void PaddingWidthProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is BreadcrumbBar control)
             {
@@ -141,6 +141,11 @@ namespace NeeView
 
         public List<Breadcrumb> CreateBreadcrumbs(string path)
         {
+            if (string.IsNullOrEmpty(path))
+            {
+                return new();
+            }
+
             var queries = new QueryPath(path);
 
             return Enumerable.Range(0, queries.Tokens.Length)
@@ -175,7 +180,7 @@ namespace NeeView
             this.ItemsControl.UpdateLayout();
 
             int index = -2;
-            while (this.ItemsControl.ActualWidth + MinPadding > Root.ActualWidth)
+            while (this.ItemsControl.ActualWidth + PaddingWidth > Root.ActualWidth)
             {
                 if (index > _items.Count - 4)
                 {
@@ -210,7 +215,16 @@ namespace NeeView
             if (sender is not ComboBox comboBox) return;
             if (comboBox.DataContext is not Breadcrumb breadcrumb) return;
 
-            comboBox.ItemsSource = breadcrumb.Children;
+            breadcrumb.LoadChildren();
+        }
+
+
+        private void BreadcrumbComboBox_DropDownClosed(object sender, EventArgs e)
+        {
+            if (sender is not ComboBox comboBox) return;
+            if (comboBox.DataContext is not Breadcrumb breadcrumb) return;
+
+            breadcrumb.CancelLoadChildren();
         }
 
         private void BreadcrumbComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -218,9 +232,10 @@ namespace NeeView
             if (sender is not ComboBox comboBox) return;
             if (comboBox.DataContext is not Breadcrumb breadcrumb) return;
 
-            if (comboBox.SelectedItem is not string subDirectory) return;
+            if (comboBox.SelectedItem is not BreadcrumbToken token) return;
+            if (string.IsNullOrEmpty(token.Name)) return;
 
-            var path = LoosePath.Combine(breadcrumb.Path, subDirectory);
+            var path = LoosePath.Combine(breadcrumb.Path, token.Name);
             SetPath(path);
         }
 

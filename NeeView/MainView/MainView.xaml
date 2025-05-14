@@ -65,7 +65,7 @@
         </Grid>
 
         <!-- Processing -->
-        <local:ProgressRing Width="16" Height="16"
+        <local:ProgressRing Radius="8"
                             HorizontalAlignment="Left" VerticalAlignment="Top"
                             Margin="{Binding ElementName=MainViewCanvas, Path=Margin}"
                             Visibility="{Binding IsProcessing, Converter={StaticResource BooleanToVisibilityConverter}}"/>

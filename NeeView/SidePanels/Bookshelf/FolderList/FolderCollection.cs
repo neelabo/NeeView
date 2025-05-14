@@ -267,7 +267,12 @@ namespace NeeView
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        protected virtual List<FolderItem> Sort(IEnumerable<FolderItem> source, CancellationToken token)
+        protected List<FolderItem> Sort(IEnumerable<FolderItem> source, CancellationToken token)
+        {
+            return Sort(source, FolderOrder, token);
+        }
+
+        protected virtual List<FolderItem> Sort(IEnumerable<FolderItem> source, FolderOrder folderOrder, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -283,7 +288,7 @@ namespace NeeView
                 orderSource = source.OrderBy(e => e.Type);
             }
 
-            var order = FolderOrder switch
+            var order = folderOrder switch
             {
                 FolderOrder.FileName
                     => orderSource.ThenBy(e => e, new ComparerFileName(token)),

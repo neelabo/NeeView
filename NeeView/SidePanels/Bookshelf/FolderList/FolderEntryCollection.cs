@@ -43,10 +43,10 @@ namespace NeeView
 
         public override async Task InitializeItemsAsync(CancellationToken token)
         {
-            await Task.Run(() => InitializeItems(token), token);
+            await Task.Run(() => InitializeItems(null, token), token);
         }
 
-        private void InitializeItems(CancellationToken token)
+        public void InitializeItems(FolderOrder? folderOrderHint, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -102,7 +102,8 @@ namespace NeeView
                                 .ToList();
                         }
 
-                        var list = Sort(items, token);
+                        var folderOrder = folderOrderHint.HasValue ? folderOrderHint.Value : FolderOrder;
+                        var list = Sort(items, folderOrder, token);
 
                         if (!list.Any())
                         {
@@ -147,7 +148,7 @@ namespace NeeView
             public MultipleArchive(FolderItem folderItem)
             {
                 FolderItem = folderItem;
-                
+
                 if (folderItem.Name is null) return;
 
                 var match = _regex.Match(folderItem.Name);

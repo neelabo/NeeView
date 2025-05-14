@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,12 +25,15 @@ namespace NeeView
         {
             InitializeComponent();
 
+            this.Root.Width = 36;
+            this.Root.Height = 36;
+
+            this.Arc.Radius = Radius;
             this.Arc.StrokeThickness = 4.0;
             this.Arc.Opacity = 0.0;
 
             this.Loaded += (s, e) => UpdateActivity();
             this.IsVisibleChanged += (s, e) => UpdateActivity();
-            this.SizeChanged += ProgressRing_SizeChanged;
         }
 
 
@@ -69,10 +73,29 @@ namespace NeeView
         }
 
 
-        private void ProgressRing_SizeChanged(object sender, SizeChangedEventArgs e)
+        public double Radius
         {
-            var radius = Math.Max((Math.Min(e.NewSize.Width, e.NewSize.Height) - this.Arc.StrokeThickness) * 0.5, 1.0);
-            this.Arc.Radius = radius;
+            get { return (double)GetValue(RadiusProperty); }
+            set { SetValue(RadiusProperty, value); }
+        }
+
+        public static readonly DependencyProperty RadiusProperty =
+            DependencyProperty.Register("Radius", typeof(double), typeof(ProgressRing), new PropertyMetadata(16.0, RadiusProperty_Changed));
+
+        private static void RadiusProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is ProgressRing control)
+            {
+                control.UpdateRadius();
+            }
+        }
+
+
+        private void UpdateRadius()
+        {
+            this.Arc.Radius = Radius;
+            this.Root.Width = Radius * 2.0 + this.Arc.StrokeThickness;
+            this.Root.Height = Radius * 2.0 + this.Arc.StrokeThickness;
         }
 
         private void UpdateActivity()

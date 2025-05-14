@@ -274,16 +274,16 @@ namespace NeeView
             return item;
         }
 
-        protected override List<FolderItem> Sort(IEnumerable<FolderItem> source, CancellationToken token)
+        protected override List<FolderItem> Sort(IEnumerable<FolderItem> source, FolderOrder folderOrder, CancellationToken token)
         {
-            return FolderOrder switch
+            return folderOrder switch
             {
                 FolderOrder.EntryTime
                     => source.OrderBy(e => GetIndex(e)).ToList(),
                 FolderOrder.EntryTimeDescending
                     => source.OrderBy(e => GetIndex(e)).Reverse().ToList(),
                 _
-                    => base.Sort(source, token)
+                    => base.Sort(source, folderOrder, token)
             };
 
             static int GetIndex(FolderItem item)

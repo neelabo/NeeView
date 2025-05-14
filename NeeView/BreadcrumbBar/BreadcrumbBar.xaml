@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NeeView"
              xmlns:nvc="clr-namespace:NeeView.Windows.Controls"
+             xmlns:properties="clr-namespace:NeeView.Properties"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
@@ -14,7 +15,7 @@
 
         <PathGeometry x:Key="g_arrow_right_16px" FillRule="Nonzero" Figures="M 6 4 L 10 8 L 6 12" />
         <PathGeometry x:Key="g_arrow_down_16px" FillRule="Nonzero" Figures="M 4 6 L 8 10 L 12 6" />
-        <Pen x:Key="pen_arrow" Thickness="2" Brush="{DynamicResource Control.Foreground}"/>
+        <Pen x:Key="pen_arrow" Thickness="1" Brush="{DynamicResource Control.Foreground}"/>
 
         <DrawingImage x:Key="ic_arrow_right_16px">
             <DrawingImage.Drawing>
@@ -104,46 +105,62 @@
             </Setter>
         </Style>
 
+        <DataTemplate DataType="{x:Type local:FileBreadcrumbToken}">
+            <DockPanel LastChildFill="True">
+                <local:FileIconImage DockPanel.Dock="Left" Path="{Binding Path}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <TextBlock Text="{Binding Label}" VerticalAlignment="Center"/>
+            </DockPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type local:LoadingBreadcrumbToken}">
+            <local:ProgressRing Radius="8" Margin="24,2"/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type local:EmptyBreadcrumbToken}">
+            <TextBlock Text="{Binding Label}" Foreground="{DynamicResource Control.GrayText}" />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type local:BreadcrumbToken}">
+            <TextBlock Text="{Binding Label}"/>
+        </DataTemplate>
+
         <DataTemplate x:Key="Breadcrumb" DataType="local:Breadcrumb">
             <StackPanel x:Name="Root" Orientation="Horizontal" Visibility="{Binding TrimMode, Converter={StaticResource BreadcrumbTrimModeToVisibilityConverter}}">
-                <Button x:Name="MainButton" Style="{StaticResource BreadcrumbButton}" Click="MainButton_Click" IsTabStop="False">
+                <Button x:Name="MainButton" Style="{StaticResource BreadcrumbButton}" Click="MainButton_Click" IsTabStop="False" Visibility="{Binding IsVisibleName, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <TextBlock Text="{Binding Name}"/>
                 </Button>
-                <ComboBox x:Name="BreadcrumbComboBox" VerticalAlignment="Stretch" IsTabStop="False" 
+                <ComboBox x:Name="BreadcrumbComboBox" VerticalAlignment="Stretch" IsTabStop="False"
                           Style="{StaticResource BreadcrumbComboBox}"
                           Visibility="{Binding HasChildren, Converter={StaticResource BooleanToVisibilityConverter}}"
+                          ItemsSource="{Binding Children}"
                           DropDownOpened="BreadcrumbComboBox_DropDownOpened"
+                          DropDownClosed="BreadcrumbComboBox_DropDownClosed"
                           SelectionChanged="BreadcrumbComboBox_SelectionChanged">
                 </ComboBox>
             </StackPanel>
         </DataTemplate>
 
     </UserControl.Resources>
-    
-    <Grid x:Name="Root" SizeChanged="Root_SizeChanged">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
 
-            <ItemsControl x:Name="ItemsControl" Grid.Column="0" ItemTemplate="{StaticResource Breadcrumb}" VerticalAlignment="Top" HorizontalAlignment="Left" IsTabStop="False">
+    <DockPanel x:Name="Root" LastChildFill="True" SizeChanged="Root_SizeChanged">
+
+        <Grid DockPanel.Dock="Left">
+            <ItemsControl x:Name="ItemsControl" ItemTemplate="{StaticResource Breadcrumb}" VerticalAlignment="Top" HorizontalAlignment="Left" IsTabStop="False">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal"/>
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
+            <Rectangle x:Name="ItemsControlMask" Fill="Transparent" Visibility="Collapsed" d:Visibility="Visible"/>
+        </Grid>
 
-            <Rectangle x:Name="ItemsControlMask" Grid.Column="0" Fill="#2800" Visibility="Collapsed" d:Visibility="Visible"/>
-
-            <Rectangle x:Name="BreadcrumbPadding" Grid.Column="1" Fill="#2008" Visibility="Collapsed" d:Visibility="Visible"
+        <Rectangle x:Name="BreadcrumbPadding" Fill="Transparent" Visibility="Collapsed" d:Visibility="Visible"
                   IsHitTestVisible="True"
                   Focusable="True"
                   MouseLeftButtonDown="Padding_MouseLeftButtonDown"
                   GotFocus="Padding_GotFocus" >
-            </Rectangle>
+        </Rectangle>
 
-        </Grid>
-    </Grid>
+    </DockPanel>
 </UserControl>

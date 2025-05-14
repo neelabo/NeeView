@@ -62,6 +62,12 @@ namespace NeeView
             this.Root.DataContext = _vm;
         }
 
+        private void AddressBreadcrumbBar_PaddingFocused(object sender, RoutedEventArgs e)
+        {
+            this.AddressTextBox.Visibility = Visibility.Visible;
+            this.AddressTextBox.Focus();
+        }
+
         private void AddressTextBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (sender is not TextBox t) return;
@@ -80,14 +86,24 @@ namespace NeeView
             textBox.SelectAll();
         }
 
+        private void AddressTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            this.AddressTextBox.Visibility = Visibility.Collapsed;
+        }
+
         // アドレスバー入力
         private void AddressTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (_vm is null) return;
 
-            if (e.Key == Key.Return)
+            if (e.Key == Key.Escape)
             {
-                _vm.Model.Address = this.AddressTextBox.Text;
+                this.AddressTextBox.Visibility = Visibility.Collapsed;
+            }
+            else if (e.Key == Key.Return)
+            {
+                this.AddressTextBox.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+                this.AddressTextBox.Visibility = Visibility.Collapsed;
             }
 
             // 単キーのショートカット無効
@@ -267,5 +283,18 @@ namespace NeeView
         }
 
         #endregion
+
+        private void CopyMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (_vm is null) return;
+
+            Clipboard.SetText(_vm.Model.Address);
+        }
+
+        private void EditMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            this.AddressTextBox.Visibility = Visibility.Visible;
+            this.AddressTextBox.Focus();
+        }
     }
 }

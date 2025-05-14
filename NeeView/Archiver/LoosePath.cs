@@ -170,36 +170,66 @@ namespace NeeView
                 return s1.TrimEnd(Separators) + separator + s2.TrimStart(Separators);
         }
 
-        public static string Combine(params IEnumerable<string?> tokens)
+        public static string Combine(params IEnumerable<string?> collection)
         {
+            var tokens = collection.WhereNotNull();
+
             if (!tokens.Any())
             {
                 return "";
             }
 
-            var hasStartSeparator = tokens.Last()?.StartsWith(DefaultSeparator) ?? false;
-            var hasEndSeparator = tokens.Last()?.EndsWith(DefaultSeparator) ?? false;
-            var items = tokens.Select(e => e?.Trim(Separators)).WhereNotNull().ToList();
-
-            if (items.Count == 0)
+            var first = tokens.First();
+            var scheme = "";
+            if (_schemeRegex.IsMatch(first))
             {
-                return "";
+                scheme = first;
+                tokens = tokens.Skip(1);
             }
 
-            if (!hasStartSeparator && _schemeRegex.IsMatch(items[0]))
+            if (!tokens.Any())
             {
-                var s = items[0]
-                    + string.Join(DefaultSeparator, items.Skip(1))
-                    + (hasEndSeparator ? DefaultSeparator.ToString() : "");
-                return s;
+                return scheme;
             }
-            else
+
+            var startSeparatorCount = CountLeadingSeparator(tokens.First());
+            var endSeparatorCount = CountTerminalSeparator(tokens.Last());
+
+            var s = scheme
+                + (startSeparatorCount > 0 ? new string(DefaultSeparator, startSeparatorCount) : "")
+                + string.Join(DefaultSeparator, tokens.Select(e => e.Trim(Separators)))
+                + (endSeparatorCount > 0 ? new string(DefaultSeparator, endSeparatorCount) : "");
+
+            return s;
+        }
+
+        // 先頭から連続したセパレーターをカウントする
+        public static int CountLeadingSeparator(string s)
+        {
+            int count = 0;
+            foreach (char c in s)
             {
-                var s = (hasStartSeparator ? DefaultSeparator.ToString() : "")
-                    + string.Join(DefaultSeparator, items)
-                    + (hasEndSeparator ? DefaultSeparator.ToString() : "");
-                return s;
+                if (c == '\\' || c == '/')
+                    count++;
+                else
+                    break;
             }
+            return count;
+        }
+
+        // 終端から連続したセパレーターをカウントする
+        public static int CountTerminalSeparator(string s)
+        {
+            int count = 0;
+            for (int i = s.Length - 1; i >= 0; i--)
+            {
+                var c = s[i];
+                if (c == '\\' || c == '/')
+                    count++;
+                else
+                    break;
+            }
+            return count;
         }
 
         // ファイル名として使えない文字を置換
