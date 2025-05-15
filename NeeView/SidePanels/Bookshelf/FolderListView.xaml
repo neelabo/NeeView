@@ -57,6 +57,8 @@
             <local:IsNullConverter x:Key="IsNullConverter" />
             <local:StringNullOrWhiteSpaceToVisibilityConverter x:Key="StringNullOrWhiteSpaceToVisibilityConverter" True="Collapsed" False="Visible" />
 
+            <local:PlaceBreadcrumbProfile x:Key="PlaceBreadcrumbProfile" />
+            
             <Style x:Key="FolderListButtonStyle" TargetType="Button" BasedOn="{StaticResource IconButton}">
                 <Setter Property="Width" Value="28" />
                 <Setter Property="MinHeight" Value="{DynamicResource FontIconSize}" />
@@ -91,8 +93,8 @@
 
                 <StackPanel HorizontalAlignment="Stretch">
                     <Grid x:Name="PlaceGrid">
-                        <DockPanel>
-                            <TextBlock DockPanel.Dock="Right" Text="{Binding FolderCollection.ValidCount, StringFormat={}{0}}" Foreground="{DynamicResource Panel.Foreground}" Margin="5,0"
+                        <DockPanel MinHeight="24" Margin="0,0,0,8">
+                            <TextBlock DockPanel.Dock="Right" Text="{Binding FolderCollection.ValidCount, StringFormat={}{0}}" Foreground="{DynamicResource Panel.Foreground}" Margin="5,0" VerticalAlignment="Center"
                                     Visibility="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsVisibleItemsCount, Converter={StaticResource BooleanToVisibilityConverter}}" />
                             <DockPanel x:Name="PlaceBar">
                                 <Image x:Name="PlaceIcon" DockPanel.Dock="Left" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,0,0"
@@ -109,7 +111,11 @@
                                         ToolTip="{properties:TextBinding Bookshelf.SubFolder.ToolTip}"
                                         Visibility="{Binding FolderCollection, Converter={StaticResource FolderCollectionToFolderRecursiveVisibilityConverter}}" />
                                 <Border Margin="5,0">
-                                    <nwc:LeftTrimmingTextBlock TextSource="{Binding FolderCollection.PlaceDisplayString}" ToolTip="{Binding FolderCollection.PlaceDisplayString}" VerticalAlignment="Center" />
+                                    <local:BreadcrumbBar x:Name="PlaceBreadcrumbBar" VerticalAlignment="Center" TabIndex="12"       
+                                                 KeyboardNavigation.TabNavigation="Local"
+                                                 Profile="{StaticResource PlaceBreadcrumbProfile}"
+                                                 Path="{Binding Model.PlacePath}">
+                                    </local:BreadcrumbBar>
                                 </Border>
 
                             </DockPanel>

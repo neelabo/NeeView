@@ -13,8 +13,12 @@ namespace NeeView
     public enum QueryScheme
     {
         [AliasName]
-        File = 0,
+        None = 0,
 
+        [AliasName]
+        File,
+
+        // NOTE: パスの存在しない特殊なスキーマ
         [AliasName]
         Root,
 
@@ -28,10 +32,19 @@ namespace NeeView
         Script,
     }
 
-    public static class QuerySchemeExtensions
+    public static partial class QuerySchemeExtensions
     {
+        [GeneratedRegex(@"^([a-zA-Z]{2,}:)")]
+        private static partial Regex _schemeRegex { get; }
+
+        //ALPHA* (ALPHA / DIGIT / "+" / "-" / "." )
+        [GeneratedRegex(@"^([a-zA-Z][a-zA-Z0-9+\-\.]+:)")]
+        private static partial Regex _strictSchemeRegex { get; }
+
+
         static readonly Dictionary<QueryScheme, string> _map = new()
         {
+            [QueryScheme.None] = "none:",
             [QueryScheme.File] = "file:",
             [QueryScheme.Root] = "root:",
             [QueryScheme.Bookmark] = "bookmark:",
@@ -39,9 +52,17 @@ namespace NeeView
             [QueryScheme.Script] = "script:",
         };
 
+        static readonly Dictionary<string, QueryScheme> _parseMap;
+
         static Dictionary<QueryScheme, ImageSource>? _imageMap;
 
         static Dictionary<QueryScheme, ImageSource>? _thumbnailImageMap;
+
+
+        static QuerySchemeExtensions()
+        {
+            _parseMap = _map.ToDictionary(e => e.Value, e => e.Key);
+        }
 
 
         [MemberNotNull(nameof(_imageMap))]
@@ -53,6 +74,7 @@ namespace NeeView
             {
                 return new Dictionary<QueryScheme, ImageSource>()
                 {
+                    [QueryScheme.None] = MainWindow.Current.Resources["ic_noentry"] as ImageSource ?? throw new DirectoryNotFoundException(),
                     [QueryScheme.File] = MainWindow.Current.Resources["ic_desktop_windows_24px"] as ImageSource ?? throw new DirectoryNotFoundException(),
                     [QueryScheme.Root] = MainWindow.Current.Resources["ic_bookshelf"] as ImageSource ?? throw new DirectoryNotFoundException(),
                     [QueryScheme.Bookmark] = MainWindow.Current.Resources["ic_grade_24px"] as ImageSource ?? throw new DirectoryNotFoundException(),
@@ -71,6 +93,7 @@ namespace NeeView
             {
                 return new Dictionary<QueryScheme, ImageSource>()
                 {
+                    [QueryScheme.None] = MainWindow.Current.Resources["ic_noentry"] as ImageSource ?? throw new DirectoryNotFoundException(),
                     [QueryScheme.File] = MainWindow.Current.Resources["ic_desktop_windows_24px_t"] as ImageSource ?? throw new DirectoryNotFoundException(),
                     [QueryScheme.Root] = MainWindow.Current.Resources["ic_bookshelf"] as ImageSource ?? throw new DirectoryNotFoundException(),
                     [QueryScheme.Bookmark] = MainWindow.Current.Resources["ic_grade_24px_t"] as ImageSource ?? throw new DirectoryNotFoundException(),
@@ -87,7 +110,15 @@ namespace NeeView
 
         public static QueryScheme GetScheme(string path)
         {
-            return _map.FirstOrDefault(e => path.StartsWith(e.Value, StringComparison.Ordinal)).Key;
+            var match = _schemeRegex.Match(path);
+            if (match.Success)
+            {
+                if (_parseMap.TryGetValue(match.Groups[1].Value.ToLower(), out var scheme))
+                {
+                    return scheme;
+                }
+            }
+            return QueryScheme.File;
         }
 
         public static ImageSource ToImage(this QueryScheme scheme)
@@ -106,6 +137,11 @@ namespace NeeView
         {
             return path.StartsWith(scheme.ToSchemeString(), StringComparison.Ordinal);
         }
+
+        public static bool CanOmit(this QueryScheme scheme)
+        {
+            return scheme == QueryScheme.File;
+        }
     }
 
     /// <summary>
@@ -119,7 +155,8 @@ namespace NeeView
 
         private static readonly string _querySearch = "?search=";
 
-        public static QueryPath Empty { get; } = new QueryPath(QueryScheme.Root);
+        public static QueryPath Root { get; } = new QueryPath(QueryScheme.Root);
+        public static QueryPath None { get; } = new QueryPath(QueryScheme.None);
 
 
         private string? _search;
@@ -176,6 +213,8 @@ namespace NeeView
         }
 
         public bool IsEmpty => Path is null;
+
+        public bool IsNone => Scheme == QueryScheme.None;
 
 
         /// <summary>
@@ -239,7 +278,7 @@ namespace NeeView
         {
             if (Path == null)
             {
-                return QueryPath.Empty;
+                return QueryPath.Root;
             }
 
             var parent = LoosePath.GetDirectoryName(Path);
@@ -394,6 +433,24 @@ namespace NeeView
         public QueryPath Substring(int startIndex, int length)
         {
             return new QueryPath(LoosePath.Combine(Tokens.Skip(startIndex).Take(length)));
+        }
+
+        /// <summary>
+        /// 部分パスを連結したパスを作る
+        /// </summary>
+        /// <param name="part"></param>
+        /// <returns></returns>
+        public QueryPath Combine(string part)
+        {
+            return Scheme switch
+            {
+                QueryScheme.None
+                    => new QueryPath(part),
+                QueryScheme.Root
+                    => string.IsNullOrEmpty(part) ? this : new QueryPath(part),
+                _
+                    => this with { Path = LoosePath.Combine(Path, part) },
+            };
         }
     }
 }

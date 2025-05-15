@@ -15,9 +15,7 @@ namespace NeeView
         private static readonly List<BreadcrumbToken> _emptyChildren = [new EmptyBreadcrumbToken()];
 
         private readonly IBreadcrumbProfile _profile;
-        private readonly QueryPath _queryPath;
-        private readonly int _index;
-        private readonly string _path;
+        private readonly QueryPath _path;
         private readonly string _name;
         private readonly bool _terminal;
         private BreadcrumbTrimMode _trimMode;
@@ -25,26 +23,29 @@ namespace NeeView
         private CancellationTokenSource? _cancellationTokenSource;
 
 
-        public Breadcrumb(IBreadcrumbProfile profile, QueryPath queryPath, int index)
+        public Breadcrumb(IBreadcrumbProfile profile, QueryPath query, int index)
         {
-            if (index >= queryPath.Tokens.Length) throw new ArgumentOutOfRangeException(nameof(index));
+            if (index >= query.Tokens.Length) throw new ArgumentOutOfRangeException(nameof(index));
+
+            if (query.Scheme == QueryScheme.Root)
+            {
+                query = new QueryPath("");
+            }
 
             _profile = profile;
-            _queryPath = queryPath;
-            _index = index;
-            _terminal = _index + 1 == _queryPath.Tokens.Length;
+            _terminal = index + 1 == query.Tokens.Length;
 
-            // TODO: File のような SimplePath 構造に対応
-            _path = _queryPath.Substring(0, _index + 1).SimplePath;
-            _name = profile.GetDisplayName(_queryPath.Tokens[_index], index);
-            IsVisibleName = index != 0 || !string.IsNullOrEmpty(_path);
+            _path = query.Substring(0, index + 1);
+
+            _name = profile.GetDisplayName(query, index);
+            IsVisibleName = index != 0 || !(_path.Scheme.CanOmit() && string.IsNullOrEmpty(_path.Path));
         }
 
-        public string Path => _path;
+        public QueryPath Path => _path;
         public string Name => TrimMode == BreadcrumbTrimMode.Trim ? "..." : _name;
         public bool IsTerminal => _terminal;
         public bool IsVisibleName { get; }
-        public bool HasChildren => !_terminal || _profile.CanHasChild(_path, _index);
+        public bool HasChildren => !_terminal || _profile.CanHasChild(_path);
 
         public List<BreadcrumbToken> Children
         {
@@ -76,7 +77,7 @@ namespace NeeView
             {
                 try
                 {
-                    var children = _profile.GetChildren(_path, _index, _cancellationTokenSource.Token);
+                    var children = _profile.GetChildren(_path, _cancellationTokenSource.Token);
                     Children = children.Count > 0 ? children : _emptyChildren;
                 }
                 catch (OperationCanceledException)

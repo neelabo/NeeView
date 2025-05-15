@@ -1795,7 +1795,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type nrl:LayoutPanelHeader}">
-                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Height="24">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" MinHeight="24">
                         <DockPanel>
                             <Button x:Name="PART_CloseButton" DockPanel.Dock="Right" Style="{StaticResource IconButton}" Width="24" VerticalAlignment="Center"
                                     Command="{x:Static nrl:LayoutPanelHeader.CloseCommand}"

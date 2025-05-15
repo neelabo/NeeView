@@ -67,7 +67,7 @@ namespace NeeView
         }
 
         public static readonly DependencyProperty ProfileProperty =
-            DependencyProperty.Register("Profile", typeof(IBreadcrumbProfile), typeof(BreadcrumbBar), new PropertyMetadata(new FileSystemBreadcrumbProfile(), ProfileProperty_Changed));
+            DependencyProperty.Register("Profile", typeof(IBreadcrumbProfile), typeof(BreadcrumbBar), new PropertyMetadata(new DefaultBreadcrumbProfile(), ProfileProperty_Changed));
 
         private static void ProfileProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -141,16 +141,17 @@ namespace NeeView
 
         public List<Breadcrumb> CreateBreadcrumbs(string path)
         {
-            if (string.IsNullOrEmpty(path))
+            var query = Profile.GetQueryPath(path);
+            if (query.IsNone)
             {
                 return new();
             }
 
-            var queries = new QueryPath(path);
-
-            return Enumerable.Range(0, queries.Tokens.Length)
-                .Select(e => new Breadcrumb(Profile, queries, e))
+            var crumbs =  Enumerable.Range(0, query.Tokens.Length)
+                .Select(e => new Breadcrumb(Profile, query, e))
                 .ToList();
+
+            return Profile.ArrangeBreadCrumbs(crumbs);
         }
 
         private void MainButton_Click(object sender, RoutedEventArgs e)
@@ -158,7 +159,7 @@ namespace NeeView
             if (sender is not Button control) return;
             if (control.DataContext is not Breadcrumb breadcrumb) return;
 
-            SetPath(breadcrumb.Path);
+            SetPath(breadcrumb.Path.SimplePath);
         }
 
         public void SetPath(string path)
@@ -180,7 +181,7 @@ namespace NeeView
             this.ItemsControl.UpdateLayout();
 
             int index = -2;
-            while (this.ItemsControl.ActualWidth + PaddingWidth > Root.ActualWidth)
+            while (this.ItemsControl.ActualWidth + PaddingWidth + 1 > Root.ActualWidth)
             {
                 if (index > _items.Count - 4)
                 {
@@ -235,8 +236,7 @@ namespace NeeView
             if (comboBox.SelectedItem is not BreadcrumbToken token) return;
             if (string.IsNullOrEmpty(token.Name)) return;
 
-            var path = LoosePath.Combine(breadcrumb.Path, token.Name);
-            SetPath(path);
+            SetPath(breadcrumb.Path.Combine(token.Name).SimplePath);
         }
 
     }

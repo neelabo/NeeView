@@ -69,6 +69,7 @@ namespace NeeView
             _disposables.Add(this.SubscribeCollectionChanged((s, e) =>
             {
                 UpdateVisibleItem(BookOperation.Current.Address, true);
+                RaisePropertyChanged(nameof(PlacePath));
             }));
 
             this.SearchBoxModel = new SearchBoxModel(new BookshelfSearchBoxComponent(this));
@@ -91,6 +92,18 @@ namespace NeeView
         {
             get => Config.Current.Bookshelf.IsSearchIncludeSubdirectories;
             set => Config.Current.Bookshelf.IsSearchIncludeSubdirectories = value;
+        }
+
+        public string? PlacePath
+        {
+            get { return Place?.SimplePath; }
+            set
+            {
+                if (Place?.SimplePath != value)
+                {
+                    RequestPlace(new QueryPath(value), null, FolderSetPlaceOption.Focus | FolderSetPlaceOption.UpdateHistory);
+                }
+            }
         }
 
 

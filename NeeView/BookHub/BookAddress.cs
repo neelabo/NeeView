@@ -36,7 +36,7 @@ namespace NeeView
         /// <summary>
         /// ブックのアドレス
         /// </summary>
-        public QueryPath TargetPath { get; set; } = QueryPath.Empty;
+        public QueryPath TargetPath { get; set; } = QueryPath.None;
 
         /// <summary>
         /// ソースアドレス。ショートカットファイルとか
@@ -46,12 +46,12 @@ namespace NeeView
         /// <summary>
         /// ブックのあるフォルダー
         /// </summary>
-        public QueryPath Place { get; set; } = QueryPath.Empty;
+        public QueryPath Place { get; set; } = QueryPath.None;
 
         /// <summary>
         /// EntryName の基準となるパス
         /// </summary>
-        public QueryPath ArchivePath { get; set; } = QueryPath.Empty;
+        public QueryPath ArchivePath { get; set; } = QueryPath.None;
 
         /// <summary>
         /// ページを含めたアーカイブパス

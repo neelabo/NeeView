@@ -301,6 +301,7 @@ PageListPanelAccessor.Style=@Panel.Style
 PanelListItemImageShape.Banner=@Word.Banner
 PanelListItemStyle.Banner=@Word.Banner
 PanelListItemStyle.Thumbnail=@Word.Thumbnail
+PasteCommand.Menu=@Menu.Paste
 Playlist.DeleteItemsMessage=@Message.DeleteItems
 Playlist.MoreMenu.Delete=@Menu.Delete
 Playlist.MoreMenu.Open=@Menu.OpenAs

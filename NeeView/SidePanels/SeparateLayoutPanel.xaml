@@ -14,7 +14,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Text="{Binding LayoutPanel.Title}" Foreground="{DynamicResource Panel.Header}" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="0" Text="{Binding LayoutPanel.Title}" Foreground="{DynamicResource Panel.Header}" VerticalAlignment="Center" MinHeight="24" />
             <ContentControl Grid.Row="1" Content="{Binding LayoutPanel.Content.Value}" Focusable="False" />
         </Grid>
     </Border>

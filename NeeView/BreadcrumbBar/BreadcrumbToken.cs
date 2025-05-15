@@ -1,21 +1,24 @@
-﻿namespace NeeView
+﻿using System.Diagnostics;
+using System.Windows.Media;
+
+namespace NeeView
 {
     public class BreadcrumbToken
     {
-        private readonly string _parent;
+        private readonly QueryPath _parent;
         private readonly string _name;
         private readonly string? _label;
 
-
-        public BreadcrumbToken(string parent, string name, string? label)
+        public BreadcrumbToken(QueryPath parent, string name, string? label)
         {
+            Debug.Assert(parent is not null);
+
             _parent = parent;
             _name = name;
             _label = label;
         }
 
-
-        public string Path => LoosePath.Combine(_parent, _name);
+        public QueryPath Path => _parent.Combine(_name);
         public string Name => _name;
         public string Label => _label ?? Name;
   
@@ -30,21 +33,32 @@
 
     public class FileBreadcrumbToken : BreadcrumbToken
     {
-        public FileBreadcrumbToken(string parent, string name, string? label) : base(parent, name, label)
+        public FileBreadcrumbToken(QueryPath parent, string name, string? label) : base(parent, name, label)
         {
         }
     }
 
+    public class SchemeBreadcrumbToken : BreadcrumbToken
+    {
+        public SchemeBreadcrumbToken(QueryScheme scheme) : base(QueryPath.None, scheme.ToSchemeString(), scheme.ToAliasName())
+        {
+            Scheme = scheme;
+        }
+
+        public QueryScheme Scheme { get; }
+        public ImageSource ImageSource => Scheme.ToImage();
+    }
+
     public class EmptyBreadcrumbToken : BreadcrumbToken
     {
-        public EmptyBreadcrumbToken() : base("", "", ResourceService.GetString("@Word.ItemNone"))
+        public EmptyBreadcrumbToken() : base(QueryPath.None, "", ResourceService.GetString("@Word.ItemNone"))
         {
         }
     }
 
     public class LoadingBreadcrumbToken : BreadcrumbToken
     {
-        public LoadingBreadcrumbToken() : base("", "", ResourceService.GetString("@Notice.LoadingTitle"))
+        public LoadingBreadcrumbToken() : base(QueryPath.None, "", ResourceService.GetString("@Notice.LoadingTitle"))
         {
         }
     }

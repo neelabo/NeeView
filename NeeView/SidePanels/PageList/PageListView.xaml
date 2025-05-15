@@ -60,7 +60,7 @@
 
         <StackPanel DockPanel.Dock="Top">
 
-            <Border Margin="1,2">
+            <Border MinHeight="24" Margin="0,0,0,8">
                 <DockPanel>
                     <TextBlock DockPanel.Dock="Right" Text="{Binding Model.ValidCount, StringFormat={}{0}}" Foreground="{DynamicResource Panel.Foreground}" Margin="5,0"
                         Visibility="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsVisibleItemsCount, Converter={StaticResource BooleanToVisibilityConverter}}" />

@@ -6,17 +6,14 @@ namespace NeeView
 {
     public interface IBreadcrumbProfile
     {
-        string GetDisplayName(string s, int index)
-        {
-            return s;
-        }
+        string GetDisplayName(QueryPath query, int index) => query.Tokens[index];
 
-        List<BreadcrumbToken> GetChildren(string path, int index, CancellationToken token);
+        List<BreadcrumbToken> GetChildren(QueryPath query, CancellationToken token);
 
-        bool CanHasChild(string path, int index)
-        {
-            return true;
-        }
+        bool CanHasChild(QueryPath query) => true;
+
+        List<Breadcrumb> ArrangeBreadCrumbs(List<Breadcrumb> crumbs) => crumbs;
+
+        QueryPath GetQueryPath(string path) => string.IsNullOrEmpty(path) ? QueryPath.None : new QueryPath(path);
     }
-
 }

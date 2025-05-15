@@ -26,6 +26,7 @@
             <local:MultiBooleanOrConverter x:Key="MultiBooleanOrConverter" />
             <local:IsNotNullConverter x:Key="IsNotNullConverter" />
             <local:VisibilityInverseConverter x:Key="VisibilityInverseConverter" />
+            <local:BooleanReverseConverter x:Key="BooleanReverseConverter" />
 
             <local:AddressBreadcrumbProfile x:Key="AddressBreadcrumbProfile" />
 
@@ -254,8 +255,8 @@
                                 QueryContinueDrag="BookButton_QueryContinueDrag">
                             <Image Source="{StaticResource ic_info_outline_24px}" />
                         </Button>
-                        <Grid VerticalAlignment="Center">
-                            <local:BreadcrumbBar x:Name="AddressBreadcrumbBar" VerticalAlignment="Center" TabIndex="12"       
+                        <Grid VerticalAlignment="Stretch">
+                            <local:BreadcrumbBar x:Name="AddressBreadcrumbBar" TabIndex="12"       
                                                  KeyboardNavigation.TabNavigation="Local"
                                                  Profile="{StaticResource AddressBreadcrumbProfile}"
                                                  Path="{Binding Model.Address}"
@@ -266,15 +267,16 @@
                                 <local:BreadcrumbBar.ContextMenu>
                                     <ContextMenu>
                                         <MenuItem Header="{properties:TextBinding Menu.Copy}" Click="CopyMenuItem_Click"/>
+                                        <MenuItem Header="{properties:TextBinding Menu.Paste}" Click="PasteMenuItem_Click" IsEnabled="{Binding Model.IsBookLocked, Converter={StaticResource BooleanReverseConverter}}" />
                                         <MenuItem Header="{properties:TextBinding Menu.Edit}" Click="EditMenuItem_Click"/>
                                     </ContextMenu>
                                 </local:BreadcrumbBar.ContextMenu>
                             </local:BreadcrumbBar>
                             <TextBox x:Name="AddressTextBox" Style="{StaticResource NVTextBoxWithoutEffect}"
                                      Visibility="Collapsed"
-                                 Text="{Binding Model.Address}" BorderThickness="0" VerticalAlignment="Center" TabIndex="12" KeyDown="AddressTextBox_KeyDown"
+                                     Text="{Binding Model.Address}" BorderThickness="0" VerticalAlignment="Center" TabIndex="12" KeyDown="AddressTextBox_KeyDown"
                                      LostFocus="AddressTextBox_LostFocus"
-                                 Background="Transparent" IsReadOnly="{Binding Model.IsBookLocked}"/>
+                                     Background="Transparent" IsReadOnly="{Binding Model.IsBookLocked}"/>
                         </Grid>
                     </DockPanel>
 

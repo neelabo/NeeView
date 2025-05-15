@@ -66,8 +66,8 @@
 
         <StackPanel DockPanel.Dock="Top">
 
-            <DockPanel HorizontalAlignment="Stretch">
-                <TextBlock DockPanel.Dock="Right" Text="{Binding FolderCollection.ValidCount, StringFormat={}{0}}" Foreground="{DynamicResource Panel.Foreground}" Margin="5,0"
+            <DockPanel HorizontalAlignment="Stretch" MinHeight="24" Margin="0,0,0,8">
+                <TextBlock DockPanel.Dock="Right" Text="{Binding FolderCollection.ValidCount, StringFormat={}{0}}" Foreground="{DynamicResource Panel.Foreground}" Margin="5,0" VerticalAlignment="Center"
                                     Visibility="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsVisibleItemsCount, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 <Border x:Name="PlaceGrid" Margin="1,0">
                     <local:BreadcrumbBar Profile="{StaticResource BookmarkBreadcrumbProfile}" Path="{Binding FullPath}" VerticalAlignment="Center" />

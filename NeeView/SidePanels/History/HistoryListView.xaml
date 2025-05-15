@@ -29,7 +29,7 @@
     <DockPanel x:Name="DockPanel" Margin="2" Background="Transparent">
 
         <StackPanel DockPanel.Dock="Top">
-            <DockPanel LastChildFill="False">
+            <DockPanel LastChildFill="False" MinHeight="24" Margin="0,0,0,8">
                 <TextBlock DockPanel.Dock="Right" Text="{Binding Model.ViewItemsCount}" Foreground="{DynamicResource Panel.Foreground}" Margin="5,0"
                         Visibility="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsVisibleItemsCount, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 <TextBlock Text="{Binding FilterPath}" ToolTip="{Binding FilterPath}" HorizontalAlignment="Right" VerticalAlignment="Center" />

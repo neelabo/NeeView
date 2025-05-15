@@ -288,7 +288,34 @@ namespace NeeView
         {
             if (_vm is null) return;
 
-            Clipboard.SetText(_vm.Model.Address);
+            try
+            {
+                Clipboard.SetText(_vm.Model.Address);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        }
+
+        private void PasteMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (_vm is null) return;
+
+            string? text = null;
+            try
+            {
+                text = Clipboard.GetText();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
+            if (text is not null)
+            {
+                _vm.Model.Address = text;
+            }
         }
 
         private void EditMenuItem_Click(object sender, RoutedEventArgs e)

@@ -34,6 +34,9 @@ namespace NeeView
         [GeneratedRegex(@"[/\\]")]
         private static partial Regex _separateRegex { get; }
 
+        [GeneratedRegex(@"^[a-zA-Z]:\\?$")]
+        private static partial Regex _driveRegex { get; }
+
         [GeneratedRegex(@"^[a-z]:")]
         private static partial Regex _lowerDriveLetterRegex { get; }
 
@@ -315,6 +318,54 @@ namespace NeeView
             var pages = paths.Select(e => book.Pages.GetPageWithEntryFullName(e)).WhereNotNull();
             if (!pages.Any()) return;
             BookOperation.Current.ValidatePages(pages);
+        }
+
+        /// <summary>
+        /// ドライブ表示名を取得
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public static string? GetDriveDisplayName(string s)
+        {
+            try
+            {
+                if (s is not null && _driveRegex.IsMatch(s))
+                {
+                    var driveInfo = new DriveInfo(s);
+                    return GetDriveLabel(driveInfo);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
+            return null;
+        }
+
+        private static string GetDriveLabel(DriveInfo driveInfo)
+        {
+            var driveName = driveInfo.Name.TrimEnd('\\');
+            var volumeLabel = driveInfo.DriveType.ToDisplayString();
+            var driveLabel = $"{volumeLabel} ({driveName})";
+
+            try
+            {
+                // NOTE: ドライブによってはこのプロパティの取得に時間がかかる
+                var IsReady = driveInfo.IsReady;
+                if (driveInfo.IsReady)
+                {
+                    volumeLabel = string.IsNullOrEmpty(driveInfo.VolumeLabel) ? driveInfo.DriveType.ToDisplayString() : driveInfo.VolumeLabel;
+                    driveLabel = $"{volumeLabel} ({driveName})";
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+
+            return driveLabel;
         }
 
 

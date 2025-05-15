@@ -107,7 +107,14 @@
 
         <DataTemplate DataType="{x:Type local:FileBreadcrumbToken}">
             <DockPanel LastChildFill="True">
-                <local:FileIconImage DockPanel.Dock="Left" Path="{Binding Path}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <local:FileIconImage DockPanel.Dock="Left" Path="{Binding Path.SimplePath}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <TextBlock Text="{Binding Label}" VerticalAlignment="Center"/>
+            </DockPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type local:SchemeBreadcrumbToken}">
+            <DockPanel LastChildFill="True">
+                <Image DockPanel.Dock="Left" Source="{Binding ImageSource}" VerticalAlignment="Center" Width="16" Height="16" Margin="0,0,8,0"/>
                 <TextBlock Text="{Binding Label}" VerticalAlignment="Center"/>
             </DockPanel>
         </DataTemplate>
@@ -145,7 +152,7 @@
     <DockPanel x:Name="Root" LastChildFill="True" SizeChanged="Root_SizeChanged">
 
         <Grid DockPanel.Dock="Left">
-            <ItemsControl x:Name="ItemsControl" ItemTemplate="{StaticResource Breadcrumb}" VerticalAlignment="Top" HorizontalAlignment="Left" IsTabStop="False">
+            <ItemsControl x:Name="ItemsControl" ItemTemplate="{StaticResource Breadcrumb}" VerticalAlignment="Center" HorizontalAlignment="Left" IsTabStop="False">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal"/>

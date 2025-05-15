@@ -85,8 +85,8 @@ namespace NeeView
         private QueryPath? _place;
         private string? _name;
         private string? _displayName;
-        private QueryPath _targetPath = QueryPath.Empty;
-        private QueryPath _entityPath = QueryPath.Empty;
+        private QueryPath _targetPath = QueryPath.None;
+        private QueryPath _entityPath = QueryPath.None;
         private bool _isReady;
         private bool _isRecursive;
         private FolderItemIconOverlay _iconOverlay = FolderItemIconOverlay.Uninitialized;
