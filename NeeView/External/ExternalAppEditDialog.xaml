@@ -17,6 +17,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/SettingTheme.xaml" />
+                <ResourceDictionary Source="/Styles/TextBoxIcons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <local:ArchivePolicyToSampleStringConverter x:Key="ArchivePolicyToSampleStringConverter" />

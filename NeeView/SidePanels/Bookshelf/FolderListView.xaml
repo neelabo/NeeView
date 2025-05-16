@@ -17,6 +17,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/ArrowIcons.xaml" />
                 <ResourceDictionary Source="/Styles/PanelIcons.xaml" />
+                <ResourceDictionary Source="/Styles/MoreButtonIcons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <!--#region Icons -->

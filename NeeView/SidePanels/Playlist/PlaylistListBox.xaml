@@ -17,7 +17,7 @@
         <ResourceDictionary>
 
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/PanelIcons.xaml" />
+                <ResourceDictionary Source="/Styles/PanelIcons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Pen x:Key="pen_folder" Brush="{DynamicResource Panel.Foreground}" Thickness="1.25"/>

@@ -1185,18 +1185,6 @@
         </Setter>
     </Style>
 
-    <Style x:Key="NVToggleSwitch" TargetType="{x:Type nvc:ToggleSwitch}">
-        <Setter Property="FocusVisualStyle" Value="{StaticResource NVFocusVisual}" />
-        <Setter Property="Fill" Value="Transparent" />
-        <Setter Property="SelectBrush" Value="{DynamicResource Control.MouseOver.Background}" />
-        <Setter Property="Stroke" Value="{DynamicResource Window.Foreground}" />
-        <Setter Property="CheckedBrush" Value="{DynamicResource Control.Accent}" />
-        <Setter Property="CheckedThumbBrush" Value="{DynamicResource Control.AccentText}" />
-        <Setter Property="DisableBrush" Value="{DynamicResource Control.GrayText}" />
-        <Setter Property="Margin" Value="5,0" />
-        <Setter Property="MinHeight" Value="30" />
-    </Style>
-
     <!--#endregion NVCheckBox-->
 
     <!--#region NVTextBox -->
@@ -1720,8 +1708,8 @@
                             <Border.OpacityMask>
                                 <MultiBinding Converter="{StaticResource BorderGapMaskConverter}" ConverterParameter="6">
                                     <Binding ElementName="Header" Path="ActualWidth" />
-                                    <Binding RelativeSource="{RelativeSource Self}" Path="ActualWidth" />
-                                    <Binding RelativeSource="{RelativeSource Self}" Path="ActualHeight" />
+                                    <Binding RelativeSource="{RelativeSource Mode=Self}" Path="ActualWidth" />
+                                    <Binding RelativeSource="{RelativeSource Mode=Self}" Path="ActualHeight" />
                                 </MultiBinding>
                             </Border.OpacityMask>
                         </Border>

@@ -1,0 +1,18 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:NeeView">
+
+    <DrawingImage x:Key="ic_more_24px_a">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="Transparent" Geometry="{StaticResource g_rect24x24}" />
+                <GeometryDrawing Brush="{DynamicResource Control.Accent}" Pen="{x:Null}" Geometry="{StaticResource g_more_24px}" />
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <Style TargetType="{x:Type local:MoreMenuButton}" BasedOn="{StaticResource {x:Type local:MoreMenuButton}}">
+        <Setter Property="ImageSource" Value="{StaticResource ic_more_24px_a}"/>
+    </Style>
+
+</ResourceDictionary>

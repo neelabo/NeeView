@@ -13,7 +13,7 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
         <Style TargetType="Hyperlink" BasedOn="{StaticResource NVHyperlink}">
-            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=NavigateUri}"/>
+            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=NavigateUri}"/>
             <Setter Property="FocusVisualStyle" Value="{StaticResource NVBorderFocusVisual}" />
             <EventSetter Event="RequestNavigate"  Handler="Hyperlink_RequestNavigate"/>
         </Style>

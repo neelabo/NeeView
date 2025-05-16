@@ -10,9 +10,16 @@
              xmlns:properties="clr-namespace:NeeView.Properties"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    
+
     <UserControl.Resources>
-        <nv:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/TextBoxIcons.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <nv:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+
+        </ResourceDictionary>
     </UserControl.Resources>
 
     <Border BorderBrush="{DynamicResource Control.Border}" BorderThickness="1">

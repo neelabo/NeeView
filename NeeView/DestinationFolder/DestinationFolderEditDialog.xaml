@@ -12,15 +12,21 @@
         Style="{StaticResource ChromeDialogStyle}" ResizeMode="NoResize">
 
     <Window.Resources>
+        <ResourceDictionary>
+            
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/TextBoxIcons.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-        <Style x:Key="ButtonStyle" TargetType="Button" BasedOn="{StaticResource NVDialogButton}" />
+            <Style x:Key="ButtonStyle" TargetType="Button" BasedOn="{StaticResource NVDialogButton}" />
 
-        <Style x:Key="HeaderStyle" TargetType="TextBlock">
-            <Setter Property="MinWidth" Value="160" />
-            <Setter Property="Margin" Value="10" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-        </Style>
+            <Style x:Key="HeaderStyle" TargetType="TextBlock">
+                <Setter Property="MinWidth" Value="160" />
+                <Setter Property="Margin" Value="10" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
 
+        </ResourceDictionary>
     </Window.Resources>
 
     <DockPanel Margin="5" >

@@ -1,0 +1,31 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:NeeView">
+
+    <Pen x:Key="pen_folder" Brush="{DynamicResource Panel.Foreground}" Thickness="1.25"/>
+
+    <DrawingImage x:Key="fic_arrow_forward_24px">
+        <DrawingImage.Drawing>
+            <GeometryDrawing Brush="{DynamicResource Panel.Foreground}" Pen="{x:Null}" Geometry="{StaticResource g_arrow_forward_24px}" />
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <DrawingImage x:Key="fic_folder">
+        <DrawingImage.Drawing>
+            <GeometryDrawing Pen="{StaticResource pen_folder}" Geometry="{StaticResource g_folder}" />
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <DrawingImage x:Key="fic_playlist">
+        <DrawingImage.Drawing>
+            <GeometryDrawing Pen="{StaticResource pen_folder}" Geometry="{StaticResource g_playlist}" />
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <Style TargetType="{x:Type local:FolderListIcon}" BasedOn="{StaticResource {x:Type local:FolderListIcon}}">
+        <Setter Property="FolderIcon" Value="{StaticResource fic_folder}"/>
+        <Setter Property="LinkIcon" Value="{StaticResource fic_arrow_forward_24px}"/>
+        <Setter Property="PlaylistIcon" Value="{StaticResource fic_playlist}"/>
+    </Style>
+
+</ResourceDictionary>

@@ -12,10 +12,6 @@
     
     <UserControl.Resources>
         <ResourceDictionary>
-            
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/MenuIcons.xaml" />
-            </ResourceDictionary.MergedDictionaries>
 
             <DrawingImage x:Key="ic_play_allow_24px">
                 <DrawingImage.Drawing>

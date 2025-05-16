@@ -7,7 +7,7 @@
         <ResourceDictionary>
 
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/PanelIcons.xaml" />
+                <ResourceDictionary Source="/Styles/PanelIcons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="TextButton" TargetType="Button" BasedOn="{StaticResource NVDialogButton}">

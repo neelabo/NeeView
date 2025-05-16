@@ -143,8 +143,10 @@ namespace NeeView.PageFrames
 
             // 遅延ロード
             var pageLoading = new PageLoading();
+            var pageLoadingViewModel = new PageLoadingViewModel(pageLoading);
             var pageLoadingControl = new PageLoadingControl();
-            pageLoadingControl.DataContext = new PageLoadingViewModel(pageLoading);
+            pageLoadingControl.SetBinding(PageLoadingControl.IsActiveProperty, new Binding(nameof(PageLoadingViewModel.IsActive)) { Source = pageLoadingViewModel });
+            pageLoadingControl.SetBinding(PageLoadingControl.MessageProperty, new Binding(nameof(PageLoadingViewModel.Message)) { Source = pageLoadingViewModel });
             this.Children.Add(pageLoadingControl);
             _delayMove = new PageFrameBoxDelayMove(this, _loader, pageLoading);
             _disposables.Add(_delayMove);

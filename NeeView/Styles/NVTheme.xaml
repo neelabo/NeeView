@@ -32,7 +32,6 @@
 
     <Style x:Key="{x:Type Slider}" TargetType="{x:Type Slider}" BasedOn="{StaticResource NVSlider}" />
 
-    <Style x:Key="{x:Type nvc:ToggleSwitch}" TargetType="{x:Type nvc:ToggleSwitch}" BasedOn="{StaticResource NVToggleSwitch}" />
     <Style x:Key="{x:Type nrl:LayoutPanelHeader}" TargetType="{x:Type nrl:LayoutPanelHeader}" BasedOn="{StaticResource NVLayoutPanelHeader}" />
 
     <Style x:Key="{x:Type Button}" TargetType="{x:Type Button}" BasedOn="{StaticResource NVButton}" />

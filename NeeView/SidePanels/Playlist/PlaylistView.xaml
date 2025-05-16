@@ -12,11 +12,10 @@
              Foreground="{DynamicResource Panel.Foreground}">
 
     <UserControl.Resources>
-
         <ResourceDictionary>
 
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/PanelIcons.xaml" />
+                <ResourceDictionary Source="/Styles/MoreButtonIcons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <local:PathToFileNameWithoutExtensionConverter x:Key="PathToFileNameWithoutExtensionConverter" />

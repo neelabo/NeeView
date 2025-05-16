@@ -1,0 +1,728 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:NeeView"
+    xmlns:nwc="clr-namespace:NeeView.Windows.Controls"
+    xmlns:nwd="clr-namespace:NeeView.Windows.Data">
+    
+    <!--#region FilmStripThumbnail-->
+
+    <local:NullableToInverseVisibilityConverter x:Key="NullableToInverseVisibilityConverter"/>
+
+    <Style TargetType="{x:Type local:ThumbnailListImage}">
+        <Setter Property="Background" Value="{DynamicResource Thumbnail.Foreground}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:ThumbnailListImage}">
+                    <Grid x:Name="PART_Root">
+                        <Ellipse x:Name="PART_Ellipse" Fill="{TemplateBinding Background}" Width="8" Height="8" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                 Visibility="{TemplateBinding Property=Source, Converter={StaticResource NullableToInverseVisibilityConverter}}">
+                        </Ellipse>
+                        <Image Source="{TemplateBinding Source}" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" Stretch="Uniform">
+                            <Image.Effect>
+                                <DropShadowEffect ShadowDepth="2" Opacity="0.5" />
+                            </Image.Effect>
+                        </Image>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion FilmStripThumbnail-->
+
+    <!--#region ThumbnailIcon-->
+
+    <local:ImageSourceToThumbnailConverter x:Key="ImageSourceToThumbnailConverter" />
+
+
+    <local:ContentBackgroundBrushConverter x:Key="ContentBackgroundBrushConverter" />
+    <local:BooleanToContentStretchConverter x:Key="BooleanToContentStretchConverter" />
+    <local:BooleanToContentViewboxConverter x:Key="BooleanToContentViewboxConverter" />
+    <local:BooleanToContentAlignmentYConverter x:Key="BooleanToContentAlignmentYConverter" />
+    <local:ContentProfileToolTopEnableConverter x:Key="ContentProfileToolTopEnableConverter" />
+
+    <Style TargetType="{x:Type local:PanelListContentImage}">
+        <Setter Property="Width" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ContentItemProfile.ShapeWidth, Mode=OneTime}"/>
+        <Setter Property="Height" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ContentItemProfile.ShapeHeight, Mode=OneTime}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:PanelListContentImage}">
+                    <Grid x:Name="PART_Root" Background="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.Background, Converter={StaticResource ContentBackgroundBrushConverter}}">
+                        <Rectangle HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderOptions.BitmapScalingMode="HighQuality" UseLayoutRounding="True"
+                                Width="{TemplateBinding Width}"
+                                Height="{TemplateBinding Height}"
+                                ToolTipService.IsEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsUniqueImage, Converter={StaticResource ContentProfileToolTopEnableConverter}}"
+                                ToolTipService.InitialShowDelay="1000">
+                            <Rectangle.Fill>
+                                <ImageBrush ImageSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.ImageSource, Converter={StaticResource ImageSourceToThumbnailConverter}}"
+                                    Stretch="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsNormalImage, Converter={StaticResource BooleanToContentStretchConverter}}"
+                                    Viewbox="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsNormalImage,Converter={StaticResource BooleanToContentViewboxConverter}}"
+                                    AlignmentY="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsNormalImage, Converter={StaticResource BooleanToContentAlignmentYConverter}}">
+                                </ImageBrush>
+                            </Rectangle.Fill>
+                            <Rectangle.ToolTip>
+                                <Image Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.ImageSource}" />
+                            </Rectangle.ToolTip>
+                        </Rectangle>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <local:BannerBackgroundBrushConverter x:Key="BannerBackgroundBrushConverter" />
+    <local:BooleanToBannerStretchConverter x:Key="BooleanToBannerStretchConverter" />
+    <local:BooleanToBannerViewboxConverter x:Key="BooleanToBannerViewboxConverter" />
+    <local:BooleanToBannerAlignmentYConverter x:Key="BooleanToBannerAlignmentYConverter" />
+    <local:BannerProfileToolTopEnableConverter x:Key="BannerProfileToolTopEnableConverter" />
+
+    <Style TargetType="{x:Type local:PanelListBannerImage}">
+        <Setter Property="Width" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.BannerItemProfile.ShapeWidth, Mode=OneTime}"/>
+        <Setter Property="Height" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.BannerItemProfile.ShapeHeight, Mode=OneTime}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:PanelListBannerImage}">
+                    <Grid x:Name="PART_Root" Background="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.Background, Converter={StaticResource BannerBackgroundBrushConverter}}">
+                        <Rectangle HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderOptions.BitmapScalingMode="HighQuality" UseLayoutRounding="True"
+                                Width="{TemplateBinding Width}"
+                                Height="{TemplateBinding Height}"
+                                ToolTipService.IsEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsUniqueImage, Converter={StaticResource BannerProfileToolTopEnableConverter}}"
+                                ToolTipService.InitialShowDelay="1000">
+                            <Rectangle.Fill>
+                                <ImageBrush ImageSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.ImageSource, Converter={StaticResource ImageSourceToThumbnailConverter}}"
+                                    Stretch="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsNormalImage, Converter={StaticResource BooleanToBannerStretchConverter}}"
+                                    Viewbox="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsNormalImage,Converter={StaticResource BooleanToBannerViewboxConverter}}"
+                                    AlignmentY="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsNormalImage, Converter={StaticResource BooleanToBannerAlignmentYConverter}}">
+                                </ImageBrush>
+                            </Rectangle.Fill>
+                            <Rectangle.ToolTip>
+                                <Image Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.ImageSource}" />
+                            </Rectangle.ToolTip>
+                        </Rectangle>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <local:ThumbnailBackgroundBrushConverter x:Key="ThumbnailBackgroundBrushConverter" />
+    <local:BooleanToThumbnailStretchConverter x:Key="BooleanToThumbnailStretchConverter" />
+    <local:BooleanToThumbnailViewboxConverter x:Key="BooleanToThumbnailViewboxConverter" />
+    <local:BooleanToThumbnailAlignmentYConverter x:Key="BooleanToThumbnailAlignmentYConverter" />
+    <local:ThumbnailProfileToolTopEnableConverter x:Key="ThumbnailProfileToolTopEnableConverter" />
+
+    <Style TargetType="{x:Type local:PanelListThumbnailImage}">
+        <Setter Property="Width" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.ShapeWidth, Mode=OneTime}"/>
+        <Setter Property="Height" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.ShapeHeight, Mode=OneTime}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:PanelListThumbnailImage}">
+                    <Grid x:Name="PART_Root" Background="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.Background, Converter={StaticResource ThumbnailBackgroundBrushConverter}}">
+                        <Rectangle HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderOptions.BitmapScalingMode="HighQuality" UseLayoutRounding="True"
+                                Width="{TemplateBinding Width}"
+                                Height="{TemplateBinding Height}"
+                                ToolTipService.IsEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsUniqueImage, Converter={StaticResource ThumbnailProfileToolTopEnableConverter}}"
+                                ToolTipService.InitialShowDelay="1000">
+                            <Rectangle.Fill>
+                                <ImageBrush x:Name="PART_ImageBrush" ImageSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.ImageSource, Converter={StaticResource ImageSourceToThumbnailConverter}}"
+                                        Stretch="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsNormalImage, Converter={StaticResource BooleanToThumbnailStretchConverter}}"
+                                        Viewbox="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsNormalImage, Converter={StaticResource BooleanToThumbnailViewboxConverter}}"
+                                        AlignmentY="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsNormalImage, Converter={StaticResource BooleanToThumbnailAlignmentYConverter}}">
+                                </ImageBrush>
+                            </Rectangle.Fill>
+                            <Rectangle.ToolTip>
+                                <Image Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.ImageSource}" />
+                            </Rectangle.ToolTip>
+                        </Rectangle>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion ThumbnailIcon-->
+
+    <!--#region FolderListIcon-->
+
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    <local:FolderItemIconOverlayToVisibilityConverter x:Key="FolderItemIconOverlayToVisibilityConverter"/>
+    <local:FolderItemIconOverlayToImageSourceConverter x:Key="FolderItemIconOverlayToImageSourceConverter"/>
+
+    <Style TargetType="{x:Type local:FolderListIcon}">
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="FolderIcon" Value="{StaticResource ic_dummy}"/>
+        <Setter Property="LinkIcon" Value="{StaticResource ic_dummy}"/>
+        <Setter Property="PlaylistIcon" Value="{StaticResource ic_dummy}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:FolderListIcon}">
+                    <DockPanel Height="20" LastChildFill="False">
+                        <Grid x:Name="PART_Folder" DockPanel.Dock="Right">
+                            <Grid x:Name="PART_Spacer" Width="18" Height="18" Margin="2,0,0,0" Visibility="{TemplateBinding IsKeepArea, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <Grid Width="18" Height="18" Margin="2,0,0,0" Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FolderItem.IsDirectory, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Image Source="{TemplateBinding FolderIcon}" Width="18" Height="18"/>
+                            </Grid>
+                            <Grid Width="18" Height="18" Margin="2,0,0,0" Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FolderItem.IsLink, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Image Source="{TemplateBinding LinkIcon}" Width="10" Height="10" Margin="0,2,4,2"/>
+                            </Grid>
+                            <Grid Width="18" Height="18" Margin="2,0,0,2" Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FolderItem.IsPlaylist, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Image Source="{TemplateBinding PlaylistIcon}" Width="16" Height="16" Margin="0,0,0,0"/>
+                            </Grid>
+                        </Grid>
+                        <Grid Width="18" Height="18" Margin="2,0,0,0" Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FolderItem.IconOverlay, Converter={StaticResource FolderItemIconOverlayToVisibilityConverter}}" >
+                            <Image VerticalAlignment="Center" HorizontalAlignment="Center" Width="14" Height="14" Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FolderItem.IconOverlay, Converter={StaticResource FolderItemIconOverlayToImageSourceConverter}}"/>
+                        </Grid>
+                    </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion FolderListIcon-->
+
+    <!--#region MoreButton-->
+
+    <Style TargetType="{x:Type local:MoreMenuButton}">
+        <Setter Property="Width" Value="28"/>
+        <Setter Property="ImageSource" Value="{StaticResource ic_dummy}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:MoreMenuButton}">
+                    <ToggleButton x:Name="PART_MoreButton" Style="{StaticResource IconToggleButton}" Width="28"
+                                  nwc:DropDownMenuBehavior.DropDownMenu="{TemplateBinding MoreMenu}">
+                        <Image x:Name="PART_ButtonImage" Source="{TemplateBinding ImageSource}" Margin="2" />
+                    </ToggleButton>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion MoreButton-->
+
+    <!--#region ToggleSwitch-->
+
+    <Style TargetType="{x:Type nwc:ToggleSwitch}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource NVFocusVisual}" />
+        <Setter Property="Fill" Value="Transparent" />
+        <Setter Property="SelectBrush" Value="{DynamicResource Control.MouseOver.Background}" />
+        <Setter Property="Stroke" Value="{DynamicResource Window.Foreground}" />
+        <Setter Property="CheckedBrush" Value="{DynamicResource Control.Accent}" />
+        <Setter Property="CheckedThumbBrush" Value="{DynamicResource Control.AccentText}" />
+        <Setter Property="DisableBrush" Value="{DynamicResource Control.GrayText}" />
+        <Setter Property="Margin" Value="5,0" />
+        <Setter Property="MinHeight" Value="30" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type nwc:ToggleSwitch}">
+                    <ControlTemplate.Resources>
+                        <nwc:BooleanToSwitchStringConverter x:Key="BooleanToSwitchStringConverter" />
+                        <Storyboard x:Key="OnAnimation">
+                            <DoubleAnimationUsingKeyFrames x:Name="PART_OnAnimationFrame" Storyboard.TargetName="PART_ThumbTranslate" Storyboard.TargetProperty="X" FillBehavior="HoldEnd">
+                                <SplineDoubleKeyFrame KeyTime="0:0:0.3" Value="20" KeySpline="0, 0.5, 0.5, 1"/>
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                        <Storyboard x:Key="OffAnimation">
+                            <DoubleAnimationUsingKeyFrames x:Name="PART_OffAnimationFrame" Storyboard.TargetName="PART_ThumbTranslate" Storyboard.TargetProperty="X" FillBehavior="HoldEnd">
+                                <SplineDoubleKeyFrame KeyTime="0:0:0.3" Value="0" KeySpline="0, 0.5, 0.5, 1"/>
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                        <Storyboard x:Key="OnMouseOver">
+                            <DoubleAnimation Storyboard.TargetName="PART_ThumbScale" Storyboard.TargetProperty="ScaleX" To="1.2" Duration="0:0:0.1" />
+                            <DoubleAnimation Storyboard.TargetName="PART_ThumbScale" Storyboard.TargetProperty="ScaleY" To="1.2" Duration="0:0:0.1" />
+                        </Storyboard>
+                        <Storyboard x:Key="OffMouseOver">
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_ThumbScale" Storyboard.TargetProperty="ScaleX" FillBehavior="Stop" >
+                                <SplineDoubleKeyFrame KeyTime="0:0:0.3" Value="1.0" KeySpline="0, 0.5, 0.5, 1"/>
+                            </DoubleAnimationUsingKeyFrames>
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_ThumbScale" Storyboard.TargetProperty="ScaleY" FillBehavior="Stop" >
+                                <SplineDoubleKeyFrame KeyTime="0:0:0.3" Value="1.0" KeySpline="0, 0.5, 0.5, 1"/>
+                            </DoubleAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </ControlTemplate.Resources>
+                    <Grid x:Name="PART_Root" Background="Transparent">
+                        <Grid.Triggers>
+                            <EventTrigger RoutedEvent="MouseEnter">
+                                <BeginStoryboard Storyboard="{StaticResource OnMouseOver}" />
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="MouseLeave">
+                                <BeginStoryboard Storyboard="{StaticResource OffMouseOver}" />
+                            </EventTrigger>
+                        </Grid.Triggers>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Canvas x:Name="PART_Canvas" Grid.Column="0" Width="40" Height="20" Margin="0" VerticalAlignment="Center">
+                            <Rectangle x:Name="PART_Rectangle" Width="40" Height="20" RadiusX="9" RadiusY="9" Fill="White" Stroke="Black"  StrokeThickness="2" />
+                            <Ellipse x:Name="PART_Ellipse" Canvas.Left="5" Canvas.Top="5" Width="10" Height="10" Fill="Black" RenderTransformOrigin="0.5,0.5" >
+                                <Ellipse.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform x:Name="PART_ThumbScale" ScaleX="1" ScaleY="1" />
+                                        <TranslateTransform x:Name="PART_ThumbTranslate" X="0" Y="0" />
+                                    </TransformGroup>
+                                </Ellipse.RenderTransform>
+                            </Ellipse>
+                        </Canvas>
+                        <TextBlock Grid.Column="1" Margin="10,0" VerticalAlignment="Center"
+                                   Text="{TemplateBinding IsChecked, Converter={StaticResource BooleanToSwitchStringConverter}}"
+                                   Visibility="{TemplateBinding ShowState, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion ToggleSwitch-->
+
+    <!--#region SmartSlider-->
+
+    <nwc:ThicknessToDoubleConverter x:Key="ThicknessToDoubleConverter" />
+
+    <Style TargetType="{x:Type nwc:SmartSlider}">
+        <Setter Property="Focusable" Value="True"/>
+        <Setter Property="KeyboardNavigation.IsTabStop" Value="True"/>
+        <Setter Property="FocusVisualStyle" Value="{StaticResource NVFocusVisual}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type nwc:SmartSlider}">
+                    <ControlTemplate.Resources>
+
+                        <Style TargetType="{x:Type RepeatButton}">
+                            <Setter Property="IsTabStop" Value="False" />
+                            <Setter Property="Focusable" Value="False" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                                        <Grid Background="Transparent">
+                                            <Border Height="3" Background="{TemplateBinding Background}" />
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+
+                        <Style TargetType="{x:Type Thumb}">
+                            <Setter Property="BorderThickness" Value="3"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Thumb}">
+                                        <Grid Background="Transparent">
+                                            <Ellipse x:Name="Ellipse" StrokeThickness="{TemplateBinding BorderThickness, Converter={StaticResource ThicknessToDoubleConverter}}" Stroke="{TemplateBinding BorderBrush}" Fill="{TemplateBinding Background}" />
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Ellipse" Property="Fill" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Foreground}" />
+                                            </Trigger>
+                                            <Trigger Property="IsMouseCaptured" Value="True">
+                                                <Setter TargetName="Ellipse" Property="Fill" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=BorderBrush}" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+
+                    </ControlTemplate.Resources>
+
+                    <Track x:Name="PART_Track" Height="{TemplateBinding ThumbSize}">
+                        <Track.DecreaseRepeatButton>
+                            <RepeatButton Background="{TemplateBinding TrackDecreaseBrush}" />
+                        </Track.DecreaseRepeatButton>
+                        <Track.Thumb>
+                            <Thumb x:Name="PART_Thumb" Width="{TemplateBinding ThumbSize}" Height="{TemplateBinding ThumbSize}"
+                                   BorderThickness="{TemplateBinding ThumbThickness}"
+                                   BorderBrush="{TemplateBinding ThumbBorderBrush}"
+                                   Background="{TemplateBinding ThumbFill}"
+                                   Foreground="{TemplateBinding ThumbFillMouseOver}"
+                                   Visibility="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        </Track.Thumb>
+                        <Track.IncreaseRepeatButton>
+                            <RepeatButton Background="{TemplateBinding TrackIncreaseBrush}" />
+                        </Track.IncreaseRepeatButton>
+                    </Track>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion SmartSlider-->
+
+    <!--#region SliderTextBox-->
+
+    <Style TargetType="{x:Type local:SliderTextBox}">
+        <Setter Property="FontFamily" Value="Arial"/>
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:SliderTextBox}">
+                    <Grid x:Name="PART_Root" IsHitTestVisible="True" Focusable="True">
+                        <Grid.Resources>
+                            <local:SliderValueConverter x:Key="SliderValueConverter"/>
+                        </Grid.Resources>
+                        <Grid.Style>
+                            <Style TargetType="Grid">
+                                <Setter Property="KeyboardNavigation.IsTabStop" Value="True" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=PART_TextBox, Path=IsFocused}" Value="True">
+                                        <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+                        <Grid>
+                            <Border Background="Transparent" BorderThickness="1">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="BorderBrush" Value="Transparent" />
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="BorderBrush" Value="{DynamicResource Control.Accent}" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <TextBlock x:Name="PART_TextBlock" TextAlignment="Center" VerticalAlignment="Center" Padding="8,0" Text="{TemplateBinding DisplayText}" />
+                            </Border>
+                            <TextBox x:Name="PART_TextBox" TextAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Stretch"
+                                 Foreground="{DynamicResource TextBox.Foreground}" Background="{DynamicResource TextBox.Background}"
+                                 Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Value, UpdateSourceTrigger=Explicit, Converter={StaticResource SliderValueConverter}}"
+                                 Visibility="Hidden">
+                            </TextBox>
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion SliderTextBox-->
+
+    <!--#region ActiveMarker-->
+
+    <Style TargetType="{x:Type local:ActiveMarker}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:ActiveMarker}">
+                    <Rectangle x:Name="PART_Marker" Width="5" Height="5" Fill="#804682B4" Visibility="Hidden">
+                        <Rectangle.RenderTransform>
+                            <RotateTransform x:Name="PART_MarkerRotate" CenterX="2.5" CenterY="2.5"/>
+                        </Rectangle.RenderTransform>
+                    </Rectangle>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion ActiveMarker-->
+
+    <!--#region ProgressRing-->
+
+    <Style TargetType="{x:Type local:ProgressRing}">
+        <Setter Property="Foreground" Value="{DynamicResource Control.Accent}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:ProgressRing}">
+                    <Grid x:Name="PART_Root" HorizontalAlignment="Center" VerticalAlignment="Center" Width="36" Height="36">
+                        <local:ArcSegmentShape x:Name="PART_Arc" Radius="16" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="{TemplateBinding Foreground}" >
+                            <Canvas.RenderTransform>
+                                <RotateTransform x:Name="PART_ArcRotate" Angle="0"/>
+                            </Canvas.RenderTransform>
+                        </local:ArcSegmentShape>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion ProgressRing-->
+    
+    <!--#region SizeInspector-->
+
+    <Style TargetType="{x:Type nwc:SizeInspector}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type nwc:SizeInspector}">
+                    <Grid x:Name="PART_Root">
+                        <Grid Margin="0,0,0,5" VerticalAlignment="Top">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <nwc:EnterTriggerTextBox Grid.Column="0" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=X, Mode=TwoWay}"/>
+                            <TextBlock Grid.Column="1" Text="x" Margin="5,0"/>
+                            <nwc:EnterTriggerTextBox Grid.Column="2" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Y, Mode=TwoWay}"/>
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!--#endregion SizeInspector-->
+
+    <!--#region PointInspector-->
+
+    <Style TargetType="{x:Type nwc:PointInspector}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type nwc:PointInspector}">
+                    <Grid x:Name="PART_Root">
+                        <StackPanel>
+                            <DockPanel Margin="0,0,0,5">
+                                <TextBlock Text="X" Width="16"/>
+                                <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Width="70" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=X}" Slider="{Binding ElementName=PART_SliderX}"/>
+                                <Slider x:Name="PART_SliderX" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=X}" Minimum="0" Maximum="1" TickFrequency="0.01" Margin="5,0"/>
+                            </DockPanel>
+                            <DockPanel Margin="0,0,0,5">
+                                <TextBlock Text="Y" Width="16"/>
+                                <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Width="70" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Y}" Slider="{Binding ElementName=PART_SliderY}"/>
+                                <Slider x:Name="PART_SliderY" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Y}" Minimum="0" Maximum="1" TickFrequency="0.01" Margin="5,0"/>
+                            </DockPanel >
+                        </StackPanel>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion PointInspector-->
+
+    <!--#region FileNameBox-->
+
+    <nwd:NotBoolToVisiblityConverter x:Key="NotBoolToVisiblityConverter"/>
+
+    <Style TargetType="{x:Type nwc:FileNameBox}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type nwc:FileNameBox}">
+                    <Grid x:Name="PART_Root">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Margin="0,0,4,0" Grid.Column="0">
+                            <TextBox x:Name="PART_PathTextBox" VerticalContentAlignment="Center"
+                                     Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Text}">
+                            </TextBox>
+
+                            <TextBlock x:Name="PART_PathTextBlock" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=EmptyMessage}" VerticalAlignment="Center" Margin="4,0" Foreground="{DynamicResource Control.GrayText}" IsHitTestVisible="False">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Hidden" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ElementName=PART_PathTextBox, Path=Text}" Value="">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
+
+                        <Button x:Name="PART_ButtonOpenDialog" Grid.Column="2" Style="{StaticResource NVButton}" MinWidth="0" MinHeight="0" Padding="0" Margin="0" Width="26">
+                            <Image Width="18" Source="{TemplateBinding FolderIcon}" />
+                        </Button>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion FileNameBox-->
+
+    <!--#region TextBoxWithMessage-->
+
+    <Style TargetType="{x:Type nwc:TextBoxWithMessage}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type nwc:TextBoxWithMessage}">
+                    <Grid>
+                        <TextBox x:Name="PART_InputTextBox" VerticalContentAlignment="Center" Text="{Binding Text, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                        <TextBlock Text="{Binding EmptyMessage, RelativeSource={RelativeSource Mode=TemplatedParent}}" VerticalAlignment="Center" Margin="4,0" Foreground="Gray" IsHitTestVisible="False">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=PART_InputTextBox, Path=Text}" Value="">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!--#endregion TextBoxWithMessage-->
+
+    <!--#region BusyFadeView-->
+
+    <Style TargetType="{x:Type local:BusyFadeView}">
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:BusyFadeView}">
+                    <Grid>
+                        <local:ProgressRing x:Name="PART_ProgressRing" VerticalAlignment="Top" Margin="0,50,0,0" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!--#endregion BusyFadeView-->
+    
+    <!--#region CropControl-->
+
+    <Style TargetType="{x:Type local:CropControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:CropControl}">
+                    <Grid x:Name="PART_Root" ClipToBounds="True">
+                        <Canvas>
+                            <Viewbox x:Name="PART_ViewBox" Stretch="Fill">
+                                <ContentControl x:Name="PART_TargetSocket" Focusable="False" Content="{TemplateBinding Target}" />
+                            </Viewbox>
+                        </Canvas>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!--#endregion CropControl-->
+
+    <!--#region NowLoadingView-->
+
+    <local:IsNearZeroConverter x:Key="IsNearZeroConverter"/>
+
+    <Style TargetType="{x:Type local:NowLoadingView}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:NowLoadingView}">
+                    <Grid x:Name="PART_Root">
+                        <Grid x:Name="PART_NowLoading" IsHitTestVisible="False" Opacity="0.0">
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=PART_NowLoading, Path=Opacity, Converter={StaticResource IsNearZeroConverter}}" Value="True">
+                                            <Setter Property="Visibility" Value="Hidden"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+                            <Grid x:Name="PART_NowLoadingNormal" Background="{DynamicResource Window.Background}">
+                                <StackPanel x:Name="PART_NowLoadingLabel" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Vertical">
+                                    <TextBlock x:Name="PART_NowLoadingText" Text="Now Loading" TextAlignment="Center" VerticalAlignment="Center"
+                                                   Foreground="{DynamicResource Window.Foreground}" FontFamily="Meiryo" FontSize="{StaticResource InfoTextFontSize}" Margin="8" TextTrimming="CharacterEllipsis"/>
+                                    <local:ProgressRing x:Name="PART_ProgressRing" />
+                                </StackPanel>
+                            </Grid>
+                            <TextBlock x:Name="PART_NowLoadingTiny" Text="Now Loading ..." VerticalAlignment="Bottom" HorizontalAlignment="Right" Foreground="White" Background="#88000000" Padding="20,5" IsHitTestVisible="False"/>
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!--#endregion NowLoadingView-->
+
+    <!--#region PageLoadingControl-->
+
+    <Style TargetType="{x:Type local:PageLoadingControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:PageLoadingControl}">
+                    <StackPanel x:Name="PART_Root" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock x:Name="PART_MessageTextBlock" Text="{TemplateBinding Message}" FontSize="20" Foreground="White" Margin="10">
+                            <TextBlock.Effect>
+                                <DropShadowEffect ShadowDepth="2" />
+                            </TextBlock.Effect>
+                        </TextBlock>
+                        <local:ProgressRing x:Name="PART_ProgressRing" />
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!--#endregion PageLoadingControl-->
+
+    <!--#region SimpleProgressBar-->
+
+    <Style TargetType="{x:Type local:SimpleProgressBar}">
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Foreground" Value="Green"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:SimpleProgressBar}">
+                    <Grid x:Name="PART_Root">
+                        <Rectangle x:Name="PART_Bar" Fill="{TemplateBinding Foreground}" HorizontalAlignment="Left" Width="128" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!--#endregion SimpleProgressBar-->
+
+    <!--#region VisiblePasswordBox-->
+
+    <Style x:Key="NVPasswordBox" TargetType="{x:Type PasswordBox}">
+        <Setter Property="Foreground" Value="{DynamicResource TextBox.Foreground}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{DynamicResource TextBox.Border}" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
+        <Setter Property="CaretBrush" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Foreground}" />
+    </Style>
+
+    <Style TargetType="{x:Type local:VisiblePasswordBox}">
+        <Setter Property="FocusManager.IsFocusScope" Value="True"/>
+        <Setter Property="VisibleOnIcon" Value="{StaticResource ic_dummy}"/>
+        <Setter Property="VisibleOffIcon" Value="{StaticResource ic_dummy}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:VisiblePasswordBox}">
+                    <Grid>
+                        <PasswordBox x:Name="PART_InputValuePasswordBox" Style="{StaticResource NVPasswordBox}"
+                             Padding="2,0,30,0"
+                             VerticalContentAlignment="Center" />
+                        <TextBox x:Name="PART_InputValueTextBox"
+                             Padding="2,0,30,0"
+                             VerticalContentAlignment="Center" />
+                        <Button x:Name="PART_VisibleToggleButton" Style="{StaticResource IconButton}"
+                              Margin="1"
+                              Width="30"
+                              HorizontalAlignment="Right">
+                            <Image Margin="2">
+                                <Image.Style>
+                                    <Style TargetType="{x:Type Image}">
+                                        <Setter Property="Source" Value="{Binding VisibleOnIcon, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsVisibleValue, RelativeSource={RelativeSource Mode=TemplatedParent}}" Value="True">
+                                                <Setter Property="Source" Value="{Binding VisibleOffIcon, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </Button>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion VisiblePasswordBox-->
+
+</ResourceDictionary>

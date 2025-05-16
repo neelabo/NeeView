@@ -14,8 +14,10 @@
         <ResourceDictionary>
 
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/ArrowIcons.xaml" />
+                <ResourceDictionary Source="/Styles/ArrowIcons.xaml"/>
+                <ResourceDictionary Source="/Styles/MoreButtonIcons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+                
 
             <DrawingImage x:Key="ic_photo_library_24px">
                 <DrawingImage.Drawing>

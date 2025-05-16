@@ -6,6 +6,10 @@
                     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                     xmlns:local="clr-namespace:NeeView.Windows.Property">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Styles/TextBoxIcons.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
     <nv:DoubleToPercentStringConverter x:Key="DoubleToPercentStringConverter" />
 
     <DataTemplate DataType="{x:Type local:PropertyValue_Object}">

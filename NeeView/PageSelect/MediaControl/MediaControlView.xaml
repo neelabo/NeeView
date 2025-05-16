@@ -10,8 +10,13 @@
              d:DesignHeight="300" d:DesignWidth="300">
 
     <UserControl.Resources>
+        <ResourceDictionary>
 
-        <DrawingImage x:Key="ic_play_allow_24px">
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/MoreButtonIcons.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <DrawingImage x:Key="ic_play_allow_24px">
             <DrawingImage.Drawing>
                 <DrawingGroup>
                     <GeometryDrawing Brush="Transparent" Geometry="{StaticResource g_rect24x24}" />
@@ -96,6 +101,8 @@
             <Setter Property="Width" Value="24"/>
             <Setter Property="Height" Value="24"/>
         </Style>
+
+        </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid x:Name="Root">
@@ -194,7 +201,7 @@
                         <nwc:SmartSlider.Value>
                             <MultiBinding Converter="{StaticResource EnableValueConverter}">
                                 <Binding Path="Operator.Volume"/>
-                                <Binding RelativeSource="{RelativeSource Self}" Path="IsEnabled" Mode="OneWay" />
+                                <Binding RelativeSource="{RelativeSource Mode=Self}" Path="IsEnabled" Mode="OneWay" />
                             </MultiBinding>
                         </nwc:SmartSlider.Value>
                     </nwc:SmartSlider>
@@ -266,7 +273,7 @@
                     <nwc:SmartSlider.Value>
                         <MultiBinding Converter="{StaticResource EnableValueConverter}">
                             <Binding Path="Operator.Position"/>
-                            <Binding RelativeSource="{RelativeSource Self}" Path="IsEnabled" Mode="OneWay" />
+                            <Binding RelativeSource="{RelativeSource Mode=Self}" Path="IsEnabled" Mode="OneWay" />
                         </MultiBinding>
                     </nwc:SmartSlider.Value>
                     -->

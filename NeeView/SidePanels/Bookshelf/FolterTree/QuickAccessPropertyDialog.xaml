@@ -9,9 +9,14 @@
         mc:Ignorable="d"
         Style="{StaticResource ChromeDialogStyle}"
         Title="{properties:TextBinding QuickAccessPropertyDialog.Title}" Height="220" Width="512">
-    
+
     <Window.Resources>
-        <Style x:Key="ButtonStyle" TargetType="Button" BasedOn="{StaticResource NVDialogButton}" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/TextBoxIcons.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="ButtonStyle" TargetType="Button" BasedOn="{StaticResource NVDialogButton}" />
+        </ResourceDictionary>
     </Window.Resources>
 
     <DockPanel Margin="5">

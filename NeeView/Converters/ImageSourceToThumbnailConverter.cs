@@ -6,7 +6,7 @@ using System.Windows.Media;
 namespace NeeView
 {
     /// <summary>
-    /// ImageSourceがnullの場合、デフォルト画像を割り当てる。サムネイル用
+    /// ImageSourceが nullの場合、デフォルト画像を割り当てる。サムネイル用
     /// </summary>
     [ValueConversion(typeof(ImageSource), typeof(ImageSource))]
     public class ImageSourceToThumbnailConverter : IValueConverter

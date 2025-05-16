@@ -1,0 +1,42 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:NeeView"
+                    xmlns:nwc="clr-namespace:NeeView.Windows.Controls">
+
+    <DrawingImage x:Key="ic_folder_open_24px_a">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="Transparent" Geometry="{StaticResource g_rect24x24}" />
+                <GeometryDrawing Brush="{DynamicResource Window.Foreground}" Pen="{x:Null}" Geometry="{StaticResource g_folder_open_24px}" />
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <DrawingImage x:Key="ic_visibility_24px">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="Transparent" Geometry="{StaticResource g_rect24x24}" />
+                <GeometryDrawing Brush="{DynamicResource Button.Foreground}" Pen="{x:Null}" Geometry="{StaticResource g_visibility_24px}" />
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <DrawingImage x:Key="ic_visibility_off_24px">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="Transparent" Geometry="{StaticResource g_rect24x24}" />
+                <GeometryDrawing Brush="{DynamicResource Button.Foreground}" Pen="{x:Null}" Geometry="{StaticResource g_visibility_off_24px}" />
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
+    <Style TargetType="{x:Type nwc:FileNameBox}" BasedOn="{StaticResource {x:Type nwc:FileNameBox}}">
+        <Setter Property="FolderIcon" Value="{StaticResource ic_folder_open_24px_a}"/>
+    </Style>
+
+    <Style TargetType="{x:Type local:VisiblePasswordBox}" BasedOn="{StaticResource {x:Type local:VisiblePasswordBox}}">
+        <Setter Property="VisibleOnIcon" Value="{StaticResource ic_visibility_24px}"/>
+        <Setter Property="VisibleOffIcon" Value="{StaticResource ic_visibility_off_24px}"/>
+    </Style>
+
+</ResourceDictionary>

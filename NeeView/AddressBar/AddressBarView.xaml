@@ -15,8 +15,7 @@
         <ResourceDictionary>
 
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/ArrowIcons.xaml" />
-                <ResourceDictionary Source="/Styles/MenuIcons.xaml" />
+                <ResourceDictionary Source="/Styles/MenuIcons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />

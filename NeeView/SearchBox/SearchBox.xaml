@@ -11,10 +11,7 @@
         <ResourceDictionary>
 
             <ResourceDictionary.MergedDictionaries>
-                <!--
-                <ResourceDictionary Source="/Styles/ArrowIcons.xaml" />
-                -->
-                <ResourceDictionary Source="/Styles/PanelIcons.xaml" />
+                <ResourceDictionary Source="/Styles/PanelIcons.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <DrawingImage x:Key="ic_search_24px_g">

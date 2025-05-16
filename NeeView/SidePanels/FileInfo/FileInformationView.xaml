@@ -5,35 +5,42 @@
         Focusable="True" FocusVisualStyle="{x:Null}" Foreground="{DynamicResource Panel.Foreground}">
 
     <UserControl.Resources>
-        <DrawingImage x:Key="ic_info_24px">
-            <DrawingImage.Drawing>
-                <DrawingGroup>
-                    <DrawingGroup.Children>
-                        <GeometryDrawing Brush="Transparent" Geometry="{StaticResource g_rect24x24}" />
-                        <GeometryDrawing Brush="Gray" Pen="{x:Null}" Geometry="{StaticResource g_info_outline_24px}" />
-                    </DrawingGroup.Children>
-                </DrawingGroup>
-            </DrawingImage.Drawing>
-        </DrawingImage>
+        <ResourceDictionary>
 
-        <DrawingImage x:Key="ic_bookmark_24px">
-            <DrawingImage.Drawing>
-                <GeometryDrawing Brush="{DynamicResource PlaylistItemIcon.Foreground}" Pen="{x:Null}" Geometry="{StaticResource g_bookmark_24px}" />
-            </DrawingImage.Drawing>
-        </DrawingImage>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/MoreButtonIcons.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityHiddenConverter" False="Hidden" />
-        <local:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
-        <local:PendingCountToOpacityConverter x:Key="PendingCountToOpacityConverter" />
+            <DrawingImage x:Key="ic_info_24px">
+                <DrawingImage.Drawing>
+                    <DrawingGroup>
+                        <DrawingGroup.Children>
+                            <GeometryDrawing Brush="Transparent" Geometry="{StaticResource g_rect24x24}" />
+                            <GeometryDrawing Brush="Gray" Pen="{x:Null}" Geometry="{StaticResource g_info_outline_24px}" />
+                        </DrawingGroup.Children>
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
 
-        <Style x:Key="PageMarkStyle" TargetType="Image">
-            <Setter Property="Width" Value="16" />
-            <Setter Property="Height" Value="16" />
-            <Setter Property="Source" Value="{StaticResource ic_bookmark_24px}" />
-            <Setter Property="Visibility" Value="{Binding Page.IsMarked, Converter={StaticResource BooleanToVisibilityConverter}}" />
-        </Style>
+            <DrawingImage x:Key="ic_bookmark_24px">
+                <DrawingImage.Drawing>
+                    <GeometryDrawing Brush="{DynamicResource PlaylistItemIcon.Foreground}" Pen="{x:Null}" Geometry="{StaticResource g_bookmark_24px}" />
+                </DrawingImage.Drawing>
+            </DrawingImage>
 
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityHiddenConverter" False="Hidden" />
+            <local:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
+            <local:PendingCountToOpacityConverter x:Key="PendingCountToOpacityConverter" />
+
+            <Style x:Key="PageMarkStyle" TargetType="Image">
+                <Setter Property="Width" Value="16" />
+                <Setter Property="Height" Value="16" />
+                <Setter Property="Source" Value="{StaticResource ic_bookmark_24px}" />
+                <Setter Property="Visibility" Value="{Binding Page.IsMarked, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            </Style>
+
+        </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid Background="Transparent" Margin="2" KeyDown="FolderInformationView_KeyDown">

@@ -11,18 +11,24 @@
              Foreground="{DynamicResource Panel.Foreground}">
 
     <UserControl.Resources>
+        <ResourceDictionary>
 
-        <DrawingImage x:Key="ic_history_24px">
-            <DrawingImage.Drawing>
-                <DrawingGroup>
-                    <DrawingGroup.Children>
-                        <GeometryDrawing Brush="Transparent" Geometry="{StaticResource g_rect24x24}" />
-                        <GeometryDrawing Brush="Gray" Pen="{x:Null}" Geometry="{StaticResource g_history_24px}" />
-                    </DrawingGroup.Children>
-                </DrawingGroup>
-            </DrawingImage.Drawing>
-        </DrawingImage>
-        
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/MoreButtonIcons.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <DrawingImage x:Key="ic_history_24px">
+                <DrawingImage.Drawing>
+                    <DrawingGroup>
+                        <DrawingGroup.Children>
+                            <GeometryDrawing Brush="Transparent" Geometry="{StaticResource g_rect24x24}" />
+                            <GeometryDrawing Brush="Gray" Pen="{x:Null}" Geometry="{StaticResource g_history_24px}" />
+                        </DrawingGroup.Children>
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
+
+        </ResourceDictionary>
     </UserControl.Resources>
 
 

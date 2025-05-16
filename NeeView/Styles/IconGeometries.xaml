@@ -252,4 +252,10 @@
         </DrawingImage.Drawing>
     </DrawingImage>
 
+    <DrawingImage x:Key="ic_dummy">
+        <DrawingImage.Drawing>
+            <GeometryDrawing Brush="Gray" Pen="{x:Null}" Geometry="{StaticResource g_noentry}"/>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
 </ResourceDictionary>
