@@ -40,7 +40,7 @@ namespace NeeView
         /// <param name="setting">生成オプション</param>
         /// <param name="token">キャンセルトークン</param>
         /// <returns>ImageSource</returns>
-        public async Task<ImageSource> CreateImageSourceAsync(IStreamSource streamSource, Size size, BitmapCreateSetting setting, CancellationToken token)
+        public async ValueTask<ImageSource> CreateImageSourceAsync(IStreamSource streamSource, Size size, BitmapCreateSetting setting, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -61,7 +61,7 @@ namespace NeeView
             return bitmapSource;
         }
 
-        public async Task<byte[]> CreateImageAsync(IStreamSource streamSource, Size size, BitmapCreateSetting setting, BitmapImageFormat format, int quality, CancellationToken token)
+        public async ValueTask<byte[]> CreateImageAsync(IStreamSource streamSource, Size size, BitmapCreateSetting setting, BitmapImageFormat format, int quality, CancellationToken token)
         {
             using var stream = await streamSource.OpenStreamAsync(token);
             return CreateImage(stream, size, setting, format, quality, token);
@@ -76,7 +76,7 @@ namespace NeeView
             return outStream.ToArray();
         }
 
-        public async Task<byte[]> CreateThumbnailAsync(IStreamSource streamSource, ThumbnailProfile profile, CancellationToken token)
+        public async ValueTask<byte[]> CreateThumbnailAsync(IStreamSource streamSource, ThumbnailProfile profile, CancellationToken token)
         {
             using var stream = await streamSource.OpenStreamAsync(token);
             return CreateThumbnail(stream, profile, token);

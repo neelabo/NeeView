@@ -17,7 +17,7 @@ namespace NeeView
         public Thumbnail Thumbnail { get; }
 
 
-        public async Task LoadAsync(CancellationToken token)
+        public async ValueTask LoadAsync(CancellationToken token)
         {
             //Debug.WriteLine($"LoadThumbnail({Thumbnail.SerialNumber}): {_content.ArchiveEntry}");
             NVDebug.AssertMTA();
@@ -30,7 +30,7 @@ namespace NeeView
             Thumbnail.Initialize(source);
         }
 
-        public virtual async Task<ThumbnailSource> LoadThumbnailAsync(CancellationToken token)
+        public virtual async ValueTask<ThumbnailSource> LoadThumbnailAsync(CancellationToken token)
         {
             // ダミーサムネイル
             return await Task.FromResult(new ThumbnailSource(null));

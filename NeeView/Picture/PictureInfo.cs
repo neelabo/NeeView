@@ -109,7 +109,7 @@ namespace NeeView
             }
         }
 
-        public static async Task<PictureInfo> CreateAsync(IStreamSource streamSource, string? decoder, CancellationToken token)
+        public static async ValueTask<PictureInfo> CreateAsync(IStreamSource streamSource, string? decoder, CancellationToken token)
         {
             using (var stream = await streamSource.OpenStreamAsync(token))
             {

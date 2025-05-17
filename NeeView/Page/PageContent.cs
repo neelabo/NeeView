@@ -158,7 +158,7 @@ namespace NeeView
             };
         }
 
-        public async Task<PageDataSource> LoadAsync(CancellationToken token)
+        public async ValueTask<PageDataSource> LoadAsync(CancellationToken token)
         {
             if (_disposedValue) throw new ObjectDisposedException(this.GetType().FullName);
 
@@ -195,9 +195,9 @@ namespace NeeView
             }
         }
 
-        protected abstract Task<PageSource> LoadSourceAsync(CancellationToken token);
+        protected abstract ValueTask<PageSource> LoadSourceAsync(CancellationToken token);
 
-        public async Task<PictureInfo?> LoadPictureInfoAsync(CancellationToken token)
+        public async ValueTask<PictureInfo?> LoadPictureInfoAsync(CancellationToken token)
         {
             if (PictureInfo is not null) return PictureInfo;
 
@@ -214,7 +214,7 @@ namespace NeeView
             }
         }
 
-        protected virtual async Task<PictureInfo?> LoadPictureInfoCoreAsync(CancellationToken token)
+        protected virtual async ValueTask<PictureInfo?> LoadPictureInfoCoreAsync(CancellationToken token)
         {
             return await Task.FromResult<PictureInfo?>(null);
         }

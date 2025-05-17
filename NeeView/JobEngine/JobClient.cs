@@ -64,7 +64,7 @@ namespace NeeView
         /// <summary>
         /// JOBの完了を待つ (すべて)
         /// </summary>
-        public async Task WaitAsync(CancellationToken token)
+        public async ValueTask WaitAsync(CancellationToken token)
         {
             await Task.WhenAll(_sources.Select(e => e.WaitAsync(token)));
         }
@@ -73,7 +73,7 @@ namespace NeeView
         /// JOBの完了を待つ
         /// </summary>
         /// <param name="pages">完了待ちをするページ</param>
-        public async Task WaitAsync(List<IPageContentLoader> pages, int millisecondsTimeout, CancellationToken token)
+        public async ValueTask WaitAsync(List<IPageContentLoader> pages, int millisecondsTimeout, CancellationToken token)
         {
             if (_disposedValue) return;
 

@@ -8,7 +8,7 @@ namespace NeeView
     public interface IViewSourceStrategy
     {
         bool CheckLoaded(Size size) { return true; }
-        Task<DataSource> LoadCoreAsync(PageDataSource data, Size size, CancellationToken token);
+        ValueTask<DataSource> LoadCoreAsync(PageDataSource data, Size size, CancellationToken token);
 
         void Unload() { }
     }

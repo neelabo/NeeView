@@ -14,7 +14,7 @@ namespace NeeView
             this.Thumbnail.IsCacheEnabled = true;
         }
 
-        public override async Task<ThumbnailSource> LoadThumbnailAsync(CancellationToken token)
+        public override async ValueTask<ThumbnailSource> LoadThumbnailAsync(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
             NVDebug.AssertMTA();

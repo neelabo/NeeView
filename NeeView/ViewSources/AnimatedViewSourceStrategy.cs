@@ -17,7 +17,7 @@ namespace NeeView
         }
 
 
-        public async Task<DataSource> LoadCoreAsync(PageDataSource data, Size size, CancellationToken token)
+        public async ValueTask<DataSource> LoadCoreAsync(PageDataSource data, Size size, CancellationToken token)
         {
             if (data.Data is not AnimatedPageData pageData) throw new InvalidOperationException(nameof(data.Data));
 
@@ -37,7 +37,7 @@ namespace NeeView
 
 
         // TODO: Async
-        private async Task<BitmapImage?> LoadImageAsync(MediaSource mediaSource, CancellationToken token)
+        private async ValueTask<BitmapImage?> LoadImageAsync(MediaSource mediaSource, CancellationToken token)
         {
             try
             {
