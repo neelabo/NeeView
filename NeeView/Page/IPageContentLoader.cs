@@ -7,7 +7,7 @@ namespace NeeView
     {
         bool IsLoaded { get; }
 
-        Task LoadContentAsync(CancellationToken token);
+        ValueTask LoadContentAsync(CancellationToken token);
     }
 
 }

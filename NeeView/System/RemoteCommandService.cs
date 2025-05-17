@@ -91,7 +91,7 @@ namespace NeeView
             _ = SendAsync(command, delivery, CancellationToken.None);
         }
 
-        public async Task SendAsync(RemoteCommand command, RemoteCommandDelivery delivery, CancellationToken token)
+        public async ValueTask SendAsync(RemoteCommand command, RemoteCommandDelivery delivery, CancellationToken token)
         {
             if (_disposedValue) return;
 

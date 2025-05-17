@@ -257,7 +257,7 @@ namespace NeeView
         /// <summary>
         /// 表示ページ読み込み完了まで待機
         /// </summary>
-        public async Task WaitAsync(CancellationToken token)
+        public async ValueTask WaitAsync(CancellationToken token)
         {
             await _presenter.WaitForViewPageStableAsync(token);
         }

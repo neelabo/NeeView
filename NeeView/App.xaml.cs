@@ -144,7 +144,7 @@ namespace NeeView
         /// <param name="timeout">タイムアウト時間(ms)</param>
         /// <returns></returns>
         /// <exception cref="TimeoutException"></exception>
-        private static async Task<IDisposable> BootProcessLockAsync(int timeout)
+        private static async ValueTask<IDisposable> BootProcessLockAsync(int timeout)
         {
             try
             {
@@ -160,7 +160,7 @@ namespace NeeView
         /// <summary> 
         /// 初期化 
         /// </summary>
-        private async Task InitializeAsync(StartupEventArgs e)
+        private async ValueTask InitializeAsync(StartupEventArgs e)
         {
             Debug.WriteLine($"App.InitializeAsync...: {Stopwatch.ElapsedMilliseconds}ms");
 

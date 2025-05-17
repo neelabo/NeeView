@@ -16,7 +16,7 @@ namespace NeeView
         /// </summary>
         /// <param name="path">ドライブパス</param>
         /// <param name="callback">画像生成後のコールバック</param>
-        public static async Task CreateDriveIconAsync(string path, Action<BitmapSourceCollection> callback)
+        public static async ValueTask CreateDriveIconAsync(string path, Action<BitmapSourceCollection> callback)
         {
             await AppDispatcher.BeginInvoke(async () => await CreateDriveIcon());
 

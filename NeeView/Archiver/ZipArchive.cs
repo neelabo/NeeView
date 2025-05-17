@@ -61,7 +61,7 @@ namespace NeeView
 
 
         // エントリーリストを得る
-        protected override async Task<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token)
+        protected override async ValueTask<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token)
         {
             var list = new List<ArchiveEntry>();
             var directories = new List<ArchiveEntry>();
@@ -147,7 +147,7 @@ namespace NeeView
             return list;
         }
 
-        protected override async Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
+        protected override async ValueTask<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
         {
             if (entry.Id < 0) throw new ArgumentException("Cannot open this entry: " + entry.EntryName);
             if (entry.IsDirectory) throw new InvalidOperationException("Cannot open directory: " + entry.EntryName);
@@ -184,7 +184,7 @@ namespace NeeView
         /// <param name="exportFileName">エクスポート先のパス</param>
         /// <param name="isOverwrite">上書き許可</param>
         /// <param name="token"></param>
-        protected override async Task ExtractToFileInnerAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
+        protected override async ValueTask ExtractToFileInnerAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
         {
             var extractor = new ZipArchiveExtractor(this, _encoding);
             await extractor.ExtractAsync(entry, exportFileName, isOverwrite, token);
@@ -247,7 +247,7 @@ namespace NeeView
         /// すでにタスクが動作しているときは削除要求をそのタスクに追加する。
         /// </remarks>
         /// <exception cref="ArgumentException">Not registered with this archiver.</exception>
-        public override async Task<DeleteResult> DeleteAsync(List<ArchiveEntry> entries)
+        public override async ValueTask<DeleteResult> DeleteAsync(List<ArchiveEntry> entries)
         {
             if (!IsRoot) throw new ArgumentException("The archive is not a file.");
             if (entries.Any(e => e.Archive != this)) throw new ArgumentException("There are elements not registered with this archiver.", nameof(entries));
@@ -346,7 +346,7 @@ namespace NeeView
         /// <summary>
         /// rename
         /// </summary>
-        public override async Task<bool> RenameAsync(ArchiveEntry entry, string name)
+        public override async ValueTask<bool> RenameAsync(ArchiveEntry entry, string name)
         {
             if (entry.Archive != this) throw new ArgumentException("There are elements not registered with this archiver.", nameof(entry));
             if (!IsRoot) throw new ArgumentException("The archive is not a file.");

@@ -17,7 +17,7 @@ namespace NeeLaboratory.IO
             return result;
         }
 
-        public static async Task<byte[]> ReadAllBytesAsync(string path, FileShare share)
+        public static async ValueTask<byte[]> ReadAllBytesAsync(string path, FileShare share)
         {
             byte[] result;
             using (FileStream stream = File.Open(path, FileMode.Open, FileAccess.Read, share))
@@ -28,7 +28,7 @@ namespace NeeLaboratory.IO
             return result;
         }
 
-        public static async Task WriteAllBytesAsync(string path, byte[] bytes)
+        public static async ValueTask WriteAllBytesAsync(string path, byte[] bytes)
         {
             using (FileStream stream = File.Open(path, FileMode.Create, FileAccess.Write))
             {

@@ -8,7 +8,7 @@ namespace NeeView
     {
         bool IsThumbnailValid { get; }
 
-        Task<ImageSource?> LoadThumbnailAsync(CancellationToken token);
+        ValueTask<ImageSource?> LoadThumbnailAsync(CancellationToken token);
     }
 
 }

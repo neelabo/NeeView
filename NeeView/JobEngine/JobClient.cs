@@ -66,7 +66,7 @@ namespace NeeView
         /// </summary>
         public async ValueTask WaitAsync(CancellationToken token)
         {
-            await Task.WhenAll(_sources.Select(e => e.WaitAsync(token)));
+            await Task.WhenAll(_sources.Select(e => e.WaitAsync(token).AsTask()));
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace NeeView
             if (_disposedValue) return;
 
             var tasks = pages
-                .Select(e => _sources.FirstOrDefault(a => a.Key == e)?.WaitAsync(millisecondsTimeout, token))
+                .Select(e => (_sources.FirstOrDefault(a => a.Key == e)?.WaitAsync(millisecondsTimeout, token).AsTask()))
                 .WhereNotNull()
                 .ToList();
 

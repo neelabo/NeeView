@@ -341,7 +341,7 @@ namespace NeeView
             }
         }
 
-        public async Task<List<PlaylistItem>?> InsertAsync(IEnumerable<string> paths, PlaylistItem? targetItem, CancellationToken token)
+        public async ValueTask<List<PlaylistItem>?> InsertAsync(IEnumerable<string> paths, PlaylistItem? targetItem, CancellationToken token)
         {
             if (_model is null) return null;
             if (!_model.IsEditable) return null;
@@ -351,7 +351,7 @@ namespace NeeView
             return items;
         }
 
-        public async Task<List<string>> ValidatePlaylistItemPath(IEnumerable<string> paths, CancellationToken token)
+        public async ValueTask<List<string>> ValidatePlaylistItemPath(IEnumerable<string> paths, CancellationToken token)
         {
             var list = new List<string>();
             foreach (var path in paths)

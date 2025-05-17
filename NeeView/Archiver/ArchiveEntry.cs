@@ -312,7 +312,7 @@ namespace NeeView
         /// ストリームを開く
         /// </summary>
         /// <returns>Stream</returns>
-        public async Task<Stream> OpenEntryAsync(bool decrypt, CancellationToken token)
+        public async ValueTask<Stream> OpenEntryAsync(bool decrypt, CancellationToken token)
         {
             return await Archive.OpenStreamAsync(this, decrypt, token);
         }
@@ -322,7 +322,7 @@ namespace NeeView
         /// </summary>
         /// <param name="exportFileName">出力ファイル名</param>
         /// <param name="isOverwrite">上書き許可フラグ</param>
-        public async Task ExtractToFileAsync(string exportFileName, bool isOverwrite, CancellationToken token)
+        public async ValueTask ExtractToFileAsync(string exportFileName, bool isOverwrite, CancellationToken token)
         {
             if (exportFileName is null) throw new ArgumentNullException(nameof(exportFileName));
 
@@ -336,7 +336,7 @@ namespace NeeView
         /// </summary>
         /// <param name="entry"></param>
         /// <param name="isKeepFileName">エントリー名をファイル名にする</param>
-        public async Task<FileProxy> GetFileProxyAsync(bool isKeepFileName, CancellationToken token)
+        public async ValueTask<FileProxy> GetFileProxyAsync(bool isKeepFileName, CancellationToken token)
         {
             _fileProxy = _fileProxy ?? await CreateFileProxyAsync(new TempFileNamePolicy(isKeepFileName, "entry"), false, token);
             return _fileProxy;
@@ -349,7 +349,7 @@ namespace NeeView
         /// <param name="fileNamePolicy">ファイル名ポリシ―</param>
         /// <param name="isOverwrite">上書き許可</param>
         /// <returns>ファイル</returns>
-        public async Task<FileProxy> CreateFileProxyAsync(TempFileNamePolicy fileNamePolicy, bool isOverwrite, CancellationToken token)
+        public async ValueTask<FileProxy> CreateFileProxyAsync(TempFileNamePolicy fileNamePolicy, bool isOverwrite, CancellationToken token)
         {
             var entityPath = EntityPath;
             if (entityPath is not null)
@@ -392,7 +392,7 @@ namespace NeeView
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task WaitPreExtractAsync(CancellationToken token)
+        public async ValueTask WaitPreExtractAsync(CancellationToken token)
         {
             await Archive.WaitPreExtractAsync(this, token);
         }
@@ -491,7 +491,7 @@ namespace NeeView
         /// <summary>
         /// delete
         /// </summary>
-        public async Task<DeleteResult> DeleteAsync()
+        public async ValueTask<DeleteResult> DeleteAsync()
         {
             return await Archive.DeleteAsync(this);
         }
@@ -499,7 +499,7 @@ namespace NeeView
         /// <summary>
         /// 複数エントリをまとめて削除
         /// </summary>
-        public static async Task<bool> DeleteEntriesAsync(IEnumerable<ArchiveEntry> entries)
+        public static async ValueTask<bool> DeleteEntriesAsync(IEnumerable<ArchiveEntry> entries)
         {
             if (!entries.Any()) return false;
 
@@ -532,7 +532,7 @@ namespace NeeView
             return Archive.CanRename(this);
         }
 
-        public async Task<bool> RenameAsync(string name)
+        public async ValueTask<bool> RenameAsync(string name)
         {
             return await Archive.RenameAsync(this, name);
         }
@@ -553,7 +553,7 @@ namespace NeeView
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
         /// <exception cref="NotSupportedException"></exception>
-        public async Task<string?> RealizeAsync(CancellationToken token)
+        public async ValueTask<string?> RealizeAsync(CancellationToken token)
         {
             return await RealizeAsync(ArchivePolicy.SendExtractFile, token);
         }
@@ -565,7 +565,7 @@ namespace NeeView
         /// <param name="token"></param>
         /// <returns>実体ファイルのパス。取得できなかったときは null</returns>
         /// <exception cref="NotSupportedException">サポートされていない ArchivePolicy</exception>
-        public virtual async Task<string?> RealizeAsync(ArchivePolicy archivePolicy, CancellationToken token)
+        public virtual async ValueTask<string?> RealizeAsync(ArchivePolicy archivePolicy, CancellationToken token)
         {
             // file
             if (IsFileSystem)

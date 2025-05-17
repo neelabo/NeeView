@@ -37,7 +37,7 @@ namespace NeeLaboratory.IO.NodesTest
         /// <summary>
         /// テスト環境初期化
         /// </summary>
-        public static async Task<FileTree> CreateTestEnvironmentAsync(CancellationToken token)
+        public static async ValueTask<FileTree> CreateTestEnvironmentAsync(CancellationToken token)
         {
             if (Directory.Exists(_folderRoot)) Directory.Delete(_folderRoot, true);
             if (Directory.Exists(_folderRoot2)) Directory.Delete(_folderRoot2, true);

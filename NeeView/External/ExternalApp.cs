@@ -58,7 +58,7 @@ namespace NeeView
         }
 
 
-        public async Task ExecuteAsync(IEnumerable<Page> pages, CancellationToken token)
+        public async ValueTask ExecuteAsync(IEnumerable<Page> pages, CancellationToken token)
         {
             var external = new ExternalAppUtility();
             await external.CallAsync(pages, this, token);

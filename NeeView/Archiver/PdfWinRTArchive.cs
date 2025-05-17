@@ -36,7 +36,7 @@ namespace NeeView
         }
 
         // エントリーリストを得る
-        protected override async Task<List<ArchiveEntry>> GetEntriesInnerAsync(CancellationToken token)
+        protected override async ValueTask<List<ArchiveEntry>> GetEntriesInnerAsync(CancellationToken token)
         {
             var list = new List<ArchiveEntry>();
 
@@ -78,7 +78,7 @@ namespace NeeView
             return ms;
         }
 
-        private async Task<PdfPage> GetPageAsync(int page)
+        private async ValueTask<PdfPage> GetPageAsync(int page)
         {
             StorageFile file = await StorageFile.GetFileFromPathAsync(Path);
             var pdfDocument = await PdfDocument.LoadFromFileAsync(file);

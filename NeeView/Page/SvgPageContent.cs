@@ -49,7 +49,7 @@ namespace NeeView
             }
         }
 
-        private async Task<DrawingGroup> LoadDrawingImageAsync(CancellationToken token)
+        private async ValueTask<DrawingGroup> LoadDrawingImageAsync(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 

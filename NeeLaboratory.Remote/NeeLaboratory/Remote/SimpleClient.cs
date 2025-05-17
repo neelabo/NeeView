@@ -22,7 +22,7 @@ namespace NeeLaboratory.Remote
             _serverPipeName = serverPipeName;
         }
 
-        public async Task<List<Chunk>> CallAsync(List<Chunk> args, CancellationToken token)
+        public async ValueTask<List<Chunk>> CallAsync(List<Chunk> args, CancellationToken token)
         {
             // セマフォで排他処理。通信は同時に１つだけ
             _semaphore.Wait(token);
@@ -37,7 +37,7 @@ namespace NeeLaboratory.Remote
             }
         }
 
-        public async Task<List<Chunk>> CallInnerAsync(List<Chunk> args, int timeout, CancellationToken token)
+        public async ValueTask<List<Chunk>> CallInnerAsync(List<Chunk> args, int timeout, CancellationToken token)
         {
             ////Debug.WriteLine($"Client: Start");
             using (var pipeClient = new NamedPipeClientStream(".", _serverPipeName, PipeDirection.InOut))

@@ -28,7 +28,7 @@ namespace NeeView
             return new Handler(_semaphore);
         }
 
-        public async Task<IDisposable> LockAsync(int timeout)
+        public async ValueTask<IDisposable> LockAsync(int timeout)
         {
             await _semaphore.AsTask().WaitAsync(TimeSpan.FromMilliseconds(timeout));
             return new Handler(_semaphore);

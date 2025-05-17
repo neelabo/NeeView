@@ -89,7 +89,7 @@ namespace NeeLaboratory.Threading.Jobs
         /// </summary>
         /// <param name="token">エンジンのキャンセルトークン</param>
         /// <returns></returns>
-        public async Task ExecuteAsync()
+        public async ValueTask ExecuteAsync()
         {
             if (_disposedValue) return;
 
@@ -127,12 +127,12 @@ namespace NeeLaboratory.Threading.Jobs
         /// <summary>
         /// Job終了待機
         /// </summary>
-        public async Task WaitAsync()
+        public async ValueTask WaitAsync()
         {
             await _complete.WaitHandle.AsTask();
         }
 
-        public async Task WaitAsync(CancellationToken token)
+        public async ValueTask WaitAsync(CancellationToken token)
         {
             await _complete.WaitHandle.AsTask().WaitAsync(token);
         }
@@ -143,7 +143,7 @@ namespace NeeLaboratory.Threading.Jobs
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        protected abstract Task ExecuteAsync(CancellationToken token);
+        protected abstract ValueTask ExecuteAsync(CancellationToken token);
 
         /// <summary>
         /// Jobキャンセル時

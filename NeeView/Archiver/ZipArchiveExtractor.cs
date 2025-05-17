@@ -19,7 +19,7 @@ namespace NeeView
             _encoding = encoding;
         }
 
-        public override async Task ExtractAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
+        public override async ValueTask ExtractAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
         {
             if (_archive.IsDisposed) return;
 
@@ -37,7 +37,7 @@ namespace NeeView
             }
         }
 
-        protected override async Task ExtractCore(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
+        protected override async ValueTask ExtractCore(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
         {
             Debug.Assert(entry.Archive == _archive);
             Debug.Assert(_rawArchive is not null);

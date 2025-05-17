@@ -59,7 +59,7 @@ namespace NeeView
             }
         }
 
-        private async Task<ArchivePageData?> LoadArchivePageData(CancellationToken token)
+        private async ValueTask<ArchivePageData?> LoadArchivePageData(CancellationToken token)
         {
             var pageContent = await ArchivePageUtility.GetSelectedPageContentAsync(ArchiveEntry, false, token);
             pageContent.Decrypt = false;

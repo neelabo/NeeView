@@ -24,7 +24,7 @@ namespace NeeView
             return InnerEntry.IsArchive();
         }
 
-        public override async Task<string?> RealizeAsync(ArchivePolicy archivePolicy, CancellationToken token)
+        public override async ValueTask<string?> RealizeAsync(ArchivePolicy archivePolicy, CancellationToken token)
         {
             return await InnerEntry.RealizeAsync(archivePolicy, token);
         }

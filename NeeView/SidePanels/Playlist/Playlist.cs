@@ -388,7 +388,7 @@ namespace NeeView
             }
         }
 
-        public async Task DeleteInvalidItemsAsync(CancellationToken token)
+        public async ValueTask DeleteInvalidItemsAsync(CancellationToken token)
         {
             if (!IsEditable) return;
 

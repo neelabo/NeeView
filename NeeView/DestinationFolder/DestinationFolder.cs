@@ -71,7 +71,7 @@ namespace NeeView
             return Name.GetHashCode(StringComparison.Ordinal) ^ Path.GetHashCode(StringComparison.Ordinal);
         }
 
-        public async Task CopyAsyncNoExceptions(IEnumerable<string> paths, CancellationToken token)
+        public async ValueTask CopyAsyncNoExceptions(IEnumerable<string> paths, CancellationToken token)
         {
             try
             {
@@ -87,7 +87,7 @@ namespace NeeView
             }
         }
 
-        public async Task CopyAsync(IEnumerable<string> paths, CancellationToken token)
+        public async ValueTask CopyAsync(IEnumerable<string> paths, CancellationToken token)
         {
             if (!paths.Any()) return;
 
@@ -99,7 +99,7 @@ namespace NeeView
             await FileIO.SHCopyToFolderAsync(paths, this.Path, token);
         }
 
-        public async Task MoveAsyncNoExceptions(IEnumerable<string> paths, CancellationToken token)
+        public async ValueTask MoveAsyncNoExceptions(IEnumerable<string> paths, CancellationToken token)
         {
             try
             {
@@ -115,7 +115,7 @@ namespace NeeView
             }
         }
 
-        public async Task MoveAsync(IEnumerable<string> paths, CancellationToken token)
+        public async ValueTask MoveAsync(IEnumerable<string> paths, CancellationToken token)
         {
             if (!paths.Any()) return;
 

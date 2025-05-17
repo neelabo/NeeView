@@ -14,7 +14,7 @@ namespace NeeView
             _archive = archive;
         }
 
-        protected override async Task ExtractCore(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
+        protected override async ValueTask ExtractCore(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
         {
             Debug.Assert(entry.Archive == _archive);
             if (entry.Id < 0) throw new ApplicationException("Cannot open this entry: " + entry.EntryName);

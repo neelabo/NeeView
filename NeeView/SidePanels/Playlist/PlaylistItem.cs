@@ -186,7 +186,7 @@ namespace NeeView
             return true;
         }
 
-        public async Task<bool> RenameAsync(string name)
+        public async ValueTask<bool> RenameAsync(string name)
         {
             // TODO: この命令でリストの保存処理等の波及処理が実行されるようにする
 

@@ -264,7 +264,7 @@ namespace NeeView
 
         #region DragDrop
 
-        public async Task DragStartBehavior_DragBeginAsync(object? sender, DragStartEventArgs e, CancellationToken token)
+        public async ValueTask DragStartBehavior_DragBeginAsync(object? sender, DragStartEventArgs e, CancellationToken token)
         {
             var items = this.ListBox.SelectedItems
                 .Cast<PlaylistItem>()
@@ -403,7 +403,7 @@ namespace NeeView
             return false;
         }
 
-        private async Task<List<PlaylistItem>?> GetPlaylistItemsAsync(DragEventArgs e, bool copyMaybe, CancellationToken token)
+        private async ValueTask<List<PlaylistItem>?> GetPlaylistItemsAsync(DragEventArgs e, bool copyMaybe, CancellationToken token)
         {
             var entries = e.Data.GetData<PlaylistListBoxItemCollection>();
             if (entries is not null)
@@ -435,7 +435,7 @@ namespace NeeView
             return null;
         }
 
-        private async Task<List<PlaylistItem>?> CreatePlaylistItems(IEnumerable<string> paths, CancellationToken token)
+        private async ValueTask<List<PlaylistItem>?> CreatePlaylistItems(IEnumerable<string> paths, CancellationToken token)
         {
             var validPaths = await _vm.ValidatePlaylistItemPath(paths, token);
             var collection = _vm.Items;

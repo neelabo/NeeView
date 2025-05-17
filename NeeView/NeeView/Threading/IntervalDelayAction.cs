@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -12,7 +13,7 @@ namespace NeeView.Threading
         private Action? _action;
         private bool _disposedValue;
         private readonly DispatcherTimer _timer;
-        private readonly System.Threading.Lock _lock = new();
+        private readonly Lock _lock = new();
         private int _timestamp;
 
 

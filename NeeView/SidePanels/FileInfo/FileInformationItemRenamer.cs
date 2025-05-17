@@ -46,7 +46,7 @@ namespace NeeView
 
         public event EventHandler? ArchiveChanged;
 
-        protected override async Task<bool> OnRenameAsync(string oldValue, string newValue)
+        protected override async ValueTask<bool> OnRenameAsync(string oldValue, string newValue)
         {
             Debug.Assert(oldValue != newValue);
             var isSuccess = await _item.RenameAsync(newValue);

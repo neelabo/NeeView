@@ -29,7 +29,7 @@ namespace NeeView
         public long CacheSize => _cache.Count;
 
 
-        public async Task<Stream> OpenStreamAsync(CancellationToken token)
+        public async ValueTask<Stream> OpenStreamAsync(CancellationToken token)
         {
             await CreateCacheAsync(Decrypt, token);
 
@@ -43,7 +43,7 @@ namespace NeeView
             }
         }
 
-        public async Task CreateCacheAsync(bool decrypt, CancellationToken token)
+        public async ValueTask CreateCacheAsync(bool decrypt, CancellationToken token)
         {
             // 展開処理の重複を避けるため、ファイルシステムエントリ以外はキャッシュを作る
             if (_cache.Array is not null || ArchiveEntry.HasCache || ArchiveEntry.IsFileSystem) return;

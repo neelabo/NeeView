@@ -64,7 +64,7 @@ namespace NeeView
         /// 展開
         /// テンポラリファイルはキャッシュを活用する
         /// </summary>
-        public async Task<FileProxy> ExtractAsync(ArchiveEntry entry, CancellationToken token)
+        public async ValueTask<FileProxy> ExtractAsync(ArchiveEntry entry, CancellationToken token)
         {
             var cachedTempFile = TempFileCache.Current.Get(entry.Ident);
             if (cachedTempFile != null) return cachedTempFile;
@@ -82,7 +82,7 @@ namespace NeeView
         /// ファイルはテンポラリに生成される
         /// </summary>
         /// <returns>展開後されたファイル名</returns>
-        public async Task<FileProxy> ExtractRawAsync(ArchiveEntry entry, CancellationToken token)
+        public async ValueTask<FileProxy> ExtractRawAsync(ArchiveEntry entry, CancellationToken token)
         {
             //Debug.WriteLine($"EXT: {entry.Ident}");
 

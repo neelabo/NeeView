@@ -194,7 +194,7 @@ namespace NeeView
             return _exporter.CreateImageSource(options);
         }
 
-        public async Task ExportAsync(string path, bool isOverwrite, CancellationToken token)
+        public async ValueTask ExportAsync(string path, bool isOverwrite, CancellationToken token)
         {
             path = System.IO.Path.GetFullPath(path);
 

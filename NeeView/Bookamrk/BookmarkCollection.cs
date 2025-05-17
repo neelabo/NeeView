@@ -221,7 +221,7 @@ namespace NeeView
 
 
         // 無効な履歴削除
-        public async Task RemoveUnlinkedAsync(CancellationToken token)
+        public async ValueTask RemoveUnlinkedAsync(CancellationToken token)
         {
             // 削除項目収集
             List<TreeListNode<IBookmarkEntry>> nodes;
