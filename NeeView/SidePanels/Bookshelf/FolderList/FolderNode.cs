@@ -91,7 +91,7 @@ namespace NeeView
 
         // Methods
 
-        public async Task<FolderNode?> GetParent(CancellationToken token)
+        public async ValueTask<FolderNode?> GetParent(CancellationToken token)
         {
             if (!_isParentValid)
             {
@@ -124,7 +124,7 @@ namespace NeeView
             return Parent;
         }
 
-        private async Task<FolderNode?> CreateParent(CancellationToken token)
+        private async ValueTask<FolderNode?> CreateParent(CancellationToken token)
         {
             if (_isParentValid) return Parent;
 
@@ -150,7 +150,7 @@ namespace NeeView
         }
 
 
-        public async Task<FolderNode?> GetPrev(CancellationToken token)
+        public async ValueTask<FolderNode?> GetPrev(CancellationToken token)
         {
             var parent = await GetParent(token);
             if (parent == null) return null;
@@ -165,7 +165,7 @@ namespace NeeView
             return null;
         }
 
-        public async Task<FolderNode?> GetNext(CancellationToken token)
+        public async ValueTask<FolderNode?> GetNext(CancellationToken token)
         {
             var parent = await GetParent(token);
             if (parent == null) return null;
@@ -181,7 +181,7 @@ namespace NeeView
         }
 
 
-        public async Task<List<FolderNode>> GetChildren(CancellationToken token)
+        public async ValueTask<List<FolderNode>> GetChildren(CancellationToken token)
         {
             if (_children is null)
             {
@@ -198,7 +198,7 @@ namespace NeeView
             return _children;
         }
 
-        private async Task<List<FolderNode>> CreateChildren(CancellationToken token)
+        private async ValueTask<List<FolderNode>> CreateChildren(CancellationToken token)
         {
             if (_children is not null) return _children;
 
@@ -233,7 +233,7 @@ namespace NeeView
         }
 
 
-        public async Task<FolderNode?> CruisePrev(CancellationToken token)
+        public async ValueTask<FolderNode?> CruisePrev(CancellationToken token)
         {
             var prev = await GetPrev(token);
             var cruse = await GetCruisePrev(token);
@@ -246,7 +246,7 @@ namespace NeeView
             return cruse;
         }
 
-        public async Task<FolderNode?> GetCruisePrev(CancellationToken token)
+        public async ValueTask<FolderNode?> GetCruisePrev(CancellationToken token)
         {
             var parent = await GetParent(token);
             if (parent == null) return null;
@@ -264,7 +264,7 @@ namespace NeeView
             return parent;
         }
 
-        private async Task<FolderNode> CruiseDescendant(CancellationToken token)
+        private async ValueTask<FolderNode> CruiseDescendant(CancellationToken token)
         {
             if (CanCruiseChildren(this))
             {
@@ -286,7 +286,7 @@ namespace NeeView
             return (node.Content.Attributes & (FolderItemAttribute.Shortcut | FolderItemAttribute.PlaylistMember)) == 0;
         }
 
-        public async Task<FolderNode?> CruiseNext(CancellationToken token)
+        public async ValueTask<FolderNode?> CruiseNext(CancellationToken token)
         {
             var next = await GetNext(token);
             var cruse = await GetCruiseNext(token);
@@ -299,7 +299,7 @@ namespace NeeView
             return cruse;
         }
 
-        public async Task<FolderNode?> GetCruiseNext(CancellationToken token)
+        public async ValueTask<FolderNode?> GetCruiseNext(CancellationToken token)
         {
             if (CanCruiseChildren(this))
             {
@@ -314,7 +314,7 @@ namespace NeeView
             return await CruiseNextUp(token);
         }
 
-        private async Task<FolderNode?> CruiseNextUp(CancellationToken token)
+        private async ValueTask<FolderNode?> CruiseNextUp(CancellationToken token)
         {
             var parent = await GetParent(token);
             if (parent == null) return null;

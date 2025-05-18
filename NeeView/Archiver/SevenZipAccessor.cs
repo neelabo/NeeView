@@ -224,7 +224,7 @@ namespace NeeView
         /// <param name="fileExtraction">エントリの出力定義</param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task PreExtractAsync(bool encryptedMaybe, string directory, SevenZipFileExtraction fileExtraction, bool decrypt, CancellationToken token)
+        public async ValueTask PreExtractAsync(bool encryptedMaybe, string directory, SevenZipFileExtraction fileExtraction, bool decrypt, CancellationToken token)
         {
             Debug.Assert(!string.IsNullOrEmpty(directory));
 

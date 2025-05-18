@@ -91,7 +91,7 @@ namespace NeeView
         /// </summary>
         /// <param name="path">パス</param>
         /// <returns>閉じたなら true</returns>
-        public static async Task<CloseBookResult> CloseBookAsync(string path)
+        public static async ValueTask<CloseBookResult> CloseBookAsync(string path)
         {
             return await CloseBookAsync(new List<string>() { path });
         }
@@ -101,7 +101,7 @@ namespace NeeView
         /// </summary>
         /// <param name="paths">パス候補</param>
         /// <returns>閉じたなら true</returns>
-        public static async Task<CloseBookResult> CloseBookAsync(IEnumerable<string> paths)
+        public static async ValueTask<CloseBookResult> CloseBookAsync(IEnumerable<string> paths)
         {
             bool isClosed;
             var bookAddress = BookHub.Current.Address;

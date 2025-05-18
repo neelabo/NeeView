@@ -144,7 +144,7 @@ namespace NeeView
         /// <param name="timeout">タイムアウト時間(ms)</param>
         /// <returns></returns>
         /// <exception cref="TimeoutException"></exception>
-        private static async Task<IDisposable> BootProcessLockAsync(int timeout)
+        private static async ValueTask<IDisposable> BootProcessLockAsync(int timeout)
         {
             try
             {
@@ -152,7 +152,7 @@ namespace NeeView
             }
             catch (TimeoutException ex)
             {
-                var message = $"NeeView is terminated because it could not be started within {(int)(timeout / 1000)} seconds. Check Task Manager and terminate any other NeeView.exe processes that are still running.";
+                var message = $"NeeView is terminated because it could not be started within {(int)(timeout / 1000)} seconds. Check ValueTask Manager and terminate any other NeeView.exe processes that are still running.";
                 throw new TimeoutException(message, ex);
             }
         }
@@ -160,7 +160,7 @@ namespace NeeView
         /// <summary> 
         /// 初期化 
         /// </summary>
-        private async Task InitializeAsync(StartupEventArgs e)
+        private async ValueTask InitializeAsync(StartupEventArgs e)
         {
             Debug.WriteLine($"App.InitializeAsync...: {Stopwatch.ElapsedMilliseconds}ms");
 

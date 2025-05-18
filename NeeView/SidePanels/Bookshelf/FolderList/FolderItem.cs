@@ -415,7 +415,7 @@ namespace NeeView
             return false;
         }
 
-        public async Task<bool> RenameAsync(string name)
+        public async ValueTask<bool> RenameAsync(string name)
         {
             // TODO: ダイアログ処理を含んでいる。UI処理を分離したい
 

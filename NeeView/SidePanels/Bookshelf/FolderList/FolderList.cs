@@ -561,7 +561,7 @@ namespace NeeView
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task WaitAsync(CancellationToken cancellationToken)
+        public async ValueTask WaitAsync(CancellationToken cancellationToken)
         {
             await _busyLockEvent.WaitHandle.AsTask().WaitAsync(cancellationToken);
         }
@@ -600,7 +600,7 @@ namespace NeeView
         /// </summary>
         /// <param name="place">フォルダーパス</param>
         /// <param name="select">初期選択項目</param>
-        public async Task SetPlaceAsync(QueryPath path, FolderItemPosition? select, FolderSetPlaceOption options)
+        public async ValueTask SetPlaceAsync(QueryPath path, FolderItemPosition? select, FolderSetPlaceOption options)
         {
             if (_disposedValue) return;
 
@@ -700,7 +700,7 @@ namespace NeeView
         /// <summary>
         /// フォルダーリスト更新
         /// </summary>
-        public async Task RefreshAsync(bool force, bool resetSearchEngine)
+        public async ValueTask RefreshAsync(bool force, bool resetSearchEngine)
         {
             if (_disposedValue) return;
 
@@ -721,7 +721,7 @@ namespace NeeView
         /// 現在開いているフォルダーで更新(弱)
         /// e.isKeepPlaceが有効の場合、すでにリストに存在している場合は何もしない
         /// </summary>
-        public async Task SyncWeak(FolderListSyncEventArgs e)
+        public async ValueTask SyncWeak(FolderListSyncEventArgs e)
         {
             if (_disposedValue) return;
 
@@ -798,7 +798,7 @@ namespace NeeView
         #region MoveFolder
 
         // 次のフォルダーに移動
-        public async Task NextFolder(bool isPrioritizeBookMove, BookLoadOption option = BookLoadOption.None)
+        public async ValueTask NextFolder(bool isPrioritizeBookMove, BookLoadOption option = BookLoadOption.None)
         {
             if (_disposedValue) return;
 
@@ -821,7 +821,7 @@ namespace NeeView
         }
 
         // 前のフォルダーに移動
-        public async Task PrevFolder(bool isPrioritizeBookMove, BookLoadOption option = BookLoadOption.None)
+        public async ValueTask PrevFolder(bool isPrioritizeBookMove, BookLoadOption option = BookLoadOption.None)
         {
             if (_disposedValue) return;
 
@@ -844,7 +844,7 @@ namespace NeeView
         }
 
         // ランダムなフォルダーに移動
-        public async Task RandomFolder(BookLoadOption option = BookLoadOption.None)
+        public async ValueTask RandomFolder(BookLoadOption option = BookLoadOption.None)
         {
             if (_disposedValue) return;
 
@@ -870,7 +870,7 @@ namespace NeeView
         /// <summary>
         /// コマンドの「前のフォルダーに移動」「次のフォルダーへ移動」に対応
         /// </summary>
-        private async Task<bool> MoveFolder(int direction, BookLoadOption options)
+        private async ValueTask<bool> MoveFolder(int direction, BookLoadOption options)
         {
             var isCruise = IsCruise() && _folderCollection is not FolderSearchCollection;
             if (isCruise)
@@ -886,7 +886,7 @@ namespace NeeView
         /// <summary>
         /// 通常フォルダー移動
         /// </summary>
-        private async Task<bool> MoveNextFolder(int direction, BookLoadOption options)
+        private async ValueTask<bool> MoveNextFolder(int direction, BookLoadOption options)
         {
             if (_folderCollection is null) return false;
 
@@ -904,7 +904,7 @@ namespace NeeView
         /// <summary>
         /// ランダムフォルダー移動
         /// </summary>
-        private async Task<bool> MoveRandomFolder(BookLoadOption options)
+        private async ValueTask<bool> MoveRandomFolder(BookLoadOption options)
         {
             if (_folderCollection is null) return false;
 
@@ -933,7 +933,7 @@ namespace NeeView
         /// <summary>
         /// 巡回フォルダー移動
         /// </summary>
-        private async Task<bool> MoveCruiseFolder(int direction, BookLoadOption options)
+        private async ValueTask<bool> MoveCruiseFolder(int direction, BookLoadOption options)
         {
             // TODO: NowLoad表示をどうしよう。BookHubに処理を移してそこで行う？
 
@@ -1005,7 +1005,7 @@ namespace NeeView
         /// <summary>
         /// コレクション作成
         /// </summary>
-        public async Task<FolderCollection?> CreateFixedFolderCollectionAsync(QueryPath path, bool isForce, CancellationToken token)
+        public async ValueTask<FolderCollection?> CreateFixedFolderCollectionAsync(QueryPath path, bool isForce, CancellationToken token)
         {
             if (_disposedValue) return null;
 
@@ -1042,7 +1042,7 @@ namespace NeeView
         /// <summary>
         /// コレクション作成
         /// </summary>
-        private async Task<FolderCollection?> CreateFolderCollectionAsync(QueryPath path, bool isForce, CancellationToken token)
+        private async ValueTask<FolderCollection?> CreateFolderCollectionAsync(QueryPath path, bool isForce, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -1720,14 +1720,14 @@ namespace NeeView
             return select;
         }
 
-        public async Task RemoveAsync(FolderItem item)
+        public async ValueTask RemoveAsync(FolderItem item)
         {
             if (_disposedValue) return;
 
             await RemoveAsync(new FolderItem[] { item });
         }
 
-        public async Task RemoveAsync(IEnumerable<FolderItem> items)
+        public async ValueTask RemoveAsync(IEnumerable<FolderItem> items)
         {
             if (_disposedValue) return;
 
@@ -1746,7 +1746,7 @@ namespace NeeView
             }
         }
 
-        private async Task RemoveFilesAsync(IEnumerable<FolderItem> items)
+        private async ValueTask RemoveFilesAsync(IEnumerable<FolderItem> items)
         {
             if (!items.Any()) return;
             if (items.Any(e => !FileIO.ExistsPath(e.TargetPath.SimplePath))) return;

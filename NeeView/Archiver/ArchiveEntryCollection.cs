@@ -46,7 +46,7 @@ namespace NeeView
         /// <summary>
         /// ArchiveEntry収集
         /// </summary>
-        public async Task<List<ArchiveEntryNode>> GetEntriesAsync(bool decrypt, CancellationToken token)
+        public async ValueTask<List<ArchiveEntryNode>> GetEntriesAsync(bool decrypt, CancellationToken token)
         {
             if (_entries != null) return _entries;
 
@@ -105,7 +105,7 @@ namespace NeeView
         }
 
 
-        private async Task<List<ArchiveEntryNode>> GetSubArchivesEntriesAsync(List<ArchiveEntryNode> entries, bool decrypt, CancellationToken token)
+        private async ValueTask<List<ArchiveEntryNode>> GetSubArchivesEntriesAsync(List<ArchiveEntryNode> entries, bool decrypt, CancellationToken token)
         {
             var result = new List<ArchiveEntryNode>();
 
@@ -145,14 +145,14 @@ namespace NeeView
 
 
         // filter: ページとして画像ファイルのみリストアップ
-        public async Task<List<ArchiveEntryNode>> GetEntriesWhereImageAsync(bool decrypt, CancellationToken token)
+        public async ValueTask<List<ArchiveEntryNode>> GetEntriesWhereImageAsync(bool decrypt, CancellationToken token)
         {
             var entries = await GetEntriesAsync(decrypt, token);
             return entries.Where(e => e.ArchiveEntry.IsImage()).ToList();
         }
 
         // filter: ページとして画像ファイルとアーカイブをリストアップ
-        public async Task<List<ArchiveEntryNode>> GetEntriesWhereImageAndArchiveAsync(bool decrypt, CancellationToken token)
+        public async ValueTask<List<ArchiveEntryNode>> GetEntriesWhereImageAndArchiveAsync(bool decrypt, CancellationToken token)
         {
             var entries = await GetEntriesAsync(decrypt, token);
             if (Mode == ArchiveEntryCollectionMode.CurrentDirectory)
@@ -166,21 +166,21 @@ namespace NeeView
         }
 
         // filter: ページとしてすべてのファイルをリストアップ。フォルダーは空きフォルダーのみリストアップ
-        public async Task<List<ArchiveEntryNode>> GetEntriesWherePageAllAsync(bool decrypt, CancellationToken token)
+        public async ValueTask<List<ArchiveEntryNode>> GetEntriesWherePageAllAsync(bool decrypt, CancellationToken token)
         {
             var entries = await GetEntriesAsync(decrypt, token);
             return entries.WherePageAll().ToList();
         }
 
         // filter: 含まれるサブアーカイブのみ抽出
-        public async Task<List<ArchiveEntryNode>> GetEntriesWhereSubArchivesAsync(bool decrypt, CancellationToken token)
+        public async ValueTask<List<ArchiveEntryNode>> GetEntriesWhereSubArchivesAsync(bool decrypt, CancellationToken token)
         {
             var entries = await GetEntriesAsync(decrypt, token);
             return entries.Where(e => e.ArchiveEntry.IsArchive() || e.ArchiveEntry.IsMedia()).ToList();
         }
 
         // filter: 含まれるブックを抽出
-        public async Task<List<ArchiveEntryNode>> GetEntriesWhereBookAsync(bool decrypt, CancellationToken token)
+        public async ValueTask<List<ArchiveEntryNode>> GetEntriesWhereBookAsync(bool decrypt, CancellationToken token)
         {
             var entries = await GetEntriesAsync(decrypt, token);
             if (Mode == ArchiveEntryCollectionMode.CurrentDirectory)

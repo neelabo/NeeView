@@ -81,7 +81,7 @@ namespace NeeView
             return true;
         }
 
-        public async Task DeleteInvalidBookmark()
+        public async ValueTask DeleteInvalidBookmark()
         {
             // 直前の命令はキャンセル
             _removeUnlinkedCancellationTokenSource?.Cancel();

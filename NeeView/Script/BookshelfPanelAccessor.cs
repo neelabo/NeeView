@@ -128,7 +128,7 @@ namespace NeeView
         [WordNodeMember]
         public void Wait()
         {
-            _model.WaitAsync(_cancellationToken).Wait();
+            _model.WaitAsync(_cancellationToken).AsTask().Wait();
         }
 
         internal void SetCancellationToken(CancellationToken cancellationToken)

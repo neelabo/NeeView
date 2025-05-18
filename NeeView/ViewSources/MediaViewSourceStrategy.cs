@@ -12,7 +12,7 @@ namespace NeeView
         {
         }
 
-        public async Task<DataSource> LoadCoreAsync(PageDataSource data, Size size, CancellationToken token)
+        public async ValueTask<DataSource> LoadCoreAsync(PageDataSource data, Size size, CancellationToken token)
         {
             if (data.Data is not MediaPageData pageData) throw new InvalidOperationException(nameof(data.Data));
 

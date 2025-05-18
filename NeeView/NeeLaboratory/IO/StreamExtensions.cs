@@ -32,7 +32,7 @@ namespace NeeLaboratory.IO
         /// <param name="length">copy length</param>
         /// <param name="token">cancellation token</param>
         /// <returns></returns>
-        public static async Task<byte[]> ToArrayAsync(this Stream stream, int start, int length, CancellationToken token)
+        public static async ValueTask<byte[]> ToArrayAsync(this Stream stream, int start, int length, CancellationToken token)
         {
             var array = new byte[length];
             stream.Seek(start, SeekOrigin.Begin);
@@ -71,7 +71,7 @@ namespace NeeLaboratory.IO
         /// <summary>
         /// 読み込みサイズを保証する ReadAsync()
         /// </summary>
-        public static async Task<int> SafeReadAsync(this Stream stream, byte[] array, int offset, int length, CancellationToken token = default)
+        public static async ValueTask<int> SafeReadAsync(this Stream stream, byte[] array, int offset, int length, CancellationToken token = default)
         {
             int totalRead = 0;
             while (totalRead < length)

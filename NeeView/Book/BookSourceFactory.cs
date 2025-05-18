@@ -11,7 +11,7 @@ namespace NeeView
     public static class BookSourceFactory
     {
         // 本読み込み
-        public static async Task<BookSource> CreateAsync(BookAddress address, BookCreateSetting setting, CancellationToken token)
+        public static async ValueTask<BookSource> CreateAsync(BookAddress address, BookCreateSetting setting, CancellationToken token)
         {
             // ページ生成
             var archiveEntryCollection = CreateArchiveEntryCollection(address.TargetPath.SimplePath, setting.IsRecursiveFolder, setting.ArchiveRecursiveMode, setting.IsIgnoreCache, setting.ArchiveHint);
@@ -63,7 +63,7 @@ namespace NeeView
         /// <summary>
         /// ページ生成
         /// </summary>
-        private static async Task<List<Page>> CreatePageCollection(ArchiveEntryCollection archiveEntryCollection, BookPageCollectMode bookPageCollectMode, PageContentFactory contentFactory, bool decrypt, CancellationToken token)
+        private static async ValueTask<List<Page>> CreatePageCollection(ArchiveEntryCollection archiveEntryCollection, BookPageCollectMode bookPageCollectMode, PageContentFactory contentFactory, bool decrypt, CancellationToken token)
         {
             List<ArchiveEntryNode> entries = bookPageCollectMode switch
             {

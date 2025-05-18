@@ -139,7 +139,7 @@ namespace NeeView
             _model.UpdatePreview();
         }
 
-        public async Task<bool?> ShowSelectSaveFileDialogAsync(Window owner, CancellationToken token)
+        public async ValueTask<bool?> ShowSelectSaveFileDialogAsync(Window owner, CancellationToken token)
         {
             var dialog = new ExportImageSeveFileDialog(_model.ExportFolder,
                 _model.CreateFileName(ExportImageFileNameMode.Default, ExportImageFormat.Png),

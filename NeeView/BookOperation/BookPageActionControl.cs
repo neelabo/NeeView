@@ -80,7 +80,7 @@ namespace NeeView
         /// </summary>
         /// <param name="pages"></param>
         /// <returns></returns>
-        public async Task RemovePagesAsync(List<Page> pages)
+        public async ValueTask RemovePagesAsync(List<Page> pages)
         {
             await RemovePagesCoreAsync(pages);
 
@@ -101,7 +101,7 @@ namespace NeeView
         }
 
         // 現在表示しているページのファイルを削除する
-        public async Task DeleteFileAsync()
+        public async ValueTask DeleteFileAsync()
         {
             var page = _book?.CurrentPage;
             if (page is null) return;
@@ -117,7 +117,7 @@ namespace NeeView
         }
 
         // 指定ページのファイルを削除する
-        public async Task DeleteFileAsync(List<Page> pages)
+        public async ValueTask DeleteFileAsync(List<Page> pages)
         {
             var isCompletely = pages.Any(e => !e.ArchiveEntry.IsFileSystem);
             if (Config.Current.System.IsRemoveConfirmed || isCompletely)
@@ -150,7 +150,7 @@ namespace NeeView
             }
         }
 
-        private async Task RemovePagesCoreAsync(List<Page> pages)
+        private async ValueTask RemovePagesCoreAsync(List<Page> pages)
         {
             if (pages.Count == 0) return;
 
@@ -221,7 +221,7 @@ namespace NeeView
             _ = CopyToFolderAsync(parameter, multiPagePolicy, CancellationToken.None);
         }
 
-        public async Task CopyToFolderAsync(DestinationFolder parameter, MultiPagePolicy multiPagePolicy, CancellationToken token)
+        public async ValueTask CopyToFolderAsync(DestinationFolder parameter, MultiPagePolicy multiPagePolicy, CancellationToken token)
         {
             try
             {
@@ -253,7 +253,7 @@ namespace NeeView
             _ = MoveToFolderAsync(parameter, multiPagePolicy, CancellationToken.None);
         }
 
-        public async Task MoveToFolderAsync(DestinationFolder parameter, MultiPagePolicy multiPagePolicy, CancellationToken token)
+        public async ValueTask MoveToFolderAsync(DestinationFolder parameter, MultiPagePolicy multiPagePolicy, CancellationToken token)
         {
             try
             {
@@ -282,7 +282,7 @@ namespace NeeView
         }
 
         // 外部アプリで開く
-        public async Task OpenApplicationAsync(IExternalApp parameter, MultiPagePolicy multiPagePolicy, CancellationToken token)
+        public async ValueTask OpenApplicationAsync(IExternalApp parameter, MultiPagePolicy multiPagePolicy, CancellationToken token)
         {
             var pages = CollectPages(_book, multiPagePolicy);
             var external = new ExternalAppUtility();
@@ -329,7 +329,7 @@ namespace NeeView
         }
 
         // クリップボードに切り取り
-        public async Task CutToClipboardAsync(CopyFileCommandParameter parameter, CancellationToken token)
+        public async ValueTask CutToClipboardAsync(CopyFileCommandParameter parameter, CancellationToken token)
         {
             try
             {
@@ -360,7 +360,7 @@ namespace NeeView
         }
 
         // クリップボードにコピー
-        public async Task CopyToClipboardAsync(CopyFileCommandParameter parameter, CancellationToken token)
+        public async ValueTask CopyToClipboardAsync(CopyFileCommandParameter parameter, CancellationToken token)
         {
             try
             {

@@ -60,7 +60,7 @@ namespace NeeView
             return FileSearchEngine.DefaultSearcher.Analyze(keyword);
         }
 
-        public async Task<FileSearchResultWatcher> SearchAsync(string path, string keyword, CancellationToken token)
+        public async ValueTask<FileSearchResultWatcher> SearchAsync(string path, string keyword, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 

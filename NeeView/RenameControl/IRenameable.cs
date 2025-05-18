@@ -20,6 +20,6 @@ namespace NeeView
         /// </summary>
         /// <param name="name">new name</param>
         /// <returns>is success</returns>
-        Task<bool> RenameAsync(string name);
+        ValueTask<bool> RenameAsync(string name);
     }
 }

@@ -36,7 +36,7 @@ namespace NeeView
         }
 
         // エントリーリストを得る
-        protected override async Task<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token)
+        protected override async ValueTask<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token)
         {
             var list = new List<ArchiveEntry>();
 
@@ -70,7 +70,7 @@ namespace NeeView
 
         // エントリーのストリームを得る
         // PDFは画像化したものをストリームにして返す
-        protected override async Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
+        protected override async ValueTask<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
         {
             using (var stream = new FileStream(Path, FileMode.Open, FileAccess.Read))
             using (var pdfDocument = PdfDocument.Load(stream))
@@ -125,7 +125,7 @@ namespace NeeView
 
 
         // ファイルとして出力
-        protected override async Task ExtractToFileInnerAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
+        protected override async ValueTask ExtractToFileInnerAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
         {
             // 上書き時は移動前に削除
             if (isOverwrite && File.Exists(exportFileName))

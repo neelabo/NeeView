@@ -133,7 +133,7 @@ namespace NeeView
         /// <returns>事前展開が実行され完了すれば true, 実行されなければ false</returns>
         /// <exception cref="ObjectDisposedException"></exception>
         /// <exception cref="PreExtractException">スリープ状態です</exception>
-        private async Task<bool> PreExtractAsync(CancellationToken token)
+        private async ValueTask<bool> PreExtractAsync(CancellationToken token)
         {
             if (_disposedValue) throw new ObjectDisposedException(GetType().FullName);
 
@@ -228,7 +228,7 @@ namespace NeeView
         /// <param name="entry"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task WaitPreExtractAsync(ArchiveEntry entry, CancellationToken token)
+        public async ValueTask WaitPreExtractAsync(ArchiveEntry entry, CancellationToken token)
         {
             if (!CanPreExtract()) return;
             if (entry.Data is not null) return;

@@ -40,7 +40,7 @@ namespace NeeLaboratory.IO
             }
         }
 
-        private async Task<List<Process>> CollectProcess(RemoteCommandDelivery delivery)
+        private async ValueTask<List<Process>> CollectProcess(RemoteCommandDelivery delivery)
         {
             return await Task.Run(() =>
             {

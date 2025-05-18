@@ -28,7 +28,7 @@ namespace NeeView
         }
 
 
-        public async Task<DataSource> LoadCoreAsync(PageDataSource data, Size size, CancellationToken token)
+        public async ValueTask<DataSource> LoadCoreAsync(PageDataSource data, Size size, CancellationToken token)
         {
             // NOTE: 非同期で処理されることを期待している
             NVDebug.AssertMTA();

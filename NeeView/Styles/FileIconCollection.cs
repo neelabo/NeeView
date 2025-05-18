@@ -64,7 +64,7 @@ namespace NeeView
         private readonly Dictionary<Key, BitmapSourceCollection> _caches = new();
 
 
-        public async Task InitializeAsync()
+        public async ValueTask InitializeAsync()
         {
             await AppDispatcher.BeginInvoke(() => CreateDefaultFolderIcon());
         }

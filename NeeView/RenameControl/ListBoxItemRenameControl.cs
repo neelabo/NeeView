@@ -43,7 +43,7 @@ namespace NeeView
             return new RenameControlSource(listBoxItem, textBlock, item.GetRenameText());
         }
 
-        protected override async Task<bool> OnRenameAsync(string oldValue, string newValue)
+        protected override async ValueTask<bool> OnRenameAsync(string oldValue, string newValue)
         {
             Debug.Assert(oldValue != newValue);
             return await _item.RenameAsync(newValue);

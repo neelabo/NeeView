@@ -15,7 +15,7 @@ namespace NeeView
         // TODO: PageContent保持メモリサイズ用。本来の用途ではないのでどうにかする
         long Length => throw new NotSupportedException();
 
-        Task<Stream> OpenStreamAsync(CancellationToken token);
+        ValueTask<Stream> OpenStreamAsync(CancellationToken token);
 
         // TODO: PageContent保持メモリサイズ用。本来の用途ではないのでどうにかする
         long GetMemorySize(); //=> 0L;

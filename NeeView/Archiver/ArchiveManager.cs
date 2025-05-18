@@ -435,7 +435,7 @@ namespace NeeView
         /// <param name="source">ArchiveEntry</param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task<Archive> CreateArchiveAsync(ArchiveEntry source, bool ignoreCache, CancellationToken token)
+        public async ValueTask<Archive> CreateArchiveAsync(ArchiveEntry source, bool ignoreCache, CancellationToken token)
         {
             ThrowIfDisposed();
 
@@ -552,7 +552,7 @@ namespace NeeView
         /// <summary>
         /// すべてのアーカイブのファイルロック解除
         /// </summary>
-        public async Task UnlockAllArchivesAsync()
+        public async ValueTask UnlockAllArchivesAsync()
         {
             if (_disposedValue) return;
 

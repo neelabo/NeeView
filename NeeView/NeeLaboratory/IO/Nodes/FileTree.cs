@@ -84,7 +84,7 @@ namespace NeeLaboratory.IO.Nodes
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task<IDisposable> LockAsync(CancellationToken token)
+        public async ValueTask<IDisposable> LockAsync(CancellationToken token)
         {
             return await _asyncLock.LockAsync(token);
         }
@@ -94,7 +94,7 @@ namespace NeeLaboratory.IO.Nodes
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task InitializeAsync(CancellationToken token)
+        public async ValueTask InitializeAsync(CancellationToken token)
         {
             if (_disposedValue) return;
 
@@ -239,7 +239,7 @@ namespace NeeLaboratory.IO.Nodes
         /// <param name="e"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task FileSystemActionAsync(FileSystemAction action, FileSystemEventArgs e, CancellationToken token)
+        public async ValueTask FileSystemActionAsync(FileSystemAction action, FileSystemEventArgs e, CancellationToken token)
         {
             using (await _asyncLock.LockAsync(token))
             {
@@ -441,7 +441,7 @@ namespace NeeLaboratory.IO.Nodes
                 _eventArgs = eventArgs;
             }
 
-            protected override async Task ExecuteAsync(CancellationToken token)
+            protected override async ValueTask ExecuteAsync(CancellationToken token)
             {
                 await _tree.FileSystemActionAsync(_action, _eventArgs, token);
             }

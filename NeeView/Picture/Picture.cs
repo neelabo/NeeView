@@ -142,7 +142,7 @@ namespace NeeView
         /// サイズを指定し、必要であれば作り直す。不要であればなにもしない。
         /// </summary>
         /// TODO: 名前は UpdateImageSource のほうがふさわしい
-        public async Task<bool> CreateImageSourceAsync(object data, Size size, CancellationToken token)
+        public async ValueTask<bool> CreateImageSourceAsync(object data, Size size, CancellationToken token)
         {
             var sizeSource = CreateSizeSource(size);
             if (sizeSource is null) return false;
@@ -186,7 +186,7 @@ namespace NeeView
             }
         }
 
-        private async Task<ImageSource> CreateImageSourceAsync(object data, Size size, bool keepAspectRatio, CancellationToken token)
+        private async ValueTask<ImageSource> CreateImageSourceAsync(object data, Size size, bool keepAspectRatio, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 

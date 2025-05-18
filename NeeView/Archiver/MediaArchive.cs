@@ -22,7 +22,7 @@ namespace NeeView
             return Properties.TextResources.GetString("Archiver.Media");
         }
 
-        protected override async Task<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token)
+        protected override async ValueTask<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token)
         {
             var fileInfo = new FileInfo(this.Path);
 
@@ -45,14 +45,14 @@ namespace NeeView
             return Config.Current.Archive.Media.IsEnabled;
         }
 
-        protected override async Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
+        protected override async ValueTask<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
         {
             Debug.Assert(entry.Archive == this);
             var path = entry.EntityPath ?? throw new InvalidOperationException("Must exist.");
             return await Task.FromResult(new FileStream(path, FileMode.Open, FileAccess.Read));
         }
 
-        protected override async Task ExtractToFileInnerAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
+        protected override async ValueTask ExtractToFileInnerAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
         {
             Debug.Assert(entry.Archive == this);
             var path = entry.EntityPath ?? throw new InvalidOperationException("Must exist.");

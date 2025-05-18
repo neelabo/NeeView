@@ -11,7 +11,7 @@ namespace NeeView
         {
         }
 
-        public async Task<BitmapPageSource> LoadAsync(ArchiveEntryStreamSource streamSource, bool createPictureInfo, bool createSource, CancellationToken token)
+        public async ValueTask<BitmapPageSource> LoadAsync(ArchiveEntryStreamSource streamSource, bool createPictureInfo, bool createSource, CancellationToken token)
         {
             var loader = _imageDataLoader ?? new BitmapPageSourceLoader();
             var imageData = await loader.LoadAsync(streamSource, createPictureInfo, createSource, token);

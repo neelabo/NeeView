@@ -14,7 +14,7 @@ namespace NeeView
         }
 
 
-        public override async Task<ThumbnailSource> LoadThumbnailAsync(CancellationToken token)
+        public override async ValueTask<ThumbnailSource> LoadThumbnailAsync(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
             NVDebug.AssertMTA();
@@ -51,7 +51,7 @@ namespace NeeView
         /// ロード済の場合はそのメモリから、そうでない場合は ArchiveEntry から。
         /// </remarks>
         /// <returns></returns>
-        private async Task<Stream> CreateEntryStreamAsync(CancellationToken token)
+        private async ValueTask<Stream> CreateEntryStreamAsync(CancellationToken token)
         {
             if (_content.Data is byte[] bytes)
             {

@@ -94,7 +94,7 @@ namespace NeeView
             return BookHub.Current.GetCurrentBook()?.Pages.GetPageWithEntryFullName(path);
         }
 
-        private async Task CopyAsync(PageAccessor[] pages, CancellationToken token)
+        private async ValueTask CopyAsync(PageAccessor[] pages, CancellationToken token)
         {
             try
             {
@@ -112,7 +112,7 @@ namespace NeeView
             }
         }
 
-        private async Task CopyAsync(string[] paths, CancellationToken token)
+        private async ValueTask CopyAsync(string[] paths, CancellationToken token)
         {
             try
             {
@@ -129,7 +129,7 @@ namespace NeeView
             }
         }
 
-        private static async Task<List<ArchiveEntry>> PathToArchiveEntry(IEnumerable<string> paths, CancellationToken token)
+        private static async ValueTask<List<ArchiveEntry>> PathToArchiveEntry(IEnumerable<string> paths, CancellationToken token)
         {
             var entries = new List<ArchiveEntry>();
             foreach (var path in paths)
@@ -139,7 +139,7 @@ namespace NeeView
             return entries;
         }
 
-        private static async Task<List<string>> RealizeArchiveEntry(IEnumerable<ArchiveEntry> entries, CancellationToken token)
+        private static async ValueTask<List<string>> RealizeArchiveEntry(IEnumerable<ArchiveEntry> entries, CancellationToken token)
         {
             var archivePolicy = Config.Current.System.ArchiveCopyPolicy.LimitedRealization();
             return await ArchiveEntryUtility.RealizeArchiveEntry(entries, archivePolicy, token);

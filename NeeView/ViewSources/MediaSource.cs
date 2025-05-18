@@ -33,7 +33,7 @@ namespace NeeView
             return Path ?? "StreamSource";
         }
 
-        public async Task<Stream> OpenStreamAsync(CancellationToken token)
+        public async ValueTask<Stream> OpenStreamAsync(CancellationToken token)
         {
             if (StreamSource is not null)
             {

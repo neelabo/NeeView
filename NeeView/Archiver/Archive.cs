@@ -258,7 +258,7 @@ namespace NeeView
         /// <summary>
         /// エントリリストを取得 (Archive内でのみ使用)
         /// </summary>
-        protected abstract Task<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token);
+        protected abstract ValueTask<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token);
 
         /// <summary>
         /// エントリリストを取得
@@ -310,7 +310,7 @@ namespace NeeView
         /// <summary>
         /// 指定階層のエントリのみ取得
         /// </summary>
-        public async Task<List<ArchiveEntry>> GetEntriesAsync(string path, bool isRecursive, bool decrypt, CancellationToken token)
+        public async ValueTask<List<ArchiveEntry>> GetEntriesAsync(string path, bool isRecursive, bool decrypt, CancellationToken token)
         {
             path = LoosePath.TrimDirectoryEnd(path);
 
@@ -328,7 +328,7 @@ namespace NeeView
         /// <summary>
         /// エントリーのストリームを取得
         /// </summary>
-        public async Task<Stream> OpenStreamAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
+        public async ValueTask<Stream> OpenStreamAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
         {
             if (entry.Id < 0) throw new ApplicationException("Cannot open this entry: " + entry.EntryName);
 
@@ -351,12 +351,12 @@ namespace NeeView
         /// <summary>
         /// エントリのストリームを取得 (Inner)
         /// </summary>
-        protected abstract Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token);
+        protected abstract ValueTask<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token);
 
         /// <summary>
         /// エントリーをファイルとして出力
         /// </summary>
-        public async Task ExtractToFileAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
+        public async ValueTask ExtractToFileAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
         {
             await WaitPreExtractAsync(entry, token);
 
@@ -379,7 +379,7 @@ namespace NeeView
         /// <summary>
         /// エントリをファイルとして出力 (Inner)
         /// </summary>
-        protected abstract Task ExtractToFileInnerAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token);
+        protected abstract ValueTask ExtractToFileInnerAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token);
 
 
         /// <summary>
@@ -451,7 +451,7 @@ namespace NeeView
         /// <summary>
         /// 事前展開
         /// </summary>
-        public virtual Task PreExtractAsync(string directory, bool decrypt, CancellationToken token)
+        public virtual ValueTask PreExtractAsync(string directory, bool decrypt, CancellationToken token)
         {
             throw new NotImplementedException("This archiver does not support pre-extract");
         }
@@ -504,7 +504,7 @@ namespace NeeView
         /// <param name="entry"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task WaitPreExtractAsync(ArchiveEntry entry, CancellationToken token)
+        public async ValueTask WaitPreExtractAsync(ArchiveEntry entry, CancellationToken token)
         {
             await _preExtractor.WaitPreExtractAsync(entry, token);
         }
@@ -544,7 +544,7 @@ namespace NeeView
         /// <summary>
         /// delete
         /// </summary>
-        public async Task<DeleteResult> DeleteAsync(ArchiveEntry entry)
+        public async ValueTask<DeleteResult> DeleteAsync(ArchiveEntry entry)
         {
             return await DeleteAsync(new List<ArchiveEntry>() { entry });
         }
@@ -552,7 +552,7 @@ namespace NeeView
         /// <summary>
         /// delete entries
         /// </summary>
-        public virtual async Task<DeleteResult> DeleteAsync(List<ArchiveEntry> entries)
+        public virtual async ValueTask<DeleteResult> DeleteAsync(List<ArchiveEntry> entries)
         {
             return await Task.FromResult(DeleteResult.Failed);
         }
@@ -586,7 +586,7 @@ namespace NeeView
         /// <summary>
         /// rename
         /// </summary>
-        public virtual async Task<bool> RenameAsync(ArchiveEntry entry, string name)
+        public virtual async ValueTask<bool> RenameAsync(ArchiveEntry entry, string name)
         {
             return await Task.FromResult(false);
         }
@@ -594,7 +594,7 @@ namespace NeeView
         /// <summary>
         /// async read Zone.Identifier
         /// </summary>
-        protected async Task ReadZoneIdentifierAsync(CancellationToken token)
+        protected async ValueTask ReadZoneIdentifierAsync(CancellationToken token)
         {
             _zoneIdentifier = await ZoneIdentifier.ReadAsync(Path, token);
         }
@@ -612,7 +612,7 @@ namespace NeeView
         /// <summary>
         /// async write Zone.Identifier
         /// </summary>
-        public async Task WriteZoneIdentifierAsync(string path, CancellationToken token)
+        public async ValueTask WriteZoneIdentifierAsync(string path, CancellationToken token)
         {
             if (_zoneIdentifier is null) return;
 

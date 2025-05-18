@@ -11,7 +11,7 @@ namespace NeeView
 {
     public static class ClipboardUtility
     {
-        public static async Task CutAsync(List<Page> pages, CancellationToken token)
+        public static async ValueTask CutAsync(List<Page> pages, CancellationToken token)
         {
             var data = new DataObject();
 
@@ -29,7 +29,7 @@ namespace NeeView
             }
         }
 
-        public static async Task CopyAsync(List<Page> pages, CancellationToken token)
+        public static async ValueTask CopyAsync(List<Page> pages, CancellationToken token)
         {
             var data = new DataObject();
 
@@ -39,12 +39,12 @@ namespace NeeView
             }
         }
 
-        public static async Task<bool> SetDataAsync(DataObject data, List<Page> pages, CancellationToken token)
+        public static async ValueTask<bool> SetDataAsync(DataObject data, List<Page> pages, CancellationToken token)
         {
             return await SetDataAsync(data, pages, Config.Current.System, token);
         }
 
-        public static async Task<bool> SetDataAsync(DataObject data, List<Page> pages, ICopyPolicy policy, CancellationToken token)
+        public static async ValueTask<bool> SetDataAsync(DataObject data, List<Page> pages, ICopyPolicy policy, CancellationToken token)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace NeeView
         /// <param name="policy">登録方針</param>
         /// <param name="token"></param>
         /// <returns>登録成功/失敗</returns>
-        private static async Task<bool> SetDataCoreAsync(DataObject data, List<Page> pages, ICopyPolicy policy, CancellationToken token)
+        private static async ValueTask<bool> SetDataCoreAsync(DataObject data, List<Page> pages, ICopyPolicy policy, CancellationToken token)
         {
             if (pages.Count == 0) return false;
 

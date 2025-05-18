@@ -69,7 +69,7 @@ namespace NeeView
             _args = args;
         }
 
-        protected override async Task ExecuteAsync(CancellationToken token)
+        protected override async ValueTask ExecuteAsync(CancellationToken token)
         {
             await _bookHub.LoadAsync(_args, token);
         }
@@ -101,7 +101,7 @@ namespace NeeView
             this.CanBeCanceled = false;
         }
 
-        protected override async Task ExecuteAsync(CancellationToken token)
+        protected override async ValueTask ExecuteAsync(CancellationToken token)
         {
             _bookHub.Unload(_args);
 

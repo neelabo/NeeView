@@ -31,7 +31,7 @@ namespace NeeView
         /// <summary>
         /// パスから完全なArchiveEntryを作成
         /// </summary>
-        public static async Task<ArchiveEntry> CreateAsync(string path, ArchiveHint archiveHint, bool decrypt, CancellationToken token)
+        public static async ValueTask<ArchiveEntry> CreateAsync(string path, ArchiveHint archiveHint, bool decrypt, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -89,7 +89,7 @@ namespace NeeView
         /// アーカイブ内のエントリーを返す。
         /// 入れ子になったアーカイブの場合、再帰処理する。
         /// </summary>
-        private static async Task<ArchiveEntry> CreateInnerAsync(Archive archive, string entryName, bool decrypt, CancellationToken token)
+        private static async ValueTask<ArchiveEntry> CreateInnerAsync(Archive archive, string entryName, bool decrypt, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -122,7 +122,7 @@ namespace NeeView
         /// </summary>
         /// <param name="source">対象のエントリ</param>
         /// <param name="depth">検索範囲</param>
-        public static async Task<ArchiveEntry?> CreateFirstImageArchiveEntryAsync(ArchiveEntry source, int depth, bool decrypt, CancellationToken token)
+        public static async ValueTask<ArchiveEntry?> CreateFirstImageArchiveEntryAsync(ArchiveEntry source, int depth, bool decrypt, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -184,7 +184,7 @@ namespace NeeView
         /// <param name="path"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static async Task<bool> ExistsAsync(string path, bool decrypt, CancellationToken token)
+        public static async ValueTask<bool> ExistsAsync(string path, bool decrypt, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -256,7 +256,7 @@ namespace NeeView
         /// <param name="archivePolicy">実ファイルでなくアーカイブエントリである場合の方針</param>
         /// <param name="token"></param>
         /// <returns>実体化されたファイルパス</returns>
-        public static async Task<List<string>> RealizeArchiveEntry(IEnumerable<ArchiveEntry> entries, ArchivePolicy archivePolicy, CancellationToken token)
+        public static async ValueTask<List<string>> RealizeArchiveEntry(IEnumerable<ArchiveEntry> entries, ArchivePolicy archivePolicy, CancellationToken token)
         {
             var paths = new List<string>();
             foreach (var entry in entries)
