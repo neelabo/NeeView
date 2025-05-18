@@ -152,7 +152,7 @@ namespace NeeView
             }
             catch (TimeoutException ex)
             {
-                var message = $"NeeView is terminated because it could not be started within {(int)(timeout / 1000)} seconds. Check ValueTask Manager and terminate any other NeeView.exe processes that are still running.";
+                var message = $"NeeView is terminated because it could not be started within {(int)(timeout / 1000)} seconds. Check Task Manager and terminate any other NeeView.exe processes that are still running.";
                 throw new TimeoutException(message, ex);
             }
         }
