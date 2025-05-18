@@ -12,7 +12,7 @@ namespace NeeView
         /// <summary>
         /// ブックサムネイル作成負荷計測
         /// </summary>
-        public static async Task TestAsync()
+        public static async ValueTask TestAsync()
         {
             Thumbnail.DebugIgnoreCache = true;
 

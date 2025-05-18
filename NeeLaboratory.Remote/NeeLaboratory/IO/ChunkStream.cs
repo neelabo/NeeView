@@ -68,7 +68,7 @@ namespace NeeLaboratory.IO
             _stream.Write(buffer, 0, buffer.Length);
         }
 
-        public async Task WriteDataAsync(byte[] buffer, CancellationToken token)
+        public async ValueTask WriteDataAsync(byte[] buffer, CancellationToken token)
         {
             await _stream.WriteAsync(buffer, token);
         }
@@ -89,7 +89,7 @@ namespace NeeLaboratory.IO
             _stream.WriteByte(value);
         }
 
-        public async Task WriteByteAsync(byte value, CancellationToken token)
+        public async ValueTask WriteByteAsync(byte value, CancellationToken token)
         {
             var buffer = new byte[] { value };
             await WriteDataAsync(buffer, token);
@@ -112,7 +112,7 @@ namespace NeeLaboratory.IO
             WriteData(BitConverter.GetBytes(value));
         }
 
-        public async Task WriteInt32Async(int value, CancellationToken token)
+        public async ValueTask WriteInt32Async(int value, CancellationToken token)
         {
             await WriteDataAsync(BitConverter.GetBytes(value), token);
         }
@@ -144,7 +144,7 @@ namespace NeeLaboratory.IO
             }
         }
 
-        public async Task WriteChunkAsync(Chunk chunk, CancellationToken token)
+        public async ValueTask WriteChunkAsync(Chunk chunk, CancellationToken token)
         {
             await WriteInt32Async(chunk.Id, token);
             await WriteInt32Async(chunk.Length, token);
@@ -185,7 +185,7 @@ namespace NeeLaboratory.IO
             }
         }
 
-        public async Task WriteChunkArrayAsync(List<Chunk> chunks, CancellationToken token)
+        public async ValueTask WriteChunkArrayAsync(List<Chunk> chunks, CancellationToken token)
         {
             await WriteInt32Async(chunks.Count, token);
             foreach (var chunk in chunks)

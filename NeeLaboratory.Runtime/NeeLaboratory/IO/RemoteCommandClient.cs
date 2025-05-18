@@ -22,7 +22,7 @@ namespace NeeLaboratory.IO
             _processName = processName;
         }
 
-        public async Task SendAsync(RemoteCommand command, RemoteCommandDelivery delivery, CancellationToken token)
+        public async ValueTask SendAsync(RemoteCommand command, RemoteCommandDelivery delivery, CancellationToken token)
         {
             var processes = await CollectProcess(delivery);
             foreach (var process in processes)
@@ -64,7 +64,7 @@ namespace NeeLaboratory.IO
             });
         }
 
-        private static async Task SendAsync(string pipeName, RemoteCommand command, int timeout)
+        private static async ValueTask SendAsync(string pipeName, RemoteCommand command, int timeout)
         {
             using var tokenSource = new CancellationTokenSource();
             tokenSource.CancelAfter(timeout);
