@@ -337,11 +337,14 @@ namespace NeeView
 
         private void HandleDropEvent(ListBoxDropEventArgs e)
         {
-            if (!AcceptDrop(e))
+            if (AcceptDrop(e))
+            {
+                e.DragEventArgs.Handled = true;
+            }
+            else
             {
                 e.DragEventArgs.Effects = DragDropEffects.None;
             }
-            e.DragEventArgs.Handled = true;
         }
 
         private bool AcceptDrop(ListBoxDropEventArgs e)
