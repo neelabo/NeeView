@@ -111,8 +111,7 @@
                                         ToolTip="{properties:TextBinding Bookshelf.SubFolder.ToolTip}"
                                         Visibility="{Binding FolderCollection, Converter={StaticResource FolderCollectionToFolderRecursiveVisibilityConverter}}" />
                                 <Border Margin="5,0">
-                                    <local:BreadcrumbBar x:Name="PlaceBreadcrumbBar" VerticalAlignment="Center" TabIndex="12"       
-                                                 KeyboardNavigation.TabNavigation="Local"
+                                    <local:BreadcrumbBar x:Name="PlaceBreadcrumbBar" VerticalAlignment="Center"
                                                  Profile="{StaticResource PlaceBreadcrumbProfile}"
                                                  Path="{Binding Model.PlacePath}">
                                     </local:BreadcrumbBar>

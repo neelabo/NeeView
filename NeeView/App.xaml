@@ -27,6 +27,8 @@
                 <ResourceDictionary Source="/Styles/NVTheme.xaml" />
                 <ResourceDictionary Source="/Styles/WindowStyles.xaml" />
 
+                <ResourceDictionary Source="/BreadcrumbBar/BreadcrumbBarResource.xaml" />
+
             </ResourceDictionary.MergedDictionaries>
 
 

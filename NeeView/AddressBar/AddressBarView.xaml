@@ -256,7 +256,8 @@
                             <Image Source="{StaticResource ic_info_outline_24px}" />
                         </Button>
                         <Grid VerticalAlignment="Stretch">
-                            <local:BreadcrumbBar x:Name="AddressBreadcrumbBar" TabIndex="12"       
+                            <local:BreadcrumbBar x:Name="AddressBreadcrumbBar"
+                                                 KeyboardNavigation.TabIndex="12"
                                                  KeyboardNavigation.TabNavigation="Local"
                                                  Profile="{StaticResource AddressBreadcrumbProfile}"
                                                  Path="{Binding Model.Address}"

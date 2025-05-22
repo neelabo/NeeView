@@ -49,12 +49,14 @@ namespace NeeView
         public ImageSource ImageSource => Scheme.ToImage();
     }
 
+
     public class EmptyBreadcrumbToken : BreadcrumbToken
     {
         public EmptyBreadcrumbToken() : base(QueryPath.None, "", ResourceService.GetString("@Word.ItemNone"))
         {
         }
     }
+
 
     public class LoadingBreadcrumbToken : BreadcrumbToken
     {

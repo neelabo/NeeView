@@ -20,6 +20,10 @@ namespace NeeView
 
         public string GetDisplayName(QueryPath query, int index)
         {
+            if (index == 0 && query.Scheme.CanOmit())
+            {
+                return "";
+            }
             var s = query.Tokens[index];
             if (index == 1)
             {

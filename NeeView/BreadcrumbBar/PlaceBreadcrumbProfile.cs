@@ -87,9 +87,9 @@ namespace NeeView
 
         public List<Breadcrumb> ArrangeBreadCrumbs(List<Breadcrumb> crumbs)
         {
-            if (crumbs.Count == 0 || crumbs[0].IsVisibleName)
+            if (crumbs.Count == 0 || crumbs[0].HasName)
             {
-                return crumbs.Prepend(new Breadcrumb(this, new QueryPath(""), 0)).ToList();
+                return crumbs.Prepend(new NormalBreadcrumb(this, new QueryPath(""), 0)).ToList();
             }
             return crumbs;
         }

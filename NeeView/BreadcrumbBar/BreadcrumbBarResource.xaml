@@ -1,0 +1,136 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:NeeView">
+
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
+    <Style x:Key="BreadcrumbButton" TargetType="{x:Type Button}" BasedOn="{StaticResource IconButton}">
+        <Setter Property="Padding" Value="2" />
+        <Setter Property="Foreground" Value="{DynamicResource Control.Foreground}" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <ControlTemplate x:Key="BreadcrumbComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
+        <Border x:Name="Border" BorderThickness="1" Background="Transparent" BorderBrush="Transparent">
+            <Path x:Name="Arrow" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="{TemplateBinding Foreground}" StrokeThickness="1" Data="M 6 4 L 10 8 L 6 12" />
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="Arrow" Property="Opacity" Value="0.5" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Background}" />
+                <Setter TargetName="Border" Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=BorderBrush}" />
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Background}" />
+                <Setter TargetName="Border" Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=BorderBrush}" />
+                <Setter TargetName="Arrow" Property="Data" Value="M 4 6 L 8 10 L 12 6" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style x:Key="BreadcrumbComboBox" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource NVComboBox}">
+        <Setter Property="Width" Value="20" />
+        <Setter Property="MinWidth" Value="16" />
+        <Setter Property="MinHeight" Value="16" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="VirtualizingPanel.IsVirtualizing" Value="True"/>
+        <Setter Property="VirtualizingPanel.VirtualizationMode" Value="Recycling"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ComboBox}">
+                    <Grid>
+                        <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" />
+                        <ToggleButton x:Name="ToggleButton" Template="{StaticResource BreadcrumbComboBoxToggleButton}" Focusable="False" ClickMode="Press"
+                                Foreground="{DynamicResource Control.Foreground}" Background="{TemplateBinding local:ComboBoxTools.MouseOverBackground}"
+                                BorderBrush="{TemplateBinding local:ComboBoxTools.MouseOverBorderBrush}" VerticalAlignment="Stretch"
+                                IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" />
+                        <Popup x:Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}">
+                            <Grid x:Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                <Border x:Name="DropDownBorder" BorderThickness="1" BorderBrush="{DynamicResource Menu.Border}" Background="{DynamicResource Menu.Background}"
+                                        TextElement.Foreground="{DynamicResource Menu.Foreground}">
+                                    <ScrollViewer Style="{StaticResource NVScrollViewer}" Margin="0" Padding="0" SnapsToDevicePixels="True">
+                                        <VirtualizingStackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+                                </Border>
+                            </Grid>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="HasItems" Value="false">
+                            <Setter TargetName="DropDownBorder" Property="MinHeight" Value="95" />
+                        </Trigger>
+                        <Trigger Property="IsGrouping" Value="true">
+                            <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
+                        </Trigger>
+                        <Trigger SourceName="Popup" Property="AllowsTransparency" Value="true">
+                            <Setter TargetName="DropDownBorder" Property="CornerRadius" Value="0" />
+                            <Setter TargetName="DropDownBorder" Property="Margin" Value="0" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <DataTemplate DataType="{x:Type local:FileBreadcrumbToken}">
+        <DockPanel LastChildFill="True">
+            <local:FileIconImage DockPanel.Dock="Left" Path="{Binding Path.SimplePath}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <TextBlock Text="{Binding Label}" VerticalAlignment="Center"/>
+        </DockPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type local:SchemeBreadcrumbToken}">
+        <DockPanel LastChildFill="True">
+            <Image DockPanel.Dock="Left" Source="{Binding ImageSource}" VerticalAlignment="Center" Width="16" Height="16" Margin="0,0,8,0"/>
+            <TextBlock Text="{Binding Label}" VerticalAlignment="Center"/>
+        </DockPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type local:LoadingBreadcrumbToken}">
+        <local:ProgressRing Radius="8" Margin="24,2"/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type local:EmptyBreadcrumbToken}">
+        <TextBlock Text="{Binding Label}" Foreground="{DynamicResource Control.GrayText}" />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type local:BreadcrumbToken}">
+        <TextBlock Text="{Binding Label}"/>
+    </DataTemplate>
+
+
+    <Style TargetType="{x:Type local:BreadcrumbItem}">
+        <Setter Property="IsTabStop" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:BreadcrumbItem}">
+                    <StackPanel x:Name="PART_Root" Orientation="Horizontal">
+                        <Button x:Name="PART_MainButton" Style="{StaticResource BreadcrumbButton}"
+                                IsTabStop="False" Visibility="{Binding Breadcrumb.HasName, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <TextBlock Text="{Binding Breadcrumb.Name, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                        </Button>
+                        <ComboBox x:Name="PART_BreadcrumbComboBox" VerticalAlignment="Stretch" IsTabStop="False"
+                              Style="{StaticResource BreadcrumbComboBox}"
+                              Visibility="{Binding Breadcrumb.HasChildren, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource BooleanToVisibilityConverter}}"
+                              ItemsSource="{Binding Breadcrumb.Children, RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                        </ComboBox>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type local:BreadcrumbPadding}">
+        <Setter Property="Focusable" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:BreadcrumbPadding}">
+                    <Rectangle x:Name="PART_Root" Fill="Transparent"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
