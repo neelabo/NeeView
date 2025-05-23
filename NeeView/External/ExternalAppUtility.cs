@@ -26,7 +26,7 @@ namespace NeeView
         /// <param name="pages">実行するページ群</param>
         /// <param name="options">実行オプション</param>
         /// <param name="token">キャンセルトークン</param>
-        public async Task CallAsync(IEnumerable<Page> pages, IExternalApp options, CancellationToken token)
+        public async ValueTask CallAsync(IEnumerable<Page> pages, IExternalApp options, CancellationToken token)
         {
             try
             {

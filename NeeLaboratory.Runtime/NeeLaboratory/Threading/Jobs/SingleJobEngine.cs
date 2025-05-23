@@ -226,7 +226,7 @@ namespace NeeLaboratory.Threading.Jobs
                 try
                 {
                     _log?.Trace($"Job execute: {_currentJob}");
-                    _currentJob?.ExecuteAsync().Wait(token);
+                    _currentJob?.ExecuteAsync().AsTask().Wait(token);
                 }
                 catch (OperationCanceledException)
                 {

@@ -333,7 +333,7 @@ namespace NeeView
             return false;
         }
 
-        public virtual async Task<bool> RenameAsync(string name)
+        public virtual async ValueTask<bool> RenameAsync(string name)
         {
             return await Task.FromResult(false);
         }

@@ -161,7 +161,7 @@ namespace NeeView
             _model.IsVisibleChanged(isVisible);
         }
 
-        public async Task RemoveAsync(IEnumerable<FolderItem> items)
+        public async ValueTask RemoveAsync(IEnumerable<FolderItem> items)
         {
             if (items == null) return;
 

@@ -183,7 +183,7 @@ namespace NeeView
 
         #region DragDrop
 
-        public async Task DragStartBehavior_DragBeginAsync(object? sender, Windows.DragStartEventArgs e, CancellationToken token)
+        public async ValueTask DragStartBehavior_DragBeginAsync(object? sender, Windows.DragStartEventArgs e, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 

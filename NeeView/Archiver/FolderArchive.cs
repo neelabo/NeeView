@@ -52,7 +52,7 @@ namespace NeeView
         }
 
         // リスト取得
-        protected override async Task<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token)
+        protected override async ValueTask<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token)
         {
             // Pathがない場合は汎用アーカイブなのでリスト作成は行わない
             if (string.IsNullOrEmpty(Path))
@@ -160,7 +160,7 @@ namespace NeeView
         }
 
         // ストリームを開く
-        protected override async Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
+        protected override async ValueTask<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
         {
             Debug.Assert(entry.Archive == this);
             Debug.Assert(entry.EntityPath is not null);
@@ -168,7 +168,7 @@ namespace NeeView
         }
 
         // ファイル出力
-        protected override async Task ExtractToFileInnerAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
+        protected override async ValueTask ExtractToFileInnerAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
         {
             Debug.Assert(entry.Archive == this);
             Debug.Assert(entry.EntityPath is not null);
@@ -203,7 +203,7 @@ namespace NeeView
         /// delete entries
         /// </summary>
         /// <exception cref="ArgumentException">Not registered with this archiver.</exception>
-        public override async Task<DeleteResult> DeleteAsync(List<ArchiveEntry> entries)
+        public override async ValueTask<DeleteResult> DeleteAsync(List<ArchiveEntry> entries)
         {
             if (entries.Any(e => e.Archive != this)) throw new ArgumentException("There are elements not registered with this archiver.", nameof(entries));
 
@@ -228,7 +228,7 @@ namespace NeeView
         /// <summary>
         /// rename
         /// </summary>
-        public override async Task<bool> RenameAsync(ArchiveEntry entry, string name)
+        public override async ValueTask<bool> RenameAsync(ArchiveEntry entry, string name)
         {
             if (entry.Archive != this) throw new ArgumentException("There are elements not registered with this archiver.", nameof(entry));
 

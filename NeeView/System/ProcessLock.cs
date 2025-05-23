@@ -20,7 +20,7 @@ namespace NeeView
             return _lock.Lock();
         }
 
-        public static async Task<IDisposable> LockAsync(int timeout)
+        public static async ValueTask<IDisposable> LockAsync(int timeout)
         {
             return await _lock.LockAsync(timeout);
         }

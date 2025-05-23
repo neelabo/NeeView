@@ -69,7 +69,7 @@ namespace NeeView
         /// <param name="token">キャンセルトークン</param>
         /// <returns>生成したインスタンス</returns>
         // TODO: 非同期ではパラメータ生成のみを行い、BookAddressコンストラクタにそれを渡すようにして初期化する
-        public static async Task<BookAddress> CreateAsync(QueryPath query, QueryPath sourceQuery, string? entryName, ArchiveEntryCollectionMode mode, BookLoadOption option, CancellationToken token)
+        public static async ValueTask<BookAddress> CreateAsync(QueryPath query, QueryPath sourceQuery, string? entryName, ArchiveEntryCollectionMode mode, BookLoadOption option, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -82,7 +82,7 @@ namespace NeeView
         /// 初期化。
         /// アーカイブ展開等を含むため、非同期処理。
         /// </summary>
-        private async Task ConstructAsync(QueryPath query, QueryPath sourceQuery, string? entryName, ArchiveEntryCollectionMode mode, BookLoadOption option, CancellationToken token)
+        private async ValueTask ConstructAsync(QueryPath query, QueryPath sourceQuery, string? entryName, ArchiveEntryCollectionMode mode, BookLoadOption option, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 

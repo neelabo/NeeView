@@ -12,7 +12,7 @@ namespace NeeView.Threading
         /// <param name="retryCount">リトライ回数(2以上)</param>
         /// <param name="millisecondsInterval">リトライインターバル(ms)</param>
         /// <param name="action">処理本体</param>
-        public static async Task RetryActionAsync(int retryCount, int millisecondsInterval, Action action)
+        public static async ValueTask RetryActionAsync(int retryCount, int millisecondsInterval, Action action)
         {
             if (action is null) throw new ArgumentNullException(nameof(action));
             if (retryCount < 2) throw new ArgumentException("retryCount must be 2 or more");

@@ -161,7 +161,7 @@ namespace NeeView
             Task.Run(() => LoadAsync(context, CancellationToken.None));
         }
 
-        private async Task LoadAsync(BookLoadContext context, CancellationToken token)
+        private async ValueTask LoadAsync(BookLoadContext context, CancellationToken token)
         {
             Debug.Assert(context.Direction is 1 or -1);
 
@@ -270,7 +270,7 @@ namespace NeeView
         /// <param name="range">ページ範囲</param>
         /// <param name="direction">ページ方向</param>
         /// <param name="token">キャンセルトークン</param>
-        private async Task LoadMainAsync(PageRange range, int direction, CancellationToken token)
+        private async ValueTask LoadMainAsync(PageRange range, int direction, CancellationToken token)
         {
             var indexes = Enumerable.Range(range.Min.Index, range.Max.Index - range.Min.Index + 1).ToList();
             var pages = indexes.Direction(direction).Select(e => _bookContext.GetPage(e, true)).WhereNotNull().ToList();
@@ -303,7 +303,7 @@ namespace NeeView
         /// <param name="direction">先読み方向</param>
         /// <param name="limit">先読みページ数上限</param>
         /// <param name="token">キャンセルトークン</param>
-        private async Task<(int Count, PagePosition Position)> LoadAheadAsync(PagePosition position, int direction, int limit, CancellationToken token)
+        private async ValueTask<(int Count, PagePosition Position)> LoadAheadAsync(PagePosition position, int direction, int limit, CancellationToken token)
         {
             var count = 0;
             var pos = position;
@@ -332,7 +332,7 @@ namespace NeeView
             return (count, pos);
         }
 
-        public async Task<PageFrame?> LoadAheadCoreAsync(PagePosition pos, int direction, CancellationToken token)
+        public async ValueTask<PageFrame?> LoadAheadCoreAsync(PagePosition pos, int direction, CancellationToken token)
         {
             NVDebug.AssertMTA();
             token.ThrowIfCancellationRequested();

@@ -191,7 +191,7 @@ namespace NeeView
         /// </summary>
         /// <param name="header"></param>
         /// <returns></returns>
-        internal async Task<byte[]?> LoadAsync(ThumbnailCacheHeader header, CancellationToken token)
+        internal async ValueTask<byte[]?> LoadAsync(ThumbnailCacheHeader header, CancellationToken token)
         {
             if (_disposedValue) return null;
             if (!IsEnabled) return null;

@@ -12,6 +12,6 @@ namespace NeeLaboratory.Threading.Jobs
         /// <summary>
         /// Jobの実行処理
         /// </summary>
-        Task ExecuteAsync();
+        ValueTask ExecuteAsync();
     }
 }

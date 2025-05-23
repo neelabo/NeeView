@@ -30,7 +30,7 @@ namespace NeeView
         }
 
 
-        public async Task ExtractAsync(CancellationToken token)
+        public async ValueTask ExtractAsync(CancellationToken token)
         {
             _map.Clear();
             _cancellationToken = token;

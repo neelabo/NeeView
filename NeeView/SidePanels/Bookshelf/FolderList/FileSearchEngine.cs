@@ -82,7 +82,7 @@ namespace NeeView
             _searchCancellationTokenSource?.Cancel();
         }
 
-        public async Task<FileSearchResultWatcher> SearchAsync(string keyword, CancellationToken token)
+        public async ValueTask<FileSearchResultWatcher> SearchAsync(string keyword, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
             ThrowIfDisposed();
@@ -127,7 +127,7 @@ namespace NeeView
         }
 
 
-        public async Task<List<FileItem>> SearchAsync(string keyword, IEnumerable<FileItem> entries, CancellationToken token)
+        public async ValueTask<List<FileItem>> SearchAsync(string keyword, IEnumerable<FileItem> entries, CancellationToken token)
         {
             return await Task.Run(() => _searcher.Search(keyword, entries, token).Cast<FileItem>().ToList());
         }

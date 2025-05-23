@@ -19,7 +19,7 @@ namespace NeeView
         /// <summary>
         /// ファイル削除、確認ダイアログ付き。１項目専用
         /// </summary>
-        public static async Task<bool> DeleteAsync(ArchiveEntry entry, string title, FrameworkElement? thumbnail)
+        public static async ValueTask<bool> DeleteAsync(ArchiveEntry entry, string title, FrameworkElement? thumbnail)
         {
             return await DeleteAsync(new List<ArchiveEntry> { entry }, title, thumbnail);
         }
@@ -31,7 +31,7 @@ namespace NeeView
         /// <param name="title">確認ダイアログタイトル。null で自動生成する</param>
         /// <param name="thumbnail">確認ダイアログサムネイル。null で自動生成する</param>
         /// <returns>削除成功/失敗</returns>
-        public static async Task<bool> DeleteAsync(List<ArchiveEntry> entries, string title, FrameworkElement? thumbnail)
+        public static async ValueTask<bool> DeleteAsync(List<ArchiveEntry> entries, string title, FrameworkElement? thumbnail)
         {
             if (entries.Count == 0) return false;
 

@@ -15,7 +15,7 @@ namespace NeeLaboratory.Threading
     {
         private readonly SemaphoreSlim _semaphore = new(1, 1);
 
-        public async Task<IDisposable> LockAsync(CancellationToken token)
+        public async ValueTask<IDisposable> LockAsync(CancellationToken token)
         {
             await _semaphore.WaitAsync(token);
             return new Handler(_semaphore);

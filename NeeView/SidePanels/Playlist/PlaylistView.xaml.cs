@@ -89,7 +89,7 @@ namespace NeeView
             this.IsInvalidFileNameChars = true;
         }
 
-        protected override async Task<bool> OnRenameAsync(string oldValue, string newValue)
+        protected override async ValueTask<bool> OnRenameAsync(string oldValue, string newValue)
         {
             if (oldValue == newValue) return true;
 

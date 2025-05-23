@@ -207,7 +207,7 @@ namespace NeeView
             e.Handled = true;
         }
 
-        private static async Task CutAsync(List<Page> pages, CancellationToken token)
+        private static async ValueTask CutAsync(List<Page> pages, CancellationToken token)
         {
             await ClipboardUtility.CutAsync(pages, token);
         }
@@ -246,7 +246,7 @@ namespace NeeView
             e.Handled = true;
         }
 
-        private static async Task CopyAsync(List<Page> pages, CancellationToken token)
+        private static async ValueTask CopyAsync(List<Page> pages, CancellationToken token)
         {
             await ClipboardUtility.CopyAsync(pages, token);
         }
@@ -380,7 +380,7 @@ namespace NeeView
             return BookOperation.Current.Control.CanDeleteFile(pages);
         }
 
-        private static async Task RemoveAsync(List<Page> pages)
+        private static async ValueTask RemoveAsync(List<Page> pages)
         {
             await BookOperation.Current.Control.DeleteFileAsync(pages);
         }

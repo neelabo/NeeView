@@ -294,13 +294,13 @@ namespace NeeView
         {
         }
 
-        private async Task RenameQuickAccess(QuickAccessNode item)
+        private async ValueTask RenameQuickAccess(QuickAccessNode item)
         {
             var renamer = new FolderTreeItemRenamer(this.TreeView, null);
             await renamer.RenameAsync(item);
         }
 
-        private async Task RenameBookmarkFolder(BookmarkFolderNode item)
+        private async ValueTask RenameBookmarkFolder(BookmarkFolderNode item)
         {
             var renamer = new FolderTreeItemRenamer(this.TreeView, null);
             await renamer.RenameAsync(item);
@@ -618,7 +618,7 @@ namespace NeeView
 
         #region DragDrop
 
-        public async Task DragStartBehavior_DragBeginAsync(object? sender, DragStartEventArgs e, CancellationToken token)
+        public async ValueTask DragStartBehavior_DragBeginAsync(object? sender, DragStartEventArgs e, CancellationToken token)
         {
             if (e.DragItem is not TreeViewItem data)
             {

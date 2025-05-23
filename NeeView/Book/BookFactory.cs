@@ -6,7 +6,7 @@ namespace NeeView
 {
     public static class BookFactory
     {
-        public static async Task<Book> CreateAsync(object? sender, BookAddress address, BookCreateSetting setting, BookMemento memento, CancellationToken token)
+        public static async ValueTask<Book> CreateAsync(object? sender, BookAddress address, BookCreateSetting setting, BookMemento memento, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 

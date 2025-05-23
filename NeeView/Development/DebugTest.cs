@@ -15,7 +15,7 @@ namespace NeeView
 {
     public static class DebugTest
     {
-        public static async Task ExecuteTestAsync()
+        public static async ValueTask ExecuteTestAsync()
         {
             ////StringTools.TestStringArgumentSplitter();
             ////return;
@@ -83,7 +83,7 @@ namespace NeeView
 
         static class ArchiveEntryCollectionTest
         {
-            public static async Task ExecuteAsync(CancellationToken token)
+            public static async ValueTask ExecuteAsync(CancellationToken token)
             {
                 var path = @"E:\Work\Labo\サンプル\サブフォルダテストX.zip";
                 //var path = @"E:\Work\Labo\サンプル\サブフォルダテストX.zip\サブフォルダテストX";

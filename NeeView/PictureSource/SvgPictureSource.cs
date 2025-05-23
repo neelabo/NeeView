@@ -24,7 +24,7 @@ namespace NeeView
         public PictureInfo? PictureInfo { get; }
 
 
-        public async Task<byte[]> CreateImageAsync(DrawingGroup drawing, Size size, BitmapCreateSetting setting, BitmapImageFormat format, int quality, CancellationToken token)
+        public async ValueTask<byte[]> CreateImageAsync(DrawingGroup drawing, Size size, BitmapCreateSetting setting, BitmapImageFormat format, int quality, CancellationToken token)
         {
             if (size.IsEmptyOrZero()) throw new ArgumentOutOfRangeException(nameof(size));
 
@@ -44,13 +44,13 @@ namespace NeeView
             }
         }
 
-        public async Task<ImageSource> CreateImageSourceAsync(DrawingGroup drawing, Size size, BitmapCreateSetting setting, CancellationToken token)
+        public async ValueTask<ImageSource> CreateImageSourceAsync(DrawingGroup drawing, Size size, BitmapCreateSetting setting, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
             return await Task.FromResult(CreateImageSource(drawing)); // TODO: async
         }
 
-        public async Task<byte[]> CreateThumbnailAsync(DrawingGroup drawing, ThumbnailProfile profile, CancellationToken token)
+        public async ValueTask<byte[]> CreateThumbnailAsync(DrawingGroup drawing, ThumbnailProfile profile, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 

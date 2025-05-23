@@ -456,7 +456,7 @@ namespace NeeView
             await RenameAsync();
         }
 
-        private async Task RenameAsync()
+        private async ValueTask RenameAsync()
         {
             var listBox = this.ListBox;
             if (listBox.SelectedItem is not FolderItem item) return;
@@ -588,7 +588,7 @@ namespace NeeView
 
         #region DragDrop
 
-        public async Task DragStartBehavior_DragBeginAsync(object? sender, DragStartEventArgs e, CancellationToken token)
+        public async ValueTask DragStartBehavior_DragBeginAsync(object? sender, DragStartEventArgs e, CancellationToken token)
         {
             var items = this.ListBox.SelectedItems
                 .Cast<FolderItem>()

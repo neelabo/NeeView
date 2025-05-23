@@ -56,7 +56,7 @@ namespace NeeView
         public bool Initialized() => Format != null;
 
         // エントリーリストを得る
-        protected override async Task<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token)
+        protected override async ValueTask<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token)
         {
             NVDebug.AssertMTA();
             token.ThrowIfCancellationRequested();
@@ -110,7 +110,7 @@ namespace NeeView
         }
 
         // エントリーのストリームを得る
-        protected override async Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
+        protected override async ValueTask<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
         {
             NVDebug.AssertMTA();
             Debug.Assert(entry is not null);
@@ -151,7 +151,7 @@ namespace NeeView
         /// <param name="exportFileName">エクスポート先のパス</param>
         /// <param name="isOverwrite">上書き許可</param>
         /// <param name="token"></param>
-        protected override async Task ExtractToFileInnerAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
+        protected override async ValueTask ExtractToFileInnerAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
         {
             Debug.Assert(entry.Archive == this);
             var extractor = new SevenZipArchiveExtractor(this);
@@ -186,7 +186,7 @@ namespace NeeView
         /// <summary>
         /// 事前展開処理
         /// </summary>
-        public override async Task PreExtractAsync(string directory, bool decrypt, CancellationToken token)
+        public override async ValueTask PreExtractAsync(string directory, bool decrypt, CancellationToken token)
         {
             Debug.Assert(!string.IsNullOrEmpty(directory));
 

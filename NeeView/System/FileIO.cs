@@ -258,7 +258,7 @@ namespace NeeView
         /// <param name="token"></param>
         /// <returns></returns>
         /// <exception cref="TimeoutException"></exception>
-        public static async Task WaitFileReadableAsync(FileInfo file, TimeSpan timeout, CancellationToken token)
+        public static async ValueTask WaitFileReadableAsync(FileInfo file, TimeSpan timeout, CancellationToken token)
         {
             var time = new TimeSpan();
             var interval = TimeSpan.FromMilliseconds(500);
@@ -294,12 +294,12 @@ namespace NeeView
         /// </remarks>
         /// <param name="path"></param>
         /// <returns></returns>
-        private static async Task<CloseBookResult> CloseBookAsync(string path)
+        private static async ValueTask<CloseBookResult> CloseBookAsync(string path)
         {
             return await CloseBookAsync([path]);
         }
 
-        private static async Task<CloseBookResult> CloseBookAsync(IEnumerable<string> paths)
+        private static async ValueTask<CloseBookResult> CloseBookAsync(IEnumerable<string> paths)
         {
             // 開いている本であるならば閉じる
             var result = await BookHubTools.CloseBookAsync(paths);
@@ -379,7 +379,7 @@ namespace NeeView
         /// <param name="isOverwrite"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static async Task CopyFileAsync(string sourceFileName, string destFileName, bool isOverwrite, bool createDirectory, CancellationToken token)
+        public static async ValueTask CopyFileAsync(string sourceFileName, string destFileName, bool isOverwrite, bool createDirectory, CancellationToken token)
         {
             await Task.Run(() =>
             {
@@ -396,23 +396,23 @@ namespace NeeView
         /// <summary>
         /// ファイル、ディレクトリーを指定のフォルダーにコピーする
         /// </summary>
-        public static async Task SHCopyToFolderAsync(IEnumerable<string> paths, string toDirectory, CancellationToken token)
+        public static async ValueTask SHCopyToFolderAsync(IEnumerable<string> paths, string toDirectory, CancellationToken token)
         {
             await SHCopyToFolderAsync(WindowTools.GetWindowHandle(), paths, toDirectory, token);
         }
 
-        public static async Task SHCopyToFolderAsync(IntPtr hwnd, IEnumerable<string> paths, string toDirectory, CancellationToken token)
+        public static async ValueTask SHCopyToFolderAsync(IntPtr hwnd, IEnumerable<string> paths, string toDirectory, CancellationToken token)
         {
             var directoryPath = EnsureDirectory(toDirectory);
             await Task.Run(() => ShellFileOperation.Copy(hwnd, paths, directoryPath), token);
         }
 
-        public static async Task SHCopyAsync(string source, string destination, CancellationToken token)
+        public static async ValueTask SHCopyAsync(string source, string destination, CancellationToken token)
         {
             await SHCopyAsync(WindowTools.GetWindowHandle(), source, destination, token);
         }
 
-        public static async Task SHCopyAsync(IntPtr hwnd, string source, string destination, CancellationToken token)
+        public static async ValueTask SHCopyAsync(IntPtr hwnd, string source, string destination, CancellationToken token)
         {
             var dest = LoosePath.TrimEnd(destination);
 
@@ -432,12 +432,12 @@ namespace NeeView
         /// <summary>
         /// ファイル、ディレクトリーを指定のフォルダーに移動する
         /// </summary>
-        public static async Task SHMoveToFolderAsync(IEnumerable<string> paths, string toDirectory, CancellationToken token)
+        public static async ValueTask SHMoveToFolderAsync(IEnumerable<string> paths, string toDirectory, CancellationToken token)
         {
             await SHMoveToFolderAsync(WindowTools.GetWindowHandle(), paths, toDirectory, token);
         }
 
-        public static async Task SHMoveToFolderAsync(IntPtr hwnd, IEnumerable<string> paths, string toDirectory, CancellationToken token)
+        public static async ValueTask SHMoveToFolderAsync(IntPtr hwnd, IEnumerable<string> paths, string toDirectory, CancellationToken token)
         {
             await CloseBookAsync(paths);
             var directoryPath = EnsureDirectory(toDirectory);
@@ -445,12 +445,12 @@ namespace NeeView
             ValidateBookPages(paths);
         }
 
-        public static async Task SHMoveAsync(string source, string destination, CancellationToken token)
+        public static async ValueTask SHMoveAsync(string source, string destination, CancellationToken token)
         {
             await SHMoveAsync(WindowTools.GetWindowHandle(), source, destination, token);
         }
 
-        public static async Task SHMoveAsync(IntPtr hwnd, string source, string destination, CancellationToken token)
+        public static async ValueTask SHMoveAsync(IntPtr hwnd, string source, string destination, CancellationToken token)
         {
             var paths = new string[] { source };
             await CloseBookAsync(paths);
@@ -471,7 +471,7 @@ namespace NeeView
         /// <summary>
         /// ファイル削除
         /// </summary>
-        public static async Task DeleteAsync(string path)
+        public static async ValueTask DeleteAsync(string path)
         {
             await DeleteAsync(new List<string>() { path });
         }
@@ -479,7 +479,7 @@ namespace NeeView
         /// <summary>
         /// ファイル削除
         /// </summary>
-        public static async Task DeleteAsync(IEnumerable<string> paths)
+        public static async ValueTask DeleteAsync(IEnumerable<string> paths)
         {
             await CloseBookAsync(paths);
             ShellFileOperation.Delete(WindowTools.GetWindowHandle(), paths, Config.Current.System.IsRemoveWantNukeWarning);
@@ -615,7 +615,7 @@ namespace NeeView
         /// <summary>
         /// ファイル名前変更。現在ブックにも反映させる
         /// </summary>
-        public static async Task<bool> RenameAsync(string src, string dst, bool restoreBook)
+        public static async ValueTask<bool> RenameAsync(string src, string dst, bool restoreBook)
         {
             var closeBookResult = await CloseBookAsync(src);
 

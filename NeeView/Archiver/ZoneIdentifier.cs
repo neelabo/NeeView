@@ -37,7 +37,7 @@ namespace NeeView
             return null;
         }
 
-        public static async Task<ZoneIdentifier?> ReadAsync(string path, CancellationToken token)
+        public static async ValueTask<ZoneIdentifier?> ReadAsync(string path, CancellationToken token)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace NeeView
             }
         }
 
-        public async Task WriteAsync(string path, CancellationToken token)
+        public async ValueTask WriteAsync(string path, CancellationToken token)
         {
             if (_bytes is null) return;
 

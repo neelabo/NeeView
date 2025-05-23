@@ -6,7 +6,7 @@ namespace NeeView.Threading
 {
     public class RetryAction
     {
-        public static async Task RetryActionAsync(Action saveAction, int retryLimit, int intervalMilliseconds, CancellationToken token)
+        public static async ValueTask RetryActionAsync(Action saveAction, int retryLimit, int intervalMilliseconds, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
