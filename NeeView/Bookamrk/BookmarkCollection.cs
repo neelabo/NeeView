@@ -26,7 +26,7 @@ namespace NeeView
 
         private BookmarkCollection()
         {
-            _items = new TreeListNode<IBookmarkEntry>(new BookmarkFolder());
+            _items = CreateEmptyTree();
         }
 
 
@@ -41,11 +41,15 @@ namespace NeeView
         }
 
 
+        private static TreeListNode<IBookmarkEntry> CreateEmptyTree()
+        {
+            return new TreeListNode<IBookmarkEntry>(new BookmarkFolder());
+        }
+
         public void RaiseBookmarkChangedEvent(BookmarkCollectionChangedEventArgs e)
         {
             BookmarkChanged?.Invoke(this, e);
         }
-
 
         public void Load(TreeListNode<IBookmarkEntry> nodes, IEnumerable<BookMemento> books)
         {
@@ -60,14 +64,12 @@ namespace NeeView
             BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Reset));
         }
 
-
         public Bookmark? Find(string path)
         {
             if (path == null) return null;
 
             return Items.Select(e => e.Value).OfType<Bookmark>().FirstOrDefault(e => e.Path == path);
         }
-
 
         public BookMementoUnit? FindUnit(string place)
         {
@@ -76,14 +78,12 @@ namespace NeeView
             return Find(place)?.Unit;
         }
 
-
         public TreeListNode<IBookmarkEntry>? FindNode(IBookmarkEntry entry)
         {
             if (entry == null) return null;
 
             return Items.FirstOrDefault(e => e.Value == entry);
         }
-
 
         public TreeListNode<IBookmarkEntry>? FindNode(string path)
         {
@@ -138,7 +138,6 @@ namespace NeeView
 
             return null;
         }
-
 
         public bool Contains(string place)
         {
@@ -218,7 +217,6 @@ namespace NeeView
                 }
             }
         }
-
 
         // 無効な履歴削除
         public async ValueTask RemoveUnlinkedAsync(CancellationToken token)
@@ -415,7 +413,6 @@ namespace NeeView
             return true;
         }
 
-
         public bool Merge(TreeListNode<IBookmarkEntry> item, TreeListNode<IBookmarkEntry> target)
         {
             if (item?.Value is not BookmarkFolder) throw new ArgumentException("item must be BookmarkFolder");
@@ -473,7 +470,6 @@ namespace NeeView
             }
         }
 
-
         private static string GetValidateFolderName(IEnumerable<string> names, string? name, string defaultName)
         {
             name = BookmarkFolder.GetValidateName(name);
@@ -495,7 +491,6 @@ namespace NeeView
 
             return name;
         }
-
 
         private void ValidateFolderName(TreeListNode<IBookmarkEntry> node)
         {
@@ -615,7 +610,8 @@ namespace NeeView
             QuickAccessCollection.Current.Restore(memento.QuickAccess);
             if (memento.Nodes is not null && memento.Books is not null)
             {
-                this.Load(BookmarkNodeConverter.ConvertToTreeListNode(memento.Nodes), memento.Books);
+                var nodes = BookmarkNodeConverter.ConvertToTreeListNode(memento.Nodes) ?? CreateEmptyTree();
+                this.Load(nodes, memento.Books);
             }
         }
 
@@ -666,7 +662,7 @@ namespace NeeView
             return node;
         }
 
-        public static TreeListNode<IBookmarkEntry> ConvertToTreeListNode(BookmarkNode source)
+        public static TreeListNode<IBookmarkEntry>? ConvertToTreeListNode(BookmarkNode source)
         {
             if (source.IsFolder)
             {
@@ -679,14 +675,21 @@ namespace NeeView
                 {
                     foreach (var child in source.Children)
                     {
-                        node.Add(ConvertToTreeListNode(child));
+                        var childNode = ConvertToTreeListNode(child);
+                        if (childNode is not null)
+                        {
+                            node.Add(childNode);
+                        }
                     }
                 }
                 return node;
             }
             else
             {
-                if (source.Path is null) throw new InvalidOperationException();
+                if (string.IsNullOrWhiteSpace(source.Path))
+                {
+                    return null;
+                }
                 var bookmark = new Bookmark(source.Path)
                 {
                     EntryTime = source.EntryTime

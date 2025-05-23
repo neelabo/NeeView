@@ -17,7 +17,7 @@ namespace NeeView
 
             if (values[0] is not QueryPath path)
             {
-                return DependencyProperty.UnsetValue;
+                path = QueryPath.Root;
             }
 
             if (values[1] is not double dpiScale)

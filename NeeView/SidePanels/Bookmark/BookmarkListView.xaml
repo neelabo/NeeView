@@ -71,7 +71,7 @@
                 <TextBlock DockPanel.Dock="Right" Text="{Binding FolderCollection.ValidCount, StringFormat={}{0}}" Foreground="{DynamicResource Panel.Foreground}" Margin="5,0" VerticalAlignment="Center"
                                     Visibility="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsVisibleItemsCount, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 <Border x:Name="PlaceGrid" Margin="1,0">
-                    <local:BreadcrumbBar Profile="{StaticResource BookmarkBreadcrumbProfile}" Path="{Binding FullPath}" VerticalAlignment="Center" />
+                    <local:BreadcrumbBar Profile="{StaticResource BookmarkBreadcrumbProfile}" Path="{Binding FullPath}" />
                 </Border>
             </DockPanel>
 

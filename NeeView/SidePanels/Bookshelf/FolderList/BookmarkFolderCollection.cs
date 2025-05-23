@@ -244,6 +244,7 @@ namespace NeeView
         private FolderItem? CreateFolderItemBookmark(TreeListNode<IBookmarkEntry> node)
         {
             if (node?.Value is not Bookmark bookmark) return null;
+            if (string.IsNullOrWhiteSpace(bookmark.Path)) return null;
 
             var item = new FileFolderItem(_isOverlayEnabled)
             {

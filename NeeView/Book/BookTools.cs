@@ -14,7 +14,7 @@ namespace NeeView
 
         public static bool CanBookmark(string path)
         {
-            return !path.StartsWith(Temporary.Current.TempDirectory, StringComparison.Ordinal);
+            return !string.IsNullOrWhiteSpace(path) &&  !path.StartsWith(Temporary.Current.TempDirectory, StringComparison.Ordinal);
         }
     }
 
