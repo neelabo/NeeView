@@ -1,4 +1,5 @@
-﻿using NeeView.IO;
+﻿//#define LOCAL_DEBUG
+
 using NeeLaboratory.Linq;
 using System;
 using System.Collections.Generic;
@@ -11,13 +12,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Globalization;
-using NeeView.Threading;
+using NeeLaboratory.Generators;
 
 namespace NeeView
 {
     /// <summary>
     /// フォルダーエントリコレクション
     /// </summary>
+    [LocalDebug]
     public partial class FolderEntryCollection : FolderCollection, IDisposable
     {
         private FileSystemWatcher? _fileSystemWatcher;
@@ -165,6 +167,7 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
+            LocalDebug.WriteLine($"Create: {path}");
             _engine?.RequestCreate(path);
         }
 
@@ -172,6 +175,7 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
+            LocalDebug.WriteLine($"Delete: {path}");
             _engine?.RequestDelete(path);
         }
 
@@ -179,6 +183,7 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
+            LocalDebug.WriteLine($"Rename: {oldPath} => {path}");
             _engine?.RequestRename(oldPath, path);
         }
 

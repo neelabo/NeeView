@@ -37,7 +37,7 @@ namespace NeeView
             }
         }
 
-        public static async ValueTask InvokeAsync (Action action)
+        public static async ValueTask InvokeAsync(Action action)
         {
             if (UIDispatcher.CheckAccess())
             {

@@ -29,8 +29,6 @@ namespace NeeView
         [GeneratedRegex(@"^(.+)\((\d+)\)$")]
         private static partial Regex _fileNumberRegex { get; }
 
-
-
         [GeneratedRegex(@"[/\\]")]
         private static partial Regex _separateRegex { get; }
 
@@ -42,6 +40,10 @@ namespace NeeView
 
         [GeneratedRegex(@":$")]
         private static partial Regex _colonTerminalRegex { get; }
+
+
+        public static event EventHandler<FileReplaceEventHander>? Replacing;
+        public static event EventHandler<FileReplaceEventHander>? Replaced;
 
 
         /// <summary>
@@ -368,6 +370,28 @@ namespace NeeView
             return driveLabel;
         }
 
+        /// <summary>
+        /// ファイルを置き換える。
+        /// </summary>
+        /// <remarks>
+        /// Replacing イベントと Replaced イベントを発行する。
+        /// </remarks>
+        /// <param name="sourceFileName"></param>
+        /// <param name="destinationFileName"></param>
+        /// <param name="destinationBackupFileName"></param>
+        public static void Replace(string sourceFileName, string destinationFileName, string? destinationBackupFileName)
+        {
+            var args = new FileReplaceEventHander(sourceFileName, destinationFileName, destinationBackupFileName);
+            Replacing?.Invoke(null, args);
+            try
+            {
+                File.Replace(sourceFileName, destinationFileName, destinationBackupFileName);
+            }
+            finally
+            {
+                Replaced?.Invoke(null, args);
+            }
+        }
 
         #region Copy
 
@@ -698,4 +722,17 @@ namespace NeeView
         #endregion Rename
     }
 
+
+    public class FileReplaceEventHander : EventArgs
+    {
+        public string SourceFileName { get; }
+        public string DestinationFileName { get; }
+        public string? DestinationBackupFileName { get; }
+        public FileReplaceEventHander(string sourceFileName, string destinationFileName, string? destinationBackupFileName)
+        {
+            SourceFileName = sourceFileName;
+            DestinationFileName = destinationFileName;
+            DestinationBackupFileName = destinationBackupFileName;
+        }
+    }
 }

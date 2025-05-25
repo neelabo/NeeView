@@ -1,18 +1,27 @@
-﻿using NeeLaboratory.Threading.Jobs;
+﻿//#define LOCAL_DEBUG
+
+using NeeLaboratory.Threading.Jobs;
 using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
+using NeeLaboratory.Generators;
 
 using Jobs = NeeLaboratory.Threading.Jobs;
 
 namespace NeeView
 {
 
-    public class FolderCollectionEngine : IDisposable
+    [LocalDebug]
+    public partial class FolderCollectionEngine : IDisposable
     {
         private readonly FolderCollection _folderCollection;
         private readonly DelaySingleJobEngine _engine;
+        private readonly Lock _lock = new();
+        private int _transactionCount = 0;
+        private FolderCollectionTransaction? _transaction;
+        private bool _disposedValue = false;
 
 
         public FolderCollectionEngine(FolderCollection folderCollection)
@@ -22,9 +31,59 @@ namespace NeeView
             _engine = new DelaySingleJobEngine(nameof(FolderCollectionEngine));
             _engine.JobError += JobEngine_Error;
             _engine.StartEngine();
+
+            FileIO.Replacing += FileIO_Replacing;
+            FileIO.Replaced += FileIO_Replaced;
         }
 
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    FileIO.Replacing -= FileIO_Replacing;
+                    FileIO.Replaced -= FileIO_Replaced;
+                    _engine.Dispose();
+                }
+                _disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void FileIO_Replacing(object? sender, FileReplaceEventHander e)
+        {
+            if (_disposedValue) return;
+
+            var count = Interlocked.Increment(ref _transactionCount);
+            if (count == 1)
+            {
+                LocalDebug.WriteLine("Replacing...");
+                BeginTransaction();
+            }
+        }
+
+        private void FileIO_Replaced(object? sender, FileReplaceEventHander e)
+        {
+            if (_disposedValue) return;
+
+            // FileWatcher イベント取得のタイムラグを考慮して、遅延実行でトランザクションをコミットする
+            AppDispatcher.BeginInvoke(() =>
+            {
+                var count = Interlocked.Decrement(ref _transactionCount);
+                if (count == 0)
+                {
+                    LocalDebug.WriteLine("Replaced");
+                    CommitTransaction();
+                }
+            });
+        }
 
         /// <summary>
         /// JobEngineで例外発生
@@ -45,7 +104,17 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
-            _engine.Enqueue(new CreateJob(this, path, false));
+            lock (_lock)
+            {
+                if (_transaction != null)
+                {
+                    _transaction.EnqueueCreate(path);
+                }
+                else
+                {
+                    EnqueueCreate(path);
+                }
+            }
         }
 
         /// <summary>
@@ -56,7 +125,17 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
-            _engine.Enqueue(new DeleteJob(this, path, false));
+            lock (_lock)
+            {
+                if (_transaction != null)
+                {
+                    _transaction.EnqueueDelete(path);
+                }
+                else
+                {
+                    EnqueueDelete(path);
+                }
+            }
         }
 
         /// <summary>
@@ -73,32 +152,57 @@ namespace NeeView
                 return;
             }
 
-            _engine.Enqueue(new RenameJob(this, oldPath, path, false));
-        }
-
-
-        #region IDisposable Support
-        private bool _disposedValue = false;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposedValue)
+            lock (_lock)
             {
-                if (disposing)
+                if (_transaction != null)
                 {
-                    _engine.Dispose();
+                    _transaction.EnqueueRename(oldPath, path);
                 }
-                _disposedValue = true;
+                else
+                {
+                    EnqueueRename(oldPath, path);
+                }
             }
         }
 
-        public void Dispose()
+        public void EnqueueCreate(QueryPath path)
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            if (_disposedValue) return;
+            _engine.Enqueue(new CreateJob(this, path, false));
         }
-        #endregion
 
+        public void EnqueueDelete(QueryPath path)
+        {
+            if (_disposedValue) return;
+            _engine.Enqueue(new DeleteJob(this, path, false));
+        }
+
+        public void EnqueueRename(QueryPath oldPath, QueryPath path)
+        {
+            if (_disposedValue) return;
+            _engine.Enqueue(new RenameJob(this, oldPath, path, false));
+        }
+
+        private void BeginTransaction()
+        {
+            if (_disposedValue) return;
+
+            lock (_lock)
+            {
+                _transaction ??= new FolderCollectionTransaction();
+            }
+        }
+
+        private void CommitTransaction()
+        {
+            if (_disposedValue) return;
+
+            lock (_lock)
+            {
+                _transaction?.Flush(this);
+                _transaction = null;
+            }
+        }
 
 
         public abstract class FolderCollectionJob : JobBase

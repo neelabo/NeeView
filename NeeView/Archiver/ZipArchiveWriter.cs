@@ -137,7 +137,7 @@ namespace NeeView
                         {
                             using (await asyncLock.LockAsync(token))
                             {
-                                File.Replace(tempFilename, _path, null);
+                                FileIO.Replace(tempFilename, _path, null);
                             }
                             break;
                         }
