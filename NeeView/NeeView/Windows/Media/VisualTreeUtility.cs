@@ -202,7 +202,7 @@ namespace NeeView.Windows.Media
             where T : DependencyObject
         {
             var element = HitTest(visual, point);
-            if (element is null)
+            if (element is null) 
             {
                 return null;
             }
@@ -272,14 +272,14 @@ namespace NeeView.Windows.Media
             return null;
         }
 
-
         /// <summary>
         /// DependencyObject から、型、名前を指定して親コントロールを取得する
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
+        /// <param name="terminator">ターミネーター</param>
         /// <returns></returns>
-        public static T? GetParentElement<T>(DependencyObject obj)
+        public static T? GetParentElement<T>(DependencyObject obj, DependencyObject? terminator = null)
             where T : class
         {
             if (obj is not Visual)
@@ -288,7 +288,7 @@ namespace NeeView.Windows.Media
             }
 
             var element = obj;
-            while (element != null)
+            while (element != null && element != terminator)
             {
                 element = VisualTreeHelper.GetParent(element);
                 if (element is T item)
