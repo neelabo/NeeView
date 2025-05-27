@@ -30,7 +30,7 @@ namespace NeeView
     public partial class PlaylistListBox : UserControl, IPageListPanel, IDisposable, IToolTipService
     {
         private readonly PlaylistListBoxViewModel _vm;
-        private readonly PlaylistListBoxDragReceiver _dragReceiver;
+        private readonly PlaylistListBoxInsertDropAssist _dropAssist;
         private ListBoxThumbnailLoader? _thumbnailLoader;
         private PageThumbnailJobClient? _jobClient;
         private bool _focusRequest;
@@ -56,10 +56,12 @@ namespace NeeView
             this.Loaded += PlaylistListBox_Loaded;
             this.Unloaded += PlaylistListBox_Unloaded;
 
-            _dragReceiver = new PlaylistListBoxDragReceiver(this.ListBox, _vm);
-            _dragReceiver.PreviewDragOver += PlaylistListBoxDragReceiver_PreviewDragOver;
-            _dragReceiver.DragOver += PlaylistListBoxDragReceiver_DragOver;
-            _dragReceiver.Drop += PlaylistListBoxDragReceiver_Drop;
+            _dropAssist = new PlaylistListBoxInsertDropAssist(this.ListBox, _vm);
+            this.ListBox.PreviewDragEnter += ListBox_PreviewDragEnter;
+            this.ListBox.PreviewDragLeave += ListBox_PreviewDragLeave;
+            this.ListBox.PreviewDragOver += ListBox_PreviewDragOver;
+            this.ListBox.DragOver += ListBox_DragOver;
+            this.ListBox.Drop += ListBox_Drop;
         }
 
 
@@ -71,7 +73,6 @@ namespace NeeView
 
         public static readonly DependencyProperty IsToolTipEnabledProperty =
             DependencyProperty.Register("IsToolTipEnabled", typeof(bool), typeof(PlaylistListBox), new PropertyMetadata(true));
-
 
 
         #region Commands
@@ -291,34 +292,57 @@ namespace NeeView
             await Task.CompletedTask;
         }
 
-        private void PlaylistListBoxDragReceiver_PreviewDragOver(object sender, DragEventArgs e)
+        private void ListBox_PreviewDragEnter(object sender, DragEventArgs e)
+        {
+            _dropAssist.OnDragEnter(sender, e);
+
+            ListBox_PreviewDragOver(sender, e);
+            if (e.Handled) return;
+
+            ListBox_DragOver(sender, e);
+        }
+
+        private void ListBox_PreviewDragLeave(object sender, DragEventArgs e)
+        {
+            _dropAssist.OnDragLeave(sender, e);
+        }
+
+        private void ListBox_PreviewDragOver(object sender, DragEventArgs e)
         {
             if (e.Handled) return;
 
             var scrolled = DragDropHelper.AutoScroll(sender, e);
             if (scrolled)
             {
+                _dropAssist.HideAdorner();
                 e.Effects = DragDropEffects.None;
                 e.Handled = true;
             }
         }
 
-        private void PlaylistListBoxDragReceiver_DragOver(object? sender, ListBoxDropEventArgs e)
+        private void ListBox_DragOver(object sender, DragEventArgs e)
         {
-            HandleDropEvent(e);
+            var target = _dropAssist.OnDragOver(sender, e);
+
+            HandleDropEvent(e, target);
+            if (e.Effects == DragDropEffects.None)
+            {
+                _dropAssist.HideAdorner();
+            }
         }
 
-        private void PlaylistListBoxDragReceiver_Drop(object? sender, ListBoxDropEventArgs e)
+        private void ListBox_Drop(object sender, DragEventArgs e)
         {
-            HandleDropEvent(e);
+            var target = _dropAssist.OnDrop(sender, e);
 
-            if (e.DragEventArgs.Effects == DragDropEffects.None)
+            HandleDropEvent(e, target);
+            if (e.Effects == DragDropEffects.None)
             {
                 return;
             }
 
-            var targetItem = e.Item?.Content as PlaylistItem;
-            var delta = e.Delta;
+            var targetItem = (target.Item as ListBoxItem)?.Content as PlaylistItem;
+            var delta = target.Delta;
             if (targetItem is null)
             {
                 delta = 0;
@@ -326,46 +350,43 @@ namespace NeeView
 
             AppDispatcher.BeginInvoke(async () =>
             {
-                var copyMaybe = e.DragEventArgs.Effects.HasFlag(DragDropEffects.Copy);
-                var dropItems = await GetPlaylistItemsAsync(e.DragEventArgs, copyMaybe, CancellationToken.None);
+                var copyMaybe = e.Effects.HasFlag(DragDropEffects.Copy);
+                var dropItems = await GetPlaylistItemsAsync(e, copyMaybe, CancellationToken.None);
                 if (dropItems is not null)
                 {
-                    DropToPlaylist(sender, e.DragEventArgs, dropItems, targetItem, delta);
+                    DropToPlaylist(sender, e, dropItems, targetItem, delta);
                 }
             });
         }
 
-        private void HandleDropEvent(ListBoxDropEventArgs e)
+        private void HandleDropEvent(DragEventArgs e, DropTargetItem target)
         {
-            if (AcceptDrop(e))
+            if (!AcceptDrop(e, target))
             {
-                e.DragEventArgs.Handled = true;
+                e.Effects = DragDropEffects.None;
             }
-            else
-            {
-                e.DragEventArgs.Effects = DragDropEffects.None;
-            }
+            e.Handled = true;
         }
 
-        private bool AcceptDrop(ListBoxDropEventArgs e)
+        private bool AcceptDrop(DragEventArgs e, DropTargetItem target)
         {
             if (!_vm.IsEditable)
             {
                 return false;
             }
 
-            var entries = e.DragEventArgs.Data.GetData<PlaylistListBoxItemCollection>();
+            var entries = e.Data.GetData<PlaylistListBoxItemCollection>();
             if (entries is not null)
             {
                 //e.DragEventArgs.Effects = Keyboard.Modifiers == ModifierKeys.Control ? DragDropEffects.Copy : DragDropEffects.Move;
-                e.DragEventArgs.Effects = DragDropEffects.Move;
+                e.Effects = DragDropEffects.Move;
 
                 if (!entries.Any())
                 {
                     return false;
                 }
 
-                var destination = e.Item?.Content as PlaylistItem;
+                var destination = (target.Item as ListBoxItem)?.Content as PlaylistItem;
 
                 if (_vm.IsGroupBy)
                 {
@@ -389,17 +410,17 @@ namespace NeeView
                 }
             }
 
-            var queries = e.DragEventArgs.Data.GetQueryPathCollection();
+            var queries = e.Data.GetQueryPathCollection();
             if (queries is not null)
             {
-                e.DragEventArgs.Effects = DragDropEffects.Copy;
+                e.Effects = DragDropEffects.Copy;
                 return queries.Any();
             }
 
-            var files = e.DragEventArgs.Data.GetFileDrop();
+            var files = e.Data.GetFileDrop();
             if (files is not null)
             {
-                e.DragEventArgs.Effects = DragDropEffects.Copy;
+                e.Effects = DragDropEffects.Copy;
                 return files.Any();
             }
 
@@ -527,7 +548,7 @@ namespace NeeView
             }
         }
 
-        #endregion DragDrop
+#endregion DragDrop
 
         private void PlaylistListBox_Loaded(object? sender, RoutedEventArgs e)
         {

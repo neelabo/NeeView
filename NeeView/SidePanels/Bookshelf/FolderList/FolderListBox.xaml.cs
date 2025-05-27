@@ -27,7 +27,7 @@ namespace NeeView
     public partial class FolderListBox : UserControl, IPageListPanel, IDisposable, IToolTipService
     {
         private readonly FolderListBoxViewModel _vm;
-        private readonly FolderListBoxDragReceiver _dragReceiver;
+        private readonly FolderListBoxInsertDropAssist _dropAssist;
         private ListBoxThumbnailLoader? _thumbnailLoader;
         private PageThumbnailJobClient? _jobClient;
         private FolderItem? _clickItem;
@@ -63,10 +63,12 @@ namespace NeeView
                 this.ListBox.ContextMenu = menu;
             }
 
-            _dragReceiver = new FolderListBoxDragReceiver(this.ListBox, _vm);
-            _dragReceiver.PreviewDragOver += FolderListBoxDragReceiver_PreviewDragOver;
-            _dragReceiver.DragOver += FolderListBoxDragReceiver_DragOver;
-            _dragReceiver.Drop += FolderListBoxDragReceiver_Drop;
+            _dropAssist = new FolderListBoxInsertDropAssist(this.ListBox, _vm);
+            this.ListBox.PreviewDragEnter += ListBox_PreviewDragEnter;
+            this.ListBox.PreviewDragLeave += ListBox_PreviewDragLeave;
+            this.ListBox.PreviewDragOver += ListBox_PreviewDragOver;
+            this.ListBox.DragOver += ListBox_DragOver;
+            this.ListBox.Drop += ListBox_Drop;
         }
 
 
@@ -641,28 +643,51 @@ namespace NeeView
             await Task.CompletedTask;
         }
 
-        private void FolderListBoxDragReceiver_PreviewDragOver(object? sender, DragEventArgs e)
+        private void ListBox_PreviewDragEnter(object sender, DragEventArgs e)
+        {
+            _dropAssist.OnDragEnter(sender, e);
+
+            ListBox_PreviewDragOver(sender, e);
+            if (e.Handled) return;
+
+            ListBox_DragOver(sender, e);
+        }
+
+        private void ListBox_PreviewDragLeave(object sender, DragEventArgs e)
+        {
+            _dropAssist.OnDragLeave(sender, e);
+        }
+
+        private void ListBox_PreviewDragOver(object sender, DragEventArgs e)
         {
             if (e.Handled) return;
 
             var scrolled = DragDropHelper.AutoScroll(sender, e);
             if (scrolled)
             {
+                _dropAssist.HideAdorner();
                 e.Effects = DragDropEffects.None;
                 e.Handled = true;
             }
         }
 
-        private void FolderListBoxDragReceiver_DragOver(object? sender, ListBoxDropEventArgs e)
+        private void ListBox_DragOver(object sender, DragEventArgs e)
         {
-            HandleDropEvent(e);
+            var target = _dropAssist.OnDragOver(sender, e);
+
+            HandleDropEvent(e, target);
+            if (e.Effects == DragDropEffects.None)
+            {
+                _dropAssist.HideAdorner();
+            }
         }
 
-        private void FolderListBoxDragReceiver_Drop(object? sender, ListBoxDropEventArgs e)
+        private void ListBox_Drop(object sender, DragEventArgs e)
         {
-            HandleDropEvent(e);
+            var target = _dropAssist.OnDrop(sender, e);
 
-            if (e.DragEventArgs.Effects == DragDropEffects.None)
+            HandleDropEvent(e, target);
+            if (e.Effects == DragDropEffects.None)
             {
                 return;
             }
@@ -672,48 +697,45 @@ namespace NeeView
                 return;
             }
 
-            var targetItem = e.Item?.Content as FolderItem;
+            var targetItem = (target.Item as ListBoxItem)?.Content as FolderItem;
             var bookmarkNode = targetItem?.Source as TreeListNode<IBookmarkEntry>;
-            var delta = e.Delta;
+            var delta = target.Delta;
             if (bookmarkNode is null)
             {
                 bookmarkNode = bookmarkFolderCollection.BookmarkPlace;
                 delta = 0;
             }
 
-            var copyMaybe = e.DragEventArgs.Effects.HasFlag(DragDropEffects.Copy);
-            var entries = GetBookmarkEntryCollection(e.DragEventArgs, copyMaybe);
+            var copyMaybe = e.Effects.HasFlag(DragDropEffects.Copy);
+            var entries = GetBookmarkEntryCollection(e, copyMaybe);
             if (entries is not null)
             {
-                DropToBookmark(sender, e.DragEventArgs, entries, bookmarkNode, delta);
+                DropToBookmark(sender, e, entries, bookmarkNode, delta);
             }
         }
 
-        private void HandleDropEvent(ListBoxDropEventArgs e)
+        private void HandleDropEvent(DragEventArgs e, DropTargetItem target)
         {
-            if (AcceptDrop(e))
+            if (!AcceptDrop(e, target))
             {
-                e.DragEventArgs.Handled = true;
+                e.Effects = DragDropEffects.None;
             }
-            else
-            {
-                e.DragEventArgs.Effects = DragDropEffects.None;
-            }
+            e.Handled = true;
         }
 
-        private bool AcceptDrop(ListBoxDropEventArgs e)
+        private bool AcceptDrop(DragEventArgs e, DropTargetItem target)
         {
             if (_vm.FolderCollection is not BookmarkFolderCollection)
             {
                 return false;
             }
 
-            var entries = e.DragEventArgs.Data.GetData<BookmarkNodeCollection>();
+            var entries = e.Data.GetData<BookmarkNodeCollection>();
             if (entries is not null)
             {
-                e.DragEventArgs.Effects = Keyboard.Modifiers == ModifierKeys.Control ? DragDropEffects.Copy : DragDropEffects.Move;
+                e.Effects = Keyboard.Modifiers == ModifierKeys.Control ? DragDropEffects.Copy : DragDropEffects.Move;
 
-                var destination = (e.Item?.Content as FolderItem)?.Source as TreeListNode<IBookmarkEntry>;
+                var destination = ((target.Item as ListBoxItem)?.Content as FolderItem)?.Source as TreeListNode<IBookmarkEntry>;
                 if (destination is null)
                 {
                     return _vm.FolderCollection.ValidCount == 0;
@@ -722,17 +744,17 @@ namespace NeeView
                 return !entries.Contains(destination) && entries.All(e => !destination.ParentContains(e));
             }
 
-            var queries = e.DragEventArgs.Data.GetQueryPathCollection();
+            var queries = e.Data.GetQueryPathCollection();
             if (queries is not null)
             {
-                e.DragEventArgs.Effects = DragDropEffects.Copy;
+                e.Effects = DragDropEffects.Copy;
                 return queries.Any();
             }
 
-            var files = e.DragEventArgs.Data.GetFileDrop();
+            var files = e.Data.GetFileDrop();
             if (files is not null)
             {
-                e.DragEventArgs.Effects = DragDropEffects.Copy;
+                e.Effects = DragDropEffects.Copy;
                 return files.Any();
             }
 
@@ -878,7 +900,7 @@ namespace NeeView
             }
         }
 
-        #endregion DragDrop
+#endregion DragDrop
 
 
         private void FolderListBox_Loaded(object? sender, RoutedEventArgs e)

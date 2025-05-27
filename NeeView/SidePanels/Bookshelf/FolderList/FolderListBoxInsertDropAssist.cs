@@ -4,20 +4,20 @@ using System.Windows.Controls;
 
 namespace NeeView
 {
-    public class FolderListBoxDragReceiver : ListBoxDragReceiver
+    public class FolderListBoxInsertDropAssist : InsertDropAssist
     {
+        private readonly ListBox _listBox;
         private readonly FolderListBoxViewModel _vm;
 
-        public FolderListBoxDragReceiver(ListBox listBox, FolderListBoxViewModel vm) : base(listBox)
+        public FolderListBoxInsertDropAssist(ListBox listBox, FolderListBoxViewModel vm)
+            : base(listBox, new FolderListBoxDropAssistProfile())
         {
+            _listBox = listBox;
             _vm = vm;
-            SplitBrush = listBox.Foreground;
         }
 
-        protected override void OnPreviewDragEnter(object sender, DragEventArgs e)
+        public sealed override void OnDragEnter(object? sender, DragEventArgs e)
         {
-            base.OnPreviewDragEnter(sender, e);
-
             SplitBrush = _listBox.Foreground;
 
             Orientation = _vm.Model.PanelListItemStyle == PanelListItemStyle.Thumbnail ? Orientation.Horizontal : Orientation.Vertical;
@@ -25,18 +25,24 @@ namespace NeeView
             if (_vm.FolderOrder.IsEntryCategory())
             {
                 AllowInsert = true;
-                ReceiveItemType = ListBoxDragReceiveItemType.All;
+                ReceiveItemType = InsertDropItemType.All;
             }
             else
             {
                 AllowInsert = false;
-                ReceiveItemType = ListBoxDragReceiveItemType.Folder;
+                ReceiveItemType = InsertDropItemType.Folder;
             }
-        }
 
-        protected override bool IsFolder(ListBoxItem? item)
+            base.OnDragEnter(sender, e);
+        }
+    }
+
+
+    public class FolderListBoxDropAssistProfile : ListBoxDropAssistProfile
+    {
+        public override bool IsFolder(FrameworkElement? item)
         {
-            var targetItem = item?.Content as FolderItem;
+            var targetItem = (item as ListBoxItem)?.Content as FolderItem;
             return targetItem is not null && targetItem.Attributes.HasFlag(FolderItemAttribute.Bookmark | FolderItemAttribute.Directory);
         }
     }

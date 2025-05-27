@@ -1,144 +1,112 @@
-﻿using NeeView.Windows.Media;
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace NeeView.Windows
 {
-    public enum ListBoxDragReceiveItemType
+    /// <summary>
+    /// リストコントロールへの挿入ドロップ補助
+    /// </summary>
+    public class InsertDropAssist
     {
-        None = 0,
-        Folder = (1 << 0),
-        Item = (1 << 1),
-        All = Folder | Item
-    }
-
-    public class ListBoxDragReceiver
-    {
-        protected readonly ListBox _listBox;
+        protected readonly FrameworkElement _itemsControl;
+        private readonly DropAssistProfile _profile;
         private RectangleAdorner? _adorner;
 
 
-        public ListBoxDragReceiver(ListBox listBox)
+        public InsertDropAssist(FrameworkElement itemsControl, DropAssistProfile profile)
         {
-            _listBox = listBox;
-
-            _listBox.PreviewDragEnter += OnPreviewDragEnter;
-            _listBox.PreviewDragLeave += OnPreviewDragLeave;
-            _listBox.PreviewDragOver += OnPreviewDragOver;
-            _listBox.Drop += OnDrop;
+            _itemsControl = itemsControl;
+            _profile = profile;
         }
-
-
-        public event DragEventHandler? PreviewDragOver;
-        public event EventHandler<ListBoxDropEventArgs>? DragOver;
-        public event EventHandler<ListBoxDropEventArgs>? Drop;
 
 
         protected RectangleAdorner Adorner => EnsureAdorner();
         public Brush ShapeBrush { get; set; } = new SolidColorBrush(Color.FromArgb(0x80, 0x80, 0x80, 0x80));
-        public Brush SplitBrush { get; set; } = new SolidColorBrush(Colors.Black);
+        public Brush SplitBrush { get; set; } = Brushes.Black;
         public Orientation Orientation { get; set; } = Orientation.Vertical;
         public bool AllowInsert { get; set; } = true;
-        public ListBoxDragReceiveItemType ReceiveItemType { get; set; } = ListBoxDragReceiveItemType.All;
+        public InsertDropItemType ReceiveItemType { get; set; } = InsertDropItemType.All;
 
+
+        private void InitializeAdornerParameter()
+        {
+            SplitBrush = App.Current.Resources["Control.Foreground"] as Brush ?? Brushes.Black;
+        }
 
         private RectangleAdorner EnsureAdorner()
         {
             if (_adorner is null)
             {
-                // NOTE: ClipToBounds 効果のあるコントロールに関連付ける
-                var presenter = VisualTreeUtility.GetChildElement<ScrollContentPresenter>(_listBox);
-                Debug.Assert(presenter != null);
-                _adorner = new RectangleAdorner(presenter) { IsClipEnabled = true };
+                _adorner = new RectangleAdorner(_profile.GetAdornerTarget(_itemsControl)) { IsClipEnabled = true };
             }
             return _adorner;
         }
 
-        protected virtual void OnPreviewDragEnter(object sender, DragEventArgs e)
+        public virtual void OnDragEnter(object? sender, DragEventArgs e)
         {
-            OnPreviewDragOver(sender, e);
+            InitializeAdornerParameter();
             Adorner.Attach();
         }
 
-        private void OnPreviewDragLeave(object sender, DragEventArgs e)
+        public virtual void OnDragLeave(object? sender, DragEventArgs e)
         {
             Adorner.Detach();
         }
 
-        private void OnPreviewDragOver(object sender, DragEventArgs e)
+        public virtual DropTargetItem OnDragOver(object? sender, DragEventArgs e)
         {
-            PreviewDragOver?.Invoke(sender, e);
             if (e.Handled)
             {
                 Adorner.Visibility = Visibility.Collapsed;
-                return;
+                return new DropTargetItem(null, 0);
             }
 
-            var (item, delta) = PointToViewItemDelta(_listBox, e, Orientation);
+            var target = _profile.PointToDropTargetItem(e, _itemsControl, AllowInsert, Orientation);
 
-            DragOver?.Invoke(sender, new ListBoxDropEventArgs(e, item, delta));
-
-            if (item is not null && e.Effects != DragDropEffects.None)
+            if (e.Effects == DragDropEffects.None)
             {
-                var isVisible = SetAdornerShape(item, delta, Orientation);
+                Adorner.Visibility = Visibility.Collapsed;
+            }
+            else if (target.Item is not null)
+            {
+                var isVisible = SetAdornerShape(target.Item, target.Delta, Orientation);
                 Adorner.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
             }
             else
             {
-                Adorner.Visibility = Visibility.Collapsed;
+                SetAdornerDefaultShape(_itemsControl, Orientation);
+                Adorner.Visibility = Visibility.Visible;
             }
+
+            return target;
         }
 
-        private void OnDrop(object sender, DragEventArgs e)
+        public virtual DropTargetItem OnDrop(object? sender, DragEventArgs e)
         {
             Adorner.Detach();
-
-            var (item, delta) = PointToViewItemDelta(_listBox, e, Orientation);
-            Drop?.Invoke(sender, new ListBoxDropEventArgs(e, item, delta));
+            return _profile.PointToDropTargetItem(e, _itemsControl, AllowInsert, Orientation);
         }
 
-        (ListBoxItem? item, int delta) PointToViewItemDelta(ListBox listBox, DragEventArgs e, Orientation orientation)
+        public void HideAdorner()
         {
-            var (item, rate) = ListBoxTools.PointToViewItemRate(_listBox, e, Orientation);
-            var delta = item is not null && AllowInsert ? GetInsertOffset(rate, IsFolder(item)) : 0;
-            return (item, delta);
+            Adorner.Visibility = Visibility.Collapsed;
         }
 
-        protected virtual bool IsFolder(ListBoxItem? item)
+        private void SetAdornerDefaultShape(FrameworkElement itemsControl, Orientation orientation)
         {
-            return false;
-        }
-
-        protected virtual bool Accept(ListBoxItem? item, int delta, DragEventArgs e)
-        {
-            return true;
-        }
-
-        private int GetInsertOffset(double rate, bool isFolder)
-        {
-            if (isFolder)
+            if (orientation == Orientation.Horizontal)
             {
-                return rate switch
-                {
-                    < 0.25 => -1,
-                    > 0.75 => +1,
-                    _ => 0
-                };
+                SetAdornerHorizontalSplit(itemsControl, null, HorizontalAlignment.Left);
             }
             else
             {
-                return rate switch
-                {
-                    < 0.5 => -1,
-                    _ => +1
-                };
+                SetAdornerVerticalSplit(itemsControl, null, VerticalAlignment.Top);
             }
         }
 
-        private bool SetAdornerShape(ListBoxItem item, int delta, Orientation orientation)
+        private bool SetAdornerShape(FrameworkElement item, int delta, Orientation orientation)
         {
             switch (delta)
             {
@@ -194,19 +162,19 @@ namespace NeeView.Windows
             }
         }
 
-        private bool AllowReceiveItem(ListBoxItem item)
+        private bool AllowReceiveItem(FrameworkElement item)
         {
-            if (ReceiveItemType == ListBoxDragReceiveItemType.All)
+            if (ReceiveItemType == InsertDropItemType.All)
             {
                 return true;
             }
-            if (IsFolder(item))
+            if (_profile.IsFolder(item))
             {
-                return ReceiveItemType.HasFlag(ListBoxDragReceiveItemType.Folder);
+                return ReceiveItemType.HasFlag(InsertDropItemType.Folder);
             }
             else
             {
-                return ReceiveItemType.HasFlag(ListBoxDragReceiveItemType.Item);
+                return ReceiveItemType.HasFlag(InsertDropItemType.Item);
             }
         }
 
@@ -218,9 +186,14 @@ namespace NeeView.Windows
             Adorner.Brush = ShapeBrush;
         }
 
-        private void SetAdornerVerticalSplit(ListBoxItem item, VerticalAlignment vertical)
+        private void SetAdornerVerticalSplit(FrameworkElement item, VerticalAlignment vertical)
         {
             var next = GetVerticalItem(item, vertical);
+            SetAdornerVerticalSplit(item, next, vertical);
+        }
+
+        private void SetAdornerVerticalSplit(FrameworkElement item, FrameworkElement? next, VerticalAlignment vertical)
+        {
             if (next is not null)
             {
                 var p0 = GetElementCenter(item);
@@ -244,9 +217,14 @@ namespace NeeView.Windows
             Adorner.Brush = SplitBrush;
         }
 
-        private void SetAdornerHorizontalSplit(ListBoxItem item, HorizontalAlignment horizontal)
+        private void SetAdornerHorizontalSplit(FrameworkElement item, HorizontalAlignment horizontal)
         {
             var next = GetHorizontalItem(item, horizontal);
+            SetAdornerHorizontalSplit(item, next, horizontal);
+        }
+
+        private void SetAdornerHorizontalSplit(FrameworkElement item, FrameworkElement? next, HorizontalAlignment horizontal)
+        {
             if (next is not null)
             {
                 var p0 = GetElementCenter(item);
@@ -270,59 +248,38 @@ namespace NeeView.Windows
             Adorner.Brush = SplitBrush;
         }
 
-        private ListBoxItem? GetVerticalItem(ListBoxItem item, VerticalAlignment vertical)
+        private FrameworkElement? GetVerticalItem(FrameworkElement item, VerticalAlignment vertical)
         {
             var point = GetElementCenter(item);
             point.Y += item.ActualHeight * vertical.Direction() * 1.0;
-            return VisualTreeUtility.HitTest<ListBoxItem>(_listBox, point);
+            return _profile.ItemHitTest(_itemsControl, point);
         }
 
-        private ListBoxItem? GetHorizontalItem(ListBoxItem item, HorizontalAlignment horizontal)
+        private FrameworkElement? GetHorizontalItem(FrameworkElement item, HorizontalAlignment horizontal)
         {
             var point = GetElementCenter(item);
             point.X += item.ActualWidth * horizontal.Direction() * 1.0;
-            return VisualTreeUtility.HitTest<ListBoxItem>(_listBox, point);
+            return _profile.ItemHitTest(_itemsControl, point);
         }
 
         private (Point p0, Point p1) GetElementRect(FrameworkElement element)
         {
-            var p0 = element.TranslatePoint(new Point(0, 0), _listBox);
+            var p0 = element.TranslatePoint(new Point(0, 0), _itemsControl);
             var p1 = p0 + new Vector(element.ActualWidth, element.ActualHeight);
             return (p0, p1);
         }
 
         private Point GetElementCenter(FrameworkElement element)
         {
-            return element.TranslatePoint(new Point(element.ActualWidth * 0.5, element.ActualHeight * 0.5), _listBox);
+            return element.TranslatePoint(new Point(element.ActualWidth * 0.5, element.ActualHeight * 0.5), _itemsControl);
         }
     }
 
 
-    public static class VerticalAlignmentExtensions
-    {
-        public static double Direction(this VerticalAlignment vertical)
-        {
-            return vertical switch
-            {
-                VerticalAlignment.Top => -1.0,
-                VerticalAlignment.Bottom => 1.0,
-                _ => 0.0
-            };
-        }
-    }
-
-
-    public static class HorizontalAlignmentExtensions
-    {
-        public static double Direction(this HorizontalAlignment horizontal)
-        {
-            return horizontal switch
-            {
-                HorizontalAlignment.Left => -1.0,
-                HorizontalAlignment.Right => 1.0,
-                _ => 0.0
-            };
-        }
-    }
-
+    /// <summary>
+    /// ドロップターゲット項目情報
+    /// </summary>
+    /// <param name="Item">ターゲット項目</param>
+    /// <param name="Delta">ターゲット項目の挿入位置。-1 or 0 or 1</param>
+    public record DropTargetItem(FrameworkElement? Item, int Delta);
 }

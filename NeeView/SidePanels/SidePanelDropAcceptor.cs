@@ -17,7 +17,7 @@ namespace NeeView
         /// </summary>
         private readonly ItemsControl _itemsControl;
         private readonly LayoutDockPanelContent _dock;
-        private readonly ItemsControlDropAssist _dropAssist;
+        private readonly SidePanelInsertDropAssist _dropAssist;
         private DropAcceptDescription _description;
 
 
@@ -26,7 +26,7 @@ namespace NeeView
             _itemsControl = itemsControl;
             _dock = dock;
 
-            _dropAssist = new ItemsControlDropAssist(_itemsControl);
+            _dropAssist = new SidePanelInsertDropAssist(_itemsControl);
 
             _description = new DropAcceptDescription();
             _description.DragEnter += Description_DragEnter;
@@ -71,21 +71,27 @@ namespace NeeView
         {
             if (!e.Data.GetDataPresent(typeof(LayoutPanel)))
             {
+                e.Effects = DragDropEffects.None;
+                e.Handled = true;
                 return;
             }
 
-            _dropAssist.OnDragOver(sender, e);
+            e.Effects = e.AllowedEffects.HasFlag(DragDropEffects.Move) ? DragDropEffects.Move : DragDropEffects.None;
 
-            if (e.AllowedEffects.HasFlag(DragDropEffects.Move))
-            {
-                e.Effects = DragDropEffects.Move;
-                e.Handled = true;
-            }
-            else
+            var target = _dropAssist.OnDragOver(sender, e);
+
+            var panel = e.Data.GetData<LayoutPanel>();
+            if (panel is null || panel == (target.Item as ContentPresenter)?.Content)
             {
                 e.Effects = DragDropEffects.None;
-                e.Handled = true;
             }
+
+            if (e.Effects == DragDropEffects.None)
+            {
+                _dropAssist.HideAdorner();
+            }
+
+            e.Handled = true;
         }
 
         private void Description_DragDrop(object? sender, DragEventArgs e)
@@ -122,12 +128,12 @@ namespace NeeView
         /// <summary>
         /// リストの挿入位置を求める
         /// </summary>
-        private int GetItemInsertIndex(ItemsControlDropTarget args, LayoutPanel panel)
+        private int GetItemInsertIndex(DropTargetItem args, LayoutPanel panel)
         {
             if (_itemsControl == null) return -1;
 
             var src = GetItemIndex(panel);
-            var dst = GetItemIndex(args.Item);
+            var dst = GetItemIndex(args.Item as ContentPresenter);
 
             if (dst < 0)
             {
@@ -151,7 +157,8 @@ namespace NeeView
         /// <returns></returns>
         private int GetItemIndex(ContentPresenter? control)
         {
-            if (_itemsControl == null) return -1;
+            if (_itemsControl is null) return -1;
+            if (control is null) return -1;
 
             var count = _itemsControl.Items.Count;
             for (int index = 0; index < count; ++index)
@@ -186,6 +193,15 @@ namespace NeeView
             }
 
             return -1;
+        }
+    }
+
+
+    public class SidePanelInsertDropAssist : InsertDropAssist
+    {
+        public SidePanelInsertDropAssist(ItemsControl itemsControl)
+            : base(itemsControl, new ItemsControlDropAssistProfile())
+        {
         }
     }
 }
