@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Shapes;
 using System.Windows.Media;
 using System.Diagnostics.CodeAnalysis;
+using NeeLaboratory.Linq;
 
 namespace NeeView
 {
@@ -111,14 +112,14 @@ namespace NeeView
 
         private void Update()
         {
-            var _root = new AlternativeBreadcrumb();
-            var _items = CreateBreadcrumbs(Path);
+            var root = new RootBreadcrumb();
+            var items = CreateBreadcrumbs(Path);
 
             this.Children.Clear();
 
-            this.Children.Add(new BreadcrumbItem() { Name = "Root", Breadcrumb = _root });
+            this.Children.Add(new RootBreadcrumbItem() { Name = "Root", Breadcrumb = root });
 
-            foreach (var item in _items)
+            foreach (var item in items)
             {
                 this.Children.Add(new BreadcrumbItem() { Breadcrumb = item });
             }
@@ -188,9 +189,9 @@ namespace NeeView
                     if (_context.Root.DesiredSize.Width < child.DesiredSize.Width)
                     {
                         _context.IsRoot = true;
-                        if (_context.Root.Breadcrumb is AlternativeBreadcrumb alternative)
+                        if (_context.Root.Breadcrumb is RootBreadcrumb root)
                         {
-                            alternative.Breadcrumb = child.Breadcrumb;
+                            root.Items = children.Take(children.Count - index).Select(e => e.Breadcrumb).WhereNotNull().ToList();
                         }
                         break;
                     }
@@ -282,7 +283,7 @@ namespace NeeView
             public int Ellipsis { get; set; }
             public bool IsRoot { get; set; }
 
-            public BreadcrumbItem Root { get; private set; }
+            public RootBreadcrumbItem Root { get; private set; }
             public List<BreadcrumbItem> Items { get; private set; }
             public UIElement? Mask { get; private set; }
             public BreadcrumbPadding? Padding { get; private set; }
@@ -300,7 +301,7 @@ namespace NeeView
                     {
                         case "Root":
                             if (Root is not null) throw new InvalidOperationException("Root already exists.");
-                            Root = (BreadcrumbItem)child;
+                            Root = (RootBreadcrumbItem)child;
                             break;
                         case "Mask":
                             if (Mask is not null) throw new InvalidOperationException("Mask already exists.");

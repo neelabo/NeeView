@@ -30,6 +30,25 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
+    <ControlTemplate x:Key="BreadcrumbComboBoxRootToggleButton" TargetType="{x:Type ToggleButton}">
+        <Border x:Name="Border" BorderThickness="1" Background="Transparent" BorderBrush="Transparent">
+            <TextBlock x:Name="Text" Text="..." HorizontalAlignment="Center"/>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="Text" Property="Opacity" Value="0.5" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Background}" />
+                <Setter TargetName="Border" Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=BorderBrush}" />
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Background}" />
+                <Setter TargetName="Border" Property="BorderBrush" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=BorderBrush}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
     <Style x:Key="BreadcrumbComboBox" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource NVComboBox}">
         <Setter Property="Width" Value="20" />
         <Setter Property="MinWidth" Value="16" />
@@ -37,12 +56,13 @@
         <Setter Property="Padding" Value="0" />
         <Setter Property="VirtualizingPanel.IsVirtualizing" Value="True"/>
         <Setter Property="VirtualizingPanel.VirtualizationMode" Value="Recycling"/>
+        <Setter Property="local:ComboBoxTools.ToggleButtonTemplate" Value="{StaticResource BreadcrumbComboBoxToggleButton}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ComboBox}">
                     <Grid>
                         <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" />
-                        <ToggleButton x:Name="ToggleButton" Template="{StaticResource BreadcrumbComboBoxToggleButton}" Focusable="False" ClickMode="Press"
+                        <ToggleButton x:Name="ToggleButton" Template="{TemplateBinding local:ComboBoxTools.ToggleButtonTemplate}" Focusable="False" ClickMode="Press"
                                 Foreground="{DynamicResource Control.Foreground}" Background="{TemplateBinding local:ComboBoxTools.MouseOverBackground}"
                                 BorderBrush="{TemplateBinding local:ComboBoxTools.MouseOverBorderBrush}" VerticalAlignment="Stretch"
                                 IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" />
@@ -101,6 +121,27 @@
     </DataTemplate>
 
 
+    <Style TargetType="{x:Type local:RootBreadcrumbItem}">
+        <Setter Property="IsTabStop" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:RootBreadcrumbItem}">
+                    <StackPanel x:Name="PART_Root" Orientation="Horizontal">
+                        <ComboBox x:Name="PART_MainComboBox" VerticalAlignment="Stretch" IsTabStop="False"
+                            Style="{StaticResource BreadcrumbComboBox}"
+                            local:ComboBoxTools.ToggleButtonTemplate="{StaticResource BreadcrumbComboBoxRootToggleButton}">
+                        </ComboBox>
+                        <ComboBox x:Name="PART_BreadcrumbComboBox" VerticalAlignment="Stretch" IsTabStop="False"
+                              Style="{StaticResource BreadcrumbComboBox}"
+                              Visibility="{Binding Breadcrumb.HasChildren, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource BooleanToVisibilityConverter}}"
+                              ItemsSource="{Binding Breadcrumb.Children, RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                        </ComboBox>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <Style TargetType="{x:Type local:BreadcrumbItem}">
         <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="Template">

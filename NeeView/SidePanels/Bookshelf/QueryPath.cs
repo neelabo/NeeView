@@ -440,8 +440,13 @@ namespace NeeView
         /// </summary>
         /// <param name="part"></param>
         /// <returns></returns>
-        public QueryPath Combine(string part)
+        public QueryPath Combine(string? part)
         {
+            if (string.IsNullOrEmpty(part))
+            {
+                return this;
+            }
+
             return Scheme switch
             {
                 QueryScheme.None

@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace NeeView
@@ -19,7 +20,6 @@ namespace NeeView
             DependencyProperty.RegisterAttached("MouseOverBackground", typeof(Brush), typeof(ComboBoxTools), new PropertyMetadata(Brushes.Transparent));
 
 
-
         public static Brush GetMouseOverBorderBrush(DependencyObject obj)
         {
             return (Brush)obj.GetValue(MouseOverBorderBrushProperty);
@@ -32,6 +32,20 @@ namespace NeeView
 
         public static readonly DependencyProperty MouseOverBorderBrushProperty =
             DependencyProperty.RegisterAttached("MouseOverBorderBrush", typeof(Brush), typeof(ComboBoxTools), new PropertyMetadata(Brushes.White));
+
+
+        public static ControlTemplate? GetToggleButtonTemplate(DependencyObject obj)
+        {
+            return (ControlTemplate)obj.GetValue(ToggleButtonTemplateProperty);
+        }
+
+        public static void SetToggleButtonTemplate(DependencyObject obj, Brush value)
+        {
+            obj.SetValue(ToggleButtonTemplateProperty, value);
+        }
+
+        public static readonly DependencyProperty ToggleButtonTemplateProperty =
+            DependencyProperty.RegisterAttached("ToggleButtonTemplate", typeof(ControlTemplate), typeof(ComboBoxTools), new PropertyMetadata(null));
     }
 
 }
