@@ -456,20 +456,6 @@ namespace NeeView
             }
         }
 
-        // TODO: ソートオーダーの導入で不要になるかも？
-        public void Sort()
-        {
-            if (!IsEditable) return;
-
-            lock (_lock)
-            {
-                var sorted = _items.OrderBy(e => e.Path, NaturalSort.Comparer);
-                this.Items = new ObservableCollection<PlaylistItem>(sorted);
-
-                _isDirty = true;
-            }
-        }
-
         public bool Rename(PlaylistItem item, string newName)
         {
             if (!IsEditable) return false;
