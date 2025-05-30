@@ -96,14 +96,19 @@ namespace NeeView
             return _source?.CanBookmark() ?? false;
         }
 
-        public void SetBookmark(bool isBookmark)
+        public void SetBookmark(bool isBookmark, string? parent = null)
         {
-            _source?.SetBookmark(isBookmark);
+            _source?.SetBookmark(isBookmark, parent);
         }
 
-        public void ToggleBookmark()
+        public void ToggleBookmark(string? parent = null)
         {
-            _source?.ToggleBookmark();
+            _source?.ToggleBookmark(parent);
+        }
+
+        public bool IsBookmarkOn(string? parent)
+        {
+            return _source?.IsBookmarkOn(parent) ?? false;
         }
 
     }

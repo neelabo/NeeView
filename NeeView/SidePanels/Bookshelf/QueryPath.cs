@@ -164,19 +164,19 @@ namespace NeeView
         private string[]? _tokens;
 
 
-        public QueryPath(string? source)
+        public QueryPath(string? source, QueryScheme defaultScheme = QueryScheme.File)
         {
             var rest = source;
             (rest, Search) = TakeQuerySearch(rest);
-            (rest, Scheme) = TakeScheme(rest);
+            (rest, Scheme) = TakeScheme(rest, defaultScheme);
             Path = GetValidatePath(rest, Scheme);
         }
 
-        public QueryPath(string? source, string? search)
+        public QueryPath(string? source, string? search, QueryScheme defaultScheme = QueryScheme.File)
         {
             var rest = source;
             Search = search;
-            (rest, Scheme) = TakeScheme(rest);
+            (rest, Scheme) = TakeScheme(rest, defaultScheme);
             Path = GetValidatePath(rest, Scheme);
         }
 
@@ -246,6 +246,11 @@ namespace NeeView
         public string[] Tokens => _tokens ??= CreateTokens();
 
 
+        public string GetSimplePath(QueryScheme omit)
+        {
+            return Scheme == omit ? Path ?? "" : FullPath;
+        }
+
         private static (string? RestSource, string? SearchWord) TakeQuerySearch(string? source)
         {
             if (source != null)
@@ -260,7 +265,7 @@ namespace NeeView
             return (source, null);
         }
 
-        private static (string? RestSource, QueryScheme Scheme) TakeScheme(string? source)
+        private static (string? RestSource, QueryScheme Scheme) TakeScheme(string? source, QueryScheme defaultScheme = QueryScheme.File)
         {
             if (source != null)
             {
@@ -271,7 +276,7 @@ namespace NeeView
                     return (source[schemeString.Length..], scheme);
                 }
             }
-            return (source, QueryScheme.File);
+            return (source, defaultScheme);
         }
 
         public QueryPath GetParent()

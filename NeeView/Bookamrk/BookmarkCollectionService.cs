@@ -12,17 +12,36 @@ namespace NeeView
     public static class BookmarkCollectionService
     {
         /// <summary>
-        /// 現在開いているフォルダーリストの場所を優先してブックマークを追加する
+        /// ブックマークを追加する
         /// </summary>
-        public static void Add(QueryPath query)
+        public static TreeListNode<IBookmarkEntry>? Add(QueryPath query, TreeListNode<IBookmarkEntry>? parent)
         {
-            if (!BookmarkFolderList.Current.AddBookmark(query, false))
+            if (parent is not null)
             {
-                AddToChild(query, BookmarkCollection.Current.Items);
+                return AddTo(query, parent);
+            }
+            else
+            {
+                return Add(query);
             }
         }
 
-        public static TreeListNode<IBookmarkEntry>? AddToChild(QueryPath query, TreeListNode<IBookmarkEntry> parent)
+        /// <summary>
+        /// 現在開いているフォルダーリストの場所を優先してブックマークを追加する
+        /// </summary>
+        public static TreeListNode<IBookmarkEntry>? Add(QueryPath query)
+        {
+            if (!BookmarkFolderList.Current.AddBookmark(query, false))
+            {
+                return AddTo(query, BookmarkCollection.Current.Items);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// ブックマークフォルダーを指定してブックマークを追加する
+        /// </summary>
+        public static TreeListNode<IBookmarkEntry>? AddTo(QueryPath query, TreeListNode<IBookmarkEntry> parent)
         {
             if (query.Scheme != QueryScheme.File)
             {
@@ -43,6 +62,21 @@ namespace NeeView
         }
 
         /// <summary>
+        /// ブックマークを削除する
+        /// </summary>
+        public static bool Remove(QueryPath query, TreeListNode<IBookmarkEntry>? parent)
+        {
+            if (parent is not null)
+            {
+                return RemoveFrom(query, parent);
+            }
+            else
+            {
+                return Remove(query);
+            }
+        }
+
+        /// <summary>
         /// 現在開いているフォルダーリストを優先してブックマークを削除する
         /// </summary>
         public static bool Remove(QueryPath query)
@@ -60,9 +94,9 @@ namespace NeeView
         }
 
         /// <summary>
-        /// フォルダーを指定してブックマークを削除する
+        /// 指定したフォルダーからブックマークを削除する
         /// </summary>
-        public static bool Remove(QueryPath query, TreeListNode<IBookmarkEntry> parent)
+        public static bool RemoveFrom(QueryPath query, TreeListNode<IBookmarkEntry> parent)
         {
             var node = FindChildBookmark(query, parent);
             if (node != null)
@@ -100,25 +134,20 @@ namespace NeeView
         /// <param name="path"></param>
         /// <param name="parent"></param>
         /// <returns></returns>
-        public static TreeListNode<IBookmarkEntry>? FindChildBookmark(QueryPath path, TreeListNode<IBookmarkEntry> parent)
+        public static TreeListNode<IBookmarkEntry>? FindChildBookmark(QueryPath path, TreeListNode<IBookmarkEntry>? parent)
         {
-            if (path is null)
+            if (path is null || path.Scheme != QueryScheme.File)
             {
                 return null;
             }
 
             if (parent is null)
             {
-                return null;
-            }
-
-            if (path.Scheme == QueryScheme.File)
-            {
-                return parent.Children.FirstOrDefault(e => e.Value is Bookmark bookmark && bookmark.Path == path.SimplePath);
+                return BookmarkCollection.Current.FindNode(path);
             }
             else
             {
-                return null;
+                return parent.Children.FirstOrDefault(e => e.Value is Bookmark bookmark && bookmark.Path == path.SimplePath);
             }
         }
 
@@ -197,5 +226,12 @@ namespace NeeView
                 _ => false,
             };
         }
+
+        public static TreeListNode<IBookmarkEntry>? FindBookmarkFolder(QueryPath path)
+        {
+            var node = BookmarkCollection.Current.FindNode(path);
+            return node != null && node.Value is BookmarkFolder ? node : null;
+        }
+
     }
 }

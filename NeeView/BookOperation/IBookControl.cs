@@ -19,7 +19,8 @@ namespace NeeView
         void ReLoad();
 
         bool CanBookmark();
-        void SetBookmark(bool isBookmark);
-        void ToggleBookmark();
+        void SetBookmark(bool isBookmark, string? parent);
+        void ToggleBookmark(string? parent);
+        bool IsBookmarkOn(string? parent);
     }
 }

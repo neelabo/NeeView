@@ -104,6 +104,7 @@ namespace NeeView
             typeof(ExportBackupCommandParameter),
             typeof(CopyToFolderAsCommandParameter),
             typeof(MoveToFolderAsCommandParameter),
+            typeof(ToggleBookmarkCommandParameter),
         };
 
 

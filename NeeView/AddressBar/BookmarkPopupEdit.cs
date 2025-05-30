@@ -79,7 +79,7 @@ namespace NeeView
         private TreeListNode<IBookmarkEntry>? AddToChild(string path, TreeListNode<IBookmarkEntry> parent)
         {
             LocalDebug.WriteLine($"{path} to {parent.Value.Name}");
-            return BookmarkCollectionService.AddToChild(new QueryPath(Path), parent);
+            return BookmarkCollectionService.Add(new QueryPath(Path), parent);
         }
 
         private void MoveToChild(TreeListNode<IBookmarkEntry> node, TreeListNode<IBookmarkEntry> parent)

@@ -1649,7 +1649,7 @@ namespace NeeView
                 return false;
             }
 
-            var node = BookmarkCollectionService.AddToChild(path, bookmarkFolderCollection.BookmarkPlace);
+            var node = BookmarkCollectionService.Add(path, bookmarkFolderCollection.BookmarkPlace);
             if (node != null)
             {
                 var item = bookmarkFolderCollection.FirstOrDefault(e => node == (e.Source as TreeListNode<IBookmarkEntry>));

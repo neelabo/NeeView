@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeView.Collections.Generic;
 using NeeView.PageFrames;
 using System;
 using System.Collections.Generic;
@@ -102,26 +103,38 @@ namespace NeeView
         }
 
         // ブックマーク設定
-        public void SetBookmark(bool isBookmark)
+        public void SetBookmark(bool isBookmark, string? parent)
         {
             if (CanBookmark())
             {
                 var query = new QueryPath(_book.Path);
+
+                TreeListNode<IBookmarkEntry>? parentNode = null;
+                if (!string.IsNullOrEmpty(parent))
+                {
+                    var parentQuery = new QueryPath(parent);
+                    parentNode = BookmarkCollectionService.FindBookmarkFolder(parentQuery);
+                    if (parentNode is null)
+                    {
+                        ToastService.Current.Show(new Toast($"{ResourceService.GetString("@Bookmark.Message.FolderNotFoundError")}\n{parentQuery.GetSimplePath(QueryScheme.Bookmark)}", "", ToastIcon.Error));
+                        return;
+                    }
+                }
 
                 if (isBookmark)
                 {
                     // ignore temporary directory
                     if (_book.Path.StartsWith(Temporary.Current.TempDirectory, StringComparison.Ordinal))
                     {
-                        ToastService.Current.Show(new Toast(Properties.TextResources.GetString("Bookmark.Message.TemporaryNotSupportedError"), "", ToastIcon.Error));
+                        ToastService.Current.Show(new Toast(ResourceService.GetString("@Bookmark.Message.TemporaryNotSupportedError"), "", ToastIcon.Error));
                         return;
                     }
 
-                    BookmarkCollectionService.Add(query);
+                    BookmarkCollectionService.Add(query, parentNode);
                 }
                 else
                 {
-                    BookmarkCollectionService.Remove(query);
+                    BookmarkCollectionService.Remove(query, parentNode);
                 }
 
                 RaisePropertyChanged(nameof(IsBookmark));
@@ -129,11 +142,26 @@ namespace NeeView
         }
 
         // ブックマーク切り替え
-        public void ToggleBookmark()
+        public void ToggleBookmark(string? parent)
         {
             if (CanBookmark())
             {
-                SetBookmark(!IsBookmark);
+                SetBookmark(!IsBookmarkOn(parent), parent);
+            }
+        }
+
+        public bool IsBookmarkOn(string? parent)
+        {
+            if (!string.IsNullOrEmpty(parent))
+            {
+                var query = new QueryPath(_book.Path);
+                var parentNode = BookmarkCollectionService.FindBookmarkFolder(new QueryPath(parent));
+                if (parentNode is null) return false;
+                return BookmarkCollectionService.FindChildBookmark(query, parentNode) != null;
+            }
+            else
+            {
+                return IsBookmark;
             }
         }
 
