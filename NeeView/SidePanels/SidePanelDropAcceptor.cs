@@ -146,7 +146,7 @@ namespace NeeView
             }
             else
             {
-                return dst;
+                return dst + (args.Delta < 0 ? -1 : 0);
             }
         }
 
