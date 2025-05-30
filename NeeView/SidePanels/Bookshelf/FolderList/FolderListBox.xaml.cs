@@ -237,7 +237,7 @@ namespace NeeView
             if ((sender as ListBox)?.SelectedItem is not FolderItem item) return;
 
             // サブフォルダー読み込み状態を反転する
-            var option = item.IsRecursived ? BookLoadOption.NotRecursive : BookLoadOption.Recursive;
+            var option = item.IsRecursive ? BookLoadOption.NotRecursive : BookLoadOption.Recursive;
             _vm.Model.LoadBook(item, option, ArchiveHint.None);
         }
 
@@ -1173,7 +1173,7 @@ namespace NeeView
 
             // サブフォルダー読み込みの状態を更新
             var isDefaultRecursive = _vm.FolderCollection != null && _vm.FolderCollection.FolderParameter.IsFolderRecursive;
-            item.UpdateIsRecursived(isDefaultRecursive);
+            item.UpdateIsRecursive(isDefaultRecursive);
 
             // コンテキストメニュー生成
 
@@ -1227,7 +1227,7 @@ namespace NeeView
                     contextMenu.Items.Add(new Separator());
                 }
                 contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@BookshelfItem.Menu.OpenBook"), Command = OpenBookCommand });
-                contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@BookshelfItem.Menu.Subfolder"), Command = LoadWithRecursiveCommand, IsChecked = item.IsRecursived });
+                contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@BookshelfItem.Menu.Subfolder"), Command = LoadWithRecursiveCommand, IsChecked = item.IsRecursive });
                 contextMenu.Items.Add(new Separator());
                 contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@Word.Bookmark"), Command = ToggleBookmarkCommand, IsChecked = BookmarkCollection.Current.Contains(item.EntityPath.SimplePath) });
                 contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@BookshelfItem.Menu.DeleteHistory"), Command = RemoveHistoryCommand });

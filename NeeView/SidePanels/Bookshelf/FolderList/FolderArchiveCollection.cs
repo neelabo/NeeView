@@ -29,6 +29,11 @@ namespace NeeView
 
         public override async ValueTask InitializeItemsAsync(CancellationToken token)
         {
+            await InitializeItemsAsync(null, token);
+        }
+
+        public async ValueTask InitializeItemsAsync(FolderOrder? folderOrderHint, CancellationToken token)
+        {
             token.ThrowIfCancellationRequested();
 
             try
@@ -60,7 +65,8 @@ namespace NeeView
                 .Where(e => e != null)
                 .ToList();
 
-            var list = Sort(items, token);
+            var folderOrder = folderOrderHint.HasValue ? folderOrderHint.Value : FolderOrder;
+            var list = Sort(items, folderOrder, token);
 
             if (!list.Any())
             {

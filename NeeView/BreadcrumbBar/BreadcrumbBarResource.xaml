@@ -96,7 +96,7 @@
 
     <DataTemplate DataType="{x:Type local:FileBreadcrumbToken}">
         <DockPanel LastChildFill="True">
-            <local:FileIconImage DockPanel.Dock="Left" Path="{Binding Path.SimplePath}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <local:FileIconImage DockPanel.Dock="Left" Path="{Binding Path}" VerticalAlignment="Center" Margin="0,0,8,0"/>
             <TextBlock Text="{Binding Label}" VerticalAlignment="Center"/>
         </DockPanel>
     </DataTemplate>

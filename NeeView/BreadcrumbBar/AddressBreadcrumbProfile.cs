@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 
 
 namespace NeeView
@@ -32,21 +33,33 @@ namespace NeeView
             return s;
         }
 
-        public List<BreadcrumbToken> GetChildren(QueryPath query, CancellationToken token)
+        public async ValueTask<List<BreadcrumbToken>> GetChildrenAsync(QueryPath query, CancellationToken token)
         {
             if (string.IsNullOrEmpty(query.Path))
             {
                 return GetDriveChildren();
             }
 
-            var collection = new FolderEntryCollection(query, false, false);
-            collection.InitializeItems(FolderOrder.FileName, token);
-
-            var items = collection.Where(e => !e.IsEmpty());
+            IEnumerable<FolderItem> items = [];
+            if (query.Scheme == QueryScheme.File)
+            {
+                if (Directory.Exists(query.SimplePath))
+                {
+                    var collection = new FolderEntryCollection(query, false, false);
+                    collection.InitializeItems(FolderOrder.FileName, token);
+                    items = collection.Where(e => !e.IsEmpty());
+                }
+                else if (File.Exists(query.SimplePath) || FileIO.IsArchivePath(query.SimplePath))
+                {
+                    var collection = new FolderArchiveCollection(query, Config.Current.System.ArchiveRecursiveMode, false, false);
+                    await collection.InitializeItemsAsync(FolderOrder.FileName, token);
+                    items = collection.Where(e => !e.IsEmpty());
+                }
+            }
 
             if (!IncludeFile)
             {
-                items = items.Where(e => e.IsDirectoryMaybe());
+                items = items.Where(e => e.IsDirectoryMaybe() || e.Attributes.HasFlag(FolderItemAttribute.ArchiveEntry));
             }
 
             return items.Select(e => new FileBreadcrumbToken(query, e.Name ?? "None", null)).ToList<BreadcrumbToken>();

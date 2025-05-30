@@ -207,7 +207,7 @@ namespace NeeView
         /// <summary>
         /// フォルダーリストのコンテキストメニュー用
         /// </summary>
-        public bool IsRecursived
+        public bool IsRecursive
         {
             get { return _isRecursive; }
             set { if (_isRecursive != value) { _isRecursive = value; RaisePropertyChanged(); } }
@@ -298,13 +298,13 @@ namespace NeeView
         }
 
         /// <summary>
-        /// IsRecursived 更新
+        /// IsRecursive 更新
         /// </summary>
-        public void UpdateIsRecursived(bool isDefaultRecursive)
+        public void UpdateIsRecursive(bool isDefaultRecursive)
         {
             var option = isDefaultRecursive ? BookLoadOption.DefaultRecursive : BookLoadOption.None;
             var memento = BookMementoTools.GetLatestBookMemento(EntityPath.SimplePath, option);
-            this.IsRecursived = memento.IsRecursiveFolder;
+            this.IsRecursive = memento.IsRecursiveFolder;
         }
 
         private void UpdateOverlay()

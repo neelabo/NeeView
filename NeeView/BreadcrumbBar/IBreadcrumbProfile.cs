@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 
 namespace NeeView
@@ -8,7 +9,7 @@ namespace NeeView
     {
         string GetDisplayName(QueryPath query, int index) => query.Tokens[index];
 
-        List<BreadcrumbToken> GetChildren(QueryPath query, CancellationToken token);
+        ValueTask<List<BreadcrumbToken>> GetChildrenAsync(QueryPath query, CancellationToken token);
 
         bool CanHasChild(QueryPath query) => true;
 

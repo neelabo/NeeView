@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 
 namespace NeeView
@@ -21,7 +22,7 @@ namespace NeeView
             return s;
         }
 
-        public List<BreadcrumbToken> GetChildren(QueryPath query, CancellationToken token)
+        public async ValueTask<List<BreadcrumbToken>> GetChildrenAsync(QueryPath query, CancellationToken token)
         {
             if (query.Scheme != QueryScheme.Bookmark) return new();
 
@@ -36,6 +37,7 @@ namespace NeeView
                 .Select(e => new BreadcrumbToken(query, e, null))
                 .ToList();
 
+            await ValueTask.CompletedTask;
             return list;
         }
 

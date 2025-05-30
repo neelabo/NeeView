@@ -59,11 +59,11 @@ namespace NeeView
 
             Children = _loadingChildren;
 
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 try
                 {
-                    var children = _profile.GetChildren(_path, _cancellationTokenSource.Token);
+                    var children = await _profile.GetChildrenAsync(_path, _cancellationTokenSource.Token);
                     Children = children.Count > 0 ? children : _emptyChildren;
                 }
                 catch (OperationCanceledException)

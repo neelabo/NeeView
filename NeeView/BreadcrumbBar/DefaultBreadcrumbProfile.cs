@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 
 namespace NeeView
@@ -10,9 +11,10 @@ namespace NeeView
     {
         public static DefaultBreadcrumbProfile Instance { get; } = new();
 
-        public List<BreadcrumbToken> GetChildren(QueryPath query, CancellationToken token)
+        public async ValueTask<List<BreadcrumbToken>> GetChildrenAsync(QueryPath query, CancellationToken token)
         {
 #if DEBUG
+            await ValueTask.CompletedTask;
             return new string[] { "AAA", "BBB", "CCC" }.Select(e => new BreadcrumbToken(query, e, null)).ToList();
 #else
             return new();

@@ -393,6 +393,31 @@ namespace NeeView
             }
         }
 
+        public static bool IsArchivePath(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                return false;
+            }
+            if (Directory.Exists(path) || File.Exists(path))
+            {
+                return false;
+            }
+
+            for (var s = LoosePath.GetDirectoryName(path); !string.IsNullOrEmpty(s); s = LoosePath.GetDirectoryName(s))
+            {
+                if (File.Exists(s))
+                {
+                    return true;
+                }
+                if (Directory.Exists(s))
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
         #region Copy
 
         /// <summary>
