@@ -226,8 +226,11 @@ namespace NeeView
                 return _iconOverlay;
             }
         }
+        
+        public string? TargetPlace { get; set; }
 
-        public virtual string? Detail => Name;
+        public string? Detail => TargetPlace is not null ? $"{TargetPlace}\n{Name}" : Name;
+
 
         public abstract IThumbnail? Thumbnail { get; }
 

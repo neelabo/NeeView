@@ -36,6 +36,15 @@ namespace NeeView
                 .ToList();
 
             items = _searcher.Search(_searchKeyword, items, token).Cast<FolderItem>().ToList();
+
+            foreach(var item in items)
+            {
+                if (item.Source is not TreeListNode<IBookmarkEntry> node) continue;
+                var path = string.Join("\\", node.Hierarchy.SkipLast(1).Select(e => e.Value.Name));
+                var query = new QueryPath(path, QueryScheme.Bookmark);
+                item.TargetPlace = query.FullPath;
+            }
+
             return items;
         }
     }

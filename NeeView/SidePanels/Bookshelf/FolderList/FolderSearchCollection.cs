@@ -77,6 +77,11 @@ namespace NeeView
                 list.Add(_folderItemFactory.CreateFolderItemEmpty());
             }
 
+            foreach (var item in list)
+            {
+                item.TargetPlace = item.TargetPath.GetParent().SimplePath;
+            }
+
             this.Items = new ObservableCollection<FolderItem>(list);
             BindingOperations.EnableCollectionSynchronization(this.Items, new object());
 
