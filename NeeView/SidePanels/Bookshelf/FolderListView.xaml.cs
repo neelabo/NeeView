@@ -11,6 +11,7 @@ using System.Windows.Media.Animation;
 using NeeView.Windows;
 using System.Threading;
 using NeeView.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NeeView
 {
@@ -159,21 +160,82 @@ namespace NeeView
             {
                 _isButtonDown = false;
 
-                if (_vm.Model.Place == null)
+                var data = CreatePlaceDataObject();
+                if (data == null)
                 {
                     return;
                 }
-                if (_vm.Model.Place.Scheme != QueryScheme.File && _vm.Model.Place.Scheme != QueryScheme.Bookmark)
-                {
-                    return;
-                }
-
-                var data = new DataObject();
-                data.SetQueryPathAndFile(_vm.Model.Place);
 
                 _ghost.Attach(this.PlaceBar, new Point(24, 24));
                 DragDrop.DoDragDrop(element, data, DragDropEffects.Copy);
                 _ghost.Detach();
+            }
+        }
+
+        private DataObject? CreatePlaceDataObject()
+        {
+            var place = _vm.Model.Place;
+            if (!CanDragPlace(place))
+            {
+                return null;
+            }
+
+            var data = new DataObject();
+            data.SetQueryPathAndFile(place);
+            return data;
+        }
+
+        private bool CanDragPlace([NotNullWhen(true)] QueryPath? place)
+        {
+            if (place == null)
+            {
+                return false;
+            }
+            if (place.Scheme != QueryScheme.File && place.Scheme != QueryScheme.Bookmark)
+            {
+                return false;
+            }
+            if (place.Scheme == QueryScheme.File && string.IsNullOrEmpty(place.Path))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private void PlaceBar_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            if (!CanDragPlace(_vm.Model.Place))
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void CopyMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var data = CreatePlaceDataObject();
+                if (data == null)
+                {
+                    return;
+                }
+                Clipboard.SetDataObject(data);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        }
+
+        private void CopyAsTextMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Clipboard.SetText(_vm.Model.Place?.SimplePath ?? "");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
             }
         }
 

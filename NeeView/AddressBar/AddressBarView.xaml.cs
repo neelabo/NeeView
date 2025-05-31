@@ -290,6 +290,22 @@ namespace NeeView
 
             try
             {
+                var data = new DataObject();
+                data.SetQueryPathAndFile(new QueryPath(_vm.Model.Address));
+                Clipboard.SetDataObject(data);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        }
+
+        private void CopyAsTextMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (_vm is null) return;
+
+            try
+            {
                 Clipboard.SetText(_vm.Model.Address);
             }
             catch (Exception ex)
@@ -305,14 +321,22 @@ namespace NeeView
             string? text = null;
             try
             {
-                text = Clipboard.GetText();
+                var files = Clipboard.GetFileDropList();
+                if (files is not null && files.Count > 0)
+                {
+                    text = files[0];
+                }
+                else
+                {
+                    text = Clipboard.GetText();
+                }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
             }
 
-            if (text is not null)
+            if (!string.IsNullOrEmpty(text))
             {
                 _vm.Model.Address = text;
             }

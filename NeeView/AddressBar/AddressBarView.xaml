@@ -266,7 +266,8 @@
                                                  PaddingFocused="AddressBreadcrumbBar_PaddingFocused">
                                 <local:BreadcrumbBar.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Header="{properties:TextBinding Menu.Copy}" Click="CopyMenuItem_Click"/>
+                                        <MenuItem Header="{properties:TextBinding Menu.CopyAddress}" Click="CopyMenuItem_Click"/>
+                                        <MenuItem Header="{properties:TextBinding Menu.CopyAddressAsText}" Click="CopyAsTextMenuItem_Click"/>
                                         <MenuItem Header="{properties:TextBinding Menu.Paste}" Click="PasteMenuItem_Click" IsEnabled="{Binding Model.IsBookLocked, Converter={StaticResource BooleanReverseConverter}}" />
                                         <MenuItem Header="{properties:TextBinding Menu.Edit}" Click="EditMenuItem_Click"/>
                                     </ContextMenu>

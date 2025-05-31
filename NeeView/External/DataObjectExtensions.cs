@@ -10,7 +10,7 @@ namespace NeeView
         public static void SetQueryPathAndFile(this DataObject data, QueryPath query)
         {
             data.SetQueryPathList([query]);
-            if (System.IO.Path.Exists(query.SimplePath))
+            if (query.Scheme == QueryScheme.File)
             {
                 data.SetFileDropList([query]);
             }
@@ -36,7 +36,7 @@ namespace NeeView
         {
             if (Config.Current.System.TextCopyPolicy == TextCopyPolicy.None) return;
 
-            var files = queries.Where(e => e.Scheme == QueryScheme.File).Select(e => e.SimplePath).ToArray();
+            var files = queries.Select(e => e.SimplePath).ToArray();
             if (!files.Any()) return;
 
             data.SetData(DataFormats.UnicodeText, string.Join(System.Environment.NewLine, files));

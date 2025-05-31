@@ -59,7 +59,7 @@
             <local:StringNullOrWhiteSpaceToVisibilityConverter x:Key="StringNullOrWhiteSpaceToVisibilityConverter" True="Collapsed" False="Visible" />
 
             <local:PlaceBreadcrumbProfile x:Key="PlaceBreadcrumbProfile" />
-            
+
             <Style x:Key="FolderListButtonStyle" TargetType="Button" BasedOn="{StaticResource IconButton}">
                 <Setter Property="Width" Value="28" />
                 <Setter Property="MinHeight" Value="{DynamicResource FontIconSize}" />
@@ -97,7 +97,13 @@
                         <DockPanel MinHeight="24" Margin="0,0,0,8">
                             <TextBlock DockPanel.Dock="Right" Text="{Binding FolderCollection.ValidCount, StringFormat={}{0}}" Foreground="{DynamicResource Panel.Foreground}" Margin="5,0" VerticalAlignment="Center"
                                     Visibility="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsVisibleItemsCount, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                            <DockPanel x:Name="PlaceBar">
+                            <DockPanel x:Name="PlaceBar" Background="Transparent" ContextMenuOpening="PlaceBar_ContextMenuOpening">
+                                <DockPanel.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="{properties:TextBinding Menu.CopyAddress}" Click="CopyMenuItem_Click"/>
+                                        <MenuItem Header="{properties:TextBinding Menu.CopyAddressAsText}" Click="CopyAsTextMenuItem_Click"/>
+                                    </ContextMenu>
+                                </DockPanel.ContextMenu>
                                 <Image x:Name="PlaceIcon" DockPanel.Dock="Left" Width="16" Height="16" VerticalAlignment="Center" Margin="0,0,0,0"
                                         PreviewMouseLeftButtonDown="PlaceIcon_MouseLeftButtonDown" PreviewMouseLeftButtonUp="PlaceIcon_MouseLeftButtonUp" PreviewMouseMove="PlaceIcon_MouseMove"
                                         QueryContinueDrag="PlaceIcon_QueryContinueDrag">

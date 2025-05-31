@@ -100,6 +100,54 @@ namespace NeeView
             this.ListBoxContent.Content = content;
         }
 
+        private void CopyMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var data = CreatePlaceDataObject();
+                if (data == null)
+                {
+                    return;
+                }
+                Clipboard.SetDataObject(data);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        }
+
+        private void CopyAsTextMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (_vm is null) return;
+
+            try
+            {
+                Clipboard.SetText(_vm.Model.Place?.SimplePath ?? "");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        }
+
+        private DataObject? CreatePlaceDataObject()
+        {
+            if (_vm is null)
+            {
+                return null;
+            }
+
+            var place = _vm.Model.Place;
+            if (place == null)
+            {
+                return null;
+            }
+
+            var data = new DataObject();
+            data.SetQueryPathAndFile(place);
+            return data;
+        }
 
         #region UI Accessor
 

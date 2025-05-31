@@ -25,7 +25,12 @@ namespace NeeView
             {
                 return "";
             }
-            var s = query.Tokens[index];
+            var tokens = query.Tokens;
+            if (tokens.Length <= index)
+            {
+                return "";
+            }
+            var s = tokens[index];
             if (index == 1)
             {
                 return FileIO.GetDriveDisplayName(s) ?? s;

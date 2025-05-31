@@ -40,7 +40,7 @@
             <local:FolderCollectionToFolderRecursiveVisibilityConverter x:Key="FolderCollectionToFolderRecursiveVisibilityConverter" />
             <local:FolderTreeLayoutToBooleanConverter x:Key="FolderTreeLayoutToBooleanConverter" />
             <local:PathToPlaceIconConverter x:Key="PathToPlaceIconConverter" />
-            
+
             <local:BookmarkBreadcrumbProfile x:Key="BookmarkBreadcrumbProfile" />
 
             <Style x:Key="FolderListButtonStyle" TargetType="Button" BasedOn="{StaticResource IconButton}">
@@ -70,8 +70,14 @@
             <DockPanel HorizontalAlignment="Stretch" MinHeight="24" Margin="0,0,0,8">
                 <TextBlock DockPanel.Dock="Right" Text="{Binding FolderCollection.ValidCount, StringFormat={}{0}}" Foreground="{DynamicResource Panel.Foreground}" Margin="5,0" VerticalAlignment="Center"
                                     Visibility="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsVisibleItemsCount, Converter={StaticResource BooleanToVisibilityConverter}}" />
-                <Border x:Name="PlaceGrid" Margin="1,0">
+                <Border x:Name="PlaceGrid" Margin="1,0" Background="Transparent">
                     <local:BreadcrumbBar Profile="{StaticResource BookmarkBreadcrumbProfile}" Path="{Binding FullPath}" />
+                    <Border.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="{properties:TextBinding Menu.CopyAddress}" Click="CopyMenuItem_Click"/>
+                            <MenuItem Header="{properties:TextBinding Menu.CopyAddressAsText}" Click="CopyAsTextMenuItem_Click"/>
+                        </ContextMenu>
+                    </Border.ContextMenu>
                 </Border>
             </DockPanel>
 
@@ -116,7 +122,7 @@
                                  DeleteCommand="{Binding SearchBoxModel.DeleteCommand}"
                                  />
             </Grid>
-            
+
         </StackPanel>
 
         <Grid x:Name="LayoutGrid" SizeChanged="Grid_SizeChanged">
@@ -128,7 +134,7 @@
                 <RowDefinition Height="{Binding FolderTreeAreaHeight, Mode=TwoWay}"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            
+
             <local:FolderTreeView x:Name="FolderTree"
                                   Visibility="{Binding Model.IsFolderTreeVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <local:FolderTreeView.Style>

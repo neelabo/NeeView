@@ -13,8 +13,8 @@ namespace NeeView
 
         public async ValueTask<List<BreadcrumbToken>> GetChildrenAsync(QueryPath query, CancellationToken token)
         {
-#if DEBUG
             await ValueTask.CompletedTask;
+#if DEBUG
             return new string[] { "AAA", "BBB", "CCC" }.Select(e => new BreadcrumbToken(query, e, null)).ToList();
 #else
             return new();
