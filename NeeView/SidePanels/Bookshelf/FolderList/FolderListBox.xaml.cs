@@ -730,6 +730,11 @@ namespace NeeView
                 return false;
             }
 
+            if (_vm.FolderCollection.Place.Search is not null)
+            {
+                return false;
+            }
+
             var entries = e.Data.GetData<BookmarkNodeCollection>();
             if (entries is not null)
             {
