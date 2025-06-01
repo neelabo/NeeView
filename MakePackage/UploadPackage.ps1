@@ -236,7 +236,7 @@ $canary_body = @"
 ## Canary Version
 
 NeeView Canary is a snapshot of the development process.
-It is intended to give you a preview of features that will be available in the official version.
+It is intended to give you a preview of features that will be available in a future stable version.
 
 This version runs on .NET $dotNetVersion.
 
@@ -246,8 +246,8 @@ See also: [About Canary Version](https://neelabo.github.io/NeeView/package-canar
 $beta_body = @"
 ## Beta Version
 
-NeeView Beta is the version just before the official release.
-No new features will be added, only bug fixes. The official version will be released in approximately one to two weeks.
+NeeView Beta is the version just before the stable version.
+No new features will be added, only bug fixes. The stable version will be released in approximately one to two weeks.
 
 This version runs on .NET $dotNetVersion.
 
