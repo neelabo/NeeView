@@ -263,7 +263,7 @@ namespace NeeView
                 case "size":
                     return new IntegerSearchValue(Length);
                 case "bookmark":
-                    return new BooleanSearchValue(IsBookmark());
+                    return new BooleanSearchValue(IsBookmark() && !IsDirectory);
                 case "history":
                     return new BooleanSearchValue(BookHistoryCollection.Current.Contains(EntityPath.SimplePath));
                 default:
@@ -278,7 +278,7 @@ namespace NeeView
         public bool IsDrive() => (Attributes & FolderItemAttribute.Drive) == FolderItemAttribute.Drive;
         public bool IsEmpty() => (Attributes & FolderItemAttribute.Empty) == FolderItemAttribute.Empty;
         public bool IsDisable() => IsDirectory && !IsReady;
-        public bool IsBookmark() => (Attributes & FolderItemAttribute.Bookmark) == FolderItemAttribute.Bookmark;
+        public bool IsBookmark() => (Attributes & FolderItemAttribute.Bookmark) == FolderItemAttribute.Bookmark; 
         public bool IsFileSystem() => (Attributes & (FolderItemAttribute.System | FolderItemAttribute.Bookmark | FolderItemAttribute.QuickAccess | FolderItemAttribute.Empty | FolderItemAttribute.None)) == 0;
 
         // FolderCollection上のパス
