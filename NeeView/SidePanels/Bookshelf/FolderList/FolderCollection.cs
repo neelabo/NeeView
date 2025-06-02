@@ -325,9 +325,9 @@ namespace NeeView
                 return order.ToList();
             }
             // NOTE: Linq.OrderByでのOperationCanceledException例外はInvalidOperationExceptionとして報告される
-            catch (InvalidOperationException ex) when (ex.InnerException is OperationCanceledException opex)
+            catch (InvalidOperationException ex) when (ex.InnerException is OperationCanceledException cex)
             {
-                throw opex;
+                throw cex;
             }
         }
 
@@ -590,14 +590,14 @@ namespace NeeView
                 return;
             }
 
-            AppDispatcher.Invoke(() => RenameItem(item, path));
+            AppDispatcher.Invoke(() => RenameItem(item, path, null));
         }
 
-        public void RenameItem(FolderItem item, QueryPath path)
+        public void RenameItem(FolderItem item, QueryPath path, string? name)
         {
             if (item == null) return;
 
-            item.SetTargetPath(path);
+            item.SetTargetPathAndName(path, name);
         }
 
 

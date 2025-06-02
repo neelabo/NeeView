@@ -1216,6 +1216,7 @@ namespace NeeView
                     contextMenu.Items.Add(DestinationFolderCollectionUtility.CreateDestinationFolderItem(ResourceService.GetString("@BookshelfItem.Menu.MoveToFolder"), false, MoveToFolderCommand, OpenDestinationFolderCommand));
                     contextMenu.Items.Add(new Separator());
                     contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@BookshelfItem.Menu.DeleteBookmark"), Command = RemoveCommand });
+                    contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@BookshelfItem.Menu.Rename"), Command = RenameCommand });
                 }
             }
             else if (item.Attributes.HasFlag(FolderItemAttribute.Empty))

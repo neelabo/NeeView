@@ -157,41 +157,51 @@ namespace NeeView
         public static bool Rename(TreeListNode<IBookmarkEntry> node, string newName)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
-            if (node.Value is not BookmarkFolder folder) throw new ArgumentOutOfRangeException(nameof(node));
-
-            newName = BookmarkFolder.GetValidateName(newName);
-            var oldName = folder.Name;
-
-            if (string.IsNullOrEmpty(newName))
+            if (node.Value is BookmarkFolder folder)
             {
-                return false;
-            }
+                newName = BookmarkTools.GetValidateName(newName);
+                var oldName = folder.Name;
 
-            if (newName != oldName)
-            {
-                var conflict = node.Parent?.Children.FirstOrDefault(e => e != node && e.Value is BookmarkFolder && e.Value.Name == newName);
-                if (conflict != null)
+                if (string.IsNullOrEmpty(newName))
                 {
-                    var dialog = new MessageDialog(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("MergeFolderDialog.Message"), newName), Properties.TextResources.GetString("MergeFolderDialog.Title"));
-                    dialog.Commands.Add(UICommands.Yes);
-                    dialog.Commands.Add(UICommands.No);
-                    var result = dialog.ShowDialog();
+                    return false;
+                }
 
-                    if (result.Command == UICommands.Yes)
+                if (newName != oldName)
+                {
+                    var conflict = node.Parent?.Children.FirstOrDefault(e => e != node && e.Value is BookmarkFolder && e.Value.Name == newName);
+                    if (conflict != null)
                     {
-                        BookmarkCollection.Current.Merge(node, conflict);
+                        var dialog = new MessageDialog(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("MergeFolderDialog.Message"), newName), Properties.TextResources.GetString("MergeFolderDialog.Title"));
+                        dialog.Commands.Add(UICommands.Yes);
+                        dialog.Commands.Add(UICommands.No);
+                        var result = dialog.ShowDialog();
+
+                        if (result.Command == UICommands.Yes)
+                        {
+                            BookmarkCollection.Current.Merge(node, conflict);
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        folder.Name = newName;
+                        BookmarkCollection.Current.RaiseBookmarkChangedEvent(new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Rename, node.Parent, node) { OldName = oldName });
                         return true;
                     }
                 }
-                else
-                {
-                    folder.Name = newName;
-                    BookmarkCollection.Current.RaiseBookmarkChangedEvent(new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Rename, node.Parent, node) { OldName = oldName });
-                    return true;
-                }
+                return false;
+            }
+            else if (node.Value is Bookmark bookmark)
+            {
+                newName = BookmarkTools.GetValidateName(newName);
+                var oldName = bookmark.Name;
+                bookmark.Name = newName;
+                BookmarkCollection.Current.RaiseBookmarkChangedEvent(new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Rename, node.Parent, node) { OldName = oldName });
+                return true;
             }
 
-            return false;
+            throw new InvalidOperationException($"Cannot rename node of type {node.Value.GetType().Name}.");
         }
 
         /// <summary>

@@ -293,10 +293,10 @@ namespace NeeView
         /// <summary>
         /// ターゲットパスと名前の設定
         /// </summary>
-        public void SetTargetPath(QueryPath path)
+        public void SetTargetPathAndName(QueryPath path, string? name)
         {
             this.TargetPath = path;
-            this.Name = path.FileName;
+            this.Name = name ?? path.FileName;
             OnRenamed();
         }
 
@@ -388,7 +388,7 @@ namespace NeeView
             return DisplayName;
         }
 
-        public string GetRenameText()
+        public virtual string GetRenameText()
         {
             return this.TargetPath.FileName;
         }
@@ -410,7 +410,7 @@ namespace NeeView
                     return Config.Current.System.IsFileWriteAccessEnabled;
                 }
             }
-            else if (this.Attributes.HasFlag(FolderItemAttribute.Bookmark | FolderItemAttribute.Directory))
+            else if (this.Attributes.HasFlag(FolderItemAttribute.Bookmark))
             {
                 return true;
             }

@@ -12,6 +12,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using NeeLaboratory.Generators;
+using System.Text.Json.Serialization;
 
 namespace NeeView
 {
@@ -472,7 +473,7 @@ namespace NeeView
 
         private static string GetValidateFolderName(IEnumerable<string> names, string? name, string defaultName)
         {
-            name = BookmarkFolder.GetValidateName(name);
+            name = BookmarkTools.GetValidateName(name);
             if (string.IsNullOrWhiteSpace(name))
             {
                 name = defaultName;
@@ -502,7 +503,7 @@ namespace NeeView
 
                 var folder = ((BookmarkFolder)child.Value);
 
-                var name = BookmarkFolder.GetValidateName(folder.Name);
+                var name = BookmarkTools.GetValidateName(folder.Name);
                 if (string.IsNullOrWhiteSpace(name))
                 {
                     name = "_";
@@ -621,12 +622,15 @@ namespace NeeView
 
     public class BookmarkNode
     {
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? Name { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? Path { get; set; }
 
         public DateTime EntryTime { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<BookmarkNode>? Children { get; set; }
 
         public bool IsFolder => Children != null;
@@ -651,6 +655,7 @@ namespace NeeView
             }
             else if (source.Value is Bookmark bookmark)
             {
+                node.Name = bookmark.RawName;
                 node.Path = bookmark.Path;
                 node.EntryTime = bookmark.EntryTime;
             }
@@ -692,6 +697,7 @@ namespace NeeView
                 }
                 var bookmark = new Bookmark(source.Path)
                 {
+                    Name = source.Name ?? "",
                     EntryTime = source.EntryTime
                 };
                 var node = new TreeListNode<IBookmarkEntry>(bookmark);

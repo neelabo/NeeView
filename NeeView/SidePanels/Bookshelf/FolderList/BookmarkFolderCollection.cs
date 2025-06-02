@@ -112,11 +112,11 @@ namespace NeeView
                         {
                             if (e.Item.Value is BookmarkFolder bookmarkFolder)
                             {
-                                RenameItem(item, e.Item.CreateQuery());
+                                RenameItem(item, e.Item.CreateQuery(), null);
                             }
                             else if (e.Item.Value is Bookmark bookmark)
                             {
-                                RenameItem(item, new QueryPath(bookmark.Path));
+                                RenameItem(item, new QueryPath(bookmark.Path), bookmark.Name);
                             }
                         }
                     }
@@ -246,7 +246,7 @@ namespace NeeView
             if (node?.Value is not Bookmark bookmark) return null;
             if (string.IsNullOrWhiteSpace(bookmark.Path)) return null;
 
-            var item = new FileFolderItem(_isOverlayEnabled)
+            var item = new BookmarkFolderItem(_isOverlayEnabled)
             {
                 Source = node,
                 Type = FolderItemType.File,
@@ -317,5 +317,21 @@ namespace NeeView
             base.Dispose(disposing);
         }
         #endregion
+    }
+
+
+    public class BookmarkFolderItem : FileFolderItem
+    {
+        public BookmarkFolderItem(bool isOverlayEnabled) : base(isOverlayEnabled)
+        {
+        }
+
+        public Bookmark Bookmark => (this.Source as TreeListNode<IBookmarkEntry>)?.Value as Bookmark
+            ?? throw new InvalidOperationException("Source is not a Bookmark node.");
+
+        public override string GetRenameText()
+        {
+            return Bookmark.Name;
+        }
     }
 }
