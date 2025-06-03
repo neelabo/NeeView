@@ -14,26 +14,26 @@ namespace NeeView
         /// <summary>
         /// ブックマークを追加する
         /// </summary>
-        public static TreeListNode<IBookmarkEntry>? Add(QueryPath query, TreeListNode<IBookmarkEntry>? parent)
+        public static TreeListNode<IBookmarkEntry>? Add(QueryPath query, TreeListNode<IBookmarkEntry>? parent, string? name, bool allowDuplicate)
         {
             if (parent is not null)
             {
-                return AddTo(query, parent);
+                return AddTo(query, parent, name, allowDuplicate);
             }
             else
             {
-                return Add(query);
+                return Add(query, name, allowDuplicate);
             }
         }
 
         /// <summary>
         /// 現在開いているフォルダーリストの場所を優先してブックマークを追加する
         /// </summary>
-        public static TreeListNode<IBookmarkEntry>? Add(QueryPath query)
+        public static TreeListNode<IBookmarkEntry>? Add(QueryPath query, string? name, bool allowDuplicate)
         {
             if (!BookmarkFolderList.Current.AddBookmark(query, false))
             {
-                return AddTo(query, BookmarkCollection.Current.Items);
+                return AddTo(query, BookmarkCollection.Current.Items, name, allowDuplicate);
             }
             return null;
         }
@@ -41,22 +41,29 @@ namespace NeeView
         /// <summary>
         /// ブックマークフォルダーを指定してブックマークを追加する
         /// </summary>
-        public static TreeListNode<IBookmarkEntry>? AddTo(QueryPath query, TreeListNode<IBookmarkEntry> parent)
+        public static TreeListNode<IBookmarkEntry>? AddTo(QueryPath query, TreeListNode<IBookmarkEntry> parent, string? name, bool allowDuplicate)
         {
             if (query.Scheme != QueryScheme.File)
             {
                 return null;
             }
 
-            // TODO: 重複チェックはBookmarkCollectionで行うようにする?
-            var node = parent.Children.FirstOrDefault(e => e.Value is Bookmark bookmark && bookmark.Path == query.SimplePath);
-            if (node == null)
+            if (!allowDuplicate)
             {
-                var unit = BookMementoCollection.Current.Set(query.SimplePath);
-                var bookmark = new Bookmark(unit);
-                node = new TreeListNode<IBookmarkEntry>(bookmark);
-                BookmarkCollection.Current.AddToChild(node, parent);
+                if (FindBookmark(parent, query, null) != null)
+                {
+                    return null;
+                }
             }
+
+            var unit = BookMementoCollection.Current.Set(query.SimplePath);
+            var bookmark = new Bookmark(unit);
+            if (name is not null)
+            {
+                bookmark.Name = name;
+            }
+            var node = new TreeListNode<IBookmarkEntry>(bookmark);
+            BookmarkCollection.Current.AddToChild(node, parent);
 
             return node;
         }
@@ -197,7 +204,10 @@ namespace NeeView
                 newName = BookmarkTools.GetValidateName(newName);
                 var oldName = bookmark.Name;
                 bookmark.Name = newName;
-                BookmarkCollection.Current.RaiseBookmarkChangedEvent(new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Rename, node.Parent, node) { OldName = oldName });
+                if (bookmark.Name != oldName)
+                {
+                    BookmarkCollection.Current.RaiseBookmarkChangedEvent(new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Rename, node.Parent, node) { OldName = oldName });
+                }
                 return true;
             }
 
@@ -237,10 +247,34 @@ namespace NeeView
             };
         }
 
+        /// <summary>
+        /// ブックマークフォルダーを検索する
+        /// </summary>
+        /// <param name="path">ブックマークフォルダ―パス</param>
+        /// <returns>ブックマークノード。見つからなかったら null</returns>
         public static TreeListNode<IBookmarkEntry>? FindBookmarkFolder(QueryPath path)
         {
             var node = BookmarkCollection.Current.FindNode(path);
             return node != null && node.Value is BookmarkFolder ? node : null;
+        }
+
+        /// <summary>
+        /// ブックマークフォルダ―からブックマークを検索する
+        /// </summary>
+        /// <param name="parent">検索するブックマークフォルダ―</param>
+        /// <param name="query">ブックマークのターゲットパス</param>
+        /// <param name="name">ブックマークの名前。null の場合はブックマークの名前を比較しない</param>
+        /// <returns>ブックマークノード。見つからなかったら null</returns>
+        public static TreeListNode<IBookmarkEntry>? FindBookmark(TreeListNode<IBookmarkEntry> parent, QueryPath query, string? name)
+        {
+            if (name is null)
+            {
+                return parent.Children.FirstOrDefault(e => e.Value is Bookmark bookmark && bookmark.Path == query.SimplePath);
+            }
+            else
+            {
+                return parent.Children.FirstOrDefault(e => e.Value is Bookmark bookmark && bookmark.Path == query.SimplePath && bookmark.Name == name);
+            }
         }
 
     }

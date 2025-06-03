@@ -1339,7 +1339,7 @@ namespace NeeView
                 return _folderCollection.FirstOrDefault();
             }
 
-            if (pos.Index >= 0)
+            if (pos.Path is not null && pos.Index >= 0)
             {
                 var item = _folderCollection.Items.ElementAtOrDefault(pos.Index);
                 if (item != null && item.TargetPath == pos.Path)
@@ -1348,18 +1348,31 @@ namespace NeeView
                 }
             }
 
-            // アーカイブ内のパスの場合、有効な項目になるまで場所を遡る
-            var path = pos.Path;
-            do
+            if (pos.Path is not null)
             {
-                var select = _folderCollection.Items.FirstOrDefault(e => e.TargetPath == path);
+                // アーカイブ内のパスの場合、有効な項目になるまで場所を遡る
+                var path = pos.Path;
+                do
+                {
+                    var select = _folderCollection.Items.FirstOrDefault(e => e.TargetPath == path);
+                    if (select != null)
+                    {
+                        return select;
+                    }
+                    path = path.GetParent();
+                }
+                while (path != null && path.FullPath.Length > _folderCollection.Place.FullPath.Length);
+            }
+
+            if (pos.Source is not null)
+            {
+                var select = _folderCollection.Items.FirstOrDefault(e => e.Source == pos.Source);
                 if (select != null)
                 {
                     return select;
                 }
-                path = path.GetParent();
             }
-            while (path != null && path.FullPath.Length > _folderCollection.Place.FullPath.Length);
+
             return _folderCollection.FirstOrDefault();
         }
 
@@ -1649,7 +1662,7 @@ namespace NeeView
                 return false;
             }
 
-            var node = BookmarkCollectionService.Add(path, bookmarkFolderCollection.BookmarkPlace);
+            var node = BookmarkCollectionService.Add(path, bookmarkFolderCollection.BookmarkPlace, null, false);
             if (node != null)
             {
                 var item = bookmarkFolderCollection.FirstOrDefault(e => node == (e.Source as TreeListNode<IBookmarkEntry>));

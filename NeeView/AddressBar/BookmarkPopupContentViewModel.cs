@@ -3,6 +3,7 @@ using NeeView.Collections.Generic;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace NeeView
 {
@@ -21,17 +22,41 @@ namespace NeeView
             _root = new RootFolderTree();
             _root.Children = [new RootBookmarkFolderNode(_root) { IsExpanded = true }];
 
+            TreeListNode<IBookmarkEntry>? node = null;
+            if (BookmarkFolderList.Current.SelectedItem is BookmarkFolderItem item && item.Bookmark.Path == path)
+            {
+                node = item.BookmarkNode;
+            }
+
             _comboBoxCollection = new BookmarkPopupComboBoxCollection(_root, _bookPath);
             _comboBoxCollection.SubscribePropertyChanged(nameof(_comboBoxCollection.SelectedItem), ComboBox_SelectedItemChanged);
+            Debug.Assert(node is null || node.Parent == GetBookmarkEntry(_comboBoxCollection.SelectedItem));
 
-            _edit = new(_bookPath, GetBookmarkEntry(_comboBoxCollection.SelectedItem));
+            _edit = new(_bookPath, GetBookmarkEntry(_comboBoxCollection.SelectedItem), node);
+            _edit.SubscribePropertyChanged(nameof(_edit.Name), (s, e) => RaisePropertyChanged(nameof(Name)));
+
+            if (_edit.IsEdit)
+            {
+                TitleText = ResourceService.GetString("@BookmarkDialog.Edit");
+                IsAddButtonVisible = true;
+            }
+            else
+            {
+                TitleText = ResourceService.GetString("@BookmarkDialog.Add");
+                IsAddButtonVisible = false;
+            }
         }
 
 
         public event EventHandler? FolderTreeViewSelectionChanged;
 
 
-        public string BookPath => _bookPath;
+        public string Name
+        {
+            get => _edit.Name;
+            set => _edit.Name = value;
+        }
+
 
         public ObservableCollection<FolderTreeNodeBase>? TreeViewItems => _root?.Children;
 
@@ -51,9 +76,11 @@ namespace NeeView
 
         public bool IsEdit => _edit.IsEdit;
 
-        public string TitleText => ResourceService.GetString("@Word.Bookmark");
-        public string OKButtonText => ResourceService.GetString("@Word.Add");
+        public string TitleText { get; } 
+        public string OKButtonText => ResourceService.GetString("@Word.Done");
+        public string AddButtonText => ResourceService.GetString("@Word.Add");
         public string DeleteButtonText => ResourceService.GetString("@Word.Remove");
+        public bool IsAddButtonVisible { get; }
 
 
         private void ComboBox_SelectedItemChanged(object? sender, PropertyChangedEventArgs e)
@@ -66,11 +93,26 @@ namespace NeeView
             }
         }
 
-        public void ApplyBookmark(bool? result)
+        public void ApplyBookmark(BookmarkPopupResult result)
         {
-            _edit.Apply(GetBookmarkEntry(SelectedItem), result);
+            var folder = GetBookmarkEntry(SelectedItem);
+            switch (result)
+            {
+                case BookmarkPopupResult.Add:
+                    _edit.Add(folder);
+                    break;
+                case BookmarkPopupResult.Remove:
+                    _edit.Remove(folder);
+                    break;
+                case BookmarkPopupResult.Edit:
+                    _edit.Edit(folder);
+                    break;
+                case BookmarkPopupResult.None:
+                    return;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(result), result, null);
+            }
         }
-
 
         public void SetTreeViewSelectedItem(FolderTreeNodeBase? item, bool raiseChangedEvent)
         {
@@ -92,4 +134,12 @@ namespace NeeView
         }
     }
 
+
+    public enum BookmarkPopupResult
+    {
+        None,
+        Add,
+        Remove,
+        Edit,
+    }
 }

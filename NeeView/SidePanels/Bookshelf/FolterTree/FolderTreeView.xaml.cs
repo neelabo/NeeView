@@ -951,7 +951,7 @@ namespace NeeView
             {
                 if (isDrop)
                 {
-                    BookmarkCollectionService.Add(query, bookmarkFolderTarget.BookmarkSource);
+                    BookmarkCollectionService.Add(query, bookmarkFolderTarget.BookmarkSource, null, false);
                 }
                 e.Effects = DragDropEffects.Copy;
                 e.Handled = true;
@@ -977,7 +977,7 @@ namespace NeeView
                 {
                     if (isDrop)
                     {
-                        BookmarkCollectionService.Add(new QueryPath(fileName), bookmarkFolderTarget.BookmarkSource);
+                        BookmarkCollectionService.Add(new QueryPath(fileName), bookmarkFolderTarget.BookmarkSource, null, false);
                     }
                     isDropped = true;
                 }

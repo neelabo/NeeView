@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:NeeView"
              xmlns:properties="clr-namespace:NeeView.Properties"
              mc:Ignorable="d" 
-             MinWidth="300" MaxWidth="600"
+             MinWidth="400" MaxWidth="600"
              FontSize="{DynamicResource DefaultFontSize}"
              Foreground="{DynamicResource Menu.Foreground}"
              d:DesignHeight="450" d:DesignWidth="300">
@@ -48,7 +48,8 @@
 
             <StackPanel Margin="5">
                 <TextBlock Grid.Row="0" Grid.Column="0" Margin="2" Text="{properties:TextBinding Word.Name}" />
-                <TextBlock Grid.Row="0" Grid.Column="1" Margin="2" Text="{Binding BookPath, Converter={StaticResource PathToBookNameConverter}}" TextTrimming="CharacterEllipsis"/>
+                <TextBox x:Name="BookmarkNameTextBox" Grid.Row="0" Grid.Column="1" Margin="2" Text="{Binding Name}"
+                         GotFocus="BookmarkNameTextBox_GotFocus" />
             </StackPanel>
 
             <StackPanel x:Name="BookmarkFolderSelector" Margin="5">
@@ -135,6 +136,7 @@
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
                 <Button x:Name="OKButton" Style="{StaticResource NVAccentButton}" Content="{Binding OKButtonText}" Click="OKButton_Click"/>
+                <Button x:Name="AddButton" Style="{StaticResource NVButton}" Content="{Binding AddButtonText}" Click="AddButton_Click" Visibility="{Binding IsAddButtonVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 <Button x:Name="DeleteButton" Style="{StaticResource NVButton}" Content="{Binding DeleteButtonText}" Click="DeleteButton_Click"/>
             </StackPanel>
         </StackPanel>

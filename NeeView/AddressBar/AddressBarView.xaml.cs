@@ -62,6 +62,11 @@ namespace NeeView
             this.Root.DataContext = _vm;
         }
 
+        private void Control_KeyDown_IgnoreSingleKeyGesture(object sender, KeyEventArgs e)
+        {
+            KeyExGesture.AddFilter(KeyExGestureFilter.All);
+        }
+
         private void AddressBreadcrumbBar_PaddingFocused(object sender, RoutedEventArgs e)
         {
             this.AddressTextBox.Visibility = Visibility.Visible;

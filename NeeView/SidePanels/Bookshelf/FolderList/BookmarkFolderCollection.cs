@@ -326,6 +326,9 @@ namespace NeeView
         {
         }
 
+        public TreeListNode<IBookmarkEntry> BookmarkNode => this.Source as TreeListNode<IBookmarkEntry>
+            ?? throw new InvalidOperationException("Source is not a Bookmark node.");
+
         public Bookmark Bookmark => (this.Source as TreeListNode<IBookmarkEntry>)?.Value as Bookmark
             ?? throw new InvalidOperationException("Source is not a Bookmark node.");
 

@@ -28,7 +28,7 @@ namespace NeeView
     public partial class BookmarkPopupContent : UserControl
     {
         private readonly BookmarkPopupContentViewModel _vm;
-        private bool? _result;
+        private BookmarkPopupResult _result = BookmarkPopupResult.None;
 
         public BookmarkPopupContent() : this("")
         {
@@ -137,20 +137,37 @@ namespace NeeView
             }
         }
 
+        private void BookmarkNameTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is not TextBox textBox) return;
+
+            AppDispatcher.BeginInvoke(() => textBox.SelectAll());
+        }
+
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
-            _result = true;
+            _result = _vm.IsEdit ? BookmarkPopupResult.Edit : BookmarkPopupResult.Add;
+            Close();
+        }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            _result = BookmarkPopupResult.Add;
             Close();
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            _result = false;
+            _result = BookmarkPopupResult.Remove;
             Close();
         }
 
         public void Decide()
         {
+            if (_result == BookmarkPopupResult.None && !_vm.IsEdit)
+            {
+                _result = BookmarkPopupResult.Add;
+            }
             _vm.ApplyBookmark(_result);
         }
 

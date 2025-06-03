@@ -191,7 +191,7 @@ namespace NeeView
                 }
                 else
                 {
-                    BookmarkCollectionService.Add(item.EntityPath);
+                    BookmarkCollectionService.Add(item.EntityPath, null, false);
                 }
             }
         }

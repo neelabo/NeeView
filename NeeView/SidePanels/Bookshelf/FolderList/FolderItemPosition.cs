@@ -14,8 +14,17 @@
             this.Index = index;
         }
 
-        public QueryPath Path { get; private set; }
+        public FolderItemPosition(object source)
+        {
+            this.Source = source;
+            this.Path = null;
+            this.Index = -1;
+        }
+
+
+        public QueryPath? Path { get; private set; }
         public int Index { get; private set; }
+        public object? Source { get; private set; }
 
         public override string ToString()
         {

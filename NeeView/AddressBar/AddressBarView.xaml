@@ -304,7 +304,7 @@
                StaysOpen="False" AllowsTransparency="True"
                Opened="BookmarkPopup_Opened" Closed="BookmarkPopup_Closed"
                PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}" >
-            <Grid x:Name="BookmarkPopupRoot" Margin="5" >
+            <Grid x:Name="BookmarkPopupRoot" Margin="5" KeyDown="Control_KeyDown_IgnoreSingleKeyGesture" >
                 <Grid.Effect>
                     <DropShadowEffect Opacity="0.5" ShadowDepth="2"/>
                 </Grid.Effect>

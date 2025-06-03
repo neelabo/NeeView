@@ -130,7 +130,7 @@ namespace NeeView
                         return;
                     }
 
-                    BookmarkCollectionService.Add(query, parentNode);
+                    BookmarkCollectionService.Add(query, parentNode, null, false);
                 }
                 else
                 {
