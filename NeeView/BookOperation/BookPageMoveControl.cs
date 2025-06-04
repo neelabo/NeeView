@@ -49,12 +49,14 @@ namespace NeeView
 
         public void ScrollToPrevFrame(object? sender, ScrollPageCommandParameter parameter)
         {
-            _box.ScrollToNextFrame(LinkedListDirection.Previous, parameter, parameter.LineBreakStopMode, parameter.EndMargin);
+            bool allowScroll = !Config.Current.Mouse.IsHoverScroll;
+            _box.ScrollToNextFrame(LinkedListDirection.Previous, parameter, parameter.LineBreakStopMode, parameter.EndMargin, allowScroll);
         }
 
         public void ScrollToNextFrame(object? sender, ScrollPageCommandParameter parameter)
         {
-            _box.ScrollToNextFrame(LinkedListDirection.Next, parameter, parameter.LineBreakStopMode, parameter.EndMargin);
+            bool allowScroll = !Config.Current.Mouse.IsHoverScroll;
+            _box.ScrollToNextFrame(LinkedListDirection.Next, parameter, parameter.LineBreakStopMode, parameter.EndMargin, allowScroll);
         }
 
         public void MoveTo(object? sender, int index)

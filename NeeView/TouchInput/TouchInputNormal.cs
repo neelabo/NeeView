@@ -147,7 +147,7 @@ namespace NeeView
                 //var p2 = e.GetPosition(MainWindow.Current);
                 //NVDebug.WriteInfo("Air", $"{p2:f0}");
 
-                _hoverTransformControl.HoverScroll(pos, timestamp);
+                _hoverTransformControl.HoverScroll(pos, timestamp, DragActionUpdateOptions.None);
             }
         }
 

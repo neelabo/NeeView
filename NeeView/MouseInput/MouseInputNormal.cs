@@ -287,6 +287,8 @@ namespace NeeView
         public override void OnUpdateSelectedFrame(FrameChangeType changeType)
         {
             _hoverTransformControl?.UpdateSelected();
+            // NOTE: ホバースクロール即時反映。タイミングによってはその後に座標補正されてしまうため、実行タイミングを遅らせている
+            AppDispatcher.BeginInvoke(() => HoverScrollIfEnabled(Mouse.GetPosition(_context.Sender), System.Environment.TickCount, DragActionUpdateOptions.Immediate));
         }
 
 
@@ -295,14 +297,18 @@ namespace NeeView
         /// </summary>
         private void HoverScrollIfEnabled(object? sender, MouseEventArgs e)
         {
+            HoverScrollIfEnabled(e.GetPosition(_context.Sender), e.Timestamp, DragActionUpdateOptions.None);
+        }
+
+        public void HoverScrollIfEnabled(Point point, int timestamp, DragActionUpdateOptions options)
+        {
             if (_hoverTransformControl is null) return;
 
             _hoverTransformControl.IsEnabled = Config.Current.Mouse.IsHoverScroll;
             if (_hoverTransformControl.IsEnabled)
             {
-                var pos = ToDragCoord(e.GetPosition(_context.Sender));
-                var timestamp = e.Timestamp;
-                _hoverTransformControl.HoverScroll(pos, timestamp);
+                var pos = ToDragCoord(point);
+                _hoverTransformControl.HoverScroll(pos, timestamp, options);
             }
         }
 

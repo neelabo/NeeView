@@ -107,6 +107,7 @@ namespace NeeView
     {
         None = 0,
         IgnoreUpdateState = (1 << 0),
+        Immediate = (1 << 1),
     }
 
 

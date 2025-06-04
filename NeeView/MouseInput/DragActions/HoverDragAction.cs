@@ -48,6 +48,12 @@ namespace NeeView
                 HoverScroll(Context.Last, TimeSpan.FromSeconds(_mouseConfig.HoverScrollDuration));
             }
 
+            public override void Flush()
+            {
+                Context.UpdateRect();
+                HoverScroll(Context.Last, TimeSpan.Zero);
+            }
+
             /// <summary>
             /// Hover scroll
             /// </summary>

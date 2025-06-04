@@ -154,6 +154,8 @@ namespace NeeView
 
         public void ScrollLeft(ViewScrollCommandParameter parameter)
         {
+            if (Config.Current.Mouse.IsHoverScroll) return;
+
             var control = GetDragTransform(false);
             if (control is null) return;
 
@@ -171,6 +173,8 @@ namespace NeeView
 
         public void ScrollRight(ViewScrollCommandParameter parameter)
         {
+            if (Config.Current.Mouse.IsHoverScroll) return;
+
             var control = GetDragTransform(false);
             if (control is null) return;
 
@@ -188,6 +192,8 @@ namespace NeeView
 
         public void ScrollDown(ViewScrollCommandParameter parameter)
         {
+            if (Config.Current.Mouse.IsHoverScroll) return;
+
             var control = GetDragTransform(false);
             if (control is null) return;
 
@@ -205,6 +211,8 @@ namespace NeeView
 
         public void ScrollUp(ViewScrollCommandParameter parameter)
         {
+            if (Config.Current.Mouse.IsHoverScroll) return;
+
             var control = GetDragTransform(false);
             if (control is null) return;
 
@@ -222,22 +230,28 @@ namespace NeeView
 
         public void ScrollNTypeDown(ViewScrollNTypeCommandParameter parameter)
         {
+            if (Config.Current.Mouse.IsHoverScroll) return;
+
             _presenter.ScrollToNext(LinkedListDirection.Next, parameter);
         }
 
         public void ScrollNTypeUp(ViewScrollNTypeCommandParameter parameter)
         {
+            if (Config.Current.Mouse.IsHoverScroll) return;
+
             _presenter.ScrollToNext(LinkedListDirection.Previous, parameter);
         }
 
         public void NextScrollPage(object? sender, ScrollPageCommandParameter parameter)
         {
-            _presenter.ScrollToNextFrame(LinkedListDirection.Next, parameter, parameter.LineBreakStopMode, parameter.EndMargin);
+            bool allowScroll = !Config.Current.Mouse.IsHoverScroll;
+            _presenter.ScrollToNextFrame(LinkedListDirection.Next, parameter, parameter.LineBreakStopMode, parameter.EndMargin, allowScroll);
         }
 
         public void PrevScrollPage(object? sender, ScrollPageCommandParameter parameter)
         {
-            _presenter.ScrollToNextFrame(LinkedListDirection.Previous, parameter, parameter.LineBreakStopMode, parameter.EndMargin);
+            bool allowScroll = !Config.Current.Mouse.IsHoverScroll;
+            _presenter.ScrollToNextFrame(LinkedListDirection.Previous, parameter, parameter.LineBreakStopMode, parameter.EndMargin, allowScroll);
         }
 
 

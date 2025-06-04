@@ -1094,12 +1094,12 @@ namespace NeeView.PageFrames
         }
 
         // Scroll + NextFrame
-        public void ScrollToNextFrame(LinkedListDirection direction, IScrollNTypeParameter parameter, LineBreakStopMode lineBreakStopMode, double endMargin)
+        public void ScrollToNextFrame(LinkedListDirection direction, IScrollNTypeParameter parameter, LineBreakStopMode lineBreakStopMode, double endMargin, bool allowScroll)
         {
             if (_disposedValue) return;
             if (!_bookContext.IsEnabled) return;
 
-            var isTerminated = ScrollToNext(direction, parameter, lineBreakStopMode, endMargin);
+            var isTerminated = ScrollToNext(direction, parameter, lineBreakStopMode, endMargin, allowScroll);
             if (isTerminated)
             {
                 MoveToNextFrame(direction);
@@ -1116,7 +1116,7 @@ namespace NeeView.PageFrames
             if (_disposedValue) return false;
             if (!_bookContext.IsEnabled) return false;
 
-            return ScrollToNext(direction, parameter, LineBreakStopMode.Line, 0.0);
+            return ScrollToNext(direction, parameter, LineBreakStopMode.Line, 0.0, true);
         }
 
         /// <summary>
@@ -1124,7 +1124,7 @@ namespace NeeView.PageFrames
         /// </summary>
         /// <param name="direction"></param>
         /// <returns>is scroll terminated</returns>
-        private bool ScrollToNext(LinkedListDirection direction, IScrollNTypeParameter parameter, LineBreakStopMode lineBreakStopMode, double endMargin)
+        private bool ScrollToNext(LinkedListDirection direction, IScrollNTypeParameter parameter, LineBreakStopMode lineBreakStopMode, double endMargin, bool allowScroll)
         {
             if (_disposedValue) return false;
             if (!_bookContext.IsEnabled) return false;
@@ -1141,7 +1141,7 @@ namespace NeeView.PageFrames
             var viewRect = _transformControlFactory.CreateViewRect(_viewBox.Rect);
 
             var math = new NScroll(_context, contentRect, viewRect);
-            var scroll = math.ScrollN(direction.ToSign(), parameter, endMargin);
+            var scroll = allowScroll ? math.ScrollN(direction.ToSign(), parameter, endMargin) : new ScrollResult(parameter.ScrollType, default);
 
             if (scroll.IsLineBreak && isLimit && (scroll.IsTerminated || lineBreakStopMode == LineBreakStopMode.Line))
             {

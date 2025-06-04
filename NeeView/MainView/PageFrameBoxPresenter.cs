@@ -575,9 +575,9 @@ namespace NeeView
         }
 
         // TODO: 呼ばれない？
-        public void ScrollToNextFrame(LinkedListDirection direction, IScrollNTypeParameter parameter, LineBreakStopMode lineBreakStopMode, double endMargin)
+        public void ScrollToNextFrame(LinkedListDirection direction, IScrollNTypeParameter parameter, LineBreakStopMode lineBreakStopMode, double endMargin, bool allowScroll)
         {
-            ValidBox()?.ScrollToNextFrame(direction, parameter, lineBreakStopMode, endMargin);
+            ValidBox()?.ScrollToNextFrame(direction, parameter, lineBreakStopMode, endMargin, allowScroll);
         }
 
         public bool ScrollToNext(LinkedListDirection direction, IScrollNTypeParameter parameter)

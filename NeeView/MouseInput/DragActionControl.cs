@@ -49,6 +49,10 @@ namespace NeeView
         {
         }
 
+        public virtual void Flush()
+        {
+        }
+
         public virtual void ExecuteEnd(ISpeedometer? speedometer, bool continued)
         {
         }

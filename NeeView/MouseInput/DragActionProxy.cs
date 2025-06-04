@@ -37,7 +37,14 @@ namespace NeeView
         {
             if (_action is null) return;
             _action.Context.Update(point, timestamp, options);
-            _action.Execute();
+            if (options.HasFlag(DragActionUpdateOptions.Immediate))
+            {
+                _action.Flush();
+            }
+            else
+            {
+                _action.Execute();
+            }
         }
 
         public void MouseWheel(MouseWheelEventArgs e)

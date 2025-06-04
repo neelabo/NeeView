@@ -53,10 +53,9 @@ namespace NeeView
             }
         }
 
-
-        public void HoverScroll(Point point, int timestamp)
+        public void HoverScroll(Point point, int timestamp, DragActionUpdateOptions options)
         {
-            _action.Execute(point, timestamp, DragActionUpdateOptions.None);
+            _action.Execute(point, timestamp, options);
         }
     }
 }
