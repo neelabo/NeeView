@@ -74,6 +74,7 @@ namespace NeeView
         public string DefaultPlaylist => Config.Current.Playlist.DefaultPlaylist;
         public string NewPlaylist => string.IsNullOrEmpty(Config.Current.Playlist.PlaylistFolder) ? "" : Path.Combine(Config.Current.Playlist.PlaylistFolder, "NewPlaylist.nvpls");
 
+        // NOTE: Separatorを含むことがあるので、List<object>にしている
         public List<object> PlaylistFiles
         {
             get
@@ -359,6 +360,24 @@ namespace NeeView
             BookHub.Current.RequestLoad(this, SelectedItem, null, BookLoadOption.IsBook, true);
         }
 
+        public string GetNextPlaylist(int offset)
+        {
+            Debug.Assert(-1 <= offset || offset <= 1);
+
+            if (_playlistCollection is null || _playlistCollection.Count == 0)
+            {
+                return "";
+            }
+
+            var items = _playlistCollection.OfType<string>().ToList();
+            if (items.Count == 0)
+            {
+                return "";
+            }
+
+            int index = (items.IndexOf(SelectedItem) + items.Count + offset) % items.Count;
+            return items[index];
+        }
 
         #region Playlist Controls
 

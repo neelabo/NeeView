@@ -284,6 +284,8 @@ namespace NeeView
                 new ToggleBookmarkCommand(),
                 new RegisterBookmarkCommand(),
 
+                new NextPlaylistCommand(),
+                new PrevPlaylistCommand(),
                 new TogglePlaylistItemCommand(),
                 new PrevPlaylistItemCommand(),
                 new NextPlaylistItemCommand(),
