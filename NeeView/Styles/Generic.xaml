@@ -3,7 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:NeeView"
     xmlns:nwc="clr-namespace:NeeView.Windows.Controls"
-    xmlns:nwd="clr-namespace:NeeView.Windows.Data">
+    xmlns:nwd="clr-namespace:NeeView.Windows.Data"
+    xmlns:properties="clr-namespace:NeeView.Properties">
     
     <!--#region FilmStripThumbnail-->
 
@@ -621,12 +622,12 @@
                             </Grid.Style>
                             <Grid x:Name="PART_NowLoadingNormal" Background="{DynamicResource Window.Background}">
                                 <StackPanel x:Name="PART_NowLoadingLabel" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Vertical">
-                                    <TextBlock x:Name="PART_NowLoadingText" Text="Now Loading" TextAlignment="Center" VerticalAlignment="Center"
+                                    <TextBlock x:Name="PART_NowLoadingText" Text="{properties:TextBinding Word.NowLoading}" TextAlignment="Center" VerticalAlignment="Center"
                                                    Foreground="{DynamicResource Window.Foreground}" FontFamily="Meiryo" FontSize="{StaticResource InfoTextFontSize}" Margin="8" TextTrimming="CharacterEllipsis"/>
                                     <local:ProgressRing x:Name="PART_ProgressRing" />
                                 </StackPanel>
                             </Grid>
-                            <TextBlock x:Name="PART_NowLoadingTiny" Text="Now Loading ..." VerticalAlignment="Bottom" HorizontalAlignment="Right" Foreground="White" Background="#88000000" Padding="20,5" IsHitTestVisible="False"/>
+                            <TextBlock x:Name="PART_NowLoadingTiny" Text="{properties:TextBinding Word.NowLoading, StringFormat={}{0} ...}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Foreground="White" Background="#88000000" Padding="20,5" IsHitTestVisible="False"/>
                         </Grid>
                     </Grid>
                 </ControlTemplate>
