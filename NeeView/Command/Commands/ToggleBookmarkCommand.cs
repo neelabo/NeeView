@@ -31,7 +31,7 @@ namespace NeeView
             return BookOperation.Current.BookControl.CanBookmark();
         }
 
-        [MethodArgument("@ToggleBookmarkCommand.Execute.Remarks")]
+        [MethodArgument("@ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
             if (e.Args.Length > 0)
