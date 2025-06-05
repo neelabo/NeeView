@@ -238,7 +238,7 @@
                  FocusVisualStyle="{x:Null}"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                  HorizontalContentAlignment="Stretch"
-                 ItemsSource="{Binding Model.Items, NotifyOnTargetUpdated=True}"
+                 ItemsSource="{Binding CollectionViewSource.View, NotifyOnTargetUpdated=True}"
                  SelectedItem="{Binding Model.SelectedItem}"
                  SelectionChanged="PageList_SelectionChanged"
                  PreviewMouseLeftButtonDown="PageList_MouseLeftButtonDown"
@@ -250,7 +250,8 @@
                  IsSimpleTextSearchEnabled="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsTextSearchEnabled}"
                  VirtualizingPanel.IsVirtualizing="True"
                  VirtualizingPanel.ScrollUnit="{StaticResource PanelScrollUnit}"
-                 VirtualizingPanel.VirtualizationMode="Recycling">
+                 VirtualizingPanel.VirtualizationMode="Recycling"
+                 VirtualizingPanel.IsVirtualizingWhenGrouping="True">
 
             <b:Interaction.Behaviors>
                 <nw:ListBoxExtendedDragDropStartBehavior AllowedEffects="Copy, Scroll" AllowRightButtonDrag="True" DragDropFormat="{x:Static local:PageListBox.DragDropFormat}" DragBeginAsync="DragStartBehavior_DragBeginAsync" />
@@ -288,6 +289,23 @@
                     </Style.Triggers>
                 </Style>
             </ListBox.Style>
+
+            <ListBox.GroupStyle>
+                <GroupStyle>
+                    <GroupStyle.HeaderTemplate>
+                        <DataTemplate>
+                            <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource Panel.Separator}" Margin="0,15,0,0">
+                                <TextBlock VerticalAlignment="Center" Text="{Binding Name}" Foreground="{DynamicResource Panel.Header}" Margin="0,5" TextTrimming="CharacterEllipsis" />
+                            </Border>
+                        </DataTemplate>
+                    </GroupStyle.HeaderTemplate>
+                    <GroupStyle.Panel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel Orientation="Vertical"/>
+                        </ItemsPanelTemplate>
+                    </GroupStyle.Panel>
+                </GroupStyle>
+            </ListBox.GroupStyle>
 
         </nw:ListBoxExtended>
 

@@ -10,6 +10,7 @@ namespace NeeView
         private PageNameFormat _format = PageNameFormat.Smart;
         private bool _showBookTitle = true;
         private bool _focusMainView;
+        private bool _isGroupBy;
 
 
         /// <summary>
@@ -50,6 +51,16 @@ namespace NeeView
         {
             get { return _focusMainView; }
             set { SetProperty(ref _focusMainView, value); }
+        }
+
+        /// <summary>
+        /// グループ表示
+        /// </summary>
+        [PropertyMember]
+        public bool IsGroupBy
+        {
+            get { return _isGroupBy; }
+            set { SetProperty(ref _isGroupBy, value); }
         }
     }
 

@@ -122,6 +122,8 @@ namespace NeeView
                 menu.Items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleBanner"), PanelListItemStyle.Banner));
                 menu.Items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleThumbnail"), PanelListItemStyle.Thumbnail));
                 menu.Items.Add(new Separator());
+                menu.Items.Add(CreateCheckMenuItem(Properties.TextResources.GetString("Menu.GroupBy"), new Binding(nameof(PageListConfig.IsGroupBy)) { Source = Config.Current.PageList }));
+                menu.Items.Add(new Separator());
                 menu.Items.Add(CreateCheckableMenuItem(Properties.TextResources.GetString("PageListConfig.ShowBookTitle"), new Binding(nameof(PageListConfig.ShowBookTitle)) { Source = Config.Current.PageList }));
                 menu.Items.Add(CreateCheckableMenuItem(Properties.TextResources.GetString("PageListConfig.FocusMainView"), new Binding(nameof(PageListConfig.FocusMainView)) { Source = Config.Current.PageList }));
                 return menu;

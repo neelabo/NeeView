@@ -1087,7 +1087,7 @@ namespace NeeView.PageFrames
                 var directory = _bookContext.Book.Pages[index].GetSmartDirectoryName();
                 if (string.IsNullOrEmpty(directory))
                 {
-                    directory = "(Root)";
+                    directory = ResourceService.GetString("@Word.RootDirectory");
                 }
                 InfoMessage.Current.SetMessage(InfoMessageType.Notify, directory);
             }

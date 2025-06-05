@@ -96,7 +96,7 @@ namespace NeeView
                 menu.Items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleBanner"), PanelListItemStyle.Banner));
                 menu.Items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleThumbnail"), PanelListItemStyle.Thumbnail));
                 menu.Items.Add(new Separator());
-                menu.Items.Add(CreateCheckMenuItem(Properties.TextResources.GetString("Playlist.MoreMenu.GroupBy"), new Binding(nameof(PlaylistConfig.IsGroupBy)) { Source = Config.Current.Playlist }));
+                menu.Items.Add(CreateCheckMenuItem(Properties.TextResources.GetString("Menu.GroupBy"), new Binding(nameof(PlaylistConfig.IsGroupBy)) { Source = Config.Current.Playlist }));
                 menu.Items.Add(CreateCheckMenuItem(Properties.TextResources.GetString("Playlist.MoreMenu.CurrentBook"), new Binding(nameof(PlaylistConfig.IsCurrentBookFilterEnabled)) { Source = Config.Current.Playlist }));
                 menu.Items.Add(new Separator());
                 menu.Items.Add(CreateCommandMenuItem(Properties.TextResources.GetString("Playlist.MoreMenu.New"), _vm.NewCommand));
