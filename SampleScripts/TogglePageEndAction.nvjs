@@ -1,5 +1,5 @@
-﻿// @name ページ終端挙動の切り替え
-// @description ページ終端を超えて移動しようとした時の挙動を切り替える
+﻿// @name Switching page end behavior
+// @description Switch the behavior when trying to move beyond the end of the page.
 
 switch (nv.Config.Book.PageEndAction) {
     case "None":

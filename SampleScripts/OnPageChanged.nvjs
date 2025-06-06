@@ -1,7 +1,9 @@
-// @name ページ開始処理
-// @description ページを開いたときのイベント
+// Scripts with the special name OnPageChanged.nvjs are automatically executed when the page is changed.
+//
+// @name Page start processing
+// @description Event when a page is opened
 
-// 例：ファイル拡張子によって背景を変える。２ページ表示のときは１ページ目の拡張子を参照する
+// Example: Change the background based on the file extension. When displaying two pages, refer to the extension of the first page.
 
 var backgroundType = "Black"
 var page = nv.Book.ViewPages[0]

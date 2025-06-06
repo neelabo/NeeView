@@ -1,5 +1,5 @@
-// @name スライドショー加速
-// @description スライドを切り替える時間を１秒減らします
+// @name Speed up slideshow
+// @description Reduce the time between slide changes by one second.
 
 nv.Config.SlideShow.SlideShowInterval -= 1.0
 

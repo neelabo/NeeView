@@ -1,5 +1,5 @@
-﻿// @name アンシャープマスクON/OFF
-// @description アンシャープマスクの切り替え。リサイズフィルターが有効でないときは警告を表示する
+﻿// @name UnsharpMask ON/OFF
+// @description Switching between UnsharpMask. Display a warning when the resize filter is not enabled.
 
 if (nv.Config.ImageResizeFilter.IsEnabled) {
     nv.Config.ImageResizeFilter.IsUnsharpMaskEnabled = !nv.Config.ImageResizeFilter.IsUnsharpMaskEnabled

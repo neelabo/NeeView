@@ -1,5 +1,5 @@
-﻿    // @name フルスクリーン＆動画再生
-    // @description フルスクリーンと動画再生を同時に切り替え
+﻿    // @name Full screen & video playback
+    // @description Switch between full screen and video playback simultaneously
 
     nv.Command.ToggleFullScreen.Execute()
     nv.Command.ToggleMediaPlay.Execute()

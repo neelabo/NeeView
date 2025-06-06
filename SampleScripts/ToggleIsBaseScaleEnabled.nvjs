@@ -1,6 +1,6 @@
-﻿// 設定を変更することをスクリプトコマンド化するサンプルです。
+﻿// This is an example of scripting commands to change settings.
 //
-// @name 基底スケールON/OFF
+// @name Base Scale ON/OFF
 
 nv.Config.View.IsBaseScaleEnabled = !nv.Config.View.IsBaseScaleEnabled
 

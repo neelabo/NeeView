@@ -1,10 +1,10 @@
-﻿// 起動時に実行するスクリプトのサンプル
+﻿// Sample script to run at startup
 // e.g.) NeeView.exe --script="C:\FooBar\Startup.nvjs"
 
-// サイドパネルをすべて閉じでメインビューにフォーカスする
+// Close all side panels to focus on the main view.
 nv.Command.FocusMainView.Patch({NeedClosePanels:true}).Execute()
 
-// エフェクト設定：画像サイズを512x512にする
+// Effect settings: Set image size to 512x512
 nv.Config.ImageCustomSize.Size = "512,512"
 nv.Config.ImageCustomSize.IsUniformed = false
 nv.Config.ImageCustomSize.IsEnabled = true

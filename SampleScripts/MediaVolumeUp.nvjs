@@ -1,5 +1,5 @@
-    // @name 音量増加
-    // @description 動画の音量を大きくします
+    // @name Volume up
+    // @description Increase the volume of the video.
     
     nv.Config.Archive.Media.Volume += 0.05
     if (nv.Config.Archive.Media.Volume > 1.0)

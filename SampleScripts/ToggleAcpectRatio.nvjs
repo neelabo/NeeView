@@ -1,5 +1,5 @@
-﻿// @name アスペクト比の切り替え
-// @description アスペクト比の切り替え。サイズ指定が有効でないときは警告を表示する
+﻿// @name Aspect ratio switching
+// @description Switch aspect ratio. Display a warning when size specification is not valid.
 
 if (nv.Config.ImageCustomSize.IsEnabled) {
     const aspects = ["None", "Origin", "Ratio_1_1", "Ratio_2_3", "Ratio_4_3", "Ratio_8_9", "Ratio_16_9", "HalfView", "View"]

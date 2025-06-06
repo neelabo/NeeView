@@ -1,5 +1,5 @@
-// @name 基底スケール拡大
-// @description 基底スケールを大きくします
+// @name Base Scale Expansion
+// @description Increase the base scale.
 
 if (nv.Config.View.IsBaseScaleEnabled)
 {

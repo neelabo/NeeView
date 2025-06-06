@@ -1,5 +1,5 @@
-// @name 基底スケール縮小
-// @description 基底スケールを小さくします
+// @name Base Scale Reduction
+// @description Reduce the base scale.
 
 if (nv.Config.View.IsBaseScaleEnabled)
 {

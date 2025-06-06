@@ -1,5 +1,5 @@
-﻿// @name ブックファイルを移動する
-// @description 開いているブックのファイルまたはディレクトリを移動するサンプルです (v42.0~)
+﻿// @name Move book file
+// @description This is an example of moving a file or directory in an open book. (v42.0~)
 
 var destination = "E:\\FooBar\\"
 
