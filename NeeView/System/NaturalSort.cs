@@ -12,18 +12,24 @@ namespace NeeView
     /// </summary>
     public static class NaturalSort
     {
+        private static readonly IComparer<string> _asciiComparer;
         private static readonly IComparer<string> _nativeComparer;
-        private static readonly IComparer<string> _customComparer;
+        private static readonly IComparer<string> _naturalComparer;
 
         static NaturalSort()
         {
+            _asciiComparer = StringComparer.Ordinal;
             _nativeComparer = new NativeNaturalComparer();
-            _customComparer = new NaturalComparer();
+            _naturalComparer = new NaturalComparer();
         }
 
-
-        public static IComparer<string> Comparer => Config.Current.System.IsNaturalSortEnabled ? _customComparer : _nativeComparer;
-
+        public static IComparer<string> Comparer => Config.Current.System.StringComparerType switch
+        {
+            StringComparerType.Ascii => _asciiComparer,
+            StringComparerType.Native => _nativeComparer,
+            StringComparerType.Natural => _naturalComparer,
+            _ => _nativeComparer
+        };
 
         public static int Compare(string? x, string? y)
         {

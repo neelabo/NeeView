@@ -29,7 +29,7 @@ namespace NeeView
         private bool _isIgnoreImageDpi = true;
         private string _downloadPath = "";
         private bool _isOpenBookAtCurrentPlace;
-        private bool _isNaturalSortEnabled;
+        private StringComparerType _stringComparer = StringComparerType.Native;
         private bool _isInputMethodEnabled;
         private DestinationFolderCollection _destinationFolderCollection = new();
         private ExternalAppCollection _externalAppCollection = new() { new ExternalApp() };
@@ -180,12 +180,12 @@ namespace NeeView
             set { SetProperty(ref _isOpenBookAtCurrentPlace, value); }
         }
 
-        // カスタム自然順ソート
+        // 名前順の種類
         [PropertyMember]
-        public bool IsNaturalSortEnabled
+        public StringComparerType StringComparerType
         {
-            get { return _isNaturalSortEnabled; }
-            set { SetProperty(ref _isNaturalSortEnabled, value); }
+            get { return _stringComparer; }
+            set { SetProperty(ref _stringComparer, value); }
         }
 
         // テキストボックス以外でのIME有効 (現状では非公開)
@@ -371,6 +371,23 @@ namespace NeeView
             set { DestinationFolderCollection = value ?? new(); }
         }
 
+        // カスタム自然順ソート
+        [Obsolete("no used"), Alternative(nameof(StringComparerType), 44, ScriptErrorLevel.Warning)] // ver.44
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public bool IsNaturalSortEnabled
+        {
+            get { return false; }
+            set { StringComparerType = value ? StringComparerType.Natural : StringComparerType.Native; }
+        }
+
         #endregion Obsolete
+    }
+
+
+    public enum StringComparerType
+    {
+        Ascii = 0,
+        Native = 1,
+        Natural = 2,
     }
 }

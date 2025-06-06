@@ -64,7 +64,7 @@ namespace NeeView.Setting
             this.Items.Add(section);
 
             section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.General.Environment"));
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.IsNaturalSortEnabled))));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.StringComparerType))));
             if (!Environment.IsAppxPackage)
             {
                 section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.IsNetworkEnabled))));

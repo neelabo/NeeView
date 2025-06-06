@@ -464,6 +464,7 @@ SusiePluginList.Down=@Word.ToDown
 SusiePluginList.Up=@Word.ToUp
 SwirlEffectUnit.Center=@Word.Center
 SystemConfig.Language=@Word.Language
+SystemConfig.StringComparerType=@StringComparerType
 TextCopyPolicy.None=@Word.None
 ThemeConfig.ThemeString=@ThemeConfig.ThemeType
 ThemeErrorDialog.FolderIsNotSet=@Message.FolderIsNotSet
