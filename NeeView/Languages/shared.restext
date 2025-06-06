@@ -511,3 +511,4 @@ WidePageVerticalAlignment.Top=@VerticalAlignment.Top
 WindowChromeFrame.None=@Word.None
 WindowSettingTitle=@Word.Settings
 WindowStateEx.FullScreen=@Word.FullScreen
+BookshelfConfig.FolderSortOrder=@FolderSortOrder

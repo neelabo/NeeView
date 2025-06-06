@@ -20,7 +20,7 @@ namespace NeeView
         private bool _isSearchIncludeSubdirectories = true;
         private FolderOrder _defaultFolderOrder;
         private FolderOrder _playlistFolderOrder;
-        private bool _isOrderWithoutFileType;
+        private FolderSortOrder _folderSortOrder = FolderSortOrder.First;
 
         [JsonInclude, JsonPropertyName(nameof(Home))]
         public string? _home;
@@ -158,13 +158,13 @@ namespace NeeView
         }
 
         /// <summary>
-        /// ファイルタイプを考慮しない並び替え
+        /// フォルダーの並べ替え順序
         /// </summary>
         [PropertyMember]
-        public bool IsOrderWithoutFileType
+        public FolderSortOrder FolderSortOrder
         {
-            get { return _isOrderWithoutFileType; }
-            set { SetProperty(ref _isOrderWithoutFileType, value); }
+            get { return _folderSortOrder; }
+            set { SetProperty(ref _folderSortOrder, value); }
         }
 
 
@@ -190,6 +190,17 @@ namespace NeeView
         {
             get { return false; }
             set { }
+        }
+
+        /// <summary>
+        /// ファイルタイプを考慮しない並び替え
+        /// </summary>
+        [Obsolete("no used"), Alternative(nameof(FolderSortOrder), 44, ScriptErrorLevel.Warning)] // ver.44
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public bool IsOrderWithoutFileType
+        {
+            get { return false; }
+            set { FolderSortOrder = value ? FolderSortOrder.None : FolderSortOrder.First; }
         }
 
         #endregion Obsolete

@@ -47,15 +47,16 @@ namespace NeeView
                 folder.Children = SortEntryTime(folder.Children);
             }
 
-            IOrderedEnumerable<BookmarkNode> nodes;
-            if (Config.Current.Bookshelf.IsOrderWithoutFileType)
+            IOrderedEnumerable<BookmarkNode> nodes = Config.Current.Bookshelf.FolderSortOrder switch
             {
-                nodes = source.OrderBy(e => 0);
-            }
-            else
-            {
-                nodes = source.OrderBy(e => e.IsFolder);
-            }
+                FolderSortOrder.First
+                    => source.OrderBy(e => e.IsFolder),
+                FolderSortOrder.Last
+                    => source.OrderByDescending(e => e.IsFolder),
+                _
+                    => source.OrderBy(e => 0),
+            };
+
             return nodes.ThenBy(e => e.EntryTime).ThenBy(e => e, new ComparerTaskNodeName()).ToList();
         }
 

@@ -276,17 +276,15 @@ namespace NeeView
         {
             token.ThrowIfCancellationRequested();
 
-            IOrderedEnumerable<FolderItem> orderSource;
-
-            if (Config.Current.Bookshelf.IsOrderWithoutFileType)
+            IOrderedEnumerable<FolderItem> orderSource = Config.Current.Bookshelf.FolderSortOrder switch
             {
-                // NOTE: 並び順を変えないOrderBy
-                orderSource = source.OrderBy(e => 0);
-            }
-            else
-            {
-                orderSource = source.OrderBy(e => e.Type);
-            }
+                FolderSortOrder.First
+                    => source.OrderBy(e => e.Type),
+                FolderSortOrder.Last
+                    => source.OrderByDescending(e => e.Type),
+                _
+                    => source.OrderBy(e => 0),
+            };
 
             var order = folderOrder switch
             {

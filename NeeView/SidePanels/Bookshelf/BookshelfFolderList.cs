@@ -36,6 +36,11 @@ namespace NeeView
                 await RefreshAsync(true, true);
             }));
 
+            _disposables.Add(Config.Current.Bookshelf.SubscribePropertyChanged(nameof(BookshelfConfig.FolderSortOrder), async (s, e) =>
+            {
+                await RefreshAsync(true, true);
+            }));
+
             _disposables.Add(Config.Current.Bookshelf.SubscribePropertyChanged(nameof(BookshelfConfig.IsVisibleHistoryMark), (s, e) =>
             {
                 FolderCollection?.RefreshIcon(null);

@@ -31,6 +31,11 @@ namespace NeeView
                 RaisePropertyChanged(nameof(IsSyncBookshelfEnabled));
             }));
 
+            _disposables.Add(Config.Current.Bookshelf.SubscribePropertyChanged(nameof(BookshelfConfig.FolderSortOrder), async (s, e) =>
+            {
+                await RefreshAsync(true, true);
+            }));
+
             this.SearchBoxModel = new SearchBoxModel(new BookmarkSearchBoxComponent(this));
         }
 
