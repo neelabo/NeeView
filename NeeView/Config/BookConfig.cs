@@ -26,7 +26,7 @@ namespace NeeView
         private double _frameSpace = -1.0;
         private string? _terminalSound;
         private bool _isAutoRecursive = false;
-        private bool _isSortFileFirst;
+        private FolderSortOrder _folderSortOrder = FolderSortOrder.First;
         private bool _resetPageWhenRandomSort;
         private bool _isInsertDummyPage;
         private bool _isInsertDummyFirstPage = false;
@@ -174,14 +174,13 @@ namespace NeeView
             set { SetProperty(ref _isAutoRecursive, value); }
         }
 
-        // ファイル並び順、ファイル優先
+        // フォルダーの並べ替え順序
         [PropertyMember]
-        public bool IsSortFileFirst
+        public FolderSortOrder FolderSortOrder
         {
-            get { return _isSortFileFirst; }
-            set { SetProperty(ref _isSortFileFirst, value); }
+            get { return _folderSortOrder; }
+            set { SetProperty(ref _folderSortOrder, value); }
         }
-
 
         // ランダムソートでページをリセット
         [PropertyMember]
@@ -281,6 +280,15 @@ namespace NeeView
         {
             get { return 300.0; }
             set { }
+        }
+
+        // ファイル並び順、ファイル優先
+        [Obsolete("no used"), Alternative(nameof(FolderSortOrder), 44, ScriptErrorLevel.Warning)] // ver.44
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public bool IsSortFileFirst
+        {
+            get { return false; }
+            set { FolderSortOrder = value ? FolderSortOrder.Last : FolderSortOrder.First; }
         }
 
         #endregion

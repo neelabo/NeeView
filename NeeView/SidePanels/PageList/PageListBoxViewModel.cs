@@ -123,7 +123,7 @@ namespace NeeView
         {
             if (item is not Page page) return ResourceService.GetString("@Word.ItemNone");
 
-            if (page.PageType != PageType.File)
+            if (Config.Current.Book.FolderSortOrder != FolderSortOrder.None && page.PageType != PageType.File)
             {
                 return ResourceService.GetString("@Word.Unspecified") + " ";
             }
@@ -134,7 +134,7 @@ namespace NeeView
         }
 
         private static string GetDirectoryName(Page page)
-        { 
+        {
             var path = LoosePath.GetDirectoryName(page.EntryName) ?? string.Empty;
             if (string.IsNullOrEmpty(path))
             {
@@ -154,7 +154,7 @@ namespace NeeView
         {
             if (item is not Page page) return ResourceService.GetString("@Word.ItemNone");
 
-            if (page.PageType != PageType.File)
+            if (Config.Current.Book.FolderSortOrder != FolderSortOrder.None && page.PageType != PageType.File)
             {
                 return ResourceService.GetString("@Word.Unspecified");
             }
@@ -188,7 +188,7 @@ namespace NeeView
         {
             if (item is not Page page) return ResourceService.GetString("@Word.ItemNone");
 
-            if (page.PageType != PageType.File)
+            if (Config.Current.Book.FolderSortOrder != FolderSortOrder.None && page.PageType != PageType.File)
             {
                 return ResourceService.GetString("@Word.Unspecified");
             }

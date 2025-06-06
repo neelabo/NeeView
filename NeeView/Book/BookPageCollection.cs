@@ -296,7 +296,7 @@ namespace NeeView
         /// <summary>
         /// ページ更新
         /// </summary>
-        private void UpdatePagesAsync()
+        public void UpdatePagesAsync()
         {
             if (_disposedValue) return;
             if (_sourcePages.Count <= 0) return;
@@ -382,31 +382,39 @@ namespace NeeView
             if (_disposedValue) return pages;
             if (!pages.Any()) return pages;
 
-            var isSortFileFirst = Config.Current.Book.IsSortFileFirst;
+            IOrderedEnumerable<Page> orderSource = Config.Current.Book.FolderSortOrder switch
+            {
+                FolderSortOrder.First
+                    => pages.OrderBy(e => e.PageType),
+                FolderSortOrder.Last
+                    => pages.OrderByDescending(e => e.PageType),
+                _
+                    => pages.OrderBy(e => 0),
+            };
 
             switch (sortMode)
             {
                 case PageSortMode.FileName:
-                    pages = pages.OrderBy(e => e.PageType).ThenBy(e => e, new ComparerFileName(isSortFileFirst, token));
+                    pages = orderSource.ThenBy(e => e, new ComparerFileName(token));
                     break;
                 case PageSortMode.FileNameDescending:
-                    pages = pages.OrderBy(e => e.PageType).ThenByDescending(e => e, new ComparerFileName(isSortFileFirst, token));
+                    pages = orderSource.ThenByDescending(e => e, new ComparerFileName(token));
                     break;
                 case PageSortMode.TimeStamp:
-                    pages = pages.OrderBy(e => e.PageType).ThenBy(e => e.ArchiveEntry.LastWriteTime).ThenBy(e => e, new ComparerFileName(isSortFileFirst, token));
+                    pages = orderSource.ThenBy(e => e.ArchiveEntry.LastWriteTime).ThenBy(e => e, new ComparerFileName(token));
                     break;
                 case PageSortMode.TimeStampDescending:
-                    pages = pages.OrderBy(e => e.PageType).ThenByDescending(e => e.ArchiveEntry.LastWriteTime).ThenBy(e => e, new ComparerFileName(isSortFileFirst, token));
+                    pages = orderSource.ThenByDescending(e => e.ArchiveEntry.LastWriteTime).ThenBy(e => e, new ComparerFileName(token));
                     break;
                 case PageSortMode.Size:
-                    pages = pages.OrderBy(e => e.PageType).ThenBy(e => e.ArchiveEntry.Length).ThenBy(e => e, new ComparerFileName(isSortFileFirst, token));
+                    pages = orderSource.ThenBy(e => e.ArchiveEntry.Length).ThenBy(e => e, new ComparerFileName(token));
                     break;
                 case PageSortMode.SizeDescending:
-                    pages = pages.OrderBy(e => e.PageType).ThenByDescending(e => e.ArchiveEntry.Length).ThenBy(e => e, new ComparerFileName(isSortFileFirst, token));
+                    pages = orderSource.ThenByDescending(e => e.ArchiveEntry.Length).ThenBy(e => e, new ComparerFileName(token));
                     break;
                 case PageSortMode.Random:
                     var random = new Random();
-                    pages = pages.OrderBy(e => e.PageType).ThenBy(e => random.Next());
+                    pages = orderSource.ThenBy(e => random.Next());
                     break;
                 case PageSortMode.Entry:
                     pages = pages.OrderBy(e => e.EntryIndex);
@@ -437,12 +445,10 @@ namespace NeeView
         /// </summary>
         private class ComparerFileName : IComparer<Page>
         {
-            private readonly int _sortFileFirstSign;
             private readonly CancellationToken _token;
 
-            public ComparerFileName(bool isSortFileFirst, CancellationToken token)
+            public ComparerFileName(CancellationToken token)
             {
-                _sortFileFirstSign = isSortFileFirst ? 1 : -1;
                 _token = token;
             }
 
@@ -461,12 +467,6 @@ namespace NeeView
                 {
                     if (xName[i] != yName[i])
                     {
-                        var xIsDirectory = i + 1 != xName.Length || x.ArchiveEntry.IsDirectory;
-                        var yIsDirectory = i + 1 != yName.Length || y.ArchiveEntry.IsDirectory;
-                        if (xIsDirectory != yIsDirectory)
-                        {
-                            return (xIsDirectory ? 1 : -1) * _sortFileFirstSign;
-                        }
                         return NaturalSort.Compare(xName[i], yName[i]);
                     }
                 }

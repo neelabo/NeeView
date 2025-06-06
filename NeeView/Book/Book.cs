@@ -1,4 +1,5 @@
-﻿using NeeLaboratory.Generators;
+﻿using NeeLaboratory.ComponentModel;
+using NeeLaboratory.Generators;
 using NeeView.Collections.Generic;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace NeeView
         private readonly BookLoadOption _loadOption;
         private readonly BookAddress _address;
         private List<Page> _currentPages = new();
-
+        private readonly DisposableCollection _disposables = new();
 
         public Book(BookAddress address, BookSource source, BookMemento memento, BookLoadOption option, bool isNew, ArchiveHint archiveHint)
         {
@@ -44,6 +45,12 @@ namespace NeeView
 
             IsNew = isNew;
             ArchiveHint = archiveHint;
+
+            _disposables.Add(_source);
+
+            _disposables.Add(Config.Current.Book.SubscribePropertyChanged(nameof(BookConfig.FolderSortOrder),
+                (s, e) => _source.Pages.UpdatePagesAsync()
+            ));
         }
 
 
@@ -233,7 +240,7 @@ namespace NeeView
                         Book.Default = null;
                     }
 
-                    _source.Dispose();
+                    _disposables.Dispose();
                 }
 
                 _disposedValue = true;
