@@ -10,6 +10,8 @@ namespace NeeView
             {
                 RootQuickAccessNode n
                     => new QuickAccessFolderNodeAccessor(model, n),
+                QuickAccessFolderNode n
+                    => new QuickAccessFolderNodeAccessor(model, n),
                 QuickAccessNode n
                     => new QuickAccessNodeAccessor(model, n),
                 RootDirectoryNode n

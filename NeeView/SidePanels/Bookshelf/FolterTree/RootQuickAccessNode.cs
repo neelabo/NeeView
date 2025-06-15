@@ -1,21 +1,17 @@
 ﻿using NeeLaboratory.ComponentModel;
-using System;
-using System.Collections.ObjectModel;
+using NeeView.Collections;
+using NeeView.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Windows.Media;
 
 namespace NeeView
 {
-
-    public class RootQuickAccessNode : FolderTreeNodeBase
+    public class RootQuickAccessNode : QuickAccessFolderNode
     {
-        public RootQuickAccessNode()
+        public RootQuickAccessNode() : base(QuickAccessCollection.Current.Root, null)
         {
             // NOTE: need call Initialize()
-
             Icon = new SingleImageSourceCollection(ResourceTools.GetElementResource<ImageSource>(MainWindow.Current, "ic_lightning"));
         }
 
@@ -24,15 +20,7 @@ namespace NeeView
 
         public override string DisplayName { get => Properties.TextResources.GetString("Word.QuickAccess"); set { } }
 
-        public override IImageSourceCollection Icon { get; } 
-
-
-        [NotNull]
-        public override ObservableCollection<FolderTreeNodeBase>? Children
-        {
-            get { return _children = _children ?? new ObservableCollection<FolderTreeNodeBase>(QuickAccessCollection.Current.Items.Select(e => new QuickAccessNode(e, this))); }
-            set { SetProperty(ref _children, value); }
-        }
+        public override IImageSourceCollection Icon { get; }
 
 
         public void Initialize(FolderTreeNodeBase parent)
@@ -43,49 +31,119 @@ namespace NeeView
             QuickAccessCollection.Current.CollectionChanged += QuickAccessCollection_CollectionChanged;
         }
 
-        private void QuickAccessCollection_CollectionChanged(object? sender, QuickAccessCollectionChangeEventArgs e)
-        {
 
+        private void QuickAccessCollection_CollectionChanged(object? sender, TreeCollectionChangeEventArgs<IQuickAccessEntry> e)
+        {
             switch (e.Action)
             {
-                case QuickAccessCollectionChangeAction.Refresh:
+                case TreeCollectionChangeAction.Refresh:
+                    Source = BookmarkCollection.Current.Items;
                     RefreshChildren(isExpanded: true);
+                    RaisePropertyChanged(nameof(Children));
                     break;
 
-                case QuickAccessCollectionChangeAction.Add:
-                    var addItem = e.Element as QuickAccess ?? throw new InvalidOperationException();
-                    var index = QuickAccessCollection.Current.Items.IndexOf(addItem);
-                    var node = new QuickAccessNode(addItem, null) { IsSelected = true }; // NOTE: 選択項目として追加
-                    Insert(index, node);
+                case TreeCollectionChangeAction.Add:
+                    Directory_Created(e.NewItem, e.NewIndex);
                     break;
 
-                case QuickAccessCollectionChangeAction.Remove:
-                    var removeItem = e.Element as QuickAccess ?? throw new InvalidOperationException();
-                    Remove(removeItem);
+                case TreeCollectionChangeAction.Remove:
+                    Directory_Deleted(e.OldParent, e.OldItem);
                     break;
 
-                case QuickAccessCollectionChangeAction.Move:
-                    this.Children.Move(e.OldIndex, e.NewIndex);
-                    AssertChildrenOrder();
-                    break;
-
-                case QuickAccessCollectionChangeAction.Rename:
-                case QuickAccessCollectionChangeAction.PathChanged:
-                    // nop
+                case TreeCollectionChangeAction.Move:
+                    Directory_Move(e.NewItem, e.OldIndex, e.NewIndex);
                     break;
             }
         }
 
-        [Conditional("DEBUG")]
-        private void AssertChildrenOrder()
+        private void Directory_Move(TreeListNode<IQuickAccessEntry>? item, int oldIndex, int newIndex)
         {
-            Debug.Assert(this.Children.Count == QuickAccessCollection.Current.Items.Count);
-            for (int i = 0; i < this.Children.Count; i++)
+            if (item is null) return;
+
+            var parent = item.Parent;
+            if (parent is null) return;
+
+            var node = GetDirectoryNode(parent.CreateQuery(QueryScheme.QuickAccess));
+            if (node != null)
             {
-                var quickAccess = this.Children[i].Source as QuickAccess;
-                Debug.Assert(quickAccess is not null);
-                Debug.Assert(QuickAccessCollection.Current.Items[i] == quickAccess);
+                node.Children.Move(oldIndex, newIndex);
+            }
+            else
+            {
+                Debug.WriteLine("Skip move");
             }
         }
+
+        private void Directory_Created(TreeListNode<IQuickAccessEntry>? item, int index)
+        {
+            if (item is null) return;
+
+            // 不要？
+            if (item.Value is not IQuickAccessEntry)
+            {
+                return;
+            }
+
+            //Debug.WriteLine("Create: " + item.CreateQuery(QueryScheme.Bookmark));
+
+            var parent = item.Parent;
+            if (parent is null) return;
+
+            var node = GetDirectoryNode(parent.CreateQuery(QueryScheme.QuickAccess));
+            if (node != null)
+            {
+                var newNode = CreateFolderNode(item, null);
+                node.Insert(index, newNode);
+            }
+            else
+            {
+                Debug.WriteLine("Skip create");
+            }
+        }
+
+        private void Directory_Deleted(TreeListNode<IQuickAccessEntry>? parent, TreeListNode<IQuickAccessEntry>? item)
+        {
+            if (parent is null) return;
+            if (item is null) return;
+
+            // 不要？
+            if (item.Value is not IQuickAccessEntry)
+            {
+                return;
+            }
+
+            Debug.WriteLine("Delete: " + item.Value.Name);
+
+            var node = GetDirectoryNode(parent.CreateQuery(QueryScheme.QuickAccess));
+            if (node != null)
+            {
+                node.Remove(item);
+            }
+            else
+            {
+                Debug.WriteLine("Skip delete");
+            }
+        }
+
+        private QuickAccessFolderNode? GetDirectoryNode(QueryPath path)
+        {
+            return GetDirectoryNode(path.Path);
+        }
+
+        private QuickAccessFolderNode? GetDirectoryNode(string? path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                return this;
+            }
+
+            return GetFolderTreeNode(path, false, false) as QuickAccessFolderNode;
+        }
+
+        public override bool CanRename()
+        {
+            return false;
+        }
+
     }
 }

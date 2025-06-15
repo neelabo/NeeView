@@ -80,11 +80,11 @@ namespace NeeView
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property)]
     public class ReturnTypeAttribute : Attribute
     {
-        public Type ReturnType;
+        public Type[] ReturnTypes;
 
-        public ReturnTypeAttribute(Type returnType)
+        public ReturnTypeAttribute(params Type[] returnTypes)
         {
-            ReturnType = returnType;
+            ReturnTypes = returnTypes;
         }
     }
 }

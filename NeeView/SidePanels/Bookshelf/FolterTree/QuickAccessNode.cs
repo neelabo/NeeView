@@ -1,28 +1,28 @@
 ﻿using NeeLaboratory.ComponentModel;
-using System;
+using NeeView.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace NeeView
 {
-    public class QuickAccessNode : FolderTreeNodeBase
+
+    public class QuickAccessNode : QuickAccessNodeBase
     {
-        public QuickAccessNode(QuickAccess source, RootQuickAccessNode? parent)
+        public QuickAccessNode(TreeListNode<IQuickAccessEntry> source, FolderTreeNodeBase? parent)
         {
             Source = source;
             Parent = parent;
         }
 
-        public QuickAccess QuickAccessSource => (QuickAccess?)Source ?? throw new InvalidOperationException();
 
-        public override string Name { get => QuickAccessSource.Name; set { } }
+        public override string Name { get => QuickAccessSource.Value.Name ?? ""; set { } }
 
         public override string DisplayName { get => Name; set { } }
 
-        public string Path { get => QuickAccessSource.Path; }
+        public string Path { get => QuickAccessSource.Value.Path ?? ""; }
 
-        public override IImageSourceCollection Icon => PathToPlaceIconConverter.Convert(new QueryPath(QuickAccessSource.Path));
+        public override IImageSourceCollection Icon => PathToPlaceIconConverter.Convert(new QueryPath(QuickAccessSource.Value?.Path));
 
         public override string GetRenameText()
         {
@@ -41,9 +41,9 @@ namespace NeeView
 
         public bool Rename(string name)
         {
-            if (this.Name == name) return false;
+            if (QuickAccessSource.Value.Name == name) return false;
 
-            QuickAccessSource.Name = name;
+            QuickAccessSource.Value.Name = name;
             RaisePropertyChanged(nameof(Name));
             RaisePropertyChanged(nameof(DisplayName));
             return true;
@@ -51,9 +51,9 @@ namespace NeeView
 
         public void SetPath(string path)
         {
-            if (this.QuickAccessSource.Path == path) return;
+            if (QuickAccessSource.Value.Path == path) return;
 
-            QuickAccessSource.Path = path;
+            QuickAccessSource.Value.Path = path;
             RefreshAllProperties();
         }
     }

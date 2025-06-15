@@ -1,16 +1,32 @@
-﻿namespace NeeView
-{
-    public record class QuickAccessFolderNodeSource
-    {
-        private readonly RootQuickAccessNode _node;
+﻿using System.Collections.Generic;
 
-        public QuickAccessFolderNodeSource(RootQuickAccessNode node)
+namespace NeeView
+{
+    public record class QuickAccessFolderNodeSource : ISetParameter
+    {
+        private readonly QuickAccessFolderNode _node;
+
+        public QuickAccessFolderNodeSource(QuickAccessFolderNode node)
         {
             _node = node;
         }
 
         [WordNodeMember(AltName = "@Word.Name")]
-        public string Name => _node.DisplayName;
+        public string Name
+        {
+            get { return _node.Name; }
+            set { AppDispatcher.Invoke(() => _node.Rename(value)); }
+        }
+
+        public void SetParameter(IDictionary<string, object?>? obj)
+        {
+            if (obj == null) return;
+            var name = JavaScriptObjectTools.GetValue<string>(obj, nameof(Name));
+            if (name is not null)
+            {
+                Name = name;
+            }
+        }
     }
 
 }

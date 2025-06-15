@@ -1,12 +1,14 @@
 ﻿using NeeLaboratory.ComponentModel;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace NeeView
 {
-    public class QuickAccess : BindableBase, ICloneable
+    public class QuickAccess : BindableBase, ICloneable, IQuickAccessEntry
     {
         private string? _path;
 
@@ -57,6 +59,8 @@ namespace NeeView
                 SetProperty(ref _name, string.IsNullOrEmpty(name) || name == DefaultName ? null : name); 
             }
         }
+
+        public string? RawName => _name;
 
         public string DefaultName
         {
@@ -129,7 +133,24 @@ namespace NeeView
             Name = memento.Name;
         }
 
-        #endregion
+        public string GetRenameText()
+        {
+            return Name;
+        }
 
+        public bool CanRename()
+        {
+            return true;
+        }
+
+        public async ValueTask<bool> RenameAsync(string name)
+        {
+            Name = name;
+            await ValueTask.CompletedTask;
+            return true;
+        }
+
+        #endregion
     }
+
 }

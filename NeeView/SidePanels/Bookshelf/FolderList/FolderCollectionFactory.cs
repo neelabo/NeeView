@@ -217,10 +217,9 @@ namespace NeeView
         {
             token.ThrowIfCancellationRequested();
 
-            _ = path;
             _ = isActive;
 
-            var collection = new QuickAccessFolderCollection(_isOverlayEnabled);
+            var collection = new QuickAccessFolderCollection(path, _isOverlayEnabled);
             await collection.InitializeItemsAsync(token);
             return collection;
         }

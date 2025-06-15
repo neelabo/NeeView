@@ -7,15 +7,12 @@ namespace NeeView
 {
     public record class QuickAccessFolderNodeAccessor : NodeAccessor
     {
-        private readonly RootQuickAccessNode _node;
-        private readonly QuickAccessCollection _collection;
+        private readonly QuickAccessFolderNode _node;
         private readonly QuickAccessFolderNodeSource _value;
 
-        // QuickAccessFolder。今のところ Root のみ。
-        public QuickAccessFolderNodeAccessor(FolderTreeModel model, RootQuickAccessNode node) : base(model, node)
+        public QuickAccessFolderNodeAccessor(FolderTreeModel model, QuickAccessFolderNode node) : base(model, node)
         {
             _node = node;
-            _collection = QuickAccessCollection.Current;
             _value = new QuickAccessFolderNodeSource(_node);
         }
 
@@ -27,27 +24,25 @@ namespace NeeView
 
         protected override string GetName() => _value.Name;
 
-
         [WordNodeMember]
-        [ReturnType(typeof(QuickAccessNodeAccessor))]
+        [ReturnType(typeof(QuickAccessNodeAccessor), typeof(QuickAccessFolderNodeAccessor))]
         public override NodeAccessor Add(IDictionary<string, object?>? parameter)
         {
             return base.Add(parameter);
         }
 
         [WordNodeMember(AltName = nameof(Add))]
-        [ReturnType(typeof(QuickAccessNodeAccessor))]
+        [ReturnType(typeof(QuickAccessNodeAccessor), typeof(QuickAccessFolderNodeAccessor))]
         public override NodeAccessor Insert(int index, IDictionary<string, object?>? parameter)
         {
             return base.Insert(index, parameter);
         }
 
-        [WordNodeMember(IsEnabled = false)]
-        public override bool Remove()
+        [WordNodeMember(AltClassType = typeof(NodeAccessor))]
+        public override void MoveTo(int newIndex)
         {
-            throw new NotSupportedException();
+            base.MoveTo(newIndex);
         }
-
 
         internal static WordNode CreateWordNode(string name)
         {
@@ -55,5 +50,4 @@ namespace NeeView
             return node;
         }
     }
-
 }

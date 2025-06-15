@@ -76,14 +76,24 @@ namespace NeeView
             Model?.AddQuickAccess(item);
         }
 
-        public void MoveQuickAccess(QuickAccessNode src, QuickAccessNode dst)
+        public void MoveQuickAccess(QuickAccessNodeBase src, QuickAccessNodeBase dst)
         {
             Model?.MoveQuickAccess(src, dst);
+        }
+
+        public void RemoveQuickAccessFolder(QuickAccessFolderNode item)
+        {
+            Model?.RemoveQuickAccessFolder(item);
         }
 
         public void RemoveQuickAccess(QuickAccessNode item)
         {
             Model?.RemoveQuickAccess(item);
+        }
+
+        public QuickAccessFolderNode? NewQuickAccessFolder(QuickAccessFolderNode item)
+        {
+            return Model?.NewQuickAccessFolder(item);
         }
 
         public BookmarkFolderNode? NewBookmarkFolder(BookmarkFolderNode item)

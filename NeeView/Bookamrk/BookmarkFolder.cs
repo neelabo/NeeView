@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using System;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 
 namespace NeeView
@@ -28,8 +29,12 @@ namespace NeeView
     }
 
 
-    public class BookmarkEmpty : IBookmarkEntry, ICloneable
+    public class BookmarkEmpty : IBookmarkEntry, ICloneable, INotifyPropertyChanged
     {
+#pragma warning disable CS0067 
+        public event PropertyChangedEventHandler? PropertyChanged;
+#pragma warning restore CS0067
+
         public string? Name => "";
 
         public object Clone()

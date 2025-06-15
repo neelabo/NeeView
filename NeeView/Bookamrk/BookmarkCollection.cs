@@ -13,6 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NeeLaboratory.Generators;
 using System.Text.Json.Serialization;
+using System.ComponentModel;
 
 namespace NeeView
 {
@@ -710,7 +711,7 @@ namespace NeeView
     public static class TreeListNodeExtensions
     {
         public static QueryPath CreateQuery<T>(this TreeListNode<T> node, QueryScheme scheme)
-            where T : IHasName, ICloneable
+            where T : IHasName, ICloneable, INotifyPropertyChanged
         {
             var path = string.Join("\\", node.Hierarchy.Select(e => e.Value).Skip(1).OfType<T>().Select(e => e.Name));
             return new QueryPath(scheme, path, null);

@@ -43,7 +43,10 @@ namespace NeeView
                 var returnTypeAttribute = property.GetCustomAttribute<ReturnTypeAttribute>();
                 if (returnTypeAttribute is not null)
                 {
-                    types.AddIfNotNull(GetAnchorType(returnTypeAttribute.ReturnType));
+                    foreach (var returnType in returnTypeAttribute.ReturnTypes)
+                    {
+                        types.AddIfNotNull(GetAnchorType(returnType));
+                    }
                 }
             }
 
@@ -54,7 +57,10 @@ namespace NeeView
                 var returnTypeAttribute = method.GetCustomAttribute<ReturnTypeAttribute>();
                 if (returnTypeAttribute is not null)
                 {
-                    types.AddIfNotNull(GetAnchorType(returnTypeAttribute.ReturnType));
+                    foreach (var returnType in returnTypeAttribute.ReturnTypes)
+                    {
+                        types.AddIfNotNull(GetAnchorType(returnType));
+                    }
                 }
             }
 

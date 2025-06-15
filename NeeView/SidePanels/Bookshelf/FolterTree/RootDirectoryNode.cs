@@ -9,7 +9,7 @@ namespace NeeView
 {
     public class RootDirectoryNode : DirectoryNode
     {
-        public RootDirectoryNode(FolderTreeNodeBase parent) : base("", parent)
+        public RootDirectoryNode(FolderTreeNodeBase? parent) : base("", parent)
         {
             Parent = parent;
 

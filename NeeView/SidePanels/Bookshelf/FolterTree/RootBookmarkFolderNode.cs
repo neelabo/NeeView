@@ -8,7 +8,7 @@ namespace NeeView
 {
     public class RootBookmarkFolderNode : BookmarkFolderNode
     {
-        public RootBookmarkFolderNode(FolderTreeNodeBase parent) : base(BookmarkCollection.Current.Items, parent)
+        public RootBookmarkFolderNode(FolderTreeNodeBase? parent) : base(BookmarkCollection.Current.Items, parent)
         {
             BookmarkCollection.Current.BookmarkChanged += BookmarkCollection_BookmarkChanged;
 

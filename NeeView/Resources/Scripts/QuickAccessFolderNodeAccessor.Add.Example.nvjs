@@ -1,2 +1,5 @@
 // Create quick access by specifying only path
 nv.Bookshelf.FolderTree.QuickAccessNode.Add({Path:"C:\\FooBar"})
+
+// Create quick access folder
+nv.Bookshelf.FolderTree.QuickAccessNode.Add({Type:"folder"})

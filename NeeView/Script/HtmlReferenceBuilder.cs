@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.Linq;
 using NeeLaboratory.Text;
+using SharpVectors.Dom;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -313,7 +314,7 @@ namespace NeeView
                 var name = property.DeclaringType?.Name + "." + property.Name;
                 var attribute = property.GetCustomAttribute<DocumentableAttribute>();
                 var returnTypeAttribute = property.GetCustomAttribute<ReturnTypeAttribute>();
-                var typeString = TypeToString(returnTypeAttribute?.ReturnType ?? property.PropertyType) + (attribute?.DocumentType != null ? $" ({TypeToString(attribute.DocumentType)})" : "");
+                var typeString = TypesToString(returnTypeAttribute?.ReturnTypes, property.PropertyType) + (attribute?.DocumentType != null ? $" ({TypeToString(attribute.DocumentType)})" : "");
                 var rw = (property.CanRead ? "r" : "") + (property.CanWrite ? "w" : "");
                 var memberName = new DocumentMemberName(property);
                 var summary = memberName.GetHtmlDocumentWithRemarks() + CreatePropertyDetail(property);
@@ -321,6 +322,15 @@ namespace NeeView
             }
 
             return dataTable;
+        }
+
+        private string TypesToString(Type[]? types, Type defaultType)
+        {
+            if (types is null)
+            {
+                return TypeToString(defaultType);
+            }
+            return string.Join("<br/>", types.Select(e => TypeToString(e)));
         }
 
         private string CreatePropertyDetail(PropertyInfo property)
@@ -351,7 +361,7 @@ namespace NeeView
                 var attribute = method.GetCustomAttribute<DocumentableAttribute>() ?? throw new InvalidOperationException();
                 var title = (attribute.Name ?? method.Name) + "(" + string.Join(", ", method.GetParameters().Select(e => TypeToString(e.ParameterType))) + ")";
                 var returnTypeAttribute = method.GetCustomAttribute<ReturnTypeAttribute>();
-                var typeString = TypeToString(returnTypeAttribute?.ReturnType ?? method.ReturnType) + (attribute?.DocumentType != null ? $" ({TypeToString(attribute.DocumentType)})" : "");
+                var typeString = TypesToString(returnTypeAttribute?.ReturnTypes, method.ReturnType) + (attribute?.DocumentType != null ? $" ({TypeToString(attribute.DocumentType)})" : "");
                 var memberName = new DocumentMemberName(method);
                 var summary = memberName.GetHtmlDocumentWithRemarks() + CreateMethodDetail(method);
 
@@ -384,7 +394,7 @@ namespace NeeView
             {
                 builder.Append($"<h4>{ResourceService.GetString("@Word.Returns")}</h4>").AppendLine();
                 var returnTypeAttribute = method.GetCustomAttribute<ReturnTypeAttribute>();
-                var typeString = TypeToString(returnTypeAttribute?.ReturnType ?? method.ReturnType) + (attribute?.DocumentType != null ? $" ({TypeToString(attribute.DocumentType)})" : "");
+                var typeString = TypesToString(returnTypeAttribute?.ReturnTypes, method.ReturnType) + (attribute?.DocumentType != null ? $" ({TypeToString(attribute.DocumentType)})" : "");
                 var memberName = new DocumentMemberName(method);
                 var summary = memberName.GetHtmlDocument(".Returns") ?? "";
                 builder.AppendDictionary(new Dictionary<string, string> { [typeString] = summary });

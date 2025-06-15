@@ -1,8 +1,8 @@
 ﻿using NeeLaboratory.Windows.Input;
-using NeeView.Windows.Media;
 using NeeView.Collections;
 using NeeView.Collections.Generic;
 using NeeView.Windows;
+using NeeView.Windows.Media;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,6 +17,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -119,6 +120,10 @@ namespace NeeView
                             _vm.RemoveQuickAccess(quickAccess);
                             break;
 
+                        case QuickAccessFolderNode quickAccessFolder:
+                            _vm.RemoveQuickAccessFolder(quickAccessFolder);
+                            break;
+
                         case RootBookmarkFolderNode rootBookmarkFolder:
                             break;
 
@@ -142,17 +147,21 @@ namespace NeeView
                     {
                         case QuickAccessNode quickAccessNode:
                             {
-                                var work = (QuickAccess)quickAccessNode.QuickAccessSource.Clone();
-                                var dialog = new QuickAccessPropertyDialog(work)
+                                var quickAccess = quickAccessNode.QuickAccessSource.Value as QuickAccess;
+                                if (quickAccess is not null)
                                 {
-                                    Owner = Window.GetWindow(this),
-                                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                                };
-                                var result = dialog.ShowDialog();
-                                if (result == true)
-                                {
-                                    quickAccessNode.QuickAccessSource.Restore(work.CreateMemento());
-                                    quickAccessNode.RefreshAllProperties();
+                                    var work = (QuickAccess)quickAccess.Clone();
+                                    var dialog = new QuickAccessPropertyDialog(work)
+                                    {
+                                        Owner = Window.GetWindow(this),
+                                        WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                                    };
+                                    var result = dialog.ShowDialog();
+                                    if (result == true)
+                                    {
+                                        quickAccess.Restore(work.CreateMemento());
+                                        quickAccessNode.RefreshAllProperties();
+                                    }
                                 }
                             }
                             break;
@@ -200,6 +209,17 @@ namespace NeeView
                 {
                     switch (this.TreeView.SelectedItem)
                     {
+                        case QuickAccessFolderNode quickAccessFolderNode:
+                            {
+                                var newItem = _vm.NewQuickAccessFolder(quickAccessFolderNode);
+                                if (newItem != null)
+                                {
+                                    this.TreeView.UpdateLayout();
+                                    await RenameQuickAccessFolder(newItem);
+                                }
+                            }
+                            break;
+
                         case BookmarkFolderNode bookmarkFolderNode:
                             {
                                 var newItem = _vm.NewBookmarkFolder(bookmarkFolderNode);
@@ -227,6 +247,10 @@ namespace NeeView
                     {
                         case QuickAccessNode quickAccessNode:
                             await RenameQuickAccess(quickAccessNode);
+                            break;
+
+                        case QuickAccessFolderNode quickAccessFolderNode:
+                            await RenameQuickAccessFolder(quickAccessFolderNode);
                             break;
 
                         case BookmarkFolderNode bookmarkFolderNode:
@@ -300,6 +324,12 @@ namespace NeeView
             await renamer.RenameAsync(item);
         }
 
+        private async ValueTask RenameQuickAccessFolder(QuickAccessFolderNode item)
+        {
+            var renamer = new FolderTreeItemRenamer(this.TreeView, null);
+            await renamer.RenameAsync(item);
+        }
+
         private async ValueTask RenameBookmarkFolder(BookmarkFolderNode item)
         {
             var renamer = new FolderTreeItemRenamer(this.TreeView, null);
@@ -348,116 +378,6 @@ namespace NeeView
 
             _vm.Model.SelectedItem = selectedItem;
         }
-
-#if false
-        private ItemsControl? ScrollIntoView(FolderTreeNodeBase item)
-        {
-            if (item == null)
-            {
-                return null;
-            }
-
-            if (!_vm.IsValid) return null;
-            if (_vm.Model is null) return null;
-
-            if (!this.TreeView.IsVisible)
-            {
-                return null;
-            }
-
-            ////Debug.WriteLine("ScrollIntoView:");
-
-            this.TreeView.UpdateLayout();
-
-            ItemsControl? container = this.TreeView;
-            var lastContainer = container;
-            foreach (var node in item.Hierarchy.Skip(1))
-            {
-                if (node.Parent == null)
-                {
-                    break;
-                }
-
-                if (node.Parent.Children is null)
-                {
-                    break;
-                }
-
-                var index = node.Parent.Children.IndexOf(node);
-                if (index < 0)
-                {
-                    break;
-                }
-
-                container = ScrollIntoView(container, index);
-                if (container == null)
-                {
-                    break;
-                }
-
-                container.UpdateLayout();
-                lastContainer = container;
-            }
-
-            ////Debug.WriteLine("ScrollIntoView: done.");
-            return lastContainer;
-        }
-
-        // from https://docs.microsoft.com/ja-jp/dotnet/framework/wpf/controls/how-to-find-a-treeviewitem-in-a-treeview
-        // HACK: BindingErrorが出る
-        private static TreeViewItem? ScrollIntoView(ItemsControl container, int index)
-        {
-            // Expand the current container
-            if (container is TreeViewItem item && !item.IsExpanded)
-            {
-                container.SetValue(TreeViewItem.IsExpandedProperty, true);
-                container.UpdateLayout();
-            }
-
-            // Try to generate the ItemsPresenter and the ItemsPanel.
-            // by calling ApplyTemplate.  Note that in the 
-            // virtualizing case even if the item is marked 
-            // expanded we still need to do this step in order to 
-            // regenerate the visuals because they may have been virtualized away.
-            container.ApplyTemplate();
-            ItemsPresenter? itemsPresenter = (ItemsPresenter)container.Template.FindName("ItemsHost", container);
-            if (itemsPresenter != null)
-            {
-                itemsPresenter.ApplyTemplate();
-            }
-            else
-            {
-                // The Tree template has not named the ItemsPresenter, 
-                // so walk the descendents and find the child.
-                itemsPresenter = VisualTreeUtility.FindVisualChild<ItemsPresenter>(container);
-                if (itemsPresenter == null)
-                {
-                    container.UpdateLayout();
-                    itemsPresenter = VisualTreeUtility.FindVisualChild<ItemsPresenter>(container);
-                }
-            }
-
-            Panel itemsHostPanel = (Panel)VisualTreeHelper.GetChild(itemsPresenter, 0);
-
-            // Ensure that the generator for this panel has been created.
-            _ = itemsHostPanel.Children;
-
-            if (itemsHostPanel is CustomVirtualizingStackPanel virtualizingPanel)
-            {
-                virtualizingPanel.BringIntoView(index);
-                var subContainer = (TreeViewItem?)container.ItemContainerGenerator.ContainerFromIndex(index);
-                return subContainer;
-            }
-            else
-            {
-                var subContainer = (TreeViewItem?)container.ItemContainerGenerator.ContainerFromIndex(index);
-                // Bring the item into view to maintain the 
-                // same behavior as with a virtualizing panel.
-                subContainer?.BringIntoView();
-                return subContainer;
-            }
-        }
-#endif
 
         private void ViewModel_SelectedItemChanged(object? sender, EventArgs e)
         {
@@ -567,6 +487,17 @@ namespace NeeView
             {
                 case RootQuickAccessNode:
                     contextMenu.Items.Add(CreateMenuItem(Properties.TextResources.GetString("FolderTree.Menu.AddCurrentQuickAccess"), AddQuickAccessCommand));
+                    contextMenu.Items.Add(new Separator());
+                    contextMenu.Items.Add(CreateMenuItem(Properties.TextResources.GetString("FolderTree.Menu.NewFolder"), NewFolderCommand));
+                    break;
+
+                case QuickAccessFolderNode:
+                    contextMenu.Items.Add(CreateMenuItem(Properties.TextResources.GetString("FolderTree.Menu.AddCurrentQuickAccess"), AddQuickAccessCommand));
+                    contextMenu.Items.Add(new Separator());
+                    contextMenu.Items.Add(CreateMenuItem(Properties.TextResources.GetString("FolderTree.Menu.NewFolder"), NewFolderCommand));
+                    contextMenu.Items.Add(new Separator());
+                    contextMenu.Items.Add(CreateMenuItem(Properties.TextResources.GetString("FolderTree.Menu.Delete"), RemoveCommand, Key.Delete.ToString()));
+                    contextMenu.Items.Add(CreateMenuItem(Properties.TextResources.GetString("FolderTree.Menu.Rename"), RenameCommand, Key.F2.ToString()));
                     break;
 
                 case QuickAccessNode:
@@ -628,8 +559,13 @@ namespace NeeView
 
             switch (data.DataContext)
             {
+                case QuickAccessFolderNode quickAccessFolder:
+                    e.Data.SetData(new QuickAccessNodeBaseObject(quickAccessFolder));
+                    e.AllowedEffects = DragDropEffects.Copy | DragDropEffects.Move;
+                    break;
+
                 case QuickAccessNode quickAccess:
-                    e.Data.SetData(quickAccess);
+                    e.Data.SetData(new QuickAccessNodeBaseObject(quickAccess));
                     e.Data.SetText(quickAccess.Path);
                     e.AllowedEffects = DragDropEffects.Copy | DragDropEffects.Move;
                     break;
@@ -692,7 +628,7 @@ namespace NeeView
                 {
                     case RootQuickAccessNode:
                         {
-                            DropToQuickAccess(sender, e, isDrop, null, e.Data.GetData<QuickAccessNode>());
+                            DropToQuickAccess(sender, e, isDrop, null, e.Data.GetData<QuickAccessNodeBaseObject>()?.Value);
                             if (e.Handled) return;
 
                             DropToQuickAccess(sender, e, isDrop, null, e.Data.GetData<BookmarkNodeCollection>());
@@ -706,9 +642,26 @@ namespace NeeView
                         }
                         break;
 
+                    case QuickAccessFolderNode quickAccessFolder:
+                        {
+                            // TODO: 指定フォルダーにドロップ
+                            DropToQuickAccess(sender, e, isDrop, quickAccessFolder, e.Data.GetData<QuickAccessNodeBaseObject>()?.Value);
+                            if (e.Handled) return;
+
+                            DropToQuickAccess(sender, e, isDrop, quickAccessFolder, e.Data.GetData<BookmarkNodeCollection>());
+                            if (e.Handled) return;
+
+                            DropToQuickAccess(sender, e, isDrop, quickAccessFolder, e.Data.GetQueryPathCollection());
+                            if (e.Handled) return;
+
+                            DropToQuickAccess(sender, e, isDrop, quickAccessFolder, e.Data.GetFileDrop());
+                            if (e.Handled) return;
+                        }
+                        break;
+
                     case QuickAccessNode quickAccessTarget:
                         {
-                            DropToQuickAccess(sender, e, isDrop, quickAccessTarget, e.Data.GetData<QuickAccessNode>());
+                            DropToQuickAccess(sender, e, isDrop, quickAccessTarget, e.Data.GetData<QuickAccessNodeBaseObject>()?.Value);
                             if (e.Handled) return;
 
                             DropToQuickAccess(sender, e, isDrop, quickAccessTarget, e.Data.GetData<BookmarkNodeCollection>());
@@ -738,11 +691,16 @@ namespace NeeView
             }
         }
 
-#pragma warning disable IDE0060 // 未使用のパラメーターを削除します
+        //#pragma warning disable IDE0060 // 未使用のパラメーターを削除します
 
-        private void DropToQuickAccess(object? sender, DragEventArgs e, bool isDrop, QuickAccessNode? quickAccessTarget, QuickAccessNode? quickAccess)
+        private void DropToQuickAccess(object? sender, DragEventArgs e, bool isDrop, QuickAccessNodeBase? quickAccessTarget, QuickAccessNodeBase? quickAccess)
         {
             if (quickAccessTarget == null || quickAccess == null)
+            {
+                return;
+            }
+
+            if (!CanDropToQuickAccess(quickAccessTarget, quickAccess.QuickAccessSource))
             {
                 return;
             }
@@ -758,14 +716,14 @@ namespace NeeView
             }
         }
 
-        private void DropToQuickAccess(object? sender, DragEventArgs e, bool isDrop, QuickAccessNode? quickAccessTarget, IEnumerable<TreeListNode<IBookmarkEntry>>? bookmarkEntries)
+        private void DropToQuickAccess(object? sender, DragEventArgs e, bool isDrop, QuickAccessNodeBase? quickAccessTarget, IEnumerable<TreeListNode<IBookmarkEntry>>? bookmarkEntries)
         {
             // QuickAccessは大量操作できないので先頭１項目だけ処理する
             DropToQuickAccess(sender, e, isDrop, quickAccessTarget, bookmarkEntries?.FirstOrDefault());
         }
 
 
-        private void DropToQuickAccess(object? sender, DragEventArgs e, bool isDrop, QuickAccessNode? quickAccessTarget, TreeListNode<IBookmarkEntry>? bookmarkEntry)
+        private void DropToQuickAccess(object? sender, DragEventArgs e, bool isDrop, QuickAccessNodeBase? quickAccessTarget, TreeListNode<IBookmarkEntry>? bookmarkEntry)
         {
             if (_vm.Model is null) return;
             if (bookmarkEntry is null) return;
@@ -775,7 +733,7 @@ namespace NeeView
                 if (isDrop)
                 {
                     var query = bookmarkEntry.CreateQuery(QueryScheme.Bookmark);
-                    _vm.Model.InsertQuickAccess(quickAccessTarget, query.SimplePath);
+                    _vm.Model.InsertQuickAccess(null, quickAccessTarget, query.SimplePath);
                 }
                 e.Effects = DragDropEffects.Copy;
                 e.Handled = true;
@@ -783,13 +741,13 @@ namespace NeeView
         }
 
 
-        private void DropToQuickAccess(object? sender, DragEventArgs e, bool isDrop, QuickAccessNode? quickAccessTarget, IEnumerable<QueryPath>? queries)
+        private void DropToQuickAccess(object? sender, DragEventArgs e, bool isDrop, QuickAccessNodeBase? quickAccessTarget, IEnumerable<QueryPath>? queries)
         {
             // QuickAccessは大量操作できないので先頭１項目だけ処理する
             DropToQuickAccess(sender, e, isDrop, quickAccessTarget, queries?.FirstOrDefault());
         }
 
-        private void DropToQuickAccess(object? sender, DragEventArgs e, bool isDrop, QuickAccessNode? quickAccessTarget, QueryPath? query)
+        private void DropToQuickAccess(object? sender, DragEventArgs e, bool isDrop, QuickAccessNodeBase? quickAccessTarget, QueryPath? query)
         {
             if (query == null) return;
             if (_vm.Model is null) return;
@@ -799,14 +757,14 @@ namespace NeeView
             {
                 if (isDrop)
                 {
-                    _vm.Model.InsertQuickAccess(quickAccessTarget, query.SimpleQuery);
+                    _vm.Model.InsertQuickAccess(null, quickAccessTarget, query.SimpleQuery);
                 }
                 e.Effects = DragDropEffects.Copy;
                 e.Handled = true;
             }
         }
 
-        private void DropToQuickAccess(object? sender, DragEventArgs e, bool isDrop, QuickAccessNode? quickAccessTarget, string[] fileNames)
+        private void DropToQuickAccess(object? sender, DragEventArgs e, bool isDrop, QuickAccessNodeBase? quickAccessTarget, string[] fileNames)
         {
             if (_vm.Model is null) return;
 
@@ -826,7 +784,7 @@ namespace NeeView
                 {
                     if (isDrop)
                     {
-                        _vm.Model.InsertQuickAccess(quickAccessTarget, fileName);
+                        _vm.Model.InsertQuickAccess(null, quickAccessTarget, fileName);
                     }
                     isDropped = true;
                 }
@@ -836,6 +794,12 @@ namespace NeeView
                 e.Effects = DragDropEffects.Copy;
                 e.Handled = true;
             }
+        }
+
+        private static bool CanDropToQuickAccess(QuickAccessNodeBase target, TreeListNode<IQuickAccessEntry> node)
+        {
+            var targetNode = target.QuickAccessSource;
+            return !targetNode.Children.Contains(node) && !targetNode.ParentContains(node) && targetNode != node;
         }
 
         private static bool IsPlaylistFile(string path)
@@ -1001,7 +965,7 @@ namespace NeeView
             return element;
         }
 
-#pragma warning restore IDE0060 // 未使用のパラメーターを削除します
+        //#pragma warning restore IDE0060 // 未使用のパラメーターを削除します
 
         #endregion DragDrop
 

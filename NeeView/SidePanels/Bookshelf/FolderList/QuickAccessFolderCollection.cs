@@ -1,5 +1,7 @@
-﻿using System;
+﻿using NeeView.Collections.Generic;
+using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
@@ -13,8 +15,14 @@ namespace NeeView
     /// </summary>
     public class QuickAccessFolderCollection : FolderCollection, IDisposable
     {
-        public QuickAccessFolderCollection(bool isOverlayEnabled) : base(new QueryPath(QueryScheme.QuickAccess, null), isOverlayEnabled)
+        private readonly TreeListNode<IQuickAccessEntry>? _node;
+
+
+        public QuickAccessFolderCollection(QueryPath path, bool isOverlayEnabled) : base(path, isOverlayEnabled)
         {
+            if (path.Scheme != QueryScheme.QuickAccess) throw new ArgumentException("Not a QuickAccess scheme path.", nameof(path));
+
+            _node = QuickAccessCollection.Current.FindNode(Place);
         }
 
 
@@ -25,39 +33,38 @@ namespace NeeView
         {
             token.ThrowIfCancellationRequested();
 
-            var items = QuickAccessCollection.Current.Items.Select(e => CreateFolderItem(Place, e));
-
-            this.Items = new ObservableCollection<FolderItem>(items);
-
-            //TODO:
-            QuickAccessCollection.Current.CollectionChanged += QuickAccessCollection_CollectionChanged;
+            if (_node is not null)
+            {
+                this.Items = new ObservableCollection<FolderItem>(_node.Children.Select(e => CreateFolderItem(Place, e)));
+                _node.Children.CollectionChanged += Children_CollectionChanged;
+            }
 
             await Task.CompletedTask;
         }
 
-
-        private void QuickAccessCollection_CollectionChanged(object? sender, QuickAccessCollectionChangeEventArgs e)
+        private void Children_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (_disposedValue) return;
 
             switch (e.Action)
             {
-                case QuickAccessCollectionChangeAction.Add:
+                case NotifyCollectionChangedAction.Add:
+                    if (e.NewItems is null) return;
+                    foreach (var target in e.NewItems.Cast<TreeListNode<IQuickAccessEntry>>().Reverse())
                     {
-                        var target = e.Element as QuickAccess ?? throw new InvalidOperationException("e.Element must be QuickAccess");
                         var item = Items.FirstOrDefault(i => target == i.Source);
                         if (item == null)
                         {
                             item = CreateFolderItem(Place, target);
-                            var index = QuickAccessCollection.Current.Items.IndexOf(target);
-                            InsertItem(item, index);
+                            InsertItem(item, e.NewStartingIndex);
                         }
                     }
                     break;
 
-                case QuickAccessCollectionChangeAction.Remove:
+                case NotifyCollectionChangedAction.Remove:
+                    if (e.OldItems is null) return;
+                    foreach (var target in e.OldItems.Cast<TreeListNode<IQuickAccessEntry>>().Reverse())
                     {
-                        var target = e.Element as QuickAccess ?? throw new InvalidOperationException("e.Element must be QuickAccess");
                         var item = Items.FirstOrDefault(i => target == i.Source);
                         if (item != null)
                         {
@@ -66,29 +73,25 @@ namespace NeeView
                     }
                     break;
 
-                case QuickAccessCollectionChangeAction.Move:
-                    break;
-
-                case QuickAccessCollectionChangeAction.Refresh:
-                    BookshelfFolderList.Current.RequestPlace(new QueryPath(QueryScheme.QuickAccess, null), null, FolderSetPlaceOption.UpdateHistory | FolderSetPlaceOption.ResetKeyword | FolderSetPlaceOption.Refresh);
-                    break;
-
-                case QuickAccessCollectionChangeAction.Rename:
-                case QuickAccessCollectionChangeAction.PathChanged:
+                case NotifyCollectionChangedAction.Move:
                     // nop.
+                    break;
+
+                case NotifyCollectionChangedAction.Reset:
+                    BookshelfFolderList.Current.RequestPlace(Place, null, FolderSetPlaceOption.UpdateHistory | FolderSetPlaceOption.ResetKeyword | FolderSetPlaceOption.Refresh);
                     break;
             }
         }
 
-        private FolderItem CreateFolderItem(QueryPath parent, QuickAccess quickAccess)
+        private FolderItem CreateFolderItem(QueryPath parent, TreeListNode<IQuickAccessEntry> quickAccess)
         {
             return new ConstFolderItem(new FolderThumbnail(), _isOverlayEnabled)
             {
                 Source = quickAccess,
                 Type = FolderItemType.Directory,
                 Place = parent,
-                Name = quickAccess.Name,
-                TargetPath = new QueryPath(quickAccess.Path),
+                Name = quickAccess.Value.Name,
+                TargetPath = new QueryPath(quickAccess.Value.Path),
                 Length = -1,
                 Attributes = FolderItemAttribute.Directory | FolderItemAttribute.System | FolderItemAttribute.QuickAccess,
                 IsReady = true
@@ -124,7 +127,10 @@ namespace NeeView
             {
                 if (disposing)
                 {
-                    QuickAccessCollection.Current.CollectionChanged -= QuickAccessCollection_CollectionChanged;
+                    if (_node is not null)
+                    {
+                        _node.Children.CollectionChanged -= Children_CollectionChanged;
+                    }
                 }
 
                 _disposedValue = true;

@@ -1,37 +1,55 @@
 ﻿using NeeLaboratory.ComponentModel;
-using NeeView.Collections.Generic;
+using NeeLaboratory.Generators;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
+
+// TODO: Node 要素になるためのインターフェイスを整備する。 ICloneable は必要か？ IHasName ほしいかも？ 
 
 namespace NeeView.Collections.Generic
 {
-    public class TreeListNode<T> : BindableBase, IEnumerable<TreeListNode<T>>, IHasValue<T>
-        where T : ICloneable
+    public partial class TreeListNode<T> : BindableBase, IEnumerable<TreeListNode<T>>, IHasValue<T>, ITreeViewNode, IRenameable
+        where T : ICloneable, INotifyPropertyChanged
     {
         private TreeListNode<T>? _parent;
-        private ObservableCollection<TreeListNode<T>> _children;
+        private readonly ObservableCollection<TreeListNode<T>> _children;
+        private bool _isSelected;
         private bool _isExpanded;
         private T _value;
 
+#if DEBUG
+        private static int _serialCounter;
+        private readonly int _serial = _serialCounter++;
+#endif
 
         public TreeListNode(T value)
         {
             _children = new ObservableCollection<TreeListNode<T>>();
-            _value = value;
+            SetValue(value);
+
+            this.PropertyChanged += This_PropertyChanged;
+            _children.CollectionChanged += Children_CollectionChanged;
         }
+
+
+        [Subscribable]
+        public event PropertyChangedEventHandler? RoutedPropertyChanged;
+
+        [Subscribable]
+        public event NotifyCollectionChangedEventHandler? RoutedCollectionChanged;
 
 
         public TreeListNode<T>? Parent => _parent;
 
-        public ObservableCollection<TreeListNode<T>> Children
-        {
-            get => _children;
-            private set => _children = value;
-        }
+        public ObservableCollection<TreeListNode<T>> Children => _children;
 
         public TreeListNode<T>? Previous
         {
@@ -86,23 +104,70 @@ namespace NeeView.Collections.Generic
             set { SetProperty(ref _isExpanded, value); }
         }
 
-        private bool _IsSelected;
         public bool IsSelected
         {
-            get { return _IsSelected; }
-            set { SetProperty(ref _IsSelected, value); }
+            get { return _isSelected; }
+            set { SetProperty(ref _isSelected, value); }
         }
-
 
         public T Value
         {
-            get => _value;
-            set => _value = value;
+            get { return _value; }
+            set
+            {
+                if (!EqualityComparer<T>.Default.Equals(_value, value))
+                {
+                    SetValue(value);
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+        [MemberNotNull(nameof(_value))]
+        private void SetValue(T value)
+        {
+            if (_value is not null)
+            {
+                _value.PropertyChanged -= Value_PropertyChanged;
+            }
+            _value = value;
+            _value.PropertyChanged += Value_PropertyChanged;
+        }
+
+        private void Value_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            OnRoutedPropertyChanged(sender, e);
         }
 
         public TreeListNode<T> Root => _parent == null ? this : _parent.Root;
+
         public int Depth => _parent == null ? 0 : _parent.Depth + 1;
 
+        ITreeNode? ITreeNode.Parent => Parent;
+
+        IEnumerable<ITreeNode>? ITreeNode.Children => Children;
+
+        private void This_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            OnRoutedPropertyChanged(this, e);
+        }
+
+        private void Children_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            OnRoutedCollectionChanged(this, e);
+        }
+
+        public void OnRoutedPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            RoutedPropertyChanged?.Invoke(sender, e);
+            _parent?.OnRoutedPropertyChanged(sender, e);
+        }
+
+        public void OnRoutedCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            RoutedCollectionChanged?.Invoke(sender, e);
+            _parent?.OnRoutedCollectionChanged(sender, e);
+        }
 
         public bool ParentContains(TreeListNode<T> target)
         {
@@ -119,6 +184,15 @@ namespace NeeView.Collections.Generic
         public int GetIndex()
         {
             return _parent == null ? 0 : _parent._children.IndexOf(this);
+        }
+
+        public void Clear()
+        {
+            foreach (var node in _children)
+            {
+                node._parent = null;
+            }
+            _children.Clear();
         }
 
         public void Add(T value)
@@ -160,10 +234,6 @@ namespace NeeView.Collections.Generic
             Insert(index, node);
         }
 
-        public void Sort(IComparer<TreeListNode<T>> comparer)
-        {
-            _children = new ObservableCollection<TreeListNode<T>>(_children.OrderBy(e => e, comparer));
-        }
 
         public bool Remove(T value)
         {
@@ -246,7 +316,7 @@ namespace NeeView.Collections.Generic
         {
             var node = new TreeListNode<T>((T)this.Value.Clone());
 
-            foreach(var child in _children)
+            foreach (var child in _children)
             {
                 node.Add(child.Clone());
             }
@@ -277,12 +347,27 @@ namespace NeeView.Collections.Generic
             return this.GetEnumerator();
         }
 
+        public string GetRenameText()
+        {
+            return Value is IRenameable renamable ? renamable.GetRenameText() : "";
+        }
+
+        public bool CanRename()
+        {
+            return Value is IRenameable renamable ? renamable.CanRename() : false;
+        }
+
+        public ValueTask<bool> RenameAsync(string name)
+        {
+            return Value is IRenameable renamable ? renamable.RenameAsync(name) : ValueTask.FromResult(false);
+        }
+
         #endregion
     }
 
 
     public class TreeListNodeMemento<T>
-        where T : ICloneable
+        where T : ICloneable, INotifyPropertyChanged
     {
         public TreeListNodeMemento(TreeListNode<T> node)
         {

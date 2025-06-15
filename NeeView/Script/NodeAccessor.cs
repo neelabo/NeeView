@@ -34,7 +34,7 @@ namespace NeeView
             get { return _node.IsExpanded; }
             set { AppDispatcher.Invoke(() => _node.IsExpanded = value); }
         }
-        
+
         [WordNodeMember]
         public virtual int Index
         {
@@ -70,7 +70,8 @@ namespace NeeView
 
             return AppDispatcher.Invoke(() =>
             {
-                var item = _model.NewNode(_node) ?? throw new InvalidOperationException("Cannot create new node.");
+                var type = GetTypeFromParameter(parameter);
+                var item = _model.NewNode(_node, type) ?? throw new InvalidOperationException("Cannot create new node.");
                 var accessor = FolderNodeAccessorFactory.Create(_model, item);
                 (accessor.Value as ISetParameter)?.SetParameter(parameter);
                 return accessor;
@@ -91,11 +92,17 @@ namespace NeeView
 
             return AppDispatcher.Invoke(() =>
             {
-                var item = _model.NewNode(_node, index) ?? throw new InvalidOperationException("Cannot create new node.");
+                var type = GetTypeFromParameter(parameter);
+                var item = _model.NewNode(_node, index, type) ?? throw new InvalidOperationException("Cannot create new node.");
                 var accessor = FolderNodeAccessorFactory.Create(_model, item);
                 (accessor.Value as ISetParameter)?.SetParameter(parameter);
                 return accessor;
             });
+        }
+
+        private static string? GetTypeFromParameter(IDictionary<string, object?>? parameter)
+        {
+            return JavaScriptObjectTools.GetValue<string>(parameter, "Type");
         }
 
         [WordNodeMember]

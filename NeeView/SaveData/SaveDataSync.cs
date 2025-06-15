@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using NeeLaboratory.IO;
+using NeeView.Collections.Generic;
 using NeeView.Data;
 using NeeView.Threading;
 
@@ -47,6 +48,7 @@ namespace NeeView
                 if (disposing)
                 {
                     BookmarkCollection.Current.BookmarkChanged -= BookmarkCollection_BookmarkChanged;
+                    QuickAccessCollection.Current.RoutedPropertyChanged -= QuickAccessCollection_RoutedPropertyChanged;
                     QuickAccessCollection.Current.CollectionChanged -= QuickAccessCollection_CollectionChanged;
                     BookHistoryCollection.Current.HistoryChanged -= BookHistoryCollection_HistoryChanged;
                     BookHistoryCollection.Current.SearchChanged -= Search_HistoryChanged;
@@ -68,14 +70,20 @@ namespace NeeView
         public void Initialize()
         {
             BookmarkCollection.Current.BookmarkChanged += BookmarkCollection_BookmarkChanged;
+            QuickAccessCollection.Current.RoutedPropertyChanged += QuickAccessCollection_RoutedPropertyChanged;
             QuickAccessCollection.Current.CollectionChanged += QuickAccessCollection_CollectionChanged;
             BookHistoryCollection.Current.HistoryChanged += BookHistoryCollection_HistoryChanged;
             BookHistoryCollection.Current.SearchChanged += Search_HistoryChanged;
         }
 
-        private void QuickAccessCollection_CollectionChanged(object? sender, QuickAccessCollectionChangeEventArgs e)
+        private void QuickAccessCollection_RoutedPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.Action == QuickAccessCollectionChangeAction.Refresh) return;
+            _delaySaveBookmark.Request();
+        }
+
+        private void QuickAccessCollection_CollectionChanged(object? sender, TreeCollectionChangeEventArgs<IQuickAccessEntry> e)
+        {
+            if (e.Action == TreeCollectionChangeAction.Refresh) return;
             _delaySaveBookmark.Request();
         }
 
