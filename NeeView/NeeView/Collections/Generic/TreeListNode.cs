@@ -12,12 +12,14 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
-// TODO: Node 要素になるためのインターフェイスを整備する。 ICloneable は必要か？ IHasName ほしいかも？ 
-
 namespace NeeView.Collections.Generic
 {
+    public interface ITreeListNode : ICloneable, IHasName, INotifyPropertyChanged
+    {
+    }
+
     public partial class TreeListNode<T> : BindableBase, IEnumerable<TreeListNode<T>>, IHasValue<T>, ITreeViewNode, IRenameable
-        where T : ICloneable, INotifyPropertyChanged
+        where T : ITreeListNode
     {
         private TreeListNode<T>? _parent;
         private readonly ObservableCollection<TreeListNode<T>> _children;
@@ -95,6 +97,10 @@ namespace NeeView.Collections.Generic
                 }
             }
         }
+
+        public string Name => Value?.Name ?? "";
+
+        public string Path => string.Join("\\", Hierarchy.Select(e => e.Name));
 
         public bool CanExpand => Children.Count > 0;
 
@@ -324,6 +330,11 @@ namespace NeeView.Collections.Generic
             return node;
         }
 
+        public override string ToString()
+        {
+            return $"{Path}";
+        }
+
         #region IEnumerable support
 
         public IEnumerator<TreeListNode<T>> GetEnumerator()
@@ -367,7 +378,7 @@ namespace NeeView.Collections.Generic
 
 
     public class TreeListNodeMemento<T>
-        where T : ICloneable, INotifyPropertyChanged
+        where T : ITreeListNode
     {
         public TreeListNodeMemento(TreeListNode<T> node)
         {

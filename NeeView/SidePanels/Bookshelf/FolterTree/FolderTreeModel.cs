@@ -397,25 +397,36 @@ namespace NeeView
         /// <param name="parent">親フォルダー</param>
         /// <param name="dst">挿入一のノード。このノードの手前に新しく挿入する</param>
         /// <param name="path">新しい QuickAccess パス</param>
-        public void InsertQuickAccess(QuickAccessFolderNode? parent, QuickAccessNodeBase? dst, string? path)
+        public void InsertQuickAccess(QuickAccessFolderNode? parent, QuickAccessNodeBase? dst, int delta, string? path)
         {
-            // TODO: 挿入位置の指定方法。ドラッグ＆ドロップを想定
-            // A) Parent, Index
-            // B) Target, Offset(-1, 0 +1) ... 0 でフォルダーならば子として追加
-
-            parent ??= dst?.Parent as QuickAccessFolderNode ?? _rootQuickAccess;
-            if (parent is null)
+            // 子として追加
+            if (delta == 0)
             {
-                return;
+                parent ??= dst as QuickAccessFolderNode ?? _rootQuickAccess;
+                AddQuickAccess(parent, path);
             }
-
-            var index = dst != null ? parent.QuickAccessSource.Children.IndexOf(dst.Source) : 0;
-            if (index < 0)
+            // 前後に追加
+            else
             {
-                return;
-            }
+                parent ??= dst?.Parent as QuickAccessFolderNode ?? _rootQuickAccess;
+                if (parent is null)
+                {
+                    return;
+                }
 
-            InsertQuickAccess(parent, index, path);
+                var index = dst != null ? parent.QuickAccessSource.Children.IndexOf(dst.Source) : 0;
+                if (index < 0)
+                {
+                    return;
+                }
+
+                if (delta > 0)
+                {
+                    index++;
+                }
+
+                InsertQuickAccess(parent, index, path);
+            }
         }
 
         public bool RemoveQuickAccessFolder(QuickAccessFolderNode item)
@@ -568,16 +579,28 @@ namespace NeeView
             }
         }
 
-        public void MoveQuickAccess(QuickAccessNodeBase src, QuickAccessNodeBase dst)
+        public void MoveQuickAccess(QuickAccessNodeBase src, QuickAccessNodeBase dst, int delta)
         {
             if (src == dst)
             {
                 return;
             }
 
-            if (src.Parent != dst.Parent)
+            // 子に移動
+            if (delta == 0)
             {
-                // 階層をまたいだ移動
+                var parent = (dst as QuickAccessFolderNode)?.QuickAccessSource;
+                if (parent is null)
+                {
+                    return;
+                }
+                var item = src.QuickAccessSource;
+                QuickAccessCollection.Current.Move(parent, item, -1);
+            }
+
+            // 階層をまたいだ移動
+            else if (src.Parent != dst.Parent)
+            {
                 var parent = (dst.Parent as QuickAccessFolderNode)?.QuickAccessSource;
                 if (parent is null)
                 {
@@ -591,12 +614,17 @@ namespace NeeView
                     return;
                 }
 
+                if (delta > 0)
+                {
+                    dstIndex++;
+                }
+
                 QuickAccessCollection.Current.Move(parent, item, dstIndex);
             }
 
+            // 同一階層での移動
             else
             {
-                // 同一階層での移動
                 var parent = (src.Parent as QuickAccessFolderNode)?.QuickAccessSource;
                 if (parent is null)
                 {
@@ -613,6 +641,22 @@ namespace NeeView
                 {
                     return;
                 }
+
+                if (srcIndex < dstIndex)
+                {
+                    if (delta < 0)
+                    {
+                        dstIndex -= 1;
+                    }
+                }
+                else
+                {
+                    if (delta > 0)
+                    {
+                        dstIndex += 1;
+                    }
+                }
+
                 QuickAccessCollection.Current.Move(parent, srcIndex, dstIndex);
             }
         }

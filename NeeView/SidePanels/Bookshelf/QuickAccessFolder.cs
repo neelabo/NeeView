@@ -56,6 +56,11 @@ namespace NeeView
             await ValueTask.CompletedTask;
             return true;
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.ComponentModel;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -69,9 +70,9 @@ namespace NeeView.Windows
             {
                 Adorner.Visibility = Visibility.Collapsed;
             }
-            else if (target.Item is not null)
+            else if (target.View is not null)
             {
-                var isVisible = SetAdornerShape(target.Item, target.Delta, Orientation);
+                var isVisible = SetAdornerShape(target.View, target.Delta, Orientation);
                 Adorner.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
             }
             else
@@ -180,9 +181,9 @@ namespace NeeView.Windows
 
         private void SetAdornerShape(FrameworkElement element)
         {
-            (var p0, var p1) = GetElementRect(element);
-            Adorner.Start = p0;
-            Adorner.End = p1;
+            var rect = GetElementRect(element);
+            Adorner.Start = rect.TopLeft;
+            Adorner.End = rect.BottomRight;
             Adorner.Brush = ShapeBrush;
         }
 
@@ -262,16 +263,16 @@ namespace NeeView.Windows
             return _profile.ItemHitTest(_itemsControl, point);
         }
 
-        private (Point p0, Point p1) GetElementRect(FrameworkElement element)
+        private Rect GetElementRect(FrameworkElement element)
         {
             var p0 = element.TranslatePoint(new Point(0, 0), _itemsControl);
-            var p1 = p0 + new Vector(element.ActualWidth, element.ActualHeight);
-            return (p0, p1);
+            var rect = new Rect(p0.X, p0.Y, element.ActualWidth, element.ActualHeight);
+            return _profile.AdjustElementRect(rect);
         }
 
         private Point GetElementCenter(FrameworkElement element)
         {
-            return element.TranslatePoint(new Point(element.ActualWidth * 0.5, element.ActualHeight * 0.5), _itemsControl);
+            return GetElementRect(element).Center();
         }
     }
 
@@ -280,6 +281,31 @@ namespace NeeView.Windows
     /// ドロップターゲット項目情報
     /// </summary>
     /// <param name="Item">ターゲット項目</param>
+    /// <param name="View">表示要素</param>
     /// <param name="Delta">ターゲット項目の挿入位置。-1 or 0 or 1</param>
-    public record DropTargetItem(FrameworkElement? Item, int Delta);
+    public record DropTargetItem
+    {
+        private FrameworkElement? _view;
+
+        public DropTargetItem(FrameworkElement? item, int delta) : this(item, item, delta)
+        {
+        }
+
+        public DropTargetItem(FrameworkElement? item, FrameworkElement? view, int delta)
+        {
+            Item = item;
+            View = view;
+            Delta = delta;
+        }
+
+        public FrameworkElement? Item { get; init; }
+        
+        public FrameworkElement? View
+        {
+            get => _view ?? Item;
+            init => _view = value;
+        }
+
+        public int Delta { get; init; }
+    }
 }

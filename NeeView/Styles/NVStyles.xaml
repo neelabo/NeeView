@@ -795,7 +795,7 @@
                                 <Binding Path="(local:TreeViewItemTools.VerticalMargin)" RelativeSource="{RelativeSource Mode=TemplatedParent}" BindsDirectlyToSource="False" />
                             </MultiBinding>
                         </StackPanel.Margin>
-                        <Grid Margin="0,-1,0,0">
+                        <Grid x:Name="PART_Content" Margin="0,-1,0,0">
                             <Border Name="Separator" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"
                                     SnapsToDevicePixels="True" />
                             <Border Name="Bd" BorderThickness="1" SnapsToDevicePixels="True">

@@ -1,8 +1,10 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.Collections;
 using NeeView.Collections.Generic;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Media;
 
 namespace NeeView
@@ -63,7 +65,7 @@ namespace NeeView
             var parent = item.Parent;
             if (parent is null) return;
 
-            var node = GetDirectoryNode(parent.CreateQuery(QueryScheme.QuickAccess));
+            var node = GetDirectoryNode(parent);
             if (node != null)
             {
                 node.Children.Move(oldIndex, newIndex);
@@ -89,7 +91,7 @@ namespace NeeView
             var parent = item.Parent;
             if (parent is null) return;
 
-            var node = GetDirectoryNode(parent.CreateQuery(QueryScheme.QuickAccess));
+            var node = GetDirectoryNode(parent);
             if (node != null)
             {
                 var newNode = CreateFolderNode(item, null);
@@ -114,7 +116,7 @@ namespace NeeView
 
             Debug.WriteLine("Delete: " + item.Value.Name);
 
-            var node = GetDirectoryNode(parent.CreateQuery(QueryScheme.QuickAccess));
+            var node = GetDirectoryNode(parent);
             if (node != null)
             {
                 node.Remove(item);
@@ -125,6 +127,15 @@ namespace NeeView
             }
         }
 
+        private QuickAccessFolderNode? GetDirectoryNode(TreeListNode<IQuickAccessEntry>? item)
+        {
+            if (item is null) return null;
+
+            return this.Walk().OfType<QuickAccessFolderNode>().FirstOrDefault(e => e.QuickAccessSource == item);
+        }
+
+#if false
+        // NOTE: 重複したパスに非対応
         private QuickAccessFolderNode? GetDirectoryNode(QueryPath path)
         {
             return GetDirectoryNode(path.Path);
@@ -139,6 +150,7 @@ namespace NeeView
 
             return GetFolderTreeNode(path, false, false) as QuickAccessFolderNode;
         }
+#endif
 
         public override bool CanRename()
         {

@@ -17,7 +17,7 @@ namespace NeeView.Collections.Generic
     // TODO: thread safe (lock)
 
     public partial class TreeCollection<T> : BindableBase, IEnumerable<TreeListNode<T>>
-        where T : ICloneable, INotifyPropertyChanged
+        where T : ITreeListNode
     {
         private readonly Lock _lock = new();
 
@@ -118,6 +118,9 @@ namespace NeeView.Collections.Generic
         public void Move(TreeListNode<T> parent, int oldIndex, int newIndex)
         {
             Debug.Assert(parent.Children is not null);
+            Debug.Assert(oldIndex >= 0);
+            Debug.Assert(newIndex >= 0);
+
             if (oldIndex == newIndex) return;
 
             lock (_lock)
@@ -177,7 +180,7 @@ namespace NeeView.Collections.Generic
 
 
     public class TreeCollectionChangeEventArgs<T> : EventArgs
-        where T : ICloneable, INotifyPropertyChanged
+        where T : ITreeListNode
     {
         private TreeCollectionChangeEventArgs(TreeCollectionChangeAction action, TreeListNode<T>? changeItem)
         {

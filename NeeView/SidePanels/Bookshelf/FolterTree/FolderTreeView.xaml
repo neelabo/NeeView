@@ -68,6 +68,7 @@
                             <ContextMenu/>
                         </Setter.Value>
                     </Setter>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                     <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
                     <Setter Property="local:TreeViewItemTools.VerticalMargin" Value="5" />

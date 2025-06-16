@@ -711,7 +711,7 @@ namespace NeeView
     public static class TreeListNodeExtensions
     {
         public static QueryPath CreateQuery<T>(this TreeListNode<T> node, QueryScheme scheme)
-            where T : IHasName, ICloneable, INotifyPropertyChanged
+            where T : ITreeListNode
         {
             var path = string.Join("\\", node.Hierarchy.Select(e => e.Value).Skip(1).OfType<T>().Select(e => e.Name));
             return new QueryPath(scheme, path, null);

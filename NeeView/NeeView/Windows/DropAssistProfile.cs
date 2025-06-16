@@ -9,7 +9,8 @@ namespace NeeView.Windows
         public abstract DropTargetItem PointToDropTargetItem(DragEventArgs e, FrameworkElement itemsControl, bool allowInsert, Orientation orientation);
         public abstract bool IsFolder(FrameworkElement? item);
         public abstract FrameworkElement? ItemHitTest(FrameworkElement itemsControl, Point point);
-
+        
+        public virtual Rect AdjustElementRect(Rect rect) => rect;
 
         protected static int GetInsertOffset(double rate, bool isFolder)
         {
