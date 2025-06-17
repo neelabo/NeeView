@@ -1,13 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using NeeView.Collections.Generic;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace NeeView
 {
     public record class QuickAccessNodeSource : ISetParameter
     {
-        private readonly QuickAccessNode _node;
+        private readonly TreeListNode<QuickAccessEntry> _node;
 
-        public QuickAccessNodeSource(QuickAccessNode node)
+        public QuickAccessNodeSource(TreeListNode<QuickAccessEntry> node)
         {
+            Debug.Assert(node.Value is QuickAccess);
             _node = node;
         }
 
@@ -15,14 +18,14 @@ namespace NeeView
         public string Path
         {
             get { return _node.Path; }
-            set { AppDispatcher.Invoke(() => _node.SetPath(value)); }
+            set { AppDispatcher.Invoke(() => _node.Value.Path = value); }
         }
 
         [WordNodeMember(AltName = "@Word.Name")]
         public string Name
         {
             get { return _node.Name; }
-            set { AppDispatcher.Invoke(() => _node.Rename(value)); }
+            set { AppDispatcher.Invoke(() => _node.Value.Name = value); }
         }
 
 

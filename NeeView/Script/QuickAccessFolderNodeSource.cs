@@ -1,13 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using NeeView.Collections.Generic;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace NeeView
 {
     public record class QuickAccessFolderNodeSource : ISetParameter
     {
-        private readonly QuickAccessFolderNode _node;
+        private readonly TreeListNode<QuickAccessEntry> _node;
 
-        public QuickAccessFolderNodeSource(QuickAccessFolderNode node)
+        public QuickAccessFolderNodeSource(TreeListNode<QuickAccessEntry> node)
         {
+            Debug.Assert(node.Value is QuickAccessFolder);
             _node = node;
         }
 
@@ -15,7 +18,7 @@ namespace NeeView
         public string Name
         {
             get { return _node.Name; }
-            set { AppDispatcher.Invoke(() => _node.Rename(value)); }
+            set { AppDispatcher.Invoke(() => _node.Value.Name = value); }
         }
 
         public void SetParameter(IDictionary<string, object?>? obj)

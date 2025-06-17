@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -20,7 +21,6 @@ namespace NeeView.Collections.Generic
         where T : ITreeListNode
     {
         private readonly Lock _lock = new();
-
 
         public TreeCollection(T rootValue)
         {

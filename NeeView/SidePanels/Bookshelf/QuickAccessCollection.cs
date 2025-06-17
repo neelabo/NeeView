@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace NeeView
 {
-    public class QuickAccessCollection : TreeCollection<IQuickAccessEntry>
+    public class QuickAccessCollection : TreeCollection<QuickAccessEntry>
     {
         static QuickAccessCollection() => Current = new QuickAccessCollection();
         public static QuickAccessCollection Current { get; }
@@ -26,7 +26,7 @@ namespace NeeView
         }
 
 
-        public TreeListNode<IQuickAccessEntry>? FindNode(QueryPath query)
+        public TreeListNode<QuickAccessEntry>? FindNode(QueryPath query)
         {
             if (query.Scheme != QueryScheme.QuickAccess)
             {
@@ -42,12 +42,12 @@ namespace NeeView
         }
 
         // TODO: TreeCollection に移動
-        private TreeListNode<IQuickAccessEntry>? FindNode(TreeListNode<IQuickAccessEntry> node, string path)
+        private TreeListNode<QuickAccessEntry>? FindNode(TreeListNode<QuickAccessEntry> node, string path)
         {
             return FindNode(node, path.Split(LoosePath.Separators));
         }
 
-        private TreeListNode<IQuickAccessEntry>? FindNode(TreeListNode<IQuickAccessEntry> node, IEnumerable<string> pathTokens)
+        private TreeListNode<QuickAccessEntry>? FindNode(TreeListNode<QuickAccessEntry> node, IEnumerable<string> pathTokens)
         {
             if (pathTokens == null)
             {
@@ -70,18 +70,18 @@ namespace NeeView
         }
 
 
-        public TreeListNode<IQuickAccessEntry>? AddNewFolder(TreeListNode<IQuickAccessEntry> parent, string? name)
+        public TreeListNode<QuickAccessEntry>? AddNewFolder(TreeListNode<QuickAccessEntry> parent, string? name)
         {
             return InsertNewFolder(parent, parent.Children.Count, name);
         }
 
-        public TreeListNode<IQuickAccessEntry>? InsertNewFolder(TreeListNode<IQuickAccessEntry> parent, int index, string? name)
+        public TreeListNode<QuickAccessEntry>? InsertNewFolder(TreeListNode<QuickAccessEntry> parent, int index, string? name)
         {
             if (parent.Value is not QuickAccessFolder) return null;
 
-            var ignoreNames = parent.Children.Where(e => e.Value is IQuickAccessEntry).Select(e => e.Value.Name).WhereNotNull();
+            var ignoreNames = parent.Children.Where(e => e.Value is QuickAccessEntry).Select(e => e.Value.Name).WhereNotNull();
             var validName = GetValidateFolderName(ignoreNames, name, Properties.TextResources.GetString("Word.NewFolder"));
-            var node = new TreeListNode<IQuickAccessEntry>(new QuickAccessFolder() { Name = validName });
+            var node = new TreeListNode<QuickAccessEntry>(new QuickAccessFolder() { Name = validName });
 
             Insert(parent, index, node);
             parent.IsExpanded = true;
@@ -157,7 +157,7 @@ namespace NeeView
 
     public static class QuickAccessTreeNodeConverter
     {
-        public static QuickAccessTreeNode ConvertFrom(TreeListNode<IQuickAccessEntry> source)
+        public static QuickAccessTreeNode ConvertFrom(TreeListNode<QuickAccessEntry> source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
 
@@ -185,7 +185,7 @@ namespace NeeView
             return node;
         }
 
-        public static TreeListNode<IQuickAccessEntry>? ConvertToTreeListNode(QuickAccessTreeNode source)
+        public static TreeListNode<QuickAccessEntry>? ConvertToTreeListNode(QuickAccessTreeNode source)
         {
             if (source.IsFolder)
             {
@@ -194,7 +194,7 @@ namespace NeeView
                     Name = source.Name
                 };
 
-                var node = new TreeListNode<IQuickAccessEntry>(folder);
+                var node = new TreeListNode<QuickAccessEntry>(folder);
                 if (source.Children is not null)
                 {
                     foreach (var child in source.Children)
@@ -218,7 +218,7 @@ namespace NeeView
                 {
                     Name = source.Name ?? "",
                 };
-                var node = new TreeListNode<IQuickAccessEntry>(quickAccess);
+                var node = new TreeListNode<QuickAccessEntry>(quickAccess);
                 return node;
             }
         }

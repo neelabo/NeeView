@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Collections.Generic;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,9 @@ namespace NeeView
     public record class NodeAccessor
     {
         private readonly FolderTreeModel _model;
-        private readonly FolderTreeNodeBase _node;
+        private readonly ITreeViewNode _node;
 
-        public NodeAccessor(FolderTreeModel model, FolderTreeNodeBase node)
+        public NodeAccessor(FolderTreeModel model, ITreeViewNode node)
         {
             _model = model;
             _node = node;
@@ -20,12 +21,23 @@ namespace NeeView
 
         internal FolderTreeModel Model => _model;
 
-        internal FolderTreeNodeBase Node => _node;
+        internal ITreeViewNode Node => _node;
 
         [WordNodeMember]
         public bool IsDisposed
         {
-            get { return _node.IsDisposed; }
+            get
+            {
+                return _node switch
+                {
+                    TreeListNode<QuickAccessEntry> quickAccess
+                        => quickAccess.Root != QuickAccessCollection.Current.Root,
+                    FolderTreeNodeBase folderNode
+                        => folderNode.IsDisposed,
+                    _
+                        => throw new InvalidOperationException(),
+                };
+            }
         }
 
         [WordNodeMember]

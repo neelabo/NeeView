@@ -1,5 +1,7 @@
-﻿using System;
+﻿using NeeView.Collections.Generic;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection.Metadata;
 
@@ -7,12 +9,13 @@ namespace NeeView
 {
     public record class QuickAccessFolderNodeAccessor : NodeAccessor
     {
-        private readonly QuickAccessFolderNode _node;
+        private readonly TreeListNode<QuickAccessEntry> _node;
         private readonly QuickAccessFolderNodeSource _value;
 
-        public QuickAccessFolderNodeAccessor(FolderTreeModel model, QuickAccessFolderNode node) : base(model, node)
+        public QuickAccessFolderNodeAccessor(FolderTreeModel model, ITreeViewNode node) : base(model, node)
         {
-            _node = node;
+            _node = (TreeListNode<QuickAccessEntry>)node;
+            Debug.Assert(_node.Value is QuickAccessFolder);
             _value = new QuickAccessFolderNodeSource(_node);
         }
 

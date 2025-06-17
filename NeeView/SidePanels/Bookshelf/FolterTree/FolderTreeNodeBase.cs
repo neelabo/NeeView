@@ -128,13 +128,14 @@ namespace NeeView
 
         public IEnumerable<FolderTreeNodeBase> HierarchyReverse => this.GteHierarchyReverse().Cast<FolderTreeNodeBase>();
 
-        #region for ITreeNode
         
         ITreeNode? ITreeNode.Parent => Parent;
 
         IEnumerable<ITreeNode>? ITreeNode.Children => Children;
 
-        #endregion for ITreeNode
+        ITreeViewNode? ITreeViewNode.Parent => Parent;
+
+        IEnumerable<ITreeViewNode>? ITreeViewNode.Children => Children;
 
 
         protected virtual void OnParentChanged(object sender, EventArgs e)

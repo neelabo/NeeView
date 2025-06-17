@@ -7,6 +7,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NeeView"
              xmlns:nw="clr-namespace:NeeView.Windows"
+             xmlns:properties="clr-namespace:NeeView.Properties"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
@@ -28,12 +29,46 @@
         </Style>
 
         <local:ImageSourceCollectionToImageSourceConverter x:Key="ImageSourceCollectionToImageSourceConverter" Width="16.0" />
+        <local:QuickAccessEntryToImageSourceConverter x:Key="QuickAccessEntryToImageSourceConverter" />
+
+        <HierarchicalDataTemplate x:Key="DefaultNodeTemplate" ItemsSource="{Binding Children}">
+            <DockPanel>
+                <Image Style="{StaticResource IconImageStyle}">
+                    <Image.Source>
+                        <MultiBinding Converter="{StaticResource ImageSourceCollectionToImageSourceConverter}">
+                            <Binding Path="Icon" />
+                            <Binding Path="DataContext.DpiScale" ElementName="Root" />
+                        </MultiBinding>
+                    </Image.Source>
+                </Image>
+                <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource NodeTextBlockStyle}" Text="{Binding DisplayName}"/>
+            </DockPanel>
+        </HierarchicalDataTemplate>
+
+        <HierarchicalDataTemplate x:Key="QuickAccessNodeTemplate" ItemsSource="{Binding Children}">
+            <DockPanel>
+                <Image Style="{StaticResource IconImageStyle}">
+                    <Image.Source>
+                        <MultiBinding Converter="{StaticResource QuickAccessEntryToImageSourceConverter}">
+                            <Binding Path="Value" />
+                            <Binding Path="DataContext.DpiScale" ElementName="Root" />
+                        </MultiBinding>
+                    </Image.Source>
+                </Image>
+                <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource NodeTextBlockStyle}" Text="{Binding Value.Name}"/>
+            </DockPanel>
+        </HierarchicalDataTemplate>
+
+        <local:FolderTreeItemTemplateSelector x:Key="FolderTreeItemTemplateSelector"
+                                              Default="{StaticResource DefaultNodeTemplate}"
+                                              QuickAccess="{StaticResource QuickAccessNodeTemplate}"/>
 
     </UserControl.Resources>
 
     <Grid x:Name="Root">
         <TreeView x:Name="TreeView"
                   Style="{StaticResource NVTreeView}"
+                  ItemTemplateSelector="{StaticResource FolderTreeItemTemplateSelector}"
                   Foreground="{DynamicResource Panel.Foreground}" Background="Transparent" BorderThickness="0"
                   SelectedItemChanged="TreeView_SelectedItemChanged"
                   IsVisibleChanged="TreeView_IsVisibleChanged"
@@ -79,22 +114,6 @@
                     <EventSetter Event="Selected" Handler="TreeViewItem_Selected" />
                 </Style>
             </TreeView.ItemContainerStyle>
-
-            <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                    <DockPanel>
-                        <Image Style="{StaticResource IconImageStyle}">
-                            <Image.Source>
-                                <MultiBinding Converter="{StaticResource ImageSourceCollectionToImageSourceConverter}">
-                                    <Binding Path="Icon" />
-                                    <Binding Path="DataContext.DpiScale" ElementName="Root" />
-                                </MultiBinding>
-                            </Image.Source> 
-                        </Image>
-                        <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource NodeTextBlockStyle}" Text="{Binding DisplayName}"/>
-                    </DockPanel>
-                </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
 
         </TreeView>
     </Grid>

@@ -14,7 +14,7 @@ namespace NeeView
         {
             if (values.Length < 2) throw new InvalidOperationException();
 
-            if (values[0] is not IQuickAccessEntry entry)
+            if (values[0] is not QuickAccessEntry entry)
             {
                 return DependencyProperty.UnsetValue;
             }
@@ -38,7 +38,7 @@ namespace NeeView
             }
             else if (entry is QuickAccessFolder)
             {
-                return ResourceTools.GetElementResource<ImageSource>(MainWindow.Current, "fic_lightning");
+                return ResourceTools.GetElementResource<ImageSource>(MainWindow.Current, "ic_lightning");
             }
             else if (entry is QuickAccess quickAccess)
             {

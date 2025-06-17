@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace NeeView
 {
-    public class QuickAccess : BindableBase, ICloneable, IQuickAccessEntry
+    public sealed class QuickAccess : QuickAccessEntry
     {
         private string? _path;
 
@@ -32,7 +32,7 @@ namespace NeeView
         }
 
         [NotNull]
-        public string? Path
+        public override string? Path
         {
             get { return _path ?? ""; }
             set
@@ -47,7 +47,7 @@ namespace NeeView
 
         [JsonIgnore]
         [NotNull]
-        public string? Name
+        public override string? Name
         {
             get
             {
@@ -60,7 +60,7 @@ namespace NeeView
             }
         }
 
-        public string? RawName => _name;
+        public override string? RawName => _name;
 
         public string DefaultName
         {
@@ -97,7 +97,7 @@ namespace NeeView
             return Name;
         }
 
-        public object Clone()
+        public override object Clone()
         {
             var clone = new QuickAccess();
             clone.Restore(CreateMemento());
@@ -133,17 +133,17 @@ namespace NeeView
             Name = memento.Name;
         }
 
-        public string GetRenameText()
+        public override string GetRenameText()
         {
             return Name;
         }
 
-        public bool CanRename()
+        public override bool CanRename()
         {
             return true;
         }
 
-        public async ValueTask<bool> RenameAsync(string name)
+        public override async ValueTask<bool> RenameAsync(string name)
         {
             Name = name;
             await ValueTask.CompletedTask;

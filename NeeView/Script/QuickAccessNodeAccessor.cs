@@ -1,18 +1,21 @@
-﻿using System;
+﻿using NeeView.Collections.Generic;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection.Metadata;
 
 namespace NeeView
 {
     public record class QuickAccessNodeAccessor : NodeAccessor
     {
-        private readonly QuickAccessNode _node;
+        private readonly TreeListNode<QuickAccessEntry> _node;
         private readonly QuickAccessNodeSource _value;
 
-        public QuickAccessNodeAccessor(FolderTreeModel model, QuickAccessNode node) : base(model, node)
+        public QuickAccessNodeAccessor(FolderTreeModel model, ITreeViewNode node) : base(model, node)
         {
-            _node = node;
+            _node = (TreeListNode<QuickAccessEntry>)node;
+            Debug.Assert(_node.Value is QuickAccess);
             _value = new QuickAccessNodeSource(_node);
         }
 

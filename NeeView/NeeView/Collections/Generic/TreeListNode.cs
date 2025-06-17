@@ -153,6 +153,10 @@ namespace NeeView.Collections.Generic
 
         IEnumerable<ITreeNode>? ITreeNode.Children => Children;
 
+        ITreeViewNode? ITreeViewNode.Parent => Parent;
+
+        IEnumerable<ITreeViewNode>? ITreeViewNode.Children => Children;
+
         private void This_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             OnRoutedPropertyChanged(this, e);
@@ -185,6 +189,41 @@ namespace NeeView.Collections.Generic
         public TreeListNode<T>? Find(T value)
         {
             return _children.FirstOrDefault(e => EqualityComparer<T>.Default.Equals(e.Value, value));
+        }
+
+        /// <summary>
+        /// 指定パスの<see cref="TreeListNode{T}"/>を取得
+        /// </summary>
+        /// <param name="path">指定パス</param>
+        /// <param name="asFarAsPossible">指定パスが存在しない場合、存在する上位ノードを返す</param>
+        /// <returns></returns>
+        public TreeListNode<T>? GetNode(string? path, bool asFarAsPossible)
+        {
+            if (path == null) return null;
+
+            var pathTokens = path.Trim(LoosePath.Separators).Split(LoosePath.Separators);
+            return GetNode(pathTokens, asFarAsPossible);
+        }
+
+        /// <summary>
+        /// 指定パスの<see cref="TreeListNode{T}"/>を取得
+        /// </summary>
+        public TreeListNode<T>? GetNode(IEnumerable<string> pathTokens, bool asFarAsPossible)
+        {
+            if (!pathTokens.Any())
+            {
+                return this;
+            }
+
+            var token = pathTokens.First();
+
+            var child = Children?.FirstOrDefault(e => e.Name == token);
+            if (child != null)
+            {
+                return child.GetNode(pathTokens.Skip(1), asFarAsPossible);
+            }
+
+            return asFarAsPossible ? this : null;
         }
 
         public int GetIndex()
@@ -332,7 +371,7 @@ namespace NeeView.Collections.Generic
 
         public override string ToString()
         {
-            return $"{Path}";
+            return Name; // $"{Path}";
         }
 
         #region IEnumerable support

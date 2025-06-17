@@ -1,18 +1,17 @@
-﻿using System;
+﻿using NeeView.Collections.Generic;
+using System;
 
 namespace NeeView
 {
     public static class FolderNodeAccessorFactory
     {
-        public static NodeAccessor Create(FolderTreeModel model, FolderTreeNodeBase node)
+        public static NodeAccessor Create(FolderTreeModel model, ITreeViewNode node)
         {
             return node switch
             {
-                RootQuickAccessNode n
+                TreeListNode<QuickAccessEntry> { Value: QuickAccessFolder } n
                     => new QuickAccessFolderNodeAccessor(model, n),
-                QuickAccessFolderNode n
-                    => new QuickAccessFolderNodeAccessor(model, n),
-                QuickAccessNode n
+                TreeListNode<QuickAccessEntry> { Value: QuickAccess } n
                     => new QuickAccessNodeAccessor(model, n),
                 RootDirectoryNode n
                     => new DirectoryNodeAccessor(model, n),

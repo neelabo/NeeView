@@ -1,7 +1,11 @@
 ﻿using NeeView.Collections.Generic;
+using NeeView.Windows;
 using NeeView.Windows.Media;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -10,7 +14,7 @@ namespace NeeView
     public static class TreeViewExtensions
     {
         public static ItemsControl? ScrollIntoView<T>(this TreeView treeView, T? item)
-            where T : ITreeNode
+        where T : ITreeNode
         {
             if (item == null)
             {
@@ -23,20 +27,32 @@ namespace NeeView
             var lastContainer = container;
 
             // 上位ノードから順番に ScrollIntoView する。
-            // ルートの子供から TreeView のアイテムにする前提なので Skip(1) している。
-            foreach (var node in item.GetHierarchy().Skip(1))
+            foreach (var node in item.GetHierarchy())
             {
+                int index;
                 if (node.Parent == null)
                 {
-                    break;
+                    // TreeViewItemsSource.MultiRoot=true の場合は複数のルートを持つ。
+                    // そうでない場合、ルートの子供から TreeView のアイテムにする前提なので Skip(1) している。
+                    var multiRoot = TreeViewItemsSource.GetMultiRoot(treeView);
+                    if (multiRoot)
+                    {
+                        index = IndexOf(container.ItemsSource, node);
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
-
-                if (node.Parent.Children is null)
+                else
                 {
-                    break;
+                    if (node.Parent.Children is null)
+                    {
+                        break;
+                    }
+                    index = node.Parent.Children.IndexOf(node);
                 }
 
-                var index = node.Parent.Children.IndexOf(node);
                 if (index < 0)
                 {
                     break;
@@ -109,5 +125,26 @@ namespace NeeView
                 return subContainer;
             }
         }
+
+        private static int IndexOf(IEnumerable items, object? value)
+        {
+            int index = 0;
+            foreach (var item in items)
+            {
+                if (item == value) return index;
+                index++;
+            }
+            return -1;
+        }
+    }
+
+
+    public static class TreeViewItemsSource
+    {
+        public static readonly DependencyProperty MultiRootProperty =
+            DependencyProperty.RegisterAttached("MultiRoot", typeof(bool), typeof(TreeViewItemsSource), new PropertyMetadata(false));
+
+        public static bool GetMultiRoot(DependencyObject obj) => (bool)obj.GetValue(MultiRootProperty);
+        public static void SetMultiRoot(DependencyObject obj, bool value) => obj.SetValue(MultiRootProperty, value);
     }
 }

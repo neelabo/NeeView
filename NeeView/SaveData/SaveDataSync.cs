@@ -81,7 +81,7 @@ namespace NeeView
             _delaySaveBookmark.Request();
         }
 
-        private void QuickAccessCollection_CollectionChanged(object? sender, TreeCollectionChangeEventArgs<IQuickAccessEntry> e)
+        private void QuickAccessCollection_CollectionChanged(object? sender, TreeCollectionChangeEventArgs<QuickAccessEntry> e)
         {
             if (e.Action == TreeCollectionChangeAction.Refresh) return;
             _delaySaveBookmark.Request();

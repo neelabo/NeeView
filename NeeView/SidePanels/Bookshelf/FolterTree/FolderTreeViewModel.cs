@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeView.Collections.Generic;
 using NeeView.Windows;
 using System;
 using System.Windows;
@@ -76,22 +77,17 @@ namespace NeeView
             Model?.AddQuickAccess(item);
         }
 
-        public void MoveQuickAccess(QuickAccessNodeBase src, QuickAccessNodeBase dst, int delta)
+        public void MoveQuickAccess(TreeListNode<QuickAccessEntry> src, TreeListNode<QuickAccessEntry> dst, int delta)
         {
             Model?.MoveQuickAccess(src, dst, delta);
         }
 
-        public void RemoveQuickAccessFolder(QuickAccessFolderNode item)
-        {
-            Model?.RemoveQuickAccessFolder(item);
-        }
-
-        public void RemoveQuickAccess(QuickAccessNode item)
+        public void RemoveQuickAccess(TreeListNode<QuickAccessEntry> item)
         {
             Model?.RemoveQuickAccess(item);
         }
 
-        public QuickAccessFolderNode? NewQuickAccessFolder(QuickAccessFolderNode item)
+        public TreeListNode<QuickAccessEntry>? NewQuickAccessFolder(TreeListNode<QuickAccessEntry> item)
         {
             return Model?.NewQuickAccessFolder(item);
         }

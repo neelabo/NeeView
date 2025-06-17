@@ -15,7 +15,7 @@ namespace NeeView
     /// </summary>
     public class QuickAccessFolderCollection : FolderCollection, IDisposable
     {
-        private readonly TreeListNode<IQuickAccessEntry>? _node;
+        private readonly TreeListNode<QuickAccessEntry>? _node;
 
 
         public QuickAccessFolderCollection(QueryPath path, bool isOverlayEnabled) : base(path, isOverlayEnabled)
@@ -50,7 +50,7 @@ namespace NeeView
             {
                 case NotifyCollectionChangedAction.Add:
                     if (e.NewItems is null) return;
-                    foreach (var target in e.NewItems.Cast<TreeListNode<IQuickAccessEntry>>().Reverse())
+                    foreach (var target in e.NewItems.Cast<TreeListNode<QuickAccessEntry>>().Reverse())
                     {
                         var item = Items.FirstOrDefault(i => target == i.Source);
                         if (item == null)
@@ -63,7 +63,7 @@ namespace NeeView
 
                 case NotifyCollectionChangedAction.Remove:
                     if (e.OldItems is null) return;
-                    foreach (var target in e.OldItems.Cast<TreeListNode<IQuickAccessEntry>>().Reverse())
+                    foreach (var target in e.OldItems.Cast<TreeListNode<QuickAccessEntry>>().Reverse())
                     {
                         var item = Items.FirstOrDefault(i => target == i.Source);
                         if (item != null)
@@ -83,7 +83,7 @@ namespace NeeView
             }
         }
 
-        private FolderItem CreateFolderItem(QueryPath parent, TreeListNode<IQuickAccessEntry> quickAccess)
+        private FolderItem CreateFolderItem(QueryPath parent, TreeListNode<QuickAccessEntry> quickAccess)
         {
             return new ConstFolderItem(new FolderThumbnail(), _isOverlayEnabled)
             {
