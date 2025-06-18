@@ -207,9 +207,13 @@ namespace NeeView
         {
             var frameWidth = window.ActualWidth - canvasSize.Width;
             var frameHeight = window.ActualHeight - canvasSize.Height;
-            if (frameWidth < 0.0 || frameHeight < 0.0)
+            if (frameWidth < 0.0)
             {
-                throw new ArgumentException($"canvasSize must be smaller than Window.Size.", nameof(canvasSize));
+                frameWidth = 0.0;
+            }
+            if (frameHeight < 0.0)
+            {
+                frameHeight = 0.0;
             }
             window.Width = newCanvasSize.Width + frameWidth;
             window.Height = newCanvasSize.Height + frameHeight;
