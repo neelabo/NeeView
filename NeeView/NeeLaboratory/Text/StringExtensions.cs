@@ -2,18 +2,22 @@
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace NeeLaboratory.Text
 {
-    // from https://stackoverflow.com/questions/40347168/how-to-parse-an-escape-sequence
-    public static class StringExtensions
+    public static partial class StringExtensions
     {
+        [GeneratedRegex(@"[\r\n]+")]
+        private static partial Regex _newLineRegex { get; }
+
         private enum UnescapeState
         {
             Unescaped,
             Escaped
         }
 
+        // from https://stackoverflow.com/questions/40347168/how-to-parse-an-escape-sequence
         public static string Unescape(this string s)
         {
             var sb = new StringBuilder(s.Length + 2);
@@ -83,6 +87,16 @@ namespace NeeLaboratory.Text
             var a = s.Take(1).Select(e => char.ToUpper(e, CultureInfo.InvariantCulture));
             var b = complete ? s.Skip(1).Select(e => char.ToLower(e, CultureInfo.InvariantCulture)) : s.Skip(1);
             return new string(a.Concat(b).ToArray());
+        }
+
+        /// <summary>
+        /// 改行文字を空白に置き換える
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string NewLineToSpace(this string s)
+        {
+            return _newLineRegex.Replace(s, " ");
         }
     }
 }

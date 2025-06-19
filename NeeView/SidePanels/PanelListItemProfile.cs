@@ -230,6 +230,15 @@ namespace NeeView
             }
         }
 
+        [PropertyMapIgnore]
+        public double LayoutedTextHeight
+        {
+            get
+            {
+                return IsTextWrapped ? TextHeight : double.NaN;
+            }
+        }
+
         #endregion
 
         public PanelListItemProfile Clone()
@@ -244,6 +253,7 @@ namespace NeeView
         {
             _isTextHeightDirty = true;
             RaisePropertyChanged(nameof(TextHeight));
+            RaisePropertyChanged(nameof(LayoutedTextHeight));
         }
 
         // calc textbox height

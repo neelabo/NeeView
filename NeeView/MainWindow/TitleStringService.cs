@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using NeeLaboratory.Linq;
+using NeeLaboratory.Text;
 using NeeView.PageFrames;
 using NeeView.Text;
 using NeeView.Windows;
@@ -123,7 +124,8 @@ namespace NeeView
                 if (content is null) return "";
                 var pageElement = content.Element;
                 var fullPath = pageElement.Page.EntryName;
-                return fullPath.Replace("/", " > ", StringComparison.Ordinal).Replace("\\", " > ", StringComparison.Ordinal) + GetPartString(content);
+                var fullName = fullPath.Replace("/", " > ", StringComparison.Ordinal).Replace("\\", " > ", StringComparison.Ordinal) + GetPartString(content);
+                return fullName.NewLineToSpace();
             }
 
             string name0 = GetName(contents.ElementAtOrDefault(0));
@@ -137,7 +139,8 @@ namespace NeeView
                 if (content is null) return "";
                 var pageElement = content.Element;
                 var fullPath = pageElement.Page.EntryName;
-                return LoosePath.GetFileName(fullPath) + GetPartString(content);
+                var name = LoosePath.GetFileName(fullPath) + GetPartString(content);
+                return name.NewLineToSpace();
             }
 
             string GetPartString(ViewContent? content)
