@@ -6,6 +6,7 @@ namespace NeeView.Threading
 {
     public class IntervalAction : IDisposable
     {
+        private readonly Dispatcher _dispatcher;
         private readonly DispatcherTimer _timer;
         private readonly Action _action;
         private int _requestCount;
@@ -18,6 +19,7 @@ namespace NeeView.Threading
         public IntervalAction(Action action, TimeSpan interval, Dispatcher dispatcher)
         {
             _action = action;
+            _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
             _timer = new DispatcherTimer(DispatcherPriority.Normal, dispatcher);
             _timer.Interval = interval;
             _timer.Tick += new EventHandler(DispatcherTimer_Tick);
@@ -50,6 +52,13 @@ namespace NeeView.Threading
         {
             if (_disposedValue) return;
 
+            _dispatcher.Invoke(() => FlushCore());
+        }
+
+        private void FlushCore()
+        {
+            if (_disposedValue) return;
+
             if (Interlocked.Exchange(ref _requestCount, 0) > 0)
             {
                 _action.Invoke();
@@ -61,7 +70,7 @@ namespace NeeView.Threading
         /// </summary>
         private void DispatcherTimer_Tick(object? sender, EventArgs e)
         {
-            Flush();
+            FlushCore();
         }
 
         #region IDisposable Support

@@ -19,6 +19,8 @@ namespace NeeView
         private string? _pagemarkFilenameToDelete;
         private bool _historyMergeFlag;
         private DateTime _historyLastWriteTime;
+        private FileStamp _userSettingFileStamp = new();
+        private FileStamp _bookmarkFileStamp = new();
 
         // 設定のバックアップを１起動に付き１回に制限するフラグ
         private bool _backupOnce = true;
@@ -29,22 +31,6 @@ namespace NeeView
             App.Current.CriticalError += (s, e) => DisableSave();
         }
 
-#if false
-        public const string UserSettingFileName = "UserSetting.json";
-        public const string HistoryFileName = "History.json";
-        public const string BookmarkFileName = "Bookmark.json";
-        public const string PagemarkFileName = "Pagemark.json";
-        public const string CustomThemeFolder = "Themes";
-        public const string PlaylistsFolder = "Playlists";
-        public const string ScriptsFolder = "Scripts";
-
-        public static string DefaultHistoryFilePath => Path.Combine(Environment.LocalApplicationDataPath, HistoryFileName);
-        public static string DefaultBookmarkFilePath => Path.Combine(Environment.LocalApplicationDataPath, BookmarkFileName);
-        public static string DefaultPagemarkFilePath => Path.Combine(Environment.LocalApplicationDataPath, PagemarkFileName);
-        public static string DefaultCustomThemeFolder => Environment.GetUserDataPath(CustomThemeFolder);
-        public static string DefaultPlaylistsFolder => Environment.GetUserDataPath(PlaylistsFolder);
-        public static string DefaultScriptsFolder => Environment.GetUserDataPath(ScriptsFolder);
-#endif
 
         public static string UserSettingFilePath => App.Current.Option.SettingFilename ?? throw new InvalidOperationException("UserSettingFilePath must not be null");
         public static string HistoryFilePath => Config.Current.History.HistoryFilePath;
@@ -61,6 +47,17 @@ namespace NeeView
         public void DisableSave()
         {
             IsEnableSave = false;
+        }
+
+        public void SetUserSettingFileStamp(FileStamp? fileStamp)
+        {
+            if (fileStamp is null) return;
+            _userSettingFileStamp = fileStamp;
+        }
+
+        public bool IsLatestUserSettingFileStamp()
+        {
+            return _userSettingFileStamp.IsLatest();
         }
 
         #region Load
@@ -82,11 +79,12 @@ namespace NeeView
             using (ProcessLock.Lock())
             {
                 var filename = App.Current.Option.SettingFilename;
-                var extension = Path.GetExtension(filename)?.ToLowerInvariant();
-                if (extension == ".json" && File.Exists(filename))
+                if (File.Exists(filename))
                 {
+                    var fileStamp = FileStamp.Create(filename);
                     var failedDialog = new UserSettingLoadFailedDialog(cancellable);
                     setting = SafetyLoad(UserSettingTools.Load, filename, failedDialog, LoadUserSettingBackupCallback);
+                    setting?.SetFileStamp(fileStamp);
                 }
                 else
                 {
@@ -109,11 +107,10 @@ namespace NeeView
             using (ProcessLock.Lock())
             {
                 var filename = HistoryFilePath;
-                var extension = Path.GetExtension(filename).ToLowerInvariant();
                 var failedDialog = new LoadFailedDialog("@Notice.LoadHistoryFailed", "@Notice.LoadHistoryFailedTitle");
 
                 var fileInfo = new FileInfo(filename);
-                if (extension == ".json" && fileInfo.Exists)
+                if (fileInfo.Exists)
                 {
                     BookHistoryCollection.Memento? memento = SafetyLoad(BookHistoryCollection.Memento.Load, HistoryFilePath, failedDialog);
                     BookHistoryCollection.Current.Restore(memento, true);
@@ -125,17 +122,27 @@ namespace NeeView
         // ブックマーク読み込み
         public void LoadBookmark()
         {
+            LoadBookmark(BookmarkFilePath);
+        }
+
+        public void LoadBookmark(string filename)
+        {
             using (ProcessLock.Lock())
             {
-                var filename = BookmarkFilePath;
-                var extension = Path.GetExtension(filename).ToLowerInvariant();
-                var failedDialog = new LoadFailedDialog("@Notice.LoadBookmarkFailed", "@Notice.LoadBookmarkFailedTitle");
-
-                if (extension == ".json" && File.Exists(filename))
+                if (!File.Exists(filename))
                 {
-                    BookmarkCollection.Memento? memento = SafetyLoad(BookmarkCollection.Memento.Load, filename, failedDialog);
-                    BookmarkCollection.Current.Restore(memento);
+                    return;
                 }
+
+                var fileStamp = FileStamp.Create(filename);
+                if (fileStamp == _bookmarkFileStamp)
+                {
+                    return;
+                }
+                _bookmarkFileStamp = fileStamp;
+                var failedDialog = new LoadFailedDialog("@Notice.LoadBookmarkFailed", "@Notice.LoadBookmarkFailedTitle");
+                BookmarkCollection.Memento? memento = SafetyLoad(BookmarkCollection.Memento.Load, filename, failedDialog);
+                BookmarkCollection.Current.Restore(memento);
             }
         }
 
@@ -216,6 +223,7 @@ namespace NeeView
             {
                 bool createBackup = Config.Current.System.IsSettingBackup && _backupOnce;
                 SafetySave(UserSettingTools.Save, UserSettingFilePath, createBackup);
+                SetUserSettingFileStamp(FileStamp.Create(UserSettingFilePath));
                 _backupOnce = false;
             }
         }
@@ -302,6 +310,7 @@ namespace NeeView
             {
                 var bookmarkMemento = BookmarkCollection.Current.CreateMemento();
                 SafetySave(bookmarkMemento.Save, BookmarkFilePath, false);
+                _bookmarkFileStamp = FileStamp.Create(BookmarkFilePath);
             }
         }
 

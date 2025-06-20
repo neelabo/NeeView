@@ -23,18 +23,14 @@ namespace NeeView
 
         private readonly DelayAction _delaySaveBookmark;
         private readonly IntervalAction _delaySaveHistory;
-
+        private readonly UserSettingWatcher _userSettingWatcher = new UserSettingWatcher();
+        private readonly BookmarkWatcher _bookmarkWatcher = new BookmarkWatcher();
+        private readonly PlaylistWatcher _playlistWatcher = new PlaylistWatcher();
 
         private SaveDataSync()
         {
             _delaySaveBookmark = new DelayAction(() => SaveBookmark(true, true), TimeSpan.FromSeconds(0.5));
             _delaySaveHistory = new IntervalAction(() => SaveHistory(true), TimeSpan.FromMinutes(5.0));
-
-            RemoteCommandService.Current.AddReceiver("LoadUserSetting", LoadUserSetting);
-            RemoteCommandService.Current.AddReceiver("LoadHistory", LoadHistory);
-            RemoteCommandService.Current.AddReceiver("LoadBookmark", LoadBookmark);
-            RemoteCommandService.Current.AddReceiver("LoadPlaylist", LoadPlaylist);
-            RemoteCommandService.Current.AddReceiver("RenamePlaylist", RenamePlaylist);
         }
 
 
@@ -47,6 +43,9 @@ namespace NeeView
             {
                 if (disposing)
                 {
+                    _playlistWatcher.Dispose();
+                    _bookmarkWatcher.Dispose();
+                    _userSettingWatcher.Dispose();
                     BookmarkCollection.Current.BookmarkChanged -= BookmarkCollection_BookmarkChanged;
                     QuickAccessCollection.Current.RoutedPropertyChanged -= QuickAccessCollection_RoutedPropertyChanged;
                     QuickAccessCollection.Current.CollectionChanged -= QuickAccessCollection_CollectionChanged;
@@ -76,6 +75,13 @@ namespace NeeView
             BookHistoryCollection.Current.SearchChanged += Search_HistoryChanged;
         }
 
+        public void DisposeWatcher()
+        {
+            _playlistWatcher.Dispose();
+            _bookmarkWatcher.Dispose();
+            _userSettingWatcher.Dispose();
+        }
+
         private void QuickAccessCollection_RoutedPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             _delaySaveBookmark.Request();
@@ -99,7 +105,7 @@ namespace NeeView
             //Debug.WriteLine($"{nameof(SaveDataSync)}.{nameof(BookHistoryCollection_HistoryChanged)}: Request.");
             _delaySaveHistory.Request();
         }
-        
+
         private void Search_HistoryChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Reset) return;
@@ -113,43 +119,6 @@ namespace NeeView
             _delaySaveHistory.Flush();
             PlaylistHub.Current.Flush();
         }
-
-        private void LoadUserSetting(RemoteCommand command)
-        {
-            Debug.WriteLine($"{SaveDataProfile.UserSettingFileName} is updated by other process.");
-            var setting = SaveData.Current.LoadUserSetting(false);
-            try
-            {
-                Config.Current.Window.FreezeWindowState = true;
-                UserSettingTools.Restore(setting);
-            }
-            finally
-            {
-                Config.Current.Window.FreezeWindowState = false;
-            }
-        }
-
-        private void LoadHistory(RemoteCommand command)
-        {
-            // TODO: フラグ管理のみ？
-        }
-
-        private void LoadBookmark(RemoteCommand command)
-        {
-            Debug.WriteLine($"{SaveDataProfile.BookmarkFileName} is updated by other process.");
-            SaveData.Current.LoadBookmark();
-        }
-
-        private void LoadPlaylist(RemoteCommand command)
-        {
-            PlaylistHub.Current.Reload(command.Args[0]);
-        }
-
-        private void RenamePlaylist(RemoteCommand command)
-        {
-            PlaylistHub.Current.Rename(command.Args[0], command.Args[1]);
-        }
-
 
         public void SaveUserSetting(bool sync, bool handleException)
         {
@@ -171,14 +140,6 @@ namespace NeeView
                 {
                     throw new IOException(message, ex);
                 }
-            }
-
-            // TODO: 動作検証用に古い形式のデータも保存する
-            ////SaveData.Current.SaveUserSettingV1();
-
-            if (sync)
-            {
-                RemoteCommandService.Current.Send(new RemoteCommand("LoadUserSetting"), RemoteCommandDelivery.All);
             }
         }
 
@@ -225,11 +186,6 @@ namespace NeeView
                 {
                     throw new IOException(message, ex);
                 }
-            }
-
-            if (sync)
-            {
-                RemoteCommandService.Current.Send(new RemoteCommand("LoadBookmark"), RemoteCommandDelivery.All);
             }
         }
 

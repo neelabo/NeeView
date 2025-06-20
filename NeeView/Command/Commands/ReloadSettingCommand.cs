@@ -16,6 +16,7 @@
         public override void Execute(object? sender, CommandContext e)
         {
             var setting = SaveData.Current.LoadUserSetting(false);
+            SaveData.Current.SetUserSettingFileStamp(setting.FileStamp);
             UserSettingTools.Restore(setting);
         }
     }

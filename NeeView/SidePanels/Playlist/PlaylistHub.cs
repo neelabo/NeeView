@@ -1,9 +1,8 @@
-﻿using Microsoft.Win32;
+﻿//#define LOCAL_DEBUG
+
+using Microsoft.Win32;
 using NeeLaboratory.ComponentModel;
-using NeeLaboratory.IO;
-using NeeView.IO;
-using NeeView.Properties;
-using NeeView.Threading;
+using NeeLaboratory.Generators;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -20,7 +19,9 @@ using System.Windows.Controls;
 
 namespace NeeView
 {
-    public class PlaylistHub : BindableBase
+
+    [LocalDebug]
+    public partial class PlaylistHub : BindableBase
     {
         static PlaylistHub() => Current = new PlaylistHub();
         public static PlaylistHub Current { get; }
@@ -219,8 +220,6 @@ namespace NeeView
 
                 SetPlaylist(LoadPlaylist(this.SelectedItem));
                 _isPlaylistDirty = false;
-
-                //StartFileWatch(this.SelectedItem);
             }
         }
 
@@ -232,7 +231,17 @@ namespace NeeView
 
         public void Reload(string path)
         {
-            if (string.Compare(SelectedItem, path, StringComparison.OrdinalIgnoreCase) == 0)
+            LocalDebug.WriteLine($"Path={path}");
+
+            var reloadPath = GetReloadPlaylistPath(path);
+
+            if (SelectedItem != reloadPath)
+            {
+                SelectedItem = reloadPath;
+                return;
+            }
+
+            if (!_playlist.FileStamp.IsLatest())
             {
                 ReloadPlaylist();
             }
@@ -247,19 +256,23 @@ namespace NeeView
             }
         }
 
-        public void Rename(string oldPath, string newPath)
+        /// <summary>
+        /// 再読み込みするプレイリストのパスを決定する。
+        /// </summary>
+        /// <param name="path">現在のプレイリストが存在しないときの代替。ファイル名が変更されたとき用</param>
+        /// <returns></returns>
+        private string GetReloadPlaylistPath(string path)
         {
-            if (string.Compare(SelectedItem, oldPath, StringComparison.OrdinalIgnoreCase) == 0)
+            if (File.Exists(SelectedItem))
             {
-                _playlist.Path = newPath;
-                SelectedItem = newPath;
+                return SelectedItem;
             }
-            else if (string.Compare(SelectedItem, newPath, StringComparison.OrdinalIgnoreCase) == 0)
+            if (File.Exists(path))
             {
-                Reload(newPath);
+                return path;
             }
+            return DefaultPlaylist;
         }
-
 
         private void SetPlaylist(Playlist value)
         {

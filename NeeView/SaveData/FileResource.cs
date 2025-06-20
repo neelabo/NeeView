@@ -9,16 +9,19 @@ namespace NeeView
         private readonly string _path;
         private byte[]? _bytes;
         private FileResourceState _state;
+        private FileStamp _fileStamp;
         private Exception? _exception;
 
         public FileResource(string path)
         {
             _path = path;
+            _fileStamp = new FileStamp(path, default);
         }
 
         public string Path => _path;
         public byte[]? Bytes => _state == FileResourceState.Stable ? _bytes : GetBytes();
         public FileResourceState State => _state;
+        public FileStamp FileStamp => _fileStamp;
         public Exception? Exception => _state == FileResourceState.Exception ? _exception : null;
         public bool IsBackup { get; init; }
 
@@ -39,6 +42,7 @@ namespace NeeView
                         if (File.Exists(_path))
                         {
                             _bytes = File.ReadAllBytes(_path);
+                            _fileStamp = FileStamp.Create(_path);
                             _state = FileResourceState.Stable;
                         }
                         else

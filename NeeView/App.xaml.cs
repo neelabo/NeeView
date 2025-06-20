@@ -214,6 +214,7 @@ namespace NeeView
 
             // ensure UserSetting
             setting ??= CreateUserSetting(settingResource);
+            SaveData.Current.SetUserSettingFileStamp(setting.FileStamp);
             UserSettingTools.Restore(setting, replaceConfig: true);
 
             // fix language
@@ -440,6 +441,7 @@ namespace NeeView
                 if (App.Current.IsMainWindowLoaded)
                 {
                     // 設定保存
+                    SaveDataSync.Current.DisposeWatcher();
                     SaveDataSync.Current.SaveAll(false, false);
                     SaveDataSync.Current.Dispose();
                     SaveData.Current.DisableSave();

@@ -15,32 +15,38 @@ namespace NeeView.Windows.Data
     /// </summary>
     public partial class DelayValue<T> : BindableBase, IDisposable
     {
-        // Fields
-
         private T? _value;
         private T? _delayValue;
         private DateTime _delayTime = DateTime.MaxValue;
+        private readonly Dispatcher _dispatcher;
         private readonly DispatcherTimer _timer;
         private bool _disposedValue;
 
 
-        // Constructors
-
-        public DelayValue()
+        public DelayValue() : this(default, App.Current.Dispatcher)
         {
-            _timer = new DispatcherTimer();
-            _timer.Interval = TimeSpan.FromSeconds(0.1);
-            _timer.Tick += Tick;
         }
 
-        public DelayValue(T value) : this()
+        public DelayValue(Dispatcher dispatcher) : this(default, dispatcher)
         {
+        }
+
+        public DelayValue(T? value) : this(value, App.Current.Dispatcher)
+        {
+        }
+
+        public DelayValue(T? value, Dispatcher dispatcher)
+        {
+            _dispatcher = dispatcher;
+            _timer = new DispatcherTimer(DispatcherPriority.Normal, _dispatcher);
+            _timer.Interval = TimeSpan.FromSeconds(0.1);
+            _timer.Tick += Tick;
+
             _value = value;
             _delayValue = value;
         }
 
-        // Events
-
+        
         /// <summary>
         /// 値が反映されたときのイベント
         /// </summary>
@@ -48,15 +54,11 @@ namespace NeeView.Windows.Data
         public event EventHandler? ValueChanged;
 
 
-        // Properties
-
         /// <summary>
         /// 現在値
         /// </summary>
         public T? Value => _value;
 
-
-        // Methods
 
         /// <summary>
         /// タイマー精度変更
@@ -113,7 +115,7 @@ namespace NeeView.Windows.Data
 
             if (ms <= 0.0)
             {
-                Flush();
+                _dispatcher.Invoke(() => Flush());
             }
             else
             {

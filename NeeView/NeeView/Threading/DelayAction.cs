@@ -14,33 +14,40 @@ namespace NeeView.Threading
     /// </summary>
     public class DelayAction : IDisposable
     {
+        private const int _defaultDelayMilliseconds = 1000;
+
         private readonly System.Threading.Lock _lock = new();
+        private readonly Dispatcher _dispatcher;
         private readonly DispatcherTimer _timer;
         private readonly Action? _defaultAction;
-        private readonly TimeSpan _defaultDelay = TimeSpan.FromMilliseconds(1000);
+        private readonly TimeSpan _defaultDelay;
         private Action? _action;
 
 
-        public DelayAction(Dispatcher dispatcher)
+        public DelayAction()
+            : this(null, TimeSpan.FromMilliseconds(_defaultDelayMilliseconds), Application.Current.Dispatcher)
         {
+        }
+
+        public DelayAction(Dispatcher dispatcher)
+            : this(null, TimeSpan.FromMilliseconds(_defaultDelayMilliseconds), dispatcher)
+        {
+        }
+
+        public DelayAction(Action? action, TimeSpan delay)
+            : this(action, delay, Application.Current.Dispatcher)
+        {
+        }
+
+        public DelayAction(Action? action, TimeSpan delay, Dispatcher dispatcher)
+        {
+            _dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
             _timer = new DispatcherTimer(DispatcherPriority.Normal, dispatcher);
             _timer.Tick += new EventHandler(DispatcherTimer_Tick);
-        }
 
-        public DelayAction() : this(Application.Current.Dispatcher)
-        {
-        }
-
-        public DelayAction(Action action, TimeSpan delay) : this(action, delay, Application.Current.Dispatcher)
-        {
-        }
-
-        public DelayAction(Action action, TimeSpan delay, Dispatcher dispatcher) : this(dispatcher)
-        {
             _defaultDelay = delay;
             _defaultAction = action;
         }
-
 
 
         /// <summary>
@@ -83,6 +90,14 @@ namespace NeeView.Threading
             if (_disposedValue) return;
             if (_action is null) return;
 
+            _dispatcher.Invoke(() => FlushCore());
+        }
+
+        private void FlushCore()
+        {
+            if (_disposedValue) return;
+            if (_action is null) return;
+
             if (StopTimer())
             {
                 _action.Invoke();
@@ -117,7 +132,7 @@ namespace NeeView.Threading
         /// </summary>
         private void DispatcherTimer_Tick(object? sender, EventArgs e)
         {
-            Flush();
+            FlushCore();
         }
 
         #region IDisposable Support

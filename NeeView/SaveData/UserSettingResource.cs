@@ -61,6 +61,7 @@ namespace NeeView
                     Debug.Assert(res.Bytes != null);
                     using var ms = new MemoryStream(res.Bytes);
                     var setting = UserSettingTools.Load(ms);
+                    setting?.SetFileStamp(res.FileStamp);
                     // バックアップファイルからの読み込みの場合はバックアップの生成を抑制する
                     if (res.IsBackup)
                     {

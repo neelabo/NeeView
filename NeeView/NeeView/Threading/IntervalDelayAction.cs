@@ -11,6 +11,7 @@ namespace NeeView.Threading
     {
         private Action? _action;
         private bool _disposedValue;
+        private readonly Dispatcher _dispatcher;
         private readonly DispatcherTimer _timer;
         private readonly System.Threading.Lock _lock = new();
         private int _timestamp;
@@ -22,6 +23,7 @@ namespace NeeView.Threading
 
         public IntervalDelayAction(Dispatcher dispatcher)
         {
+            _dispatcher = dispatcher;
             _timer = new DispatcherTimer(DispatcherPriority.Normal, dispatcher);
             _timer.Tick += Timer_Tick;
 
@@ -97,6 +99,11 @@ namespace NeeView.Threading
 
         public bool Flush()
         {
+            return _dispatcher.Invoke(() => FlushCore());
+        }
+
+        private bool FlushCore()
+        {
             lock (_lock)
             {
                 _timer.Stop();
@@ -114,7 +121,7 @@ namespace NeeView.Threading
 
         private void Timer_Tick(object? sender, EventArgs e)
         {
-            Flush();
+            FlushCore();
         }
 
     }

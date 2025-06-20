@@ -1,6 +1,9 @@
-﻿using NeeLaboratory;
+﻿//#define LOCAL_DEBUG
+
+using NeeLaboratory;
 using NeeLaboratory.Collection;
 using NeeLaboratory.ComponentModel;
+using NeeLaboratory.Generators;
 using NeeLaboratory.IO;
 using NeeLaboratory.Linq;
 using NeeView.Threading;
@@ -18,11 +21,12 @@ using System.Threading.Tasks;
 
 namespace NeeView
 {
-    public class Playlist : BindableBase
+    [LocalDebug]
+    public partial class Playlist : BindableBase
     {
         private ObservableCollection<PlaylistItem> _items = new();
         private MultiMap<string, PlaylistItem> _itemsMap = new();
-        private string _playlistPath;
+        private FileStamp _fileStamp;
         private readonly Lock _lock = new();
         private bool _isDirty;
         private bool _isEditable;
@@ -30,13 +34,17 @@ namespace NeeView
         private readonly DelayAction _delaySave;
 
 
-        public Playlist(string path)
+        public Playlist(string path) : this(path, default)
         {
-            _playlistPath = path;
+        }
+
+        public Playlist(string path, DateTime lastWriteTime)
+        {
+            _fileStamp = new FileStamp(path, lastWriteTime);
             _delaySave = new DelayAction(() => Save(false), TimeSpan.FromSeconds(1.0));
         }
 
-        public Playlist(string path, PlaylistSource playlistFile, bool isNew) : this(path)
+        public Playlist(string path, DateTime lastWriteTime, PlaylistSource playlistFile, bool isNew) : this(path)
         {
             _isNew = false;
             this.Items = new ObservableCollection<PlaylistItem>(playlistFile.Items.Select(e => new PlaylistItem(e)));
@@ -45,16 +53,23 @@ namespace NeeView
         }
 
 
-
         public event NotifyCollectionChangedEventHandler? CollectionChanged;
 
         public event EventHandler<PlaylistItemRenamedEventArgs>? ItemRenamed;
 
 
-        public string Path
+        public string Path => _fileStamp.Path;
+
+        public FileStamp FileStamp
         {
-            get { return _playlistPath; }
-            set { SetProperty(ref _playlistPath, value); }
+            get { return _fileStamp; }
+            set
+            {
+                if (SetProperty(ref _fileStamp, value))
+                {
+                    RaisePropertyChanged(nameof(Path));
+                }
+            }
         }
 
         public bool IsEditable
@@ -646,6 +661,8 @@ namespace NeeView
             if (!this.IsEditable) return false;
             if (this.Path is null) return false;
 
+            LocalDebug.WriteLine($"Path={this.Path}, IsForce={isForce}");
+
             PlaylistSource source;
             lock (_lock)
             {
@@ -664,7 +681,8 @@ namespace NeeView
                     }
                     _isNew = false;
 
-                    this.Path = FileIO.CreateUniquePath(this.Path);
+                    var path = FileIO.CreateUniquePath(this.Path);
+                    this.FileStamp = new FileStamp(path, default);
                 }
 
                 var newFileName = this.Path + ".new.tmp";
@@ -675,10 +693,10 @@ namespace NeeView
                     {
                         try
                         {
-
                             File.Delete(newFileName);
                             SaveCore(newFileName);
                             File.Replace(newFileName, this.Path, null);
+                            this.FileStamp = FileStamp.Create(this.Path);
                         }
                         catch
                         {
@@ -689,9 +707,9 @@ namespace NeeView
                     else
                     {
                         SaveCore(this.Path);
+                        this.FileStamp = FileStamp.Create(this.Path);
                     }
 
-                    RemoteCommandService.Current.Send(new RemoteCommand("LoadPlaylist", this.Path), RemoteCommandDelivery.All);
                     return true;
                 }
                 catch (Exception ex)
@@ -727,6 +745,8 @@ namespace NeeView
 
         public static Playlist Load(string path, bool createNewFile)
         {
+            LocalDebug.WriteLine($"Path={path}, CreateNewFile={createNewFile}");
+
             var file = new FileInfo(path);
             if (file.Exists)
             {
@@ -735,7 +755,7 @@ namespace NeeView
                     try
                     {
                         var playlistFile = PlaylistSourceTools.Load(path);
-                        var playlist = new Playlist(path, playlistFile, false);
+                        var playlist = new Playlist(path, file.LastWriteTime, playlistFile, false);
                         playlist.IsEditable = !file.Attributes.HasFlag(FileAttributes.ReadOnly);
                         return playlist;
                     }
@@ -748,7 +768,7 @@ namespace NeeView
             }
             else if (file.Directory?.Exists == true || IsDefaultPlaylistsFolder(file))
             {
-                var playlist = new Playlist(path, new PlaylistSource(), true);
+                var playlist = new Playlist(path, default, new PlaylistSource(), true);
                 if (createNewFile)
                 {
                     playlist.Save(true);
@@ -768,7 +788,7 @@ namespace NeeView
         public List<string> CollectAnotherPlaylists()
         {
             return PlaylistHub.GetPlaylistFiles(true)
-                .Where(e => e != _playlistPath)
+                .Where(e => e != this.Path)
                 .ToList();
         }
 
@@ -776,7 +796,7 @@ namespace NeeView
         {
             if (path is null) return;
             if (items is null || !items.Any()) return;
-            if (path == _playlistPath) return;
+            if (path == this.Path) return;
 
             var playlist = Load(path, true);
             if (!playlist.IsEditable) return;
@@ -825,8 +845,7 @@ namespace NeeView
                 var newPath = FileIO.CreateUniquePath(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Path) ?? ".", newName.TrimStart() + System.IO.Path.GetExtension(Path)));
                 var oldPath = Path;
                 File.Move(oldPath, newPath);
-                Path = newPath;
-                RemoteCommandService.Current.Send(new RemoteCommand("RenamePlaylist", oldPath, newPath), RemoteCommandDelivery.All);
+                FileStamp = FileStamp.Create(newPath);
                 return true;
             }
             catch (Exception ex) when (useErrorDialog)
