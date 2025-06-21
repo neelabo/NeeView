@@ -627,7 +627,10 @@
                                     <local:ProgressRing x:Name="PART_ProgressRing" />
                                 </StackPanel>
                             </Grid>
-                            <TextBlock x:Name="PART_NowLoadingTiny" Text="{properties:TextBinding Word.NowLoading, StringFormat={}{0} ...}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Foreground="White" Background="#88000000" Padding="20,5" IsHitTestVisible="False"/>
+                            <StackPanel x:Name="PART_NowLoadingTiny" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right" Background="#88000000" IsHitTestVisible="False">
+                                <local:ProgressRing x:Name="PART_ProgressRingTiny" Radius="8" VerticalAlignment="Center" Foreground="White" Margin="10,0,0,0"/>
+                                <TextBlock x:Name="PART_NowLoadingTextTiny" Text="{properties:TextBinding Word.NowLoading}" Foreground="White" Padding="5,5,20,5" VerticalAlignment="Center"/>
+                            </StackPanel>
                         </Grid>
                     </Grid>
                 </ControlTemplate>

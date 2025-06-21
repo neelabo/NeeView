@@ -10,6 +10,12 @@
         Normal,
 
         [AliasName]
+        NormalIconOnly,
+
+        [AliasName]
         Tiny,
+
+        [AliasName]
+        TinyIconOnly,
     }
 }
