@@ -84,7 +84,8 @@ namespace NeeView
 #endif
 
             // 起動処理排他ロック取得。時間内 (30sec) に獲得できなければアプリ終了
-            var bootLock = await BootProcessLockAsync(30 * 1000);
+            var bootLock = new BootProcessLock(30 * 1000);
+            var bootLockKey = bootLock.Lock();
 
             this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
@@ -109,7 +110,7 @@ namespace NeeView
             catch (OperationCanceledException ex)
             {
                 Trace.WriteLine("InitializeCancelException: " + ex.Message);
-                bootLock.Dispose();
+                bootLockKey.Dispose();
 
                 if (ex is OperationCanceledWithDialogException dialogException)
                 {
@@ -121,6 +122,7 @@ namespace NeeView
             }
             finally
             {
+                bootLockKey.Dispose();
                 bootLock.Dispose();
             }
 
@@ -136,25 +138,6 @@ namespace NeeView
             mainWindow.Show();
 
             MessageDialog.IsShowInTaskBar = false;
-        }
-
-        /// <summary>
-        /// 排他起動処理用のロック取得
-        /// </summary>
-        /// <param name="timeout">タイムアウト時間(ms)</param>
-        /// <returns></returns>
-        /// <exception cref="TimeoutException"></exception>
-        private static async ValueTask<IDisposable> BootProcessLockAsync(int timeout)
-        {
-            try
-            {
-                return await BootProcessLock.LockAsync(timeout);
-            }
-            catch (TimeoutException ex)
-            {
-                var message = $"NeeView is terminated because it could not be started within {(int)(timeout / 1000)} seconds. Check Task Manager and terminate any other NeeView.exe processes that are still running.";
-                throw new TimeoutException(message, ex);
-            }
         }
 
         /// <summary> 

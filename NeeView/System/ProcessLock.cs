@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace NeeView
 {
     /// <summary>
-    /// プロセス間セマフォ
+    /// プロセス間ミューテックス
     /// </summary>
     public static class ProcessLock
     {
@@ -12,7 +12,7 @@ namespace NeeView
 
         static ProcessLock()
         {
-            _lock = new ProcessLockCore("NeeView.s001", 1000 * 10);
+            _lock = new ProcessLockCore("NeeView.m001", 1000 * 10);
         }
 
         public static IDisposable Lock()

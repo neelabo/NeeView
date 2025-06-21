@@ -4,25 +4,55 @@ using System.Threading.Tasks;
 namespace NeeView
 {
     /// <summary>
-    /// 起動時のプロセス間セマフォ
+    /// 起動時のプロセス間ミューテックス
     /// </summary>
-    public static class BootProcessLock
+    /// <remarks>
+    /// 起動時のみ使用するため Dispose できるようにしている
+    /// </remarks>
+    public class BootProcessLock : IDisposable
     {
-        private static readonly ProcessLockCore _lock;
+        private readonly int _timeout;
+        private readonly ProcessLockCore _lock;
+        private bool _disposedValue;
 
-        static BootProcessLock()
+        public BootProcessLock(int timeout)
         {
-            _lock = new ProcessLockCore("NeeView.boot", -1);
+            _timeout = timeout;
+            _lock = new ProcessLockCore("NeeView.boot", timeout);
         }
 
-        public static IDisposable Lock()
+        public IDisposable Lock()
         {
-            return _lock.Lock();
+            if (_disposedValue) throw new ObjectDisposedException(nameof(BootProcessLock));
+
+            try
+            {
+                return _lock.Lock();
+            }
+            catch (TimeoutException ex)
+            {
+                var message = $"NeeView is terminated because it could not be started within {_timeout / 1000} seconds. Check Task Manager and terminate any other NeeView.exe processes that are still running.";
+                throw new TimeoutException(message, ex);
+            }
         }
 
-        public static async ValueTask<IDisposable> LockAsync(int timeout)
+        protected virtual void Dispose(bool disposing)
         {
-            return await _lock.LockAsync(timeout);
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    _lock.Dispose();
+                }
+
+                _disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }
