@@ -189,7 +189,6 @@ namespace NeeView
             {
                 if (disposing)
                 {
-                    _box?.BookMementoControl.SaveBookMemento();
                     DetachPageFrameBoxContext();
                     ClearViewPages();
                 }
@@ -203,6 +202,13 @@ namespace NeeView
             GC.SuppressFinalize(this);
         }
 
+        public void ForceSaveBookMemento()
+        {
+            if (_box is null) return;
+
+            _box.BookMementoControl.IsPageChangeCountEnabled = false;
+            _box.BookMementoControl.SaveBookMemento();
+        }
 
         private void BookHub_LoadRequesting(object? sender, BookPathEventArgs e)
         {
@@ -432,9 +438,9 @@ namespace NeeView
             ViewContentChanged?.Invoke(this, e);
 
             if (e.State < ViewContentState.Loaded) return;
-            
+
             _viewContents = new List<ViewContent>(e.ViewContents);
-            
+
             var pages = e.ViewContents.Select(e => e.Page).Distinct().ToList();
             if (_viewPages.SequenceEqual(pages)) return;
 
@@ -480,7 +486,7 @@ namespace NeeView
         {
             ViewSizeChanged?.Invoke(this, e);
         }
-        
+
         private void Box_PagesChanged(object? sender, EventArgs e)
         {
             RaisePropertyChanged(nameof(Pages));

@@ -616,6 +616,8 @@ namespace NeeView
             if (_vm.IsClosing) return;
             _vm.IsClosing = true;
 
+            Trace.WriteLine($"Window.FinalizeMainWindow:");
+
             // ブック読み込み要求無効化
             BookHub.Current.IsEnabled = false;
 

@@ -20,11 +20,10 @@ namespace NeeView
         private readonly BookHistoryCollection _historyCollection;
         private bool _historyEntry;
         private bool _historyRemoved;
-        private bool _historyAddRequested;
         private bool _disposedValue;
         private readonly DisposableCollection _disposables = new();
-        private int _pageChangedCount;
-
+        private int _pageChangeCount;
+       
 
         public BookMementoControl(Book book, BookHistoryCollection historyCollection)
         {
@@ -34,6 +33,12 @@ namespace NeeView
             _disposables.Add(_book.SubscribeCurrentPageChanged(Book_CurrentPageChanged));
             _disposables.Add(_historyCollection.SubscribeHistoryChanged(BookHistoryCollection_HistoryChanged));
         }
+
+
+        /// <summary>
+        /// 履歴保存条件にページ変更回数を使用するかどうか
+        /// </summary>
+        public bool IsPageChangeCountEnabled { get; set; } = true;
 
 
         protected virtual void Dispose(bool disposing)
@@ -78,7 +83,7 @@ namespace NeeView
             if (e.IsTopPageChanged)
             {
                 LocalDebug.WriteLine("CurrentPageChanged");
-                _pageChangedCount++;
+                _pageChangeCount++;
                 _historyRemoved = false;
             }
 
@@ -90,7 +95,7 @@ namespace NeeView
         /// </summary>
         public void RequestSaveBookMemento()
         {
-            _historyAddRequested = true;
+            IsPageChangeCountEnabled = false;
             TrySaveBookMemento();
         }
 
@@ -145,7 +150,7 @@ namespace NeeView
             if (memento == null) return;
 
             // ブックマークの更新
-            BookmarkCollection.Current.Update(memento, _pageChangedCount > 1);
+            BookmarkCollection.Current.Update(memento, _pageChangeCount > 1);
 
             // 履歴の保存
             if (CanHistory(book))
@@ -169,7 +174,7 @@ namespace NeeView
 
             return !_historyRemoved
                 && book.Pages.Count > 0
-                && (_historyAddRequested || _historyEntry || _pageChangedCount >= historyEntryPageCount || book.CurrentPages.LastOrDefault() == book.Pages.Last())
+                && (!IsPageChangeCountEnabled || _historyEntry || _pageChangeCount >= historyEntryPageCount || book.CurrentPages.LastOrDefault() == book.Pages.Last())
                 && (Config.Current.History.IsInnerArchiveHistoryEnabled || book.Source.ArchiveEntryCollection.Archive?.Parent == null)
                 && (Config.Current.History.IsUncHistoryEnabled || !LoosePath.IsUnc(book.Path));
         }

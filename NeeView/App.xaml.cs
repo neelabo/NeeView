@@ -405,6 +405,8 @@ namespace NeeView
         {
             Trace.WriteLine($"App.SessionEnding: {e.ReasonSessionEnding}");
 
+            (this.MainWindow as MainWindow)?.FinalizeMainWindow();
+
             Terminate(false);
         }
 
@@ -418,6 +420,9 @@ namespace NeeView
 
             try
             {
+                // 現在のブックを履歴に保存
+                PageFrameBoxPresenter.Current.ForceSaveBookMemento();
+
                 // 各種Dispose
                 ApplicationDisposer.Current.Dispose();
 
