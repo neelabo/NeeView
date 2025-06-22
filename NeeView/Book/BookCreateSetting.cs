@@ -31,6 +31,11 @@
         public PageSortMode SortMode { get; set; }
 
         /// <summary>
+        /// ページの並び順用 乱数シード
+        /// </summary>
+        public int SortSeed { get; set; }
+
+        /// <summary>
         /// キャッシュ無効
         /// </summary>
         public bool IsIgnoreCache { get; set; }

@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace NeeView
 {
@@ -43,6 +44,10 @@ namespace NeeView
 
         // ページ並び順
         public PageSortMode SortMode { get; set; }
+
+        // ページ並び順用シード。PageSortMode.Random のときに使用する
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public int SortSeed { get; set; }
 
         // 自動回転
         public AutoRotateType AutoRotate { get; set; }

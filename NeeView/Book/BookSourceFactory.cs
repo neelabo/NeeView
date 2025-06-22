@@ -37,7 +37,7 @@ namespace NeeView
             var searchKeyword = address.TargetPath.Search ?? "";
 
             var pageCollection = new BookPageCollection(pages);
-            pageCollection.Initialize(sortMode, searchKeyword, token);
+            pageCollection.Initialize(sortMode, setting.SortSeed, searchKeyword, token);
             var book = new BookSource(archiveEntryCollection, pageCollection, bookMemoryService);
             book.SubFolderCount = subFolderCount;
 

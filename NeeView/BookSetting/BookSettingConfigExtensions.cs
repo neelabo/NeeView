@@ -18,6 +18,7 @@ namespace NeeView
             memento.IsSupportedWidePage = self.IsSupportedWidePage;
             memento.IsRecursiveFolder = self.IsRecursiveFolder;
             memento.SortMode = self.SortMode;
+            memento.SortSeed = 0;
             memento.AutoRotate = self.AutoRotate;
             memento.BaseScale = self.BaseScale;
 

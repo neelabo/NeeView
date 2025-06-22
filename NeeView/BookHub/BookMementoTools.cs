@@ -85,15 +85,24 @@ namespace NeeView
             var memory = CreateLatestBookMemento(path, latest);
             Debug.Assert(memory == null || memory.Path == path);
 
+            BookMemento memento;
             if (memory != null && option.HasFlag(BookLoadOption.Resume))
             {
-                return memory.Clone();
+                memento = memory.Clone();
             }
             else
             {
                 var restore = memory?.ToBookSetting();
-                return Config.Current.BookSettingPolicy.Mix(Config.Current.BookSettingDefault, Config.Current.BookSetting, restore, option.HasFlag(BookLoadOption.DefaultRecursive)).ToBookMemento();
+                memento = Config.Current.BookSettingPolicy.Mix(Config.Current.BookSettingDefault, Config.Current.BookSetting, restore, option.HasFlag(BookLoadOption.DefaultRecursive)).ToBookMemento();
             }
+
+            if (option.HasFlag(BookLoadOption.ReLoad) && memento.SortMode == PageSortMode.Random)
+            {
+                memento.Page = "";
+                memento.SortSeed = 0;
+            }
+
+            return memento;
         }
 
         /// <summary>

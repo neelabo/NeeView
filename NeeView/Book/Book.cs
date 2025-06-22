@@ -262,7 +262,7 @@ namespace NeeView
             var memento = new BookMemento
             {
                 Path = _source.Path,
-                Page = _source.Pages.SortMode != PageSortMode.Random ? this.CurrentPage?.EntryName ?? "" : "",
+                Page = this.CurrentPage?.EntryName ?? "",
 
                 PageMode = _setting.PageMode,
                 BookReadOrder = _setting.BookReadOrder,
@@ -272,6 +272,7 @@ namespace NeeView
                 IsSupportedWidePage = _setting.IsSupportedWidePage,
                 IsRecursiveFolder = _source.IsRecursiveFolder,
                 SortMode = _source.Pages.SortMode,
+                SortSeed = _source.Pages.SortSeed,
                 AutoRotate = _setting.AutoRotate,
                 BaseScale = _setting.BaseScale,
             };

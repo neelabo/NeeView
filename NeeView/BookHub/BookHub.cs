@@ -207,7 +207,7 @@ namespace NeeView
         /// <returns></returns>
         public BookHubCommandLoad? RequestLoad(object? sender, string? path, string? start, BookLoadOption option, bool isRefreshFolderList)
         {
-            return RequestLoad(sender, path, start, option, isRefreshFolderList, ArchiveHint.None, null); 
+            return RequestLoad(sender, path, start, option, isRefreshFolderList, ArchiveHint.None, null);
         }
 
         public BookHubCommandLoad? RequestLoad(object? sender, string? path, string? start, BookLoadOption option, bool isRefreshFolderList, ArchiveHint archiveHint, BookMemento? bookMemento)
@@ -335,7 +335,7 @@ namespace NeeView
             if (_isLoading || Address == null) return;
 
             var book = _book;
-            BookLoadOption options = book != null ? (book.LoadOption & BookLoadOption.KeepHistoryOrder) | BookLoadOption.Resume : BookLoadOption.None;
+            BookLoadOption options = book != null ? (book.LoadOption & BookLoadOption.KeepHistoryOrder) | BookLoadOption.Resume | BookLoadOption.ReLoad : BookLoadOption.None;
             ArchiveHint archiveHint = hint ?? (book != null ? book.ArchiveHint : ArchiveHint.None);
 
             var query = new QueryPath(Address, book?.Pages.SearchKeyword);
@@ -611,6 +611,7 @@ namespace NeeView
                 ArchiveRecursiveMode = Config.Current.System.ArchiveRecursiveMode,
                 BookPageCollectMode = Config.Current.System.BookPageCollectMode,
                 SortMode = memento.SortMode,
+                SortSeed = memento.SortSeed,
                 IsIgnoreCache = option.HasFlag(BookLoadOption.IgnoreCache),
                 IsNew = isNew,
                 LoadOption = option,
@@ -785,6 +786,6 @@ namespace NeeView
     }
 
 
-    
+
 }
 

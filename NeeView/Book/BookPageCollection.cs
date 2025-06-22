@@ -20,6 +20,7 @@ namespace NeeView
         private List<Archive> _sourceArchives;
         private List<Page> _sourcePages;
         private PageSortMode _sortMode = PageSortMode.Entry;
+        private int _sortSeed;
         private string _searchKeyword = "";
         private CancellationTokenSource? _sortCancellationTokenSource;
         private readonly Page _emptyPage;
@@ -115,6 +116,11 @@ namespace NeeView
             }
         }
 
+        public int SortSeed
+        {
+            get => _sortMode == PageSortMode.Random ? _sortSeed : 0;
+        }
+
         /// <summary>
         /// 検索キーワード
         /// </summary>
@@ -137,11 +143,12 @@ namespace NeeView
         /// <param name="sortMode">ソートモード</param>
         /// <param name="searchKeyword">検索キーワード</param>
         /// <param name="token"></param>
-        public void Initialize(PageSortMode sortMode, string searchKeyword, CancellationToken token)
+        public void Initialize(PageSortMode sortMode, int sortSeed, string searchKeyword, CancellationToken token)
         {
             _sortMode = sortMode;
+            _sortSeed = sortSeed;
             _searchKeyword = searchKeyword;
-            UpdatePages(_sortMode, _searchKeyword, token);
+            UpdatePages(_sortMode, _sortSeed, _searchKeyword, token);
         }
 
         #region IDisposable Support
@@ -309,7 +316,7 @@ namespace NeeView
             {
                 try
                 {
-                    UpdatePages(_sortMode, _searchKeyword, _sortCancellationTokenSource.Token);
+                    UpdatePages(_sortMode, 0, _searchKeyword, _sortCancellationTokenSource.Token);
                 }
                 catch (OperationCanceledException)
                 {
@@ -322,7 +329,7 @@ namespace NeeView
             });
         }
 
-        private void UpdatePages(PageSortMode sortMode, string searchKeyword, CancellationToken token)
+        private void UpdatePages(PageSortMode sortMode, int sortSeed, string searchKeyword, CancellationToken token)
         {
             if (_disposedValue) return;
             if (_sourcePages.Count <= 0) return;
@@ -333,7 +340,7 @@ namespace NeeView
 
                 //Debug.WriteLine($"Sort {sortMode} ...");
                 var pages = SelectSearchPages(_sourcePages, searchKeyword, token);
-                pages = SortPages(pages, sortMode, token);
+                pages = SortPages(pages, sortMode, sortSeed, token);
 
                 if (!pages.Any())
                 {
@@ -377,7 +384,7 @@ namespace NeeView
 
         #region ページの並び替え
 
-        private IEnumerable<Page> SortPages(IEnumerable<Page> pages, PageSortMode sortMode, CancellationToken token)
+        private IEnumerable<Page> SortPages(IEnumerable<Page> pages, PageSortMode sortMode, int sortSeed, CancellationToken token)
         {
             if (_disposedValue) return pages;
             if (!pages.Any()) return pages;
@@ -413,7 +420,8 @@ namespace NeeView
                     pages = orderSource.ThenByDescending(e => e.ArchiveEntry.Length).ThenBy(e => e, new ComparerFileName(token));
                     break;
                 case PageSortMode.Random:
-                    var random = new Random();
+                    _sortSeed = sortSeed != 0 ? sortSeed : Random.Shared.Next(1, int.MaxValue);
+                    var random = new Random(_sortSeed);
                     pages = orderSource.ThenBy(e => random.Next());
                     break;
                 case PageSortMode.Entry:
