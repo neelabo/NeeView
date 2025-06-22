@@ -8,6 +8,7 @@ namespace NeeView
     public class StartUpConfig : BindableBase
     {
         private string? _lastBookPath;
+        private BookMemento? _lastBookMement;
         private string? _lastFolderPath;
         private bool _isSplashScreenEnabled = true;
         private bool _isMultiBootEnabled;
@@ -89,10 +90,18 @@ namespace NeeView
         #region HiddenParameters
 
         [PropertyMapIgnore]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? LastBookPath
         {
             get { return IsOpenLastBook ? _lastBookPath : null; }
             set { SetProperty(ref _lastBookPath, value); }
+        }
+        
+        [PropertyMapIgnore]
+        public BookMemento? LastBookMemento
+        {
+            get { return _lastBookMement; }
+            set { SetProperty(ref _lastBookMement, value); }
         }
 
         [PropertyMapIgnore]

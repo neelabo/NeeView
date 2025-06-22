@@ -422,6 +422,7 @@ namespace NeeView
             {
                 // 現在のブックを履歴に保存
                 PageFrameBoxPresenter.Current.ForceSaveBookMemento();
+                PageFrameBoxPresenter.Current.SaveLastBookMemento();
 
                 // 各種Dispose
                 ApplicationDisposer.Current.Dispose();

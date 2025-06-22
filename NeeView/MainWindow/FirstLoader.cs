@@ -10,6 +10,7 @@ namespace NeeView
     public class FirstLoader
     {
         private List<string>? _bookPaths;
+        private BookMemento? _bookMemento;
         private string? _folderPath;
         private bool _isFolderLink;
         private BookLoadOption _bookLoadOptions;
@@ -23,6 +24,7 @@ namespace NeeView
             if (Config.Current.StartUp.LastBookPath?.StartsWith(Temporary.Current.TempRootPath, StringComparison.Ordinal) == true)
             {
                 Config.Current.StartUp.LastBookPath = null;
+                Config.Current.StartUp.LastBookMemento = null;
             }
 
             if (Config.Current.StartUp.LastFolderPath?.StartsWith(Temporary.Current.TempRootPath, StringComparison.Ordinal) == true)
@@ -34,6 +36,10 @@ namespace NeeView
             SetFolderPlace();
             LoadBook();
             LoadFolder();
+
+            // 起動ブック情報をクリアする
+            Config.Current.StartUp.LastBookPath = null;
+            Config.Current.StartUp.LastBookMemento = null;
         }
 
         private void SetBookPlace()
@@ -54,11 +60,15 @@ namespace NeeView
             // 最後に開いたブックを復元する
             if (Config.Current.StartUp.IsOpenLastBook)
             {
-                var path = Config.Current.StartUp.LastBookPath;
+                var path = Config.Current.StartUp.LastBookPath ?? Config.Current.StartUp.LastBookMemento?.Path;
                 if (path != null)
                 {
                     _bookPaths = new List<string> { path };
                     _bookLoadOptions = BookLoadOption.Resume | BookLoadOption.IsBook;
+                    if (Config.Current.StartUp.LastBookMemento?.Path == path)
+                    {
+                        _bookMemento = Config.Current.StartUp.LastBookMemento;
+                    }
 
                     if (_folderPath == null && Config.Current.StartUp.LastFolderPath != null)
                     {
@@ -125,7 +135,7 @@ namespace NeeView
             if (_bookPaths != null)
             {
                 var options = _bookLoadOptions | BookLoadOption.FocusOnLoaded;
-                BookHubTools.RequestLoad(this, _bookPaths, options, _folderPath == null);
+                BookHubTools.RequestLoad(this, _bookPaths, options, _folderPath == null, _bookMemento);
             }
         }
 

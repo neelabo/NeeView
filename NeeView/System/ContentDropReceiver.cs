@@ -120,7 +120,7 @@ namespace NeeView
 
         private void LoadFiles(object sender, List<string> files)
         {
-            BookHubTools.RequestLoad(sender, files, BookLoadOption.FocusOnLoaded, true);
+            BookHubTools.RequestLoad(sender, files, BookLoadOption.FocusOnLoaded, true, null);
         }
 
         // ドロップ受付判定

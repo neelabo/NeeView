@@ -124,16 +124,39 @@ namespace NeeView
             }
         }
 
-        // 設定の保存
+        /// <summary>
+        /// 設定の作成
+        /// </summary>
+        /// <returns></returns>
+        public BookMemento? CreateBookMement()
+        {
+            var book = _book;
+            if (book is null)
+            {
+                return null;
+            }
+
+            return  BookMementoTools.CreateBookMemento(book);
+        }
+
+        /// <summary>
+        /// 設定の保存
+        /// </summary>
         public void SaveBookMemento()
         {
             var book = _book;
-            if (book is null) return;
+            if (book is null)
+            {
+                return;
+            }
 
             SaveBookMemento(book);
         }
 
-        //設定の保存
+        /// <summary>
+        /// 設定の保存
+        /// </summary>
+        /// <param name="book"></param>
         private void SaveBookMemento(Book book)
         {
             if (book is null) return;

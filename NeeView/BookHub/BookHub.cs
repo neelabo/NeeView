@@ -130,7 +130,6 @@ namespace NeeView
                 if (_address != value)
                 {
                     _address = value;
-                    Config.Current.StartUp.LastBookPath = Address;
                     AddressChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
@@ -208,10 +207,10 @@ namespace NeeView
         /// <returns></returns>
         public BookHubCommandLoad? RequestLoad(object? sender, string? path, string? start, BookLoadOption option, bool isRefreshFolderList)
         {
-            return RequestLoad(sender, path, start, option, isRefreshFolderList, ArchiveHint.None); 
+            return RequestLoad(sender, path, start, option, isRefreshFolderList, ArchiveHint.None, null); 
         }
 
-        public BookHubCommandLoad? RequestLoad(object? sender, string? path, string? start, BookLoadOption option, bool isRefreshFolderList, ArchiveHint archiveHint)
+        public BookHubCommandLoad? RequestLoad(object? sender, string? path, string? start, BookLoadOption option, bool isRefreshFolderList, ArchiveHint archiveHint, BookMemento? bookMemento)
         {
             if (path == null) return null;
 
@@ -259,7 +258,8 @@ namespace NeeView
                 StartEntry = start,
                 Option = option,
                 IsRefreshFolderList = isRefreshFolderList,
-                ArchiveHint = archiveHint
+                ArchiveHint = archiveHint,
+                BookMemento = bookMemento
             });
 
             command.Completed += JobCommand_Completed;
@@ -339,7 +339,7 @@ namespace NeeView
             ArchiveHint archiveHint = hint ?? (book != null ? book.ArchiveHint : ArchiveHint.None);
 
             var query = new QueryPath(Address, book?.Pages.SearchKeyword);
-            RequestLoad(sender, query.SimpleQuery, start, options | BookLoadOption.IsBook | BookLoadOption.IgnoreCache, false, archiveHint);
+            RequestLoad(sender, query.SimpleQuery, start, options | BookLoadOption.IsBook | BookLoadOption.IgnoreCache, false, archiveHint, null);
         }
 
         // 上の階層に移動可能？
@@ -440,7 +440,7 @@ namespace NeeView
                 }
 
                 // 本の設定
-                var setting = BookMementoTools.CreateOpenBookMemento(address.TargetPath.SimplePath, lastBookMemento, args.Option);
+                var setting = args.BookMemento ?? BookMementoTools.CreateOpenBookMemento(address.TargetPath.SimplePath, lastBookMemento, args.Option);
 
                 // 最終ページなら初期化？
                 bool isResetLastPage = address.EntryName == null && Config.Current.BookSettingPolicy.Page == BookSettingPageSelectMode.RestoreOrDefaultReset;

@@ -53,6 +53,7 @@ namespace NeeView
         public BookLoadOption Option { get; set; }
         public bool IsRefreshFolderList { get; set; }
         public ArchiveHint ArchiveHint { get; set; } = ArchiveHint.None;
+        public BookMemento? BookMemento { get; set; }
     }
 
     /// <summary>

@@ -1,4 +1,10 @@
-﻿using System;
+﻿using NeeLaboratory.ComponentModel;
+using NeeLaboratory.Generators;
+using NeeLaboratory.Threading.Tasks;
+using NeeView.ComponentModel;
+using NeeView.PageFrames;
+using NeeView.Windows;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -6,12 +12,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using NeeLaboratory.ComponentModel;
-using NeeLaboratory.Generators;
-using NeeLaboratory.Threading.Tasks;
-using NeeView.ComponentModel;
-using NeeView.PageFrames;
-using NeeView.Windows;
 
 namespace NeeView
 {
@@ -202,12 +202,26 @@ namespace NeeView
             GC.SuppressFinalize(this);
         }
 
+        /// <summary>
+        /// ページ変更回数を無視して履歴保存を実行する
+        /// </summary>
         public void ForceSaveBookMemento()
         {
             if (_box is null) return;
 
             _box.BookMementoControl.IsPageChangeCountEnabled = false;
             _box.BookMementoControl.SaveBookMemento();
+        }
+
+        /// <summary>
+        /// 最後に開いたブックを記憶する
+        /// </summary>
+        public void SaveLastBookMemento()
+        {
+            if (_box is null) return;
+
+            var bookMemento = _box.BookMementoControl.CreateBookMement();
+            Config.Current.StartUp.LastBookMemento = bookMemento;
         }
 
         private void BookHub_LoadRequesting(object? sender, BookPathEventArgs e)

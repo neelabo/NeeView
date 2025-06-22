@@ -14,7 +14,7 @@ namespace NeeView
         /// </remarks>
         public static string? RequestLoad(object sender, IEnumerable<string> paths)
         {
-            return RequestLoad(sender, paths, BookLoadOption.None, true);
+            return RequestLoad(sender, paths, BookLoadOption.None, true, null);
         }
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace NeeView
         /// <remarks>
         /// 複数ファイルの場合はプレイリスト化して本棚の場所として開く
         /// </remarks>
-        public static string? RequestLoad(object sender, IEnumerable<string> paths, BookLoadOption options, bool isRefreshFolderList)
+        public static string? RequestLoad(object sender, IEnumerable<string> paths, BookLoadOption options, bool isRefreshFolderList, BookMemento? bookMemento)
         {
             if (paths is null) return null;
 
@@ -37,7 +37,7 @@ namespace NeeView
                 ExportDataPresenter.Current.Import(parameter);
                 return null;
             }
-            
+
             if (paths.Count() >= 2)
             {
                 var path = PlaylistSourceTools.CreateTempPlaylist(paths);
@@ -51,7 +51,7 @@ namespace NeeView
             else
             {
                 var path = paths.First();
-                BookHub.Current.RequestLoad(sender, path, null, options, isRefreshFolderList);
+                BookHub.Current.RequestLoad(sender, path, null, options, isRefreshFolderList, ArchiveHint.None, bookMemento);
                 return path;
             }
         }

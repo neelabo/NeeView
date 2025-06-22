@@ -61,7 +61,7 @@ namespace NeeView
         public void Load(string path, ArchiveHint archiveHint)
         {
             if (path == null) return;
-            BookHub.Current?.RequestLoad(this, path, null, BookLoadOption.KeepHistoryOrder | BookLoadOption.SkipSamePlace | BookLoadOption.IsBook, true, archiveHint);
+            BookHub.Current?.RequestLoad(this, path, null, BookLoadOption.KeepHistoryOrder | BookLoadOption.SkipSamePlace | BookLoadOption.IsBook, true, archiveHint, null);
         }
 
         public bool IsLRKeyEnabled()

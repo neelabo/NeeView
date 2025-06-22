@@ -1538,7 +1538,7 @@ namespace NeeView
 
             var query = item.TargetPath;
             var additionalOption = BookLoadOption.IsBook | BookLoadOption.KeepArchiveHint | (item.CanRemove() ? BookLoadOption.None : BookLoadOption.Undeletable);
-            BookHub.Current.RequestLoad(this, query.SimplePath, null, option | additionalOption, IsSyncBookshelfEnabled, archiveHint);
+            BookHub.Current.RequestLoad(this, query.SimplePath, null, option | additionalOption, IsSyncBookshelfEnabled, archiveHint, null);
         }
 
         /// <summary>
