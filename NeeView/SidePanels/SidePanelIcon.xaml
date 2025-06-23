@@ -20,8 +20,7 @@
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="ToolTip" Value="{Binding Title}" />
-            <Setter Property="ToolTipService.ShowDuration" Value="1000" />
-            <Setter Property="ToolTipService.Placement" Value="Bottom" />
+            <Setter Property="ToolTipService.Placement" Value="Right" />
         </Style>
 
         <Style x:Key="ContextMenuItemStyle" TargetType="MenuItem">

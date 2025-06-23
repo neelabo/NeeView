@@ -36,8 +36,6 @@
             <Style  x:Key="NameStyle" TargetType="TextBlock" BasedOn="{StaticResource NameStyleBase}">
                 <Setter Property="Margin" Value="5,0"/>
                 <Setter Property="ToolTip" Value="{Binding Detail}"/>
-                <Setter Property="ToolTipService.InitialShowDelay" Value="1000"/>
-                <Setter Property="ToolTipService.BetweenShowDelay" Value="1000" />
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:FolderListBox}, Path=IsToolTipEnabled}" Value="False">
                         <Setter Property="ToolTip" Value="{x:Null}"/>
@@ -77,8 +75,6 @@
 
             <Style x:Key="ThumbnailStackPanelStyle" TargetType="StackPanel" >
                 <Setter Property="ToolTip" Value="{Binding Detail}"/>
-                <Setter Property="ToolTipService.InitialShowDelay" Value="1000"/>
-                <Setter Property="ToolTipService.BetweenShowDelay" Value="1000" />
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:FolderListBox}, Path=IsToolTipEnabled}" Value="False">
                         <Setter Property="ToolTip" Value="{x:Null}"/>

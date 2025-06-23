@@ -93,7 +93,6 @@
             <Setter Property="Height" Value="30"/>
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-            <Setter Property="ToolTipService.ShowDuration" Value="1000" />
             <Setter Property="ToolTipService.Placement" Value="Bottom" />
         </Style>
 

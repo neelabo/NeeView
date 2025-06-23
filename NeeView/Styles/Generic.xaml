@@ -53,8 +53,7 @@
                         <Rectangle HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderOptions.BitmapScalingMode="HighQuality" UseLayoutRounding="True"
                                 Width="{TemplateBinding Width}"
                                 Height="{TemplateBinding Height}"
-                                ToolTipService.IsEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsUniqueImage, Converter={StaticResource ContentProfileToolTopEnableConverter}}"
-                                ToolTipService.InitialShowDelay="1000">
+                                ToolTipService.IsEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsUniqueImage, Converter={StaticResource ContentProfileToolTopEnableConverter}}">
                             <Rectangle.Fill>
                                 <ImageBrush ImageSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.ImageSource, Converter={StaticResource ImageSourceToThumbnailConverter}}"
                                     Stretch="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsNormalImage, Converter={StaticResource BooleanToContentStretchConverter}}"
@@ -89,8 +88,7 @@
                         <Rectangle HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderOptions.BitmapScalingMode="HighQuality" UseLayoutRounding="True"
                                 Width="{TemplateBinding Width}"
                                 Height="{TemplateBinding Height}"
-                                ToolTipService.IsEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsUniqueImage, Converter={StaticResource BannerProfileToolTopEnableConverter}}"
-                                ToolTipService.InitialShowDelay="1000">
+                                ToolTipService.IsEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsUniqueImage, Converter={StaticResource BannerProfileToolTopEnableConverter}}">
                             <Rectangle.Fill>
                                 <ImageBrush ImageSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.ImageSource, Converter={StaticResource ImageSourceToThumbnailConverter}}"
                                     Stretch="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsNormalImage, Converter={StaticResource BooleanToBannerStretchConverter}}"
@@ -124,8 +122,7 @@
                         <Rectangle HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderOptions.BitmapScalingMode="HighQuality" UseLayoutRounding="True"
                                 Width="{TemplateBinding Width}"
                                 Height="{TemplateBinding Height}"
-                                ToolTipService.IsEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsUniqueImage, Converter={StaticResource ThumbnailProfileToolTopEnableConverter}}"
-                                ToolTipService.InitialShowDelay="1000">
+                                ToolTipService.IsEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsUniqueImage, Converter={StaticResource ThumbnailProfileToolTopEnableConverter}}">
                             <Rectangle.Fill>
                                 <ImageBrush x:Name="PART_ImageBrush" ImageSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.ImageSource, Converter={StaticResource ImageSourceToThumbnailConverter}}"
                                         Stretch="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsNormalImage, Converter={StaticResource BooleanToThumbnailStretchConverter}}"

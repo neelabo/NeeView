@@ -21,8 +21,6 @@
         <Style x:Key="NameStyle" TargetType="TextBlock">
             <Setter Property="Text" Value="{Binding Name}" />
             <Setter Property="ToolTip" Value="{Binding Detail}" />
-            <Setter Property="ToolTipService.InitialShowDelay" Value="1000" />
-            <Setter Property="ToolTipService.BetweenShowDelay" Value="1000" />
             <Setter Property="Margin" Value="5,0" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -62,8 +60,6 @@
 
         <Style x:Key="ThumbnailStackPanelStyle" TargetType="StackPanel" >
             <Setter Property="ToolTip" Value="{Binding Detail}"/>
-            <Setter Property="ToolTipService.InitialShowDelay" Value="1000"/>
-            <Setter Property="ToolTipService.BetweenShowDelay" Value="1000" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:HistoryListBox}, Path=IsToolTipEnabled}" Value="False">
                     <Setter Property="ToolTip" Value="{x:Null}"/>

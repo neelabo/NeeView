@@ -62,8 +62,6 @@
             <Style x:Key="NameStyle" TargetType="TextBlock">
                 <Setter Property="Text" Value="{Binding Name}" />
                 <Setter Property="ToolTip" Value="{Binding Path}" />
-                <Setter Property="ToolTipService.InitialShowDelay" Value="1000" />
-                <Setter Property="ToolTipService.BetweenShowDelay" Value="1000" />
                 <Setter Property="Margin" Value="5,0" />
                 <Setter Property="HorizontalAlignment" Value="Left" />
                 <Setter Property="VerticalAlignment" Value="Center" />
@@ -163,7 +161,7 @@
             </DataTemplate>
 
             <DataTemplate x:Key="ThumbnailTemplate">
-                <StackPanel Margin="5" Width="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.ShapeWidth}" ToolTip="{Binding Path}" ToolTipService.InitialShowDelay="1000">
+                <StackPanel Margin="5" Width="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.ShapeWidth}" ToolTip="{Binding Path}">
                     <Grid>
                         <local:PanelListThumbnailImage Thumbnail="{Binding ArchivePage.Thumbnail}" />
                         <StackPanel Style="{StaticResource OverrideIconStackPanelStyle}">
