@@ -15,7 +15,7 @@ using System.Windows.Input;
 
 namespace NeeView
 {
-    public class PlaylistListBoxViewModel : BindableBase
+    public class PlaylistListBoxViewModel : BindableBase 
     {
         private Playlist? _model;
         private ObservableCollection<PlaylistItem>? _items;
@@ -51,6 +51,8 @@ namespace NeeView
 
             _thumbnailItemSize = new PanelThumbnailItemSize(Config.Current.Panels.ThumbnailItemProfile, 5.0 + 1.0, 4.0 + 1.0, new Size(18.0, 18.0));
             _thumbnailItemSize.AddPropertyChanged(nameof(PanelThumbnailItemSize.ItemSize), (s, e) => RaisePropertyChanged(nameof(ThumbnailItemSize)));
+
+            DetailToolTip = new PanelListItemDetailToolTip(Config.Current.Playlist);
         }
 
 
@@ -124,6 +126,8 @@ namespace NeeView
             get { return Config.Current.Playlist.PanelListItemStyle; }
             set { Config.Current.Playlist.PanelListItemStyle = value; }
         }
+
+        public PanelListItemDetailToolTip DetailToolTip { get; }
 
 
         private void UpdateIsFirstIn()

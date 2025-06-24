@@ -35,13 +35,6 @@
 
             <Style  x:Key="NameStyle" TargetType="TextBlock" BasedOn="{StaticResource NameStyleBase}">
                 <Setter Property="Margin" Value="5,0"/>
-                <Setter Property="ToolTip" Value="{Binding Detail}"/>
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:FolderListBox}, Path=IsToolTipEnabled}" Value="False">
-                        <Setter Property="ToolTip" Value="{x:Null}"/>
-                        <Setter Property="ToolTipService.IsEnabled" Value="False"/>
-                    </DataTrigger>
-                </Style.Triggers>
             </Style>
 
             <Style x:Key="NormalNameStyle" TargetType="TextBlock"  BasedOn="{StaticResource NameStyle}">
@@ -71,16 +64,6 @@
                 <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
                 <Setter Property="Foreground" Value="{DynamicResource Panel.Note}"/>
                 <Setter Property="Visibility" Value="{Binding Foreground, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource BrushAlphaToVisibilityConverter}}" />
-            </Style>
-
-            <Style x:Key="ThumbnailStackPanelStyle" TargetType="StackPanel" >
-                <Setter Property="ToolTip" Value="{Binding Detail}"/>
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:FolderListBox}, Path=IsToolTipEnabled}" Value="False">
-                        <Setter Property="ToolTip" Value="{x:Null}"/>
-                        <Setter Property="ToolTipService.IsEnabled" Value="False"/>
-                    </DataTrigger>
-                </Style.Triggers>
             </Style>
 
             <Style x:Key="VerticalSelectedStyle" TargetType="Rectangle">
@@ -140,7 +123,7 @@
             </DataTemplate>
 
             <DataTemplate x:Key="ThumbnailTemplate">
-                <StackPanel Margin="5" Width="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.ShapeWidth}" Style="{StaticResource ThumbnailStackPanelStyle}">
+                <StackPanel Margin="5" Width="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.ShapeWidth}">
                     <local:PanelListThumbnailImage Thumbnail="{Binding Thumbnail}" Opacity="{Binding PendingCount, Converter={StaticResource PendingCountToOpacityConverter}}" />
                     <Rectangle DockPanel.Dock="Bottom" Style="{StaticResource HorizontalSelectedStyle}" Margin="-5,0,-5,1" />
                     <DockPanel>
@@ -169,6 +152,11 @@
                         <ContextMenu />
                     </Setter.Value>
                 </Setter>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ElementName=Root, Path=DataContext.DetailToolTip.IsEnabled}" Value="True">
+                        <Setter Property="ToolTip" Value="{Binding Detail}"/>
+                    </DataTrigger>
+                </Style.Triggers>
             </Style>
 
             <Style x:Key="ListBoxItemBorderStyle" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource ListBoxItemStyle}">

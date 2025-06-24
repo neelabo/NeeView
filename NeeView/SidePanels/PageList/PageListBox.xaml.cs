@@ -26,7 +26,7 @@ namespace NeeView
     /// <summary>
     /// PageListBox.xaml の相互作用ロジック
     /// </summary>
-    public partial class PageListBox : UserControl, IPageListPanel, IDisposable, IToolTipService
+    public partial class PageListBox : UserControl, IPageListPanel, IDisposable
     {
         public static readonly string DragDropFormat = FormatVersion.CreateFormatName(Environment.ProcessId.ToString(CultureInfo.InvariantCulture), nameof(PageListBox));
 
@@ -45,7 +45,7 @@ namespace NeeView
         {
             InitializeComponent();
 
-            _commandResource = new PageListItemCommandResource(this);
+            _commandResource = new PageListItemCommandResource(vm.DetailToolTip);
             InitializeCommand();
 
             _vm = vm;
@@ -63,16 +63,6 @@ namespace NeeView
 
             _disposables.Add(PageFrameBoxPresenter.Current.SubscribeIsSortBusyChanged(PageFrameBox_IsSortBusyChanged));
         }
-
-
-        public bool IsToolTipEnabled
-        {
-            get { return (bool)GetValue(IsToolTipEnabledProperty); }
-            set { SetValue(IsToolTipEnabledProperty, value); }
-        }
-
-        public static readonly DependencyProperty IsToolTipEnabledProperty =
-            DependencyProperty.Register("IsToolTipEnabled", typeof(bool), typeof(PageListBox), new PropertyMetadata(true));
 
 
         protected virtual void Dispose(bool disposing)

@@ -35,6 +35,8 @@ namespace NeeView
 
             _thumbnailItemSize = new PanelThumbnailItemSize(Config.Current.Panels.ThumbnailItemProfile, 5.0 + 1.0, 4.0 + 1.0, new Size(18.0, 18.0));
             _thumbnailItemSize.SubscribePropertyChanged(nameof(_thumbnailItemSize.ItemSize), (s, e) => RaisePropertyChanged(nameof(ThumbnailItemSize)));
+
+            DetailToolTip = new PanelListItemDetailToolTip(folderList.FolderListConfig);
         }
 
 
@@ -59,6 +61,8 @@ namespace NeeView
         public bool IsThumbnailVisible => _model.IsThumbnailVisible;
 
         public Size ThumbnailItemSize => _thumbnailItemSize.ItemSize;
+
+        public PanelListItemDetailToolTip DetailToolTip { get; }
 
 
         #region RelayCommands

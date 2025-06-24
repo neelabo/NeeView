@@ -29,10 +29,10 @@ namespace NeeView
     /// </summary>
     public class PanelListItemProfile : BindableBase
     {
-        public static readonly PanelListItemProfile DefaultNormalItemProfile = new(PanelListItemImageShape.Square, 0, false, true, false);
-        public static readonly PanelListItemProfile DefaultContentItemProfile = new(PanelListItemImageShape.Square, 64, true, true, false);
-        public static readonly PanelListItemProfile DefaultBannerItemProfile = new(PanelListItemImageShape.Banner, 200, false, true, false);
-        public static readonly PanelListItemProfile DefaultThumbnailItemProfile = new(PanelListItemImageShape.Original, 128, false, true, true);
+        public static readonly PanelListItemProfile DefaultNormalItemProfile = new(PanelListItemImageShape.Square, 0, true, false, true, false);
+        public static readonly PanelListItemProfile DefaultContentItemProfile = new(PanelListItemImageShape.Square, 64, true, true, true, false);
+        public static readonly PanelListItemProfile DefaultBannerItemProfile = new(PanelListItemImageShape.Banner, 200, true, false, true, false);
+        public static readonly PanelListItemProfile DefaultThumbnailItemProfile = new(PanelListItemImageShape.Original, 128, true, false, true, true);
 
         private static Rect _rectDefault = new(0, 0, 1, 1);
         private static Rect _rectBanner = new(0, 0, 1, 0.6);
@@ -40,6 +40,7 @@ namespace NeeView
 
         private PanelListItemImageShape _imageShape;
         private int _imageWidth;
+        private bool _isDetailPopupEnabled = true;
         private bool _isImagePopupEnabled;
         private bool _isTextVisible;
         private bool _isTextWrapped;
@@ -51,10 +52,11 @@ namespace NeeView
         {
         }
 
-        public PanelListItemProfile(PanelListItemImageShape imageShape, int imageWidth, bool isImagePopupEnabled, bool isTextVisible, bool isTextWrapped)
+        public PanelListItemProfile(PanelListItemImageShape imageShape, int imageWidth, bool isDetailPopupEnalbed, bool isImagePopupEnabled, bool isTextVisible, bool isTextWrapped)
         {
             _imageShape = imageShape;
             _imageWidth = imageWidth;
+            _isDetailPopupEnabled = isDetailPopupEnalbed;
             _isImagePopupEnabled = isImagePopupEnabled;
             _isTextVisible = isTextVisible;
             _isTextWrapped = isTextWrapped;
@@ -91,6 +93,13 @@ namespace NeeView
                     RaisePropertyChanged(nameof(ShapeHeight));
                 }
             }
+        }
+
+        [PropertyMember]
+        public bool IsDetailPopupEnabled
+        {
+            get { return _isDetailPopupEnabled; }
+            set { SetProperty(ref _isDetailPopupEnabled, value); }
         }
 
         [PropertyMember]

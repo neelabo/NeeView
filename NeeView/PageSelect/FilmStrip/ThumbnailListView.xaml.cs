@@ -93,7 +93,7 @@ namespace NeeView
         {
             InitializeComponent();
 
-            _commandResource = new ThumbnailListItemCommandResource();
+            _commandResource = new ThumbnailListItemCommandResource(ThumbnailListItemDetailToolTip.Current);
             InitializeCommand();
 
             this.Root.IsVisibleChanged +=
@@ -154,7 +154,7 @@ namespace NeeView
         {
             this.Source.VisibleElement = this;
 
-            _vm = new ThumbnailListViewModel(this.Source);
+            _vm = new ThumbnailListViewModel(this.Source, ThumbnailListItemDetailToolTip.Current);
 
             _vm.CollectionChanging +=
                 (s, e) => ViewModel_CollectionChanging(s, e);

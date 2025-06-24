@@ -32,6 +32,8 @@ namespace NeeView
             Config.Current.PageList.AddPropertyChanged(nameof(PageListConfig.IsGroupBy),
                 (s, e) => UpdateGroupBy());
             UpdateItems();
+
+            DetailToolTip = new PanelListItemDetailToolTip(Config.Current.PageList);
         }
 
 
@@ -52,6 +54,8 @@ namespace NeeView
         public CollectionViewSource CollectionViewSource { get; }
 
         public bool IsGroupBy => Config.Current.PageList.IsGroupBy;
+
+        public PanelListItemDetailToolTip DetailToolTip { get; }
 
 
         private void Model_CollectionChanged(object? sender, EventArgs e)

@@ -28,6 +28,8 @@ namespace NeeView
 
             _thumbnailItemSize = new PanelThumbnailItemSize(Config.Current.Panels.ThumbnailItemProfile, 5.0 + 1.0, 4.0 + 1.0, new Size(18.0, 18.0));
             _thumbnailItemSize.AddPropertyChanged(nameof(PanelThumbnailItemSize.ItemSize), (s, e) => RaisePropertyChanged(nameof(ThumbnailItemSize)));
+
+            DetailToolTip = new PanelListItemDetailToolTip(Config.Current.History);
         }
 
 
@@ -46,6 +48,8 @@ namespace NeeView
             get => _model.SelectedItem;
             set => _model.SelectedItem = value;
         }
+
+        public PanelListItemDetailToolTip DetailToolTip { get; }
 
 
         public void Remove(IEnumerable<BookHistory> items)

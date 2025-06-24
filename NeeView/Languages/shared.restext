@@ -191,6 +191,7 @@ ExportImageWindow.IsDotKeep=@ExportImageCommandParameter.IsDotKeep
 ExportImageWindow.Mode=@ExportImageCommandParameter.Mode
 ExportPlaylistErrorDialog.Title=@Playlist.FailedToSave
 ExternalAppAccessor.ArchivePolicy=@ArchivePolicy
+FilmStripConfig.IsDetailPopupEnabled=@PanelListItemProfile.IsDetailPopupEnabled
 FolderListConfig.PanelListItemStyle=@PanelListItemStyle
 FolderTree.Menu.Delete=@Menu.Delete
 FolderTree.Menu.Explorer=@Menu.Explorer

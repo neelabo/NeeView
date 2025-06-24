@@ -27,7 +27,7 @@ namespace NeeView
     /// <summary>
     /// PlaylistListBox.xaml の相互作用ロジック
     /// </summary>
-    public partial class PlaylistListBox : UserControl, IPageListPanel, IDisposable, IToolTipService
+    public partial class PlaylistListBox : UserControl, IPageListPanel, IDisposable
     {
         private readonly PlaylistListBoxViewModel _vm;
         private readonly PlaylistListBoxInsertDropAssist _dropAssist;
@@ -63,16 +63,6 @@ namespace NeeView
             this.ListBox.DragOver += ListBox_DragOver;
             this.ListBox.Drop += ListBox_Drop;
         }
-
-
-        public bool IsToolTipEnabled
-        {
-            get { return (bool)GetValue(IsToolTipEnabledProperty); }
-            set { SetValue(IsToolTipEnabledProperty, value); }
-        }
-
-        public static readonly DependencyProperty IsToolTipEnabledProperty =
-            DependencyProperty.Register("IsToolTipEnabled", typeof(bool), typeof(PlaylistListBox), new PropertyMetadata(true));
 
 
         #region Commands
@@ -198,7 +188,7 @@ namespace NeeView
         {
             if (this.ListBox.SelectedItem is not PlaylistItem item) return;
 
-            var renamer = new PlaylistItemRenamer(this.ListBox, this, (s, e) => _vm.Rename(s, e));
+            var renamer = new PlaylistItemRenamer(this.ListBox, _vm.DetailToolTip, (s, e) => _vm.Rename(s, e));
             await renamer.RenameAsync(item);
         }
 

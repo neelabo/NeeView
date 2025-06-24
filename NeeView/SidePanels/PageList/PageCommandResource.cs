@@ -14,7 +14,7 @@ namespace NeeView
     public class PageCommandResource<TItem>
         where TItem : class, IRenameable
     {
-        private readonly IToolTipService? _toolTipService;
+        private IToolTipService? _toolTipService;
 
         public PageCommandResource()
         {

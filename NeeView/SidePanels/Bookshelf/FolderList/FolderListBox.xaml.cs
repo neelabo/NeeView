@@ -24,7 +24,7 @@ namespace NeeView
     /// <summary>
     /// FolderListBox.xaml の相互作用ロジック
     /// </summary>
-    public partial class FolderListBox : UserControl, IPageListPanel, IDisposable, IToolTipService
+    public partial class FolderListBox : UserControl, IPageListPanel, IDisposable
     {
         private readonly FolderListBoxViewModel _vm;
         private readonly FolderListBoxInsertDropAssist _dropAssist;
@@ -70,17 +70,6 @@ namespace NeeView
             this.ListBox.DragOver += ListBox_DragOver;
             this.ListBox.Drop += ListBox_Drop;
         }
-
-
-        public bool IsToolTipEnabled
-        {
-            get { return (bool)GetValue(IsToolTipEnabledProperty); }
-            set { SetValue(IsToolTipEnabledProperty, value); }
-        }
-
-        public static readonly DependencyProperty IsToolTipEnabledProperty =
-            DependencyProperty.Register("IsToolTipEnabled", typeof(bool), typeof(FolderListBox), new PropertyMetadata(true));
-
 
 
         // フォーカス可能フラグ
@@ -463,7 +452,7 @@ namespace NeeView
             var listBox = this.ListBox;
             if (listBox.SelectedItem is not FolderItem item) return;
 
-            var renamer = new FolderItemRenamer(listBox, this);
+            var renamer = new FolderItemRenamer(listBox, _vm.DetailToolTip);
             renamer.SelectedItemChanged += (s, e) =>
             {
                 if (listBox.SelectedItem is FolderItem item)

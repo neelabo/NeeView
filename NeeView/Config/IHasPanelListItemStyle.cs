@@ -1,6 +1,8 @@
-﻿namespace NeeView
+﻿using System.ComponentModel;
+
+namespace NeeView
 {
-    public interface IHasPanelListItemStyle
+    public interface IHasPanelListItemStyle : INotifyPropertyChanged
     {
         PanelListItemStyle PanelListItemStyle { get; set; }
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -171,6 +172,25 @@ namespace NeeView
             get { return _pendingCount; }
         }
 
+        public string Detail
+        {
+            get
+            {
+                var s = new StringBuilder();
+                s.AppendLine(BookPath);
+                if (ArchiveEntry.Archive is not MediaArchive)
+                {
+                    s.AppendLine(EntryName);
+                }
+                s.Append(LastWriteTime.ToString());
+                if (Length >= 0)
+                {
+                    s.AppendLine();
+                    s.Append($"{Length / 1024:N0} KB");
+                }
+                return s.ToString();
+            }
+        }
 
         #region Thumbnail
 
@@ -408,6 +428,7 @@ namespace NeeView
             RaisePropertyChanged(nameof(EntrySmartName));
             RaisePropertyChanged(nameof(EntryFullName));
             RaisePropertyChanged(nameof(TargetPath));
+            RaisePropertyChanged(nameof(Detail));
         }
 
         public string GetMetaValue(string key, CancellationToken token)

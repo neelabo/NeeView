@@ -2,6 +2,7 @@
 using NeeView.Collections;
 using NeeView.IO;
 using System;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace NeeView
@@ -38,6 +39,7 @@ namespace NeeView
                     _item.Path = ValidPath(value);
                     RaisePropertyChanged();
                     RaisePropertyChanged(nameof(Name));
+                    RaisePropertyChanged(nameof(Detail));
                 }
             }
         }
@@ -133,6 +135,19 @@ namespace NeeView
                 return _archivePage;
             }
         }
+
+        public string Detail
+        {
+            get
+            {
+                var s = new StringBuilder();
+                s.AppendLine(Path);
+                s.AppendLine(DisplayPlace);
+                s.Append(Name);
+                return s.ToString();
+            }
+        }
+
 
         private void Thumbnail_Touched(object? sender, EventArgs e)
         {

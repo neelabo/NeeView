@@ -226,10 +226,32 @@ namespace NeeView
                 return _iconOverlay;
             }
         }
-        
+
         public string? TargetPlace { get; set; }
 
-        public string? Detail => TargetPlace is not null ? $"{TargetPlace}\n{Name}" : Name;
+        public string? Detail
+        {
+            get
+            {
+                var s = new StringBuilder();
+                if (TargetPlace is not null)
+                {
+                    s.AppendLine(TargetPlace);
+                }
+                s.Append(Name);
+                if (LastWriteTime != default)
+                {
+                    s.AppendLine();
+                    s.Append(LastWriteTime.ToString());
+                }
+                if (Length >= 0)
+                {
+                    s.AppendLine();
+                    s.Append($"{Length / 1024:N0} KB");
+                }
+                return s.ToString();
+            }
+        }
 
 
         public abstract IThumbnail? Thumbnail { get; }
@@ -278,7 +300,7 @@ namespace NeeView
         public bool IsDrive() => (Attributes & FolderItemAttribute.Drive) == FolderItemAttribute.Drive;
         public bool IsEmpty() => (Attributes & FolderItemAttribute.Empty) == FolderItemAttribute.Empty;
         public bool IsDisable() => IsDirectory && !IsReady;
-        public bool IsBookmark() => (Attributes & FolderItemAttribute.Bookmark) == FolderItemAttribute.Bookmark; 
+        public bool IsBookmark() => (Attributes & FolderItemAttribute.Bookmark) == FolderItemAttribute.Bookmark;
         public bool IsFileSystem() => (Attributes & (FolderItemAttribute.System | FolderItemAttribute.Bookmark | FolderItemAttribute.QuickAccess | FolderItemAttribute.Empty | FolderItemAttribute.None)) == 0;
 
         // FolderCollection上のパス

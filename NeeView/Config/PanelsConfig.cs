@@ -149,6 +149,9 @@ namespace NeeView
             set { SetProperty(ref _isTextSearchEnabled, value); }
         }
 
+        [PropertyMapLabel("@Word.StyleNormal")]
+        public PanelListItemProfile NormalItemProfile { get; set; } = PanelListItemProfile.DefaultNormalItemProfile.Clone();
+
         [PropertyMapLabel("@Word.StyleContent")]
         public PanelListItemProfile ContentItemProfile { get; set; } = PanelListItemProfile.DefaultContentItemProfile.Clone();
 
@@ -252,7 +255,20 @@ namespace NeeView
 
         #endregion Obsolete
 
+
+        public PanelListItemProfile GetPanelListItemProfile(PanelListItemStyle style)
+        {
+            return style switch
+            {
+                PanelListItemStyle.Normal => NormalItemProfile,
+                PanelListItemStyle.Content => ContentItemProfile,
+                PanelListItemStyle.Banner => BannerItemProfile,
+                PanelListItemStyle.Thumbnail => ThumbnailItemProfile,
+                _ => throw new ArgumentOutOfRangeException(),
+            };
+        }
     }
+
 
     public enum PanelDock
     {

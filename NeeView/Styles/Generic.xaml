@@ -53,6 +53,7 @@
                         <Rectangle HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderOptions.BitmapScalingMode="HighQuality" UseLayoutRounding="True"
                                 Width="{TemplateBinding Width}"
                                 Height="{TemplateBinding Height}"
+                                ToolTipService.Placement="Left"
                                 ToolTipService.IsEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsUniqueImage, Converter={StaticResource ContentProfileToolTopEnableConverter}}">
                             <Rectangle.Fill>
                                 <ImageBrush ImageSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.ImageSource, Converter={StaticResource ImageSourceToThumbnailConverter}}"

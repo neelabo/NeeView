@@ -55,7 +55,6 @@
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="ToolTip" Value="{Binding EntryFullName}"/>
             <Setter Property="Text">
                 <Setter.Value>
                     <MultiBinding Converter="{StaticResource PageNameFormatConverter}">
@@ -65,12 +64,6 @@
                     </MultiBinding>
                 </Setter.Value>
             </Setter>
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=local:PageListBox}, Path=IsToolTipEnabled}" Value="False">
-                    <Setter Property="ToolTip" Value="{x:Null}"/>
-                    <Setter Property="ToolTipService.IsEnabled" Value="False"/>
-                </DataTrigger>
-            </Style.Triggers>
         </Style>
 
         <Style x:Key="NormalNameStyle" TargetType="TextBlock" BasedOn="{StaticResource NameStyle}">
@@ -89,7 +82,6 @@
         <Style x:Key="ThumbnailNameStyle" TargetType="TextBlock" BasedOn="{StaticResource NameStyle}">
             <Setter Property="TextWrapping" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.IsTextWrapped, Converter={StaticResource BooleanToTextWrappingConverter}}"/>
             <Setter Property="Height" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.TextHeight}"/>
-            <Setter Property="ToolTip" Value="{x:Null}"/>
         </Style>
 
         <Style x:Key="ThumbnailTextDockPanelStyle" TargetType="DockPanel">
@@ -188,7 +180,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="ThumbnailTemplate">
-            <StackPanel Margin="5" Width="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.ShapeWidth}" ToolTip="{Binding EntryFullName}">
+            <StackPanel Margin="5" Width="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.ShapeWidth}">
                 <Grid>
                     <local:PanelListThumbnailImage Thumbnail="{Binding Thumbnail}" Opacity="{Binding PendingCount, Converter={StaticResource PendingCountToOpacityConverter}}" />
                     <StackPanel Style="{StaticResource OverrideIconStackPanelStyle}">
@@ -216,6 +208,11 @@
                     <ContextMenu />
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=Root, Path=DataContext.DetailToolTip.IsEnabled}" Value="True">
+                    <Setter Property="ToolTip" Value="{Binding Detail}"/>
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
 
         <Style x:Key="ListBoxItemBorderStyle" TargetType="ListBoxItem" BasedOn="{StaticResource ListBoxItemStyle}">

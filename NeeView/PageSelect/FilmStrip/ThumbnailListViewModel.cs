@@ -16,7 +16,7 @@ namespace NeeView
         private ThumbnailList _model;
 
 
-        public ThumbnailListViewModel(ThumbnailList model)
+        public ThumbnailListViewModel(ThumbnailList model, ThumbnailListItemDetailToolTip detailToolTip)
         {
             _model = model ?? throw new InvalidOperationException();
 
@@ -28,6 +28,8 @@ namespace NeeView
 
             _model.ViewItemsChanged +=
                 (s, e) => AppDispatcher.Invoke(() => ViewItemsChanged?.Invoke(s, e));
+
+            DetailToolTip = detailToolTip;
         }
 
 
@@ -41,6 +43,8 @@ namespace NeeView
             get { return _model; }
             set { if (_model != value) { _model = value; RaisePropertyChanged(); } }
         }
+
+        public ThumbnailListItemDetailToolTip DetailToolTip { get; }
 
 
         public void MoveWheel(int delta, bool isDirectionReverse)

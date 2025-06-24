@@ -21,7 +21,7 @@
     </UserControl.Resources>
 
     <Grid x:Name="Root" Visibility="{Binding Model.ThumbnailListVisibility}" SizeChanged="ThumbnailListArea_SizeChanged" UseLayoutRounding="True">
-        
+
         <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource BottomBar.Border}" Background="{DynamicResource BottomBar.Background}">
             <Border.Style>
                 <Style TargetType="Border">
@@ -43,7 +43,7 @@
                 </Style>
             </Border.Style>
         </Border>
-        
+
         <ListBox x:Name="ThumbnailListBox" ItemsSource="{Binding Model.Items, NotifyOnTargetUpdated=True}" ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                              SelectionMode="Extended"
                              SelectedIndex="{Binding Model.SelectedIndex}"
@@ -121,6 +121,11 @@
                             <ContextMenu />
                         </Setter.Value>
                     </Setter>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=Root, Path=DataContext.DetailToolTip.IsEnabled}" Value="True">
+                            <Setter Property="ToolTip" Value="{Binding Detail}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
                 </Style>
 
             </ListBox.Resources>

@@ -16,6 +16,7 @@ namespace NeeView
         private bool _isManipulationBoundaryFeedbackEnabled = true;
         private bool _isVisiblePlaylistMark;
         private bool _isWheelMovePage;
+        private bool _isDetailPopupEnabled = true;
 
 
         /// <summary>
@@ -97,6 +98,17 @@ namespace NeeView
             get { return _isWheelMovePage; }
             set { SetProperty(ref _isWheelMovePage, value); }
         }
+
+        /// <summary>
+        /// 詳細ポップアップ
+        /// </summary>
+        [PropertyMember]
+        public bool IsDetailPopupEnabled
+        {
+            get { return _isDetailPopupEnabled; }
+            set { SetProperty(ref _isDetailPopupEnabled, value); }
+        }
+
 
         #region Obsolete
 
