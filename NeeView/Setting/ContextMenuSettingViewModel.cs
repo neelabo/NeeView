@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Linq;
+using NeeView.Collections.Generic;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,243 +10,204 @@ namespace NeeView.Setting
 {
     public class ContextMenuSettingViewModel : BindableBase
     {
-        private MenuTree? _root;
-        private ContextMenuSetting? _contextMenuSetting;
-        private List<MenuTree> _sourceElementList;
-        private int _commandTableChangeCount;
-        private int _selectedElementIndex;
+        private MenuTree? _menuTree;
+        private ContextMenuSource? _contextMenuSource;
 
 
         public ContextMenuSettingViewModel()
         {
             if (CommandTable.Current == null) throw new InvalidOperationException();
-
-            _commandTableChangeCount = CommandTable.Current.ChangeCount;
-            _sourceElementList = CreateSourceElementList();
-            _selectedElementIndex = 0;
         }
 
 
-        public MenuTree? Root
+        public MenuTree? MenuTree
         {
-            get { return _root; }
-            set { SetProperty(ref _root, value); }
+            get { return _menuTree; }
+            set { SetProperty(ref _menuTree, value); }
         }
 
 
-        public List<MenuTree> SourceElementList
+        public void Initialize(ContextMenuSource contextMenuSetting)
         {
-            get { return _sourceElementList; }
-            private set { SetProperty(ref _sourceElementList, value); }
+            _contextMenuSource = contextMenuSetting;
+
+            MenuTree = _contextMenuSource.MenuTree;
         }
 
-
-        public int SelectedElementIndex
-        {
-            get { return _selectedElementIndex; }
-            set { SetProperty(ref _selectedElementIndex, value); }
-        }
-
-
-        public void UpdateSource()
-        {
-            if (_commandTableChangeCount != CommandTable.Current.ChangeCount)
-            {
-                _commandTableChangeCount = CommandTable.Current.ChangeCount;
-                this.SourceElementList = CreateSourceElementList();
-                this.SelectedElementIndex = 0;
-
-                this.Root?.RaisePropertyChangedAll();
-            }
-        }
-
-        private static List<MenuTree> CreateSourceElementList()
-        {
-            var list = CommandTable.Current.Values
-            .OrderBy(e => e.Order)
-            .GroupBy(e => e.Group)
-            .SelectMany(g => g)
-            .Select(e => new MenuTree() { MenuElementType = MenuElementType.Command, CommandName = e.Name })
-            .ToList();
-
-            list.Insert(0, new MenuTree() { MenuElementType = MenuElementType.Group });
-            list.Insert(1, new MenuTree() { MenuElementType = MenuElementType.Separator });
-
-            return list;
-        }
-
-        public void Initialize(ContextMenuSetting contextMenuSetting)
-        {
-            _contextMenuSetting = contextMenuSetting;
-
-            Root = _contextMenuSetting.SourceTree.Clone();
-
-            // validate
-            Root.MenuElementType = MenuElementType.Group;
-            Root.Validate();
-        }
-
-        public void Decide()
-        {
-            if (_contextMenuSetting is null || Root is null) return;
-
-            _contextMenuSetting.SourceTree = Root.IsEqual(MenuTree.CreateDefault()) ? null : Root;
-        }
 
         public void Reset()
         {
-            Root = MenuTree.CreateDefault();
-
-            Decide();
+            MenuTree?.Reset();
         }
 
-        private static ObservableCollection<MenuTree>? GetParentCollection(ObservableCollection<MenuTree> collection, MenuTree target)
+
+        public TreeListNode<MenuElement>? Add(TreeListNode<MenuElement> element, TreeListNode<MenuElement> target)
         {
-            if (collection.Contains(target)) return collection;
+            if (MenuTree is null) return null;
+            if (target.Value.MenuElementType != MenuElementType.Group) return null;
 
-            foreach (var children in collection.Select(e => e.Children).WhereNotNull())
-            {
-                var parent = GetParentCollection(children, target);
-                if (parent != null) return parent;
-            }
-
-            return null;
-        }
-
-        public void AddNode(MenuTree element, MenuTree? target)
-        {
-            if (Root is null) return;
-
-            if (target == null)
-            {
-                if (Root.Children is null) throw new InvalidOperationException();
-                Root.Children.Add(element);
-            }
-            else if (target.Children != null && target.IsExpanded)
-            {
-                target.Children.Insert(0, element);
-            }
-            else
-            {
-                var parent = target.GetParent(Root);
-                if (parent != null)
-                {
-                    if (parent.Children is null) throw new InvalidOperationException();
-                    int index = parent.Children.IndexOf(target);
-                    parent.Children.Insert(index + 1, element);
-                }
-            }
-
+            target.Add(element);
+            target.IsExpanded = true;
             element.IsSelected = true;
-            Root.Validate();
+            MenuTree.Validate();
 
-            Decide();
+            return element;
         }
 
-        public void RemoveNode(MenuTree target)
+        public void RemoveSelf(TreeListNode<MenuElement> target)
         {
-            if (Root is null) return;
+            if (MenuTree is null) return;
 
-            var parent = target.GetParent(Root);
+            var parent = target.Parent;
             if (parent != null)
             {
                 if (parent.Children is null) throw new InvalidOperationException();
 
-                var next = target.GetNext(Root, false) ?? target.GetPrev(Root);
+                var next = target.GetNext(false) ?? target.GetPrev();
 
-                parent.Children.Remove(target);
-                parent.Validate();
+                parent.Remove(target);
+                MenuTreeTools.Validate(parent);
 
                 if (next != null) next.IsSelected = true;
-
-                Decide();
             }
         }
 
-        public void RenameNode(MenuTree target, string name)
+        public void Move(TreeListNode<MenuElement> src, TreeListNode<MenuElement> dst, int delta)
         {
-            target.Label = name;
+            if (MenuTree is null) return;
 
-            Decide();
-        }
-
-        public void MoveUp(MenuTree target)
-        {
-            if (Root is null) return;
-
-            var targetParent = target.GetParent(Root);
-            if (targetParent?.Children is null) throw new InvalidOperationException();
-
-            var prev = target.GetPrev(Root);
-            if (prev != null && prev != Root)
+            if (src == dst)
             {
-                var prevParent = prev.GetParent(Root);
-                if (prevParent?.Children is null) throw new InvalidOperationException();
+                return;
+            }
 
-                if (targetParent == prevParent)
+            // 子に移動
+            if (delta == 0)
+            {
+                var parent = dst;
+                if (parent is null)
                 {
-                    int index = targetParent.Children.IndexOf(target);
-                    targetParent.Children.Move(index, index - 1);
+                    return;
                 }
-                else if (targetParent == prev)
+                parent.IsExpanded = true;
+                MenuTree.Move(parent, src, -1);
+                MenuTree.Validate();
+            }
+
+            // 階層をまたいだ移動
+            else if (src.Parent != dst.Parent)
+            {
+                var parent = dst.Parent;
+                if (parent is null)
                 {
-                    targetParent.Children.Remove(target);
-                    int index = prevParent.Children.IndexOf(prev);
-                    prevParent.Children.Insert(index, target);
+                    return;
+                }
+
+                var dstIndex = parent.Children.IndexOf(dst);
+                if (dstIndex < 0)
+                {
+                    return;
+                }
+
+                if (delta > 0)
+                {
+                    dstIndex++;
+                }
+
+                MenuTree.Move(parent, src, dstIndex);
+                MenuTree.Validate();
+            }
+
+            // 同一階層での移動
+            else
+            {
+                var parent = src.Parent;
+                if (parent is null)
+                {
+                    return;
+                }
+
+                var srcIndex = parent.Children.IndexOf(src);
+                if (srcIndex < 0)
+                {
+                    return;
+                }
+                var dstIndex = parent.Children.IndexOf(dst);
+                if (dstIndex < 0)
+                {
+                    return;
+                }
+
+                if (srcIndex < dstIndex)
+                {
+                    if (delta < 0)
+                    {
+                        dstIndex -= 1;
+                    }
                 }
                 else
                 {
-                    targetParent.Children.Remove(target);
-                    int index = prevParent.Children.IndexOf(prev);
-                    prevParent.Children.Insert(index + 1, target);
+                    if (delta > 0)
+                    {
+                        dstIndex += 1;
+                    }
                 }
 
-                target.IsSelected = true;
-                Root.Validate();
-
-                Decide();
+                MenuTree.Move(parent, srcIndex, dstIndex);
+                MenuTree.Validate();
             }
         }
 
-        public void MoveDown(MenuTree target)
+        public void Copy(TreeListNode<MenuElement> src, TreeListNode<MenuElement> dst, int delta)
         {
-            if (Root is null) return;
+            if (MenuTree is null) return;
 
-            var targetParent = target.GetParent(Root);
-            if (targetParent?.Children is null) throw new InvalidOperationException();
-
-            var next = target.GetNext(Root);
-            if (next != null && next != Root)
+            if (src == dst)
             {
-                var nextParent = next.GetParent(Root);
-                if (nextParent?.Children is null) throw new InvalidOperationException();
+                return;
+            }
 
-                if (targetParent == nextParent)
+            // 子にコピー
+            if (delta == 0)
+            {
+                var parent = dst;
+                if (parent is null)
                 {
-                    if (next.IsExpanded)
-                    {
-                        if (next?.Children is null) throw new InvalidOperationException();
-                        targetParent.Children.Remove(target);
-                        next.Children.Insert(0, target);
-                    }
-                    else
-                    {
-                        int index = targetParent.Children.IndexOf(target);
-                        targetParent.Children.Move(index, index + 1);
-                    }
+                    return;
                 }
-                else
+                parent.IsExpanded = true;
+                var clone = src.Clone();
+                MenuTree.Add(parent, clone);
+                MenuTree.Validate();
+                clone.IsSelected = true;
+            }
+
+            // 前後にコピー
+            else
+            {
+                var parent = dst.Parent;
+                if (parent is null)
                 {
-                    targetParent.Children.Remove(target);
-                    int index = nextParent.Children.IndexOf(next);
-                    nextParent.Children.Insert(index, target);
+                    return;
                 }
 
-                target.IsSelected = true;
-                Root.Validate();
+                var dstIndex = parent.Children.IndexOf(dst);
+                if (dstIndex < 0)
+                {
+                    return;
+                }
 
-                Decide();
+                if (delta > 0)
+                {
+                    dstIndex++;
+                }
+
+                var clone = src.Clone();
+                MenuTree.Insert(parent, dstIndex, clone);
+                MenuTree.Validate();
+                clone.IsSelected = true;
             }
         }
+
     }
 }

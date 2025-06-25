@@ -26,7 +26,7 @@ namespace NeeView
             {
                 Format = new FormatVersion(Environment.SolutionName),
                 Config = Config.Current,
-                ContextMenu = ContextMenuManager.Current.CreateContextMenuNode(),
+                ContextMenu = ContextMenuSource.Current.CreateContextMenuNode(),
                 SusiePlugins = SusiePluginManager.Current.CreateSusiePluginCollection(),
                 DragActions = DragActionTable.Current.CreateDragActionCollection(trim),
                 Commands = CommandTable.Current.CreateCommandCollectionMemento(trim),
@@ -133,7 +133,7 @@ namespace NeeView
             DragActionTable.Current.RestoreDragActionCollection(setting.DragActions);
 
             // コンテキストメニュー設定反映
-            ContextMenuManager.Current.Restore(setting.ContextMenu);
+            ContextMenuSource.Current.Restore(setting.ContextMenu);
 
             // SusiePlugins反映
             SusiePluginManager.Current.RestoreSusiePluginCollection(setting.SusiePlugins);

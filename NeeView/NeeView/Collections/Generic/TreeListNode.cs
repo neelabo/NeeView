@@ -179,6 +179,60 @@ namespace NeeView.Collections.Generic
             _parent?.OnRoutedCollectionChanged(sender, e);
         }
 
+        /// <summary>
+        /// ツリー構造の次のノードを取得します。必要に応じて展開された子ノードも考慮します。
+        /// </summary>
+        public TreeListNode<T>? GetNext(bool isUseExpand = true)
+        {
+            // TODO: 再設計が必要
+            var parent = this.Parent;
+            if (parent == null) return null;
+            if (parent.Children is null) throw new InvalidOperationException();
+
+            if (isUseExpand && this.IsExpanded && this.Children is not null)
+            {
+                return this.Children.First();
+            }
+            else if (parent.Children.Last() == this)
+            {
+                return parent.GetNext(false);
+            }
+            else
+            {
+                int index = parent.Children.IndexOf(this);
+                return parent.Children[index + 1];
+            }
+        }
+
+        /// <summary>
+        /// ツリー構造の前のノードを取得します。
+        /// </summary>
+        public TreeListNode<T>? GetPrev()
+        {
+            // TODO: 再設計が必要
+            var parent = Parent;
+            if (parent == null) return null;
+            if (parent.Children is null) throw new InvalidOperationException();
+
+            if (parent.Children.First() == this)
+            {
+                return parent;
+            }
+            else
+            {
+                int index = parent.Children.IndexOf(this);
+                var prev = parent.Children[index - 1];
+                return prev.GetLastChild();
+            }
+        }
+
+        private TreeListNode<T>? GetLastChild()
+        {
+            if (!this.IsExpanded) return this;
+            if (this.Children is null) return this;
+            return this.Children.Last().GetLastChild();
+        }
+
         public bool ParentContains(TreeListNode<T> target)
         {
             if (target == null) throw new ArgumentNullException(nameof(target));

@@ -707,7 +707,7 @@ namespace NeeView.Setting
         {
             var control = new ContextMenuSettingControl()
             {
-                ContextMenuSetting = ContextMenuManager.Current
+                ContextMenuSetting = ContextMenuSource.Current
             };
 
             return control;

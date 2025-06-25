@@ -45,6 +45,11 @@ namespace NeeView.ComponentModel
             return (rect.EdgeMin(orientation) + rect.EdgeMax(orientation)) * 0.5;
         }
 
+        public static Rect Translate(this Rect rect, double dx, double dy)
+        {
+            return new Rect(rect.X + dx, rect.Y + dy, rect.Width, rect.Height);
+        }
+
         public static Rect InflateValid(this Rect rect, double dx, double dy)
         {
             double x;

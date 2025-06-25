@@ -20,7 +20,7 @@ namespace NeeView.Setting
     /// <summary>
     /// SettingWindow.xaml の相互作用ロジック
     /// </summary>
-    public partial class SettingWindow : Window
+    public partial class SettingWindow : Window, IHasRenameManager
     {
         /// <summary>
         /// このウィンドウが存在する間だけ設定されるインスタンス
@@ -52,6 +52,10 @@ namespace NeeView.Setting
             this.DataContext = _vm;
 
             _vm.AddPropertyChanged(nameof(SettingWindowViewModel.CurrentPage), UpdateIndexTreeSelected);
+
+            // cancel rename triggers
+            this.MouseLeftButtonDown += (s, e) => this.RenameManager.CloseAll();
+            this.MouseRightButtonDown += (s, e) => this.RenameManager.CloseAll();
         }
 
 
@@ -115,6 +119,11 @@ namespace NeeView.Setting
             {
                 settingPage.IsSelected = false;
             }
+        }
+
+        public RenameManager GetRenameManager()
+        {
+            return this.RenameManager;
         }
     }
 }

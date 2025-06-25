@@ -33,8 +33,8 @@ namespace NeeView
                 (s, e) => RaisePropertyChanged(nameof(MainViewMargin)));
 
             // context menu
-            ContextMenuManager.Current.AddPropertyChanged(nameof(ContextMenuManager.Current.SourceTree),
-                (s, e) => SetContextMenuDirty());
+            ContextMenuSource.Current.ContextMenuChanged +=
+                (s, e) => SetContextMenuDirty();
 
             RoutedCommandTable.Current.Changed +=
                 (s, e) => SetContextMenuDirty();
@@ -130,7 +130,7 @@ namespace NeeView
             _isContextMenuDirty = false;
 
             _contextMenu.Items.Clear();
-            foreach (var item in ContextMenuManager.Current.CreateContextMenuItems())
+            foreach (var item in ContextMenuSource.Current.CreateContextMenuItems())
             {
                 _contextMenu.Items.Add(item);
             }

@@ -288,7 +288,8 @@ namespace NeeView.Windows
                     if (window.Content is UIElement root && _adornerVisual != null)
                     {
                         layer = AdornerLayer.GetAdornerLayer(root);
-                        _dragGhost = new DragAdorner(root, _adornerVisual, 0.5, dragCount, _dragStartPos);
+                        var offset = (Vector)root.TranslatePoint(new Point(0, 0), window);
+                        _dragGhost = new DragAdorner(root, _adornerVisual, 0.5, dragCount, _dragStartPos + offset);
                         layer.Add(_dragGhost);
                     }
                 }

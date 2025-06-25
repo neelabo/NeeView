@@ -27,6 +27,11 @@ namespace NeeView.Collections.Generic
             Root = new TreeListNode<T>(rootValue);
         }
 
+        public TreeCollection(TreeListNode<T> root)
+        {
+            Root = root;
+        }
+
 
         [Subscribable]
         public event EventHandler<TreeCollectionChangeEventArgs<T>>? CollectionChanged;

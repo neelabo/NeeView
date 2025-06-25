@@ -39,18 +39,17 @@ namespace NeeView
                 node.AddNode(new TagNode("p").AddText("Version " + Environment.ApplicationVersion));
             }
 
-            if (menuTree.Children is null) throw new InvalidOperationException("menuTree.Children must not be null");
-            foreach (var group in menuTree.Children)
+            foreach (var group in menuTree.Root.Children)
             {
-                node.AddNode(new TagNode("h3").AddText(group.DisplayLabel));
+                node.AddNode(new TagNode("h3").AddText(group.Value.DisplayLabel));
 
                 var table = new TagNode("table");
                 if (group.Children is null) throw new InvalidOperationException("group.Children must not be null");
-                foreach (var item in group.GetTable(0))
+                foreach (var item in MenuTreeTools.GetMenuTable(group, 0))
                 {
                     table.AddNode(new TagNode("tr")
-                        .AddNode(new TagNode("td").AddText(item.Element.DisplayLabel))
-                        .AddNode(new TagNode("td").AddText(item.Element.Note)));
+                        .AddNode(new TagNode("td").AddText(item.Element.Value.DisplayLabel))
+                        .AddNode(new TagNode("td").AddText(item.Element.Value.Note)));
                 }
                 node.AddNode(table);
             }

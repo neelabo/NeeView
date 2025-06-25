@@ -14,6 +14,7 @@ namespace NeeView.Windows
         protected readonly FrameworkElement _itemsControl;
         private readonly DropAssistProfile _profile;
         private RectangleAdorner? _adorner;
+        private Vector _adornerElementOffset;
 
 
         public InsertDropAssist(FrameworkElement itemsControl, DropAssistProfile profile)
@@ -40,7 +41,12 @@ namespace NeeView.Windows
         {
             if (_adorner is null)
             {
-                _adorner = new RectangleAdorner(_profile.GetAdornerTarget(_itemsControl)) { IsClipEnabled = true };
+                var adornerElement = _profile.GetAdornerTarget(_itemsControl);
+                _adorner = new RectangleAdorner(adornerElement) { IsClipEnabled = true };
+                if (adornerElement != _itemsControl)
+                {
+                    _adornerElementOffset = (Vector)adornerElement.TranslatePoint(new Point(0, 0), _itemsControl); 
+                }
             }
             return _adorner;
         }
@@ -265,7 +271,7 @@ namespace NeeView.Windows
 
         private Rect GetElementRect(FrameworkElement element)
         {
-            var p0 = element.TranslatePoint(new Point(0, 0), _itemsControl);
+            var p0 = element.TranslatePoint(new Point(0, 0), _itemsControl) - _adornerElementOffset;
             var rect = new Rect(p0.X, p0.Y, element.ActualWidth, element.ActualHeight);
             return _profile.AdjustElementRect(rect);
         }
