@@ -25,12 +25,30 @@ namespace NeeView
             AttachProfile(_panelListItemSource.PanelListItemStyle);
         }
 
+        /// <summary>
+        /// テキスト部での詳細ポップアップ有効
+        /// </summary>
         public bool IsEnabled
         {
             get
             {
                 if (_profile == null) return false;
-                return _profile.IsDetailPopupEnabled && _isToolTipEnabled;
+                return _isToolTipEnabled && _profile.IsDetailPopupEnabled;
+            }
+        }
+
+        /// <summary>
+        /// パネル全体での詳細ポップアップ有効
+        /// </summary>
+        /// <remarks>
+        /// テキスト部が非表示でかつ画像ポップアップが無効な場合のみ
+        /// </remarks>
+        public bool IsPanelEnabled
+        {
+            get
+            {
+                if (_profile == null) return false;
+                return _isToolTipEnabled && _profile.IsDetailPopupEnabled && !_profile.IsTextVisible && !_profile.IsImagePopupEnabled;
             }
         }
 
@@ -43,6 +61,7 @@ namespace NeeView
                 if (SetProperty(ref _isToolTipEnabled, value))
                 {
                     RaisePropertyChanged(nameof(IsEnabled));
+                    RaisePropertyChanged(nameof(IsPanelEnabled));
                 }
             }
         }
@@ -79,9 +98,15 @@ namespace NeeView
 
         private void Profile_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == nameof(PanelListItemProfile.IsDetailPopupEnabled))
+            var isEnabledChanged = string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == nameof(PanelListItemProfile.IsDetailPopupEnabled);
+
+            if (isEnabledChanged)
             {
                 RaisePropertyChanged(nameof(IsEnabled));
+            }
+            if (isEnabledChanged || e.PropertyName == nameof(PanelListItemProfile.IsTextVisible) || e.PropertyName == nameof(PanelListItemProfile.IsImagePopupEnabled))
+            {
+                RaisePropertyChanged(nameof(IsPanelEnabled));
             }
         }
 

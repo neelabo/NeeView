@@ -57,27 +57,41 @@
             <Setter Property="Visibility" Value="{Binding Foreground, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource BrushAlphaToVisibilityConverter}}" />
         </Style>
 
+        <Style x:Key="DetailToolTipDockPanel" TargetType="{x:Type DockPanel}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=ListBox, Path=DataContext.DetailToolTip.IsEnabled}" Value="True">
+                    <Setter Property="ToolTip" Value="{Binding Detail}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="DetailToolTipBasePanel" TargetType="{x:Type Panel}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=ListBox, Path=DataContext.DetailToolTip.IsPanelEnabled}" Value="True">
+                    <Setter Property="ToolTip" Value="{Binding Detail}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
         <DataTemplate x:Key="NormalTemplate">
-            <Grid MinHeight="20">
+            <DockPanel Style="{StaticResource DetailToolTipDockPanel}" MinHeight="20">
                 <TextBlock Style="{StaticResource NormalNameStyle}" Margin="5,1" />
-            </Grid>
+            </DockPanel>
         </DataTemplate>
 
         <DataTemplate x:Key="ContentTemplace">
             <DockPanel Margin="2">
-                <DockPanel>
-                    <local:PanelListContentImage Thumbnail="{Binding Thumbnail}" />
-                    <StackPanel VerticalAlignment="Center">
-                        <TextBlock x:Name="DateTime" Style="{StaticResource NoteTextStyle}" Text="{Binding LastAccessTime, Converter={StaticResource DateTimeToStringConverter}}"/>
-                        <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource ContentNameStyle}" />
-                    </StackPanel>
+                <local:PanelListContentImage Thumbnail="{Binding Thumbnail}" />
+                <DockPanel Style="{StaticResource DetailToolTipDockPanel}" VerticalAlignment="Center">
+                    <TextBlock x:Name="DateTime" DockPanel.Dock="Top" Style="{StaticResource NoteTextStyle}" Text="{Binding LastAccessTime, Converter={StaticResource DateTimeToStringConverter}}"/>
+                    <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource ContentNameStyle}" />
                 </DockPanel>
             </DockPanel>
         </DataTemplate>
 
         <DataTemplate x:Key="BannerTemplate">
             <DockPanel Margin="0" HorizontalAlignment="Stretch" LastChildFill="False">
-                <DockPanel DockPanel.Dock="Bottom" Margin="2">
+                <DockPanel Style="{StaticResource DetailToolTipDockPanel}" DockPanel.Dock="Bottom" Margin="2">
                     <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource BannerrNameStyle}" />
                 </DockPanel>
                 <local:PanelListBannerImage Thumbnail="{Binding Thumbnail}" />
@@ -85,10 +99,10 @@
         </DataTemplate>
 
         <DataTemplate x:Key="ThumbnailTemplate">
-            <StackPanel Margin="5" Width="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.ShapeWidth}">
+            <StackPanel Style="{StaticResource DetailToolTipBasePanel}" Margin="5" Width="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.ShapeWidth}">
                 <local:PanelListThumbnailImage Thumbnail="{Binding Thumbnail}" />
                 <Rectangle DockPanel.Dock="Bottom" Margin="-5,0,-5,1" Height="4" Visibility="Hidden" />
-                <DockPanel>
+                <DockPanel Style="{StaticResource DetailToolTipDockPanel}">
                     <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource ThumbnailNameStyle}" />
                 </DockPanel>
             </StackPanel>
@@ -106,21 +120,16 @@
                     <ContextMenu />
                 </Setter.Value>
             </Setter>
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding ElementName=ListBox, Path=DataContext.DetailToolTip.IsEnabled}" Value="True">
-                    <Setter Property="ToolTip" Value="{Binding Detail}"/>
-                </DataTrigger>
-            </Style.Triggers>
         </Style>
 
         <Style x:Key="ListBoxItemBorderStyle" TargetType="ListBoxItem" BasedOn="{StaticResource ListBoxItemStyle}">
             <Setter Property="BorderBrush" Value="{DynamicResource Item.Separator}" />
         </Style>
-        
+
         <Style x:Key="ListBoxItemThumbnailStyle" TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource ListBoxItemStyle}">
             <Setter Property="local:ListBoxItemTools.InnerMargin" Value="0" />
         </Style>
-        
+
     </UserControl.Resources>
 
 

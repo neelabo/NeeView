@@ -88,10 +88,6 @@
                 <Setter Property="Height" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.TextHeight}"/>
             </Style>
 
-            <Style x:Key="ThumbnailTextDockPanelStyle" TargetType="DockPanel">
-                <Setter Property="Visibility" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.IsTextVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                <Setter Property="MinHeight" Value="18"/>
-            </Style>
 
             <Style x:Key="OverrideIconStackPanelStyle" TargetType="StackPanel">
                 <Setter Property="Visibility" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.IsTextVisible, Converter={StaticResource BooleanToInverseVisibilityConverter}}"/>
@@ -121,8 +117,29 @@
                 <Setter Property="Visibility" Value="{Binding IsArchive, Converter={StaticResource BooleanToVisibilityConverter}}" />
             </Style>
 
+            <Style x:Key="DetailToolTipDockPanel" TargetType="{x:Type DockPanel}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ElementName=Root, Path=DataContext.DetailToolTip.IsEnabled}" Value="True">
+                        <Setter Property="ToolTip" Value="{Binding Detail}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="DetailToolTipBasePanel" TargetType="{x:Type Panel}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ElementName=Root, Path=DataContext.DetailToolTip.IsPanelEnabled}" Value="True">
+                        <Setter Property="ToolTip" Value="{Binding Detail}"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="ThumbnailTextDockPanelStyle" TargetType="{x:Type DockPanel}" BasedOn="{StaticResource DetailToolTipDockPanel}">
+                <Setter Property="Visibility" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.IsTextVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <Setter Property="MinHeight" Value="18"/>
+            </Style>
+
             <DataTemplate x:Key="NormalTemplate">
-                <DockPanel MinHeight="20">
+                <DockPanel Style="{StaticResource DetailToolTipDockPanel}" MinHeight="20">
                     <Image DockPanel.Dock="Right" Style="{StaticResource FolderIconStyle}" Margin="1" />
                     <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource NormalNameStyle}" Margin="5,1" />
                 </DockPanel>
@@ -132,19 +149,21 @@
                 <DockPanel Margin="2">
                     <DockPanel>
                         <local:PanelListContentImage Thumbnail="{Binding ArchivePage.Thumbnail}" />
-                        <Image DockPanel.Dock="Right" Style="{StaticResource FolderIconStyle}" />
-                        <StackPanel VerticalAlignment="Center">
-                            <TextBlock x:Name="Place" Style="{StaticResource NoteTextStyle}" Text="{Binding DisplayPlace}"
+                        <DockPanel Style="{StaticResource DetailToolTipDockPanel}">
+                            <Image DockPanel.Dock="Right" Style="{StaticResource FolderIconStyle}" />
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock x:Name="Place" Style="{StaticResource NoteTextStyle}" Text="{Binding DisplayPlace}"
                                     Visibility="{Binding ElementName=ListBox, Path=DataContext.IsGroupBy, Converter={StaticResource BooleanToVisibilityInverseConverter}}" />
-                            <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource ContentNameStyle}" />
-                        </StackPanel>
+                                <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource ContentNameStyle}" />
+                            </StackPanel>
+                        </DockPanel>
                     </DockPanel>
                 </DockPanel>
             </DataTemplate>
 
             <DataTemplate x:Key="BannerTemplate">
                 <DockPanel Margin="0" HorizontalAlignment="Stretch" LastChildFill="False">
-                    <DockPanel DockPanel.Dock="Bottom" Margin="2">
+                    <DockPanel DockPanel.Dock="Bottom" Style="{StaticResource DetailToolTipDockPanel}" Margin="2">
                         <Image DockPanel.Dock="Right" Style="{StaticResource FolderIconStyle}" />
                         <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource BannerrNameStyle}" />
                     </DockPanel>
@@ -153,7 +172,7 @@
             </DataTemplate>
 
             <DataTemplate x:Key="ThumbnailTemplate">
-                <StackPanel Margin="5" Width="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.ShapeWidth}">
+                <StackPanel Style="{StaticResource DetailToolTipBasePanel}" Margin="5" Width="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.ShapeWidth}">
                     <Grid>
                         <local:PanelListThumbnailImage Thumbnail="{Binding ArchivePage.Thumbnail}" />
                         <StackPanel Style="{StaticResource OverrideIconStackPanelStyle}">
@@ -175,19 +194,11 @@
                 <EventSetter Event="KeyDown" Handler="PlaylistListItem_KeyDown" />
                 <EventSetter Event="ContextMenuOpening" Handler="PlaylistItem_ContextMenuOpening" />
                 <Setter Property="FocusVisualStyle" Value="{StaticResource NVListItemFocusVisual}" />
-                <!--
-                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-                -->
                 <Setter Property="ContextMenu">
                     <Setter.Value>
                         <ContextMenu />
                     </Setter.Value>
                 </Setter>
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding ElementName=Root, Path=DataContext.DetailToolTip.IsEnabled}" Value="True">
-                        <Setter Property="ToolTip" Value="{Binding Detail}"/>
-                    </DataTrigger>
-                </Style.Triggers>
             </Style>
 
             <Style x:Key="ListBoxItemBorderStyle" TargetType="ListBoxItem" BasedOn="{StaticResource ListBoxItemStyle}">
