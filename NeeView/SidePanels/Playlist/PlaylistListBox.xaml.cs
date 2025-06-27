@@ -314,19 +314,20 @@ namespace NeeView
         {
             var target = _dropAssist.OnDragOver(sender, e);
 
-            HandleDropEvent(e, target);
-            if (e.Effects == DragDropEffects.None)
+            if (!AcceptDrop(e, target))
             {
                 _dropAssist.HideAdorner();
+                return;
             }
+
+            e.Handled = true;
         }
 
         private void ListBox_Drop(object sender, DragEventArgs e)
         {
             var target = _dropAssist.OnDrop(sender, e);
 
-            HandleDropEvent(e, target);
-            if (e.Effects == DragDropEffects.None)
+            if (!AcceptDrop(e, target))
             {
                 return;
             }
@@ -338,6 +339,8 @@ namespace NeeView
                 delta = 0;
             }
 
+            e.Handled = true;
+
             AppDispatcher.BeginInvoke(async () =>
             {
                 var copyMaybe = e.Effects.HasFlag(DragDropEffects.Copy);
@@ -347,15 +350,6 @@ namespace NeeView
                     DropToPlaylist(sender, e, dropItems, targetItem, delta);
                 }
             });
-        }
-
-        private void HandleDropEvent(DragEventArgs e, DropTargetItem target)
-        {
-            if (!AcceptDrop(e, target))
-            {
-                e.Effects = DragDropEffects.None;
-            }
-            e.Handled = true;
         }
 
         private bool AcceptDrop(DragEventArgs e, DropTargetItem target)
