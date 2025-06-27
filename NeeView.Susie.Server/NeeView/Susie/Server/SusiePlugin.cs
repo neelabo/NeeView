@@ -436,7 +436,8 @@ namespace NeeView.Susie.Server
             lock (_lock)
             {
                 using var api = _apiCache.Lock();
-                var buff = api.GetFile(archiveFileName, position);
+                string shortPath = GetLegacyPathName(archiveFileName);
+                var buff = api.GetFile(shortPath, position);
                 if (buff == null) throw new SusieException("Susie extraction failed (Type.M)", this.Name);
                 return buff;
             }
