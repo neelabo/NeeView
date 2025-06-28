@@ -15,13 +15,6 @@ namespace NeeView.Setting
     {
         public SettingPageManipulate() : base(Properties.TextResources.GetString("SettingPage.Manipulate"))
         {
-            this.Children = new List<SettingPage>
-            {
-                new SettingPageMouse(),
-                new SettingPageTouch(),
-                new SettingPageLoupe(),
-            };
-
             var centerEnumMapWithoutAuto = typeof(DragControlCenter).VisibleAliasNameDictionary().Where(e => (DragControlCenter)e.Key != DragControlCenter.Auto).ToDictionary();
 
             var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.Manipulate.GeneralViewOperation"));

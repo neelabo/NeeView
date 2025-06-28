@@ -70,12 +70,11 @@ namespace NeeView.Setting
             {
                 new SettingPageGeneral(),
                 new SettingPageFileTypes(),
-                new SettingPageWindow(),
-                new SettingPagePanels(),
-                new SettingPageSlideshow(),
-                new SettingPageManipulate(),
                 new SettingPageBook(),
-                new SettingPageHistory(),
+                new SettingPageWindow(),
+                new SettingPageMainView(),
+                new SettingPagePanels(),
+                new SettingPageSlider(),
                 new SettingPageCommand()
             };
 

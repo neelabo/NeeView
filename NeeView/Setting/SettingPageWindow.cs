@@ -49,7 +49,6 @@ namespace NeeView.Setting
             {
                 new SettingPageFonts(),
                 new SettingPageWindowTitle(),
-                new SettingMainView(),
             };
 
             this.Items = new List<SettingItem>();
@@ -129,31 +128,6 @@ namespace NeeView.Setting
             section.Children.Add(new SettingItemNote(Properties.TextResources.GetString("SettingPage.WindowTitle.Note"), Properties.TextResources.GetString("SettingPage.WindowTitle.Note.Title")));
 
             this.Items = new List<SettingItem>() { section };
-        }
-    }
-
-    /// <summary>
-    /// SettingPage: MainView
-    /// </summary>
-    public class SettingMainView : SettingPage
-    {
-        public SettingMainView() : base(Properties.TextResources.GetString("SettingPage.MainView"))
-        {
-            this.Items = new List<SettingItem>();
-
-            var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.MainView"));
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.View, nameof(ViewConfig.MainViewMargin))));
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.MainView, nameof(MainViewConfig.AlternativeContent))));
-            this.Items.Add(section);
-
-            section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.MainView.MainViewWindow"));
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.MainView, nameof(MainViewConfig.IsFloatingEndWhenClosed))));
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.MainView, nameof(MainViewConfig.IsTopmost))));
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.MainView, nameof(MainViewConfig.IsHideTitleBar))));
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.MainView, nameof(MainViewConfig.IsAutoStretch))));
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.MainView, nameof(MainViewConfig.IsAutoHide))));
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.MainView, nameof(MainViewConfig.IsAutoShow))));
-            this.Items.Add(section);
         }
     }
 

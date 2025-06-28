@@ -15,11 +15,6 @@ namespace NeeView.Setting
     {
         public SettingPageHistory() : base(Properties.TextResources.GetString("SettingPage.History"))
         {
-            this.Children = new List<SettingPage>
-            {
-                new SettingPageHistoryPageView(),
-            };
-
             this.Items = new List<SettingItem>();
 
             var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.History.General"));
@@ -34,6 +29,11 @@ namespace NeeView.Setting
             section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.History.GeneralLimit"), Properties.TextResources.GetString("SettingPage.History.GeneralLimit.Remarks"));
             section.Children.Add(new SettingItemIndexValue<int>(PropertyMemberElement.Create(Config.Current.History, nameof(HistoryConfig.LimitSize)), new HistoryLimitSize(), false));
             section.Children.Add(new SettingItemIndexValue<TimeSpan>(PropertyMemberElement.Create(Config.Current.History, nameof(HistoryConfig.LimitSpan)), new HistoryLimitSpan(), false));
+            this.Items.Add(section);
+
+            section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.History.PageViewRecord"));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.PageViewRecorder, nameof(PageViewRecorderConfig.IsSavePageViewRecord))));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.PageViewRecorder, nameof(PageViewRecorderConfig.PageViewRecordFilePath))) { IsStretch = true });
             this.Items.Add(section);
         }
 
@@ -143,19 +143,4 @@ namespace NeeView.Setting
         #endregion
     }
 
-
-    /// <summary>
-    /// Setting: HistoryPageView
-    /// </summary>
-    public class SettingPageHistoryPageView : SettingPage
-    {
-        public SettingPageHistoryPageView() : base(Properties.TextResources.GetString("SettingPage.History.PageViewRecord"))
-        {
-            var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.History.PageViewRecord"));
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.PageViewRecorder, nameof(PageViewRecorderConfig.IsSavePageViewRecord))));
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.PageViewRecorder, nameof(PageViewRecorderConfig.PageViewRecordFilePath))) { IsStretch = true });
-
-            this.Items = new List<SettingItem>() { section };
-        }
-    }
 }
