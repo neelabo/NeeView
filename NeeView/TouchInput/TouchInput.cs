@@ -212,7 +212,7 @@ namespace NeeView
         {
             if (sender != _sender) return;
             if (!Config.Current.Touch.IsEnabled) return;
-            if (MainWindow.Current.IsMouseActivate) return;
+            if (MouseActivateService.Current.IsMouseActivate) return;
 
             ////Debug.WriteLine($"TouchDown: {e.StylusDevice.Id}");
 

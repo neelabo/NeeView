@@ -8,14 +8,13 @@ using NeeView.Setting;
 using NeeView.Threading;
 using NeeView.Windows;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -30,7 +29,7 @@ namespace NeeView
     /// MainWindow.xaml の相互作用ロジック
     /// </summary>
     [LocalDebug]
-    public partial class MainWindow : Window, IDpiScaleProvider, IHasWindowController, INotifyMouseHorizontalWheelChanged, IHasRenameManager, IMainViewWindow
+    public partial class MainWindow : Window, IDpiScaleProvider, IHasWindowController, INotifyMouseHorizontalWheelChanged, IHasRenameManager, IMainViewWindow, IWindowProcedure
     {
         private static MainWindow? _current;
         public static MainWindow Current => _current ?? throw new InvalidOperationException();
@@ -43,10 +42,12 @@ namespace NeeView
         private readonly MainViewComponent _viewComponent;
         private readonly DpiScaleProvider _dpiProvider = new();
 
+        private readonly WindowProcedure _windowProcedure;
         private readonly WindowStateManager _windowStateManager;
         private readonly MainWindowController _windowController;
 
         private readonly MediaControl _mediaControl;
+        private readonly MouseActivate _mouseActivate;
 
         public MainWindow()
         {
@@ -67,6 +68,9 @@ namespace NeeView
 
             // Window状態初期化
             InitializeWindowShapeSnap();
+
+            // winproc
+            _windowProcedure = new WindowProcedure(this);
 
             _windowStateManager = new WindowStateManager(this);
             _windowController = new MainWindowController(this, _windowStateManager);
@@ -193,7 +197,7 @@ namespace NeeView
             this.PreviewStylusDown += MainWindow_PreviewStylusDown;
 
             // mouse activate
-            this.MouseDown += MainWindow_MouseDown;
+            _mouseActivate = new MouseActivate(this);
 
             // key event for window
             this.PreviewKeyDown += MainWindow_PreviewKeyDown;
@@ -241,11 +245,11 @@ namespace NeeView
         }
 
 
+        public WindowProcedure WindowProcedure => _windowProcedure;
 
         public WindowStateManager WindowStateManager => _windowStateManager;
 
         public WindowController WindowController => _windowController;
-
 
 
         #region 初期化処理
@@ -288,33 +292,6 @@ namespace NeeView
             }
 
             Config.Current.Window.State = state;
-        }
-
-        #endregion
-
-
-        #region マウスによるウィンドウアクティブ監視
-
-        public bool IsMouseActivate { get; private set; }
-
-        public void SetMouseActivate()
-        {
-            if (!IsActive)
-            {
-                IsMouseActivate = true;
-                _ = ResetMouseActivateAsync(100);
-            }
-        }
-
-        private async ValueTask ResetMouseActivateAsync(int milliseconds)
-        {
-            await Task.Delay(milliseconds);
-            IsMouseActivate = false;
-        }
-
-        private void MainWindow_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            IsMouseActivate = false;
         }
 
         #endregion
@@ -606,6 +583,8 @@ namespace NeeView
         {
             Trace.WriteLine($"Window.Closed:");
             MessageDialog.OwnerWindow = null;
+
+            _mouseActivate.Dispose();
         }
 
         /// <summary>
@@ -974,5 +953,4 @@ namespace NeeView
         #endregion
 
     }
-
 }

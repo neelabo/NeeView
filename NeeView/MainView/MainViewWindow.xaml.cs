@@ -26,15 +26,17 @@ namespace NeeView
     /// MainViewWindow.xaml の相互作用ロジック
     /// </summary>
     [NotifyPropertyChanged]
-    public partial class MainViewWindow : Window, INotifyPropertyChanged, IDpiScaleProvider, IHasWindowController, INotifyMouseHorizontalWheelChanged, IMainViewWindow
+    public partial class MainViewWindow : Window, INotifyPropertyChanged, IDpiScaleProvider, IHasWindowController, INotifyMouseHorizontalWheelChanged, IMainViewWindow, IWindowProcedure
     {
         private readonly DpiScaleProvider _dpiProvider = new();
         private readonly WindowStateManager _windowStateManager;
         private bool _canHideMenu;
+        private readonly WindowProcedure _windowProcedure;
         private readonly WindowController _windowController;
         private RoutedCommandBinding? _routedCommandBinding;
         private readonly WeakBindableBase<MainViewConfig> _mainViewConfig;
         private Locker.Key? _referenceSizeLockLey;
+        private readonly MouseActivate _mouseActivate;
 
         public MainViewWindow()
         {
@@ -44,6 +46,8 @@ namespace NeeView
             this.DataContext = this;
 
             this.SetBinding(MainViewWindow.TitleProperty, new Binding(nameof(WindowTitle.Title)) { Source = WindowTitle.Current });
+
+            _windowProcedure = new WindowProcedure(this);
 
             _windowStateManager = new WindowStateManager(this);
             _windowStateManager.StateChanged += WindowStateManager_StateChanged;
@@ -83,6 +87,8 @@ namespace NeeView
 
             var mouseHorizontalWheel = new MouseHorizontalWheelService(this);
             mouseHorizontalWheel.MouseHorizontalWheelChanged += (s, e) => MouseHorizontalWheelChanged?.Invoke(s, e);
+
+            _mouseActivate = new MouseActivate(this);
         }
 
 
@@ -90,6 +96,7 @@ namespace NeeView
 
         public event MouseWheelEventHandler? MouseHorizontalWheelChanged;
 
+        public WindowProcedure WindowProcedure => _windowProcedure;
 
         public WindowController WindowController => _windowController;
 
@@ -198,6 +205,8 @@ namespace NeeView
 
         private void MainViewWindow_Closed(object? sender, EventArgs e)
         {
+            _mouseActivate.Dispose();
+
             _routedCommandBinding?.Dispose();
             _routedCommandBinding = null;
 

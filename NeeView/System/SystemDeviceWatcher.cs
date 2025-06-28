@@ -2,7 +2,6 @@
 using NeeLaboratory.Generators;
 using NeeView.Interop;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -167,9 +166,6 @@ namespace NeeView
                     case WindowMessages.WM_SETTINGCHANGE:
                         OnSettingChange(wParam, lParam);
                         break;
-                    case WindowMessages.WM_MOUSEACTIVATE:
-                        OnMouseActive();
-                        break;
                 }
             }
             catch (Exception ex)
@@ -190,17 +186,6 @@ namespace NeeView
             ////Trace.WriteLine($"WM_SETTINGCHANGE: {action:X4}, {str}");
 
             SettingChanged?.Invoke(this, new SettingChangedEventArgs(action, str));
-        }
-
-        /// <summary>
-        /// マウスボタンを押すことでウィンドウをアクティブ化するメッセージ処理
-        /// </summary>
-        private static void OnMouseActive()
-        {
-            if (Config.Current.Window.MouseActivateAndEat)
-            {
-                MainWindow.Current.SetMouseActivate();
-            }
         }
 
         private void OnDeviceChange(IntPtr wParam, IntPtr lParam)

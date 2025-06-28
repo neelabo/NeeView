@@ -24,7 +24,6 @@ namespace NeeView.Setting
             var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.MainView"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.View, nameof(ViewConfig.MainViewMargin))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.MainView, nameof(MainViewConfig.AlternativeContent))));
-            //section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Window, nameof(WindowConfig.MouseActivateAndEat))));
             this.Items.Add(section);
 
             section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.MainView.MainViewWindow"));

@@ -344,7 +344,7 @@ namespace NeeView
             bool isEnabled = (sender == _sender)
                 && !IsStylusDevice(e)
                 && IsMouseButtonEnabled(e)
-                && !MainWindow.Current.IsMouseActivate;
+                && !MouseActivateService.Current.IsMouseActivate;
 
             if (isEnabled)
             {
