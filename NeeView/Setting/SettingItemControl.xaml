@@ -9,7 +9,7 @@
 
     <UserControl.Resources>
 
-        <Style x:Key="EnabledTextBlockStyle" TargetType="TextBlock">
+        <Style x:Key="EnabledElementStyle" TargetType="{x:Type FrameworkElement}">
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="False">
                     <Setter Property="Opacity" Value="0.5"/>
@@ -21,8 +21,11 @@
 
     <Border x:Name="Root" BorderBrush="WhiteSmoke" BorderThickness="0,0,0,0" Background="Transparent">
         <DockPanel Margin="0,15,0,0" MinWidth="300" >
-            <TextBlock x:Name="Header"  DockPanel.Dock="Top" TextWrapping="Wrap" VerticalAlignment="Bottom" Margin="0,5" Style="{StaticResource EnabledTextBlockStyle}"/>
-            <TextBlock x:Name="Note" DockPanel.Dock="Top" TextWrapping="Wrap" Margin="0,0,0,5" Foreground="{DynamicResource Control.GrayText}" Visibility="Collapsed" Style="{StaticResource EnabledTextBlockStyle}"/>
+            <StackPanel DockPanel.Dock="Top" Style="{StaticResource EnabledElementStyle}" Orientation="Horizontal" Margin="0,5">
+                <ContentControl x:Name="Icon" Margin="0,0,8,0" VerticalAlignment="Center" Visibility="Collapsed"/>
+                <TextBlock x:Name="Header" TextWrapping="Wrap" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock x:Name="Note" DockPanel.Dock="Top" TextWrapping="Wrap" Margin="0,0,0,5" Foreground="{DynamicResource Control.GrayText}" Visibility="Collapsed" Style="{StaticResource EnabledElementStyle}"/>
             <ContentControl x:Name="ContentValue" DockPanel.Dock="Top" VerticalAlignment="Center" Focusable="False" Margin="0,5" />
             <ContentControl x:Name="SubContent" DockPanel.Dock="Top" VerticalAlignment="Center" Focusable="False" Margin="0,0,0,5" Visibility="Collapsed" />
         </DockPanel>

@@ -25,12 +25,18 @@ namespace NeeView.Setting
             InitializeComponent();
         }
 
-        public SettingItemControl(string header, string? tips, object? content, object? subContent, bool isContentStretch)
+        public SettingItemControl(object? icon, string header, string? tips, object? content, object? subContent, bool isContentStretch)
         {
             InitializeComponent();
 
             this.Header.Text = header;
             this.ContentValue.Content = content;
+
+            if (icon != null)
+            {
+                this.Icon.Content = icon;
+                this.Icon.Visibility = Visibility.Visible;
+            }
 
             if (content is null)
             {

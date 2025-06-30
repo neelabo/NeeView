@@ -40,7 +40,7 @@ namespace NeeView.Setting
             this.Tips = tips;
         }
 
-
+        public object? Icon { get; set; }
         public string Header { get; set; }
         public string? Tips { get; set; }
         public IsEnabledPropertyValue? IsEnabled { get; set; }
@@ -308,7 +308,7 @@ namespace NeeView.Setting
 
         protected override UIElement CreateContentInner()
         {
-            return new SettingItemControl(this.Header, this.Tips, _content ?? _element.TypeValue, this.SubContent, this.IsStretch);
+            return new SettingItemControl(this.Icon, this.Header, this.Tips, _content ?? _element.TypeValue, this.SubContent, this.IsStretch);
         }
 
         public override string GetSearchText()
@@ -326,7 +326,7 @@ namespace NeeView.Setting
 
         protected override UIElement CreateContentInner()
         {
-            return new SettingItemControl(this.Header, this.Tips, null, this.SubContent, false);
+            return new SettingItemControl(this.Icon, this.Header, this.Tips, null, this.SubContent, false);
         }
 
         public override string GetSearchText()
@@ -349,7 +349,7 @@ namespace NeeView.Setting
 
         protected override UIElement CreateContentInner()
         {
-            return new SettingItemControl(this.Header, this.Tips, _content, this.SubContent, this.IsStretch);
+            return new SettingItemControl(this.Icon, this.Header, this.Tips, _content, this.SubContent, this.IsStretch);
         }
 
         public override string GetSearchText()
@@ -449,7 +449,7 @@ namespace NeeView.Setting
             var binding = new Binding(nameof(PropertyValue_String.Value)) { Source = _element.TypeValue as PropertyValue_String };
             BindingOperations.SetBinding(comboBox, ComboBox.SelectedItemProperty, binding);
 
-            return new SettingItemControl(_element.Name, _element.Tips ?? this.Tips, comboBox, this.SubContent, false);
+            return new SettingItemControl(null, _element.Name, _element.Tips ?? this.Tips, comboBox, this.SubContent, false);
         }
 
         public override string GetSearchText()
@@ -488,7 +488,7 @@ namespace NeeView.Setting
                 IsEditable = _isEditable,
             };
 
-            return new SettingItemControl(_element.Name, _element.Tips ?? this.Tips, content, this.SubContent, false);
+            return new SettingItemControl(null, _element.Name, _element.Tips ?? this.Tips, content, this.SubContent, false);
         }
 
         public override string GetSearchText()
@@ -544,7 +544,7 @@ namespace NeeView.Setting
             }
             else
             {
-                return new SettingItemControl(this.Header, this.Tips, button, this.SubContent, true);
+                return new SettingItemControl(this.Icon, this.Header, this.Tips, button, this.SubContent, true);
             }
         }
     }
@@ -576,7 +576,7 @@ namespace NeeView.Setting
             }
             else
             {
-                return new SettingItemControl(this.Header, this.Tips, textBlock, this.SubContent, true);
+                return new SettingItemControl(this.Icon, this.Header, this.Tips, textBlock, this.SubContent, true);
             }
         }
     }

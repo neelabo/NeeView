@@ -3,6 +3,7 @@
 using NeeLaboratory.Collection;
 using NeeLaboratory.Windows.Input;
 using NeeView.Data;
+using NeeView.Windows;
 using NeeView.Windows.Property;
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,8 @@ namespace NeeView.Setting
 
             var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.General"));
             var cultureMap = Properties.TextResources.LanguageResource.Cultures.ToKeyValuePairList(e => e.Name, e => e.NativeName);
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.Language), new PropertyMemberElementOptions() { StringMap = cultureMap })));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.Language), new PropertyMemberElementOptions() { StringMap = cultureMap }))
+            { Icon = new FontIcon("\uE774"), Header = "Language" });
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.DateTimeFormat))));
             this.Items.Add(section);
 
@@ -344,5 +346,4 @@ namespace NeeView.Setting
         }
     }
 #endif
-
 }
