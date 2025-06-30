@@ -293,7 +293,6 @@ BookSettingSelectMode.RestoreOrDefault=Восстановить, иначе по
 BookSettingSelectMode.RestoreOrDefaultReset=Восстановить, иначе по умолчанию, сбросив последнюю страницу
 Bookshelf.Home.Menu.Set=Сделать это место домашним
 Bookshelf.Home.ToolTip=Перейти домой
-Bookshelf.MoreMenu.AddQuickAccess=Добавить это место в быстрый доступ
 Bookshelf.MoreMenu.ClearHistory=Удалить всю историю для этого места
 Bookshelf.MoreMenu.ExportPlaylist=Сохранить плейлист...
 Bookshelf.MoreMenu.SearchIncludeSubdirectories=Включая подпапки

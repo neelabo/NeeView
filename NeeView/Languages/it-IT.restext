@@ -293,7 +293,6 @@ BookSettingSelectMode.RestoreOrDefault=Ripristina, altrimenti default
 BookSettingSelectMode.RestoreOrDefaultReset=Ripristina, altrimenti default, pulisci ultima pagina
 Bookshelf.Home.Menu.Set=Imposta questo come casa
 Bookshelf.Home.ToolTip=Vai a Casa
-Bookshelf.MoreMenu.AddQuickAccess=Aggiungi questo posto ad accesso rapido
 Bookshelf.MoreMenu.ClearHistory=Cancella tutta la cronologia di questo posto
 Bookshelf.MoreMenu.ExportPlaylist=Salva playlist...
 Bookshelf.MoreMenu.SearchIncludeSubdirectories=Include sottocartelle

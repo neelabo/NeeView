@@ -66,6 +66,7 @@ BookSettingPolicyConfig.BaseScale=@Word.BaseScale
 Bookshelf.Back.ToolTip=@Word.Back
 Bookshelf.CopyToFolderFailed=@Message.CopyFailed
 Bookshelf.Message.MoveToFolderFailed=@Message.MoveFailed
+Bookshelf.MoreMenu.AddQuickAccess=@FolderTree.Menu.AddCurrentQuickAccess
 Bookshelf.Next.ToolTip=@Word.Next
 Bookshelf.SubFolder.ToolTip=@BookConfigAccessor.IsRecursiveFolder
 Bookshelf.Title=@Word.Bookshelf

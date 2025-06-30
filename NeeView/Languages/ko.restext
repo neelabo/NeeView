@@ -291,7 +291,6 @@ BookSettingSelectMode.RestoreOrDefault=복원 (불가능 시 기본값)
 BookSettingSelectMode.RestoreOrDefaultReset=복원 (불가능 시 기본값, 끝 페이지 지우기)
 Bookshelf.Home.Menu.Set=이 경로를 홈으로 설정
 Bookshelf.Home.ToolTip=홈으로 이동
-Bookshelf.MoreMenu.AddQuickAccess=이 경로를 바로 가기에 추가
 Bookshelf.MoreMenu.ClearHistory=이 경로의 모든 내역 삭제
 Bookshelf.MoreMenu.ExportPlaylist=재생 목록 저장...
 Bookshelf.MoreMenu.SearchIncludeSubdirectories=하위 폴더 포함

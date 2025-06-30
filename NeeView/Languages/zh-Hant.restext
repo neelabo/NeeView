@@ -291,7 +291,6 @@ BookSettingSelectMode.RestoreOrDefault=還原，無法還原則預設
 BookSettingSelectMode.RestoreOrDefaultReset=還原，無法還原則預設，清除最後的頁面
 Bookshelf.Home.Menu.Set=將這個位置設定為主頁
 Bookshelf.Home.ToolTip=移動到主頁
-Bookshelf.MoreMenu.AddQuickAccess=將這個位置加入到快速存取
 Bookshelf.MoreMenu.ClearHistory=刪除這個位置所有的歷史記錄
 Bookshelf.MoreMenu.ExportPlaylist=儲存播放列表...
 Bookshelf.MoreMenu.SearchIncludeSubdirectories=包括子資料夾

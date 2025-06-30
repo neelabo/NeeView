@@ -293,7 +293,6 @@ BookSettingSelectMode.RestoreOrDefault=Restaurar, caso contrário, padrão
 BookSettingSelectMode.RestoreOrDefaultReset=Restaurar, caso contrário, limpar a última página
 Bookshelf.Home.Menu.Set=Defina este lugar como início
 Bookshelf.Home.ToolTip=Ir para o Início
-Bookshelf.MoreMenu.AddQuickAccess=Adicionar este lugar para acesso rápido
 Bookshelf.MoreMenu.ClearHistory=Excluir todo o histórico deste lugar
 Bookshelf.MoreMenu.ExportPlaylist=Salvar lista de reprodução...
 Bookshelf.MoreMenu.SearchIncludeSubdirectories=Incluir subdiretórios

@@ -291,7 +291,6 @@ BookSettingSelectMode.RestoreOrDefault=恢复，否则默认
 BookSettingSelectMode.RestoreOrDefaultReset=恢复，否则默认，清除尾页
 Bookshelf.Home.Menu.Set=将此位置设为主页
 Bookshelf.Home.ToolTip=转到主页
-Bookshelf.MoreMenu.AddQuickAccess=将该位置添加到快速访问
 Bookshelf.MoreMenu.ClearHistory=删除该位置的所有历史记录
 Bookshelf.MoreMenu.ExportPlaylist=保存播放列表...
 Bookshelf.MoreMenu.SearchIncludeSubdirectories=包括子目录
