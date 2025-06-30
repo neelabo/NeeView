@@ -1069,7 +1069,7 @@ namespace NeeView
             _folderListConfig.IsFolderTreeVisible = true;
             var query = GetCurrentQueryPath();
             if (query is null) return;
-            FolderPanel.Current.FolderTreeModel?.AddQuickAccess(query);
+            FolderPanel.Current.FolderTreeModel?.AddQuickAccess(QuickAccessCollection.Current.Root, query);
         }
 
         public string? GetCurrentQueryPath()

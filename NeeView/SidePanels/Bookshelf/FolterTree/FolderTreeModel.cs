@@ -225,7 +225,7 @@ namespace NeeView
         /// <param name="path">新しい QuickAccess パス</param>
         public TreeListNode<QuickAccessEntry>? InsertQuickAccess(TreeListNode<QuickAccessEntry>? parent, int index, string? path)
         {
-            if (parent is null)
+            if (parent is null || parent.Value is not QuickAccessFolder)
             {
                 return null;
             }
@@ -281,22 +281,13 @@ namespace NeeView
             return node;
         }
 
-        public void AddQuickAccess(object item)
+        /// <summary>
+        /// 現在の場所を新しい QuickAccess として追加
+        /// </summary>
+        /// <param name="parent"></param>
+        public void AddCurrentPlaceQuickAccess(TreeListNode<QuickAccessEntry> parent)
         {
-            switch (item)
-            {
-                case TreeListNode<QuickAccessEntry> { Value: QuickAccessFolder } quickAccessFolder:
-                    AddQuickAccess(quickAccessFolder, _folderList.GetCurrentQueryPath());
-                    break;
-
-                case DirectoryNode folder:
-                    AddQuickAccess(folder.Path);
-                    break;
-
-                case string filename:
-                    AddQuickAccess(filename);
-                    break;
-            }
+            AddQuickAccess(parent, _folderList.GetCurrentQueryPath());
         }
 
         /// <summary>

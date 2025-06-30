@@ -100,10 +100,10 @@ namespace NeeView
 
                 void Execute()
                 {
-                    var item = this.TreeView.SelectedItem;
+                    var item = this.TreeView.SelectedItem as TreeListNode<QuickAccessEntry>;
                     if (item != null)
                     {
-                        _vm.AddQuickAccess(item);
+                        _vm.AddCurrentPlaceQuickAccess(item);
                     }
                 }
             }

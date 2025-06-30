@@ -72,9 +72,9 @@ namespace NeeView
             Model?.Decide(item);
         }
 
-        public void AddQuickAccess(object item)
+        public void AddCurrentPlaceQuickAccess(TreeListNode<QuickAccessEntry> item)
         {
-            Model?.AddQuickAccess(item);
+            Model?.AddCurrentPlaceQuickAccess(item);
         }
 
         public void MoveQuickAccess(TreeListNode<QuickAccessEntry> src, TreeListNode<QuickAccessEntry> dst, int delta)
