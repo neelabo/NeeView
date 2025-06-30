@@ -243,11 +243,11 @@ namespace NeeView
 
             parent.IsExpanded = true;
 
-            var item = parent.Children.FirstOrDefault(e => e.Value.Path == path);
+            var item = parent.FirstOrDefault(e => e.Value.Path == path);
             if (item is null)
             {
                 item = new TreeListNode<QuickAccessEntry>(new QuickAccess(path));
-                QuickAccessCollection.Current.Insert(parent, index, item);
+                parent.Insert(index, item);
             }
 
             SelectedItem = item;
@@ -322,7 +322,7 @@ namespace NeeView
                     return;
                 }
 
-                var index = dst != null ? parent.Children.IndexOf(dst) : 0;
+                var index = dst != null ? parent.IndexOf(dst) : 0;
                 if (index < 0)
                 {
                     return;
@@ -346,7 +346,7 @@ namespace NeeView
 
             var next = item.Next ?? item.Previous ?? item.Parent;
 
-            bool isRemoved = QuickAccessCollection.Current.RemoveSelf(item);
+            bool isRemoved = item.RemoveSelf();
             if (isRemoved)
             {
                 if (next != null)
@@ -373,7 +373,7 @@ namespace NeeView
             {
                 if (item.BookmarkSource.Value is BookmarkFolder)
                 {
-                    var count = item.BookmarkSource.Count(e => e.Value is Bookmark);
+                    var count = item.BookmarkSource.WalkChildren().Count(e => e.Value is Bookmark);
                     if (count > 0)
                     {
                         var toast = new Toast(Properties.TextResources.GetFormatString("BookmarkFolderDelete.Message", count), null, ToastIcon.Information, Properties.TextResources.GetString("Word.Restore"), () => BookmarkCollection.Current.Restore(memento));
@@ -448,7 +448,7 @@ namespace NeeView
             var parentNode = item.BookmarkSource;
 
             // TODO: 重複チェックはBookmarkCollectionで行うようにする
-            var node = parentNode.Children.FirstOrDefault(e => e.Value is Bookmark bookmark && bookmark.Path == address);
+            var node = parentNode.FirstOrDefault(e => e.Value is Bookmark bookmark && bookmark.Path == address);
             if (node == null)
             {
                 var unit = BookMementoCollection.Current.Set(address);
@@ -473,7 +473,7 @@ namespace NeeView
                     return;
                 }
                 parent.IsExpanded = true;
-                QuickAccessCollection.Current.Move(parent, src, -1);
+                src.MoveTo(parent, -1);
             }
 
             // 階層をまたいだ移動
@@ -485,7 +485,7 @@ namespace NeeView
                     return;
                 }
 
-                var dstIndex = parent.Children.IndexOf(dst);
+                var dstIndex = parent.IndexOf(dst);
                 if (dstIndex < 0)
                 {
                     return;
@@ -496,7 +496,7 @@ namespace NeeView
                     dstIndex++;
                 }
 
-                QuickAccessCollection.Current.Move(parent, src, dstIndex);
+                src.MoveTo(parent, dstIndex);
             }
 
             // 同一階層での移動
@@ -508,12 +508,12 @@ namespace NeeView
                     return;
                 }
 
-                var srcIndex = parent.Children.IndexOf(src);
+                var srcIndex = parent.IndexOf(src);
                 if (srcIndex < 0)
                 {
                     return;
                 }
-                var dstIndex = parent.Children.IndexOf(dst);
+                var dstIndex = parent.IndexOf(dst);
                 if (dstIndex < 0)
                 {
                     return;
@@ -534,7 +534,7 @@ namespace NeeView
                     }
                 }
 
-                QuickAccessCollection.Current.Move(parent, srcIndex, dstIndex);
+                parent.Move(srcIndex, dstIndex);
             }
         }
 
@@ -549,7 +549,7 @@ namespace NeeView
         {
             if (parent is not TreeListNode<QuickAccessEntry> { Value: QuickAccessFolder } folder) throw new NotSupportedException();
 
-            QuickAccessCollection.Current.Move(folder, oldIndex, newIndex);
+            folder.Move(oldIndex, newIndex);
         }
 
         public void SyncDirectory(string place)

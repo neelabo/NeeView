@@ -90,7 +90,7 @@ namespace NeeView
         {
             if (BookshelfFolderList.Current.FolderCollection is BookmarkFolderCollection bookmarkFolderCollection)
             {
-                var node = bookmarkFolderCollection.BookmarkPlace.Children.FirstOrDefault(e => e.IsEqual(query));
+                var node = bookmarkFolderCollection.BookmarkPlace.FirstOrDefault(e => e.IsEqual(query));
                 if (node != null)
                 {
                     return BookmarkCollection.Current.Remove(node);
@@ -154,7 +154,7 @@ namespace NeeView
             }
             else
             {
-                return parent.Children.FirstOrDefault(e => e.Value is Bookmark bookmark && bookmark.Path == path.SimplePath);
+                return parent.FirstOrDefault(e => e.Value is Bookmark bookmark && bookmark.Path == path.SimplePath);
             }
         }
 
@@ -176,7 +176,7 @@ namespace NeeView
 
                 if (newName != oldName)
                 {
-                    var conflict = node.Parent?.Children.FirstOrDefault(e => e != node && e.Value is BookmarkFolder && e.Value.Name == newName);
+                    var conflict = node.Parent?.FirstOrDefault(e => e != node && e.Value is BookmarkFolder && e.Value.Name == newName);
                     if (conflict != null)
                     {
                         var dialog = new MessageDialog(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("MergeFolderDialog.Message"), newName), Properties.TextResources.GetString("MergeFolderDialog.Title"));
@@ -269,11 +269,11 @@ namespace NeeView
         {
             if (name is null)
             {
-                return parent.Children.FirstOrDefault(e => e.Value is Bookmark bookmark && bookmark.Path == query.SimplePath);
+                return parent.FirstOrDefault(e => e.Value is Bookmark bookmark && bookmark.Path == query.SimplePath);
             }
             else
             {
-                return parent.Children.FirstOrDefault(e => e.Value is Bookmark bookmark && bookmark.Path == query.SimplePath && bookmark.Name == name);
+                return parent.FirstOrDefault(e => e.Value is Bookmark bookmark && bookmark.Path == query.SimplePath && bookmark.Name == name);
             }
         }
 

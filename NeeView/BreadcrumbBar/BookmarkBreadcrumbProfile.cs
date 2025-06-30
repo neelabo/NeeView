@@ -29,7 +29,7 @@ namespace NeeView
             var node = BookmarkCollection.Current.FindNode(query);
             if (node is null) return new();
 
-            var list = node.Children
+            var list = node
                 .Select(e => e.Value)
                 .OfType<BookmarkFolder>()
                 .Select(e => e.Name)

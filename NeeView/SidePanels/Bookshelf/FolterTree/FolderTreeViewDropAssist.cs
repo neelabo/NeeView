@@ -63,7 +63,7 @@ namespace NeeView
 
             if (node is TreeListNode<QuickAccessEntry> quickAccessNode)
             {
-                if (quickAccessNode.IsExpanded && quickAccessNode.Children.Count > 0 && delta == 1)
+                if (quickAccessNode.IsExpanded && quickAccessNode.Count > 0 && delta == 1)
                 {
                     return 0;
                 }

@@ -86,7 +86,7 @@ namespace NeeView
         public void CleanUp()
         {
             var histories = BookHistoryCollection.Current.Items.Select(e => e.Unit);
-            var bookmarks = BookmarkCollection.Current.Items.Select(e => e.Value).OfType<Bookmark>().Select(e => e.Unit).Distinct();
+            var bookmarks = BookmarkCollection.Current.Items.WalkChildren().Select(e => e.Value).OfType<Bookmark>().Select(e => e.Unit).Distinct();
 
             Items = histories.Union(bookmarks).ToDictionary(e => e.Path, e => e);
         }

@@ -35,8 +35,8 @@ namespace NeeView
 
             if (_node is not null)
             {
-                this.Items = new ObservableCollection<FolderItem>(_node.Children.Select(e => CreateFolderItem(Place, e)));
-                _node.Children.CollectionChanged += Children_CollectionChanged;
+                this.Items = new ObservableCollection<FolderItem>(_node.Select(e => CreateFolderItem(Place, e)));
+                _node.CollectionChanged += Children_CollectionChanged;
             }
 
             await Task.CompletedTask;
@@ -129,7 +129,7 @@ namespace NeeView
                 {
                     if (_node is not null)
                     {
-                        _node.Children.CollectionChanged -= Children_CollectionChanged;
+                        _node.CollectionChanged -= Children_CollectionChanged;
                     }
                 }
 

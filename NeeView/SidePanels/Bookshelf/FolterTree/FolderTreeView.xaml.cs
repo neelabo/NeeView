@@ -779,7 +779,7 @@ namespace NeeView
 
             if (delta == 0)
             {
-                return !targetNode.ParentContains(node) && !targetNode.Children.Contains(node);
+                return !targetNode.ParentContains(node) && !targetNode.Contains(node);
             }
             else
             {
@@ -823,7 +823,7 @@ namespace NeeView
             if (bookmarkEntry.Value is BookmarkFolder)
             {
                 var node = bookmarkFolderTarget.BookmarkSource;
-                return !node.Children.Contains(bookmarkEntry) && !node.ParentContains(bookmarkEntry) && node != bookmarkEntry;
+                return !node.Contains(bookmarkEntry) && !node.ParentContains(bookmarkEntry) && node != bookmarkEntry;
             }
             else
             {

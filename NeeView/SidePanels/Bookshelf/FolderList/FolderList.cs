@@ -1700,7 +1700,7 @@ namespace NeeView
 
                     if (node.Value is BookmarkFolder)
                     {
-                        count += node.Count(e => e.Value is Bookmark);
+                        count += node.WalkChildren().Count(e => e.Value is Bookmark);
                     }
                     else
                     {

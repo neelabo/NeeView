@@ -39,12 +39,11 @@ namespace NeeView
                 node.AddNode(new TagNode("p").AddText("Version " + Environment.ApplicationVersion));
             }
 
-            foreach (var group in menuTree.Root.Children)
+            foreach (var group in menuTree.Root)
             {
                 node.AddNode(new TagNode("h3").AddText(group.Value.DisplayLabel));
 
                 var table = new TagNode("table");
-                if (group.Children is null) throw new InvalidOperationException("group.Children must not be null");
                 foreach (var item in MenuTreeTools.GetMenuTable(group, 0))
                 {
                     table.AddNode(new TagNode("tr")

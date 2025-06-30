@@ -38,7 +38,7 @@ namespace NeeView
             {
                 if (_children == null)
                 {
-                    _children = new ObservableCollection<FolderTreeNodeBase>(BookmarkSource.Children
+                    _children = new ObservableCollection<FolderTreeNodeBase>(BookmarkSource
                         .Where(e => e.Value is BookmarkFolder)
                         .OrderBy(e => e.Value, new HasNameComparer())
                         .Select(e => new BookmarkFolderNode(e, this)));
@@ -77,13 +77,13 @@ namespace NeeView
 
         public virtual bool ContainsBookmark(string path)
         {
-            return BookmarkSource.Children.Any(e => e.Value is Bookmark bookmark && bookmark.Path == path);
+            return BookmarkSource.Any(e => e.Value is Bookmark bookmark && bookmark.Path == path);
         }
 
         public virtual DateTime GetLastEntryTime()
         {
-            if (!BookmarkSource.Children.Any()) return default;
-            return BookmarkSource.Children.Select(e => e.Value is Bookmark bookmark ? bookmark.EntryTime : default).Max();
+            if (!BookmarkSource.Any()) return default;
+            return BookmarkSource.Select(e => e.Value is Bookmark bookmark ? bookmark.EntryTime : default).Max();
         }
     }
 

@@ -362,7 +362,7 @@ namespace NeeView.Setting
 
             if (delta == 0)
             {
-                return !targetNode.ParentContains(node) && !targetNode.Children.Contains(node);
+                return !targetNode.ParentContains(node) && !targetNode.Contains(node);
             }
             else
             {

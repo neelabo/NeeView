@@ -10,7 +10,7 @@ using System.Windows.Data;
 
 namespace NeeView
 {
-    public abstract class MenuElement : BindableBase, ITreeListNode 
+    public abstract class MenuElement : BindableBase, ITreeListNode, IEquatable<MenuElement>
     {
         public MenuElement(MenuElementType type)
         {
@@ -50,6 +50,15 @@ namespace NeeView
         public void RaisePropertyChangedAll()
         {
             RaisePropertyChanged(null);
+        }
+
+        public bool Equals(MenuElement? other)
+        {
+            if (other is null) return false;
+            if (this.MenuElementType != other.MenuElementType) return false;
+            if (this.Label != other.Label) return false;
+            if (this.CommandName != other.CommandName) return false;
+            return true;
         }
 
         // TODO: immutable化すれば不要になる

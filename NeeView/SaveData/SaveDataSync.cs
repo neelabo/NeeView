@@ -1,8 +1,11 @@
-﻿using System;
+﻿//#define LOCAL_DEBUG
+
+using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using NeeLaboratory.Generators;
 using NeeLaboratory.IO;
 using NeeView.Collections.Generic;
 using NeeView.Data;
@@ -14,7 +17,8 @@ namespace NeeView
     /// ブックマーク、ページマークは変更のたびに保存。
     /// 他プロセスからの要求でリロードを行う。
     /// </summary>
-    public class SaveDataSync : IDisposable
+    [LocalDebug]
+    public partial class SaveDataSync : IDisposable
     {
         // Note: Initialize()必須
         static SaveDataSync() => Current = new SaveDataSync();
@@ -26,6 +30,8 @@ namespace NeeView
         private readonly UserSettingWatcher _userSettingWatcher = new UserSettingWatcher();
         private readonly BookmarkWatcher _bookmarkWatcher = new BookmarkWatcher();
         private readonly PlaylistWatcher _playlistWatcher = new PlaylistWatcher();
+        private bool _disposedValue = false;
+
 
         private SaveDataSync()
         {
@@ -34,8 +40,14 @@ namespace NeeView
         }
 
 
-        #region IDisposable Support
-        private bool _disposedValue = false;
+        public void Initialize()
+        {
+            BookmarkCollection.Current.BookmarkChanged += BookmarkCollection_BookmarkChanged;
+            QuickAccessCollection.Current.RoutedValuePropertyChanged += QuickAccessCollection_RoutedValuePropertyChanged;
+            QuickAccessCollection.Current.RoutedCollectionChanged += QuickAccessCollection_RoutedCollectionChanged;
+            BookHistoryCollection.Current.HistoryChanged += BookHistoryCollection_HistoryChanged;
+            BookHistoryCollection.Current.SearchChanged += Search_HistoryChanged;
+        }
 
         protected virtual void Dispose(bool disposing)
         {
@@ -47,8 +59,8 @@ namespace NeeView
                     _bookmarkWatcher.Dispose();
                     _userSettingWatcher.Dispose();
                     BookmarkCollection.Current.BookmarkChanged -= BookmarkCollection_BookmarkChanged;
-                    QuickAccessCollection.Current.RoutedPropertyChanged -= QuickAccessCollection_RoutedPropertyChanged;
-                    QuickAccessCollection.Current.CollectionChanged -= QuickAccessCollection_CollectionChanged;
+                    QuickAccessCollection.Current.RoutedValuePropertyChanged -= QuickAccessCollection_RoutedValuePropertyChanged;
+                    QuickAccessCollection.Current.RoutedCollectionChanged -= QuickAccessCollection_RoutedCollectionChanged;
                     BookHistoryCollection.Current.HistoryChanged -= BookHistoryCollection_HistoryChanged;
                     BookHistoryCollection.Current.SearchChanged -= Search_HistoryChanged;
                     _delaySaveBookmark.Dispose();
@@ -63,17 +75,7 @@ namespace NeeView
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-        #endregion IDisposable Support
 
-
-        public void Initialize()
-        {
-            BookmarkCollection.Current.BookmarkChanged += BookmarkCollection_BookmarkChanged;
-            QuickAccessCollection.Current.RoutedPropertyChanged += QuickAccessCollection_RoutedPropertyChanged;
-            QuickAccessCollection.Current.CollectionChanged += QuickAccessCollection_CollectionChanged;
-            BookHistoryCollection.Current.HistoryChanged += BookHistoryCollection_HistoryChanged;
-            BookHistoryCollection.Current.SearchChanged += Search_HistoryChanged;
-        }
 
         public void DisposeWatcher()
         {
@@ -82,19 +84,22 @@ namespace NeeView
             _userSettingWatcher.Dispose();
         }
 
-        private void QuickAccessCollection_RoutedPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        private void QuickAccessCollection_RoutedValuePropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
+            LocalDebug.WriteLine($"PropertyName={e.PropertyName}");
             _delaySaveBookmark.Request();
         }
 
-        private void QuickAccessCollection_CollectionChanged(object? sender, TreeCollectionChangeEventArgs<QuickAccessEntry> e)
+        private void QuickAccessCollection_RoutedCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action == TreeCollectionChangeAction.Refresh) return;
+            LocalDebug.WriteLine($"Action={e.Action}");
+            if (e.Action == NotifyCollectionChangedAction.Reset) return;
             _delaySaveBookmark.Request();
         }
 
         private void BookmarkCollection_BookmarkChanged(object? sender, BookmarkCollectionChangedEventArgs e)
         {
+            LocalDebug.WriteLine($"Action={e.Action}");
             if (e.Action == EntryCollectionChangedAction.Reset) return;
             _delaySaveBookmark.Request();
         }
@@ -102,14 +107,14 @@ namespace NeeView
         private void BookHistoryCollection_HistoryChanged(object? sender, BookMementoCollectionChangedArgs e)
         {
             if (e.HistoryChangedType == BookMementoCollectionChangedType.Load) return;
-            //Debug.WriteLine($"{nameof(SaveDataSync)}.{nameof(BookHistoryCollection_HistoryChanged)}: Request.");
+            LocalDebug.WriteLine($"");
             _delaySaveHistory.Request();
         }
 
         private void Search_HistoryChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Reset) return;
-            //Debug.WriteLine($"{nameof(SaveDataSync)}.{nameof(Search_HistoryChanged)}: Request: {sender}, {e.Action}");
+            LocalDebug.WriteLine($"Sender={sender}, Action={e.Action}");
             _delaySaveHistory.Request();
         }
 
@@ -122,7 +127,7 @@ namespace NeeView
 
         public void SaveUserSetting(bool sync, bool handleException)
         {
-            Debug.WriteLine($"Save UserSetting");
+            LocalDebug.WriteLine($"Save UserSetting");
 
             try
             {
@@ -143,12 +148,13 @@ namespace NeeView
             }
         }
 
-        public static void SaveHistory(bool handleException)
+        public void SaveHistory(bool handleException)
         {
-            Debug.WriteLine($"Save History");
+            LocalDebug.WriteLine($"Save History");
 
             try
             {
+                _delaySaveHistory.Cancel();
                 SaveData.Current.SaveHistory();
             }
             catch (Exception ex)
@@ -166,12 +172,13 @@ namespace NeeView
             }
         }
 
-        public static void SaveBookmark(bool sync, bool handleException)
+        public void SaveBookmark(bool sync, bool handleException)
         {
-            Debug.WriteLine($"Save Bookmark");
+            LocalDebug.WriteLine($"Save Bookmark");
 
             try
             {
+                _delaySaveBookmark?.Cancel();
                 SaveData.Current.SaveBookmark();
             }
             catch (Exception ex)

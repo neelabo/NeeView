@@ -61,8 +61,6 @@ namespace NeeView.Setting
             var parent = target.Parent;
             if (parent != null)
             {
-                if (parent.Children is null) throw new InvalidOperationException();
-
                 var next = target.GetNext(false) ?? target.GetPrev();
 
                 parent.Remove(target);
@@ -90,7 +88,7 @@ namespace NeeView.Setting
                     return;
                 }
                 parent.IsExpanded = true;
-                MenuTree.Move(parent, src, -1);
+                src.MoveTo(parent, -1);
                 MenuTree.Validate();
             }
 
@@ -103,7 +101,7 @@ namespace NeeView.Setting
                     return;
                 }
 
-                var dstIndex = parent.Children.IndexOf(dst);
+                var dstIndex = parent.IndexOf(dst);
                 if (dstIndex < 0)
                 {
                     return;
@@ -114,7 +112,7 @@ namespace NeeView.Setting
                     dstIndex++;
                 }
 
-                MenuTree.Move(parent, src, dstIndex);
+                src.MoveTo(parent, dstIndex);
                 MenuTree.Validate();
             }
 
@@ -127,12 +125,12 @@ namespace NeeView.Setting
                     return;
                 }
 
-                var srcIndex = parent.Children.IndexOf(src);
+                var srcIndex = parent.IndexOf(src);
                 if (srcIndex < 0)
                 {
                     return;
                 }
-                var dstIndex = parent.Children.IndexOf(dst);
+                var dstIndex = parent.IndexOf(dst);
                 if (dstIndex < 0)
                 {
                     return;
@@ -153,7 +151,7 @@ namespace NeeView.Setting
                     }
                 }
 
-                MenuTree.Move(parent, srcIndex, dstIndex);
+                parent.Move(srcIndex, dstIndex);
                 MenuTree.Validate();
             }
         }
@@ -177,7 +175,7 @@ namespace NeeView.Setting
                 }
                 parent.IsExpanded = true;
                 var clone = src.Clone();
-                MenuTree.Add(parent, clone);
+                parent.Add(clone);
                 MenuTree.Validate();
                 clone.IsSelected = true;
             }
@@ -191,7 +189,7 @@ namespace NeeView.Setting
                     return;
                 }
 
-                var dstIndex = parent.Children.IndexOf(dst);
+                var dstIndex = parent.IndexOf(dst);
                 if (dstIndex < 0)
                 {
                     return;
@@ -203,7 +201,7 @@ namespace NeeView.Setting
                 }
 
                 var clone = src.Clone();
-                MenuTree.Insert(parent, dstIndex, clone);
+                parent.Insert(dstIndex, clone);
                 MenuTree.Validate();
                 clone.IsSelected = true;
             }

@@ -1,7 +1,8 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeLaboratory.Generators;
+using NeeLaboratory.Linq;
 using NeeView.Collections;
 using NeeView.Collections.Generic;
-using NeeLaboratory.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,11 +10,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using NeeLaboratory.Generators;
-using System.Text.Json.Serialization;
-using System.ComponentModel;
 
 namespace NeeView
 {
@@ -70,7 +69,7 @@ namespace NeeView
         {
             if (path == null) return null;
 
-            return Items.Select(e => e.Value).OfType<Bookmark>().FirstOrDefault(e => e.Path == path);
+            return Items.WalkChildren().Select(e => e.Value).OfType<Bookmark>().FirstOrDefault(e => e.Path == path);
         }
 
         public BookMementoUnit? FindUnit(string place)
@@ -84,7 +83,7 @@ namespace NeeView
         {
             if (entry == null) return null;
 
-            return Items.FirstOrDefault(e => e.Value == entry);
+            return Items.WalkChildren().FirstOrDefault(e => e.Value == entry);
         }
 
         public TreeListNode<IBookmarkEntry>? FindNode(string path)
@@ -111,7 +110,7 @@ namespace NeeView
             }
             else if (path.Scheme == QueryScheme.File)
             {
-                return Items.FirstOrDefault(e => e.Value is Bookmark bookmark && bookmark.Path == path.SimplePath);
+                return Items.WalkChildren().FirstOrDefault(e => e.Value is Bookmark bookmark && bookmark.Path == path.SimplePath);
             }
             else
             {
@@ -132,7 +131,7 @@ namespace NeeView
             }
 
             var name = pathTokens.First();
-            var child = node.Children.FirstOrDefault(e => e.Value.Name == name);
+            var child = node.FirstOrDefault(e => e.Value.Name == name);
             if (child != null)
             {
                 return FindNode(child, pathTokens.Skip(1));
@@ -192,7 +191,7 @@ namespace NeeView
 
             lock (_lock)
             {
-                var index = memento.Index > memento.Parent.Children.Count ? memento.Parent.Children.Count : memento.Index;
+                var index = memento.Index > memento.Parent.Count ? memento.Parent.Count : memento.Index;
 
                 memento.Parent.Insert(index, memento.Node);
                 BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Add, memento.Node.Parent, memento.Node));
@@ -227,7 +226,7 @@ namespace NeeView
             List<TreeListNode<IBookmarkEntry>> nodes;
             lock (_lock)
             {
-                nodes = Items.Where(e => e.Value is Bookmark).ToList();
+                nodes = Items.WalkChildren().Where(e => e.Value is Bookmark).ToList();
             }
             var unlinked = new List<TreeListNode<IBookmarkEntry>>();
             foreach (var node in nodes)
@@ -262,7 +261,7 @@ namespace NeeView
             {
                 lock (_lock)
                 {
-                    var ignoreNames = target.Children.Where(e => e.Value is BookmarkFolder).Select(e => e.Value.Name).WhereNotNull();
+                    var ignoreNames = target.Where(e => e.Value is BookmarkFolder).Select(e => e.Value.Name).WhereNotNull();
                     var validName = GetValidateFolderName(ignoreNames, name, Properties.TextResources.GetString("Word.NewFolder"));
                     var node = new TreeListNode<IBookmarkEntry>(new BookmarkFolder() { Name = validName });
 
@@ -292,7 +291,7 @@ namespace NeeView
         {
             lock (_lock)
             {
-                newIndex = Math.Clamp(newIndex, 0, parent.Children.Count);
+                newIndex = Math.Clamp(newIndex, 0, parent.Count);
 
                 // 親がいないときは挿入
                 if (item.Parent is null)
@@ -303,7 +302,7 @@ namespace NeeView
                     {
                         return false;
                     }
-                    var node = parent.Children.FirstOrDefault(e => e.Value is Bookmark bookmark && bookmark.Path == itemPath);
+                    var node = parent.FirstOrDefault(e => e.Value is Bookmark bookmark && bookmark.Path == itemPath);
                     if (node is not null)
                     {
                         return false;
@@ -342,12 +341,11 @@ namespace NeeView
 
         private void Move(TreeListNode<IBookmarkEntry> parent, int oldIndex, int newIndex)
         {
-            Debug.Assert(parent.Children is not null);
             if (oldIndex == newIndex) return;
 
-            var item = parent.Children[oldIndex];
-            var target = parent.Children[newIndex];
-            parent.Children.Move(oldIndex, newIndex);
+            var item = parent[oldIndex];
+            var target = parent[newIndex];
+            parent.Move(oldIndex, newIndex);
 
             BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Move, item.Parent, item) { Target = target, OldIndex = oldIndex, NewIndex = newIndex });
         }
@@ -372,7 +370,7 @@ namespace NeeView
                         return false;
                     }
 
-                    var conflict = target.Children.FirstOrDefault(e => folder.IsEqual(e.Value));
+                    var conflict = target.FirstOrDefault(e => folder.IsEqual(e.Value));
                     if (conflict != null)
                     {
                         return Merge(item, conflict);
@@ -384,7 +382,7 @@ namespace NeeView
                 }
                 else if (item.Value is Bookmark bookmark)
                 {
-                    var conflict = target.Children.FirstOrDefault(e => bookmark.IsEqual(e.Value));
+                    var conflict = target.FirstOrDefault(e => bookmark.IsEqual(e.Value));
                     if (conflict != null)
                     {
                         return Remove(item);
@@ -428,12 +426,12 @@ namespace NeeView
                     BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Remove, parent, item));
                 }
 
-                foreach (var child in item.Children.ToList())
+                foreach (var child in item.ToList())
                 {
                     child.RemoveSelf();
                     if (child.Value is BookmarkFolder folder)
                     {
-                        var conflict = target.Children.FirstOrDefault(e => folder.IsEqual(e.Value));
+                        var conflict = target.FirstOrDefault(e => folder.IsEqual(e.Value));
                         if (conflict != null)
                         {
                             Merge(child, conflict);
@@ -442,7 +440,7 @@ namespace NeeView
                     }
                     else if (child.Value is Bookmark bookmark)
                     {
-                        var conflict = target.Children.FirstOrDefault(e => bookmark.IsEqual(e.Value));
+                        var conflict = target.FirstOrDefault(e => bookmark.IsEqual(e.Value));
                         if (conflict != null)
                         {
                             continue;
@@ -461,7 +459,7 @@ namespace NeeView
         {
             lock (_lock)
             {
-                foreach (var item in Items)
+                foreach (var item in Items.WalkChildren())
                 {
                     if (item.Value is Bookmark bookmark && bookmark.Path == src)
                     {
@@ -498,7 +496,7 @@ namespace NeeView
         {
             var names = new List<string>();
 
-            foreach (var child in node.Children.Where(e => e.Value is BookmarkFolder))
+            foreach (var child in node.Where(e => e.Value is BookmarkFolder).ToList())
             {
                 ValidateFolderName(child);
 
@@ -596,7 +594,7 @@ namespace NeeView
         {
             var memento = new Memento();
             memento.Nodes = BookmarkNodeConverter.ConvertFrom(Items);
-            memento.Books = Items.Select(e => e.Value).OfType<Bookmark>().Select(e => e.Unit.Memento).Distinct().ToList();
+            memento.Books = Items.WalkChildren().Select(e => e.Value).OfType<Bookmark>().Select(e => e.Unit.Memento).Distinct().ToList();
 
             // QuickAccess情報もここに保存する
             memento.QuickAccess = QuickAccessCollection.Current.CreateMemento();
@@ -649,7 +647,7 @@ namespace NeeView
             {
                 node.Name = folder.Name;
                 node.Children = new List<BookmarkNode>();
-                foreach (var child in source.Children)
+                foreach (var child in source)
                 {
                     node.Children.Add(ConvertFrom(child));
                 }

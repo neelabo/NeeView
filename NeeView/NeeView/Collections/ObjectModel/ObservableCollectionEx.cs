@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace NeeView.Collections.ObjectModel
 {
@@ -26,7 +27,10 @@ namespace NeeView.Collections.ObjectModel
 
             items.Clear();
             items.AddRange(collection);
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+
+            OnPropertyChanged(EventArgsCache.CountPropertyChanged);
+            OnPropertyChanged(EventArgsCache.IndexerPropertyChanged);
+            OnCollectionChanged(EventArgsCache.ResetCollectionChanged);
         }
 
         public int LastIndexOf(T item, int index)
@@ -54,5 +58,12 @@ namespace NeeView.Collections.ObjectModel
             }
         }
 
+
+        internal static class EventArgsCache
+        {
+            internal static readonly PropertyChangedEventArgs CountPropertyChanged = new PropertyChangedEventArgs("Count");
+            internal static readonly PropertyChangedEventArgs IndexerPropertyChanged = new PropertyChangedEventArgs("Item[]");
+            internal static readonly NotifyCollectionChangedEventArgs ResetCollectionChanged = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
+        }
     }
 }

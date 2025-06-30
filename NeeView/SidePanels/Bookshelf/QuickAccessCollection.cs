@@ -20,7 +20,7 @@ namespace NeeView
         public static QuickAccessCollection Current { get; }
 
 
-        public QuickAccessCollection() : base(new QuickAccessRoot())
+        public QuickAccessCollection() : base(new TreeListNode<QuickAccessEntry>(new QuickAccessRoot()))
         {
             Root.IsExpanded = true;
         }
@@ -60,7 +60,7 @@ namespace NeeView
             }
 
             var name = pathTokens.First();
-            var child = node.Children.FirstOrDefault(e => e.Value.Name == name);
+            var child = node.FirstOrDefault(e => e.Value.Name == name);
             if (child != null)
             {
                 return FindNode(child, pathTokens.Skip(1));
@@ -72,18 +72,18 @@ namespace NeeView
 
         public TreeListNode<QuickAccessEntry>? AddNewFolder(TreeListNode<QuickAccessEntry> parent, string? name)
         {
-            return InsertNewFolder(parent, parent.Children.Count, name);
+            return InsertNewFolder(parent, parent.Count, name);
         }
 
         public TreeListNode<QuickAccessEntry>? InsertNewFolder(TreeListNode<QuickAccessEntry> parent, int index, string? name)
         {
             if (parent.Value is not QuickAccessFolder) return null;
 
-            var ignoreNames = parent.Children.Where(e => e.Value is QuickAccessEntry).Select(e => e.Value.Name).WhereNotNull();
+            var ignoreNames = parent.Where(e => e.Value is QuickAccessEntry).Select(e => e.Value.Name).WhereNotNull();
             var validName = GetValidateFolderName(ignoreNames, name, Properties.TextResources.GetString("Word.NewFolder"));
             var node = new TreeListNode<QuickAccessEntry>(new QuickAccessFolder() { Name = validName });
 
-            Insert(parent, index, node);
+            parent.Insert(index, node);
             parent.IsExpanded = true;
             return node;
         }
@@ -131,7 +131,7 @@ namespace NeeView
             if (memento.Items is null) return;
 
             var items = memento.Items.Select(e => QuickAccessTreeNodeConverter.ConvertToTreeListNode(e)).WhereNotNull().ToList();
-            Reset(items);
+            Root.Reset(items);
         }
 
         #endregion
@@ -167,7 +167,7 @@ namespace NeeView
             {
                 node.Name = folder.Name;
                 node.Children = new List<QuickAccessTreeNode>();
-                foreach (var child in source.Children)
+                foreach (var child in source)
                 {
                     node.Children.Add(ConvertFrom(child));
                 }

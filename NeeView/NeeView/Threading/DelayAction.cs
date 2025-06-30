@@ -80,6 +80,7 @@ namespace NeeView.Threading
         public void Cancel()
         {
             StopTimer();
+            _action = null;
         }
 
         /// <summary>
@@ -101,6 +102,7 @@ namespace NeeView.Threading
             if (StopTimer())
             {
                 _action.Invoke();
+                _action = null;
             }
         }
 

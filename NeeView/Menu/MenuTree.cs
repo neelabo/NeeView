@@ -65,7 +65,7 @@ namespace NeeView
         {
             Root.Clear();
 
-            var children = CreateDefault().Root.Children.ToList();
+            var children = CreateDefault().Root.ToList();
             foreach (var node in children)
             {
                 node.RemoveSelf();
@@ -255,7 +255,7 @@ namespace NeeView
 
         private void RemoveCommand(string commandName)
         {
-            var removes = this.Root.Where(e => e.Value.MenuElementType == MenuElementType.Command && e.Value.CommandName == commandName).ToList();
+            var removes = this.Root.WalkChildren().Where(e => e.Value.MenuElementType == MenuElementType.Command && e.Value.CommandName == commandName).ToList();
             foreach (var node in removes)
             {
                 node.RemoveSelf();
