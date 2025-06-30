@@ -36,14 +36,7 @@ namespace NeeView
         {
             if (oldValue == newValue) return true;
 
-            if (_item.Source is TreeListNode<IBookmarkEntry> bookmarkNode)
-            {
-                return BookmarkCollectionService.Rename(bookmarkNode, newValue);
-            }
-            else
-            {
-                return await _item.RenameAsync(newValue);
-            }
+            return await _item.RenameAsync(newValue);
         }
     }
 

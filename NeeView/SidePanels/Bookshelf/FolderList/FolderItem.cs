@@ -415,41 +415,14 @@ namespace NeeView
             return this.TargetPath.FileName;
         }
 
-        public bool CanRename()
+        public virtual bool CanRename()
         {
-            if (!this.IsEditable)
-            {
-                return false;
-            }
-            else if (this.IsFileSystem())
-            {
-                if (this.TargetPath.SimplePath.StartsWith(Temporary.Current.TempDirectory, StringComparison.Ordinal))
-                {
-                    return false;
-                }
-                else
-                {
-                    return Config.Current.System.IsFileWriteAccessEnabled;
-                }
-            }
-            else if (this.Attributes.HasFlag(FolderItemAttribute.Bookmark))
-            {
-                return true;
-            }
-
             return false;
         }
 
-        public async ValueTask<bool> RenameAsync(string name)
+        public virtual ValueTask<bool> RenameAsync(string name)
         {
-            // TODO: ダイアログ処理を含んでいる。UI処理を分離したい
-
-            var src = this.TargetPath.SimplePath;
-            var dst = FileIO.CreateRenameDst(src, name, showConfirmDialog: true);
-            if (dst is null) return false;
-
-            var isSuccess = await FileIO.RenameAsync(src, dst, restoreBook: true); // TODO: 現在の本を開き直すのは上位で行う
-            return isSuccess;
+            return ValueTask.FromResult(false);
         }
 
         protected virtual void OnRenamed()
@@ -519,6 +492,44 @@ namespace NeeView
         }
         #endregion
 
+        public override string GetRenameText()
+        {
+            return this.TargetPath.FileName;
+        }
+
+        public override bool CanRename()
+        {
+            if (!this.IsEditable)
+            {
+                return false;
+            }
+            else if (this.IsFileSystem())
+            {
+                if (this.TargetPath.SimplePath.StartsWith(Temporary.Current.TempDirectory, StringComparison.Ordinal))
+                {
+                    return false;
+                }
+                else
+                {
+                    return Config.Current.System.IsFileWriteAccessEnabled;
+                }
+            }
+
+            return false;
+        }
+
+        public override async ValueTask<bool> RenameAsync(string name)
+        {
+            if (!CanRename()) return false;
+
+            // TODO: ダイアログ処理を含んでいる。UI処理を分離したい
+            var src = this.TargetPath.SimplePath;
+            var dst = FileIO.CreateRenameDst(src, name, showConfirmDialog: true);
+            if (dst is null) return false;
+
+            var isSuccess = await FileIO.RenameAsync(src, dst, restoreBook: true); // TODO: 現在の本を開き直すのは上位で行う
+            return isSuccess;
+        }
 
         protected override void OnRenamed()
         {

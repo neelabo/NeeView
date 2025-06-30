@@ -206,7 +206,7 @@ namespace NeeView
         {
             if (node?.Value is not BookmarkFolder folder) return null;
 
-            return new ConstFolderItem(new FolderThumbnail(), _isOverlayEnabled)
+            return new BookmarkFolderFolderItem(new FolderThumbnail(), _isOverlayEnabled)
             {
                 Source = node,
                 Type = FolderItemType.Directory,
@@ -322,19 +322,115 @@ namespace NeeView
 
     public class BookmarkFolderItem : FileFolderItem
     {
+        private readonly BookmarkFolderItemRenameModule _rename;
+
         public BookmarkFolderItem(bool isOverlayEnabled) : base(isOverlayEnabled)
         {
+            _rename = new BookmarkFolderItemRenameModule(this);
+
         }
 
         public TreeListNode<IBookmarkEntry> BookmarkNode => this.Source as TreeListNode<IBookmarkEntry>
             ?? throw new InvalidOperationException("Source is not a Bookmark node.");
 
         public Bookmark Bookmark => (this.Source as TreeListNode<IBookmarkEntry>)?.Value as Bookmark
-            ?? throw new InvalidOperationException("Source is not a Bookmark node.");
+            ?? throw new InvalidOperationException("Value is not a Bookmark.");
 
         public override string GetRenameText()
         {
-            return Bookmark.Name;
+            return _rename.GetRenameText();
+        }
+
+        public override bool CanRename()
+        {
+            return _rename.CanRename();
+        }
+
+        public override async ValueTask<bool> RenameAsync(string name)
+        {
+            return await _rename.RenameAsync(name);
         }
     }
+
+
+    public class BookmarkFolderFolderItem : ConstFolderItem 
+    {
+        private readonly BookmarkFolderItemRenameModule _rename;
+
+        public BookmarkFolderFolderItem(IThumbnail thumbnail, bool isOverlayEnabled) : base(thumbnail, isOverlayEnabled)
+        {
+            _rename = new BookmarkFolderItemRenameModule(this);
+        }
+
+        public TreeListNode<IBookmarkEntry> BookmarkNode => this.Source as TreeListNode<IBookmarkEntry>
+            ?? throw new InvalidOperationException("Source is not a Bookmark node.");
+
+        public BookmarkFolder BookmarkFolder => (this.Source as TreeListNode<IBookmarkEntry>)?.Value as BookmarkFolder
+            ?? throw new InvalidOperationException("Value is not a BookmarkFolder.");
+
+        public override string GetRenameText()
+        {
+            return _rename.GetRenameText();
+        }
+
+        public override bool CanRename()
+        {
+            return _rename.CanRename();
+        }
+
+        public override async ValueTask<bool> RenameAsync(string name)
+        {
+            return await _rename.RenameAsync(name);
+        }
+    }
+
+
+    /// <summary>
+    /// BookmarkFolderItem の名前変更機能を提供
+    /// </summary>
+    public class BookmarkFolderItemRenameModule : IRenameable
+    {
+        private readonly FolderItem _item;
+
+        public BookmarkFolderItemRenameModule(FolderItem item)
+        {
+            _item = item;
+        }
+
+        public TreeListNode<IBookmarkEntry> BookmarkNode => _item.Source as TreeListNode<IBookmarkEntry>
+                ?? throw new InvalidOperationException("Source is not a Bookmark node.");
+
+        public string GetRenameText()
+        {
+            return BookmarkNode.Name;
+        }
+
+        public bool CanRename()
+        {
+            if (!_item.IsEditable)
+            {
+                return false;
+            }
+            if (_item.Attributes.HasFlag(FolderItemAttribute.Bookmark))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public async ValueTask<bool> RenameAsync(string name)
+        {
+            if (CanRename())
+            {
+                return BookmarkCollectionService.Rename(BookmarkNode, name);
+            }
+            else
+            {
+                await ValueTask.CompletedTask;
+                return false;
+            }
+        }
+    }
+
 }

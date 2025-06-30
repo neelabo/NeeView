@@ -14,7 +14,12 @@ namespace NeeView
         internal FolderItem Source => _source;
 
         [WordNodeMember]
-        public string? Name => _source.DisplayName;
+        public string? Name
+        {
+            get { return _source.DisplayName; }
+            set { AppDispatcher.Invoke(() => Rename(value)); }
+        }
+
 
         [WordNodeMember]
         public string Path => _source.TargetPath.SimplePath;
@@ -41,6 +46,12 @@ namespace NeeView
         {
             var option = BookLoadOption.IsBook | (_source.CanRemove() ? BookLoadOption.None : BookLoadOption.Undeletable) | (isRecursive ? BookLoadOption.Recursive : BookLoadOption.NotRecursive);
             BookHub.Current.RequestLoad(this, _source.TargetPath.SimplePath, null, option, true);
+        }
+
+        protected virtual async void Rename(string? newName)
+        {
+            if (!_source.CanRename()) return;
+            await _source.RenameAsync(newName ?? "");
         }
     }
 
