@@ -23,10 +23,13 @@ namespace NeeView
         public event EventHandler? DirtyBook;
 
 
-        public BookMemoryService BookMemoryService { get; private set; }    
+        public BookMemoryService BookMemoryService { get; private set; }
 
         // この本のアーカイバ
         public ArchiveEntryCollection ArchiveEntryCollection { get; private set; }
+
+        // この本のアーカイバ識別子
+        public ArchiverIdentifier ArchiverIdentifier => ArchiveEntryCollection.Archive?.ArchiverIdentifier ?? ArchiverIdentifier.None;
 
         // この本の場所
         public string Path => this.ArchiveEntryCollection.Path;

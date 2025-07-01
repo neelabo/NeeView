@@ -1,5 +1,7 @@
 ﻿using NeeLaboratory.ComponentModel;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace NeeView
 {
@@ -9,7 +11,7 @@ namespace NeeView
         public static SelectableArchiverList Current { get; }
 
 
-        private List<ArchiverIdentifier> _archivers = new();
+        private List<SelectableArchiverItem> _archivers = new();
         private bool _isDirty = true;
 
 
@@ -20,7 +22,7 @@ namespace NeeView
         }
 
 
-        public List<ArchiverIdentifier> Archivers
+        public List<SelectableArchiverItem> Archivers
         {
             get { return _archivers; }
             set
@@ -38,7 +40,7 @@ namespace NeeView
         }
 
 
-        public List<ArchiverIdentifier> GetLatestArchivers()
+        public List<SelectableArchiverItem> GetLatestArchivers()
         {
             Update();
             return Archivers;
@@ -47,12 +49,15 @@ namespace NeeView
         public void Update()
         {
             if (!_isDirty) return;
-            _isDirty = true;
+            _isDirty = false;
 
-            var address = BookHub.Current.Address;
-            if (address is not null)
+            var book = BookOperation.Current.Book;
+            if (book is not null)
             {
-                Archivers = ArchiveManager.Current.GetSupportedArchiverList(address);
+                var bookArchiveIdentifider = book.Source.ArchiverIdentifier;
+                Archivers = ArchiveManager.Current.GetSupportedArchiverList(book.Path)
+                    .Select(e => new SelectableArchiverItem(e, e == bookArchiveIdentifider))
+                    .ToList();
             }
             else
             {
@@ -60,4 +65,6 @@ namespace NeeView
             }
         }
     }
+
+    public record SelectableArchiverItem(ArchiverIdentifier ArchiverIdentifier, bool IsChecked);
 }

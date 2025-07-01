@@ -157,6 +157,16 @@ namespace NeeView
         /// </summary>
         public bool Encrypted { get; protected set; }
 
+        /// <summary>
+        /// アーカイバ識別子
+        /// </summary>
+        public ArchiverIdentifier ArchiverIdentifier => new ArchiverIdentifier(ArchiveManager.GetArchiveType(this), GetPluginName());
+
+
+        public virtual string? GetPluginName()
+        {
+            return null;
+        }
 
         protected virtual void OnCreated(FileSystemEventArgs e)
         {

@@ -45,6 +45,12 @@ namespace NeeView
             return _susiePlugin;
         }
 
+        // プラグイン名取得
+        public override string? GetPluginName()
+        {
+            return _susiePlugin?.Plugin.Name;
+        }
+
         // アーカイブヒントで指定されたプラグイン名を取得
         private string? GetPluginNameHint()
         {

@@ -11,7 +11,13 @@ namespace NeeView
             items.Clear();
             foreach (var archiver in SelectableArchiverList.Current.GetLatestArchivers())
             {
-                items.Add(new MenuItem() { Header = archiver.ToDisplayString(), Command = ReloadWithCommand.Command, CommandParameter = archiver });
+                items.Add(new MenuItem()
+                {
+                    Header = archiver.ArchiverIdentifier.ToDisplayString(),
+                    IsChecked = archiver.IsChecked,
+                    Command = ReloadWithCommand.Command,
+                    CommandParameter = archiver.ArchiverIdentifier
+                });
             }
         }
 
