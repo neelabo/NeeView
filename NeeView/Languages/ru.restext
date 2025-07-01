@@ -1906,7 +1906,6 @@ StartUpConfig.IsAutoPlaySlideShow=Начать воспроизведение с
 StartUpConfig.IsMultiBootEnabled=Разрешить несколько запусков
 StartUpConfig.IsOpenLastBook=Восстановить открытую книгу
 StartUpConfig.IsOpenLastFolder=Восстановить расположение книжной полки
-StartUpConfig.IsOpenLastFolder.Remarks=Расположение книжной полки, если вы не открываете книгу при запуске.
 StartUpConfig.IsRestoreFullScreen=Восстановить полноэкранное состояние
 StartUpConfig.IsRestoreSecondWindowPlacement=Восстановить координаты второго окна
 StartUpConfig.IsRestoreSecondWindowPlacement.Remarks=Восстанавливает координаты окна даже после повторных запусков. Если выключено, окно будет отображаться с начальными координатами.

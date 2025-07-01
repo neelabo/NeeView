@@ -1898,7 +1898,6 @@ StartUpConfig.IsAutoPlaySlideShow=슬라이드쇼 재생 시작
 StartUpConfig.IsMultiBootEnabled=다중 실행 허용
 StartUpConfig.IsOpenLastBook=마지막으로 열었던 책 기억
 StartUpConfig.IsOpenLastFolder=서랍 경로 기억
-StartUpConfig.IsOpenLastFolder.Remarks=책을 열지 않고 실행 시 서랍 경로
 StartUpConfig.IsRestoreFullScreen=전체 화면 상태 기억
 StartUpConfig.IsRestoreSecondWindowPlacement=2개째의 창 위치 기억
 StartUpConfig.IsRestoreSecondWindowPlacement.Remarks=중복 실행 시에도 창 위치를 복원합니다. 이 항목을 끄면 초기 위치에 표시됩니다.

@@ -9,144 +9,183 @@ namespace NeeView
     /// </summary>
     public class FirstLoader
     {
-        private List<string>? _bookPaths;
-        private BookMemento? _bookMemento;
-        private string? _folderPath;
-        private bool _isFolderLink;
+        private BookProfile? _lastBook;
+        private FolderProfile? _lastFolder;
+        private BookProfile? _book;
+        private FolderProfile? _folder;
         private BookLoadOption _bookLoadOptions;
-
 
         public void Load()
         {
-            _bookPaths = null;
-            _folderPath = App.Current.Option.FolderListQuery?.SimpleQuery;
+            _book = null;
+            _folder = FolderProfile.Create(App.Current.Option.FolderListQuery?.SimpleQuery);
 
-            if (Config.Current.StartUp.LastBookPath?.StartsWith(Temporary.Current.TempRootPath, StringComparison.Ordinal) == true)
-            {
-                Config.Current.StartUp.LastBookPath = null;
-                Config.Current.StartUp.LastBookMemento = null;
-            }
-
-            if (Config.Current.StartUp.LastFolderPath?.StartsWith(Temporary.Current.TempRootPath, StringComparison.Ordinal) == true)
-            {
-                Config.Current.StartUp.LastFolderPath = null;
-            }
+            _lastBook = GetLastBookProfile();
+            _lastFolder = GetLastFolderProfile();
 
             SetBookPlace();
             SetFolderPlace();
             LoadBook();
             LoadFolder();
-
-            // 起動ブック情報をクリアする
-            Config.Current.StartUp.LastBookPath = null;
-            Config.Current.StartUp.LastBookMemento = null;
         }
+
+        private static BookProfile? GetLastBookProfile()
+        {
+#pragma warning disable CS0612 // 型またはメンバーが旧型式です
+            var path = Config.Current.StartUp.LastBook?.Path ?? Config.Current.StartUp.LastBookPath;
+            Config.Current.StartUp.LastBookPath = null;
+#pragma warning restore CS0612 // 型またはメンバーが旧型式です
+
+            if (!Config.Current.StartUp.IsOpenLastBook || string.IsNullOrEmpty(path) || path.StartsWith(Temporary.Current.TempRootPath, StringComparison.Ordinal) == true)
+            {
+                return null;
+            }
+
+            return new BookProfile(path, Config.Current.StartUp.LastBook);
+        }
+
+        private static FolderProfile? GetLastFolderProfile()
+        {
+#pragma warning disable CS0612 // 型またはメンバーが旧型式です
+            var path = Config.Current.StartUp.LastFolder?.Path ?? Config.Current.StartUp.LastFolderPath;
+            Config.Current.StartUp.LastFolderPath = null;
+#pragma warning restore CS0612 // 型またはメンバーが旧型式です
+
+            if (!Config.Current.StartUp.IsOpenLastFolder || string.IsNullOrEmpty(path) || path.StartsWith(Temporary.Current.TempRootPath, StringComparison.Ordinal) == true)
+            {
+                return null;
+            }
+
+            return new FolderProfile(path, Config.Current.StartUp.LastFolder);
+        }
+
 
         private void SetBookPlace()
         {
             if (App.Current.Option.IsBlank == SwitchOption.on)
             {
-                _bookPaths = null;
+                _book = null;
                 return;
             }
 
             // 起動引数の場所で開く
             if (App.Current.Option.Values.Count >= 1)
             {
-                _bookPaths = App.Current.Option.Values.ToList();
+                _book = BookProfile.Create(App.Current.Option.Values);
+
+                // 起動引数でブックを指定した場合は本棚を復元しない
+                _lastFolder = null;
                 return;
             }
 
             // 最後に開いたブックを復元する
-            if (Config.Current.StartUp.IsOpenLastBook)
+            if (_lastBook != null)
             {
-                var path = Config.Current.StartUp.LastBookPath ?? Config.Current.StartUp.LastBookMemento?.Path;
-                if (path != null)
-                {
-                    _bookPaths = new List<string> { path };
-                    _bookLoadOptions = BookLoadOption.Resume | BookLoadOption.IsBook;
-                    if (Config.Current.StartUp.LastBookMemento?.Path == path)
-                    {
-                        _bookMemento = Config.Current.StartUp.LastBookMemento;
-                    }
-
-                    if (_folderPath == null && Config.Current.StartUp.LastFolderPath != null)
-                    {
-                        // 前回開いていたフォルダーがブックマークであった場合、なるべくそのフォルダーをひらく
-                        if (QueryScheme.Bookmark.IsMatch(Config.Current.StartUp.LastFolderPath))
-                        {
-                            var node = BookmarkCollection.Current.FindNode(Config.Current.StartUp.LastFolderPath);
-                            if (node != null && node.WalkChildren().Select(e => e.Value).OfType<Bookmark>().Any(e => e.Path == path))
-                            {
-                                _folderPath = Config.Current.StartUp.LastFolderPath;
-                                _isFolderLink = true;
-                                return;
-                            }
-                        }
-                        // 前回開いていたフォルダーがプレイリストあった場合、なるべくそのフォルダーを開く
-                        if (PlaylistArchive.IsSupportExtension(Config.Current.StartUp.LastFolderPath))
-                        {
-                            try
-                            {
-                                var playlist = PlaylistSourceTools.Load(Config.Current.StartUp.LastFolderPath);
-                                if (playlist.Items.Any(e => e.Path == path))
-                                {
-                                    _folderPath = Config.Current.StartUp.LastFolderPath;
-                                    _isFolderLink = true;
-                                    return;
-                                }
-                            }
-                            catch
-                            {
-                                // nop.
-                            }
-                        }
-                    }
-                    return;
-                }
+                _book = _lastBook;
+                _bookLoadOptions = BookLoadOption.Resume | BookLoadOption.IsBook;
+                return;
             }
         }
 
         private void SetFolderPlace()
         {
-            if (_folderPath != null)
+            if (_folder != null)
             {
                 return;
             }
 
-            // Bookが指定されていなければ既定の場所を開く
-            if (_bookPaths == null)
+            // 前回開いていたフォルダーを復元する
+            if (_lastFolder != null)
             {
-                // 前回開いていたフォルダーを復元する
-                if (Config.Current.StartUp.LastFolderPath != null)
-                {
-                    _folderPath = Config.Current.StartUp.LastFolderPath;
-                    return;
-                }
+                _folder = _lastFolder;
+                return;
+            }
 
-                // ホームフォルダ
-                _folderPath = BookshelfFolderList.Current.GetFixedHome().SimpleQuery;
+            // Bookが指定されていなければ既定の場所を開く
+            if (_book == null)
+            {
+                _folder = FolderProfile.Create(BookshelfFolderList.Current.GetFixedHome().SimpleQuery);
                 return;
             }
         }
 
         private void LoadBook()
         {
-            if (_bookPaths != null)
-            {
-                var options = _bookLoadOptions | BookLoadOption.FocusOnLoaded;
-                BookHubTools.RequestLoad(this, _bookPaths, options, _folderPath == null, _bookMemento);
-            }
+            if (_book is null) return;
+
+            var options = _bookLoadOptions | BookLoadOption.FocusOnLoaded;
+            BookHubTools.RequestLoad(this, _book.Paths, options, _folder == null, _book.BookMemento);
         }
 
         private void LoadFolder()
         {
-            if (_folderPath != null)
+            if (_folder is null) return;
+
+            var select = _book is not null ? new FolderItemPosition(new QueryPath(_book.Path)) : null;
+            _folder.FolderMemento?.Register();
+            BookshelfFolderList.Current.RequestPlace(new QueryPath(_folder.Path), select, FolderSetPlaceOption.UpdateHistory);
+        }
+
+
+        /// <summary>
+        /// 最初のブックの情報
+        /// </summary>
+        internal class BookProfile
+        {
+            public BookProfile(string path, BookMemento? memento)
             {
-                var select = _isFolderLink ? new FolderItemPosition(new QueryPath(_bookPaths?.FirstOrDefault())) : null;
-                BookshelfFolderList.Current.RequestPlace(new QueryPath(_folderPath), select, FolderSetPlaceOption.UpdateHistory);
+                Paths = [path];
+                BookMemento = memento;
+            }
+
+            public BookProfile(IEnumerable<string> paths)
+            {
+                Paths = [.. paths];
+            }
+
+            public string Path => Paths.First();
+            public List<string> Paths { get; set; }
+            public BookMemento? BookMemento { get; set; }
+
+            public static BookProfile? Create(string? path, BookMemento? memento = null)
+            {
+                if (string.IsNullOrEmpty(path)) return null;
+
+                return new BookProfile(path, memento);
+            }
+
+            public static BookProfile? Create(IEnumerable<string>? paths)
+            {
+                var fixPaths = paths?.Where(e => !string.IsNullOrEmpty(e));
+                if (fixPaths is null || !fixPaths.Any()) return null;
+
+                return new BookProfile(fixPaths);
             }
         }
+        
+
+        /// <summary>
+        /// 最初のフォルダーの情報
+        /// </summary>
+        internal class FolderProfile
+        {
+            public FolderProfile(string path, BookshelfFolderMemento? memento)
+            {
+                Path = path;
+                FolderMemento = memento;
+            }
+
+            public string Path { get; set; }
+            public BookshelfFolderMemento? FolderMemento { get; set; }
+
+            public static FolderProfile? Create(string? path, BookshelfFolderMemento? memento = null)
+            {
+                if (string.IsNullOrEmpty(path)) return null;
+
+                return new FolderProfile(path, memento);
+            }
+        }
+
     }
 
 }

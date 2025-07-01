@@ -144,7 +144,7 @@ namespace NeeView
         /// <summary>
         /// シャッフル用ランダムシード
         /// </summary>
-        private int RandomSeed => FolderParameter.RandomSeed;
+        private int Seed => FolderParameter.Seed;
 
         /// <summary>
         /// 有効判定
@@ -178,7 +178,7 @@ namespace NeeView
         /// <returns></returns>
         public bool IsDirty(FolderParameter folder)
         {
-            return (Place.SimplePath != folder.Path || FolderOrder != folder.FolderOrder || RandomSeed != folder.RandomSeed);
+            return (Place.SimplePath != folder.Path || FolderOrder != folder.FolderOrder || Seed != folder.Seed);
         }
 
         /// <summary>
@@ -331,7 +331,7 @@ namespace NeeView
 
         private IOrderedEnumerable<FolderItem> CreateRandomOrder(IOrderedEnumerable<FolderItem> orderSource)
         {
-            var random = new Random(RandomSeed);
+            var random = new Random(Seed);
             return orderSource.ThenBy(e => random.Next());
         }
 

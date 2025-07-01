@@ -37,6 +37,15 @@ namespace NeeView
             this.DispatcherUnhandledException += Application_DispatcherUnhandledException;
         }
 
+        private void TerminateUnhandledException()
+        {
+#if DEBUG
+            TaskScheduler.UnobservedTaskException -= TaskScheduler_UnobservedTaskException;
+#endif
+            AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
+            this.DispatcherUnhandledException -= Application_DispatcherUnhandledException;
+        }
+
         /// <summary>
         /// TaskScheduler の未処理例外処理
         /// </summary>

@@ -283,6 +283,18 @@ namespace NeeView
             }
         }
 
+        public void SaveLastFolderPath()
+        {
+            if (Config.Current.StartUp.IsOpenLastFolder && Place is not null)
+            {
+                Config.Current.StartUp.LastFolder = new BookshelfFolderMemento(Place, FolderCollection?.FolderParameter);
+            }
+            else
+            {
+                Config.Current.StartUp.LastFolder = null;
+            }
+        }
+
         #region FolderHistory
 
         public List<KeyValuePair<int, QueryPath>> GetHistory(int direction, int size)

@@ -654,9 +654,6 @@ namespace NeeView
 
                         SetSelectedItem(FixedItemPrioritizeCurrentBook(select), options.HasFlag(FolderSetPlaceOption.Focus));
 
-                        // 最終フォルダー更新
-                        Config.Current.StartUp.LastFolderPath = Place.SimpleQuery;
-
                         // 検索キーワード更新
                         _searchBoxModel?.ResetInputKeyword(Place.Search);
 

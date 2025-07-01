@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
+using System;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
@@ -8,8 +9,9 @@ namespace NeeView
     public class StartUpConfig : BindableBase
     {
         private string? _lastBookPath;
-        private BookMemento? _lastBookMement;
         private string? _lastFolderPath;
+        private BookMemento? _lastBook;
+        private BookshelfFolderMemento? _lastFolder;
         private bool _isSplashScreenEnabled = true;
         private bool _isMultiBootEnabled;
         private bool _isRestoreWindowPlacement = true;
@@ -89,7 +91,7 @@ namespace NeeView
 
         #region HiddenParameters
 
-        [PropertyMapIgnore]
+        [Obsolete, PropertyMapIgnore]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? LastBookPath
         {
@@ -97,18 +99,26 @@ namespace NeeView
             set { SetProperty(ref _lastBookPath, value); }
         }
         
-        [PropertyMapIgnore]
-        public BookMemento? LastBookMemento
-        {
-            get { return _lastBookMement; }
-            set { SetProperty(ref _lastBookMement, value); }
-        }
-
-        [PropertyMapIgnore]
+        [Obsolete, PropertyMapIgnore]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? LastFolderPath
         {
             get { return IsOpenLastFolder ? _lastFolderPath : null; }
             set { SetProperty(ref _lastFolderPath, value); }
+        }
+
+        [PropertyMapIgnore]
+        public BookMemento? LastBook
+        {
+            get { return _lastBook; }
+            set { SetProperty(ref _lastBook, value); }
+        }
+
+        [PropertyMapIgnore]
+        public BookshelfFolderMemento? LastFolder
+        {
+            get { return _lastFolder; }
+            set { SetProperty(ref _lastFolder, value); }
         }
 
         #endregion HiddenParameters

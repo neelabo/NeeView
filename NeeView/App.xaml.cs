@@ -422,11 +422,16 @@ namespace NeeView
             if (_isTerminated) return;
             _isTerminated = true;
 
+            TerminateUnhandledException();
+
             try
             {
                 // 現在のブックを履歴に保存
                 PageFrameBoxPresenter.Current.ForceSaveBookMemento();
                 PageFrameBoxPresenter.Current.SaveLastBookMemento();
+
+                // 現在の本棚の場所を保存
+                BookshelfFolderList.Current.SaveLastFolderPath();
 
                 // 各種Dispose
                 ApplicationDisposer.Current.Dispose();
@@ -455,6 +460,7 @@ namespace NeeView
             {
                 Debug.Assert(false, "Application Terminate failed!!");
                 Trace.Fail($"App.Terminate: {DateTime.Now}: {ex.ToStackString()}");
+                throw;
             }
 
             if (callProcessTerminator)

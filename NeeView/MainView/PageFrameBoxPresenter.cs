@@ -220,8 +220,15 @@ namespace NeeView
         {
             if (_box is null) return;
 
-            var bookMemento = _box.BookMementoControl.CreateBookMement();
-            Config.Current.StartUp.LastBookMemento = bookMemento;
+            if (Config.Current.StartUp.IsOpenLastBook)
+            {
+                var bookMemento = _box.BookMementoControl.CreateBookMement();
+                Config.Current.StartUp.LastBook = bookMemento;
+            }
+            else
+            {
+                Config.Current.StartUp.LastBook = null;
+            }
         }
 
         private void BookHub_LoadRequesting(object? sender, BookPathEventArgs e)

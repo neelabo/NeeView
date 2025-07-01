@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace NeeView
@@ -14,16 +15,14 @@ namespace NeeView
     /// </summary>
     public class FolderParameter : BindableBase
     {
-        private static int _randomSeed = new Random().Next();
         private FolderOrder _folderOrder;
         private bool _isFolderRecursive;
-
+        private int _seed;
 
         public FolderParameter(string path)
         {
             Path = path;
             Load();
-            RandomSeed = _randomSeed;
         }
 
 
@@ -40,10 +39,10 @@ namespace NeeView
             get { return _folderOrder; }
             set
             {
-                _randomSeed = new Random().Next();
                 if (_folderOrder != value || value == FolderOrder.Random)
                 {
                     _folderOrder = value;
+                    _seed = GenerateRandomSeed(_folderOrder);
                     Save();
                     RaisePropertyChanged();
                 }
@@ -53,7 +52,7 @@ namespace NeeView
         /// <summary>
         /// シャッフル用ランダムシード
         /// </summary>
-        public int RandomSeed { get; set; }
+        public int Seed => _seed;
 
         /// <summary>
         /// この場所にあるフォルダーはサブフォルダーを読み込む
@@ -84,14 +83,51 @@ namespace NeeView
             Restore(memento);
         }
 
+        /// <summary>
+        /// ランダムシード値生成
+        /// </summary>
+        /// <param name="folderOrder">ソートモード</param>
+        /// <param name="seed">希望シード値。0で新しく生成</param>
+        /// <returns>シード値</returns>
+        private int GenerateRandomSeed(FolderOrder folderOrder, int seed = 0)
+        {
+            if (folderOrder != FolderOrder.Random)
+            {
+                return 0;
+            }
+            if (seed == 0)
+            {
+                return Random.Shared.Next(1, int.MaxValue);
+            }
+            return seed;
+        }
+
+        public static FolderOrder GetDefaultFolderOrder(string path)
+        {
+            if (QueryScheme.Bookmark.IsMatch(path))
+            {
+                return Config.Current.Bookmark.BookmarkFolderOrder;
+            }
+            else if (PlaylistArchive.IsSupportExtension(path))
+            {
+                return Config.Current.Bookshelf.PlaylistFolderOrder;
+            }
+            else
+            {
+                return Config.Current.Bookshelf.DefaultFolderOrder;
+            }
+        }
 
         #region Memento
         [Memento]
-        public class Memento : IEquatable<Memento>
+        public record class Memento
         {
             public FolderOrder FolderOrder { get; set; }
 
             public bool IsFolderRecursive { get; set; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            public int Seed { get; set; }
 
 
             public bool IsDefault(string path)
@@ -101,40 +137,10 @@ namespace NeeView
 
             public static Memento GetDefault(string path)
             {
-                var memento = new Memento();
-
-                if (QueryScheme.Bookmark.IsMatch(path))
+                return new Memento()
                 {
-                    memento.FolderOrder = Config.Current.Bookmark.BookmarkFolderOrder;
-                }
-                else if (PlaylistArchive.IsSupportExtension(path))
-                {
-                    memento.FolderOrder = Config.Current.Bookshelf.PlaylistFolderOrder;
-                }
-                else
-                {
-                    memento.FolderOrder = Config.Current.Bookshelf.DefaultFolderOrder;
-                }
-
-                return memento;
-            }
-
-            public bool Equals(Memento? other)
-            {
-                if (other == null) return false;
-
-                return (FolderOrder == other.FolderOrder &&
-                    IsFolderRecursive == other.IsFolderRecursive);
-            }
-
-            public override bool Equals(object? obj)
-            {
-                return Equals(obj as Memento);
-            }
-
-            public override int GetHashCode()
-            {
-                return HashCode.Combine(FolderOrder, IsFolderRecursive);
+                    FolderOrder = GetDefaultFolderOrder(path)
+                };
             }
         }
 
@@ -143,6 +149,7 @@ namespace NeeView
             var memento = new Memento();
             memento.FolderOrder = this.FolderOrder;
             memento.IsFolderRecursive = this.IsFolderRecursive;
+            memento.Seed = this.Seed;
             return memento;
         }
 
@@ -153,6 +160,7 @@ namespace NeeView
             // プロパティで設定するとSave()されてしまうのを回避
             _folderOrder = memento.FolderOrder;
             _isFolderRecursive = memento.IsFolderRecursive;
+            _seed = GenerateRandomSeed(memento.FolderOrder, memento.Seed);
             RaisePropertyChanged(null);
         }
 

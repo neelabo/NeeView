@@ -1898,7 +1898,6 @@ StartUpConfig.IsAutoPlaySlideShow=スライドショーの再生を開始する
 StartUpConfig.IsMultiBootEnabled=多重起動を許可する
 StartUpConfig.IsOpenLastBook=開いていたブックを復元する
 StartUpConfig.IsOpenLastFolder=本棚の場所を復元する
-StartUpConfig.IsOpenLastFolder.Remarks=起動時に本を開かない場合の本棚の場所です。
 StartUpConfig.IsRestoreFullScreen=フルスクリーン状態を復元する
 StartUpConfig.IsRestoreSecondWindowPlacement=2 つめのウィンドウ座標の復元
 StartUpConfig.IsRestoreSecondWindowPlacement.Remarks=重複起動した場合もウィンドウ座標を復元します。オフにすると初期座標で表示されます。

@@ -1906,7 +1906,6 @@ StartUpConfig.IsAutoPlaySlideShow=Comece a reproduzir o slideshow
 StartUpConfig.IsMultiBootEnabled=Permitir múltiplas instâncias
 StartUpConfig.IsOpenLastBook=Restaurar um livro aberto
 StartUpConfig.IsOpenLastFolder=Restaurar localização da estante
-StartUpConfig.IsOpenLastFolder.Remarks=A localização da estante se você não abrir o livro na inicialização.
 StartUpConfig.IsRestoreFullScreen=Restaurar o estado de tela cheia
 StartUpConfig.IsRestoreSecondWindowPlacement=Restaure as coordenadas da segunda janela
 StartUpConfig.IsRestoreSecondWindowPlacement.Remarks=Restaure também as coordenadas da janela quando as duplicatas forem ativadas. Quando definido como DESLIGADO, é exibido nas coordenadas iniciais.

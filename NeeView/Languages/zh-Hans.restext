@@ -1898,7 +1898,6 @@ StartUpConfig.IsAutoPlaySlideShow=启动幻灯片播放
 StartUpConfig.IsMultiBootEnabled=允许多重启动
 StartUpConfig.IsOpenLastBook=恢复打开的书籍
 StartUpConfig.IsOpenLastFolder=恢复书架位置
-StartUpConfig.IsOpenLastFolder.Remarks=启动时如果未打开书籍的书架位置。
 StartUpConfig.IsRestoreFullScreen=恢复全屏状态
 StartUpConfig.IsRestoreSecondWindowPlacement=恢复第二窗口坐标
 StartUpConfig.IsRestoreSecondWindowPlacement.Remarks=即使在重复启动后也恢复窗口坐标。如果关闭，窗口将以初始坐标显示。

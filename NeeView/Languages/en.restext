@@ -1906,7 +1906,6 @@ StartUpConfig.IsAutoPlaySlideShow=Start playing slideshow
 StartUpConfig.IsMultiBootEnabled=Allow multiple activations
 StartUpConfig.IsOpenLastBook=Restore an open book
 StartUpConfig.IsOpenLastFolder=Restore bookshelf location
-StartUpConfig.IsOpenLastFolder.Remarks=The location of the bookshelf if you do not open the book at startup.
 StartUpConfig.IsRestoreFullScreen=Restore full screen state
 StartUpConfig.IsRestoreSecondWindowPlacement=Restore the second window coordinates
 StartUpConfig.IsRestoreSecondWindowPlacement.Remarks=Restores window coordinates even after duplicate launches. If turned off, the window will be displayed with the initial coordinates.
