@@ -31,8 +31,8 @@ namespace NeeView
         private Visibility _visibility;
         private readonly Func<DependencyObject, bool> _elementContainsFunc;
         private bool _isPanelActive;
-        
-        
+
+
         public SidePanelViewModel(ItemsControl itemsControl, LayoutDockPanelContent dock, Func<DependencyObject, bool> elementContainsFunc)
         {
             _dock = dock;
@@ -44,20 +44,26 @@ namespace NeeView
                 Visibility = e.Visibility;
             };
 
+            Config.Current.Panels.AddPropertyChanged(nameof(PanelsConfig.IsSideBarEnabled),
+                (s, e) => RaisePropertyChanged(nameof(SideBarVisibility)));
+
+            _dock.AddPropertyChanged(nameof(_dock.LeaderPanels),
+                (s, e) => RaisePropertyChanged(nameof(SideBarVisibility)));
+
             _dock.AddPropertyChanged(nameof(_dock.SelectedItem), (s, e) =>
-            {
-                RaisePropertyChanged(nameof(PanelVisibility));
-                RaisePropertyChanged(nameof(SelectedItem));
-                if (_dock.SelectedItem != null)
                 {
-                    AutoHideDescription.VisibleOnce(true);
-                    IsPanelActive = true;
-                }
-                else
-                {
-                    IsPanelActive = false;
-                }
-            });
+                    RaisePropertyChanged(nameof(PanelVisibility));
+                    RaisePropertyChanged(nameof(SelectedItem));
+                    if (_dock.SelectedItem != null)
+                    {
+                        AutoHideDescription.VisibleOnce(true);
+                        IsPanelActive = true;
+                    }
+                    else
+                    {
+                        IsPanelActive = false;
+                    }
+                });
 
             _elementContainsFunc = elementContainsFunc;
         }
@@ -83,6 +89,7 @@ namespace NeeView
                 if (SetProperty(ref _isDragged, value))
                 {
                     RaisePropertyChanged(nameof(IsVisibleLocked));
+                    RaisePropertyChanged(nameof(SideBarVisibility));
                 }
             }
         }
@@ -123,6 +130,7 @@ namespace NeeView
                 if (SetProperty(ref _visibility, value))
                 {
                     RaisePropertyChanged(nameof(PanelVisibility));
+                    RaisePropertyChanged(nameof(SideBarVisibility));
                 }
 
                 //// TODO: これは??
@@ -138,6 +146,17 @@ namespace NeeView
             get
             {
                 return Visibility == Visibility.Visible && _dock.SelectedItem != null ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
+        /// <summary>
+        /// サイドバー表示
+        /// </summary>
+        public Visibility SideBarVisibility
+        {
+            get
+            {
+                return Config.Current.Panels.IsSideBarEnabled && (IsVisibleLocked || _dock.LeaderPanels.Count > 0) ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 
@@ -278,7 +297,7 @@ namespace NeeView
     /// </summary>
     public class RightPanelViewModel : SidePanelViewModel
     {
-        public RightPanelViewModel(ItemsControl itemsControl, LayoutDockPanelContent dock, Func<DependencyObject, bool> elementContainsFunc) : base(itemsControl, dock,elementContainsFunc)
+        public RightPanelViewModel(ItemsControl itemsControl, LayoutDockPanelContent dock, Func<DependencyObject, bool> elementContainsFunc) : base(itemsControl, dock, elementContainsFunc)
         {
             Config.Current.Panels.AddPropertyChanged(nameof(PanelsConfig.RightPanelWidth), (s, e) => RaisePropertyChanged(nameof(Width)));
         }

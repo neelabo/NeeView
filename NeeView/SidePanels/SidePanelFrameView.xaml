@@ -71,7 +71,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <Grid x:Name="LeftSidePanel" Grid.Column="0" Visibility="{Binding VM.IsSideBarVisible, Converter={StaticResource BooleanToVisibilityConverter}}" KeyboardNavigation.TabNavigation="Local"
+            <Grid x:Name="LeftSidePanel" Grid.Column="0" Visibility="{Binding VM.Left.SideBarVisibility}" KeyboardNavigation.TabNavigation="Local"
                   KeyboardNavigation.TabIndex="1">
                 <Grid x:Name="LeftIconGrid" Visibility="{Binding ElementName=LeftPanelContent, Path=Visibility}" Background="Transparent" AllowDrop="True"
                         MouseLeftButtonDown="LeftIconGrid_MouseLeftButtonDown" MouseLeftButtonUp="LeftIconGrid_MouseLeftButtonUp">
@@ -87,7 +87,7 @@
                 </Grid>
             </Grid>
 
-            <Grid x:Name="RightSidePanel" Grid.Column="2" Visibility="{Binding VM.IsSideBarVisible, Converter={StaticResource BooleanToVisibilityConverter}}" KeyboardNavigation.TabNavigation="Local"
+            <Grid x:Name="RightSidePanel" Grid.Column="2" Visibility="{Binding VM.Right.SideBarVisibility}" KeyboardNavigation.TabNavigation="Local"
                   KeyboardNavigation.TabIndex="6">
                 <Grid x:Name="RightIconGrid" Visibility="{Binding ElementName=RightPanelContent, Path=Visibility}" Background="Transparent" AllowDrop="True"
                         MouseLeftButtonDown="RightIconGrid_MouseLeftButtonDown" MouseLeftButtonUp="RightIconGrid_MouseLeftButtonUp">
