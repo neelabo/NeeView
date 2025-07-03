@@ -661,7 +661,7 @@ namespace NeeView
             DirtyWindowLayout();
 
             // 解除でフォーカスが表示されたパネルに移動してしまう現象を回避
-            if (!_windowController.AutoHideMode && Config.Current.Panels.IsHidePanelInAutoHideMode)
+            if (!_windowController.AutoHideMode && (Config.Current.Panels.IsHideLeftPanelInAutoHideMode || Config.Current.Panels.IsHideRightPanelInAutoHideMode))
             {
                 _viewComponent.RaiseFocusMainViewRequest();
             }

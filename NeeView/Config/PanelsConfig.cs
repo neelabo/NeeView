@@ -10,10 +10,12 @@ namespace NeeView
 {
     public class PanelsConfig : BindableBase
     {
-        private bool _isHidePanel;
+        private bool _isHideLeftPanel;
+        private bool _isHideRightPanel;
         private bool _isSideBarEnabled = true;
         private double _opacity = 1.0;
-        private bool _isHidePanelInAutoHideMode = true;
+        private bool _isHideLeftPanelInAutoHideMode = true;
+        private bool _isHideRightPanelInAutoHideMode = true;
         private bool _isDecoratePlace = true;
         private bool _openWithDoubleClick;
         private bool _isLeftRightKeyEnabled;
@@ -27,23 +29,43 @@ namespace NeeView
 
 
         /// <summary>
-        /// パネルを自動的に隠す
+        /// 左パネルを自動的に隠す
         /// </summary>
         [PropertyMember]
-        public bool IsHidePanel
+        public bool IsHideLeftPanel
         {
-            get { return _isHidePanel; }
-            set { SetProperty(ref _isHidePanel, value); }
+            get { return _isHideLeftPanel; }
+            set { SetProperty(ref _isHideLeftPanel, value); }
         }
 
         /// <summary>
-        /// パネルを自動的に隠す(自動非表示モード)
+        /// 右パネルを自動的に隠す
         /// </summary>
         [PropertyMember]
-        public bool IsHidePanelInAutoHideMode
+        public bool IsHideRightPanel
         {
-            get { return _isHidePanelInAutoHideMode; }
-            set { SetProperty(ref _isHidePanelInAutoHideMode, value); }
+            get { return _isHideRightPanel; }
+            set { SetProperty(ref _isHideRightPanel, value); }
+        }
+
+        /// <summary>
+        /// 左パネルを自動的に隠す(自動非表示モード)
+        /// </summary>
+        [PropertyMember]
+        public bool IsHideLeftPanelInAutoHideMode
+        {
+            get { return _isHideLeftPanelInAutoHideMode; }
+            set { SetProperty(ref _isHideLeftPanelInAutoHideMode, value); }
+        }
+
+        /// <summary>
+        /// 右パネルを自動的に隠す(自動非表示モード)
+        /// </summary>
+        [PropertyMember]
+        public bool IsHideRightPanelInAutoHideMode
+        {
+            get { return _isHideRightPanelInAutoHideMode; }
+            set { SetProperty(ref _isHideRightPanelInAutoHideMode, value); }
         }
 
         /// <summary>
@@ -149,7 +171,7 @@ namespace NeeView
             set { SetProperty(ref _isTextSearchEnabled, value); }
         }
 
-        [PropertyMapLabel("@Word.StyleNormal")]
+        [PropertyMapLabel("@Word.StyleList")]
         public PanelListItemProfile NormalItemProfile { get; set; } = PanelListItemProfile.DefaultNormalItemProfile.Clone();
 
         [PropertyMapLabel("@Word.StyleContent")]
@@ -233,12 +255,16 @@ namespace NeeView
             set { FolderTreeFontSize_Legacy = value; }
         }
 
-        [Obsolete("no used"), Alternative(nameof(IsHidePanelInAutoHideMode), 38)] // ver.38
+        [Obsolete("no used"), Alternative("IsHideLeftPanelInAutoHideMode, IsHideRightPanelInAutoHideMode", 38)] // ver.38
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public bool IsHidePanelInFullscreen
         {
             get { return default; }
-            set { IsHidePanelInAutoHideMode = value; }
+            set
+            {
+                IsHideLeftPanelInAutoHideMode = value;
+                IsHideRightPanelInAutoHideMode = value;
+            }
         }
 
         [Obsolete("no used"), Alternative(null, 38)] // ver.38
@@ -252,6 +278,56 @@ namespace NeeView
         [Obsolete("no used"), Alternative(null, 38)] // ver.38
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string? RightPanelSeleted { get; set; }
+
+        [Obsolete("no used"), Alternative("IsHideLeftPanel, IsHideRightPanel", 44, ScriptErrorLevel.Info)] // ver.44
+        [JsonIgnore]
+        public bool IsHidePanel
+        {
+            get { return _isHideLeftPanel || _isHideRightPanel; }
+            set
+            {
+                IsHideLeftPanel = value;
+                IsHideRightPanel = value;
+            }
+        }
+
+        [Obsolete("no used"), PropertyMapIgnore] // ver.44
+        [JsonPropertyName("IsHidePanel")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public bool IsHidePanel_Legacy
+        {
+            get { return default; }
+            set
+            {
+                IsHideLeftPanel = value;
+                IsHideRightPanel = value;
+            }
+        }
+
+        [Obsolete("no used"), Alternative("IsHideLeftPanelInAutoHideMode, IsHideRightPanelInAutoHideMode", 44, ScriptErrorLevel.Info)] // ver.44
+        [JsonIgnore]
+        public bool IsHidePanelInAutoHideMode
+        {
+            get { return IsHideLeftPanelInAutoHideMode || IsHideRightPanelInAutoHideMode; }
+            set
+            {
+                IsHideLeftPanelInAutoHideMode = value;
+                IsHideRightPanelInAutoHideMode = value;
+            }
+        }
+
+        [Obsolete("no used"), PropertyMapIgnore] // ver.44
+        [JsonPropertyName("IsHidePanelInAutoHideMode")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public bool IsHidePanelInAutoHideMode_Legacy
+        {
+            get { return default; }
+            set
+            {
+                IsHideLeftPanelInAutoHideMode = value;
+                IsHideRightPanelInAutoHideMode = value;
+            }
+        }
 
         #endregion Obsolete
 

@@ -159,7 +159,9 @@
 
                         <!-- サイドパネル -->
                         <local:SidePanelFrameView x:Name="SidePanelFrame" PanelMargin="{Binding SidePanelMargin, Mode=OneWay}" Visibility="Visible" Source="{Binding SidePanel}"
-                                IsAutoHide="{Binding Model.CanHidePanel}" CanvasWidth="{Binding CanvasWidth, Mode=OneWayToSource}" CanvasHeight="{Binding CanvasHeight, Mode=OneWayToSource}"
+                                IsLeftAutoHide="{Binding Model.CanHideLeftPanel}"
+                                IsRightAutoHide="{Binding Model.CanHideRightPanel}"
+                                CanvasWidth="{Binding CanvasWidth, Mode=OneWayToSource}" CanvasHeight="{Binding CanvasHeight, Mode=OneWayToSource}"
                                 d:IsHidden="True">
                         </local:SidePanelFrameView>
 

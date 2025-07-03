@@ -99,6 +99,7 @@ namespace NeeView
         [MemberNotNull(nameof(_elements), nameof(DefaultMemento), nameof(ObsoleteCommands))]
         private void InitializeCommandTable()
         {
+#pragma warning disable CS0612 // 型またはメンバーが旧型式です
             var list = new List<CommandElement>()
             {
                 new LoadAsCommand(),
@@ -149,6 +150,8 @@ namespace NeeView
                 new ToggleHideMenuCommand(),
                 new ToggleVisibleSideBarCommand(),
                 new ToggleHidePanelCommand(),
+                new ToggleHideLeftPanelCommand(),
+                new ToggleHideRightPanelCommand(),
                 new ToggleVisiblePageSliderCommand(),
                 new ToggleHidePageSliderCommand(),
 
@@ -337,6 +340,7 @@ namespace NeeView
 
                 new OpenConsoleCommand()
             };
+#pragma warning restore CS0612 // 型またはメンバーが旧型式です
 
             // command list order
             foreach (var item in list.GroupBy(e => e.Group).SelectMany(e => e).Select((e, index) => (e, index)))

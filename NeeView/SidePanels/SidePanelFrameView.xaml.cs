@@ -42,25 +42,41 @@ namespace NeeView
             DependencyProperty.Register("PanelMargin", typeof(Thickness), typeof(SidePanelFrameView), new PropertyMetadata(null));
 
 
-        /// <summary>
-        /// IsAutoHide property.
-        /// </summary>
-        public bool IsAutoHide
+        public bool IsLeftAutoHide
         {
-            get { return (bool)GetValue(IsAutoHideProperty); }
-            set { SetValue(IsAutoHideProperty, value); }
+            get { return (bool)GetValue(IsLeftAutoHideProperty); }
+            set { SetValue(IsLeftAutoHideProperty, value); }
         }
 
-        public static readonly DependencyProperty IsAutoHideProperty =
-            DependencyProperty.Register("IsAutoHide", typeof(bool), typeof(SidePanelFrameView), new PropertyMetadata(false, IsAutoHide_Changed));
+        public static readonly DependencyProperty IsLeftAutoHideProperty =
+            DependencyProperty.Register("IsLeftAutoHide", typeof(bool), typeof(SidePanelFrameView), new PropertyMetadata(false, IsLeftAutoHide_Changed));
 
-        private static void IsAutoHide_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void IsLeftAutoHide_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is SidePanelFrameView control)
             {
-                control.UpdateAutoHide();
+                control.UpdateLeftAutoHide();
             }
         }
+
+
+        public bool IsRightAutoHide
+        {
+            get { return (bool)GetValue(IsRightAutoHideProperty); }
+            set { SetValue(IsRightAutoHideProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsRightAutoHideProperty =
+            DependencyProperty.Register("IsRightAutoHide", typeof(bool), typeof(SidePanelFrameView), new PropertyMetadata(false, IsRightAutoHide_Changed));
+
+        private static void IsRightAutoHide_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is SidePanelFrameView control)
+            {
+                control.UpdateRightAutoHide();
+            }
+        }
+
 
         /// <summary>
         /// SidePanelFrameModel を Sourceとして指定する。
@@ -161,7 +177,7 @@ namespace NeeView
         public static readonly DependencyProperty RightColumnWidthProperty =
             DependencyProperty.Register("RightColumnWidth", typeof(GridLength), typeof(SidePanelFrameView), new PropertyMetadata(new GridLength(0.0)));
 
-        #endregion DependencyProperties
+#endregion DependencyProperties
 
 
         // パネル幅自動調整用
@@ -231,7 +247,8 @@ namespace NeeView
 
             InitializeColumnWidth(this.VM);
 
-            UpdateAutoHide();
+            UpdateLeftAutoHide();
+            UpdateRightAutoHide();
         }
 
 
@@ -252,12 +269,21 @@ namespace NeeView
         }
 
         /// <summary>
-        /// AutoHide 更新
+        /// 左パネル AutoHide 更新
         /// </summary>
-        private void UpdateAutoHide()
+        private void UpdateLeftAutoHide()
         {
             if (_vm == null) return;
-            _vm.IsAutoHide = IsAutoHide;
+            _vm.Left.IsAutoHide = IsLeftAutoHide;
+        }
+
+        /// <summary>
+        /// 右パネル AutoHide 更新
+        /// </summary>
+        private void UpdateRightAutoHide()
+        {
+            if (_vm == null) return;
+            _vm.Right.IsAutoHide = IsRightAutoHide;
         }
 
         /// <summary>
@@ -265,7 +291,7 @@ namespace NeeView
         /// </summary>
         private void UpdateCanvas()
         {
-            if (_vm == null || _vm.IsAutoHide)
+            if (_vm == null)
             {
                 CanvasLeft = 0;
                 CanvasTop = 0;
@@ -274,8 +300,8 @@ namespace NeeView
             }
             else
             {
-                var panel0 = this.LeftPanel.IsVisible ? this.CenterPanel : this.ScreenRect;
-                var panel1 = this.RightPanel.IsVisible ? this.CenterPanel : this.ScreenRect;
+                var panel0 = _vm.Left.IsAutoHide ? this.Root : this.LeftPanel.IsVisible ? this.CenterPanel : this.ScreenRect;
+                var panel1 = _vm.Right.IsAutoHide ? this.Root : this.RightPanel.IsVisible ? this.CenterPanel : this.ScreenRect;
                 var point0 = panel0.TranslatePoint(new Point(0, 0), this.Root);
                 var point1 = panel1.TranslatePoint(new Point(panel1.ActualWidth, panel1.ActualHeight), this.Root);
                 var rect = new Rect(point0, point1);

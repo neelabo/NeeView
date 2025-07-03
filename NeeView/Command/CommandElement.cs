@@ -92,9 +92,12 @@ namespace NeeView
         {
             NameSource = new CommandNameSource(name ?? CommandElementTools.CreateCommandName(this.GetType()), 0);
 
+            bool isObsolete = this.GetType().IsDefined(typeof(ObsoleteAttribute), false);
+            var obsoleteString = isObsolete ? $"({ResourceService.GetString("@Word.Deprecated")}) " : "";
+
             Text = GetResourceTextRequired(null, null);
             Menu = GetResourceText(nameof(Menu));
-            Remarks = GetResourceText(nameof(Remarks));
+            Remarks = obsoleteString + GetResourceText(nameof(Remarks));
         }
 
 

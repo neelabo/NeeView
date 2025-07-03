@@ -30,7 +30,6 @@
             <Setter Property="TextElement.Foreground" Value="{DynamicResource SideBar.Foreground}" />
             <Setter Property="BorderBrush" Value="{DynamicResource SideBar.Border}" />
             <Setter Property="Background" Value="{DynamicResource SideBar.Background}" />
-            <Setter Property="Opacity" Value="{Binding VM.Opacity}" />
             <Setter Property="Width" Value="41" />
             <Setter Property="UseLayoutRounding" Value="True" />
         </Style>
@@ -48,7 +47,6 @@
             <Setter Property="TextElement.Foreground" Value="{DynamicResource Panel.Foreground}" />
             <Setter Property="BorderBrush" Value="{DynamicResource Panel.Border}" />
             <Setter Property="Background" Value="{DynamicResource Panel.Background}" />
-            <Setter Property="Opacity" Value="{Binding VM.Opacity}" />
         </Style>
 
         <Style x:Key="PanelGridSplitterStyle" TargetType="{x:Type GridSplitter}">
@@ -78,7 +76,7 @@
                     <b:Interaction.Behaviors>
                         <nw:DragAcceptBehavior Description="{Binding VM.Left.Description}" />
                     </b:Interaction.Behaviors>
-                    <Border Style="{StaticResource PanelIconBorderStyle}" BorderThickness="0,0,1,0" />
+                    <Border Style="{StaticResource PanelIconBorderStyle}" BorderThickness="0,0,1,0" Opacity="{Binding VM.LeftPanelOpacity}" />
                     <Grid Margin="0,32,1,0">
                         <ItemsControl x:Name="LeftIconList" Style="{StaticResource PanelIconItemsControlStyle}" Margin="{Binding PanelMargin}" ItemTemplate="{StaticResource LeftPanelIconTemplate}"
                                 ItemsSource="{Binding VM.MainLayoutPanelManager.LeftDock.LeaderPanels}">
@@ -94,7 +92,7 @@
                     <b:Interaction.Behaviors>
                         <nw:DragAcceptBehavior Description="{Binding VM.Right.Description}" />
                     </b:Interaction.Behaviors>
-                    <Border Style="{StaticResource PanelIconBorderStyle}" BorderThickness="1,0,0,0" />
+                    <Border Style="{StaticResource PanelIconBorderStyle}" BorderThickness="1,0,0,0" Opacity="{Binding VM.RightPanelOpacity}" />
                     <Grid Margin="1,32,0,0">
                         <ItemsControl x:Name="RightIconList" Style="{StaticResource PanelIconItemsControlStyle}" Margin="{Binding PanelMargin}" ItemTemplate="{StaticResource RightPanelIconTemplate}"
                                 ItemsSource="{Binding VM.MainLayoutPanelManager.RightDock.LeaderPanels}">
@@ -117,7 +115,7 @@
 
                 <Grid x:Name="LeftPanel" Grid.Column="0" UseLayoutRounding="True"  Visibility="{Binding VM.Left.PanelVisibility}"
                       KeyboardNavigation.TabNavigation="Local" KeyboardNavigation.TabIndex="2">
-                    <Border Style="{StaticResource PanelBorderStyle}" BorderThickness="0,0,1,0" />
+                    <Border Style="{StaticResource PanelBorderStyle}" BorderThickness="0,0,1,0" Opacity="{Binding VM.LeftPanelOpacity}" />
                     <Border x:Name="LeftPanelContent" Background="Transparent" Margin="0,0,1,0">
                         <behaviors:Interaction.Behaviors>
                             <nwc:AutoHideBehavior Name="LeftPanel" Screen="{Binding ElementName=ScreenRect}" SubTarget="{Binding ElementName=LeftSplitter}" Dock="Left"
@@ -141,7 +139,7 @@
 
                 <Grid x:Name="RightPanel" Grid.Column="2" UseLayoutRounding="True" Visibility="{Binding VM.Right.PanelVisibility}"
                       KeyboardNavigation.TabNavigation="Local" KeyboardNavigation.TabIndex="5">
-                    <Border Style="{StaticResource PanelBorderStyle}" BorderThickness="1,0,0,0" />
+                    <Border Style="{StaticResource PanelBorderStyle}" BorderThickness="1,0,0,0" Opacity="{Binding VM.RightPanelOpacity}"/>
                     <Border x:Name="RightPanelContent" Background="Transparent" Margin="1,0,0,0">
                         <behaviors:Interaction.Behaviors>
                             <nwc:AutoHideBehavior Name="RightPanel" Screen="{Binding ElementName=ScreenRect}" SubTarget="{Binding ElementName=RightSplitter}" Dock="Right"

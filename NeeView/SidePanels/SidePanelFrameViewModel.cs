@@ -12,7 +12,6 @@ namespace NeeView
     /// </summary>
     public class SidePanelFrameViewModel : BindableBase
     {
-        private bool _isAutoHide;
         private SidePanelFrame _model;
 
 
@@ -29,11 +28,18 @@ namespace NeeView
             Right = right;
             Right.PropertyChanged += Right_PropertyChanged;
 
-            MainWindowModel.Current.AddPropertyChanged(nameof(MainWindowModel.CanHidePanel),
-                (s, e) => RaisePropertyChanged(nameof(Opacity)));
+            MainWindowModel.Current.AddPropertyChanged(nameof(MainWindowModel.CanHideLeftPanel),
+                (s, e) => RaisePropertyChanged(nameof(LeftPanelOpacity)));
+
+            MainWindowModel.Current.AddPropertyChanged(nameof(MainWindowModel.CanHideRightPanel),
+                (s, e) => RaisePropertyChanged(nameof(RightPanelOpacity)));
 
             Config.Current.Panels.AddPropertyChanged(nameof(PanelsConfig.Opacity),
-                (s, e) => RaisePropertyChanged(nameof(Opacity)));
+                (s, e) =>
+                {
+                    RaisePropertyChanged(nameof(LeftPanelOpacity));
+                    RaisePropertyChanged(nameof(RightPanelOpacity));
+                });
 
             Config.Current.Panels.AddPropertyChanged(nameof(PanelsConfig.IsSideBarEnabled),
                 (s, e) => RaisePropertyChanged(nameof(IsSideBarVisible)));
@@ -63,9 +69,14 @@ namespace NeeView
             set => Config.Current.Panels.IsSideBarEnabled = value;
         }
 
-        public double Opacity
+        public double LeftPanelOpacity
         {
-            get => MainWindowModel.Current.CanHidePanel ? Config.Current.Panels.Opacity : 1.0;
+            get => MainWindowModel.Current.CanHideLeftPanel ? Config.Current.Panels.Opacity : 1.0;
+        }
+
+        public double RightPanelOpacity
+        {
+            get => MainWindowModel.Current.CanHideRightPanel ? Config.Current.Panels.Opacity : 1.0;
         }
 
         public GridLength LeftPanelWidth
@@ -125,21 +136,6 @@ namespace NeeView
             }
         }
 
-        public bool IsAutoHide
-        {
-            get { return _isAutoHide; }
-            set
-            {
-                if (_isAutoHide != value)
-                {
-                    _isAutoHide = value;
-                    this.Left.IsAutoHide = value;
-                    this.Right.IsAutoHide = value;
-                    RaisePropertyChanged();
-                    PanelVisibilityChanged?.Invoke(this, EventArgs.Empty);
-                }
-            }
-        }
 
         public SidePanelFrame Model
         {
@@ -191,6 +187,9 @@ namespace NeeView
                 case nameof(Right.PanelVisibility):
                     PanelVisibilityChanged?.Invoke(this, EventArgs.Empty);
                     break;
+                case nameof(Right.IsAutoHide):
+                    PanelVisibilityChanged?.Invoke(this, EventArgs.Empty);
+                    break;
                 case nameof(Right.IsPanelActive):
                     RaisePropertyChanged(nameof(IsRightPanelActive));
                     break;
@@ -208,6 +207,9 @@ namespace NeeView
                     RaisePropertyChanged(nameof(LeftPanelWidth));
                     break;
                 case nameof(Left.PanelVisibility):
+                    PanelVisibilityChanged?.Invoke(this, EventArgs.Empty);
+                    break;
+                case nameof(Left.IsAutoHide):
                     PanelVisibilityChanged?.Invoke(this, EventArgs.Empty);
                     break;
                 case nameof(Left.IsPanelActive):

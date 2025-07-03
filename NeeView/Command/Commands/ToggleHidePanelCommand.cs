@@ -1,8 +1,10 @@
-﻿using System.Windows.Data;
+﻿using System;
+using System.Windows.Data;
 
 
 namespace NeeView
 {
+    [Obsolete]
     public class ToggleHidePanelCommand : CommandElement
     {
         public ToggleHidePanelCommand()
@@ -23,7 +25,7 @@ namespace NeeView
 
         public override void Execute(object? sender, CommandContext e)
         {
-            MainWindowModel.Current.ToggleHidePanel();
+            Config.Current.Panels.IsHidePanel = !Config.Current.Panels.IsHidePanel;
         }
     }
 }

@@ -2,7 +2,6 @@
 using NeeView.Effects;
 using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,76 +17,14 @@ namespace NeeView
     /// </summary>
     public class MainWindowViewModel : BindableBase
     {
-        #region SidePanels
-
-        /// <summary>
-        /// SidePanelMargin property.
-        /// メニュの自動非表示ON/OFFによるサイドパネル上部の余白
-        /// </summary>
-        public Thickness SidePanelMargin
-        {
-            get { return _SidePanelMargin; }
-            set { if (_SidePanelMargin != value) { _SidePanelMargin = value; RaisePropertyChanged(); } }
-        }
-
-        //
-        private Thickness _SidePanelMargin;
-
-        //
-        private void UpdateSidePanelMargin()
-        {
-            SidePanelMargin = new Thickness(0, _model.CanHideMenu ? 32 : 0, 0, _model.CanHidePageSlider ? 20 : 0);
-        }
-
-
-        /// <summary>
-        /// CanvasWidth property.
-        /// キャンバスサイズ。SidePanelから引き渡される
-        /// </summary>
-        public double CanvasWidth
-        {
-            get { return _CanvasWidth; }
-            set { if (_CanvasWidth != value) { _CanvasWidth = value; RaisePropertyChanged(); } }
-        }
-
-        //
-        private double _CanvasWidth;
-
-
-        /// <summary>
-        /// CanvasHeight property.
-        /// </summary>
-        public double CanvasHeight
-        {
-            get { return _CanvasHeight; }
-            set { if (_CanvasHeight != value) { _CanvasHeight = value; RaisePropertyChanged(); } }
-        }
-
-        //
-        private double _CanvasHeight;
-
-        #endregion
-
-        #region Window Icon
-
-        // ウィンドウアイコン：標準
-        private ImageSource? _windowIconDefault;
-
-        // ウィンドウアイコン初期化
-        private void InitializeWindowIcons()
-        {
-            _windowIconDefault = null;
-        }
-
-        // 現在のウィンドウアイコン取得
-        public ImageSource? WindowIcon => _windowIconDefault;
-
-        #endregion
-
-
         private bool _initialized;
         private MainWindowModel _model;
         private readonly MainViewComponent _viewComponent;
+        private readonly ImageSource? _windowIconDefault;
+        private Thickness _sidePanelMargin;
+        private double _canvasWidth;
+        private double _canvasHeight;
+
 
         /// <summary>
         /// コンストラクター
@@ -99,9 +36,6 @@ namespace NeeView
             MenuAutoHideDescription = new MenuAutoHideDescription(MainWindow.Current.LayerMenuSocket, MainWindow.Current.SidePanelFrame);
             StatusAutoHideDescription = new StatusAutoHideDescription(MainWindow.Current.LayerStatusArea, MainWindow.Current.SidePanelFrame);
             ThumbnailListAutoHideDescription = new StatusAutoHideDescription(MainWindow.Current.LayerThumbnailListSocket, MainWindow.Current.SidePanelFrame);
-
-            // icon
-            InitializeWindowIcons();
 
             // main window model
             _model = model;
@@ -115,9 +49,6 @@ namespace NeeView
                     UpdateSidePanelMargin();
                     RaisePropertyChanged(nameof(CanHideThumbnailList));
                 });
-
-            _model.AddPropertyChanged(nameof(_model.CanHidePanel),
-                (s, e) => UpdateSidePanelMargin());
 
             _model.FocusMainViewCall += Model_FocusMainViewCall;
 
@@ -160,8 +91,9 @@ namespace NeeView
         public event EventHandler? FocusMainViewCall;
 
 
-
         public bool IsClosing { get; set; }
+
+        public ImageSource? WindowIcon => _windowIconDefault;
 
         public string Title => PageTitle.Current.Title;
 
@@ -176,30 +108,57 @@ namespace NeeView
         public WindowTitle WindowTitle => WindowTitle.Current;
         public PageTitle PageTitle => PageTitle.Current;
         public ThumbnailList ThumbnailList => ThumbnailList.Current;
-        //public ContentCanvasBrush ContentCanvasBrush => _viewComponent.ContentCanvasBrush;
         public ImageEffect ImageEffect => ImageEffect.Current;
         public MouseInput MouseInput => _viewComponent.MouseInput;
         public InfoMessage InfoMessage => InfoMessage.Current;
         public SidePanelFrame SidePanel => SidePanelFrame.Current;
-        //public ContentCanvas ContentCanvas => _viewComponent.ContentCanvas;
-        //public LoupeTransform LoupeTransform => _viewComponent.LoupeTransform;
         public ToastService ToastService => ToastService.Current;
         public App App => App.Current;
         public AutoHideConfig AutoHideConfig => Config.Current.AutoHide;
 
 
+        /// <summary>
+        /// MainWindow Model
+        /// </summary>
         public MainWindowModel Model
         {
             get { return _model; }
-            set { if (_model != value) { _model = value; RaisePropertyChanged(); } }
+            set { SetProperty(ref _model, value); }
         }
 
+        /// <summary>
+        /// メニュの自動非表示ON/OFFによるサイドパネル上部の余白
+        /// </summary>
+        public Thickness SidePanelMargin
+        {
+            get { return _sidePanelMargin; }
+            set { SetProperty(ref _sidePanelMargin, value); }
+        }
+
+        /// <summary>
+        /// キャンバス幅。SidePanelから引き渡される
+        /// </summary>
+        public double CanvasWidth
+        {
+            get { return _canvasWidth; }
+            set { SetProperty(ref _canvasWidth, value); }
+        }
+
+        /// <summary>
+        /// キャンバス高
+        /// </summary>
+        public double CanvasHeight
+        {
+            get { return _canvasHeight; }
+            set { SetProperty(ref _canvasHeight, value); }
+        }
+
+        /// <summary>
+        /// サムネイル一覧を非表示にできるか
+        /// </summary>
         public bool CanHideThumbnailList
         {
-            get
-            {
-                return ThumbnailList.CanHideThumbnailList && !Model.CanHidePageSlider;
-            }
+            get { return ThumbnailList.CanHideThumbnailList && !Model.CanHidePageSlider; }
         }
 
         /// <summary>
@@ -217,11 +176,6 @@ namespace NeeView
         public bool IsMenuBarActive => MainWindow.Current.IsActive;
 
 
-        private void Model_FocusMainViewCall(object? sender, EventArgs e)
-        {
-            FocusMainViewCall?.Invoke(sender, e);
-        }
-
         /// <summary>
         /// 初期化
         /// </summary>
@@ -233,7 +187,6 @@ namespace NeeView
             _model.Loaded();
             _model.ContentRendered();
         }
-
 
         /// <summary>
         /// Window OnLoaded
@@ -268,6 +221,14 @@ namespace NeeView
             if (IsClosing) return;
 
             _ = ArchiveManager.Current.UnlockAllArchivesAsync();
+        }
+
+        /// <summary>
+        /// メインビューフォーカス要求
+        /// </summary>
+        private void Model_FocusMainViewCall(object? sender, EventArgs e)
+        {
+            FocusMainViewCall?.Invoke(sender, e);
         }
 
         /// <summary>
@@ -306,6 +267,14 @@ namespace NeeView
         public void AllPanelHideAtOnce()
         {
             _model.AllPanelHideAtOnce();
+        }
+
+        /// <summary>
+        /// サイドパネルの上下スペース幅を更新
+        /// </summary>
+        private void UpdateSidePanelMargin()
+        {
+            SidePanelMargin = new Thickness(0, _model.CanHideMenu ? 32 : 0, 0, _model.CanHidePageSlider ? 20 : 0);
         }
     }
 }

@@ -30,12 +30,11 @@ namespace NeeView
         private bool _isPanelVisibleLockedOld;
 
         private bool _canHidePageSlider;
-        private bool _canHidePanel;
+        private bool _canHideLeftPanel;
+        private bool _canHideRightPanel;
         private bool _canHideMenu;
 
         private volatile EditCommandWindow? _editCommandWindow;
-
-        private readonly MainViewComponent _viewComponent;
 
         private readonly MainWindowController _windowController;
 
@@ -56,12 +55,11 @@ namespace NeeView
             _windowController.SubscribePropertyChanged(nameof(_windowController.AutoHideMode),
                 (s, e) =>
                 {
-                    RefreshCanHidePanel();
+                    RefreshCanHideLeftPanel();
+                    RefreshCanHideRightPanel();
                     RefreshCanHidePageSlider();
                     RefreshCanHideMenu();
                 });
-
-            _viewComponent = MainViewComponent.Current;
 
             Config.Current.MenuBar.AddPropertyChanged(nameof(MenuBarConfig.IsHideMenuInAutoHideMode), (s, e) =>
             {
@@ -88,17 +86,28 @@ namespace NeeView
                 RefreshCanHidePageSlider();
             });
 
-            Config.Current.Panels.AddPropertyChanged(nameof(PanelsConfig.IsHidePanelInAutoHideMode), (s, e) =>
+            Config.Current.Panels.AddPropertyChanged(nameof(PanelsConfig.IsHideLeftPanelInAutoHideMode), (s, e) =>
             {
-                RefreshCanHidePanel();
+                RefreshCanHideLeftPanel();
             });
 
-            Config.Current.Panels.AddPropertyChanged(nameof(PanelsConfig.IsHidePanel), (s, e) =>
+            Config.Current.Panels.AddPropertyChanged(nameof(PanelsConfig.IsHideRightPanelInAutoHideMode), (s, e) =>
             {
-                RefreshCanHidePanel();
+                RefreshCanHideRightPanel();
             });
 
-            RefreshCanHidePanel();
+            Config.Current.Panels.AddPropertyChanged(nameof(PanelsConfig.IsHideLeftPanel), (s, e) =>
+            {
+                RefreshCanHideLeftPanel();
+            });
+
+            Config.Current.Panels.AddPropertyChanged(nameof(PanelsConfig.IsHideRightPanel), (s, e) =>
+            {
+                RefreshCanHideRightPanel();
+            });
+
+            RefreshCanHideLeftPanel();
+            RefreshCanHideRightPanel();
             RefreshCanHidePageSlider();
 
             PageViewRecorder.Initialize();
@@ -112,8 +121,6 @@ namespace NeeView
             public string GetPattern() => DateTimeTools.DateTimePattern;
         }
 
-
-        public event EventHandler? CanHidePanelChanged;
 
         public event EventHandler? FocusMainViewCall;
 
@@ -142,20 +149,22 @@ namespace NeeView
         }
 
         /// <summary>
-        /// パネルを自動非表示するか
+        /// 左パネルを自動非表示するか
         /// </summary>
-        public bool CanHidePanel
+        public bool CanHideLeftPanel
         {
-            get { return _canHidePanel; }
-            private set
-            {
-                if (SetProperty(ref _canHidePanel, value))
-                {
-                    CanHidePanelChanged?.Invoke(this, EventArgs.Empty);
-                }
-            }
+            get { return _canHideLeftPanel; }
+            set { SetProperty(ref _canHideLeftPanel, value); }
         }
 
+        /// <summary>
+        /// 右パネルを自動非表示するか
+        /// </summary>
+        public bool CanHideRightPanel
+        {
+            get { return _canHideRightPanel; }
+            set { SetProperty(ref _canHideRightPanel, value); }
+        }
 
         /// <summary>
         /// パネル表示状態をロックする
@@ -185,9 +194,14 @@ namespace NeeView
             CanHidePageSlider = Config.Current.Slider.IsEnabled && (Config.Current.Slider.IsHidePageSlider || (Config.Current.Slider.IsHidePageSliderInAutoHideMode && _windowController.AutoHideMode));
         }
 
-        public void RefreshCanHidePanel()
+        public void RefreshCanHideLeftPanel()
         {
-            CanHidePanel = Config.Current.Panels.IsHidePanel || (Config.Current.Panels.IsHidePanelInAutoHideMode && _windowController.AutoHideMode);
+            CanHideLeftPanel = Config.Current.Panels.IsHideLeftPanel || (Config.Current.Panels.IsHideLeftPanelInAutoHideMode && _windowController.AutoHideMode);
+        }
+
+        public void RefreshCanHideRightPanel()
+        {
+            CanHideRightPanel = Config.Current.Panels.IsHideRightPanel || (Config.Current.Panels.IsHideRightPanelInAutoHideMode && _windowController.AutoHideMode);
         }
 
         public bool ToggleHideMenu()
@@ -200,12 +214,6 @@ namespace NeeView
         {
             Config.Current.Slider.IsHidePageSlider = !Config.Current.Slider.IsHidePageSlider;
             return Config.Current.Slider.IsHidePageSlider;
-        }
-
-        public bool ToggleHidePanel()
-        {
-            Config.Current.Panels.IsHidePanel = !Config.Current.Panels.IsHidePanel;
-            return Config.Current.Panels.IsHidePanel;
         }
 
         public bool ToggleVisibleAddressBar()
