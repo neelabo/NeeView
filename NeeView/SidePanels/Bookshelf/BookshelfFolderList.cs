@@ -287,7 +287,7 @@ namespace NeeView
         {
             if (Config.Current.StartUp.IsOpenLastFolder && Place is not null)
             {
-                Config.Current.StartUp.LastFolder = new BookshelfFolderMemento(Place, FolderCollection?.FolderParameter);
+                Config.Current.StartUp.LastFolder = new BookshelfFolderMemento(Place, SelectedItem?.TargetPath, FolderCollection?.FolderParameter);
             }
             else
             {

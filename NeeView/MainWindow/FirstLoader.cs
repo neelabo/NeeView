@@ -121,7 +121,9 @@ namespace NeeView
         {
             if (_folder is null) return;
 
-            var select = _book is not null ? new FolderItemPosition(new QueryPath(_book.Path)) : null;
+            var path = _book?.Path ?? _folder.FolderMemento?.Select;
+            var select = path is not null ? new FolderItemPosition(new QueryPath(path)) : null;
+
             _folder.FolderMemento?.Register();
             BookshelfFolderList.Current.RequestPlace(new QueryPath(_folder.Path), select, FolderSetPlaceOption.UpdateHistory);
         }
@@ -162,7 +164,7 @@ namespace NeeView
                 return new BookProfile(fixPaths);
             }
         }
-        
+
 
         /// <summary>
         /// 最初のフォルダーの情報

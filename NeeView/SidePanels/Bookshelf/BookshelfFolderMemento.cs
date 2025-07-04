@@ -7,15 +7,18 @@
             Path = "";
         }
 
-        public BookshelfFolderMemento(QueryPath query, FolderParameter? parameter)
+        public BookshelfFolderMemento(QueryPath query, QueryPath? selectedItem, FolderParameter? parameter)
         {
             Path = query.SimpleQuery;
+            Select = selectedItem?.SimplePath;
             FolderOrder = parameter?.FolderOrder ?? FolderParameter.GetDefaultFolderOrder(query.SimplePath);
             IsFolderRecursive = parameter?.IsFolderRecursive ?? false;
             Seed = parameter?.Seed ?? 0;
         }
 
         public string Path { get; set; }
+
+        public string? Select { get; set; }
 
         public void Register()
         {
