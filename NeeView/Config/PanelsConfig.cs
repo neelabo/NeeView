@@ -26,6 +26,8 @@ namespace NeeView
         private bool _isLimitPanelWidth;
         private bool _isVisibleItemsCount = true;
         private bool _isTextSearchEnabled;
+        private double _conflictTopMargin = 32.0;
+        private double _conflictBottomMargin = 20.0;
 
 
         /// <summary>
@@ -170,6 +172,21 @@ namespace NeeView
             get { return _isTextSearchEnabled; }
             set { SetProperty(ref _isTextSearchEnabled, value); }
         }
+
+        [PropertyMember]
+        public double ConflictTopMargin
+        {
+            get { return _conflictTopMargin; }
+            set { SetProperty(ref _conflictTopMargin, Math.Max(value, 0.0)); }
+        }
+
+        [PropertyMember]
+        public double ConflictBottomMargin
+        {
+            get { return _conflictBottomMargin; }
+            set { SetProperty(ref _conflictBottomMargin, Math.Max(value, 0.0)); }
+        }
+
 
         [PropertyMapLabel("@Word.StyleList")]
         public PanelListItemProfile NormalItemProfile { get; set; } = PanelListItemProfile.DefaultNormalItemProfile.Clone();

@@ -50,6 +50,12 @@ namespace NeeView
                     RaisePropertyChanged(nameof(CanHideThumbnailList));
                 });
 
+            Config.Current.Panels.AddPropertyChanged(nameof(PanelsConfig.ConflictTopMargin),
+                (s, e) => UpdateSidePanelMargin());
+
+            Config.Current.Panels.AddPropertyChanged(nameof(PanelsConfig.ConflictBottomMargin),
+                (s, e) => UpdateSidePanelMargin());
+
             _model.FocusMainViewCall += Model_FocusMainViewCall;
 
             _model.VisibleAtOnceRequest += Model_VisibleAtOnceRequest;
@@ -274,7 +280,7 @@ namespace NeeView
         /// </summary>
         private void UpdateSidePanelMargin()
         {
-            SidePanelMargin = new Thickness(0, _model.CanHideMenu ? 32 : 0, 0, _model.CanHidePageSlider ? 20 : 0);
+            SidePanelMargin = new Thickness(0, _model.CanHideMenu ? Config.Current.Panels.ConflictTopMargin : 0, 0, _model.CanHidePageSlider ? Config.Current.Panels.ConflictBottomMargin : 0);
         }
     }
 }
