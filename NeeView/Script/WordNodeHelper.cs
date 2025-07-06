@@ -18,6 +18,16 @@ namespace NeeView
                 var attribute = property.GetCustomAttribute<WordNodeMemberAttribute>();
                 if (attribute != null && attribute.IsAutoCollect)
                 {
+                    if (IsSingleValueType(property.PropertyType))
+                    {
+                        var propertyMemberAttribute = property.PropertyType.GetCustomAttribute<WordNodeMemberAttribute>();
+                        if (propertyMemberAttribute != null && propertyMemberAttribute.IsAutoCollect)
+                        {
+                            node.Children.Add(CreateClassWordNode(property.Name, property.PropertyType));
+                            continue;
+                        }
+                    }
+
                     node.Children.Add(new WordNode(property.Name));
                 }
             }
@@ -38,6 +48,19 @@ namespace NeeView
         private static bool IsObsolete(MemberInfo info)
         {
             return info.GetCustomAttribute<ObsoleteAttribute>() != null;
+        }
+
+        private static bool IsSingleValueType(Type type)
+        {
+            if (type.IsArray)
+            {
+                return false;
+            }
+            if (typeof(System.Collections.IEnumerable).IsAssignableFrom(type) && type != typeof(string))
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

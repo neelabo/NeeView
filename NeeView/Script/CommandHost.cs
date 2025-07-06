@@ -46,6 +46,7 @@ namespace NeeView
             ExternalAppCollection = new ExternalAppCollectionAccessor();
             DestinationFolderCollection = new DestinationFolderCollectionAccessor();
             SusiePluginCollection = new SusiePluginCollectionAccessor();
+            MainView = new MainViewPanelAccessor();
         }
 
 
@@ -105,6 +106,15 @@ namespace NeeView
 
         [WordNodeMember(IsAutoCollect = false)]
         public SusiePluginCollectionAccessor SusiePluginCollection { get; }
+
+        [WordNodeMember(IsAutoCollect = false)]
+        public MainViewPanelAccessor MainView { get; }
+
+        [WordNodeMember]
+        public WindowAccessor Window
+        {
+            get { return new WindowAccessor(new MainWindowProxy()); }
+        }
 
 
         [WordNodeMember]
@@ -293,6 +303,7 @@ namespace NeeView
             node.Children.Add(ExternalAppCollection.CreateWordNode(nameof(ExternalAppCollection)));
             node.Children.Add(DestinationFolderCollection.CreateWordNode(nameof(DestinationFolderCollection)));
             node.Children.Add(SusiePluginCollection.CreateWordNode(nameof(SusiePluginCollection)));
+            node.Children.Add(MainView.CreateWordNode(nameof(MainView)));
 
             return node;
         }
@@ -343,6 +354,12 @@ namespace NeeView
                 _textBox.Focus();
                 _textBox.SelectAll();
             }
+        }
+
+
+        internal class MainWindowProxy : WindowProxy
+        {
+            public override Window? Window => App.Current.MainWindow;
         }
     }
 }

@@ -32,6 +32,11 @@ namespace NeeView.Runtime.LayoutPanel
         public ObservableCollection<LayoutPanelWindow> Windows => _windows;
 
 
+        public LayoutPanelWindow? GetWindow(LayoutPanel panel)
+        {
+            return _windows.FirstOrDefault(e => e.LayoutPanel == panel);
+        }
+
         public bool Contains(LayoutPanel panel)
         {
             return _windows.Any(e => e.LayoutPanel == panel);
