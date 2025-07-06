@@ -47,7 +47,7 @@ namespace NeeView.Windows
         /// DoDragDropのフック
         /// </summary>
         /// <remarks>
-        /// saticなオブジェクトになることがあるので標準のプロパティにしている
+        /// staticなオブジェクトになることがあるので標準のプロパティにしている
         /// </remarks>
         public IDragDropHook? DragDropHook { get; set; }
 

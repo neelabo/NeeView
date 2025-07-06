@@ -56,7 +56,7 @@ namespace NeeView.Windows
             return Width > 0 || Height > 0;
         }
 
-        public WindowPlacement WithIsFullScreeen(bool isFullScreen)
+        public WindowPlacement WithIsFullScreen(bool isFullScreen)
         {
             return new WindowPlacement(this.WindowState, this.Left, this.Top, this.Width, this.Height, isFullScreen);
         }

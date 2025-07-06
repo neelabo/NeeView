@@ -45,7 +45,7 @@ namespace NeeView.Windows
 
         public void SetMaximizeButtonSource(IMaximizeButtonSource? maximizeButton)
         {
-            _snapLayoutPresenter.SetMaximzeButtonSource(maximizeButton);
+            _snapLayoutPresenter.SetMaximizeButtonSource(maximizeButton);
         }
     }
 }

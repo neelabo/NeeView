@@ -13,10 +13,10 @@ namespace NeeView.Windows
     /// </remarks>
     public static class AppBar
     {
-        private const string _appbarClass = "Shell_TrayWnd";
+        private const string _appBarClass = "Shell_TrayWnd";
 
         // Note: This is constant in every DPI.
-        private const int _hideAppbarSpace = 2;
+        private const int _hideAppBarSpace = 2;
 
 
         public static bool IsAutoHideAppBar()
@@ -49,14 +49,14 @@ namespace NeeView.Windows
                 return false;
             }
 
-            var appbar = GetAutoHideAppBar(targetEdge, area);
-            if (appbar == IntPtr.Zero)
+            var appBar = GetAutoHideAppBar(targetEdge, area);
+            if (appBar == IntPtr.Zero)
             {
                 return false;
             }
 
-            var appbarMonitor = NativeMethods.MonitorFromWindow(appbar, (int)MonitorDefaultTo.MONITOR_DEFAULTTONEAREST);
-            if (!monitor.Equals(appbarMonitor))
+            var appBarMonitor = NativeMethods.MonitorFromWindow(appBar, (int)MonitorDefaultTo.MONITOR_DEFAULTTONEAREST);
+            if (!monitor.Equals(appBarMonitor))
             {
                 return false;
             }
@@ -64,12 +64,12 @@ namespace NeeView.Windows
             return true;
         }
 
-        public static void ApplyAppbarSpace(IntPtr monitor, RECT monitorArea, ref RECT workArea)
+        public static void ApplyAppBarSpace(IntPtr monitor, RECT monitorArea, ref RECT workArea)
         {
-            if (HasAutoHideAppBar(monitor, monitorArea, AppBarEdges.ABE_TOP)) workArea.top += _hideAppbarSpace;
-            if (HasAutoHideAppBar(monitor, monitorArea, AppBarEdges.ABE_LEFT)) workArea.left += _hideAppbarSpace;
-            if (HasAutoHideAppBar(monitor, monitorArea, AppBarEdges.ABE_RIGHT)) workArea.right -= _hideAppbarSpace;
-            if (HasAutoHideAppBar(monitor, monitorArea, AppBarEdges.ABE_BOTTOM)) workArea.bottom -= _hideAppbarSpace;
+            if (HasAutoHideAppBar(monitor, monitorArea, AppBarEdges.ABE_TOP)) workArea.top += _hideAppBarSpace;
+            if (HasAutoHideAppBar(monitor, monitorArea, AppBarEdges.ABE_LEFT)) workArea.left += _hideAppBarSpace;
+            if (HasAutoHideAppBar(monitor, monitorArea, AppBarEdges.ABE_RIGHT)) workArea.right -= _hideAppBarSpace;
+            if (HasAutoHideAppBar(monitor, monitorArea, AppBarEdges.ABE_BOTTOM)) workArea.bottom -= _hideAppBarSpace;
         }
     }
 }

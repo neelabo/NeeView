@@ -81,7 +81,7 @@ namespace NeeView.Windows
                     ToNormalize();
                     break;
                 case WindowState.Maximized:
-                    ToMximizeMaybe();
+                    ToMaximizeMaybe();
                     break;
             }
         }
@@ -183,7 +183,7 @@ namespace NeeView.Windows
             EndEdit(editArgs);
         }
 
-        public void ToMximizeMaybe()
+        public void ToMaximizeMaybe()
         {
             if (_isFullScreenMode)
             {
@@ -312,7 +312,7 @@ namespace NeeView.Windows
         /// <returns></returns>
         public WindowPlacement StoreWindowPlacement(bool withAeroSnap)
         {
-            return WindowPlacementTools.StoreWindowPlacement(_window, withAeroSnap).WithIsFullScreeen(IsFullScreen);
+            return WindowPlacementTools.StoreWindowPlacement(_window, withAeroSnap).WithIsFullScreen(IsFullScreen);
         }
 
         /// <summary>

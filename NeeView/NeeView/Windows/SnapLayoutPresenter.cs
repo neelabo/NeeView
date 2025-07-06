@@ -37,13 +37,13 @@ namespace NeeView.Windows
         /// <summary>
         /// MaximizeButton を登録することで処理が機能します。
         /// </summary>
-        public void SetMaximzeButtonSource(IMaximizeButtonSource? source)
+        public void SetMaximizeButtonSource(IMaximizeButtonSource? source)
         {
             _maximizeButton = source;
         }
 
         /// <summary>
-        /// regist WndProc
+        /// Subscribe WndProc
         /// </summary>
         private bool AddHook()
         {
@@ -159,8 +159,8 @@ namespace NeeView.Windows
                 _activeButtonState = CaptionButtonState.MouseOver;
                 _maximizeButton.SetMaximizeButtonBackground(_activeButtonState);
                 handled = true;
-                IInvokeProvider? invokeProv = new ButtonAutomationPeer(button).GetPattern(PatternInterface.Invoke) as IInvokeProvider;
-                invokeProv?.Invoke();
+                IInvokeProvider? invokeProvider = new ButtonAutomationPeer(button).GetPattern(PatternInterface.Invoke) as IInvokeProvider;
+                invokeProvider?.Invoke();
             }
 
             return IntPtr.Zero;

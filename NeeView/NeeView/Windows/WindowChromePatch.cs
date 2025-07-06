@@ -239,7 +239,7 @@ namespace NeeView.Windows
             {
                 // 通常時はモニターのワークサイズを指定。タスクバーが自動非表示の場合のマージンも加味する。
                 workArea = monitorInfo.rcWork;
-                AppBar.ApplyAppbarSpace(hMonitor, monitorInfo.rcMonitor, ref workArea);
+                AppBar.ApplyAppBarSpace(hMonitor, monitorInfo.rcMonitor, ref workArea);
 
                 // もしタブレットモードでモニターサイズと一致している(非表示タスクバー情報の取得に失敗している)場合の補正
                 // モニターサイズで SetWindowPos() を呼んでも変化がない現象の対策

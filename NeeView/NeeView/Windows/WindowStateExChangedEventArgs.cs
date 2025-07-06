@@ -4,10 +4,10 @@ namespace NeeView.Windows
 {
     public class WindowStateExChangedEventArgs : EventArgs
     {
-        public WindowStateExChangedEventArgs(WindowStateEx oldState, WindowStateEx newtate)
+        public WindowStateExChangedEventArgs(WindowStateEx oldState, WindowStateEx newState)
         {
             OldState = oldState;
-            NewState = newtate;
+            NewState = newState;
         }
 
         public WindowStateEx OldState { get; set; }
