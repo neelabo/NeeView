@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -277,6 +278,24 @@ namespace NeeView
                     ToastService.Current.Show(new Toast(ex.Message, nameof(DeleteFile), ToastIcon.Error));
                 }
             });
+        }
+
+        [WordNodeMember]
+        public string? OpenFileDialog(string? initialDirectory = null)
+        {
+            var dialog = new OpenFileDialog();
+            dialog.InitialDirectory = initialDirectory;
+            var result = dialog.ShowDialog();
+            return result == true ? dialog.FileName : null;
+        }
+
+        [WordNodeMember]
+        public string? OpenFolderDialog(string? initialDirectory = null)
+        {
+            var dialog = new OpenFolderDialog();
+            dialog.InitialDirectory = initialDirectory;
+            var result = dialog.ShowDialog();
+            return result == true ? dialog.FolderName : null;
         }
 
 
