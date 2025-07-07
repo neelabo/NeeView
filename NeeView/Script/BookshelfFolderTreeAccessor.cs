@@ -2,6 +2,7 @@
 
 namespace NeeView
 {
+    [WordNodeMember]
     public class BookshelfFolderTreeAccessor
     {
         private readonly FolderTreeModel _model;
@@ -15,13 +16,13 @@ namespace NeeView
         }
 
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public QuickAccessFolderNodeAccessor QuickAccessNode { get; }
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public DirectoryNodeAccessor DirectoryNode { get; }
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public BookmarkFolderNodeAccessor BookmarkNode { get; }
 
         [WordNodeMember]
@@ -36,15 +37,6 @@ namespace NeeView
         public void Expand(string path)
         {
             AppDispatcher.Invoke(() => _model.SyncDirectory(path));
-        }
-
-        internal static WordNode CreateWordNode(string name)
-        {
-            var node = WordNodeHelper.CreateClassWordNode(name, typeof(BookshelfFolderTreeAccessor));
-            node.Children?.Add(QuickAccessFolderNodeAccessor.CreateWordNode(nameof(QuickAccessNode)));
-            node.Children?.Add(DirectoryNodeAccessor.CreateWordNode(nameof(DirectoryNode)));
-            node.Children?.Add(BookmarkFolderNodeAccessor.CreateWordNode(nameof(BookmarkNode)));
-            return node;
         }
     }
 }

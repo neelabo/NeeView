@@ -50,16 +50,16 @@ namespace NeeView
         }
 
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public CommandAccessor? CurrentCommand => _command;
 
         [WordNodeMember]
         public string? ScriptPath => _scriptPath.ScriptPath;
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public List<string> Args => _args;
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public IDictionary<string, object> Values => _resource.Values;
 
         [WordNodeMember(IsAutoCollect = false)]
@@ -68,46 +68,46 @@ namespace NeeView
         [WordNodeMember(IsAutoCollect = false)]
         public CommandAccessorMap Command { get; }
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public EnvironmentAccessor Environment { get; }
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public BookAccessor Book { get; }
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public BookshelfPanelAccessor Bookshelf { get; }
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public PageListPanelAccessor PageList { get; }
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public BookmarkPanelAccessor Bookmark { get; }
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public PlaylistPanelAccessor Playlist { get; }
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public HistoryPanelAccessor History { get; }
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public InformationPanelAccessor Information { get; }
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public EffectPanelAccessor Effect { get; }
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public NavigatorPanelAccessor Navigator { get; }
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public ExternalAppCollectionAccessor ExternalAppCollection { get; }
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public DestinationFolderCollectionAccessor DestinationFolderCollection { get; }
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public SusiePluginCollectionAccessor SusiePluginCollection { get; }
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public MainViewPanelAccessor MainView { get; }
 
         [WordNodeMember]
@@ -285,26 +285,8 @@ namespace NeeView
             var node = WordNodeHelper.CreateClassWordNode(name, this.GetType());
             if (node.Children is null) throw new InvalidOperationException();
 
-            node.Children.Add(new WordNode(nameof(CurrentCommand)));
-            node.Children.Add(new WordNode(nameof(Args)));
-            node.Children.Add(new WordNode(nameof(Values)));
             node.Children.Add(Config.CreateWordNode(nameof(Config)));
             node.Children.Add(Command.CreateWordNode(nameof(Command)));
-            node.Children.Add(Environment.CreateWordNode(nameof(Environment)));
-            node.Children.Add(Book.CreateWordNode(nameof(Book)));
-            node.Children.Add(Bookshelf.CreateWordNode(nameof(Bookshelf)));
-            node.Children.Add(PageList.CreateWordNode(nameof(PageList)));
-            node.Children.Add(Bookmark.CreateWordNode(nameof(Bookmark)));
-            node.Children.Add(Playlist.CreateWordNode(nameof(Playlist)));
-            node.Children.Add(History.CreateWordNode(nameof(History)));
-            node.Children.Add(Information.CreateWordNode(nameof(Information)));
-            node.Children.Add(Effect.CreateWordNode(nameof(Effect)));
-            node.Children.Add(Navigator.CreateWordNode(nameof(Navigator)));
-            node.Children.Add(ExternalAppCollection.CreateWordNode(nameof(ExternalAppCollection)));
-            node.Children.Add(DestinationFolderCollection.CreateWordNode(nameof(DestinationFolderCollection)));
-            node.Children.Add(SusiePluginCollection.CreateWordNode(nameof(SusiePluginCollection)));
-            node.Children.Add(MainView.CreateWordNode(nameof(MainView)));
-
             return node;
         }
 

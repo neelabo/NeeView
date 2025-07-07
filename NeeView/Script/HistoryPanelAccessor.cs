@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace NeeView
 {
+    [WordNodeMember]
     public class HistoryPanelAccessor : LayoutPanelAccessor
     {
         private readonly HistoryPanel _panel;
@@ -65,9 +66,5 @@ namespace NeeView
             return items?.Select(e => new HistoryItemAccessor(e)).ToArray() ?? Array.Empty<HistoryItemAccessor>();
         }
 
-        internal WordNode CreateWordNode(string name)
-        {
-            return WordNodeHelper.CreateClassWordNode(name, this.GetType());
-        }
     }
 }

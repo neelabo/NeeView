@@ -12,6 +12,7 @@ namespace NeeView
     /// <summary>
     /// 本の状態
     /// </summary>
+    [WordNodeMember]
     public class BookAccessor
     {
         private CancellationToken _cancellationToken;
@@ -47,7 +48,7 @@ namespace NeeView
             set => AppDispatcher.Invoke(() => BookOperation.Current.BookControl.SetBookmark(value));
         }
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public BookConfigAccessor Config { get; } = new BookConfigAccessor();
 
         [WordNodeMember]
@@ -74,6 +75,18 @@ namespace NeeView
         {
             BookOperation.Current.WaitAsync(_cancellationToken).AsTask().Wait();
         }
+
+
+        internal void SetCancellationToken(CancellationToken cancellationToken)
+        {
+            _cancellationToken = cancellationToken;
+        }
+
+        private Archive? GetArchive()
+        {
+            return BookOperation.Current.Book?.Source.ArchiveEntryCollection.Archive;
+        }
+
 
         #region Obsolete
 
@@ -112,21 +125,5 @@ namespace NeeView
         }
 
         #endregion Obsoletet
-
-        internal void SetCancellationToken(CancellationToken cancellationToken)
-        {
-            _cancellationToken = cancellationToken;
-        }
-
-        internal WordNode CreateWordNode(string name)
-        {
-            var node = WordNodeHelper.CreateClassWordNode(name, this.GetType());
-
-            node.Children?.Add(Config.CreateWordNode(nameof(Config)));
-
-            return node;
-        }
-
-        private Archive? GetArchive() => BookOperation.Current.Book?.Source.ArchiveEntryCollection.Archive;
     }
 }

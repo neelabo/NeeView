@@ -2,6 +2,7 @@
 
 namespace NeeView
 {
+    [WordNodeMember]
     public class SusiePluginCollectionAccessor
     {
         private readonly SusiePluginManager _pluginManager;
@@ -17,11 +18,5 @@ namespace NeeView
         [WordNodeMember]
         public SusiePluginAccessor[] AMPlugins => _pluginManager.AMPlugins.Select(e => new SusiePluginAccessor(e)).ToArray();
 
-
-        internal WordNode CreateWordNode(string name)
-        {
-            var node = WordNodeHelper.CreateClassWordNode(name, this.GetType());
-            return node;
-        }
     }
 }

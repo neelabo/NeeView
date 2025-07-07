@@ -1,5 +1,6 @@
 ﻿namespace NeeView
 {
+    [WordNodeMember]
     public class InformationPanelAccessor : LayoutPanelAccessor
     {
         private readonly FileInformationPanel _panel;
@@ -12,11 +13,6 @@
             _model = _panel.FileInformation;
         }
 
-
-        internal WordNode CreateWordNode(string name)
-        {
-            return WordNodeHelper.CreateClassWordNode(name, this.GetType());
-        }
     }
 
 }

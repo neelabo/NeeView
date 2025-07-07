@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace NeeView
 {
+    [WordNodeMember]
     public record class BookmarkFolderNodeAccessor : NodeAccessor
     {
         private readonly BookmarkFolderNode _node;
@@ -37,12 +38,6 @@ namespace NeeView
             return base.Add(parameter);
         }
 
-
-        internal static WordNode CreateWordNode(string name)
-        {
-            var node = WordNodeHelper.CreateClassWordNode(name, typeof(BookmarkFolderNodeAccessor));
-            return node;
-        }
     }
 
 }

@@ -1,5 +1,6 @@
 ﻿namespace NeeView
 {
+    [WordNodeMember]
     public class NavigatorPanelAccessor : LayoutPanelAccessor
     {
         private readonly NavigatePanel _panel;
@@ -10,11 +11,6 @@
             _panel = (NavigatePanel)CustomLayoutPanelManager.Current.GetPanel(nameof(NavigatePanel));
         }
 
-
-        internal WordNode CreateWordNode(string name)
-        {
-            return WordNodeHelper.CreateClassWordNode(name, this.GetType());
-        }
     }
 
 }

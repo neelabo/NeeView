@@ -3,10 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-#pragma warning disable CA1822
-
 namespace NeeView
 {
+    [WordNodeMember]
     public class PlaylistPanelAccessor : LayoutPanelAccessor
     {
         private readonly PlaylistPanel _panel;
@@ -74,12 +73,6 @@ namespace NeeView
             return items?.Select(e => new PlaylistItemAccessor(e)).ToArray() ?? Array.Empty<PlaylistItemAccessor>();
         }
 
-        internal WordNode CreateWordNode(string name)
-        {
-            var node = WordNodeHelper.CreateClassWordNode(name, this.GetType());
-
-            return node;
-        }
     }
 
 }

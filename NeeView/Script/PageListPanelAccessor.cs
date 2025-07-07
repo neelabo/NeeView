@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace NeeView
 {
+    [WordNodeMember]
     public class PageListPanelAccessor : LayoutPanelAccessor
     {
         private readonly PageListPanel _panel;
@@ -85,10 +86,5 @@ namespace NeeView
             return pages?.Select(e => new PageAccessor(e)).ToArray() ?? Array.Empty<PageAccessor>();
         }
 
-
-        internal WordNode CreateWordNode(string name)
-        {
-            return WordNodeHelper.CreateClassWordNode(name, this.GetType());
-        }
     }
 }

@@ -5,6 +5,7 @@ using System.Threading;
 
 namespace NeeView
 {
+    [WordNodeMember]
     public class BookshelfPanelAccessor : LayoutPanelAccessor
     {
         private readonly FolderPanel _panel;
@@ -21,7 +22,7 @@ namespace NeeView
         }
 
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public BookshelfFolderTreeAccessor FolderTree => _folderTree.Value;
 
         [WordNodeMember]
@@ -134,13 +135,6 @@ namespace NeeView
         internal void SetCancellationToken(CancellationToken cancellationToken)
         {
             _cancellationToken = cancellationToken;
-        }
-
-        internal WordNode CreateWordNode(string name)
-        {
-            var node = WordNodeHelper.CreateClassWordNode(name, this.GetType());
-            node.Children?.Add(BookshelfFolderTreeAccessor.CreateWordNode(nameof(FolderTree)));
-            return node;
         }
     }
 

@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace NeeView
 {
+    [WordNodeMember]
     public record class DirectoryNodeAccessor : NodeAccessor
     {
         private readonly DirectoryNode _node;
@@ -55,11 +56,5 @@ namespace NeeView
             throw new NotSupportedException();
         }
 
-
-        internal static WordNode CreateWordNode(string name)
-        {
-            var node = WordNodeHelper.CreateClassWordNode(name, typeof(DirectoryNodeAccessor));
-            return node;
-        }
     }
 }

@@ -1,7 +1,7 @@
-﻿#pragma warning disable CA1822
-
-using NeeView.Windows;
+﻿using NeeView.Windows;
 using System.Windows;
+
+#pragma warning disable CA1822
 
 namespace NeeView
 {

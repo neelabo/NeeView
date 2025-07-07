@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Windows;
 
+#pragma warning disable CA1822
+
 namespace NeeView
 {
+    [WordNodeMember]
     public class MainViewPanelAccessor
     {
         [WordNodeMember]
@@ -21,16 +24,6 @@ namespace NeeView
         public void Close()
         {
             Window.Close();
-        }
-
-
-        internal WordNode CreateWordNode(string name)
-        {
-            var node = WordNodeHelper.CreateClassWordNode(name, this.GetType());
-            if (node.Children is null) throw new InvalidOperationException();
-
-            node.Children.Add(new WordNode(nameof(Window)));
-            return node;
         }
 
 

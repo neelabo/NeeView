@@ -2,6 +2,7 @@
 
 namespace NeeView
 {
+    [WordNodeMember]
     public class ExternalAppCollectionAccessor
     {
         private readonly ExternalAppCollection _collection;
@@ -30,11 +31,5 @@ namespace NeeView
             AppDispatcher.Invoke(() => _collection.Remove(item.Source));
         }
 
-
-        internal WordNode CreateWordNode(string name)
-        {
-            var node = WordNodeHelper.CreateClassWordNode(name, this.GetType());
-            return node;
-        }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace NeeView
 {
+    [WordNodeMember]
     public class EnvironmentAccessor
     {
         [WordNodeMember]
@@ -34,11 +35,5 @@ namespace NeeView
         [WordNodeMember]
         public string UserAgent => Environment.UserAgent;
 
-        internal WordNode CreateWordNode(string name)
-        {
-            var node = WordNodeHelper.CreateClassWordNode(name, this.GetType());
-
-            return node;
-        }
     }
 }

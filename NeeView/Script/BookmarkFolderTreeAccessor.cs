@@ -2,6 +2,7 @@
 
 namespace NeeView
 {
+    [WordNodeMember]
     public class BookmarkFolderTreeAccessor
     {
         private readonly FolderTreeModel _model;
@@ -13,7 +14,7 @@ namespace NeeView
         }
 
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public BookmarkFolderNodeAccessor BookmarkNode { get; }
 
         [WordNodeMember]
@@ -21,14 +22,6 @@ namespace NeeView
         {
             get { return _model.SelectedItem is not null ? FolderNodeAccessorFactory.Create(_model, _model.SelectedItem) : null; }
             set { AppDispatcher.Invoke(() => _model.SetSelectedItem(value?.Node)); }
-        }
-
-
-        internal static WordNode CreateWordNode(string name)
-        {
-            var node = WordNodeHelper.CreateClassWordNode(name, typeof(BookmarkFolderTreeAccessor));
-            node.Children?.Add(BookmarkFolderNodeAccessor.CreateWordNode(nameof(BookmarkNode)));
-            return node;
         }
     }
 

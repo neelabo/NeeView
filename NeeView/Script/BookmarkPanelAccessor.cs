@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace NeeView
 {
+    [WordNodeMember]
     public class BookmarkPanelAccessor : LayoutPanelAccessor
     {
         private readonly BookmarkPanel _panel;
@@ -19,7 +20,7 @@ namespace NeeView
         }
 
 
-        [WordNodeMember(IsAutoCollect = false)]
+        [WordNodeMember]
         public BookmarkFolderTreeAccessor FolderTree => _folderTree.Value;
 
         [WordNodeMember]
@@ -95,14 +96,6 @@ namespace NeeView
         public void MoveToParent()
         {
             AppDispatcher.Invoke(() => _model.MoveToParent());
-        }
-
-
-        internal WordNode CreateWordNode(string name)
-        {
-            var node = WordNodeHelper.CreateClassWordNode(name, this.GetType());
-            node.Children?.Add(BookmarkFolderTreeAccessor.CreateWordNode(nameof(FolderTree)));
-            return node;
         }
     }
 }
