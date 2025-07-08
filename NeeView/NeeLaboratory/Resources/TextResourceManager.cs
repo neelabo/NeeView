@@ -113,7 +113,7 @@ namespace NeeLaboratory.Resources
         /// 言語リソース追加読み込み
         /// </summary>
         /// <param name="fileSource"></param>
-        public void Add(IFileSource  fileSource)
+        public void Add(IFileSource fileSource)
         {
             _resource.Add(TextResourceFactory.LoadResText(fileSource));
         }
@@ -148,5 +148,11 @@ namespace NeeLaboratory.Resources
             return _instantResource;
         }
 
+
+        [Conditional("DEBUG")]
+        public void DumpNoUsed()
+        {
+            _resource.DumpNoUsed();
+        }
     }
 }

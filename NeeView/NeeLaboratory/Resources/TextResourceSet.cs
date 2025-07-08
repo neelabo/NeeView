@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 
 namespace NeeLaboratory.Resources
 {
@@ -41,12 +42,32 @@ namespace NeeLaboratory.Resources
 
         public string? GetString(string name)
         {
-            return _map.TryGetValue(name, out var value) ? value.Text : null;
+            if (_map.TryGetValue(name, out var value))
+            {
+#if DEBUG
+                value.Used = true;
+#endif
+                return value.Text;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public string? GetCaseString(string name, string pattern)
         {
-            return _map.TryGetValue(name, out var value) ? value.GetCaseText(pattern) : null;
+            if (_map.TryGetValue(name, out var value))
+            {
+#if DEBUG
+                value.Used = true;
+#endif
+                return value.GetCaseText(pattern);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public void Add(Dictionary<string, TextResourceItem> map)
@@ -87,6 +108,25 @@ namespace NeeLaboratory.Resources
         public void SetItem(string key, string text)
         {
             _map[key] = new TextResourceItem(text);
+        }
+
+
+        [Conditional("DEBUG")]
+        public void DumpNoUsed()
+        {
+            Debug.WriteLine($"---- No Used ----");
+            
+            var list = _map
+                .Where(e => !e.Value.Used)
+                .Where(e => !e.Key.StartsWith("Exif")) // Exif系を除外
+                .OrderBy(e => e.Key)
+                .ToList();
+
+            foreach (var item in list)
+            {
+                Debug.WriteLine(item.Key);
+            }
+            Debug.WriteLine($"---- done. ({list.Count}) ----");
         }
     }
 }

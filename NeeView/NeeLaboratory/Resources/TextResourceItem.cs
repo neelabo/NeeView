@@ -32,6 +32,10 @@ namespace NeeLaboratory.Resources
 
         public string Text { get; private set; } = "";
 
+#if DEBUG
+        // [DEV] リソース使用フラグ
+        public bool Used { get; set; }
+#endif
 
         public void SetText(string text)
         {

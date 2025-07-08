@@ -1,4 +1,5 @@
-﻿using NeeView.Text;
+﻿using NeeView.Properties;
+using NeeView.Text;
 using SevenZip;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace NeeView
     {
         public static async ValueTask ExecuteTestAsync()
         {
+
             ////StringTools.TestStringArgumentSplitter();
             ////return;
 
@@ -25,10 +27,13 @@ namespace NeeView
             await Task.CompletedTask;
 
             // 致命的エラーのテスト
-            InnerExcepionTest.Execute();
+            InnerExceptionTest.Execute();
 
             try
             {
+                // 未使用テキストリソース候補を出力
+                TextResources.Resource.DumpNoUsed();
+
                 // Archive のキャッシュ一覧
                 //ArchiveManager.Current.DumpCache();
 
@@ -73,7 +78,7 @@ namespace NeeView
         }
 
 
-        static class InnerExcepionTest
+        static class InnerExceptionTest
         {
             public static void Execute()
             {
