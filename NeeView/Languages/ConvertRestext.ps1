@@ -19,6 +19,7 @@ Convert mode
     Convert: Convert Json file to language files
     Revert: Convert language files to Json file
     Test: Test language files. Files will not be changed.
+    TestLiteral: Test language files. Files will not be changed. Check strings that are not culture-dependent.
 
 .PARAMETER JsonFile
 Json file name. Default is Language.json
@@ -41,7 +42,7 @@ e.g., -Cultures en,ja
 
 param (
     [Parameter(Mandatory = $true)]
-    [ValidateSet("Convert", "Revert", "Test")]
+    [ValidateSet("Convert", "Revert", "Test", "TestLiteral")]
     [string]$Mode,
     [string]$JsonFile = "Language.json",
     [switch]$Sort,
@@ -53,7 +54,8 @@ param (
 $modeDetail = switch ($Mode) {
     "Convert" { "$JsonFile -> *.restext" }
     "Revert" { "*.restext -> $JsonFile" }
-    "Test" { ".restext" }
+    "Test" { "*.restext" }
+    "TestLiteral" { "*.restext" }
     default { "Unknown" }
 }
 
@@ -351,6 +353,51 @@ function Test-RestextTable {
     }
 }
 
+function Matches-Literal {
+    param($text)
+
+    [regex]::Matches($text, '["「\[](.*?)["」\]]')
+}
+
+function Test-Literal {
+    param([PSCustomObject]$table)
+
+    foreach ($property in $table.psobject.properties) {
+        $key = $property.Name
+        $value = $property.Value
+        $MatchesCollection = Matches-Literal $value.$defaultCulture
+        if ($MatchesCollection.Count -gt 0) {
+            $corrects = @($MatchesCollection | ForEach-Object { $_.Groups[1].Value })
+            $map = @{}
+            foreach ($item in $value.psobject.properties) {
+                $culture = $item.Name
+                $text = $item.Value
+                if ([string]::IsNullOrEmpty($text)) {
+                    continue
+                }
+                $literals = @(Matches-Literal $text | ForEach-Object { $_.Groups[1].Value })
+                $map.$culture = $literals
+            }
+            for ($i=0; $i -lt $MatchesCollection.Count; $i++) {
+                $header = $true
+                foreach ($culture in $map.Keys) {
+                    $correct = $corrects[$i]
+                    $literal = ($map.$culture)[$i]
+                    if ($correct -ne $literal) {
+                        if ($header) {
+                            $header = $false
+                            Write-Output "${key}:"
+                            Write-Output "  correct: ${correct}"
+                        }
+                        Write-Output "  ${culture}: $literal"
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 #
 # MAIN
 #
@@ -381,6 +428,13 @@ elseif ($Mode -eq "Test") {
     Write-Host
     Write-Host "[Test] ..."  -fore Cyan
     Test-RestextTable $table $inputKeys
+}
+elseif($Mode -eq "TestLiteral") {
+    $cultures = Get-RestextCultures
+    $table = Get-RestextTable $cultures
+        Write-Host
+    Write-Host "[Test Literal] ..."  -fore Cyan
+    Test-Literal $table
 }
 else { 
     throw  "'$Mode' is an unknown mode. Specify 'Convert', 'Revert' or 'Test' as the mode."
