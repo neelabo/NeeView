@@ -75,7 +75,7 @@ namespace NeeView
         public void Create()
         {
             var commandName = "\"" + Environment.AssemblyLocation + "\"";
-            var label = Properties.TextResources.GetCultureStringRaw("ExplorerContextMenu.OpenInNeeView", CultureInfo.CurrentCulture) ?? "Nee&View";
+            var label = GetMenuLabel();
             var icon = commandName + ",0";
             var command = commandName + " \"%1\"";
             var commandTypeV = commandName + " \"%V\"";
@@ -90,6 +90,22 @@ namespace NeeView
             DeleteSubKey(_keyFile);
             DeleteSubKey(_keyDirectory);
             DeleteSubKey(_keyDirectoryBackground);
+        }
+
+        public void Update()
+        {
+            if (!IsEnabled) return;
+
+            var s = GetSubKey(_keyFile, null);
+            if (s != GetMenuLabel())
+            {
+                Create();
+            }
+        }
+
+        private string GetMenuLabel()
+        {
+            return Properties.TextResources.GetStringRaw("ExplorerContextMenu.OpenInNeeView") ?? "Nee&View";
         }
 
         private bool IsExistSubKey(string keyName)
@@ -135,6 +151,23 @@ namespace NeeView
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
+            }
+        }
+
+        private string? GetSubKey(string key, string? name = null)
+        {
+            try
+            {
+                using (var reg = _root.OpenSubKey(key))
+                {
+                    if (reg is null) return null;
+                    return (string?)reg.GetValue(name);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return null;
             }
         }
     }

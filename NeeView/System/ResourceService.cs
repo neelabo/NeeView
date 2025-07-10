@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.Resources;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,18 +14,6 @@ namespace NeeView
 {
     internal static partial class ResourceService
     {
-        /// <summary>
-        /// リソースキーのパターン
-        /// </summary>
-        [GeneratedRegex(@"@\[([^\]]+)\]")]
-        private static partial Regex _resourceKeyRegex { get; }
-
-        /// <summary>
-        /// テキストキーのパターン
-        /// </summary>
-        [GeneratedRegex(@"@[a-zA-Z0-9_\.\-#]+[a-zA-Z0-9]")]
-        private static partial Regex _keyRegex { get; }
-
         /// <summary>
         /// @で始まる文字列はリソースキーとしてその値を返す。
         /// そうでない場合はそのまま返す。
@@ -49,14 +38,16 @@ namespace NeeView
             }
             else
             {
-                var text = GetResourceString(key);
-                if (text != null)
+                var name = key[1..];
+
+                var text = TextResources.GetStringRaw(name);
+                if (text is not null)
                 {
-                    return Replace(text, fallback);
+                    return text;
                 }
                 else
                 {
-                    Debug.WriteLine($"Error: Not found resource key: {key[1..]}");
+                    Debug.WriteLine($"Error: Not found resource key: {name}");
                     return fallback ? key : "";
                 }
             }
@@ -71,7 +62,7 @@ namespace NeeView
         /// </remarks>
         public static string ReplaceEmpty(string s)
         {
-            return Replace(s, false);
+            return TextResources.Replace(s, false) ?? "";
         }
 
         /// <summary>
@@ -83,7 +74,7 @@ namespace NeeView
         /// </remarks>
         public static string ReplaceFallback(string s)
         {
-            return Replace(s, true);
+            return TextResources.Replace(s, true) ?? "";
         }
 
         /// <summary>
@@ -91,67 +82,7 @@ namespace NeeView
         /// </summary>
         public static string Replace(string s)
         {
-            return Replace(s, true);
-        }
-
-        /// <summary>
-        /// @で始まる文字列をリソースキーとして文字列を入れ替える
-        /// </summary>
-        /// <param name="s">変換元文字列</param>
-        /// <param name="fallback">true のとき、リソースキーが存在しないときはリソースキー名のままにする。false のときは "" に変換する</param>
-        /// <param name="depth">再帰の深さ。計算リミット用</param>
-        /// <returns></returns>
-        public static string Replace(string s, bool fallback, int depth = 0)
-        {
-            // limit is 5 depth
-            if (depth >= 5) return s;
-
-            return ReplaceEmbeddedText(_keyRegex.Replace(s, ReplaceMatchEvaluator));
-
-            string ReplaceMatchEvaluator(Match m)
-            {
-                var s = GetResourceString(m.Value);
-                return s is not null ? Replace(s, fallback, depth + 1) : (fallback ? m.Value : "");
-            }
-        }
-
-        /// <summary>
-        /// @[...] という文字列をテキストリソースのパスとして文字列を入れ替える
-        /// </summary>
-        public static string ReplaceEmbeddedText(string s)
-        {
-            return _resourceKeyRegex.Replace(s, FileNameToTextMatchEvaluator);
-        }
-
-        private static string FileNameToTextMatchEvaluator(Match match)
-        {
-            var fileName = match.Groups[1].Value;
-            var fileSource = new AppFileSource(new Uri(fileName, UriKind.Relative));
-            using var stream = fileSource.Open();
-            using var reader = new StreamReader(stream);
-            return reader.ReadToEnd();
-        }
-
-        /// <summary>
-        /// リソースキーからリソース文字列取得
-        /// </summary>
-        /// <param name="key">@で始まるリソースキー</param>
-        /// <returns>存在しない場合は null</returns>
-        public static string? GetResourceString(string key)
-        {
-            if (key is null || key[0] != '@') return null;
-
-            var rawKey = key[1..];
-            var tokens = rawKey.Split('.', 2);
-            return tokens[0] switch
-            {
-                nameof(Key)
-                    => (tokens.Length >= 2 && Enum.TryParse<Key>(tokens[1], out var inputKey)) ? inputKey.GetDisplayString() : null,
-                nameof(ModifierKeys)
-                    => (tokens.Length >= 2 && Enum.TryParse<ModifierKeys>(tokens[1], out var modifierKey)) ? modifierKey.GetDisplayString() : null,
-                _
-                    => Properties.TextResources.GetStringRaw(rawKey),
-            };
+            return TextResources.Replace(s, true) ?? "";
         }
 
         /// <summary>
@@ -162,16 +93,12 @@ namespace NeeView
         /// <returns>存在しない場合は null</returns>
         public static string? GetResourceString(string key, bool isRecursive)
         {
-            var text = GetResourceString(key);
+            // TODO: 普通の GetString() でもよいと思う。isRecursive は true しか使ってないようです。
 
-            if (text != null && isRecursive)
-            {
-                return Replace(text);
-            }
-            else
-            {
-                return text;
-            }
+            if (key is null || key[0] != '@') return null;
+            var rawKey = key[1..];
+
+            return TextResources.GetStringRaw(rawKey);
         }
 
         /// <summary>
@@ -179,7 +106,7 @@ namespace NeeView
         /// </summary>
         public static string Join(IEnumerable<string> tokens)
         {
-            return string.Join(" ", tokens.Select(e => string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetStringRaw("TokenFormat") ?? "", e)));
+            return string.Join(" ", tokens.Select(e => string.Format(CultureInfo.InvariantCulture, TextResources.GetStringRaw("TokenFormat") ?? "", e)));
         }
 
         /// <summary>
@@ -232,19 +159,20 @@ namespace NeeView
         private static void ValidateResourceKeys()
         {
             var failureCount = 0;
+            var keyRegex = new Regex(@"@[a-zA-Z0-9_\.\-#]+[a-zA-Z0-9]");
 
             foreach (var pair in Properties.TextResources.Resource.Map)
             {
-                foreach (Match match in _keyRegex.Matches(pair.Value.Text))
+                foreach (Match match in keyRegex.Matches(pair.Value.Text.String))
                 {
-                    if (GetResourceString(match.Value) is null)
+                    if (GetString(match.Value, false) is null)
                     {
                         Debug.WriteLine($"Resource key not found: {match.Value} in {pair.Key}");
                         failureCount++;
                     }
                 }
             }
-            
+
             Debug.Assert(failureCount == 0, $"{failureCount} resource keys are undefined.");
         }
     }

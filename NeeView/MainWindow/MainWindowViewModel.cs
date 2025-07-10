@@ -20,7 +20,6 @@ namespace NeeView
         private bool _initialized;
         private MainWindowModel _model;
         private readonly MainViewComponent _viewComponent;
-        private readonly ImageSource? _windowIconDefault;
         private Thickness _sidePanelMargin;
         private double _canvasWidth;
         private double _canvasHeight;
@@ -99,7 +98,7 @@ namespace NeeView
 
         public bool IsClosing { get; set; }
 
-        public ImageSource? WindowIcon => _windowIconDefault;
+        public ImageSource? WindowIcon => null;
 
         public string Title => PageTitle.Current.Title;
 

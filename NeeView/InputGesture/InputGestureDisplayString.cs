@@ -24,7 +24,7 @@ namespace NeeView
 
         private static InputGestureStringConverter GetDisplayStringStringConverter(TextResourceSegment map, string prefix)
         {
-            var uppercase = map.TryGetValue(prefix + "._Uppercase", out var value) && value.Text.Equals("true", StringComparison.OrdinalIgnoreCase);
+            var uppercase = map.TryGetValue(prefix + "._Uppercase", out var value) && value.Text.String.Equals("true", StringComparison.OrdinalIgnoreCase);
             return new InputGestureStringConverter(uppercase);
         }
 
@@ -43,7 +43,7 @@ namespace NeeView
                 var name = pair.Key.AsSpan(prefix.Length + 1);
                 if (Enum.TryParse<Key>(name, true, out var key))
                 {
-                    key.SetDisplayString(pair.Value.Text);
+                    key.SetDisplayString(pair.Value.Text.String);
                 }
                 else
                 {
@@ -64,7 +64,7 @@ namespace NeeView
                 var name = pair.Key.AsSpan(prefix.Length + 1);
                 if (Enum.TryParse<ModifierKeys>(name, true, out var key))
                 {
-                    key.SetDisplayString(pair.Value.Text);
+                    key.SetDisplayString(pair.Value.Text.String);
                 }
                 else
                 {
@@ -85,7 +85,7 @@ namespace NeeView
                 var name = pair.Key.AsSpan(prefix.Length + 1);
                 if (Enum.TryParse<MouseButton>(name, true, out var key))
                 {
-                    key.SetDisplayString(pair.Value.Text);
+                    key.SetDisplayString(pair.Value.Text.String);
                 }
                 else
                 {
@@ -106,7 +106,7 @@ namespace NeeView
                 var name = pair.Key.AsSpan(prefix.Length + 1);
                 if (Enum.TryParse<MouseAction>(name, true, out var key))
                 {
-                    key.SetDisplayString(pair.Value.Text);
+                    key.SetDisplayString(pair.Value.Text.String);
                 }
                 else
                 {
@@ -127,7 +127,7 @@ namespace NeeView
                 var name = pair.Key.AsSpan(prefix.Length + 1);
                 if (Enum.TryParse<TouchArea>(name, true, out var key))
                 {
-                    key.SetDisplayString(pair.Value.Text);
+                    key.SetDisplayString(pair.Value.Text.String);
                 }
                 else
                 {
@@ -148,7 +148,7 @@ namespace NeeView
                 var name = pair.Key.AsSpan(prefix.Length + 1);
                 if (Enum.TryParse<MouseDirection>(name, true, out var key))
                 {
-                    key.SetDisplayString(pair.Value.Text);
+                    key.SetDisplayString(pair.Value.Text.String);
                 }
                 else
                 {

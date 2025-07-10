@@ -225,6 +225,10 @@ namespace NeeView
         // 起動時処理
         public void Loaded()
         {
+            // 必要であればエクスプローラーメニューを更新
+            ExplorerContextMenu.Current.Update();
+
+            // サイドパネル復元
             CustomLayoutPanelManager.Current.Restore();
 
             // Susie起動

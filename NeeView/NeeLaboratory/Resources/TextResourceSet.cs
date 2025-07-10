@@ -9,7 +9,7 @@ namespace NeeLaboratory.Resources
     /// <summary>
     /// テキストリソース
     /// </summary>
-    public class TextResourceSet
+    public class TextResourceSet : ITextResource
     {
         private readonly CultureInfo _culture;
         private readonly Dictionary<string, TextResourceItem> _map;
@@ -35,48 +35,13 @@ namespace NeeLaboratory.Resources
         public bool IsValid => !_culture.Equals(CultureInfo.InvariantCulture);
 
 
-        public string? this[string name]
-        {
-            get { return GetString(name); }
-        }
-
-        public string? GetString(string name)
-        {
-            if (_map.TryGetValue(name, out var value))
-            {
-#if DEBUG
-                value.Used = true;
-#endif
-                return value.Text;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public string? GetCaseString(string name, string pattern)
-        {
-            if (_map.TryGetValue(name, out var value))
-            {
-#if DEBUG
-                value.Used = true;
-#endif
-                return value.GetCaseText(pattern);
-            }
-            else
-            {
-                return null;
-            }
-        }
-
         public void Add(Dictionary<string, TextResourceItem> map)
         {
             foreach (var item in map)
             {
 #if DEBUG
                 // 参照でないものは要注意
-                if (item.Value.Text[0] != '@')
+                if (item.Value.Text.String[0] != '@')
                 {
                     Debug.WriteLine($"Warning: {item.Key}={item.Value.Text}");
                 }
@@ -92,9 +57,9 @@ namespace NeeLaboratory.Resources
                 _map[item.Key] = item.Value;
 
                 // 単純な置き換えの場合はここで置き換える
-                if (item.Value.Text[0] == '@' && item.Value.Text[1] != '[')
+                if (item.Value.Text.String[0] == '@' && item.Value.Text.String[1] != '[')
                 {
-                    var sourceKey = item.Value.Text[1..];
+                    var sourceKey = item.Value.Text.String[1..];
                     Debug.Assert(_map.ContainsKey(sourceKey));
                     _map[item.Key] = _map.TryGetValue(sourceKey, out var value) ? value : item.Value;
                 }
@@ -110,6 +75,29 @@ namespace NeeLaboratory.Resources
             _map[key] = new TextResourceItem(text);
         }
 
+        public TextResourceString? GetResourceString(string name)
+        {
+            if (_map.TryGetValue(name, out var value))
+            {
+                return value.Text;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public TextResourceString? GetCaseResourceString(string name, string pattern)
+        {
+            if (_map.TryGetValue(name, out var value))
+            {
+                return value.GetCaseText(pattern);
+            }
+            else
+            {
+                return null;
+            }
+        }
 
         [Conditional("DEBUG")]
         public void DumpNoUsed()

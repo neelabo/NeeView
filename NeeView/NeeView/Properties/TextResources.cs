@@ -17,6 +17,7 @@ namespace NeeView.Properties
     internal class TextResources
     {
         private static readonly Lazy<FileLanguageResource> _languageResource = new(() => new FileLanguageResource(Path.Combine(Environment.AssemblyFolder, "Languages")));
+        private static readonly TextResourceExpand _accessor;
         private static bool _initialized;
 
         public static CultureInfo Culture => Resource.Culture;
@@ -24,6 +25,13 @@ namespace NeeView.Properties
         public static FileLanguageResource LanguageResource => _languageResource.Value;
 
         public static TextResourceManager Resource { get; } = new(LanguageResource);
+
+
+        static TextResources()
+        {
+            // テキストリソース取得時にキー文字列サポートと再帰展開を行うアクセサ
+            _accessor = new TextResourceExpand(new TextResourceWithInputGesture(Resource));
+        }
 
 
         public static void Initialize(CultureInfo culture)
@@ -54,7 +62,7 @@ namespace NeeView.Properties
         private static void CheckDuplicateText()
         {
             // テキスト重複項目を出力し、シェアテキストにするかの判断材料とする。
-            // 全言語同時にチェックする必要があるので、これはツールで行ったほうがよい。
+            // TODO: 全言語同時にチェックする必要があるので、これはツールで行ったほうがよい。
 
             var resolved = new List<string>();
             Debug.WriteLine("<ResourceText.Duplicate>");
@@ -90,31 +98,32 @@ namespace NeeView.Properties
         public static string GetString(string name)
         {
             InitializeMinimum();
-            return Resource.GetString(name) ?? "@" + name;
+            // TODO: このレベルではフォールバックしない?
+            return _accessor.GetResourceString(name)?.String ?? "@" + name;
         }
 
         public static string? GetStringRaw(string name)
         {
             InitializeMinimum();
-            return Resource.GetString(name);
-        }
-
-        public static string? GetCultureStringRaw(string name, CultureInfo culture)
-        {
-            InitializeMinimum();
-            return Resource.GetCultureString(name, culture);
+            return _accessor.GetResourceString(name)?.String;
         }
 
         public static string GetCaseString(string name, string pattern)
         {
             InitializeMinimum();
-            return Resource.GetCaseString(name, pattern) ?? "@" + name;
+            return _accessor.GetCaseResourceString(name, pattern)?.String ?? "@" + name;
         }
 
         public static string GetFormatString(string name, object? arg0)
         {
             var pattern = arg0?.ToString() ?? "";
             return string.Format(CultureInfo.InvariantCulture, GetCaseString(name, pattern), arg0);
+        }
+
+        public static string? Replace(string s, bool fallback)
+        {
+            InitializeMinimum();
+            return _accessor.Replace(s, fallback);
         }
     }
 }

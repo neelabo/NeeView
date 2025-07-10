@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace NeeLaboratory.Resources
@@ -9,11 +12,11 @@ namespace NeeLaboratory.Resources
         {
             public CaseText(string text, Regex regex)
             {
-                Text = text;
+                Text = new TextResourceString(text);
                 Regex = regex;
             }
 
-            public string Text { get; }
+            public TextResourceString Text { get; }
             public Regex Regex { get; }
         }
 
@@ -22,6 +25,7 @@ namespace NeeLaboratory.Resources
 
         public TextResourceItem()
         {
+            SetText("");
         }
 
         public TextResourceItem(string text)
@@ -30,16 +34,17 @@ namespace NeeLaboratory.Resources
         }
 
 
-        public string Text { get; private set; } = "";
+        public TextResourceString Text { get; private set; }
 
 #if DEBUG
         // [DEV] リソース使用フラグ
-        public bool Used { get; set; }
+        public bool Used => Text.IsUsed || (_caseTexts is not null && _caseTexts.Any(e => e.Text.IsUsed));
 #endif
 
+        [MemberNotNull(nameof(Text))]
         public void SetText(string text)
         {
-            Text = text;
+            Text = new TextResourceString(text);
         }
 
         public void AddCaseText(string text, Regex regex)
@@ -63,7 +68,7 @@ namespace NeeLaboratory.Resources
             }
         }
 
-        public string GetCaseText(string pattern)
+        public TextResourceString GetCaseText(string pattern)
         {
             if (_caseTexts is null) return Text;
 
@@ -77,4 +82,5 @@ namespace NeeLaboratory.Resources
             return Text;
         }
     }
+
 }

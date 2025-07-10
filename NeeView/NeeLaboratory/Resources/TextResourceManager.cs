@@ -8,11 +8,11 @@ namespace NeeLaboratory.Resources
     /// <summary>
     /// テキストリソース管理
     /// </summary>
-    public class TextResourceManager
+    public class TextResourceManager : ITextResource
     {
         private readonly LanguageResource _languageResource;
         private TextResourceSet _resource = new();
-        private TextResourceSet _instantResource = new();
+
 
         /// <summary>
         /// コンストラクタ
@@ -35,65 +35,15 @@ namespace NeeLaboratory.Resources
         public CultureInfo Culture => _resource.Culture;
 
         /// <summary>
+        /// テキストリソース
+        /// </summary>
+        public TextResourceSet Resource => _resource;
+
+        /// <summary>
         /// テキスト マップ
         /// </summary>
         public Dictionary<string, TextResourceItem> Map => _resource.Map;
 
-
-        /// <summary>
-        /// テキスト取得 インデクサ
-        /// </summary>
-        /// <param name="name">リソース名</param>
-        /// <returns>対応するテキスト。存在しない場合 null</returns>
-        public string? this[string name]
-        {
-            get => GetString(name);
-        }
-
-        /// <summary>
-        /// テキスト取得
-        /// </summary>
-        /// <param name="name">リソース名</param>
-        /// <returns>対応するテキスト。存在しない場合 null</returns>
-        public string? GetString(string name)
-        {
-            Debug.WriteLineIf(!_resource.IsValid, $"## Resource not loaded: request key = {name}");
-            return _resource.GetString(name);
-        }
-
-        /// <summary>
-        /// 一時的なカルチャ指定を伴うテキスト取得
-        /// </summary>
-        /// <param name="name">リソース名</param>
-        /// <param name="culture">カルチャ</param>
-        /// <returns></returns>
-        public string? GetCultureString(string name, CultureInfo culture)
-        {
-            return InstantResourceSet(culture).GetString(name);
-        }
-
-        /// <summary>
-        /// テキスト取得：パターン別
-        /// </summary>
-        /// <param name="name">リソース名</param>
-        /// <param name="pattern">パターン</param>
-        /// <returns></returns>
-        public string? GetCaseString(string name, string pattern)
-        {
-            Debug.WriteLineIf(!_resource.IsValid, $"## Resource not loaded: request key = {name}");
-            return _resource.GetCaseString(name, pattern);
-        }
-
-        /// <summary>
-        /// 一時的なカルチャ指定を伴うテキスト取得
-        /// </summary>
-        /// <param name="name">リソース名</param>
-        /// <param name="culture">カルチャ</param>
-        /// <returns></returns>
-        public string? GetCaseCultureString(string name, string pattern, CultureInfo culture)
-        {
-            return InstantResourceSet(culture).GetCaseString(name, pattern);
-        }
 
         /// <summary>
         /// 言語リソース読み込み
@@ -129,30 +79,31 @@ namespace NeeLaboratory.Resources
         }
 
         /// <summary>
-        /// 一時言語リソース取得
+        /// テキスト取得
         /// </summary>
-        /// <param name="culture">カルチャ</param>
+        /// <param name="key"></param>
         /// <returns></returns>
-        private TextResourceSet InstantResourceSet(CultureInfo culture)
+        public TextResourceString? GetResourceString(string key)
         {
-            var validCulture = _languageResource.ValidateCultureInfo(culture);
-            if (_resource.Culture.Equals(validCulture))
-            {
-                return _resource;
-            }
-            if (_instantResource.Culture.Equals(validCulture))
-            {
-                return _instantResource;
-            }
-            _instantResource = LoadCore(validCulture);
-            return _instantResource;
+            return _resource.GetResourceString(key);
         }
 
+        /// <summary>
+        /// テキスト取得 (パターン依存)
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="pattern"></param>
+        /// <returns></returns>
+        public TextResourceString? GetCaseResourceString(string key, string pattern)
+        {
+            return _resource.GetCaseResourceString(key, pattern);
+        }
 
         [Conditional("DEBUG")]
         public void DumpNoUsed()
         {
             _resource.DumpNoUsed();
         }
+
     }
 }
