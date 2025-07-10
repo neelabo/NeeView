@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeView.Properties;
 using NeeView.Susie;
 using System;
 using System.Collections.Generic;
@@ -24,9 +25,9 @@ namespace NeeView.Setting
     {
         private static  Dictionary<InputScheme, string> _inputSchemeNoteList { get; } = new Dictionary<InputScheme, string>
         {
-            [InputScheme.TypeA] = ResourceService.Replace(Properties.TextResources.GetString("InputScheme.TypeA.Remarks")),
-            [InputScheme.TypeB] = ResourceService.Replace(Properties.TextResources.GetString("InputScheme.TypeB.Remarks")),
-            [InputScheme.TypeC] = ResourceService.Replace(Properties.TextResources.GetString("InputScheme.TypeC.Remarks")),
+            [InputScheme.TypeA] = TextResources.Replace(TextResources.GetString("InputScheme.TypeA.Remarks"), true),
+            [InputScheme.TypeB] = TextResources.Replace(TextResources.GetString("InputScheme.TypeB.Remarks"), true),
+            [InputScheme.TypeC] = TextResources.Replace(TextResources.GetString("InputScheme.TypeC.Remarks"), true),
         };
 
         public CommandResetControl()
@@ -39,9 +40,9 @@ namespace NeeView.Setting
 
         public Dictionary<InputScheme, string> InputSchemeList { get; } = new Dictionary<InputScheme, string>
         {
-            [InputScheme.TypeA] = Properties.TextResources.GetString("InputScheme.TypeA"),
-            [InputScheme.TypeB] = Properties.TextResources.GetString("InputScheme.TypeB"),
-            [InputScheme.TypeC] = Properties.TextResources.GetString("InputScheme.TypeC")
+            [InputScheme.TypeA] = TextResources.GetString("InputScheme.TypeA"),
+            [InputScheme.TypeB] = TextResources.GetString("InputScheme.TypeB"),
+            [InputScheme.TypeC] = TextResources.GetString("InputScheme.TypeC")
         };
 
         public InputScheme InputScheme

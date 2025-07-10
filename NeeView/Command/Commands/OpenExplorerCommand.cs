@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class OpenExplorerCommand : CommandElement
     {
         public OpenExplorerCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.File");
+            this.Group = TextResources.GetString("CommandGroup.File");
             this.IsShowMessage = false;
         }
 

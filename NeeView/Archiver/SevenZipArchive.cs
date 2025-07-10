@@ -1,4 +1,5 @@
-﻿using SevenZip;
+﻿using NeeView.Properties;
+using SevenZip;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -32,7 +33,7 @@ namespace NeeView
 
         public override string ToString()
         {
-            return Properties.TextResources.GetString("Archiver.SevenZip") + (Format != null ? $" ({Format})" : null);
+            return TextResources.GetString("Archiver.SevenZip") + (Format != null ? $" ({Format})" : null);
         }
 
         public override void Unlock()
@@ -124,7 +125,7 @@ namespace NeeView
             var archiveEntry = _accessor.ArchiveFileData[entry.Id];
             if (archiveEntry.FileName != entry.RawEntryName)
             {
-                throw new ApplicationException(Properties.TextResources.GetString("InconsistencyException.Message"));
+                throw new ApplicationException(TextResources.GetString("InconsistencyException.Message"));
             }
 #endif
 

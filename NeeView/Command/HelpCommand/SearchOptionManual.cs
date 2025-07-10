@@ -1,10 +1,11 @@
-﻿using System;
+﻿using NeeLaboratory.IO.Search;
+using NeeLaboratory.Text;
+using NeeView.Properties;
+using NeeView.Text.SimpleHtmlBuilder;
+using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using NeeLaboratory.IO.Search;
-using NeeLaboratory.Text;
-using NeeView.Text.SimpleHtmlBuilder;
-using System.Diagnostics;
 
 namespace NeeView
 {
@@ -189,7 +190,7 @@ namespace NeeView
         public static string CreateSearchOptionManual()
         {
             var builder = new StringBuilder();
-            builder.AppendLine(HtmlHelpUtility.CreateHeader(ResourceService.GetString("@_SearchManual.Title")));
+            builder.AppendLine(HtmlHelpUtility.CreateHeader(TextResources.GetString("_SearchManual.Title")));
             builder.AppendLine($"<body>");
 
             var searchContext = new SearchContext()
@@ -198,7 +199,7 @@ namespace NeeView
              .AddProfile(new BookSearchProfile())
              .AddProfile(new PageSearchProfile());
 
-            var text = ResourceService.Replace(_template);
+            var text = TextResources.Replace(_template, true);
             text = text.Replace("[[ConjunctionAliasTable]]", CreateConjunctionAliasTable(searchContext), StringComparison.Ordinal);
             text = text.Replace("[[PropertyAliasTable]]", CreatePropertyAliasTable(searchContext), StringComparison.Ordinal);
             text = text.Replace("[[MatchAliasTable]]", CreateMatchAliasTable(searchContext), StringComparison.Ordinal);
@@ -261,7 +262,7 @@ namespace NeeView
                 node.AddNode(new TagNode("tr")
                     .AddNode(new TagNode("td", "nowrap").AddText(option))
                     .AddNode(new TagNode("td").AddText(key))
-                    .AddNode(new TagNode("td").AddText(key + ".Remarks", ResourceService.ReplaceEmpty)));
+                    .AddNode(new TagNode("td").AddText(key + ".Remarks", e => TextResources.Replace(e, false))));
             }
 
             node.AddNode(new TagNode("tr")
@@ -293,7 +294,7 @@ namespace NeeView
                 node.AddNode(new TagNode("tr")
                     .AddNode(new TagNode("td").AddText(string.Join(", ", option)))
                     .AddNode(new TagNode("td").AddText(key))
-                    .AddNode(new TagNode("td").AddText(key + ".Remarks", ResourceService.ReplaceEmpty)));
+                    .AddNode(new TagNode("td").AddText(key + ".Remarks", e => TextResources.Replace(e, false))));
             }
 
             return node.ToIndentString();

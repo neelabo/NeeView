@@ -1,4 +1,5 @@
-﻿using System.Windows.Data;
+﻿using NeeView.Properties;
+using System.Windows.Data;
 
 namespace NeeView
 {
@@ -6,7 +7,7 @@ namespace NeeView
     {
         public SetPageOrientationHorizontalCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.PageSetting");
+            this.Group = TextResources.GetString("CommandGroup.PageSetting");
             this.IsShowMessage = true;
         }
 
@@ -17,7 +18,7 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Properties.TextResources.GetString("PageFrameOrientation.Horizontal");
+            return TextResources.GetString("PageFrameOrientation.Horizontal");
         }
 
         public override void Execute(object? sender, CommandContext e)

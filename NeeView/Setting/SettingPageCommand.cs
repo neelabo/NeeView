@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.Windows.Input;
+using NeeView.Properties;
 using NeeView.Windows.Property;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace NeeView.Setting
     /// </summary>
     class SettingPageCommand : SettingPage
     {
-        public SettingPageCommand() : base(Properties.TextResources.GetString("SettingPage.Command"))
+        public SettingPageCommand() : base(TextResources.GetString("SettingPage.Command"))
         {
             this.Children = new List<SettingPage>
             {
@@ -28,7 +29,7 @@ namespace NeeView.Setting
 
             this.Items = new List<SettingItem>();
 
-            var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.Command.GeneralAdvance"));
+            var section = new SettingItemSection(TextResources.GetString("SettingPage.Command.GeneralAdvance"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Command, nameof(CommandConfig.IsAccessKeyEnabled))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Command, nameof(CommandConfig.IsReversePageMove))));
             section.Children.Add(new SettingItemSubProperty(PropertyMemberElement.Create(Config.Current.Command, nameof(CommandConfig.IsReversePageMoveWheel)))
@@ -49,16 +50,16 @@ namespace NeeView.Setting
     /// </summary>
     class SettingPageScript : SettingPage
     {
-        public SettingPageScript() : base(Properties.TextResources.GetString("SettingPage.Script"))
+        public SettingPageScript() : base(TextResources.GetString("SettingPage.Script"))
         {
             this.Items = new List<SettingItem>();
 
-            var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.Script"));
+            var section = new SettingItemSection(TextResources.GetString("SettingPage.Script"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Script, nameof(ScriptConfig.IsScriptFolderEnabled))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Script, nameof(ScriptConfig.ScriptFolder), new PropertyMemberElementOptions() { EmptyValue = SaveDataProfile.DefaultScriptsFolder }))
             {
                 IsStretch = true,
-                SubContent = UIElementTools.CreateHyperlink(Properties.TextResources.GetString("SettingPage.Script.OpenScriptFolder"), new RelayCommand(ScriptManager.Current.OpenScriptsFolder)),
+                SubContent = UIElementTools.CreateHyperlink(TextResources.GetString("SettingPage.Script.OpenScriptFolder"), new RelayCommand(ScriptManager.Current.OpenScriptsFolder)),
             });
 
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Script, nameof(ScriptConfig.ErrorLevel))) { SubContent = CreateScriptErrorLevelRemarks() });
@@ -107,14 +108,14 @@ namespace NeeView.Setting
     /// </summary>
     class SettingPageCommandList : SettingPage
     {
-        public SettingPageCommandList() : base(Properties.TextResources.GetString("SettingPage.Command.Main"))
+        public SettingPageCommandList() : base(TextResources.GetString("SettingPage.Command.Main"))
         {
             var linkCommand = new RelayCommand(() => this.IsSelected = true);
 
             this.IsScrollEnabled = false;
 
-            var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.Command.Main"));
-            section.Children.Add(new SettingItemCommand() { SearchResultItem = new SettingItemLink(Properties.TextResources.GetString("SettingPage.Command.Main"), linkCommand) { IsContentOnly = true } });
+            var section = new SettingItemSection(TextResources.GetString("SettingPage.Command.Main"));
+            section.Children.Add(new SettingItemCommand() { SearchResultItem = new SettingItemLink(TextResources.GetString("SettingPage.Command.Main"), linkCommand) { IsContentOnly = true } });
             this.Items = new List<SettingItem>() { section };
         }
     }
@@ -124,14 +125,14 @@ namespace NeeView.Setting
     /// </summary>
     class SettingPageContextMenu : SettingPage
     {
-        public SettingPageContextMenu() : base(Properties.TextResources.GetString("SettingPage.ContextMenu"))
+        public SettingPageContextMenu() : base(TextResources.GetString("SettingPage.ContextMenu"))
         {
             var linkCommand = new RelayCommand(() => this.IsSelected = true);
 
             this.IsScrollEnabled = false;
 
-            var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.ContextMenu.Edit"));
-            section.Children.Add(new SettingItemContextMenu() { SearchResultItem = new SettingItemLink(Properties.TextResources.GetString("SettingPage.ContextMenu.Edit"), linkCommand) { IsContentOnly = true } });
+            var section = new SettingItemSection(TextResources.GetString("SettingPage.ContextMenu.Edit"));
+            section.Children.Add(new SettingItemContextMenu() { SearchResultItem = new SettingItemLink(TextResources.GetString("SettingPage.ContextMenu.Edit"), linkCommand) { IsContentOnly = true } });
             this.Items = new List<SettingItem>() { section };
         }
     }

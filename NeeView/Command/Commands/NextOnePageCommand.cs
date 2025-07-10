@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class NextOnePageCommand : CommandElement
     {
         public NextOnePageCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Move");
+            this.Group = TextResources.GetString("CommandGroup.Move");
             this.MouseGesture = new MouseSequence("RL");
             this.IsShowMessage = false;
             this.PairPartner = "PrevOnePage";

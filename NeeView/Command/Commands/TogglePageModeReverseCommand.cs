@@ -1,11 +1,13 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class TogglePageModeReverseCommand : CommandElement
     {
 
         public TogglePageModeReverseCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.PageSetting");
+            this.Group = TextResources.GetString("CommandGroup.PageSetting");
             this.IsShowMessage = true;
 
             this.ParameterSource = new CommandParameterSource(new TogglePageModeCommandParameter());

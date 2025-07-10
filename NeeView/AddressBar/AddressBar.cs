@@ -1,6 +1,7 @@
 ﻿
 using NeeLaboratory.ComponentModel;
 using NeeView.IO;
+using NeeView.Properties;
 using System.Windows.Controls;
 
 namespace NeeView
@@ -71,10 +72,10 @@ namespace NeeView
                     var query = new QueryPath(_address);
                     if (query.Scheme == QueryScheme.Bookmark)
                     {
-                        text = Properties.TextResources.GetString("BookAddressInfo.Bookmark");
+                        text = TextResources.GetString("BookAddressInfo.Bookmark");
                     }
                 }
-                return text ?? Properties.TextResources.GetString("BookAddressInfo.Invalid");
+                return text ?? TextResources.GetString("BookAddressInfo.Invalid");
             }
         }
 

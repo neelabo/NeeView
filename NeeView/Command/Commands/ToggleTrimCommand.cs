@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -9,7 +10,7 @@ namespace NeeView
     {
         public ToggleTrimCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Effect");
+            this.Group = TextResources.GetString("CommandGroup.Effect");
             this.IsShowMessage = true;
         }
 
@@ -20,10 +21,10 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.ImageTrim.IsEnabled ? Properties.TextResources.GetString("ToggleTrimCommand.Off") : Properties.TextResources.GetString("ToggleTrimCommand.On");
+            return Config.Current.ImageTrim.IsEnabled ? TextResources.GetString("ToggleTrimCommand.Off") : TextResources.GetString("ToggleTrimCommand.On");
         }
 
-        [MethodArgument("@ToggleCommand.Execute.Remarks")]
+        [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
             if (e.Args.Length > 0)

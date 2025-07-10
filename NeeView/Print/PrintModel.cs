@@ -1,6 +1,7 @@
 ﻿using NeeLaboratory;
 using NeeLaboratory.ComponentModel;
 using NeeView.Media.Imaging;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -94,8 +95,8 @@ namespace NeeView
 
         public static Dictionary<PageOrientation, string> PageOrientationList { get; } = new Dictionary<PageOrientation, string>()
         {
-            [PageOrientation.Portrait] = Properties.TextResources.GetString("PageOperation.Portrait"),
-            [PageOrientation.Landscape] = Properties.TextResources.GetString("PageOperation.Landscape"),
+            [PageOrientation.Portrait] = TextResources.GetString("PageOperation.Portrait"),
+            [PageOrientation.Landscape] = TextResources.GetString("PageOperation.Landscape"),
         };
 
         public PrintMode PrintMode
@@ -147,9 +148,9 @@ namespace NeeView
 
         public Dictionary<HorizontalAlignment, string> HorizontalAlignmentList { get; } = new Dictionary<HorizontalAlignment, string>()
         {
-            [HorizontalAlignment.Left] = Properties.TextResources.GetString("HorizontalAlignment.Left"),
-            [HorizontalAlignment.Center] = Properties.TextResources.GetString("HorizontalAlignment.Center"),
-            [HorizontalAlignment.Right] = Properties.TextResources.GetString("HorizontalAlignment.Right"),
+            [HorizontalAlignment.Left] = TextResources.GetString("HorizontalAlignment.Left"),
+            [HorizontalAlignment.Center] = TextResources.GetString("HorizontalAlignment.Center"),
+            [HorizontalAlignment.Right] = TextResources.GetString("HorizontalAlignment.Right"),
         };
 
         public VerticalAlignment VerticalAlignment
@@ -160,9 +161,9 @@ namespace NeeView
 
         public Dictionary<VerticalAlignment, string> VerticalAlignmentList { get; } = new Dictionary<VerticalAlignment, string>()
         {
-            [VerticalAlignment.Top] = Properties.TextResources.GetString("VerticalAlignment.Top"),
-            [VerticalAlignment.Center] = Properties.TextResources.GetString("VerticalAlignment.Center"),
-            [VerticalAlignment.Bottom] = Properties.TextResources.GetString("VerticalAlignment.Bottom"),
+            [VerticalAlignment.Top] = TextResources.GetString("VerticalAlignment.Top"),
+            [VerticalAlignment.Center] = TextResources.GetString("VerticalAlignment.Center"),
+            [VerticalAlignment.Bottom] = TextResources.GetString("VerticalAlignment.Bottom"),
         };
 
         public Margin Margin

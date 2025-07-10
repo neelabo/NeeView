@@ -1,4 +1,5 @@
-﻿using NeeView.Windows.Property;
+﻿using NeeView.Properties;
+using NeeView.Windows.Property;
 
 namespace NeeView
 {
@@ -6,7 +7,7 @@ namespace NeeView
     {
         public NextPlaylistItemInBookCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Playlist");
+            this.Group = TextResources.GetString("CommandGroup.Playlist");
             this.IsShowMessage = false;
 
             // PrevPlaylistItemInBook

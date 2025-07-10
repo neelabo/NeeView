@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using NeeView.Properties;
+using System.Windows.Controls;
 
 namespace NeeView
 {
@@ -6,7 +7,7 @@ namespace NeeView
     {
         public LoadRecentBookCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.File");
+            this.Group = TextResources.GetString("CommandGroup.File");
             this.IsShowMessage = false;
         }
 

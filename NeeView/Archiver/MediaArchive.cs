@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -19,7 +20,7 @@ namespace NeeView
 
         public override string ToString()
         {
-            return Properties.TextResources.GetString("Archiver.Media");
+            return TextResources.GetString("Archiver.Media");
         }
 
         protected override async ValueTask<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token)

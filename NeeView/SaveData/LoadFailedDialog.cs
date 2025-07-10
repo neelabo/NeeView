@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 
 
 namespace NeeView
@@ -25,13 +26,13 @@ namespace NeeView
             var textBox = new System.Windows.Controls.TextBox()
             {
                 IsReadOnly = true,
-                Text = ResourceService.GetString(Message) + System.Environment.NewLine + ex.Message,
+                Text = TextResources.GetString(Message) + System.Environment.NewLine + ex.Message,
                 TextWrapping = System.Windows.TextWrapping.Wrap,
                 VerticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Auto,
                 HorizontalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Disabled,
             };
 
-            var dialog = new MessageDialog(textBox, ResourceService.GetString(Title));
+            var dialog = new MessageDialog(textBox, TextResources.GetString(Title));
             dialog.SizeToContent = System.Windows.SizeToContent.Manual;
             dialog.Height = 320.0;
             dialog.ResizeMode = System.Windows.ResizeMode.CanResize;

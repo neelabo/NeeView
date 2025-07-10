@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -9,7 +10,7 @@ namespace NeeView
     {
         public ToggleSlideShowCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.ViewManipulation");
+            this.Group = TextResources.GetString("CommandGroup.ViewManipulation");
             this.ShortCutKey = new ShortcutKey("F5");
             this.IsShowMessage = true;
         }
@@ -21,10 +22,10 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return SlideShow.Current.IsPlayingSlideShow ? Properties.TextResources.GetString("ToggleSlideShowCommand.Off") : Properties.TextResources.GetString("ToggleSlideShowCommand.On");
+            return SlideShow.Current.IsPlayingSlideShow ? TextResources.GetString("ToggleSlideShowCommand.Off") : TextResources.GetString("ToggleSlideShowCommand.On");
         }
 
-        [MethodArgument("@ToggleCommand.Execute.Remarks")]
+        [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
             if (e.Args.Length > 0)

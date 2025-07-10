@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.Linq;
 using NeeLaboratory.Text;
+using NeeView.Properties;
 using SharpVectors.Dom;
 using System;
 using System.Collections.Generic;
@@ -82,7 +83,7 @@ namespace NeeView
             var memberName = new DocumentMemberName(type);
             AppendSummary(memberName);
 
-            builder.Append(CultureInfo.InvariantCulture, $"<h4>{ResourceService.GetString("@Word.Fields")}</h4>").AppendLine();
+            builder.Append(CultureInfo.InvariantCulture, $"<h4>{TextResources.GetString("Word.Fields")}</h4>").AppendLine();
 
             AppendDictionary(type.VisibleAliasNameDictionary().ToDictionary(e => e.Key.ToString(), e => e.Value));
 
@@ -201,7 +202,7 @@ namespace NeeView
             if (attribute != null && attribute.BaseClass != type)
             {
                 Debug.Assert(type.IsSubclassOf(attribute.BaseClass));
-                builder.Append("<p>" + string.Format(CultureInfo.InvariantCulture, ResourceService.GetString("@_ScriptManual.ClassInheritance"), TypeToString(attribute.BaseClass)) + "</p>").AppendLine();
+                builder.Append("<p>" + string.Format(CultureInfo.InvariantCulture, TextResources.GetString("_ScriptManual.ClassInheritance"), TypeToString(attribute.BaseClass)) + "</p>").AppendLine();
             }
 
             // derived class
@@ -209,20 +210,20 @@ namespace NeeView
             if (derivedAttribute != null && derivedAttribute.DerivedClass.Any())
             {
                 Debug.Assert(derivedAttribute.DerivedClass.All(e => e.IsSubclassOf(type)));
-                builder.Append("<p>" + string.Format(CultureInfo.InvariantCulture, ResourceService.GetString("@_ScriptManual.ClassDerivation"), derivedAttribute.DerivedClass.Select(e => TypeToString(e))) + "</p>").AppendLine();
+                builder.Append("<p>" + string.Format(CultureInfo.InvariantCulture, TextResources.GetString("_ScriptManual.ClassDerivation"), derivedAttribute.DerivedClass.Select(e => TypeToString(e))) + "</p>").AppendLine();
             }
 
             // property
             if (properties.Any())
             {
-                builder.Append(CultureInfo.InvariantCulture, $"<h4>{ResourceService.GetString("@Word.Properties")}</h4>").AppendLine();
+                builder.Append(CultureInfo.InvariantCulture, $"<h4>{TextResources.GetString("Word.Properties")}</h4>").AppendLine();
                 AppendDataTable(PropertiesToDataTable(properties), false);
             }
 
             // method
             if (methods.Any())
             {
-                builder.Append(CultureInfo.InvariantCulture, $"<h4>{ResourceService.GetString("@Word.Methods")}</h4>").AppendLine();
+                builder.Append(CultureInfo.InvariantCulture, $"<h4>{TextResources.GetString("Word.Methods")}</h4>").AppendLine();
                 AppendDataTable(MethodsToDataTable(methods), false);
             }
 
@@ -234,7 +235,7 @@ namespace NeeView
             var methods = type.GetMethods().Where(e => IsDocumentable(e));
             if (methods.Any())
             {
-                Append($"<h4>{ResourceService.GetString("@Word.Methods")}</h4>").AppendLine();
+                Append($"<h4>{TextResources.GetString("Word.Methods")}</h4>").AppendLine();
                 AppendDataTable(MethodsToDataTable(methods), false);
             }
             return this;
@@ -248,7 +249,7 @@ namespace NeeView
             var examples = names.Select(e => GetDocument(e, ".Example", false)?.Trim()).Where(e => !string.IsNullOrEmpty(e));
             if (examples.Any())
             {
-                builder.Append(CultureInfo.InvariantCulture, $"<h4>{ResourceService.GetString("@Word.Example")}</h4>").AppendLine();
+                builder.Append(CultureInfo.InvariantCulture, $"<h4>{TextResources.GetString("Word.Example")}</h4>").AppendLine();
                 foreach (var example in examples)
                 {
                     builder.Append("<p><pre><code class=\"example\">");
@@ -265,7 +266,7 @@ namespace NeeView
         /// </summary
         private bool ExampleExists(string name)
         {
-            return GetDocument(name, ".Example", false) is not null;
+            return !string.IsNullOrEmpty(GetDocument(name, ".Example", false));
         }
 
         /// <summary>
@@ -383,7 +384,7 @@ namespace NeeView
 
             if (parameters.Length > 0)
             {
-                builder.Append($"<h4>{ResourceService.GetString("@Word.Parameters")}</h4>").AppendLine();
+                builder.Append($"<h4>{TextResources.GetString("Word.Parameters")}</h4>").AppendLine();
                 builder.AppendDataTable(ParametersToDataTable(method, parameters), false);
             }
 
@@ -392,7 +393,7 @@ namespace NeeView
 
             if (method.ReturnType != typeof(void))
             {
-                builder.Append($"<h4>{ResourceService.GetString("@Word.Returns")}</h4>").AppendLine();
+                builder.Append($"<h4>{TextResources.GetString("Word.Returns")}</h4>").AppendLine();
                 var returnTypeAttribute = method.GetCustomAttribute<ReturnTypeAttribute>();
                 var typeString = TypesToString(returnTypeAttribute?.ReturnTypes, method.ReturnType) + (attribute?.DocumentType != null ? $" ({TypeToString(attribute.DocumentType)})" : "");
                 var memberName = new DocumentMemberName(method);
@@ -425,17 +426,12 @@ namespace NeeView
         /// </summary>
         /// <param name="name">リソース名</param>
         /// <param name="postfix">リソース属性名 (e.g. #Remarks)</param>
-        /// <param name="notNull">trueの場合、リソースが存在しなければリソース名を返す</param>
+        /// <param name="fallback">trueの場合、リソースが存在しなければリソース名を返す</param>
         /// <returns>取得された文字列</returns>
-        private static string? GetDocument(string name, string? postfix, bool notNull = true)
+        private static string? GetDocument(string name, string? postfix, bool fallback = true)
         {
-            var resourceId = "@" + JoinName(name, postfix);
-            var text = ResourceService.GetResourceString(resourceId, true);
-            if (text is null && notNull)
-            {
-                text = resourceId;
-            }
-            return text;
+            var resourceId = JoinName(name, postfix);
+            return TextResources.GetString(resourceId, fallback);
         }
 
         private static string JoinName(string s1, string? s2)
@@ -450,12 +446,12 @@ namespace NeeView
         /// </summary>
         /// <param name="name"></param>
         /// <param name="postfix"></param>
-        /// <param name="notNull"></param>
+        /// <param name="fallback"></param>
         /// <returns></returns>
-        private static string? GetHtmlDocumentWithRemarks(string name, bool notNull = true)
+        private static string? GetHtmlDocumentWithRemarks(string name, bool fallback = true)
         {
-            var text = GetDocument(name, "", notNull);
-            if (text is null) return null;
+            var text = GetDocument(name, "", fallback);
+            if (string.IsNullOrEmpty(text)) return null;
             var remarks = GetDocument(name, ".Remarks", false);
             if (remarks is not null)
             {
@@ -469,11 +465,12 @@ namespace NeeView
         /// </summary>
         /// <param name="name">リソース名</param>
         /// <param name="postfix">リソース属性名 (e.g. #Remarks)</param>
-        /// <param name="notNull">trueの場合、リソースが存在しなければリソース名を返す</param>
+        /// <param name="fallback">trueの場合、リソースが存在しなければリソース名を返す</param>
         /// <returns>HTML化された文字列</returns>
-        private static string? GetHtmlDocument(string name, string? postfix, bool notNull = true)
+        private static string? GetHtmlDocument(string name, string? postfix, bool fallback = true)
         {
-            var text = GetDocument(name, postfix, notNull);
+            var text = GetDocument(name, postfix, fallback);
+            if (string.IsNullOrEmpty(text)) return null;
             return TextToHtmlFormat(text);
         }
 
@@ -613,25 +610,27 @@ namespace NeeView
 
             public string GetAltName()
             {
-                if (_attribute != null && _attribute.AltName != null && _attribute.AltName.StartsWith("@", StringComparison.Ordinal))
+                if (_attribute?.AltName != null)
                 {
-                    return _attribute.AltName[1..];
+                    return _attribute.AltName;
                 }
                 else
                 {
-                    return (_attribute?.AltClassType ?? _type)?.Name + "." + (_attribute?.AltName ?? _member);
+                    // TODO: _member==null のときに微妙な文字列を生成しているので調べる
+                    return (_attribute?.AltClassType ?? _type)?.Name + "." + (_attribute?.AltSpare ?? _member);
                 }
             }
 
             public string GetAltParameterName(DocumentableAttribute attr)
             {
-                if (attr.AltName != null && attr.AltName.StartsWith("@", StringComparison.Ordinal))
+                if (attr.AltName != null)
                 {
-                    return attr.AltName[1..];
+                    return attr.AltName;
                 }
                 else
                 {
-                    return (attr.AltClassType ?? _attribute?.AltClassType ?? _type)?.Name + "." + (attr.AltName ?? _attribute?.AltName ?? _member);
+                    // TODO: _member==null のときに微妙な文字列を生成しているので調べる
+                    return (attr.AltClassType ?? _attribute?.AltClassType ?? _type)?.Name + "." + (attr.AltSpare ?? _attribute?.AltSpare ?? _member);
                 }
             }
 
@@ -642,7 +641,7 @@ namespace NeeView
                 {
                     summary = HtmlReferenceBuilder.GetHtmlDocument(GetAltName(), postfix, false);
                 }
-                return summary ?? (notNull ? "@" + JoinName(GetName(), postfix) : null);
+                return summary ?? (notNull ? TextResources.GetLiteral(JoinName(GetName(), postfix)) : null);
             }
 
             public string? GetHtmlDocumentWithRemarks(string? postfix = null, bool notNull = true)
@@ -652,7 +651,7 @@ namespace NeeView
                 {
                     summary = HtmlReferenceBuilder.GetHtmlDocumentWithRemarks(JoinName(GetAltName(), postfix), false);
                 }
-                return summary ?? (notNull ? "@" + JoinName(GetName(), postfix) : null);
+                return summary ?? (notNull ? TextResources.GetLiteral(JoinName(GetName(), postfix)) : null);
             }
 
             public string? GetHtmlDocumentWithRemarks(ParameterInfo parameterInfo)

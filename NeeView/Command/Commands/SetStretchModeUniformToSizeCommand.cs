@@ -1,4 +1,5 @@
-﻿using System.Windows.Data;
+﻿using NeeView.Properties;
+using System.Windows.Data;
 
 
 namespace NeeView
@@ -7,7 +8,7 @@ namespace NeeView
     {
         public SetStretchModeUniformToSizeCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.ImageScale");
+            this.Group = TextResources.GetString("CommandGroup.ImageScale");
             this.IsShowMessage = true;
 
             // SetStretchModeUniform

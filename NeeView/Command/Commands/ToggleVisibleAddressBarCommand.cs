@@ -1,4 +1,5 @@
-﻿using System.Windows.Data;
+﻿using NeeView.Properties;
+using System.Windows.Data;
 
 
 namespace NeeView
@@ -7,7 +8,7 @@ namespace NeeView
     {
         public ToggleVisibleAddressBarCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Window");
+            this.Group = TextResources.GetString("CommandGroup.Window");
             this.IsShowMessage = false;
         }
 
@@ -18,7 +19,7 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.MenuBar.IsAddressBarEnabled ? Properties.TextResources.GetString("ToggleVisibleAddressBarCommand.Off") : Properties.TextResources.GetString("ToggleVisibleAddressBarCommand.On");
+            return Config.Current.MenuBar.IsAddressBarEnabled ? TextResources.GetString("ToggleVisibleAddressBarCommand.Off") : TextResources.GetString("ToggleVisibleAddressBarCommand.On");
         }
 
         public override void Execute(object? sender, CommandContext e)

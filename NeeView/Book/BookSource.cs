@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
+using NeeView.Properties;
 using System;
 
 namespace NeeView
@@ -102,7 +103,7 @@ namespace NeeView
                 return "";
             }
 
-            var inner = archiver.Parent != null ? Properties.TextResources.GetString("Word.Inner") + " " : "";
+            var inner = archiver.Parent != null ? TextResources.GetString("Word.Inner") + " " : "";
 
             var extension = LoosePath.GetExtension(archiver.EntryName);
 
@@ -110,17 +111,17 @@ namespace NeeView
             return archiverType switch
             {
                 ArchiveType.FolderArchive
-                    => Properties.TextResources.GetString("ArchiveFormat.Folder"),
+                    => TextResources.GetString("ArchiveFormat.Folder"),
                 ArchiveType.ZipArchive or ArchiveType.SevenZipArchive or ArchiveType.SusieArchive
-                    => inner + Properties.TextResources.GetString("ArchiveFormat.CompressedFile") + $"({extension})",
+                    => inner + TextResources.GetString("ArchiveFormat.CompressedFile") + $"({extension})",
                 ArchiveType.PdfArchive
-                    => inner + Properties.TextResources.GetString("ArchiveFormat.Pdf") + $"({extension})",
+                    => inner + TextResources.GetString("ArchiveFormat.Pdf") + $"({extension})",
                 ArchiveType.MediaArchive
-                    => inner + Properties.TextResources.GetString("ArchiveFormat.Media") + $"({extension})",
+                    => inner + TextResources.GetString("ArchiveFormat.Media") + $"({extension})",
                 ArchiveType.PlaylistArchive
-                    => Properties.TextResources.GetString("ArchiveFormat.Playlist"),
+                    => TextResources.GetString("ArchiveFormat.Playlist"),
                 _
-                    => Properties.TextResources.GetString("ArchiveFormat.Unknown"),
+                    => TextResources.GetString("ArchiveFormat.Unknown"),
             };
         }
 
@@ -128,7 +129,7 @@ namespace NeeView
         {
             string text = "";
             text += GetArchiveDetail() + "\n";
-            text += Properties.TextResources.GetFormatString("BookAddressInfo.Page", Pages.Count);
+            text += TextResources.GetFormatString("BookAddressInfo.Page", Pages.Count);
             return text;
         }
 

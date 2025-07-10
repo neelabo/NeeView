@@ -3,6 +3,7 @@
 using NeeLaboratory.Collection;
 using NeeLaboratory.Windows.Input;
 using NeeView.Data;
+using NeeView.Properties;
 using NeeView.Windows;
 using NeeView.Windows.Property;
 using System;
@@ -21,7 +22,7 @@ namespace NeeView.Setting
     /// </summary>
     public class SettingPageGeneral : SettingPage
     {
-        public SettingPageGeneral() : base(Properties.TextResources.GetString("SettingPage.General"))
+        public SettingPageGeneral() : base(TextResources.GetString("SettingPage.General"))
         {
             this.Children = new List<SettingPage>
             {
@@ -41,31 +42,31 @@ namespace NeeView.Setting
 
             this.Items = new List<SettingItem>();
 
-            var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.General"));
-            var cultureMap = Properties.TextResources.LanguageResource.Cultures.ToKeyValuePairList(e => e.Name, e => e.NativeName);
+            var section = new SettingItemSection(TextResources.GetString("SettingPage.General"));
+            var cultureMap = TextResources.LanguageResource.Cultures.ToKeyValuePairList(e => e.Name, e => e.NativeName);
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.Language), new PropertyMemberElementOptions() { StringMap = cultureMap }))
             { Icon = new FontIcon("\uE774"), Header = "Language" });
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.DateTimeFormat))));
             this.Items.Add(section);
 
-            section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.General.FileAccess"));
+            section = new SettingItemSection(TextResources.GetString("SettingPage.General.FileAccess"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.IsFileWriteAccessEnabled))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.IsRemoveConfirmed))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.IsRemoveWantNukeWarning))));
             this.Items.Add(section);
 
-            section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.General.Copy"));
+            section = new SettingItemSection(TextResources.GetString("SettingPage.General.Copy"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.ArchiveCopyPolicy))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.TextCopyPolicy))));
             this.Items.Add(section);
 
-            section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.General.Search"));
+            section = new SettingItemSection(TextResources.GetString("SettingPage.General.Search"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.IsIncrementalSearchEnabled))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.SearchHistorySize))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.History, nameof(HistoryConfig.IsKeepSearchHistory))));
             this.Items.Add(section);
 
-            section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.General.Environment"));
+            section = new SettingItemSection(TextResources.GetString("SettingPage.General.Environment"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.StringComparerType))));
             if (!Environment.IsAppxPackage)
             {
@@ -79,15 +80,15 @@ namespace NeeView.Setting
 #endif
             this.Items.Add(section);
 
-            section = new SettingItemSection(ResourceService.GetString("@SettingPage.General.WebBrowser"));
+            section = new SettingItemSection(TextResources.GetString("SettingPage.General.WebBrowser"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.WebBrowser))) { IsStretch = true });
             this.Items.Add(section);
 
-            section = new SettingItemSection(ResourceService.GetString("@SettingPage.General.TextEditor"));
+            section = new SettingItemSection(TextResources.GetString("SettingPage.General.TextEditor"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.TextEditor))) { IsStretch = true });
             this.Items.Add(section);
 
-            section = new SettingItemSection(ResourceService.GetString("@SettingPage.General.FileManager"));
+            section = new SettingItemSection(TextResources.GetString("SettingPage.General.FileManager"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.FileManager))) { IsStretch = true });
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.FileManagerFileArgs)))
             {
@@ -109,9 +110,9 @@ namespace NeeView.Setting
     /// </summary>
     public class SettingPageStartUp : SettingPage
     {
-        public SettingPageStartUp() : base(Properties.TextResources.GetString("SettingPage.General.Boot"))
+        public SettingPageStartUp() : base(TextResources.GetString("SettingPage.General.Boot"))
         {
-            var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.General.Boot"), Properties.TextResources.GetString("SettingPage.General.Boot.Remarks"));
+            var section = new SettingItemSection(TextResources.GetString("SettingPage.General.Boot"), TextResources.GetString("SettingPage.General.Boot.Remarks"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.StartUp, nameof(StartUpConfig.IsSplashScreenEnabled))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.StartUp, nameof(StartUpConfig.IsMultiBootEnabled))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.StartUp, nameof(StartUpConfig.IsRestoreWindowPlacement))));
@@ -138,9 +139,9 @@ namespace NeeView.Setting
     /// </summary>
     public class SettingPageSaveData : SettingPage
     {
-        public SettingPageSaveData() : base(Properties.TextResources.GetString("SettingPage.General.SaveData"))
+        public SettingPageSaveData() : base(TextResources.GetString("SettingPage.General.SaveData"))
         {
-            var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.General.SaveDataTypes"), Properties.TextResources.GetString("SettingPage.General.SaveDataTypes.Remarks"));
+            var section = new SettingItemSection(TextResources.GetString("SettingPage.General.SaveDataTypes"), TextResources.GetString("SettingPage.General.SaveDataTypes.Remarks"));
 
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.History, nameof(HistoryConfig.IsSaveHistory))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.History, nameof(HistoryConfig.HistoryFilePath)))
@@ -171,7 +172,7 @@ namespace NeeView.Setting
 
             if (Environment.ConfigType == "Debug" || (Environment.IsUseLocalApplicationDataFolder && !Environment.IsAppxPackage))
             {
-                section.Children.Add(new SettingItemButton(Properties.TextResources.GetString("SettingPage.General.SaveDataRemove"), Properties.TextResources.GetString("SettingItem.Remove"), RemoveAllData) { Tips = Properties.TextResources.GetString("SettingItem.Remove.Remarks"), });
+                section.Children.Add(new SettingItemButton(TextResources.GetString("SettingPage.General.SaveDataRemove"), TextResources.GetString("SettingItem.Remove"), RemoveAllData) { Tips = TextResources.GetString("SettingItem.Remove.Remarks"), });
             }
 
             this.Items = new List<SettingItem>() { section };
@@ -200,9 +201,9 @@ namespace NeeView.Setting
     /// </summary>
     public class SettingPageMemoryAndPerformance : SettingPage
     {
-        public SettingPageMemoryAndPerformance() : base(Properties.TextResources.GetString("SettingPage.MemoryAndPerformance"))
+        public SettingPageMemoryAndPerformance() : base(TextResources.GetString("SettingPage.MemoryAndPerformance"))
         {
-            var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.MemoryAndPerformance"));
+            var section = new SettingItemSection(TextResources.GetString("SettingPage.MemoryAndPerformance"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Performance, nameof(PerformanceConfig.CacheMemorySize))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Performance, nameof(PerformanceConfig.PreLoadSize))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Performance, nameof(PerformanceConfig.JobWorkerSize))));
@@ -223,17 +224,17 @@ namespace NeeView.Setting
     /// </summary>
     public class SettingPageThumbnail : SettingPage
     {
-        public SettingPageThumbnail() : base(Properties.TextResources.GetString("SettingPage.Thumbnail"))
+        public SettingPageThumbnail() : base(TextResources.GetString("SettingPage.Thumbnail"))
         {
             this.Items = new List<SettingItem>();
 
-            var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.Thumbnail.Cache"));
+            var section = new SettingItemSection(TextResources.GetString("SettingPage.Thumbnail.Cache"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Thumbnail, nameof(ThumbnailConfig.IsCacheEnabled))));
             section.Children.Add(new SettingItemIndexValue<TimeSpan>(PropertyMemberElement.Create(Config.Current.Thumbnail, nameof(ThumbnailConfig.CacheLimitSpan)), new CacheLimitSpan(), false));
-            section.Children.Add(new SettingItemButton(Properties.TextResources.GetString("SettingPage.Thumbnail.CacheClear"), Properties.TextResources.GetString("SettingPage.Thumbnail.CacheClearButton"), RemoveCache));
+            section.Children.Add(new SettingItemButton(TextResources.GetString("SettingPage.Thumbnail.CacheClear"), TextResources.GetString("SettingPage.Thumbnail.CacheClearButton"), RemoveCache));
             this.Items.Add(section);
 
-            section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.Thumbnail.Advance"));
+            section = new SettingItemSection(TextResources.GetString("SettingPage.Thumbnail.Advance"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Thumbnail, nameof(ThumbnailConfig.ImageWidth))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Thumbnail, nameof(ThumbnailConfig.Format))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Thumbnail, nameof(ThumbnailConfig.Quality))));
@@ -257,7 +258,7 @@ namespace NeeView.Setting
             {
                 ThumbnailCache.Current.Remove();
 
-                var dialog = new MessageDialog("", Properties.TextResources.GetString("CacheDeletedDialog.Title"));
+                var dialog = new MessageDialog("", TextResources.GetString("CacheDeletedDialog.Title"));
                 if (element != null)
                 {
                     dialog.Owner = Window.GetWindow(element);
@@ -266,7 +267,7 @@ namespace NeeView.Setting
             }
             catch (Exception ex)
             {
-                var dialog = new MessageDialog(ex.Message, Properties.TextResources.GetString("CacheDeletedFailedDialog.Title"));
+                var dialog = new MessageDialog(ex.Message, TextResources.GetString("CacheDeletedFailedDialog.Title"));
                 if (element != null)
                 {
                     dialog.Owner = Window.GetWindow(element);
@@ -302,7 +303,7 @@ namespace NeeView.Setting
                 Value = value;
             }
 
-            public override string ValueString => Value == default ? Properties.TextResources.GetString("Word.NoLimit") : Properties.TextResources.GetFormatString("Word.DaysAgo", Value.Days);
+            public override string ValueString => Value == default ? TextResources.GetString("Word.NoLimit") : TextResources.GetFormatString("Word.DaysAgo", Value.Days);
         }
     }
 
@@ -312,9 +313,9 @@ namespace NeeView.Setting
     /// </summary>
     public class SettingPageNotify : SettingPage
     {
-        public SettingPageNotify() : base(Properties.TextResources.GetString("SettingPage.Notify"))
+        public SettingPageNotify() : base(TextResources.GetString("SettingPage.Notify"))
         {
-            var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.Notify.Display"));
+            var section = new SettingItemSection(TextResources.GetString("SettingPage.Notify.Display"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Notice, nameof(NoticeConfig.NoticeShowMessageStyle))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Notice, nameof(NoticeConfig.BookNameShowMessageStyle))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Notice, nameof(NoticeConfig.CommandShowMessageStyle))));
@@ -332,15 +333,15 @@ namespace NeeView.Setting
 #if ENABLE_EXTENSIONS
     public class SettingPageExplorer : SettingPage
     {
-        public SettingPageExplorer() : base(Properties.TextResources.GetString("SettingPage.Explorer"))
+        public SettingPageExplorer() : base(TextResources.GetString("SettingPage.Explorer"))
         {
             this.Items = new List<SettingItem>();
 
-            var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.Explorer.ContextMenu"));
+            var section = new SettingItemSection(TextResources.GetString("SettingPage.Explorer.ContextMenu"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(ExplorerContextMenu.Current, nameof(ExplorerContextMenu.IsEnabled))));
             this.Items.Add(section);
 
-            section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.Explorer.FileAssociation"), Properties.TextResources.GetString("SettingPage.Explorer.FileAssociation.Remarks"));
+            section = new SettingItemSection(TextResources.GetString("SettingPage.Explorer.FileAssociation"), TextResources.GetString("SettingPage.Explorer.FileAssociation.Remarks"));
             section.Children.Add(new SettingItemFileAssociation());
             this.Items.Add(section);
         }

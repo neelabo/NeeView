@@ -1,6 +1,7 @@
 ﻿using NeeLaboratory;
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
+using NeeView.Properties;
 using NeeView.Windows.Property;
 using System;
 using System.Collections.Generic;
@@ -228,7 +229,7 @@ namespace NeeView
             if (_isMoving)
             {
                 Stop();
-                InfoMessage.Current.SetMessage(InfoMessageType.Notify, Properties.TextResources.GetString("ToggleSlideShowCommand.Off"));
+                InfoMessage.Current.SetMessage(InfoMessageType.Notify, TextResources.GetString("ToggleSlideShowCommand.Off"));
             }
         }
 

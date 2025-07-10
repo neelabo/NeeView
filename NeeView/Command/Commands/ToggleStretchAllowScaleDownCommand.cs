@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -9,7 +10,7 @@ namespace NeeView
     {
         public ToggleStretchAllowScaleDownCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.ImageScale");
+            this.Group = TextResources.GetString("CommandGroup.ImageScale");
             this.IsShowMessage = true;
         }
 
@@ -28,7 +29,7 @@ namespace NeeView
             return !NowLoading.Current.IsDisplayNowLoading;
         }
 
-        [MethodArgument("@ToggleCommand.Execute.Remarks")]
+        [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
             if (e.Args.Length > 0)

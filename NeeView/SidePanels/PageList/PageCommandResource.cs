@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.Linq;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -196,7 +197,7 @@ namespace NeeView
                 catch (Exception ex)
                 {
                     App.Current.MainWindow.Cursor = null;
-                    new MessageDialog(ex.Message, Properties.TextResources.GetString("CopyErrorDialog.Title")).ShowDialog();
+                    new MessageDialog(ex.Message, TextResources.GetString("CopyErrorDialog.Title")).ShowDialog();
                 }
                 finally
                 {
@@ -235,7 +236,7 @@ namespace NeeView
                 catch (Exception ex)
                 {
                     App.Current.MainWindow.Cursor = null;
-                    new MessageDialog(ex.Message, Properties.TextResources.GetString("CopyErrorDialog.Title")).ShowDialog();
+                    new MessageDialog(ex.Message, TextResources.GetString("CopyErrorDialog.Title")).ShowDialog();
                 }
                 finally
                 {
@@ -289,7 +290,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                new MessageDialog(ex.Message, Properties.TextResources.GetString("Bookshelf.CopyToFolderFailed")).ShowDialog();
+                new MessageDialog(ex.Message, TextResources.GetString("Bookshelf.CopyToFolderFailed")).ShowDialog();
             }
             finally
             {
@@ -332,7 +333,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                ToastService.Current.Show(new Toast(ex.Message, Properties.TextResources.GetString("PageList.Message.MoveToFolderFailed"), ToastIcon.Error));
+                ToastService.Current.Show(new Toast(ex.Message, TextResources.GetString("PageList.Message.MoveToFolderFailed"), ToastIcon.Error));
             }
             finally
             {

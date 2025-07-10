@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.Generators;
+using NeeView.Properties;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -12,7 +13,7 @@ namespace NeeView
         {
             if (rate == 1.0)
             {
-                var normal = ResourceService.GetString("@Word.Normal");
+                var normal = TextResources.GetString("Word.Normal");
                 return list ? $"{rate:0.0#} ({normal})" : normal;
             }
             else if (rate <= 0.0)

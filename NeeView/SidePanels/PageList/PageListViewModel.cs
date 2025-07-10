@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Windows.Input;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -73,9 +74,9 @@ namespace NeeView
         public RelayCommand<KeyValuePair<int, PageHistoryUnit>> MoveToHistoryCommand { get; private set; }
         public RelayCommand MoveToUpCommand { get; private set; }
 
-        public string MoveToPreviousCommandToolTip { get; } = CommandTools.CreateToolTipText("@PageList.Back.ToolTip", Key.Left, ModifierKeys.Alt);
-        public string MoveToNextCommandToolTip { get; } = CommandTools.CreateToolTipText("@PageList.Next.ToolTip", Key.Right, ModifierKeys.Alt);
-        public string MoveToUpCommandToolTip { get; } = CommandTools.CreateToolTipText("@PageList.Up.ToolTip", Key.Up, ModifierKeys.Alt);
+        public string MoveToPreviousCommandToolTip { get; } = CommandTools.CreateToolTipText("PageList.Back.ToolTip", Key.Left, ModifierKeys.Alt);
+        public string MoveToNextCommandToolTip { get; } = CommandTools.CreateToolTipText("PageList.Next.ToolTip", Key.Right, ModifierKeys.Alt);
+        public string MoveToUpCommandToolTip { get; } = CommandTools.CreateToolTipText("PageList.Up.ToolTip", Key.Up, ModifierKeys.Alt);
 
 
         [MemberNotNull(nameof(MoveToPreviousCommand), nameof(MoveToNextCommand), nameof(MoveToHistoryCommand), nameof(MoveToUpCommand))]
@@ -117,15 +118,15 @@ namespace NeeView
             public override ContextMenu Create()
             {
                 var menu = new ContextMenu();
-                menu.Items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleList"), PanelListItemStyle.Normal));
-                menu.Items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleContent"), PanelListItemStyle.Content));
-                menu.Items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleBanner"), PanelListItemStyle.Banner));
-                menu.Items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleThumbnail"), PanelListItemStyle.Thumbnail));
+                menu.Items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleList"), PanelListItemStyle.Normal));
+                menu.Items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleContent"), PanelListItemStyle.Content));
+                menu.Items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleBanner"), PanelListItemStyle.Banner));
+                menu.Items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleThumbnail"), PanelListItemStyle.Thumbnail));
                 menu.Items.Add(new Separator());
-                menu.Items.Add(CreateCheckMenuItem(Properties.TextResources.GetString("Menu.GroupBy"), new Binding(nameof(PageListConfig.IsGroupBy)) { Source = Config.Current.PageList }));
+                menu.Items.Add(CreateCheckMenuItem(TextResources.GetString("Menu.GroupBy"), new Binding(nameof(PageListConfig.IsGroupBy)) { Source = Config.Current.PageList }));
                 menu.Items.Add(new Separator());
-                menu.Items.Add(CreateCheckableMenuItem(Properties.TextResources.GetString("PageListConfig.ShowBookTitle"), new Binding(nameof(PageListConfig.ShowBookTitle)) { Source = Config.Current.PageList }));
-                menu.Items.Add(CreateCheckableMenuItem(Properties.TextResources.GetString("PageListConfig.FocusMainView"), new Binding(nameof(PageListConfig.FocusMainView)) { Source = Config.Current.PageList }));
+                menu.Items.Add(CreateCheckableMenuItem(TextResources.GetString("PageListConfig.ShowBookTitle"), new Binding(nameof(PageListConfig.ShowBookTitle)) { Source = Config.Current.PageList }));
+                menu.Items.Add(CreateCheckableMenuItem(TextResources.GetString("PageListConfig.FocusMainView"), new Binding(nameof(PageListConfig.FocusMainView)) { Source = Config.Current.PageList }));
                 return menu;
             }
 

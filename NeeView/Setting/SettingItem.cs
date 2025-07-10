@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.Linq;
 using NeeView.Data;
+using NeeView.Properties;
 using NeeView.Susie;
 using NeeView.Windows.Property;
 using System;
@@ -686,11 +687,11 @@ namespace NeeView.Setting
         public override string GetSearchText()
         {
             return string.Join(" ",
-                Properties.TextResources.GetString("Word.Command"),
-                Properties.TextResources.GetString("EditCommandWindow.Tab.Shortcut"),
-                Properties.TextResources.GetString("EditCommandWindow.Tab.Gesture"),
-                Properties.TextResources.GetString("EditCommandWindow.Tab.Touch"),
-                Properties.TextResources.GetString("EditCommandWindow.Tab.Parameter"));
+                TextResources.GetString("Word.Command"),
+                TextResources.GetString("EditCommandWindow.Tab.Shortcut"),
+                TextResources.GetString("EditCommandWindow.Tab.Gesture"),
+                TextResources.GetString("EditCommandWindow.Tab.Touch"),
+                TextResources.GetString("EditCommandWindow.Tab.Parameter"));
         }
     }
 

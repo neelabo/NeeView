@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class NextPlaylistItemCommand : CommandElement
     {
         public NextPlaylistItemCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Playlist");
+            this.Group = TextResources.GetString("CommandGroup.Playlist");
             this.IsShowMessage = false;
         }
 
@@ -18,7 +20,7 @@
             var isSuccess = PlaylistPresenter.Current?.PlaylistListBox?.MoveNext();
             if (isSuccess != true)
             {
-                InfoMessage.Current.SetMessage(InfoMessageType.Command, Properties.TextResources.GetString("Notice.PlaylistItemNextFailed"));
+                InfoMessage.Current.SetMessage(InfoMessageType.Command, TextResources.GetString("Notice.PlaylistItemNextFailed"));
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeView.Properties;
 using System;
 using System.Diagnostics;
 using System.Runtime;
@@ -46,7 +47,7 @@ namespace NeeView
 
         public MenuItem CreateDevMenuItem()
         {
-            var top = new MenuItem() { Header = Properties.TextResources.GetString("MenuTree.Debug") };
+            var top = new MenuItem() { Header = TextResources.GetString("MenuTree.Debug") };
             var collection = top.Items;
 
             var item = new MenuItem() { Header = "Debug Window", IsCheckable = true };

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -45,23 +46,23 @@ namespace NeeView
             switch (filename)
             {
                 case OnStartupFilename:
-                    source.Remarks = Properties.TextResources.GetString("ScriptOnStartupCommand.Remarks");
+                    source.Remarks = TextResources.GetString("ScriptOnStartupCommand.Remarks");
                     break;
 
                 case OnBookLoadedFilename:
-                    source.Remarks = Properties.TextResources.GetString("ScriptOnBookLoadedCommand.Remarks");
+                    source.Remarks = TextResources.GetString("ScriptOnBookLoadedCommand.Remarks");
                     break;
 
                 case OnPageChangedFilename:
-                    source.Remarks = Properties.TextResources.GetString("ScriptOnPageChangedCommand.Remarks");
+                    source.Remarks = TextResources.GetString("ScriptOnPageChangedCommand.Remarks");
                     break;
 
                 case OnWindowStateChangedFilename:
-                    source.Remarks = Properties.TextResources.GetString("ScriptOnWindowStateChangedCommand.Remarks");
+                    source.Remarks = TextResources.GetString("ScriptOnWindowStateChangedCommand.Remarks");
                     break;
 
                 default:
-                    source.Remarks = Properties.TextResources.GetString("ScriptCommand.Remarks");
+                    source.Remarks = TextResources.GetString("ScriptCommand.Remarks");
                     source.IsCloneable = true;
                     break;
             }

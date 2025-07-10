@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -9,7 +10,7 @@ namespace NeeView
     {
         public ToggleIsRecursiveFolderCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.PageSetting");
+            this.Group = TextResources.GetString("CommandGroup.PageSetting");
             this.IsShowMessage = true;
         }
 
@@ -20,10 +21,10 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return BookSettings.Current.IsRecursiveFolder ? Properties.TextResources.GetString("ToggleIsRecursiveFolderCommand.Off") : Properties.TextResources.GetString("ToggleIsRecursiveFolderCommand.On");
+            return BookSettings.Current.IsRecursiveFolder ? TextResources.GetString("ToggleIsRecursiveFolderCommand.Off") : TextResources.GetString("ToggleIsRecursiveFolderCommand.On");
         }
 
-        [MethodArgument("@ToggleCommand.Execute.Remarks")]
+        [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
             if (e.Args.Length > 0)

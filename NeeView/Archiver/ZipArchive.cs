@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.Linq;
 using NeeLaboratory.Threading;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -35,7 +36,7 @@ namespace NeeView
 
         public override string ToString()
         {
-            return Properties.TextResources.GetString("Archiver.Zip");
+            return TextResources.GetString("Archiver.Zip");
         }
 
         // サポート判定
@@ -74,7 +75,7 @@ namespace NeeView
                 // ヘッダチェック
                 if (!CheckSignature(stream))
                 {
-                    throw new FormatException(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("NotZipException.Message"), Path));
+                    throw new FormatException(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("NotZipException.Message"), Path));
                 }
 
                 // 文字エンコード取得

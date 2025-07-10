@@ -8,25 +8,25 @@ namespace NeeView
     {
         None,
 
-        [AliasName("@Archiver.Folder")]
+        [AliasName("Archiver.Folder")]
         FolderArchive,
 
-        [AliasName("@Archiver.Zip")]
+        [AliasName("Archiver.Zip")]
         ZipArchive,
 
-        [AliasName("@Archiver.SevenZip")]
+        [AliasName("Archiver.SevenZip")]
         SevenZipArchive,
 
-        [AliasName("@Archiver.Pdfium")]
+        [AliasName("Archiver.Pdfium")]
         PdfArchive,
 
-        [AliasName("@Archiver.Susie")]
+        [AliasName("Archiver.Susie")]
         SusieArchive,
 
-        [AliasName("@Archiver.Media")]
+        [AliasName("Archiver.Media")]
         MediaArchive,
 
-        [AliasName("@Archiver.Playlist")]
+        [AliasName("Archiver.Playlist")]
         PlaylistArchive,
     }
 

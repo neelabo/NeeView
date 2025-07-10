@@ -1,4 +1,5 @@
 ﻿using NeeView.PageFrames;
+using NeeView.Properties;
 using System;
 using System.Diagnostics;
 using System.Windows;
@@ -9,7 +10,7 @@ namespace NeeView
     {
         public MoveDragAction()
         {
-            Note = Properties.TextResources.GetString("DragActionType.Move");
+            Note = TextResources.GetString("DragActionType.Move");
             DragKey = new DragKey("LeftButton");
             DragActionCategory = DragActionCategory.Point;
 

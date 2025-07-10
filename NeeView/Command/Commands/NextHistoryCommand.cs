@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class NextHistoryCommand : CommandElement
     {
         public NextHistoryCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.BookMove");
+            this.Group = TextResources.GetString("CommandGroup.BookMove");
             this.IsShowMessage = false;
         }
 

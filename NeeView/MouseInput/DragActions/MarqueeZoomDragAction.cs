@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Windows;
 
 namespace NeeView
@@ -7,7 +8,7 @@ namespace NeeView
     {
         public MarqueeZoomDragAction()
         {
-            Note = Properties.TextResources.GetString("DragActionType.MarqueeZoom");
+            Note = TextResources.GetString("DragActionType.MarqueeZoom");
             //DragKey = new DragKey("Shift+RightButton");
             DragActionCategory = DragActionCategory.Scale;
         }

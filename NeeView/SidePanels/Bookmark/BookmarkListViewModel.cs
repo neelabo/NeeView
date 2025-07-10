@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Windows.Input;
+using NeeView.Properties;
 using NeeView.Windows;
 using System;
 using System.Collections;
@@ -118,7 +119,7 @@ namespace NeeView
 
         #region Commands
 
-        public string MoveToUpToolTip { get; } = CommandTools.CreateToolTipText("@Bookmark.Up.ToolTip", Key.Up, ModifierKeys.Alt);
+        public string MoveToUpToolTip { get; } = CommandTools.CreateToolTipText("Bookmark.Up.ToolTip", Key.Up, ModifierKeys.Alt);
 
         /// <summary>
         /// MoveTo command.
@@ -231,20 +232,20 @@ namespace NeeView
                 var items = menu.Items;
 
                 items.Clear();
-                items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleList"), PanelListItemStyle.Normal));
-                items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleContent"), PanelListItemStyle.Content));
-                items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleBanner"), PanelListItemStyle.Banner));
-                items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleThumbnail"), PanelListItemStyle.Thumbnail));
+                items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleList"), PanelListItemStyle.Normal));
+                items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleContent"), PanelListItemStyle.Content));
+                items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleBanner"), PanelListItemStyle.Banner));
+                items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleThumbnail"), PanelListItemStyle.Thumbnail));
                 items.Add(new Separator());
-                items.Add(CreateCommandMenuItem(Properties.TextResources.GetString("FolderTree.Menu.DeleteInvalidBookmark"), _vm.DeleteInvalidBookmarkCommand));
+                items.Add(CreateCommandMenuItem(TextResources.GetString("FolderTree.Menu.DeleteInvalidBookmark"), _vm.DeleteInvalidBookmarkCommand));
                 items.Add(new Separator());
-                items.Add(CreateCommandMenuItem(Properties.TextResources.GetString("Word.NewFolder"), _vm.NewFolderCommand));
-                items.Add(CreateCommandMenuItem(Properties.TextResources.GetString("FolderTree.Menu.AddBookmark"), _vm.AddBookmarkCommand));
+                items.Add(CreateCommandMenuItem(TextResources.GetString("Word.NewFolder"), _vm.NewFolderCommand));
+                items.Add(CreateCommandMenuItem(TextResources.GetString("FolderTree.Menu.AddBookmark"), _vm.AddBookmarkCommand));
                 items.Add(new Separator());
-                items.Add(CreateCheckMenuItem(Properties.TextResources.GetString("BookmarkList.MoreMenu.SyncBookshelf"), new Binding(nameof(BookmarkConfig.IsSyncBookshelfEnabled)) { Source = Config.Current.Bookmark }));
+                items.Add(CreateCheckMenuItem(TextResources.GetString("BookmarkList.MoreMenu.SyncBookshelf"), new Binding(nameof(BookmarkConfig.IsSyncBookshelfEnabled)) { Source = Config.Current.Bookmark }));
 
-                var subItem = new MenuItem() { Header = Properties.TextResources.GetString("Bookshelf.MoreMenu.SearchOptions") };
-                subItem.Items.Add(CreateCheckMenuItem(Properties.TextResources.GetString("Bookshelf.MoreMenu.SearchIncludeSubdirectories"), new Binding(nameof(BookmarkConfig.IsSearchIncludeSubdirectories)) { Source = Config.Current.Bookmark }));
+                var subItem = new MenuItem() { Header = TextResources.GetString("Bookshelf.MoreMenu.SearchOptions") };
+                subItem.Items.Add(CreateCheckMenuItem(TextResources.GetString("Bookshelf.MoreMenu.SearchIncludeSubdirectories"), new Binding(nameof(BookmarkConfig.IsSearchIncludeSubdirectories)) { Source = Config.Current.Bookmark }));
                 items.Add(new Separator());
                 items.Add(subItem);
 

@@ -4,6 +4,7 @@ using System.Windows.Media.Imaging;
 using System.Diagnostics;
 using NeeLaboratory.ComponentModel;
 using System.Globalization;
+using NeeView.Properties;
 
 namespace NeeView
 {
@@ -14,7 +15,7 @@ namespace NeeView
     {
         public VersionWindowViewModel()
         {
-            var readmeFile = (Properties.TextResources.Culture.Name == "ja") ? "README.ja-jp.html" : "README.html";
+            var readmeFile = (TextResources.Culture.Name == "ja") ? "README.ja-jp.html" : "README.html";
             LicenseUri = "file://" + Environment.AssemblyFolder.Replace('\\', '/').TrimEnd('/') + $"/{readmeFile}";
 
             this.Icon = ResourceBitmapUtility.GetIconBitmapFrame("/Resources/App.ico", 256);

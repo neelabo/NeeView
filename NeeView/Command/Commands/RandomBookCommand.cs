@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class RandomBookCommand : CommandElement
     {
         public RandomBookCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.BookMove");
+            this.Group = TextResources.GetString("CommandGroup.BookMove");
             this.IsShowMessage = false;
         }
 

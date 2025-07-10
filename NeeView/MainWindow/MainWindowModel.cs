@@ -2,6 +2,7 @@
 using NeeLaboratory;
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.IO.Search;
+using NeeView.Properties;
 using NeeView.Setting;
 using System;
 using System.Collections.Generic;
@@ -226,7 +227,13 @@ namespace NeeView
         public void Loaded()
         {
             // 必要であればエクスプローラーメニューを更新
-            ExplorerContextMenu.Current.Update();
+            // NOTE: 都度追従させるほどではないので、無効化している
+#if false
+            if (App.Current.Option.Language is null)
+            {
+                ExplorerContextMenu.Current.Update();
+            }
+#endif
 
             // サイドパネル復元
             CustomLayoutPanelManager.Current.Restore();
@@ -409,7 +416,7 @@ namespace NeeView
         {
             if (Environment.IsAppxPackage)
             {
-                new MessageDialog(Properties.TextResources.GetString("OpenSettingFolderErrorDialog.Message"), Properties.TextResources.GetString("OpenSettingFolderErrorDialog.Title")).ShowDialog();
+                new MessageDialog(TextResources.GetString("OpenSettingFolderErrorDialog.Message"), TextResources.GetString("OpenSettingFolderErrorDialog.Title")).ShowDialog();
                 return;
             }
 

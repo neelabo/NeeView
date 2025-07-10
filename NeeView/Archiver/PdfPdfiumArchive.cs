@@ -1,4 +1,5 @@
 ﻿using NeeView.Drawing;
+using NeeView.Properties;
 using PdfiumViewer;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace NeeView
 
         public override string ToString()
         {
-            return Properties.TextResources.GetString("Archiver.Pdfium");
+            return TextResources.GetString("Archiver.Pdfium");
         }
 
         // サポート判定

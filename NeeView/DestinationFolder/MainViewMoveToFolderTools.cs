@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.Generators;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,7 +21,7 @@ namespace NeeView
 
         public static MenuItem CreateMoveToFolderItem(ICommandParameterFactory<DestinationFolder> parameterFactory, MoveableViewPageBindingSource bindingSource)
         {
-            var menuItem = DestinationFolderCollectionUtility.CreateDestinationFolderItem(ResourceService.GetString("@MoveToFolderAsCommand.Menu"), true, _command, _dialogCommand, parameterFactory);
+            var menuItem = DestinationFolderCollectionUtility.CreateDestinationFolderItem(TextResources.GetString("MoveToFolderAsCommand.Menu"), true, _command, _dialogCommand, parameterFactory);
             menuItem.SetBinding(MenuItem.IsEnabledProperty, new Binding(nameof(MoveableViewPageBindingSource.AnyMoveableViewPages)) { Source = bindingSource });
             menuItem.SubmenuOpened += (s, e) => UpdateMoveToFolderMenu(menuItem.Items, parameterFactory);
             return menuItem;

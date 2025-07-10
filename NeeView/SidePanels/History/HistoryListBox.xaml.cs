@@ -2,6 +2,7 @@
 
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -283,9 +284,9 @@ namespace NeeView
             }
 
             contextMenu.Items.Clear();
-            contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@HistoryItem.Menu.OpenBook"), Command = OpenBookCommand });
+            contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("HistoryItem.Menu.OpenBook"), Command = OpenBookCommand });
             contextMenu.Items.Add(new Separator());
-            contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@HistoryItem.Menu.Delete"), Command = RemoveCommand });
+            contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("HistoryItem.Menu.Delete"), Command = RemoveCommand });
         }
 
         // リストのキ入力

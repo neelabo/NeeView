@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.Generators;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -143,7 +144,7 @@ namespace NeeView
             var text = new string(source.Where(e => !_invalidChars.Contains(e)).ToArray());
             if (withToast && text != source)
             {
-                ToastService.Current.Show(new Toast(Properties.TextResources.GetString("Notice.InvalidFileNameChars"), "", ToastIcon.Information));
+                ToastService.Current.Show(new Toast(TextResources.GetString("Notice.InvalidFileNameChars"), "", ToastIcon.Information));
             }
             return text;
         }
@@ -153,7 +154,7 @@ namespace NeeView
             var text = new string(source.Where(e => !LoosePath.Separators.Contains(e)).ToArray());
             if (withToast && text != source)
             {
-                ToastService.Current.Show(new Toast(Properties.TextResources.GetString("Notice.InvalidSeparatorChars"), "", ToastIcon.Information));
+                ToastService.Current.Show(new Toast(TextResources.GetString("Notice.InvalidSeparatorChars"), "", ToastIcon.Information));
             }
             return text;
         }

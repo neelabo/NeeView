@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 
 namespace NeeView
 {
@@ -6,7 +7,7 @@ namespace NeeView
     {
         public BaseScaleSliderCenteredDragAction()
         {
-            Note = Properties.TextResources.GetString("DragActionType.BaseScaleSliderCentered");
+            Note = TextResources.GetString("DragActionType.BaseScaleSliderCentered");
             ParameterSource = new DragActionParameterSource(typeof(SensitiveDragActionParameter));
             DragActionCategory = DragActionCategory.Scale;
         }

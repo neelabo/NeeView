@@ -99,9 +99,9 @@ namespace NeeLaboratory.Resources
             }
         }
 
-        [Conditional("DEBUG")]
         public void DumpNoUsed()
         {
+#if DEBUG
             Debug.WriteLine($"---- No Used ----");
             
             var list = _map
@@ -115,6 +115,7 @@ namespace NeeLaboratory.Resources
                 Debug.WriteLine(item.Key);
             }
             Debug.WriteLine($"---- done. ({list.Count}) ----");
+#endif
         }
     }
 }

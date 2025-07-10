@@ -63,8 +63,8 @@ namespace NeeView
                             stackPanel.Children.Add(new TextBlock() { Text = TextResources.GetFormatString("ConfirmFileReplaceDialog.Message", LoosePath.GetFileName(filename)), Margin = new Thickness(0, 10, 0, 10) });
                             stackPanel.Children.Add(CreateOverwriteContent(filename, exporter));
                             var dialog = new MessageDialog(stackPanel, TextResources.GetString("ConfirmFileReplaceDialog.Title"));
-                            var commandReplace = new UICommand("@ConfirmFileReplaceDialog.Replace") { IsPossible = true };
-                            var commandAddNumber = new UICommand("@ConfirmFileReplaceDialog.AddNumber") { IsPossible = true };
+                            var commandReplace = new UICommand("ConfirmFileReplaceDialog.Replace") { IsPossible = true };
+                            var commandAddNumber = new UICommand("ConfirmFileReplaceDialog.AddNumber") { IsPossible = true };
                             dialog.Commands.Add(commandReplace);
                             dialog.Commands.Add(commandAddNumber);
                             dialog.Commands.Add(UICommands.Cancel);
@@ -109,13 +109,13 @@ namespace NeeView
 
                     if (parameter.IsShowToast)
                     {
-                        var toast = new Toast(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("ExportImage.Message.Success"), filename));
+                        var toast = new Toast(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("ExportImage.Message.Success"), filename));
                         ToastService.Current.Show(toast);
                     }
                 }
                 catch (Exception ex)
                 {
-                    var toast = new Toast(ex.Message, ResourceService.GetString("@Word.Error"), ToastIcon.Error);
+                    var toast = new Toast(ex.Message, TextResources.GetString("Word.Error"), ToastIcon.Error);
                     ToastService.Current.Show(toast);
                 }
             });

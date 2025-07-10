@@ -3,6 +3,7 @@ using NeeLaboratory.Generators;
 using NeeLaboratory.Linq;
 using NeeView.Collections;
 using NeeView.Collections.Generic;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -262,7 +263,7 @@ namespace NeeView
                 lock (_lock)
                 {
                     var ignoreNames = target.Where(e => e.Value is BookmarkFolder).Select(e => e.Value.Name).WhereNotNull();
-                    var validName = GetValidateFolderName(ignoreNames, name, Properties.TextResources.GetString("Word.NewFolder"));
+                    var validName = GetValidateFolderName(ignoreNames, name, TextResources.GetString("Word.NewFolder"));
                     var node = new TreeListNode<IBookmarkEntry>(new BookmarkFolder() { Name = validName });
 
                     target.Add(node);

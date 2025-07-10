@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeView.Properties;
 using NeeView.Windows.Controls;
 using NeeView.Windows.Property;
 using System;
@@ -135,7 +136,7 @@ namespace NeeView
                 catch (IOException err)
                 {
                     Debug.WriteLine($"[Error] {err.Message}");
-                    ToastService.Current.Show(new Toast(Properties.TextResources.GetString("PageViewRecordWriteError.Message"), "", ToastIcon.Error));
+                    ToastService.Current.Show(new Toast(TextResources.GetString("PageViewRecordWriteError.Message"), "", ToastIcon.Error));
                 }
             }
         }
@@ -154,7 +155,7 @@ namespace NeeView
                 catch (IOException err)
                 {
                     Debug.WriteLine($"[Error] {err.Message}");
-                    ToastService.Current.Show(new Toast(Properties.TextResources.GetString("PageViewRecordWriteError.Message"), "", ToastIcon.Error));
+                    ToastService.Current.Show(new Toast(TextResources.GetString("PageViewRecordWriteError.Message"), "", ToastIcon.Error));
                 }
                 _viewedBookAddress = null;
                 _viewedPages = new List<Page>();
@@ -215,7 +216,7 @@ namespace NeeView
             _viewedBookAddress = book.Path;
             if (book.NotFoundStartPage != null && book.Pages.Count > 0)
             {
-                _viewedBookName = string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("Notice.CannotOpen"), LoosePath.GetFileName(book.NotFoundStartPage));
+                _viewedBookName = string.Format(CultureInfo.InvariantCulture, TextResources.GetString("Notice.CannotOpen"), LoosePath.GetFileName(book.NotFoundStartPage));
             }
             else
             {

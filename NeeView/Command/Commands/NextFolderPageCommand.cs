@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class NextFolderPageCommand : CommandElement
     {
         public NextFolderPageCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Move");
+            this.Group = TextResources.GetString("CommandGroup.Move");
             this.IsShowMessage = true;
             this.PairPartner = "PrevFolderPage";
 

@@ -1,5 +1,6 @@
 ﻿using NeeView.ComponentModel;
 using NeeView.Native;
+using NeeView.Properties;
 using NeeView.Runtime.LayoutPanel;
 using NeeView.Windows;
 using System;
@@ -66,9 +67,9 @@ namespace NeeView
             _sidePanelProfile = new SidePanelProfile();
             _sidePanelProfile.Initialize();
 
-            Resources["Floating"] = Properties.TextResources.GetString("LayoutPanel.Menu.Floating");
-            Resources["Docking"] = Properties.TextResources.GetString("LayoutPanel.Menu.Docking");
-            Resources["Close"] = Properties.TextResources.GetString("LayoutPanel.Menu.Close");
+            Resources["Floating"] = TextResources.GetString("LayoutPanel.Menu.Floating");
+            Resources["Docking"] = TextResources.GetString("LayoutPanel.Menu.Docking");
+            Resources["Close"] = TextResources.GetString("LayoutPanel.Menu.Close");
 
             WindowBuilder = new LayoutPanelWindowBuilder();
 

@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.Collections.Specialized;
 using NeeLaboratory.ComponentModel;
+using NeeView.Properties;
 using NeeView.Susie;
 using NeeView.Susie.Client;
 using System;
@@ -159,7 +160,7 @@ namespace NeeView
                     Debug.WriteLine(ex.Message);
                     var errorLogFileName = App.ErrorLogFileName;
                     App.ExportErrorLog(errorLogFileName, ex);
-                    ToastService.Current.Show(new Toast(Properties.TextResources.GetString("SusieConnectError.Message") + $"<br/><a href=\"{errorLogFileName}\">{errorLogFileName}</a>", null, ToastIcon.Error) { IsXHtml = true });
+                    ToastService.Current.Show(new Toast(TextResources.GetString("SusieConnectError.Message") + $"<br/><a href=\"{errorLogFileName}\">{errorLogFileName}</a>", null, ToastIcon.Error) { IsXHtml = true });
                 }
             }
         }

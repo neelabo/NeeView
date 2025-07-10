@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory;
+using NeeView.Properties;
 using NeeView.Windows.Property;
 
 namespace NeeView
@@ -7,7 +8,7 @@ namespace NeeView
     {
         public NextSizePageCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Move");
+            this.Group = TextResources.GetString("CommandGroup.Move");
             this.IsShowMessage = false;
             this.PairPartner = "PrevSizePage";
 

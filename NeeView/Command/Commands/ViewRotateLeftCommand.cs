@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class ViewRotateLeftCommand : CommandElement
     {
         public ViewRotateLeftCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.ViewManipulation");
+            this.Group = TextResources.GetString("CommandGroup.ViewManipulation");
             this.IsShowMessage = false;
             this.ParameterSource = new CommandParameterSource(new ViewRotateCommandParameter());
         }

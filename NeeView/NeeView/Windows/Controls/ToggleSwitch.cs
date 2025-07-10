@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -313,7 +314,7 @@ namespace NeeView.Windows.Controls
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (bool)value ? Properties.TextResources.GetString("Word.On") : Properties.TextResources.GetString("Word.Off");
+            return (bool)value ? TextResources.GetString("Word.On") : TextResources.GetString("Word.Off");
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

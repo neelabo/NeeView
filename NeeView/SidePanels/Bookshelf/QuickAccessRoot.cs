@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using NeeView.Properties;
+using System.Threading.Tasks;
 
 namespace NeeView
 {
@@ -6,7 +7,7 @@ namespace NeeView
     {
         public QuickAccessRoot()
         {
-            Name = ResourceService.GetString("@Word.QuickAccess");
+            Name = TextResources.GetString("Word.QuickAccess");
         }
 
         public override bool CanRename()

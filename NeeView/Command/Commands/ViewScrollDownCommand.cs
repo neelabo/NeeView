@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory;
+using NeeView.Properties;
 using NeeView.Windows.Property;
 using System.Runtime.Serialization;
 
@@ -8,7 +9,7 @@ namespace NeeView
     {
         public ViewScrollDownCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.ViewManipulation");
+            this.Group = TextResources.GetString("CommandGroup.ViewManipulation");
             this.IsShowMessage = false;
             
             // ViewScrollUp

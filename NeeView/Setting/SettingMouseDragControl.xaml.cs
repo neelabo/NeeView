@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -122,7 +123,7 @@ namespace NeeView.Setting
         {
             if (value.DragAction.IsLocked)
             {
-                var dlg = new MessageDialog("", Properties.TextResources.GetString("DragActionLockedDialog.Title"));
+                var dlg = new MessageDialog("", TextResources.GetString("DragActionLockedDialog.Title"));
                 dlg.Owner = GetOwner();
                 dlg.ShowDialog();
                 return;
@@ -141,7 +142,7 @@ namespace NeeView.Setting
 
         private void ResetDragActionSettingButton_Click(object? sender, RoutedEventArgs e)
         {
-            var dialog = new MessageDialog(Properties.TextResources.GetString("DragActionResetDialog.Message"), Properties.TextResources.GetString("DragActionResetDialog.Title"));
+            var dialog = new MessageDialog(TextResources.GetString("DragActionResetDialog.Message"), TextResources.GetString("DragActionResetDialog.Title"));
             dialog.Commands.Add(UICommands.Yes);
             dialog.Commands.Add(UICommands.No);
             dialog.Owner = GetOwner();

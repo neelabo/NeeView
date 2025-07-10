@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -88,7 +89,7 @@ namespace NeeView
             get
             {
                 var query = new QueryPath(_path);
-                return query.SimplePath + (query.Search != null ? $"\n{Properties.TextResources.GetString("Word.SearchWord")}: {query.Search}" : null);
+                return query.SimplePath + (query.Search != null ? $"\n{TextResources.GetString("Word.SearchWord")}: {query.Search}" : null);
             }
         }
 

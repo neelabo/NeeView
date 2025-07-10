@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class PrevPlaylistItemInBookCommand : CommandElement
     {
         public PrevPlaylistItemInBookCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Playlist");
+            this.Group = TextResources.GetString("CommandGroup.Playlist");
             this.IsShowMessage = false;
 
             this.ParameterSource = new CommandParameterSource(new MovePlaylistItemInBookCommandParameter());

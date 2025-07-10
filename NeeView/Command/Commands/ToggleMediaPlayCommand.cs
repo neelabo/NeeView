@@ -1,14 +1,16 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class ToggleMediaPlayCommand : CommandElement
     {
         public ToggleMediaPlayCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Video");
+            this.Group = TextResources.GetString("CommandGroup.Video");
         }
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return BookOperation.Current.IsMediaPlaying() ? Properties.TextResources.GetString("Word.Stop") : Properties.TextResources.GetString("Word.Play");
+            return BookOperation.Current.IsMediaPlaying() ? TextResources.GetString("Word.Stop") : TextResources.GetString("Word.Play");
         }
 
         public override bool CanExecute(object? sender, CommandContext e)

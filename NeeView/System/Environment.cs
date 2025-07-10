@@ -1,4 +1,5 @@
-﻿using PdfiumViewer;
+﻿using NeeView.Properties;
+using PdfiumViewer;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -616,7 +617,7 @@ namespace NeeView
         // 全ユーザデータ削除
         public static void RemoveApplicationData(Window? owner)
         {
-            var dialog = new MessageDialog(Properties.TextResources.GetString("DeleteApplicationDataDialog.Message"), Properties.TextResources.GetString("DeleteApplicationDataDialog.Title"));
+            var dialog = new MessageDialog(TextResources.GetString("DeleteApplicationDataDialog.Message"), TextResources.GetString("DeleteApplicationDataDialog.Title"));
             dialog.Commands.Add(UICommands.Delete);
             dialog.Commands.Add(UICommands.Cancel);
             var result = dialog.ShowDialog(owner);
@@ -630,12 +631,12 @@ namespace NeeView
                 {
                     RemoveApplicationDataCore();
                     ClearRegistry();
-                    new MessageDialog(Properties.TextResources.GetString("DeleteApplicationDataCompleteDialog.Message"), Properties.TextResources.GetString("DeleteApplicationDataCompleteDialog.Title")).ShowDialog(owner);
+                    new MessageDialog(TextResources.GetString("DeleteApplicationDataCompleteDialog.Message"), TextResources.GetString("DeleteApplicationDataCompleteDialog.Title")).ShowDialog(owner);
                     LocalApplicationDataRemoved?.Invoke(null, EventArgs.Empty);
                 }
                 catch (Exception ex)
                 {
-                    new MessageDialog(ex.Message, Properties.TextResources.GetString("DeleteApplicationDataErrorDialog.Title")).ShowDialog(owner);
+                    new MessageDialog(ex.Message, TextResources.GetString("DeleteApplicationDataErrorDialog.Title")).ShowDialog(owner);
                 }
             }
         }
@@ -646,7 +647,7 @@ namespace NeeView
             // LocalApplicationDataフォルダーを使用している場合のみ
             if (!IsUseLocalApplicationDataFolder)
             {
-                throw new ApplicationException(Properties.TextResources.GetString("CannotDeleteDataException.Message"));
+                throw new ApplicationException(TextResources.GetString("CannotDeleteDataException.Message"));
             }
 
             Debug.WriteLine("RemoveAllApplicationData ...");

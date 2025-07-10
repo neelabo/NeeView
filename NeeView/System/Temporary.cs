@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using NeeView.Properties;
 
 namespace NeeView
 {
@@ -70,7 +71,7 @@ namespace NeeView
             {
                 if (!Directory.Exists(TempRootPath))
                 {
-                    ToastService.Current.Show(new Toast(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("Notice.TemporaryErrorDirectoryNotFound"), TempRootPath), Properties.TextResources.GetString("Notice.TemporaryErrorTitle"), ToastIcon.Error));
+                    ToastService.Current.Show(new Toast(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("Notice.TemporaryErrorDirectoryNotFound"), TempRootPath), TextResources.GetString("Notice.TemporaryErrorTitle"), ToastIcon.Error));
                     TempRootPath = TempRootPathDefault;
                 }
             }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -56,7 +57,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                new MessageDialog($"{Properties.TextResources.GetString("Word.Cause")}: {ex.Message}", Properties.TextResources.GetString("FileDeleteErrorDialog.Title")).ShowDialog();
+                new MessageDialog($"{TextResources.GetString("Word.Cause")}: {ex.Message}", TextResources.GetString("FileDeleteErrorDialog.Title")).ShowDialog();
                 return false;
             }
         }
@@ -101,11 +102,11 @@ namespace NeeView
             var dockPanel = new DockPanel();
 
             var message = new TextBlock();
-            message.Inlines.Add(new Run(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("FileDeleteDialog.Message"), GetFilesTypeName(entry))));
+            message.Inlines.Add(new Run(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("FileDeleteDialog.Message"), GetFilesTypeName(entry))));
             if (isCompletely)
             {
                 message.Inlines.Add(new LineBreak());
-                message.Inlines.Add(new Run(Properties.TextResources.GetString("FileDeleteMultiDialog.Message.Completely")) { FontWeight = FontWeights.Bold });
+                message.Inlines.Add(new Run(TextResources.GetString("FileDeleteMultiDialog.Message.Completely")) { FontWeight = FontWeights.Bold });
             }
             message.Margin = new Thickness(0, 0, 0, 10);
             DockPanel.SetDock(message, Dock.Top);
@@ -135,11 +136,11 @@ namespace NeeView
         private static FrameworkElement CreateDeleteDialogContentMulti(List<ArchiveEntry> entries, bool isCompletely)
         {
             var message = new TextBlock();
-            message.Inlines.Add(new Run(Properties.TextResources.GetFormatString("FileDeleteMultiDialog.Message", entries.Count)));
+            message.Inlines.Add(new Run(TextResources.GetFormatString("FileDeleteMultiDialog.Message", entries.Count)));
             if (isCompletely)
             {
                 message.Inlines.Add(new LineBreak());
-                message.Inlines.Add(new Run(Properties.TextResources.GetString("FileDeleteMultiDialog.Message.Completely")) { FontWeight = FontWeights.Bold });
+                message.Inlines.Add(new Run(TextResources.GetString("FileDeleteMultiDialog.Message.Completely")) { FontWeight = FontWeights.Bold });
             }
             message.Margin = new Thickness(0, 10, 0, 10);
             DockPanel.SetDock(message, Dock.Top);
@@ -166,12 +167,12 @@ namespace NeeView
         /// </summary>
         private static string GetDeleteDialogTitle(List<ArchiveEntry> entries)
         {
-            return Properties.TextResources.GetString("FileDeleteDialog.Title");
+            return TextResources.GetString("FileDeleteDialog.Title");
         }
 
         private static string GetFilesTypeName(ArchiveEntry entry)
         {
-            return entry.IsDirectory ? Properties.TextResources.GetString("Word.Folder") : Properties.TextResources.GetString("Word.File");
+            return entry.IsDirectory ? TextResources.GetString("Word.Folder") : TextResources.GetString("Word.File");
         }
     }
 }

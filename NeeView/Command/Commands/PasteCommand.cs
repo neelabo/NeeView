@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class PasteCommand : CommandElement
     {
         public PasteCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.File");
+            this.Group = TextResources.GetString("CommandGroup.File");
             this.ShortCutKey = new ShortcutKey("Ctrl+V");
             this.IsShowMessage = false;
         }

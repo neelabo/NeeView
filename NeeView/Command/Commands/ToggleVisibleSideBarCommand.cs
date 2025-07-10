@@ -1,4 +1,5 @@
-﻿using System.Windows.Data;
+﻿using NeeView.Properties;
+using System.Windows.Data;
 
 
 namespace NeeView
@@ -7,7 +8,7 @@ namespace NeeView
     {
         public ToggleVisibleSideBarCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Window");
+            this.Group = TextResources.GetString("CommandGroup.Window");
             this.IsShowMessage = false;
         }
 
@@ -18,7 +19,7 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.Panels.IsSideBarEnabled ? Properties.TextResources.GetString("ToggleVisibleSideBarCommand.Off") : Properties.TextResources.GetString("ToggleVisibleSideBarCommand.On");
+            return Config.Current.Panels.IsSideBarEnabled ? TextResources.GetString("ToggleVisibleSideBarCommand.Off") : TextResources.GetString("ToggleVisibleSideBarCommand.On");
         }
 
         public override void Execute(object? sender, CommandContext e)

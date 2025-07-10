@@ -1,6 +1,4 @@
-﻿// TODO: パネルからのUI操作とスクリプトからの操作の２系統がごちゃまぜになっているので整備する
-
-namespace NeeView
+﻿namespace NeeView
 {
     public class RootFolderTree : FolderTreeNodeBase
     {

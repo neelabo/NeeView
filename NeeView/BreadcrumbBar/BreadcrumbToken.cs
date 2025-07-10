@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using NeeView.Properties;
+using System.Diagnostics;
 using System.Windows.Media;
 
 namespace NeeView
@@ -52,7 +53,7 @@ namespace NeeView
 
     public class EmptyBreadcrumbToken : BreadcrumbToken
     {
-        public EmptyBreadcrumbToken() : base(QueryPath.None, "", ResourceService.GetString("@Word.ItemNone"))
+        public EmptyBreadcrumbToken() : base(QueryPath.None, "", TextResources.GetString("Word.ItemNone"))
         {
         }
     }
@@ -60,7 +61,7 @@ namespace NeeView
 
     public class LoadingBreadcrumbToken : BreadcrumbToken
     {
-        public LoadingBreadcrumbToken() : base(QueryPath.None, "", ResourceService.GetString("@Notice.LoadingTitle"))
+        public LoadingBreadcrumbToken() : base(QueryPath.None, "", TextResources.GetString("Notice.LoadingTitle"))
         {
         }
     }

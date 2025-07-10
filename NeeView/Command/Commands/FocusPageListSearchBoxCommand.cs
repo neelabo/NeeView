@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class FocusPageListSearchBoxCommand : CommandElement
     {
         public FocusPageListSearchBoxCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Panel");
+            this.Group = TextResources.GetString("CommandGroup.Panel");
             this.IsShowMessage = false;
         }
 

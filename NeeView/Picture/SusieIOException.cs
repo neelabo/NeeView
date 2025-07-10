@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 
 namespace NeeView
 {
@@ -7,7 +8,7 @@ namespace NeeView
     /// </summary>
     public class SusieIOException : Exception
     {
-        public SusieIOException() : base(Properties.TextResources.GetString("SusieLoadFailedException.Message"))
+        public SusieIOException() : base(TextResources.GetString("SusieLoadFailedException.Message"))
         {
         }
 

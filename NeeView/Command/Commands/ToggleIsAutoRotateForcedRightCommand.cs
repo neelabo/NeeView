@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -9,7 +10,7 @@ namespace NeeView
     {
         public ToggleIsAutoRotateForcedRightCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.ViewManipulation");
+            this.Group = TextResources.GetString("CommandGroup.ViewManipulation");
             this.IsShowMessage = true;
         }
 
@@ -20,7 +21,7 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return MainViewComponent.Current.ViewPropertyControl.GetAutoRotateForcedRight() ? Properties.TextResources.GetString("ToggleIsAutoRotateForcedRightCommand.Off") : Properties.TextResources.GetString("ToggleIsAutoRotateForcedRightCommand.On");
+            return MainViewComponent.Current.ViewPropertyControl.GetAutoRotateForcedRight() ? TextResources.GetString("ToggleIsAutoRotateForcedRightCommand.Off") : TextResources.GetString("ToggleIsAutoRotateForcedRightCommand.On");
         }
 
         public override bool CanExecute(object? sender, CommandContext e)
@@ -28,7 +29,7 @@ namespace NeeView
             return !NowLoading.Current.IsDisplayNowLoading;
         }
 
-        [MethodArgument("@ToggleCommand.Execute.Remarks")]
+        [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
             if (e.Args.Length > 0)

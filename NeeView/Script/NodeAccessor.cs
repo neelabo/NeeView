@@ -96,7 +96,7 @@ namespace NeeView
             return Insert(index, null);
         }
 
-        [WordNodeMember(IsBaseClassOnly = true, AltName = nameof(Add))]
+        [WordNodeMember(IsBaseClassOnly = true, AltSpare = nameof(Add))]
         public virtual NodeAccessor Insert(int index, IDictionary<string, object?>? parameter)
         {
             if (Children is null) throw new NotSupportedException();

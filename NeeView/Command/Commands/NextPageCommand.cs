@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class NextPageCommand : CommandElement
     {
         public NextPageCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Move");
+            this.Group = TextResources.GetString("CommandGroup.Move");
             this.ShortCutKey = new ShortcutKey("Left,LeftClick");
             this.TouchGesture = new TouchGesture("TouchL1,TouchL2");
             this.MouseGesture = new MouseSequence("L");

@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.Windows.Input;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -35,7 +36,7 @@ namespace NeeView.Setting
             _key = key;
 
             var note = DragActionTable.Current.Elements[_key].Note;
-            this.Title = $"{note} - {Properties.TextResources.GetString("MouseDragSettingWindow.Title")}";
+            this.Title = $"{note} - {TextResources.GetString("MouseDragSettingWindow.Title")}";
 
             this.MouseGesture.Initialize(_memento, key);
             this.Parameter.Initialize(_memento, key);

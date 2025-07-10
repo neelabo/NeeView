@@ -1,4 +1,5 @@
 ﻿using NeeView.Maths;
+using NeeView.Properties;
 using System;
 using System.Windows;
 
@@ -8,7 +9,7 @@ namespace NeeView
     {
         public FlipHorizontalDragAction()
         {
-            Note = Properties.TextResources.GetString("DragActionType.FlipHorizontal");
+            Note = TextResources.GetString("DragActionType.FlipHorizontal");
             DragKey = new DragKey("Alt+LeftButton");
             DragActionCategory = DragActionCategory.Flip;
         }

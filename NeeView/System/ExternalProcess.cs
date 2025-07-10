@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -44,7 +45,7 @@ namespace NeeView
 
             if (!Config.Current.System.IsNetworkEnabled && _httpPrefix.IsMatch(startInfo.FileName))
             {
-                var dialog = new MessageDialog(Properties.TextResources.GetString("ExternalProcess.ConfirmBrowserDialog.Message"), Properties.TextResources.GetString("ExternalProcess.ConfirmBrowserDialog.Title"));
+                var dialog = new MessageDialog(TextResources.GetString("ExternalProcess.ConfirmBrowserDialog.Message"), TextResources.GetString("ExternalProcess.ConfirmBrowserDialog.Title"));
                 dialog.Commands.AddRange(UICommands.OKCancel);
                 var result = dialog.ShowDialog();
                 if (!result.IsPossible)
@@ -72,7 +73,7 @@ namespace NeeView
                 else
                 {
 
-                    ToastService.Current.Show(new Toast(ex.Message + "\r\n\r\n" + startInfo.FileName, Properties.TextResources.GetString("Word.Error"), ToastIcon.Error));
+                    ToastService.Current.Show(new Toast(ex.Message + "\r\n\r\n" + startInfo.FileName, TextResources.GetString("Word.Error"), ToastIcon.Error));
                 }
             }
         }

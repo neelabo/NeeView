@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -70,7 +71,7 @@ namespace NeeView
         {
             if (Count <= 0) return;
 
-            var dialog = new ProgressMessageDialog(ResourceService.GetString("@Word.Processing"));
+            var dialog = new ProgressMessageDialog(TextResources.GetString("Word.Processing"));
             dialog.Owner = owner;
             dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             dialog.Canceled += Dialog_Canceled;

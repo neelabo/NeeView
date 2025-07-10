@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -9,7 +10,7 @@ namespace NeeView
     {
         public ToggleGridCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Effect");
+            this.Group = TextResources.GetString("CommandGroup.Effect");
         }
 
         public override Binding CreateIsCheckedBinding()
@@ -19,10 +20,10 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.ImageGrid.IsEnabled ? Properties.TextResources.GetString("ToggleGridCommand.Off") : Properties.TextResources.GetString("ToggleGridCommand.On");
+            return Config.Current.ImageGrid.IsEnabled ? TextResources.GetString("ToggleGridCommand.Off") : TextResources.GetString("ToggleGridCommand.On");
         }
 
-        [MethodArgument("@ToggleCommand.Execute.Remarks")]
+        [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
             if (e.Args.Length > 0)

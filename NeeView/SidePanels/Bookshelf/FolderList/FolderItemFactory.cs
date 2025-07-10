@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using NeeView.IO;
+using NeeView.Properties;
 
 namespace NeeView
 {
@@ -31,7 +32,7 @@ namespace NeeView
                 Place = _place,
                 Name = ".",
                 TargetPath = _place with { Path = LoosePath.Combine(_place.Path, ".") },
-                DisplayName = Properties.TextResources.GetString("Notice.NoFiles"),
+                DisplayName = TextResources.GetString("Notice.NoFiles"),
                 Attributes = FolderItemAttribute.Empty,
             };
         }

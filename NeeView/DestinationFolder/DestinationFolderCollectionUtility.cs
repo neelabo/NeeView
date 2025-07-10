@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using NeeView.Properties;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -43,11 +44,11 @@ namespace NeeView
             }
             else
             {
-                items.Add(new MenuItem() { Header = ResourceService.GetString("@Word.ItemNone"), IsEnabled = false });
+                items.Add(new MenuItem() { Header = TextResources.GetString("Word.ItemNone"), IsEnabled = false });
             }
 
             items.Add(new Separator());
-            items.Add(new MenuItem() { Header = ResourceService.GetString("@BookshelfItem.Menu.DestinationFolderOption"), Command = dialogCommand });
+            items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.DestinationFolderOption"), Command = dialogCommand });
         }
     }
 

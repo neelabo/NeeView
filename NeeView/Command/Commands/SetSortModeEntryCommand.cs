@@ -1,4 +1,5 @@
-﻿using System.Windows.Data;
+﻿using NeeView.Properties;
+using System.Windows.Data;
 
 
 namespace NeeView
@@ -7,7 +8,7 @@ namespace NeeView
     {
         public SetSortModeEntryCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.PageOrder");
+            this.Group = TextResources.GetString("CommandGroup.PageOrder");
             this.IsShowMessage = true;
         }
 

@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.Linq;
 using NeeView.Collections.Generic;
+using NeeView.Properties;
 using NeeView.Windows;
 using NeeView.Windows.Media;
 using System;
@@ -671,26 +672,26 @@ namespace NeeView
 
             var listBox = this.ListBox;
             contextMenu.Items.Clear();
-            contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@PlaylistItem.Menu.Open"), Command = OpenCommand });
+            contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("PlaylistItem.Menu.Open"), Command = OpenCommand });
 
             if (_vm.IsCurrentPlaylistBookOpened)
             {
-                contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@PlaylistItem.Menu.OpenSource"), Command = OpenSourceCommand });
+                contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("PlaylistItem.Menu.OpenSource"), Command = OpenSourceCommand });
             }
 
             contextMenu.Items.Add(new Separator());
-            contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@PlaylistItem.Menu.Explorer"), Command = OpenExplorerCommand });
+            contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("PlaylistItem.Menu.Explorer"), Command = OpenExplorerCommand });
             contextMenu.Items.Add(ExternalAppCollectionUtility.CreateExternalAppItem(_commandResource.OpenExternalApp_CanExecute(listBox), OpenExternalAppCommand, OpenExternalAppDialogCommand));
-            contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@PlaylistItem.Menu.Cut"), Command = CutCommand });
-            contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@PlaylistItem.Menu.Copy"), Command = CopyCommand });
-            contextMenu.Items.Add(DestinationFolderCollectionUtility.CreateDestinationFolderItem(ResourceService.GetString("@PlaylistItem.Menu.CopyToFolder"), _commandResource.CopyToFolder_CanExecute(listBox), CopyToFolderCommand, OpenDestinationFolderCommand));
-            contextMenu.Items.Add(DestinationFolderCollectionUtility.CreateDestinationFolderItem(ResourceService.GetString("@PlaylistItem.Menu.MoveToFolder"), _commandResource.MoveToFolder_CanExecute(listBox), MoveToFolderCommand, OpenDestinationFolderCommand));
+            contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("PlaylistItem.Menu.Cut"), Command = CutCommand });
+            contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("PlaylistItem.Menu.Copy"), Command = CopyCommand });
+            contextMenu.Items.Add(DestinationFolderCollectionUtility.CreateDestinationFolderItem(TextResources.GetString("PlaylistItem.Menu.CopyToFolder"), _commandResource.CopyToFolder_CanExecute(listBox), CopyToFolderCommand, OpenDestinationFolderCommand));
+            contextMenu.Items.Add(DestinationFolderCollectionUtility.CreateDestinationFolderItem(TextResources.GetString("PlaylistItem.Menu.MoveToFolder"), _commandResource.MoveToFolder_CanExecute(listBox), MoveToFolderCommand, OpenDestinationFolderCommand));
             contextMenu.Items.Add(new Separator());
-            contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@PlaylistItem.Menu.Delete"), Command = RemoveCommand });
-            contextMenu.Items.Add(new MenuItem() { Header = ResourceService.GetString("@PlaylistItem.Menu.Rename"), Command = RenameCommand });
+            contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("PlaylistItem.Menu.Delete"), Command = RemoveCommand });
+            contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("PlaylistItem.Menu.Rename"), Command = RenameCommand });
             contextMenu.Items.Add(new Separator());
 
-            var menuItem = new MenuItem() { Header = ResourceService.GetString("@PlaylistItem.Menu.MoveToAnother") };
+            var menuItem = new MenuItem() { Header = TextResources.GetString("PlaylistItem.Menu.MoveToAnother") };
             var paths = _vm.CollectAnotherPlaylists();
             if (paths.Any())
             {

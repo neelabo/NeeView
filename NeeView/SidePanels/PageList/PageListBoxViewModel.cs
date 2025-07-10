@@ -125,11 +125,11 @@ namespace NeeView
     {
         public override object GroupNameFromItem(object item, int level, CultureInfo culture)
         {
-            if (item is not Page page) return ResourceService.GetString("@Word.ItemNone");
+            if (item is not Page page) return TextResources.GetString("Word.ItemNone");
 
             if (Config.Current.Book.FolderSortOrder != FolderSortOrder.None && page.PageType != PageType.File)
             {
-                return ResourceService.GetString("@Word.Unspecified") + " ";
+                return TextResources.GetString("Word.Unspecified") + " ";
             }
             else
             {
@@ -143,7 +143,7 @@ namespace NeeView
             if (string.IsNullOrEmpty(path))
             {
                 // NOTE: 最後にスペースを付けるのは、もしもディレクトリ名が重複したときでもグループを区別させるため
-                return ResourceService.GetString("@Word.RootDirectory") + " ";
+                return TextResources.GetString("Word.RootDirectory") + " ";
             }
             else
             {
@@ -156,11 +156,11 @@ namespace NeeView
     {
         public override object GroupNameFromItem(object item, int level, CultureInfo culture)
         {
-            if (item is not Page page) return ResourceService.GetString("@Word.ItemNone");
+            if (item is not Page page) return TextResources.GetString("Word.ItemNone");
 
             if (Config.Current.Book.FolderSortOrder != FolderSortOrder.None && page.PageType != PageType.File)
             {
-                return ResourceService.GetString("@Word.Unspecified");
+                return TextResources.GetString("Word.Unspecified");
             }
             else
             {
@@ -173,11 +173,11 @@ namespace NeeView
             var today = DateTime.Today;
             if (date == today)
             {
-                return ResourceService.GetString("@Word.Today");
+                return TextResources.GetString("Word.Today");
             }
             else if (date == today.AddDays(-1))
             {
-                return ResourceService.GetString("@Word.Yesterday");
+                return TextResources.GetString("Word.Yesterday");
             }
             else
             {
@@ -190,11 +190,11 @@ namespace NeeView
     {
         public override object GroupNameFromItem(object item, int level, CultureInfo culture)
         {
-            if (item is not Page page) return ResourceService.GetString("@Word.ItemNone");
+            if (item is not Page page) return TextResources.GetString("Word.ItemNone");
 
             if (Config.Current.Book.FolderSortOrder != FolderSortOrder.None && page.PageType != PageType.File)
             {
-                return ResourceService.GetString("@Word.Unspecified");
+                return TextResources.GetString("Word.Unspecified");
             }
             else
             {
@@ -206,7 +206,7 @@ namespace NeeView
         {
             if (length < 0)
             {
-                return ResourceService.GetString("@Word.Unspecified");
+                return TextResources.GetString("Word.Unspecified");
             }
             else if (length == 0)
             {

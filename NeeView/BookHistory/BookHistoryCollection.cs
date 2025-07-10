@@ -5,6 +5,7 @@ using NeeLaboratory.Generators;
 using NeeLaboratory.Linq;
 using NeeView.Collections.Generic;
 using NeeView.Collections.ObjectModel;
+using NeeView.Properties;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -250,7 +251,7 @@ namespace NeeView
 
         public void ShowRemovedMessage(int removedCount)
         {
-            ToastService.Current.Show(new Toast(Properties.TextResources.GetFormatString("History.DeleteItemsMessage", removedCount)));
+            ToastService.Current.Show(new Toast(TextResources.GetFormatString("History.DeleteItemsMessage", removedCount)));
         }
 
         public List<BookHistory> ToList()

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -9,7 +10,7 @@ namespace NeeView
     {
         public TogglePlaylistItemCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Playlist");
+            this.Group = TextResources.GetString("CommandGroup.Playlist");
             this.ShortCutKey = new ShortcutKey("Ctrl+M");
             this.IsShowMessage = true;
         }
@@ -21,7 +22,7 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return BookOperation.Current.Playlist.IsMarked ? Properties.TextResources.GetString("TogglePlaylistItemCommand.Off") : Properties.TextResources.GetString("TogglePlaylistItemCommand.On");
+            return BookOperation.Current.Playlist.IsMarked ? TextResources.GetString("TogglePlaylistItemCommand.Off") : TextResources.GetString("TogglePlaylistItemCommand.On");
         }
 
         public override bool CanExecute(object? sender, CommandContext e)
@@ -29,7 +30,7 @@ namespace NeeView
             return BookOperation.Current.Playlist.CanMark();
         }
 
-        [MethodArgument("@ToggleCommand.Execute.Remarks")]
+        [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
             if (e.Args.Length > 0)

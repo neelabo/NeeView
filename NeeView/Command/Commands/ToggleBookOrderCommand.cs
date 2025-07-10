@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class ToggleBookOrderCommand : CommandElement
     {
         public ToggleBookOrderCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.BookOrder");
+            this.Group = TextResources.GetString("CommandGroup.BookOrder");
             this.IsShowMessage = true;
         }
 

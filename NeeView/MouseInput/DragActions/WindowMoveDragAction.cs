@@ -1,4 +1,5 @@
-﻿using NeeView.Windows;
+﻿using NeeView.Properties;
+using NeeView.Windows;
 using System.Windows;
 using System.Windows.Media;
 
@@ -8,7 +9,7 @@ namespace NeeView
     {
         public WindowMoveDragAction()
         {
-            Note = Properties.TextResources.GetString("DragActionType.WindowMove");
+            Note = TextResources.GetString("DragActionType.WindowMove");
             DragKey = new DragKey("RightButton+LeftButton");
             DragActionCategory = DragActionCategory.None;
         }

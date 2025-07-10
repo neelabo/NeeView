@@ -21,7 +21,7 @@ namespace NeeView
             set { AppDispatcher.Invoke(() => _node.Value.Path = value); }
         }
 
-        [WordNodeMember(AltName = "@Word.Name")]
+        [WordNodeMember(AltName = "Word.Name")]
         public string Name
         {
             get { return _node.Name; }

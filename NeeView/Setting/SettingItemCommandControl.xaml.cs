@@ -4,6 +4,7 @@ using NeeLaboratory.Generators;
 using NeeLaboratory.IO.Search;
 using NeeLaboratory.Windows.Input;
 using NeeView.Data;
+using NeeView.Properties;
 using NeeView.Windows.Property;
 using System;
 using System.Collections.ObjectModel;
@@ -65,7 +66,7 @@ namespace NeeView.Setting
             public bool HasParameter { get; set; }
             public string? ParameterShareCommandName { get; set; }
             public bool IsShareParameter => !string.IsNullOrEmpty(ParameterShareCommandName);
-            public string? ShareTips => ParameterShareCommandName != null ? string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("CommandListItem.Message.ShareParameter"), CommandTable.Current.GetElement(ParameterShareCommandName).Text) : null;
+            public string? ShareTips => ParameterShareCommandName != null ? string.Format(CultureInfo.InvariantCulture, TextResources.GetString("CommandListItem.Message.ShareParameter"), CommandTable.Current.GetElement(ParameterShareCommandName).Text) : null;
         }
 
         private int _commandTableChangeCount;
@@ -349,7 +350,7 @@ namespace NeeView.Setting
                         if (overlaps.Count > 0)
                         {
                             if (item.ShortCutNote != null) item.ShortCutNote += "\n";
-                            item.ShortCutNote += string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("Notice.ConflictWith"), key, ResourceService.Join(overlaps));
+                            item.ShortCutNote += string.Format(CultureInfo.InvariantCulture, TextResources.GetString("Notice.ConflictWith"), key, TextResources.Join(overlaps));
                         }
 
                         var element = new GestureElement();
@@ -391,7 +392,7 @@ namespace NeeView.Setting
                     element.IsConflict = overlaps.Count > 0;
                     if (overlaps.Count > 0)
                     {
-                        element.Note = string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("Notice.Conflict"), ResourceService.Join(overlaps));
+                        element.Note = string.Format(CultureInfo.InvariantCulture, TextResources.GetString("Notice.Conflict"), TextResources.Join(overlaps));
                     }
 
                     item.MouseGestureElement = element;
@@ -423,7 +424,7 @@ namespace NeeView.Setting
                         if (overlaps.Count > 0)
                         {
                             if (item.TouchGestureNote != null) item.TouchGestureNote += "\n";
-                            item.TouchGestureNote += string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("Notice.ConflictWith"), area.GetDisplayString(), ResourceService.Join(overlaps));
+                            item.TouchGestureNote += string.Format(CultureInfo.InvariantCulture, TextResources.GetString("Notice.ConflictWith"), area.GetDisplayString(), TextResources.Join(overlaps));
                         }
 
                         var element = new GestureElement();

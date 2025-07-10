@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -94,7 +95,7 @@ namespace NeeView.Data
             {
                 sb.AppendLine($"{CreateParameterKeyFormat(element)}\n                {element.HelpText}\n");
             }
-            sb.AppendLine($"--\n                {Properties.TextResources.GetString("AppOption.Terminator")}");
+            sb.AppendLine($"--\n                {TextResources.GetString("AppOption.Terminator")}");
             sb.AppendLine();
             sb.AppendLine("Examples:");
             foreach (var sample in _samples)
@@ -108,7 +109,7 @@ namespace NeeView.Data
         public string GetCommandLineHelpMarkdown(bool version)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("# " + Properties.TextResources.GetString("BootOptionDialog.Title"));
+            sb.AppendLine("# " + TextResources.GetString("BootOptionDialog.Title"));
             if (version)
             {
                 sb.AppendLine();
@@ -129,7 +130,7 @@ namespace NeeView.Data
             {
                 sb.AppendLine(EscapeMarkdown(CreateParameterKeyFormat(element)) + "|" + element.HelpText);
             }
-            sb.AppendLine($"\\-\\-|{Properties.TextResources.GetString("AppOption.Terminator")}");
+            sb.AppendLine($"\\-\\-|{TextResources.GetString("AppOption.Terminator")}");
             sb.AppendLine();
 
             sb.AppendLine("### Examples");
@@ -206,7 +207,7 @@ namespace NeeView.Data
                         var element = GetElement(key);
                         if (element == null)
                         {
-                            var message = string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("OptionArgumentException.Unknown"), key) + "\n\n" + GetCommandLineHelpText();
+                            var message = string.Format(CultureInfo.InvariantCulture, TextResources.GetString("OptionArgumentException.Unknown"), key) + "\n\n" + GetCommandLineHelpText();
                             throw new ArgumentException(message);
                         }
 
@@ -266,10 +267,10 @@ namespace NeeView.Data
                 Debug.WriteLine($"Option: {item.Key} = {item.Value}");
 
                 var element = GetElement(item.Key);
-                if (element == null) throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("OptionArgumentException.Unknown"), item.Key));
+                if (element == null) throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("OptionArgumentException.Unknown"), item.Key));
 
                 var value = item.Value ?? element.Default;
-                if (value == null) throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("OptionArgumentException.Empty"), item.Key));
+                if (value == null) throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("OptionArgumentException.Empty"), item.Key));
 
                 try
                 {
@@ -278,7 +279,7 @@ namespace NeeView.Data
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
-                    throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("OptionArgumentException.Failed"), item.Key, value));
+                    throw new ArgumentException(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("OptionArgumentException.Failed"), item.Key, value));
                 }
             }
 

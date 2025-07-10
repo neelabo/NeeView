@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -9,7 +10,7 @@ namespace NeeView
     {
         public ToggleVisibleNavigatorCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Panel");
+            this.Group = TextResources.GetString("CommandGroup.Panel");
             this.ShortCutKey = new ShortcutKey("N");
             this.IsShowMessage = false;
         }
@@ -21,10 +22,10 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return SidePanelFrame.Current.IsVisibleNavigator ? Properties.TextResources.GetString("ToggleVisibleNavigatorCommand.Off") : Properties.TextResources.GetString("ToggleVisibleNavigatorCommand.On");
+            return SidePanelFrame.Current.IsVisibleNavigator ? TextResources.GetString("ToggleVisibleNavigatorCommand.Off") : TextResources.GetString("ToggleVisibleNavigatorCommand.On");
         }
 
-        [MethodArgument("@ToggleCommand.Execute.Remarks")]
+        [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
             if (e.Args.Length > 0)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -83,7 +84,7 @@ namespace NeeView
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                ToastService.Current.Show(new Toast(ex.Message, ResourceService.GetString("@Bookshelf.CopyToFolderFailed"), ToastIcon.Error));
+                ToastService.Current.Show(new Toast(ex.Message, TextResources.GetString("Bookshelf.CopyToFolderFailed"), ToastIcon.Error));
             }
         }
 
@@ -111,7 +112,7 @@ namespace NeeView
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                ToastService.Current.Show(new Toast(ex.Message, ResourceService.GetString("@PageList.Message.MoveToFolderFailed"), ToastIcon.Error));
+                ToastService.Current.Show(new Toast(ex.Message, TextResources.GetString("PageList.Message.MoveToFolderFailed"), ToastIcon.Error));
             }
         }
 

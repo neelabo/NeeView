@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Reflection.Metadata;
 using System.Windows.Controls;
 
@@ -11,7 +12,7 @@ namespace NeeView
 
         public MoveToFolderAsCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.File");
+            this.Group = TextResources.GetString("CommandGroup.File");
             this.IsShowMessage = false;
 
             this.ParameterSource = new CommandParameterSource(new MoveToFolderAsCommandParameter());

@@ -21,7 +21,7 @@ namespace NeeView
         }
 
 
-        [WordNodeMember(AltName = "@QuickAccessFolderNodeSource")]
+        [WordNodeMember(AltName = "QuickAccessFolderNodeSource")]
         [ReturnType(typeof(QuickAccessFolderNodeSource))]
         public override object? Value => _value;
 
@@ -35,7 +35,7 @@ namespace NeeView
             return base.Add(parameter);
         }
 
-        [WordNodeMember(AltName = nameof(Add))]
+        [WordNodeMember(AltSpare = nameof(Add))]
         [ReturnType(typeof(QuickAccessNodeAccessor), typeof(QuickAccessFolderNodeAccessor))]
         public override NodeAccessor Insert(int index, IDictionary<string, object?>? parameter)
         {

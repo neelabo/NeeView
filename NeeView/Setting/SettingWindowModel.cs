@@ -12,6 +12,7 @@ using System.Windows.Data;
 using System.Diagnostics;
 using NeeLaboratory.IO.Search;
 using System.Threading;
+using NeeView.Properties;
 
 namespace NeeView.Setting
 {
@@ -141,7 +142,7 @@ namespace NeeView.Setting
             get { return _pages; }
         }
 
-        public SettingPage SearchPage { get; } = new SettingPage(Properties.TextResources.GetString("SettingPage.SearchResult"));
+        public SettingPage SearchPage { get; } = new SettingPage(TextResources.GetString("SettingPage.SearchResult"));
 
 
 
@@ -234,7 +235,7 @@ namespace NeeView.Setting
             var items = new List<SettingItem>();
             if (records.Any())
             {
-                items.Add(new SettingItemSection(Properties.TextResources.GetString("SettingPage.SearchResult")));
+                items.Add(new SettingItemSection(TextResources.GetString("SettingPage.SearchResult")));
                 foreach (var group in records.GroupBy(e => e.Section))
                 {
                     var section = new SettingItemSection(group.Key.Header, group.Key.Tips);
@@ -244,7 +245,7 @@ namespace NeeView.Setting
             }
             else
             {
-                items.Add(new SettingItemSection(Properties.TextResources.GetString("SettingPage.SearchResult.NotFound")));
+                items.Add(new SettingItemSection(TextResources.GetString("SettingPage.SearchResult.NotFound")));
             }
 
             SearchPage.SetItems(items);

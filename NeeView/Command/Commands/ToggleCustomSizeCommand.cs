@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -9,7 +10,7 @@ namespace NeeView
     {
         public ToggleCustomSizeCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Effect");
+            this.Group = TextResources.GetString("CommandGroup.Effect");
             this.IsShowMessage = true;
         }
 
@@ -20,7 +21,7 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.ImageCustomSize.IsEnabled ? Properties.TextResources.GetString("ToggleCustomSizeCommand.Off") : Properties.TextResources.GetString("ToggleCustomSizeCommand.On");
+            return Config.Current.ImageCustomSize.IsEnabled ? TextResources.GetString("ToggleCustomSizeCommand.Off") : TextResources.GetString("ToggleCustomSizeCommand.On");
         }
 
         public override bool CanExecute(object? sender, CommandContext e)
@@ -28,7 +29,7 @@ namespace NeeView
             return !NowLoading.Current.IsDisplayNowLoading;
         }
 
-        [MethodArgument("@ToggleCommand.Execute.Remarks")]
+        [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
             if (e.Args.Length > 0)

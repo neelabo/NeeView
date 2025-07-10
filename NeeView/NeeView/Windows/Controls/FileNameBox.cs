@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using NeeLaboratory.Generators;
+using NeeView.Properties;
 using SharpVectors.Runtime;
 using System;
 using System.Collections.Generic;
@@ -196,7 +197,7 @@ namespace NeeView.Windows.Controls
 
         private void UpdateEmptyMessage()
         {
-            EmptyMessage = Note ?? (FileDialogType == FileDialogType.Directory ? Properties.TextResources.GetString("FileNameBox.Directory.Message") : Properties.TextResources.GetString("FileNameBox.File.Message"));
+            EmptyMessage = Note ?? (FileDialogType == FileDialogType.Directory ? TextResources.GetString("FileNameBox.Directory.Message") : TextResources.GetString("FileNameBox.File.Message"));
         }
 
         private void ButtonOpenDialog_Click(object sender, RoutedEventArgs e)
@@ -215,7 +216,7 @@ namespace NeeView.Windows.Controls
             if (FileDialogType == FileDialogType.Directory)
             {
                 var dialog = new OpenFolderDialog();
-                dialog.Title = Title ?? Properties.TextResources.GetString("FileNameBox.SelectDirectory");
+                dialog.Title = Title ?? TextResources.GetString("FileNameBox.SelectDirectory");
                 if (!string.IsNullOrWhiteSpace(path))
                 {
                     dialog.InitialDirectory = LoosePath.GetDirectoryName(path);
@@ -231,7 +232,7 @@ namespace NeeView.Windows.Controls
             else if (FileDialogType == FileDialogType.SaveFile)
             {
                 var dialog = new SaveFileDialog();
-                dialog.Title = Title ?? Properties.TextResources.GetString("FileNameBox.SelectFile");
+                dialog.Title = Title ?? TextResources.GetString("FileNameBox.SelectFile");
                 dialog.InitialDirectory = string.IsNullOrWhiteSpace(path) ? null : Path.GetDirectoryName(path);
                 dialog.FileName = string.IsNullOrWhiteSpace(path) ? DefaultText : Path.GetFileName(path);
                 dialog.Filter = Filter;
@@ -247,7 +248,7 @@ namespace NeeView.Windows.Controls
             else
             {
                 var dialog = new OpenFileDialog();
-                dialog.Title = Title ?? Properties.TextResources.GetString("FileNameBox.SelectFile");
+                dialog.Title = Title ?? TextResources.GetString("FileNameBox.SelectFile");
                 dialog.InitialDirectory = string.IsNullOrWhiteSpace(path) ? null : Path.GetDirectoryName(path);
                 dialog.FileName = string.IsNullOrWhiteSpace(path) ? DefaultText : Path.GetFileName(path);
                 dialog.Filter = Filter;

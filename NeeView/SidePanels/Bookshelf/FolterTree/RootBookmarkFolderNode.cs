@@ -1,5 +1,6 @@
 ﻿using NeeView.Collections;
 using NeeView.Collections.Generic;
+using NeeView.Properties;
 using System;
 using System.Diagnostics;
 using System.Windows.Media;
@@ -18,7 +19,7 @@ namespace NeeView
 
         public override string Name => QueryScheme.Bookmark.ToSchemeString();
 
-        public override string DisplayName { get => Properties.TextResources.GetString("Word.Bookmark"); set { } }
+        public override string DisplayName { get => TextResources.GetString("Word.Bookmark"); set { } }
 
         public override IImageSourceCollection Icon { get; }
 

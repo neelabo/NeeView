@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory;
+using NeeView.Properties;
 using NeeView.Windows.Property;
 using System.ComponentModel;
 using System.Runtime.Serialization;
@@ -9,7 +10,7 @@ namespace NeeView
     {
         public ViewScaleDownCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.ViewManipulation");
+            this.Group = TextResources.GetString("CommandGroup.ViewManipulation");
             this.ShortCutKey = new ShortcutKey("RightButton+WheelDown");
             this.IsShowMessage = false;
 

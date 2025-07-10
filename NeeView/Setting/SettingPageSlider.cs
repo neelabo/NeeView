@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.Windows.Input;
+using NeeView.Properties;
 using NeeView.Windows.Property;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace NeeView.Setting
     /// </summary>
     public class SettingPageSlider : SettingPage
     {
-        public SettingPageSlider() : base(Properties.TextResources.GetString("SettingPage.Slider"))
+        public SettingPageSlider() : base(TextResources.GetString("SettingPage.Slider"))
         {
             this.Children = new List<SettingPage>
             {
@@ -19,7 +20,7 @@ namespace NeeView.Setting
                 new SettingPagePageTitle(),
             };
 
-            var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.Slider"));
+            var section = new SettingItemSection(TextResources.GetString("SettingPage.Slider"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Slider, nameof(SliderConfig.Thickness))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Slider, nameof(SliderConfig.Opacity))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Slider, nameof(SliderConfig.SliderDirection))));
@@ -37,9 +38,9 @@ namespace NeeView.Setting
     /// </summary>
     public class SettingPageFilmstrip : SettingPage
     {
-        public SettingPageFilmstrip() : base(Properties.TextResources.GetString("SettingPage.Filmstrip"))
+        public SettingPageFilmstrip() : base(TextResources.GetString("SettingPage.Filmstrip"))
         {
-            var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.Filmstrip"));
+            var section = new SettingItemSection(TextResources.GetString("SettingPage.Filmstrip"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.FilmStrip, nameof(FilmStripConfig.ImageWidth))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Slider, nameof(SliderConfig.IsSliderLinkedFilmStrip))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.FilmStrip, nameof(FilmStripConfig.IsVisibleNumber))));
@@ -66,7 +67,7 @@ namespace NeeView.Setting
             {
                 ThumbnailCache.Current.Remove();
 
-                var dialog = new MessageDialog("", Properties.TextResources.GetString("CacheDeletedDialog.Title"));
+                var dialog = new MessageDialog("", TextResources.GetString("CacheDeletedDialog.Title"));
                 if (element != null)
                 {
                     dialog.Owner = Window.GetWindow(element);
@@ -75,7 +76,7 @@ namespace NeeView.Setting
             }
             catch (Exception ex)
             {
-                var dialog = new MessageDialog(ex.Message, Properties.TextResources.GetString("CacheDeletedFailedDialog.Title"));
+                var dialog = new MessageDialog(ex.Message, TextResources.GetString("CacheDeletedFailedDialog.Title"));
                 if (element != null)
                 {
                     dialog.Owner = Window.GetWindow(element);
@@ -93,14 +94,14 @@ namespace NeeView.Setting
     /// </summary>
     public class SettingPagePageTitle : SettingPage
     {
-        public SettingPagePageTitle() : base(Properties.TextResources.GetString("SettingPage.PageTitle"))
+        public SettingPagePageTitle() : base(TextResources.GetString("SettingPage.PageTitle"))
         {
-            var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.PageTitle"));
+            var section = new SettingItemSection(TextResources.GetString("SettingPage.PageTitle"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.PageTitle, nameof(PageTitleConfig.IsEnabled))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.PageTitle, nameof(PageTitleConfig.PageTitleFormat1))) { IsStretch = true });
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.PageTitle, nameof(PageTitleConfig.PageTitleFormat2))) { IsStretch = true });
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.PageTitle, nameof(PageTitleConfig.PageTitleFormatMedia))) { IsStretch = true });
-            section.Children.Add(new SettingItemNote(Properties.TextResources.GetString("SettingPage.WindowTitle.Note"), Properties.TextResources.GetString("SettingPage.WindowTitle.Note.Title")));
+            section.Children.Add(new SettingItemNote(TextResources.GetString("SettingPage.WindowTitle.Note"), TextResources.GetString("SettingPage.WindowTitle.Note.Title")));
 
             this.Items = new List<SettingItem>() { section };
         }

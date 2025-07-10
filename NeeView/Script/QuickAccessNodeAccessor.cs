@@ -20,7 +20,7 @@ namespace NeeView
         }
 
 
-        [WordNodeMember(AltName = "@QuickAccessNodeSource")]
+        [WordNodeMember(AltName = "QuickAccessNodeSource")]
         [ReturnType(typeof(QuickAccessNodeSource))]
         public override object? Value => _value;
 

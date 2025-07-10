@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class ReLoadCommand : CommandElement
     {
         public ReLoadCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.File");
+            this.Group = TextResources.GetString("CommandGroup.File");
             this.MouseGesture = new MouseSequence("UD");
             this.IsShowMessage = false;
         }

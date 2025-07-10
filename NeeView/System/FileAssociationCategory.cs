@@ -2,16 +2,16 @@
 {
     public enum FileAssociationCategory
     {
-        [AliasName("@Word.ForNeeView")]
+        [AliasName("Word.ForNeeView")]
         ForNeeView,
 
-        [AliasName("@Word.Image")]
+        [AliasName("Word.Image")]
         Image,
 
-        [AliasName("@Word.Archive")]
+        [AliasName("Word.Archive")]
         Archive,
         
-        [AliasName("@Word.Media")]
+        [AliasName("Word.Media")]
         Media,
     }
 

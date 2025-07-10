@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.Generators;
+using NeeView.Properties;
 using NeeView.Windows.Media;
 using System;
 using System.Collections.Generic;
@@ -93,7 +94,7 @@ namespace NeeView
             {
                 _canceled = true;
                 this.CancelButton.IsEnabled = false;
-                this.MessageTextBlock.Text = ResourceService.GetString("@Word.Canceling");
+                this.MessageTextBlock.Text = TextResources.GetString("Word.Canceling");
                 Canceled?.Invoke(this, EventArgs.Empty);
             }
         }

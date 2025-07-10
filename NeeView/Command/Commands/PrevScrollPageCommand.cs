@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeView.Properties;
 using System.Runtime.Serialization;
 
 namespace NeeView
@@ -7,7 +8,7 @@ namespace NeeView
     {
         public PrevScrollPageCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Move");
+            this.Group = TextResources.GetString("CommandGroup.Move");
             this.ShortCutKey = new ShortcutKey("WheelUp");
             this.IsShowMessage = false;
             this.PairPartner = "NextScrollPage";

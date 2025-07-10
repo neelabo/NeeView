@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Windows.Input;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -254,7 +255,7 @@ namespace NeeView
                     }
                     else
                     {
-                        menu.Items.Add(new MenuItem() { Header = Properties.TextResources.GetString("MediaControl.MoreMenu.NoAudio"), IsEnabled = false });
+                        menu.Items.Add(new MenuItem() { Header = TextResources.GetString("MediaControl.MoreMenu.NoAudio"), IsEnabled = false });
                     }
 
                     menu.Items.Add(new Separator());
@@ -270,7 +271,7 @@ namespace NeeView
                     }
                     else
                     {
-                        menu.Items.Add(new MenuItem() { Header = Properties.TextResources.GetString("MediaControl.MoreMenu.NoSubtitle"), IsEnabled = false });
+                        menu.Items.Add(new MenuItem() { Header = TextResources.GetString("MediaControl.MoreMenu.NoSubtitle"), IsEnabled = false });
                     }
 
                     menu.Items.Add(new Separator());
@@ -279,7 +280,7 @@ namespace NeeView
                 // speed rates
                 if (_vm.Operator.RateEnabled)
                 {
-                    var parent = new MenuItem() { Header = Properties.TextResources.GetString("MediaControl.Speed"), InputGestureText = MediaRateTools.GetDisplayString(_vm.Operator.Rate, false) };
+                    var parent = new MenuItem() { Header = TextResources.GetString("MediaControl.Speed"), InputGestureText = MediaRateTools.GetDisplayString(_vm.Operator.Rate, false) };
                     menu.Items.Add(parent);
                     foreach (var rate in MediaRateTools.Rates)
                     {

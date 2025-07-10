@@ -1,4 +1,5 @@
-﻿using System.Windows.Data;
+﻿using NeeView.Properties;
+using System.Windows.Data;
 
 
 namespace NeeView
@@ -7,7 +8,7 @@ namespace NeeView
     {
         public ToggleHidePageSliderCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Window");
+            this.Group = TextResources.GetString("CommandGroup.Window");
             this.IsShowMessage = false;
         }
 
@@ -18,7 +19,7 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.Slider.IsHidePageSlider ? Properties.TextResources.GetString("ToggleHidePageSliderCommand.Off") : Properties.TextResources.GetString("ToggleHidePageSliderCommand.On");
+            return Config.Current.Slider.IsHidePageSlider ? TextResources.GetString("ToggleHidePageSliderCommand.Off") : TextResources.GetString("ToggleHidePageSliderCommand.On");
         }
 
         public override bool CanExecute(object? sender, CommandContext e)

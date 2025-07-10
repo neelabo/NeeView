@@ -107,7 +107,7 @@ namespace NeeView
             using (ProcessLock.Lock())
             {
                 var filename = HistoryFilePath;
-                var failedDialog = new LoadFailedDialog("@Notice.LoadHistoryFailed", "@Notice.LoadHistoryFailedTitle");
+                var failedDialog = new LoadFailedDialog("Notice.LoadHistoryFailed", "Notice.LoadHistoryFailedTitle");
 
                 var fileInfo = new FileInfo(filename);
                 if (fileInfo.Exists)
@@ -140,7 +140,7 @@ namespace NeeView
                     return;
                 }
                 _bookmarkFileStamp = fileStamp;
-                var failedDialog = new LoadFailedDialog("@Notice.LoadBookmarkFailed", "@Notice.LoadBookmarkFailedTitle");
+                var failedDialog = new LoadFailedDialog("Notice.LoadBookmarkFailed", "Notice.LoadBookmarkFailedTitle");
                 BookmarkCollection.Memento? memento = SafetyLoad(BookmarkCollection.Memento.Load, filename, failedDialog);
                 BookmarkCollection.Current.Restore(memento);
             }
@@ -268,7 +268,7 @@ namespace NeeView
                     if (fileInfo.Exists && (_historyMergeFlag || fileInfo.GetSafeLastWriteTime() > _historyLastWriteTime))
                     {
                         //Debug.WriteLine("SaveData.SaveHistory(): merge.");
-                        var failedDialog = new LoadFailedDialog("@Notice.LoadHistoryFailed", "@Notice.LoadHistoryFailedTitle");
+                        var failedDialog = new LoadFailedDialog("Notice.LoadHistoryFailed", "Notice.LoadHistoryFailedTitle");
                         var margeMemento = SafetyLoad(BookHistoryCollection.Memento.Load, HistoryFilePath, failedDialog);
                         bookHistoryMemento.Merge(margeMemento);
                         _historyMergeFlag = true;

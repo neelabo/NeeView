@@ -285,7 +285,7 @@ namespace NeeView
             }
             else
             {
-                InfoMessage.Current.SetMessage(InfoMessageType.Notify, Properties.TextResources.GetString("Notice.HistoryTerminal"));
+                InfoMessage.Current.SetMessage(InfoMessageType.Notify, TextResources.GetString("Notice.HistoryTerminal"));
             }
         }
 
@@ -315,7 +315,7 @@ namespace NeeView
             }
             else
             {
-                InfoMessage.Current.SetMessage(InfoMessageType.Notify, Properties.TextResources.GetString("Notice.HistoryLatest"));
+                InfoMessage.Current.SetMessage(InfoMessageType.Notify, TextResources.GetString("Notice.HistoryLatest"));
             }
         }
 
@@ -381,16 +381,16 @@ namespace NeeView
     {
         public override object GroupNameFromItem(object item, int level, CultureInfo culture)
         {
-            if (item is not BookHistory data) return ResourceService.GetString("@Word.ItemNone");
+            if (item is not BookHistory data) return TextResources.GetString("Word.ItemNone");
 
             var today = DateTime.Today;
             if (data.LastAccessTime.Date == today)
             {
-                return ResourceService.GetString("@Word.Today");
+                return TextResources.GetString("Word.Today");
             }
             else if (data.LastAccessTime.Date == today.AddDays(-1))
             {
-                return ResourceService.GetString("@Word.Yesterday");
+                return TextResources.GetString("Word.Yesterday");
             }
             else
             {

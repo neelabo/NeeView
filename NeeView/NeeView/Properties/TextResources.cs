@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Data;
 
@@ -95,11 +97,16 @@ namespace NeeView.Properties
             }
         }
 
-        public static string GetString(string name)
+        public static string GetLiteral(string name)
+        {
+            return "@" + name;
+        }
+
+        public static string GetString(string name, bool fallback = true)
         {
             InitializeMinimum();
-            // TODO: このレベルではフォールバックしない?
-            return _accessor.GetResourceString(name)?.String ?? "@" + name;
+            var s = _accessor.GetResourceString(name)?.String;
+            return s ?? (fallback ? GetLiteral(name) : "");
         }
 
         public static string? GetStringRaw(string name)
@@ -108,10 +115,11 @@ namespace NeeView.Properties
             return _accessor.GetResourceString(name)?.String;
         }
 
-        public static string GetCaseString(string name, string pattern)
+        public static string GetCaseString(string name, string pattern, bool fallback = true)
         {
             InitializeMinimum();
-            return _accessor.GetCaseResourceString(name, pattern)?.String ?? "@" + name;
+            var s = _accessor.GetCaseResourceString(name, pattern)?.String;
+            return s ?? (fallback ? GetLiteral(name) : "");
         }
 
         public static string GetFormatString(string name, object? arg0)
@@ -120,10 +128,61 @@ namespace NeeView.Properties
             return string.Format(CultureInfo.InvariantCulture, GetCaseString(name, pattern), arg0);
         }
 
-        public static string? Replace(string s, bool fallback)
+        public static string Replace(string s, bool fallback)
         {
             InitializeMinimum();
-            return _accessor.Replace(s, fallback);
+            return _accessor.Replace(s, fallback) ?? "";
+        }
+
+        /// <summary>
+        /// 連結単語文字列を生成
+        /// </summary>
+        public static string Join(IEnumerable<string> tokens)
+        {
+            return string.Join(" ", tokens.Select(e => string.Format(CultureInfo.InvariantCulture, GetString("TokenFormat", false) ?? "", e)));
+        }
+
+        /// <summary>
+        /// 開発用：全言語のテキストリソースを検証する
+        /// </summary>
+        [Conditional("DEBUG")]
+        public static void ValidateAllCultures()
+        {
+            foreach (var culture in LanguageResource.Cultures)
+            {
+                LoadCulture(culture);
+
+                // 参照キーの存在チェック
+                ValidateResourceKeys();
+
+                // ヘルプテキスト目視チェック
+                //SearchOptionManual.OpenSearchOptionManual();
+                //System.Threading.Thread.Sleep(2000);
+            }
+        }
+
+        /// <summary>
+        /// 開発用：すべてのリソースについて含まれるリソースキー名が実在するかを確認する
+        /// </summary>
+        [Conditional("DEBUG")]
+        private static void ValidateResourceKeys()
+        {
+            var failureCount = 0;
+            var keyRegex = new Regex(@"@[a-zA-Z0-9_\.\-#]+[a-zA-Z0-9]");
+
+            foreach (var pair in Resource.Map)
+            {
+                foreach (Match match in keyRegex.Matches(pair.Value.Text.String))
+                {
+                    if (GetStringRaw(match.Value) is null)
+                    {
+                        Debug.WriteLine($"Resource key not found: {match.Value} in {pair.Key}");
+                        failureCount++;
+                    }
+                }
+            }
+
+            Debug.Assert(failureCount == 0, $"{failureCount} resource keys are undefined.");
         }
     }
 }

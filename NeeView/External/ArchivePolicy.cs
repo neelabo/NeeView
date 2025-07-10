@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -68,7 +69,7 @@ namespace NeeView
         {
             if (value is ArchivePolicy policy)
             {
-                return Properties.TextResources.GetString("Word.Example") + ", " + policy.ToSampleText();
+                return TextResources.GetString("Word.Example") + ", " + policy.ToSampleText();
             }
 
             return value;

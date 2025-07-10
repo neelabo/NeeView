@@ -1,6 +1,7 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Linq;
 using NeeView.Collections.Generic;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -80,7 +81,7 @@ namespace NeeView
             if (parent.Value is not QuickAccessFolder) return null;
 
             var ignoreNames = parent.Where(e => e.Value is QuickAccessEntry).Select(e => e.Value.Name).WhereNotNull();
-            var validName = GetValidateFolderName(ignoreNames, name, Properties.TextResources.GetString("Word.NewFolder"));
+            var validName = GetValidateFolderName(ignoreNames, name, TextResources.GetString("Word.NewFolder"));
             var node = new TreeListNode<QuickAccessEntry>(new QuickAccessFolder() { Name = validName });
 
             parent.Insert(index, node);

@@ -3,6 +3,7 @@
 using Microsoft.Win32;
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -307,7 +308,7 @@ namespace NeeView
         {
             if (string.IsNullOrEmpty(NewPlaylist))
             {
-                new MessageDialog(Properties.TextResources.GetString("PlaylistErrorDialog.FolderIsNotSet"), Properties.TextResources.GetString("Word.Error")).ShowDialog();
+                new MessageDialog(TextResources.GetString("PlaylistErrorDialog.FolderIsNotSet"), TextResources.GetString("Word.Error")).ShowDialog();
                 return;
             }
 
@@ -337,7 +338,7 @@ namespace NeeView
             if (!File.Exists(SelectedItem)) return;
 
             var entry = ArchiveEntryUtility.CreateTemporaryEntry(SelectedItem);
-            bool isSucceed = await ConfirmFileIO.DeleteAsync(entry, Properties.TextResources.GetString("Playlist.DeleteDialog.Title"), null);
+            bool isSucceed = await ConfirmFileIO.DeleteAsync(entry, TextResources.GetString("Playlist.DeleteDialog.Title"), null);
             if (isSucceed)
             {
                 SelectedItem = DefaultPlaylist;

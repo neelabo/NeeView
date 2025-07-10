@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Windows.Input;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -35,9 +36,9 @@ namespace NeeView
         public event EventHandler<PageSelectDialogDecidedEventArgs>? Decided;
 
 
-        public string Caption => Properties.TextResources.GetString("JumpPageCommand");
+        public string Caption => TextResources.GetString("JumpPageCommand");
 
-        public string Label => string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("Notice.JumpPageLabel"), _model.Min, _model.Max);
+        public string Label => string.Format(CultureInfo.InvariantCulture, TextResources.GetString("Notice.JumpPageLabel"), _model.Min, _model.Max);
 
         public int Value
         {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Windows.Controls;
 
 namespace NeeView
@@ -9,7 +10,7 @@ namespace NeeView
 
         public OpenExternalAppAsCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.File");
+            this.Group = TextResources.GetString("CommandGroup.File");
             this.IsShowMessage = false;
 
             this.ParameterSource = new CommandParameterSource(new OpenExternalAppAsCommandParameter());

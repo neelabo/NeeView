@@ -1,6 +1,7 @@
 ﻿using NeeLaboratory.Linq;
 using NeeView.Effects;
 using NeeView.PageFrames;
+using NeeView.Properties;
 using System;
 using System.Linq;
 using System.Windows;
@@ -43,7 +44,7 @@ namespace NeeView
             }
             catch(Exception ex)
             {
-                new MessageDialog($"{Properties.TextResources.GetString("Word.Cause")}: {ex.Message}", Properties.TextResources.GetString("PrintErrorDialog.Title")).ShowDialog();
+                new MessageDialog($"{TextResources.GetString("Word.Cause")}: {ex.Message}", TextResources.GetString("PrintErrorDialog.Title")).ShowDialog();
             }
         }
 

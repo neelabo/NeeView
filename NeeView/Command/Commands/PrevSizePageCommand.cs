@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class PrevSizePageCommand : CommandElement
     {
         public PrevSizePageCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Move");
+            this.Group = TextResources.GetString("CommandGroup.Move");
             this.IsShowMessage = false;
             this.PairPartner = "NextSizePage";
 

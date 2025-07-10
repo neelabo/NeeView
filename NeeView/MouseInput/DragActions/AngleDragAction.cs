@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Media;
 using NeeLaboratory;
 using NeeView.Maths;
+using NeeView.Properties;
 
 namespace NeeView
 {
@@ -10,7 +11,7 @@ namespace NeeView
     {
         public AngleDragAction()
         {
-            Note = Properties.TextResources.GetString("DragActionType.Angle");
+            Note = TextResources.GetString("DragActionType.Angle");
             DragKey = new DragKey("Shift+LeftButton");
             DragActionCategory = DragActionCategory.Angle;
         }

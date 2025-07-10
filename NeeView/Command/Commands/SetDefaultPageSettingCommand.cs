@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class SetDefaultPageSettingCommand : CommandElement
     {
         public SetDefaultPageSettingCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.PageSetting");
+            this.Group = TextResources.GetString("CommandGroup.PageSetting");
             this.IsShowMessage = true;
         }
 

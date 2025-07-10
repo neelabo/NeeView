@@ -44,12 +44,17 @@ namespace NeeView
         public Type? AltClassType;
 
         /// <summary>
-        /// 未定義のときにキー名に使用する名前
+        /// 未定義のときにキー名に使用するリソース名
         /// </summary>
         public string? AltName;
 
+        /// <summary>
+        /// 未定義のときにキー名に使用する名前
+        /// </summary>
+        public string? AltSpare;
 
-        public bool HasAltName() => AltClassType != null || AltName != null;
+
+        public bool HasAltName() => AltClassType != null || AltName != null || AltSpare != null;
     }
 
 

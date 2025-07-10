@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.Generators;
 using NeeLaboratory.IO.Search;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -93,7 +94,7 @@ namespace NeeView
             NameSource = new CommandNameSource(name ?? CommandElementTools.CreateCommandName(this.GetType()), 0);
 
             bool isObsolete = this.GetType().IsDefined(typeof(ObsoleteAttribute), false);
-            var obsoleteString = isObsolete ? $"({ResourceService.GetString("@Word.Deprecated")}) " : "";
+            var obsoleteString = isObsolete ? $"({TextResources.GetString("Word.Deprecated")}) " : "";
 
             Text = GetResourceTextRequired(null, null);
             Menu = GetResourceText(nameof(Menu));
@@ -108,29 +109,21 @@ namespace NeeView
         private string GetResourceKey(string? property, string? postfix = null)
         {
             var period = (property is null) ? "" : ".";
-            return "@" + this.GetType().Name + period + property + postfix;
+            return this.GetType().Name + period + property + postfix;
         }
 
         private string? GetResourceText(string? property, string? postfix = null)
         {
             var resourceKey = GetResourceKey(property, postfix);
-            var resourceValue = ResourceService.GetResourceString(resourceKey, true);
+            var resourceValue = TextResources.GetString(resourceKey, false);
             return resourceValue;
         }
 
         private string GetResourceTextRequired(string? property, string? postfix = null)
         {
             var resourceKey = GetResourceKey(property, postfix);
-            var resourceValue = ResourceService.GetResourceString(resourceKey, true);
-
-#if DEBUG
-            if (resourceValue is null)
-            {
-                Debug.WriteLine($"Error: CommandName not found: {resourceKey}");
-            }
-#endif
-
-            return resourceValue ?? resourceKey;
+            var resourceValue = TextResources.GetString(resourceKey, false);
+            return resourceValue;
         }
 
 
@@ -155,7 +148,7 @@ namespace NeeView
         public string? Menu
         {
             get { return _menuText ?? Text; }
-            set { _menuText = value; }
+            set { _menuText = string.IsNullOrEmpty(value) ? null : value; }
         }
 
         // コマンド説明
@@ -163,7 +156,7 @@ namespace NeeView
         public string? Remarks
         {
             get { return _remarksText ?? ""; }
-            set { _remarksText = value; }
+            set { _remarksText = string.IsNullOrEmpty(value) ? null : value; }
         }
 
         /// <summary>

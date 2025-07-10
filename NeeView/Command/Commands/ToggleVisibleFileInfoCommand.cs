@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -9,7 +10,7 @@ namespace NeeView
     {
         public ToggleVisibleFileInfoCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Panel");
+            this.Group = TextResources.GetString("CommandGroup.Panel");
             this.ShortCutKey = new ShortcutKey("I");
             this.IsShowMessage = false;
         }
@@ -21,10 +22,10 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return SidePanelFrame.Current.IsVisibleFileInfo ? Properties.TextResources.GetString("ToggleVisibleFileInfoCommand.Off") : Properties.TextResources.GetString("ToggleVisibleFileInfoCommand.On");
+            return SidePanelFrame.Current.IsVisibleFileInfo ? TextResources.GetString("ToggleVisibleFileInfoCommand.Off") : TextResources.GetString("ToggleVisibleFileInfoCommand.On");
         }
 
-        [MethodArgument("@ToggleCommand.Execute.Remarks")]
+        [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
             if (e.Args.Length > 0)

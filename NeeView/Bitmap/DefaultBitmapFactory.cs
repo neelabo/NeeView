@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -72,7 +73,7 @@ namespace NeeView
             if (stream.Length > 100 * 1024 && bitmap.PixelHeight == 1 && bitmap.PixelWidth == 1)
             {
                 Debug.WriteLine("1x1!?");
-                throw new ApplicationException(Properties.TextResources.GetString("Notice.ImageDecodeFailed"));
+                throw new ApplicationException(TextResources.GetString("Notice.ImageDecodeFailed"));
             }
 
             return bitmap;

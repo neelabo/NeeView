@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -118,7 +119,7 @@ namespace NeeView
         private static string GetAliasNameInner(object value, AliasNameAttribute? attribute)
         {
             var resourceKey = attribute?.AliasName ?? GetResourceKey(value);
-            var resourceString = ResourceService.GetResourceString(resourceKey, true);
+            var resourceString = TextResources.GetStringRaw(resourceKey);
 
 #if DEBUG
             if (resourceKey != null && resourceString is null)
@@ -146,7 +147,7 @@ namespace NeeView
         private static string GetResourceKey(object value, string? postfix = null)
         {
             var type = value.GetType();
-            return $"@{type.Name}.{value}{postfix}";
+            return $"{type.Name}.{value}{postfix}";
         }
 
 
@@ -164,7 +165,7 @@ namespace NeeView
             where T : notnull
         {
             var resourceKey = attribute?.Remarks ?? GetResourceKey(value, ".Remarks");
-            return ResourceService.GetResourceString(resourceKey, true);
+            return TextResources.GetStringRaw(resourceKey);
         }
 
         public static string? GetRemarks(object value)
@@ -175,7 +176,7 @@ namespace NeeView
         private static string? GetRemarks(object value, AliasNameAttribute? attribute)
         {
             var resourceKey = attribute?.Remarks ?? GetResourceKey(value, ".Remarks");
-            return ResourceService.GetResourceString(resourceKey, true);
+            return TextResources.GetStringRaw(resourceKey);
         }
 
         public static Dictionary<Enum, string> GetRemarksDictionary(this Type type)

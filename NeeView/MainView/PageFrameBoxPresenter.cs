@@ -3,6 +3,7 @@ using NeeLaboratory.Generators;
 using NeeLaboratory.Threading.Tasks;
 using NeeView.ComponentModel;
 using NeeView.PageFrames;
+using NeeView.Properties;
 using NeeView.Windows;
 using System;
 using System.Collections.Generic;
@@ -562,11 +563,11 @@ namespace NeeView
                     break;
                 case TransformAction.FlipHorizontal:
                     var isFlipHorizontal = ((IFlipControl)source).IsFlipHorizontal;
-                    infoMessage.SetMessage(InfoMessageType.ViewTransform, Properties.TextResources.GetString("Notice.FlipHorizontal") + " " + (isFlipHorizontal ? "ON" : "OFF"));
+                    infoMessage.SetMessage(InfoMessageType.ViewTransform, TextResources.GetString("Notice.FlipHorizontal") + " " + (isFlipHorizontal ? "ON" : "OFF"));
                     break;
                 case TransformAction.FlipVertical:
                     var isFlipVertical = ((IFlipControl)source).IsFlipVertical;
-                    infoMessage.SetMessage(InfoMessageType.ViewTransform, Properties.TextResources.GetString("Notice.FlipVertical") + " " + (isFlipVertical ? "ON" : "OFF"));
+                    infoMessage.SetMessage(InfoMessageType.ViewTransform, TextResources.GetString("Notice.FlipVertical") + " " + (isFlipVertical ? "ON" : "OFF"));
                     break;
             }
         }

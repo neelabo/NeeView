@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -100,7 +101,7 @@ namespace NeeView
                         query = new QueryPath(bookmark.Path, search);
                         break;
                     case BookmarkFolder folder:
-                        throw new BookAddressException(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("Notice.CannotOpenBookmarkFolder"), query.SimplePath));
+                        throw new BookAddressException(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("Notice.CannotOpenBookmarkFolder"), query.SimplePath));
                 }
             }
 

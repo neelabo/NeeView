@@ -1,5 +1,6 @@
 ﻿using NeeView.Collections;
 using NeeView.Collections.Generic;
+using NeeView.Properties;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -179,7 +180,7 @@ namespace NeeView
                     var conflict = node.Parent?.FirstOrDefault(e => e != node && e.Value is BookmarkFolder && e.Value.Name == newName);
                     if (conflict != null)
                     {
-                        var dialog = new MessageDialog(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("MergeFolderDialog.Message"), newName), Properties.TextResources.GetString("MergeFolderDialog.Title"));
+                        var dialog = new MessageDialog(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("MergeFolderDialog.Message"), newName), TextResources.GetString("MergeFolderDialog.Title"));
                         dialog.Commands.Add(UICommands.Yes);
                         dialog.Commands.Add(UICommands.No);
                         var result = dialog.ShowDialog();

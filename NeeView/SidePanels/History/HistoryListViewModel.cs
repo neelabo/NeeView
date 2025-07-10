@@ -12,6 +12,7 @@ using System.Diagnostics;
 using NeeLaboratory.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
+using NeeView.Properties;
 
 namespace NeeView
 {
@@ -34,7 +35,7 @@ namespace NeeView
 
         public HistoryList Model => _model;
 
-        public string FilterPath => string.IsNullOrEmpty(_model.FilterPath) ? Properties.TextResources.GetString("Word.AllHistory") : _model.FilterPath;
+        public string FilterPath => string.IsNullOrEmpty(_model.FilterPath) ? TextResources.GetString("Word.AllHistory") : _model.FilterPath;
 
         public SearchBoxModel SearchBoxModel => _model.SearchBoxModel;
 
@@ -55,16 +56,16 @@ namespace NeeView
             public override ContextMenu Create()
             {
                 var menu = new ContextMenu();
-                menu.Items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleList"), PanelListItemStyle.Normal));
-                menu.Items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleContent"), PanelListItemStyle.Content));
-                menu.Items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleBanner"), PanelListItemStyle.Banner));
-                menu.Items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleThumbnail"), PanelListItemStyle.Thumbnail));
+                menu.Items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleList"), PanelListItemStyle.Normal));
+                menu.Items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleContent"), PanelListItemStyle.Content));
+                menu.Items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleBanner"), PanelListItemStyle.Banner));
+                menu.Items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleThumbnail"), PanelListItemStyle.Thumbnail));
                 menu.Items.Add(new Separator());
-                menu.Items.Add(CreateCheckMenuItem(Properties.TextResources.GetString("Menu.GroupBy"), new Binding(nameof(HistoryConfig.IsGroupBy)) { Source = Config.Current.History }));
-                menu.Items.Add(CreateCheckMenuItem(Properties.TextResources.GetString("History.MoreMenu.IsCurrentFolder"), new Binding(nameof(HistoryConfig.IsCurrentFolder)) { Source = Config.Current.History }));
+                menu.Items.Add(CreateCheckMenuItem(TextResources.GetString("Menu.GroupBy"), new Binding(nameof(HistoryConfig.IsGroupBy)) { Source = Config.Current.History }));
+                menu.Items.Add(CreateCheckMenuItem(TextResources.GetString("History.MoreMenu.IsCurrentFolder"), new Binding(nameof(HistoryConfig.IsCurrentFolder)) { Source = Config.Current.History }));
                 menu.Items.Add(new Separator());
-                menu.Items.Add(CreateCommandMenuItem(Properties.TextResources.GetString("History.MoreMenu.DeleteInvalid"), _vm.RemoveUnlinkedCommand));
-                menu.Items.Add(CreateCommandMenuItem(Properties.TextResources.GetString("History.MoreMenu.DeleteAll"), _vm.RemoveAllCommand));
+                menu.Items.Add(CreateCommandMenuItem(TextResources.GetString("History.MoreMenu.DeleteInvalid"), _vm.RemoveUnlinkedCommand));
+                menu.Items.Add(CreateCommandMenuItem(TextResources.GetString("History.MoreMenu.DeleteAll"), _vm.RemoveAllCommand));
                 return  menu;
             }
 
@@ -108,7 +109,7 @@ namespace NeeView
         {
             if (BookHistoryCollection.Current.Items.Any())
             {
-                var dialog = new MessageDialog(Properties.TextResources.GetString("HistoryDeleteAllDialog.Message"), Properties.TextResources.GetString("HistoryDeleteAllDialog.Title"));
+                var dialog = new MessageDialog(TextResources.GetString("HistoryDeleteAllDialog.Message"), TextResources.GetString("HistoryDeleteAllDialog.Title"));
                 dialog.Commands.Add(UICommands.Delete);
                 dialog.Commands.Add(UICommands.Cancel);
                 var answer = dialog.ShowDialog();

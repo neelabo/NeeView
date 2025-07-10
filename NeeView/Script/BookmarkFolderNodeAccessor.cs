@@ -18,7 +18,7 @@ namespace NeeView
         }
 
 
-        [WordNodeMember(AltName = "@BookmarkFolderNodeSource")]
+        [WordNodeMember(AltName = "BookmarkFolderNodeSource")]
         [ReturnType(typeof(BookmarkFolderNodeSource))]
         public override object? Value => _value;
 
@@ -31,7 +31,7 @@ namespace NeeView
             return base.Add(parameter);
         }
 
-        [WordNodeMember(AltName = nameof(Add))]
+        [WordNodeMember(AltSpare = nameof(Add))]
         [ReturnType(typeof(BookmarkFolderNodeAccessor))]
         public override NodeAccessor Insert(int index, IDictionary<string, object?>? parameter)
         {

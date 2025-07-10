@@ -3,6 +3,7 @@
 using NeeLaboratory.Generators;
 using NeeLaboratory.Linq;
 using NeeView.IO;
+using NeeView.Properties;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -42,7 +43,7 @@ namespace NeeView
 
         public override string ToString()
         {
-            return Properties.TextResources.GetString("Archiver.Folder");
+            return TextResources.GetString("Archiver.Folder");
         }
 
         // サポート判定

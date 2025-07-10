@@ -1,7 +1,5 @@
 ﻿using System;
 
-// TODO: パネルからのUI操作とスクリプトからの操作の２系統がごちゃまぜになっているので整備する
-
 namespace NeeView
 {
     [Flags]

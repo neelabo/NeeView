@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using NeeView.Properties;
+using System.Collections.Generic;
 using System.IO;
 
 namespace NeeView.IO
@@ -9,11 +10,11 @@ namespace NeeView.IO
         {
             [DriveType.Unknown] = "",
             [DriveType.NoRootDirectory] = "",
-            [DriveType.Removable] = Properties.TextResources.GetString("Word.RemovableDrive"),
-            [DriveType.Fixed] = Properties.TextResources.GetString("Word.FixedDrive"),
-            [DriveType.Network] = Properties.TextResources.GetString("Word.NetworkDrive"),
-            [DriveType.CDRom] = Properties.TextResources.GetString("Word.CDRomDrive"),
-            [DriveType.Ram] = Properties.TextResources.GetString("Word.RamDrive"),
+            [DriveType.Removable] = TextResources.GetString("Word.RemovableDrive"),
+            [DriveType.Fixed] = TextResources.GetString("Word.FixedDrive"),
+            [DriveType.Network] = TextResources.GetString("Word.NetworkDrive"),
+            [DriveType.CDRom] = TextResources.GetString("Word.CDRomDrive"),
+            [DriveType.Ram] = TextResources.GetString("Word.RamDrive"),
         };
 
         public static string ToDisplayString(this DriveType driveType)

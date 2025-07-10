@@ -1,4 +1,5 @@
-﻿using NeeView.Windows.Property;
+﻿using NeeView.Properties;
+using NeeView.Windows.Property;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace NeeView.Setting
     /// </summary>
     public class SettingPageBook : SettingPage
     {
-        public SettingPageBook() : base(Properties.TextResources.GetString("SettingPage.Book"))
+        public SettingPageBook() : base(TextResources.GetString("SettingPage.Book"))
         {
             this.Children = new List<SettingPage>
             {
@@ -22,12 +23,12 @@ namespace NeeView.Setting
 
             this.Items = new List<SettingItem>();
 
-            var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.Book.General"));
+            var section = new SettingItemSection(TextResources.GetString("SettingPage.Book.General"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.ArchiveRecursiveMode))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.BookPageCollectMode))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.IsOpenBookAtCurrentPlace))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Book, nameof(BookConfig.Excludes)),
-                new SettingItemCollectionControl() { Collection = Config.Current.Book.Excludes, AddDialogHeader = Properties.TextResources.GetString("Word.ExcludePath"), DefaultCollection = BookConfig.DefaultExcludes }));
+                new SettingItemCollectionControl() { Collection = Config.Current.Book.Excludes, AddDialogHeader = TextResources.GetString("Word.ExcludePath"), DefaultCollection = BookConfig.DefaultExcludes }));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Book, nameof(BookConfig.FrameSpace))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Book, nameof(BookConfig.WideRatio))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Book, nameof(BookConfig.DividePageRate))));
@@ -36,7 +37,7 @@ namespace NeeView.Setting
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Book, nameof(BookConfig.LoadingPageColor))));
             this.Items.Add(section);
 
-            section = new SettingItemSection(ResourceService.GetString("@SettingPage.Book.WidePage"));
+            section = new SettingItemSection(TextResources.GetString("SettingPage.Book.WidePage"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Book, nameof(BookConfig.ContentsSpace))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Book, nameof(BookConfig.WidePageStretch))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Book, nameof(BookConfig.WidePageVerticalAlignment))));
@@ -60,16 +61,16 @@ namespace NeeView.Setting
     /// </summary>
     public class SettingPageBookMove : SettingPage
     {
-        public SettingPageBookMove() : base(Properties.TextResources.GetString("SettingPage.Book.Move"))
+        public SettingPageBookMove() : base(TextResources.GetString("SettingPage.Book.Move"))
         {
             this.Items = new List<SettingItem>();
 
-            var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.Book.MoveBook"));
+            var section = new SettingItemSection(TextResources.GetString("SettingPage.Book.MoveBook"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Book, nameof(BookConfig.IsPrioritizeBookMove))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Bookshelf, nameof(BookshelfConfig.IsCruise))));
             this.Items.Add(section);
 
-            section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.Book.MovePage"));
+            section = new SettingItemSection(TextResources.GetString("SettingPage.Book.MovePage"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Book, nameof(BookConfig.IsPrioritizePageMove))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Book, nameof(BookConfig.IsReadyToPageMove))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Book, nameof(BookConfig.PageEndAction))));
@@ -86,19 +87,19 @@ namespace NeeView.Setting
     /// </summary>
     public class SettingPageBookPageSetting : SettingPage
     {
-        public SettingPageBookPageSetting() : base(Properties.TextResources.GetString("SettingPage.Book.PageSetting"))
+        public SettingPageBookPageSetting() : base(TextResources.GetString("SettingPage.Book.PageSetting"))
         {
             this.Items = new List<SettingItem>();
 
             var defaultSetting = Config.Current.BookSettingDefault;
             var settingPolicy = Config.Current.BookSettingPolicy;
 
-            var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.Book.PageSetting"), Properties.TextResources.GetString("SettingPage.Book.PageSetting.Remarks"));
+            var section = new SettingItemSection(TextResources.GetString("SettingPage.Book.PageSetting"), TextResources.GetString("SettingPage.Book.PageSetting.Remarks"));
             section.Children.Add(new SettingItemMultiProperty(
                 PropertyMemberElement.Create(defaultSetting, nameof(BookSettingConfig.Page)),
                 PropertyMemberElement.Create(settingPolicy, nameof(BookSettingPolicyConfig.Page)))
             {
-                Content1 = Properties.TextResources.GetString("Word.FirstPage"),
+                Content1 = TextResources.GetString("Word.FirstPage"),
             });
 
             section.Children.Add(new SettingItemMultiProperty(
@@ -134,7 +135,7 @@ namespace NeeView.Setting
 
             this.Items.Add(section);
 
-            section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.Book.SubFolder"));
+            section = new SettingItemSection(TextResources.GetString("SettingPage.Book.SubFolder"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Book, nameof(BookConfig.IsConfirmRecursive))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Book, nameof(BookConfig.IsAutoRecursive))));
             this.Items.Add(section);

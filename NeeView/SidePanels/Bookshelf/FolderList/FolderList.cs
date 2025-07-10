@@ -1,29 +1,17 @@
 ﻿using NeeLaboratory.ComponentModel;
-using NeeLaboratory.IO.Search;
-using NeeView.Collections.Generic;
-using NeeLaboratory.Linq;
-using NeeView.Windows.Controls;
-using NeeView.Windows.Data;
-using NeeView.Windows.Property;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using NeeLaboratory.Generators;
+using NeeLaboratory.Linq;
 using NeeLaboratory.Threading;
 using NeeLaboratory.Threading.Tasks;
+using NeeView.Collections.Generic;
+using NeeView.Properties;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NeeView
 {
@@ -808,7 +796,7 @@ namespace NeeView
                 if (result != true)
                 {
                     SoundPlayerService.Current.PlaySeCannotMove();
-                    InfoMessage.Current.SetMessage(InfoMessageType.Notify, Properties.TextResources.GetString("Notice.BookNextFailed"));
+                    InfoMessage.Current.SetMessage(InfoMessageType.Notify, TextResources.GetString("Notice.BookNextFailed"));
                 }
             }
             finally
@@ -831,7 +819,7 @@ namespace NeeView
                 if (result != true)
                 {
                     SoundPlayerService.Current.PlaySeCannotMove();
-                    InfoMessage.Current.SetMessage(InfoMessageType.Notify, Properties.TextResources.GetString("Notice.BookPrevFailed"));
+                    InfoMessage.Current.SetMessage(InfoMessageType.Notify, TextResources.GetString("Notice.BookPrevFailed"));
                 }
             }
             finally
@@ -1708,7 +1696,7 @@ namespace NeeView
 
             if (count >= 2)
             {
-                var toast = new Toast(Properties.TextResources.GetFormatString("BookmarkFolderDelete.Message", count), null, ToastIcon.Information, Properties.TextResources.GetString("Word.Restore"),
+                var toast = new Toast(TextResources.GetFormatString("BookmarkFolderDelete.Message", count), null, ToastIcon.Information, TextResources.GetString("Word.Restore"),
                     () => { foreach (var memento in mementos) BookmarkCollection.Current.Restore(memento); });
                 ToastService.Current.Show("BookmarkList", toast);
             }
@@ -1778,7 +1766,7 @@ namespace NeeView
             }
 
             var entries = items.Select(e => ArchiveEntryUtility.CreateTemporaryEntry(e.TargetPath.SimplePath)).ToList();
-            var removed = await ConfirmFileIO.DeleteAsync(entries, Properties.TextResources.GetString("FileDeleteBookDialog.Title"), null);
+            var removed = await ConfirmFileIO.DeleteAsync(entries, TextResources.GetString("FileDeleteBookDialog.Title"), null);
             if (removed && _folderCollection != null)
             {
                 var removes = items.Where(e => !FileIO.ExistsPath(e.TargetPath.SimplePath)).ToList();

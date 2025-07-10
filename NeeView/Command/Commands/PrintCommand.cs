@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class PrintCommand : CommandElement
     {
         public PrintCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.File");
+            this.Group = TextResources.GetString("CommandGroup.File");
             this.ShortCutKey = new ShortcutKey("Ctrl+P");
             this.IsShowMessage = false;
         }

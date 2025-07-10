@@ -12,43 +12,43 @@ namespace NeeView
     /// </summary>
     public enum FolderOrder
     {
-        [AliasName("@SortOrder.FileName")]
+        [AliasName("SortOrder.FileName")]
         FileName,
 
-        [AliasName("@SortOrder.FileNameDescending")]
+        [AliasName("SortOrder.FileNameDescending")]
         FileNameDescending,
 
-        [AliasName("@SortOrder.Path")]
+        [AliasName("SortOrder.Path")]
         Path,
 
-        [AliasName("@SortOrder.PathDescending")]
+        [AliasName("SortOrder.PathDescending")]
         PathDescending,
 
-        [AliasName("@SortOrder.FileType")]
+        [AliasName("SortOrder.FileType")]
         FileType,
 
-        [AliasName("@SortOrder.FileTypeDescending")]
+        [AliasName("SortOrder.FileTypeDescending")]
         FileTypeDescending,
 
-        [AliasName("@SortOrder.TimeStamp")]
+        [AliasName("SortOrder.TimeStamp")]
         TimeStamp,
 
-        [AliasName("@SortOrder.TimeStampDescending")]
+        [AliasName("SortOrder.TimeStampDescending")]
         TimeStampDescending,
 
-        [AliasName("@SortOrder.Size")]
+        [AliasName("SortOrder.Size")]
         Size,
 
-        [AliasName("@SortOrder.SizeDescending")]
+        [AliasName("SortOrder.SizeDescending")]
         SizeDescending,
 
-        [AliasName("@SortOrder.EntryTime")]
+        [AliasName("SortOrder.EntryTime")]
         EntryTime,
 
-        [AliasName("@SortOrder.EntryTimeDescending")]
+        [AliasName("SortOrder.EntryTimeDescending")]
         EntryTimeDescending,
 
-        [AliasName("@SortOrder.Random")]
+        [AliasName("SortOrder.Random")]
         Random,
     }
 

@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class FirstPageCommand : CommandElement
     {
         public FirstPageCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Move");
+            this.Group = TextResources.GetString("CommandGroup.Move");
             this.ShortCutKey = new ShortcutKey("Ctrl+Right");
             this.MouseGesture = new MouseSequence("UR");
             this.IsShowMessage = true;

@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using NeeView.Properties;
+using System.Runtime.Serialization;
 
 namespace NeeView
 {
@@ -6,7 +7,7 @@ namespace NeeView
     {
         public CopyFileCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.File");
+            this.Group = TextResources.GetString("CommandGroup.File");
             this.ShortCutKey = new ShortcutKey("Ctrl+C");
             this.IsShowMessage = true;
 

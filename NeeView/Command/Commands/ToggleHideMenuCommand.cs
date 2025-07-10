@@ -1,4 +1,5 @@
-﻿using System.Windows.Data;
+﻿using NeeView.Properties;
+using System.Windows.Data;
 
 
 namespace NeeView
@@ -7,7 +8,7 @@ namespace NeeView
     {
         public ToggleHideMenuCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Window");
+            this.Group = TextResources.GetString("CommandGroup.Window");
             this.IsShowMessage = false;
         }
 
@@ -18,7 +19,7 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.MenuBar.IsHideMenu ? Properties.TextResources.GetString("ToggleHideMenuCommand.Off") : Properties.TextResources.GetString("ToggleHideMenuCommand.On");
+            return Config.Current.MenuBar.IsHideMenu ? TextResources.GetString("ToggleHideMenuCommand.Off") : TextResources.GetString("ToggleHideMenuCommand.On");
         }
 
         public override void Execute(object? sender, CommandContext e)

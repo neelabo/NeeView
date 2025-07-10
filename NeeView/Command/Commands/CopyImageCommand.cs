@@ -1,4 +1,5 @@
-﻿using NeeView.Windows.Property;
+﻿using NeeView.Properties;
+using NeeView.Windows.Property;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
@@ -8,7 +9,7 @@ namespace NeeView
     {
         public CopyImageCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.File");
+            this.Group = TextResources.GetString("CommandGroup.File");
             this.ShortCutKey = new ShortcutKey("Ctrl+Shift+C");
             this.IsShowMessage = true;
         }

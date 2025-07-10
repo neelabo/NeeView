@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,8 +24,8 @@ namespace NeeView.Setting
         {
             InitializeComponent();
 
-            this.AddButton.Content = Properties.TextResources.GetString("Word.Add");
-            this.CancelButton.Content = Properties.TextResources.GetString("Word.Cancel");
+            this.AddButton.Content = TextResources.GetString("Word.Add");
+            this.CancelButton.Content = TextResources.GetString("Word.Cancel");
 
             this.Loaded += AddParameterDialog_Loaded;
             this.KeyDown += AddParameterDialog_KeyDown;

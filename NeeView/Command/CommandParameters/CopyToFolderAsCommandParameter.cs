@@ -1,4 +1,5 @@
-﻿using NeeView.Windows.Property;
+﻿using NeeView.Properties;
+using NeeView.Windows.Property;
 using System;
 using System.Globalization;
 using System.Windows.Data;
@@ -39,11 +40,11 @@ namespace NeeView
         {
             if (value is not int index) return "";
 
-            if (index <= 0) return ResourceService.GetString("@Word.SelectionMenu");
+            if (index <= 0) return TextResources.GetString("Word.SelectionMenu");
             index--;
 
             var items = Config.Current.System.DestinationFolderCollection;
-            if (items.Count <= index) return ResourceService.GetString("@Word.Undefined");
+            if (items.Count <= index) return TextResources.GetString("Word.Undefined");
 
             return items[index].Name;
         }

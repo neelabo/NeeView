@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class MoveToParentBookCommand : CommandElement
     {
         public MoveToParentBookCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.BookMove");
+            this.Group = TextResources.GetString("CommandGroup.BookMove");
             this.ShortCutKey = new ShortcutKey("Alt+Up");
             this.IsShowMessage = false;
         }

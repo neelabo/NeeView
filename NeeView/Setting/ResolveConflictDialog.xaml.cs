@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Windows.Input;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -74,10 +75,10 @@ namespace NeeView.Setting
         private readonly ResolveConflictDialogContext _context;
 
         // window title
-        public string Title => $"{CommandTable.Current.GetElement(_context.Command).Text} - {Properties.TextResources.GetString("ResolveConflictDialog.Title")}";
+        public string Title => $"{CommandTable.Current.GetElement(_context.Command).Text} - {TextResources.GetString("ResolveConflictDialog.Title")}";
 
         ////public string Gesture => _context.Gesture;
-        public string Note => string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("ResolveConflictDialog.Message"), _context.Gesture.GetDisplayString());
+        public string Note => string.Format(CultureInfo.InvariantCulture, TextResources.GetString("ResolveConflictDialog.Message"), _context.Gesture.GetDisplayString());
 
         public List<ConflictItem> Conflicts => _context.Conflicts;
 

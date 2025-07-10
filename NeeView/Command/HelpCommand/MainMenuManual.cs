@@ -1,4 +1,5 @@
-﻿using NeeView.Text.SimpleHtmlBuilder;
+﻿using NeeView.Properties;
+using NeeView.Text.SimpleHtmlBuilder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace NeeView
         {
             var sb = new StringBuilder();
 
-            var title = "NeeView " + ResourceService.GetString("@Word.MainMenu");
+            var title = "NeeView " + TextResources.GetString("Word.MainMenu");
             sb.AppendLine(HtmlHelpUtility.CreateHeader(title));
 
             var menuTree = MenuTree.CreateDefault();

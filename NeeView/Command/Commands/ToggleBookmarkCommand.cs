@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -9,7 +10,7 @@ namespace NeeView
     {
         public ToggleBookmarkCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Bookmark");
+            this.Group = TextResources.GetString("CommandGroup.Bookmark");
             this.ShortCutKey = new ShortcutKey("Ctrl+D");
             this.IsShowMessage = true;
 
@@ -23,7 +24,7 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return BookOperation.Current.BookControl.IsBookmarkOn(GetFolderPath(e)) ? Properties.TextResources.GetString("ToggleBookmarkCommand.Off") : Properties.TextResources.GetString("ToggleBookmarkCommand.On");
+            return BookOperation.Current.BookControl.IsBookmarkOn(GetFolderPath(e)) ? TextResources.GetString("ToggleBookmarkCommand.Off") : TextResources.GetString("ToggleBookmarkCommand.On");
         }
 
         public override bool CanExecute(object? sender, CommandContext e)
@@ -31,7 +32,7 @@ namespace NeeView
             return BookOperation.Current.BookControl.CanBookmark();
         }
 
-        [MethodArgument("@ToggleCommand.Execute.Remarks")]
+        [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
             if (e.Args.Length > 0)

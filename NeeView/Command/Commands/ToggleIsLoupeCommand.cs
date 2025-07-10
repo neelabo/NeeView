@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -9,7 +10,7 @@ namespace NeeView
     {
         public ToggleIsLoupeCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.ViewManipulation");
+            this.Group = TextResources.GetString("CommandGroup.ViewManipulation");
             this.IsShowMessage = false;
         }
         public override Binding CreateIsCheckedBinding()
@@ -19,10 +20,10 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return MainViewComponent.Current.ViewLoupeControl.GetLoupeMode() ? Properties.TextResources.GetString("ToggleIsLoupeCommand.Off") : Properties.TextResources.GetString("ToggleIsLoupeCommand.On");
+            return MainViewComponent.Current.ViewLoupeControl.GetLoupeMode() ? TextResources.GetString("ToggleIsLoupeCommand.Off") : TextResources.GetString("ToggleIsLoupeCommand.On");
         }
 
-        [MethodArgument("@ToggleCommand.Execute.Remarks")]
+        [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
             if (e.Args.Length > 0)

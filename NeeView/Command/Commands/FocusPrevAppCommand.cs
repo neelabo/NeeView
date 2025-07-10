@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class FocusPrevAppCommand : CommandElement
     {
         public FocusPrevAppCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Window");
+            this.Group = TextResources.GetString("CommandGroup.Window");
             this.ShortCutKey = new ShortcutKey("Ctrl+Shift+Tab");
             this.IsShowMessage = false;
         }

@@ -1,4 +1,5 @@
-﻿using System.Windows.Data;
+﻿using NeeView.Properties;
+using System.Windows.Data;
 
 
 namespace NeeView
@@ -7,7 +8,7 @@ namespace NeeView
     {
         public ToggleTopmostCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Window");
+            this.Group = TextResources.GetString("CommandGroup.Window");
             this.IsShowMessage = true;
         }
 
@@ -18,7 +19,7 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.Window.IsTopmost ? Properties.TextResources.GetString("ToggleTopmostCommand.Off") : Properties.TextResources.GetString("ToggleTopmostCommand.On");
+            return Config.Current.Window.IsTopmost ? TextResources.GetString("ToggleTopmostCommand.Off") : TextResources.GetString("ToggleTopmostCommand.On");
         }
 
         public override void Execute(object? sender, CommandContext e)

@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
 using NeeLaboratory.Collection;
+using NeeView.Properties;
 
 namespace NeeView
 {
@@ -65,7 +66,7 @@ namespace NeeView
         }
 
 
-        [PropertyStrings(Name = "@ThemeConfig.ThemeType")]
+        [PropertyStrings(Name = "ThemeConfig.ThemeType")]
         public string? SelectedItem
         {
             get { return _selectedItem; }
@@ -166,7 +167,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                ToastService.Current.Show(new Toast(ex.Message, Properties.TextResources.GetString("ThemeErrorDialog.Title"), ToastIcon.Error));
+                ToastService.Current.Show(new Toast(ex.Message, TextResources.GetString("ThemeErrorDialog.Title"), ToastIcon.Error));
 
                 if (themeId.Type is ThemeType.Custom)
                 {
@@ -222,7 +223,7 @@ namespace NeeView
                 case ThemeType.Custom:
                     if (string.IsNullOrEmpty(Config.Current.Theme.CustomThemeFolder))
                     {
-                        ToastService.Current.Show(new Toast(Properties.TextResources.GetString("ThemeErrorDialog.FolderIsNotSet"), Properties.TextResources.GetString("ThemeErrorDialog.Title"), ToastIcon.Error));
+                        ToastService.Current.Show(new Toast(TextResources.GetString("ThemeErrorDialog.FolderIsNotSet"), TextResources.GetString("ThemeErrorDialog.Title"), ToastIcon.Error));
                     }
                     else
                     {
@@ -233,7 +234,7 @@ namespace NeeView
                         }
                         catch (Exception ex)
                         {
-                            ToastService.Current.Show(new Toast(ex.Message, Properties.TextResources.GetString("ThemeErrorDialog.Title"), ToastIcon.Error));
+                            ToastService.Current.Show(new Toast(ex.Message, TextResources.GetString("ThemeErrorDialog.Title"), ToastIcon.Error));
                         }
                     }
                     return LoadThemeProfile(new ThemeSource(ThemeType.Dark));
@@ -272,7 +273,7 @@ namespace NeeView
         {
             if (string.IsNullOrEmpty(Config.Current.Theme.CustomThemeFolder))
             {
-                new MessageDialog(Properties.TextResources.GetString("ThemeErrorDialog.FolderIsNotSet"), Properties.TextResources.GetString("Word.Error")).ShowDialog();
+                new MessageDialog(TextResources.GetString("ThemeErrorDialog.FolderIsNotSet"), TextResources.GetString("Word.Error")).ShowDialog();
                 return;
             }
 
@@ -288,7 +289,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                new MessageDialog(ex.Message, Properties.TextResources.GetString("Word.Error")).ShowDialog();
+                new MessageDialog(ex.Message, TextResources.GetString("Word.Error")).ShowDialog();
             }
         }
 

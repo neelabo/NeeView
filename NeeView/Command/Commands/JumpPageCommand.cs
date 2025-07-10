@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Globalization;
 
 namespace NeeView
@@ -7,7 +8,7 @@ namespace NeeView
     {
         public JumpPageCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Move");
+            this.Group = TextResources.GetString("CommandGroup.Move");
             this.IsShowMessage = false;
         }
 

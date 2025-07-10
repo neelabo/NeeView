@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.Generators;
+using NeeView.Properties;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -68,7 +69,7 @@ namespace NeeView
                 {
                     var propertyValue = property.GetValue(_source) ?? throw new InvalidOperationException();
                     var labelAttribute = (PropertyMapLabelAttribute?)property.GetCustomAttribute(typeof(PropertyMapLabelAttribute));
-                    var newLabel = labelAttribute != null ? label + ResourceService.GetString(labelAttribute.Label) + ": " : label;
+                    var newLabel = labelAttribute != null ? label + TextResources.GetString(labelAttribute.Label) + ": " : label;
                     _items.Add(key, new PropertyMap(itemName, obsoleteAttribute, alternativeAttribute, propertyValue, _accessDiagnostics, newLabel, options));
                 }
                 else

@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class PrevBookHistoryCommand : CommandElement
     {
         public PrevBookHistoryCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.BookMove");
+            this.Group = TextResources.GetString("CommandGroup.BookMove");
             this.ShortCutKey = new ShortcutKey("Alt+Left");
             this.IsShowMessage = false;
         }

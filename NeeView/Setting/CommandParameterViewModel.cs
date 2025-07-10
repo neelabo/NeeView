@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.Data;
+using NeeView.Properties;
 using NeeView.Windows.Property;
 using System.Collections.Generic;
 using System.Globalization;
@@ -23,7 +24,7 @@ namespace NeeView.Setting
             if (_commandElement.Share != null)
             {
                 _key = _commandElement.Share.Name;
-                this.Note = string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("CommandParameter.Share"), CommandTable.Current.GetElement(_key).Text);
+                this.Note = string.Format(CultureInfo.InvariantCulture, TextResources.GetString("CommandParameter.Share"), CommandTable.Current.GetElement(_key).Text);
             }
 
             var defaultParameter = _commandElement.ParameterSource?.GetDefault();

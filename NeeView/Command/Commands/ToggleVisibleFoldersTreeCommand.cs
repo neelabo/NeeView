@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -9,7 +10,7 @@ namespace NeeView
     {
         public ToggleVisibleFoldersTreeCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Panel");
+            this.Group = TextResources.GetString("CommandGroup.Panel");
             this.IsShowMessage = false;
         }
 
@@ -20,10 +21,10 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return SidePanelFrame.Current.IsVisibleBookshelfFolderTree ? Properties.TextResources.GetString("ToggleVisibleFoldersTreeCommand.Off") : Properties.TextResources.GetString("ToggleVisibleFoldersTreeCommand.On");
+            return SidePanelFrame.Current.IsVisibleBookshelfFolderTree ? TextResources.GetString("ToggleVisibleFoldersTreeCommand.Off") : TextResources.GetString("ToggleVisibleFoldersTreeCommand.On");
         }
 
-        [MethodArgument("@ToggleCommand.Execute.Remarks")]
+        [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
             if (e.Args.Length > 0)

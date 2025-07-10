@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class ToggleSortModeCommand : CommandElement
     {
         public ToggleSortModeCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.PageOrder");
+            this.Group = TextResources.GetString("CommandGroup.PageOrder");
             this.IsShowMessage = true;
         }
         public override string ExecuteMessage(object? sender, CommandContext e)

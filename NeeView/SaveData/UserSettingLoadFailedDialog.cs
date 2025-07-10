@@ -5,12 +5,12 @@
     /// </summary>
     public class UserSettingLoadFailedDialog : LoadFailedDialog
     {
-        public UserSettingLoadFailedDialog(bool cancellable) : base("@Notice.LoadSettingFailed", "@Notice.LoadSettingFailedTitle")
+        public UserSettingLoadFailedDialog(bool cancellable) : base("Notice.LoadSettingFailed", "Notice.LoadSettingFailedTitle")
         {
-            OKCommand = new UICommand("@Notice.LoadSettingFailedButtonContinue") { IsPossible = true };
+            OKCommand = new UICommand("Notice.LoadSettingFailedButtonContinue") { IsPossible = true };
             if (cancellable)
             {
-                CancelCommand = new UICommand("@Notice.LoadSettingFailedButtonQuit") { Alignment = UICommandAlignment.Left };
+                CancelCommand = new UICommand("Notice.LoadSettingFailedButtonQuit") { Alignment = UICommandAlignment.Left };
             }
         }
     }

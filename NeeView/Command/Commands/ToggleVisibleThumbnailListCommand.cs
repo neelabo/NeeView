@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -9,7 +10,7 @@ namespace NeeView
     {
         public ToggleVisibleThumbnailListCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.FilmStrip");
+            this.Group = TextResources.GetString("CommandGroup.FilmStrip");
             this.IsShowMessage = false;
         }
 
@@ -20,10 +21,10 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return ThumbnailList.Current.IsVisible ? Properties.TextResources.GetString("ToggleVisibleThumbnailListCommand.Off") : Properties.TextResources.GetString("ToggleVisibleThumbnailListCommand.On");
+            return ThumbnailList.Current.IsVisible ? TextResources.GetString("ToggleVisibleThumbnailListCommand.Off") : TextResources.GetString("ToggleVisibleThumbnailListCommand.On");
         }
 
-        [MethodArgument("@ToggleCommand.Execute.Remarks")]
+        [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
             if (e.Args.Length > 0)

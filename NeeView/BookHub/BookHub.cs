@@ -20,6 +20,7 @@ using NeeLaboratory.Threading.Jobs;
 using NeeView.Interop;
 using NeeLaboratory.Generators;
 using System.Globalization;
+using NeeView.Properties;
 
 // TODO: コマンド類の何時でも受付。ロード中だから弾く、ではない別の方法を。
 
@@ -56,7 +57,7 @@ namespace NeeView
                     var book = _book;
                     if (book?.NotFoundStartPage != null && book.Pages.Count > 0)
                     {
-                        InfoMessage.Current.SetMessage(InfoMessageType.BookName, string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("Notice.CannotOpen"), LoosePath.GetFileName(book.NotFoundStartPage)), null, 2.0);
+                        InfoMessage.Current.SetMessage(InfoMessageType.BookName, string.Format(CultureInfo.InvariantCulture, TextResources.GetString("Notice.CannotOpen"), LoosePath.GetFileName(book.NotFoundStartPage)), null, 2.0);
                     }
                     else
                     {
@@ -481,7 +482,7 @@ namespace NeeView
                 isEmptyBook = (book != null && book.Pages.Count <= 0);
                 if (isEmptyBook)
                 {
-                    bookChangedEventArgs.EmptyMessage = string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("Notice.NoPages"), book?.Path);
+                    bookChangedEventArgs.EmptyMessage = string.Format(CultureInfo.InvariantCulture, TextResources.GetString("Notice.NoPages"), book?.Path);
                 }
 
                 // フォーカス更新
@@ -503,7 +504,7 @@ namespace NeeView
                 else
                 {
                     // ファイル読み込み失敗通知
-                    var message = string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("LoadFailedException.Message"), place, ex.Message);
+                    var message = string.Format(CultureInfo.InvariantCulture, TextResources.GetString("LoadFailedException.Message"), place, ex.Message);
                     bookChangedEventArgs.EmptyMessage = message;
                 }
 
@@ -573,7 +574,7 @@ namespace NeeView
 
             token.ThrowIfCancellationRequested();
 
-            var dialog = new MessageDialog(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("ConfirmRecursiveDialog.Message"), book.Path), Properties.TextResources.GetString("ConfirmRecursiveDialog.Title"));
+            var dialog = new MessageDialog(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("ConfirmRecursiveDialog.Message"), book.Path), TextResources.GetString("ConfirmRecursiveDialog.Title"));
             dialog.Commands.Add(UICommands.Yes);
             dialog.Commands.Add(UICommands.No);
 

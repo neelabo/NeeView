@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeView.Properties;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
@@ -8,7 +9,7 @@ namespace NeeView
     {
         public ViewScrollUpCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.ViewManipulation");
+            this.Group = TextResources.GetString("CommandGroup.ViewManipulation");
             this.IsShowMessage = false;
 
             this.ParameterSource = new CommandParameterSource(new ViewScrollCommandParameter());

@@ -17,7 +17,7 @@ namespace NeeView
         }
 
 
-        [WordNodeMember(AltName = "@DirectoryNodeSource")]
+        [WordNodeMember(AltName = "DirectoryNodeSource")]
         [ReturnType(typeof(DirectoryNodeSource))]
         public override object? Value => _value;
 

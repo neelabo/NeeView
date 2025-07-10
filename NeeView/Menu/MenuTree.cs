@@ -1,4 +1,5 @@
 ﻿using NeeView.Collections.Generic;
+using NeeView.Properties;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -78,7 +79,7 @@ namespace NeeView
         {
             var root = new TreeListNode<MenuElement>(new GroupMenuElement())
             {
-                new TreeListNode<MenuElement>(new GroupMenuElement() { Name = Properties.TextResources.GetString("MenuTree.File") })
+                new TreeListNode<MenuElement>(new GroupMenuElement() { Name = TextResources.GetString("MenuTree.File") })
                 {
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "LoadAs" }),
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "Unload" }),
@@ -101,7 +102,7 @@ namespace NeeView
                     new TreeListNode<MenuElement>(new SeparatorMenuElement()),
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "CloseApplication" }),
                 },
-                new TreeListNode<MenuElement>(new GroupMenuElement() { Name=Properties.TextResources.GetString("MenuTree.View") })
+                new TreeListNode<MenuElement>(new GroupMenuElement() { Name=TextResources.GetString("MenuTree.View") })
                 {
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "ToggleVisibleBookshelf" }),
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "ToggleVisiblePageList" }),
@@ -130,7 +131,7 @@ namespace NeeView
                     new TreeListNode<MenuElement>(new SeparatorMenuElement()),
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "ToggleSlideShow" }),
                 },
-                new TreeListNode<MenuElement>(new GroupMenuElement() { Name = Properties.TextResources.GetString("MenuTree.Image") })
+                new TreeListNode<MenuElement>(new GroupMenuElement() { Name = TextResources.GetString("MenuTree.Image") })
                 {
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "SetStretchModeNone" }),
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "SetStretchModeUniform" }),
@@ -153,7 +154,7 @@ namespace NeeView
                     new TreeListNode<MenuElement>(new SeparatorMenuElement()),
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "ToggleHoverScroll" }),
                 },
-                new TreeListNode<MenuElement>(new GroupMenuElement() { Name = Properties.TextResources.GetString("MenuTree.Jump") })
+                new TreeListNode<MenuElement>(new GroupMenuElement() { Name = TextResources.GetString("MenuTree.Jump") })
                 {
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "PrevPage" }),
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "NextPage" }),
@@ -172,7 +173,7 @@ namespace NeeView
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "PrevPlaylistItem"}),
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "NextPlaylistItem" }),
                 },
-                new TreeListNode<MenuElement>(new GroupMenuElement() { Name = Properties.TextResources.GetString("MenuTree.Page") })
+                new TreeListNode<MenuElement>(new GroupMenuElement() { Name = TextResources.GetString("MenuTree.Page") })
                 {
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "SetPageModeOne" }),
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "SetPageModeTwo" }),
@@ -210,13 +211,13 @@ namespace NeeView
                     new TreeListNode<MenuElement>(new SeparatorMenuElement()),
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "SetDefaultPageSetting" }),
                 },
-                new TreeListNode<MenuElement>(new GroupMenuElement() { Name = Properties.TextResources.GetString("MenuTree.Book") })
+                new TreeListNode<MenuElement>(new GroupMenuElement() { Name = TextResources.GetString("MenuTree.Book") })
                 {
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "ToggleBookmark" }),
                     new TreeListNode<MenuElement>(new SeparatorMenuElement()),
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "SelectArchiver" }),
                 },
-                new TreeListNode<MenuElement>(new GroupMenuElement() { Name = Properties.TextResources.GetString("MenuTree.Option") })
+                new TreeListNode<MenuElement>(new GroupMenuElement() { Name = TextResources.GetString("MenuTree.Option") })
                 {
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "OpenOptionsWindow" }),
                     new TreeListNode<MenuElement>(new SeparatorMenuElement()),
@@ -229,7 +230,7 @@ namespace NeeView
                     new TreeListNode<MenuElement>(new SeparatorMenuElement()),
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "TogglePermitFile"}),
                 },
-                new TreeListNode<MenuElement>(new GroupMenuElement() { Name = Properties.TextResources.GetString("MenuTree.Help") })
+                new TreeListNode<MenuElement>(new GroupMenuElement() { Name = TextResources.GetString("MenuTree.Help") })
                 {
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "HelpMainMenu" }),
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "HelpCommandList" }),

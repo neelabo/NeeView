@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Globalization;
 using System.Reflection;
 
@@ -30,7 +31,7 @@ namespace NeeView.Data
         public string? Default => _attribute.Default;
         public bool HasParameter => _attribute.HasParameter;
         public bool RequireParameter => _attribute.RequireParameter;
-        public string? HelpText => ResourceService.GetString(_attribute.HelpText);
+        public string? HelpText => _attribute.HelpText is not null ? TextResources.GetString(_attribute.HelpText) : null;
         public bool IsVisible => _attribute.IsVisible;
 
         public string PropertyName => _info.Name;
@@ -70,7 +71,7 @@ namespace NeeView.Data
                 TypeCode.String => "string",
                 TypeCode.Int32 => "number",
                 TypeCode.Double => "number",
-                _ => throw new NotSupportedException(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("OptionArgumentException.NotSupportType"), _info.PropertyType)),
+                _ => throw new NotSupportedException(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("OptionArgumentException.NotSupportType"), _info.PropertyType)),
             };
         }
 
@@ -106,7 +107,7 @@ namespace NeeView.Data
                     _info.SetValue(_source, double.Parse(value, CultureInfo.InvariantCulture));
                     break;
                 default:
-                    throw new NotSupportedException(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("OptionArgumentException.NotSupportType"), _info.PropertyType.Name));
+                    throw new NotSupportedException(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("OptionArgumentException.NotSupportType"), _info.PropertyType.Name));
             }
         }
 

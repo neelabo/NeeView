@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Windows.Input;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -97,7 +98,7 @@ namespace NeeView
         {
             var oldSelect = _selectedDestinationFolder;
 
-            var list = new List<DestinationFolder> { new DestinationFolder(Properties.TextResources.GetString("Word.None"), "") };
+            var list = new List<DestinationFolder> { new DestinationFolder(TextResources.GetString("Word.None"), "") };
             list.AddRange(Config.Current.System.DestinationFolderCollection);
             DestinationFolderList = list;
 

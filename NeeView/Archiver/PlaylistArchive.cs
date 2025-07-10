@@ -1,5 +1,6 @@
 ﻿using NeeView;
 using NeeView.IO;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -32,7 +33,7 @@ namespace NeeView
 
         public override string ToString()
         {
-            return Properties.TextResources.GetString("Archiver.Playlist");
+            return TextResources.GetString("Archiver.Playlist");
         }
 
         // サポート判定

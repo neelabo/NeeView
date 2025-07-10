@@ -21,7 +21,7 @@ namespace NeeView
         }
 
         [PropertyMember]
-        [PropertyMapLabel("@Word.CustomBackground")]
+        [PropertyMapLabel("Word.CustomBackground")]
         public BrushSource CustomBackground
         {
             get { return _customBackground; }

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using NeeView.Properties;
+using System.Reflection;
 
 namespace NeeView
 {
@@ -6,7 +7,7 @@ namespace NeeView
     {
         private static string GetResourceKey(MethodInfo method, string? postfix = null)
         {
-            return $"@{method.DeclaringType?.Name}.{method.Name}{postfix}";
+            return $"{method.DeclaringType?.Name}.{method.Name}{postfix}";
         }
 
         public static string? GetMethodNote(MethodInfo property, MethodArgumentAttribute? attribute)
@@ -17,7 +18,7 @@ namespace NeeView
             }
 
             var resourceKey = attribute.Note ?? GetResourceKey(property, ".Remarks");
-            var resourceValue = ResourceService.GetResourceString(resourceKey, true);
+            var resourceValue = TextResources.GetStringRaw(resourceKey);
 
             return resourceValue;
         }

@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.Linq;
 using NeeView.Data;
+using NeeView.Properties;
 using NeeView.Windows;
 using System;
 using System.Collections.Generic;
@@ -41,40 +42,40 @@ namespace NeeView
 
     public class CommandLineOption
     {
-        [OptionMember("h", "help", Default = "true", HelpText = "@AppOption.IsHelp")]
+        [OptionMember("h", "help", Default = "true", HelpText = "AppOption.IsHelp")]
         public bool IsHelp { get; set; }
 
-        [OptionMember("v", "version", Default = "true", HelpText = "@AppOption.IsVersion")]
+        [OptionMember("v", "version", Default = "true", HelpText = "AppOption.IsVersion")]
         public bool IsVersion { get; set; }
 
-        [OptionMember("x", "setting", HasParameter = true, RequireParameter = true, HelpText = "@AppOption.SettingFilename")]
+        [OptionMember("x", "setting", HasParameter = true, RequireParameter = true, HelpText = "AppOption.SettingFilename")]
         public string? SettingFilename { get; set; }
 
-        [OptionMember("b", "blank", Default = "on", HelpText = "@AppOption.IsBlank")]
+        [OptionMember("b", "blank", Default = "on", HelpText = "AppOption.IsBlank")]
         public SwitchOption IsBlank { get; set; }
 
-        [OptionMember("r", "reset-placement", Default = "on", HelpText = "@AppOption.IsResetPlacement")]
+        [OptionMember("r", "reset-placement", Default = "on", HelpText = "AppOption.IsResetPlacement")]
         public SwitchOption IsResetPlacement { get; set; }
 
-        [OptionMember("n", "new-window", Default = "on", HasParameter = true, HelpText = "@AppOption.IsNewWindow")]
+        [OptionMember("n", "new-window", Default = "on", HasParameter = true, HelpText = "AppOption.IsNewWindow")]
         public SwitchOption? IsNewWindow { get; set; }
 
-        [OptionMember("s", "slideshow", Default = "on", HasParameter = true, HelpText = "@AppOption.IsSlideShow")]
+        [OptionMember("s", "slideshow", Default = "on", HasParameter = true, HelpText = "AppOption.IsSlideShow")]
         public SwitchOption? IsSlideShow { get; set; }
 
-        [OptionMember("o", "folderlist", HasParameter = true, RequireParameter = true, HelpText = "@AppOption.FolderList")]
+        [OptionMember("o", "folderlist", HasParameter = true, RequireParameter = true, HelpText = "AppOption.FolderList")]
         public string? FolderList { get; set; }
 
-        [OptionMember("l", "language", HasParameter = true, RequireParameter = true, HelpText = "@AppOption.Language")]
+        [OptionMember("l", "language", HasParameter = true, RequireParameter = true, HelpText = "AppOption.Language")]
         public string? Language { get; set; }
 
-        [OptionMember(null, "window", HasParameter = true, RequireParameter = true, HelpText = "@AppOption.WindowState")]
+        [OptionMember(null, "window", HasParameter = true, RequireParameter = true, HelpText = "AppOption.WindowState")]
         public WindowStateOption? WindowState { get; set; }
 
-        [OptionMember(null, "script", HasParameter = true, RequireParameter = true, HelpText = "@AppOption.ScriptFile")]
+        [OptionMember(null, "script", HasParameter = true, RequireParameter = true, HelpText = "AppOption.ScriptFile")]
         public string? ScriptFile { get; set; }
 
-        [OptionMember(null, "clear-registry", Default = "true", HelpText = "@AppOption.ClearRegistry")]
+        [OptionMember(null, "clear-registry", Default = "true", HelpText = "AppOption.ClearRegistry")]
         public bool IsClearRegistry { get; set; }
 
 #if DEBUG
@@ -103,7 +104,7 @@ namespace NeeView
                 {
                     if (!File.Exists(this.SettingFilename))
                     {
-                        throw new ArgumentException($"{Properties.TextResources.GetString("OptionArgumentException.FileNotFound")}: {this.SettingFilename}");
+                        throw new ArgumentException($"{TextResources.GetString("OptionArgumentException.FileNotFound")}: {this.SettingFilename}");
                     }
                     this.SettingFilename = Path.GetFullPath(this.SettingFilename);
                 }
@@ -114,7 +115,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                new MessageDialog(ex.Message, Properties.TextResources.GetString("BootErrorDialog.Title")).ShowDialog();
+                new MessageDialog(ex.Message, TextResources.GetString("BootErrorDialog.Title")).ShowDialog();
                 throw new OperationCanceledException("Wrong startup parameter");
             }
         }
@@ -163,7 +164,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                var dialog = new MessageDialog(ex.Message, NeeView.Properties.TextResources.GetString("BootErrorDialog.Title"));
+                var dialog = new MessageDialog(ex.Message, TextResources.GetString("BootErrorDialog.Title"));
                 dialog.SizeToContent = SizeToContent.WidthAndHeight;
                 dialog.ContentRendered += (s, e) => dialog.InvalidateVisual();
                 throw new OperationCanceledWithDialogException("Wrong startup parameter", dialog);
@@ -171,7 +172,7 @@ namespace NeeView
 
             if (option.IsHelp)
             {
-                var dialog = new MessageDialog(optionMap.GetCommandLineHelpText(), NeeView.Properties.TextResources.GetString("BootOptionDialog.Title"));
+                var dialog = new MessageDialog(optionMap.GetCommandLineHelpText(), TextResources.GetString("BootOptionDialog.Title"));
                 dialog.SizeToContent = SizeToContent.WidthAndHeight;
                 dialog.ContentRendered += (s, e) => dialog.InvalidateVisual();
                 throw new OperationCanceledWithDialogException("Show command line help", dialog);

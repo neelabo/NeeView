@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class CloseApplicationCommand : CommandElement
     {
         public CloseApplicationCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Other");
+            this.Group = TextResources.GetString("CommandGroup.Other");
             this.IsShowMessage = false;
         }
 

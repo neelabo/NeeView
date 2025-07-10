@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -9,7 +10,7 @@ namespace NeeView
     {
         public ToggleHoverScrollCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.ViewManipulation");
+            this.Group = TextResources.GetString("CommandGroup.ViewManipulation");
             this.IsShowMessage = true;
         }
 
@@ -20,10 +21,10 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.Mouse.IsHoverScroll ? Properties.TextResources.GetString("ToggleHoverScrollCommand.Off") : Properties.TextResources.GetString("ToggleHoverScrollCommand.On");
+            return Config.Current.Mouse.IsHoverScroll ? TextResources.GetString("ToggleHoverScrollCommand.Off") : TextResources.GetString("ToggleHoverScrollCommand.On");
         }
 
-        [MethodArgument("@ToggleCommand.Execute.Remarks")]
+        [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
             if (e.Args.Length > 0)

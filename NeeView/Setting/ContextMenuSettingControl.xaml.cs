@@ -1,5 +1,6 @@
 ﻿using NeeView.Collections.Generic;
 using NeeView.ComponentModel;
+using NeeView.Properties;
 using NeeView.Windows;
 using System;
 using System.ComponentModel;
@@ -174,7 +175,7 @@ namespace NeeView.Setting
                 node = node.Parent;
             }
 
-            var newItem = _vm.Add(new TreeListNode<MenuElement>(new GroupMenuElement() { Name = ResourceService.GetString("@Word.NewFolder") }) , node);
+            var newItem = _vm.Add(new TreeListNode<MenuElement>(new GroupMenuElement() { Name = TextResources.GetString("Word.NewFolder") }) , node);
             if (newItem != null)
             {
                 this.ContextMenuTreeView.UpdateLayout();
@@ -406,29 +407,29 @@ namespace NeeView.Setting
             switch (node.Value.MenuElementType)
             {
                 case MenuElementType.None:
-                    contextMenu.Items.Add(CreateMenuItem(Properties.TextResources.GetString("FolderTree.Menu.NewCommand"), NewCommand));
-                    contextMenu.Items.Add(CreateMenuItem(Properties.TextResources.GetString("FolderTree.Menu.NewSeparator"), NewSeparator));
-                    contextMenu.Items.Add(CreateMenuItem(Properties.TextResources.GetString("FolderTree.Menu.NewFolder"), NewFolderCommand));
+                    contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.NewCommand"), NewCommand));
+                    contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.NewSeparator"), NewSeparator));
+                    contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.NewFolder"), NewFolderCommand));
                     break;
 
                 case MenuElementType.Group:
-                    contextMenu.Items.Add(CreateMenuItem(Properties.TextResources.GetString("FolderTree.Menu.NewCommand"), NewCommand));
-                    contextMenu.Items.Add(CreateMenuItem(Properties.TextResources.GetString("FolderTree.Menu.NewSeparator"), NewSeparator));
-                    contextMenu.Items.Add(CreateMenuItem(Properties.TextResources.GetString("FolderTree.Menu.NewFolder"), NewFolderCommand));
+                    contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.NewCommand"), NewCommand));
+                    contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.NewSeparator"), NewSeparator));
+                    contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.NewFolder"), NewFolderCommand));
                     contextMenu.Items.Add(new Separator());
-                    contextMenu.Items.Add(CreateMenuItem(Properties.TextResources.GetString("FolderTree.Menu.Delete"), RemoveCommand, Key.Delete.ToString()));
-                    contextMenu.Items.Add(CreateMenuItem(Properties.TextResources.GetString("FolderTree.Menu.Rename"), RenameCommand, Key.F2.ToString()));
+                    contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.Delete"), RemoveCommand, Key.Delete.ToString()));
+                    contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.Rename"), RenameCommand, Key.F2.ToString()));
                     break;
 
                 case MenuElementType.Command:
-                    contextMenu.Items.Add(CreateMenuItem(Properties.TextResources.GetString("FolderTree.Menu.Delete"), RemoveCommand, Key.Delete.ToString()));
-                    contextMenu.Items.Add(CreateMenuItem(Properties.TextResources.GetString("FolderTree.Menu.Rename"), RenameCommand, Key.F2.ToString()));
+                    contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.Delete"), RemoveCommand, Key.Delete.ToString()));
+                    contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.Rename"), RenameCommand, Key.F2.ToString()));
                     contextMenu.Items.Add(new Separator());
-                    contextMenu.Items.Add(CreateMenuItem(Properties.TextResources.GetString("FolderTree.Menu.Property"), PropertyCommand));
+                    contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.Property"), PropertyCommand));
                     break;
 
                 case MenuElementType.Separator:
-                    contextMenu.Items.Add(CreateMenuItem(Properties.TextResources.GetString("FolderTree.Menu.Delete"), RemoveCommand, Key.Delete.ToString()));
+                    contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.Delete"), RemoveCommand, Key.Delete.ToString()));
                     break;
 
                 default:
@@ -451,9 +452,9 @@ namespace NeeView.Setting
             var contextMenu = this.ContextMenuTreeView.ContextMenu;
             contextMenu.Items.Clear();
 
-            contextMenu.Items.Add(CreateMenuItem(Properties.TextResources.GetString("FolderTree.Menu.NewCommand"), NewRootCommand));
-            contextMenu.Items.Add(CreateMenuItem(Properties.TextResources.GetString("FolderTree.Menu.NewSeparator"), NewRootSeparator));
-            contextMenu.Items.Add(CreateMenuItem(Properties.TextResources.GetString("FolderTree.Menu.NewFolder"), NewRootFolderCommand));
+            contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.NewCommand"), NewRootCommand));
+            contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.NewSeparator"), NewRootSeparator));
+            contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.NewFolder"), NewRootFolderCommand));
         }
 
         #endregion ContextMenu

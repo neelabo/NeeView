@@ -10,6 +10,7 @@ using NeeLaboratory.Linq;
 using System.Diagnostics;
 using NeeLaboratory.ComponentModel;
 using System.IO;
+using NeeView.Properties;
 
 namespace NeeView
 {
@@ -145,7 +146,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                new MessageDialog($"{Properties.TextResources.GetString("Word.Cause")}: {ex.Message}", Properties.TextResources.GetString("FileDeleteErrorDialog.Title")).ShowDialog();
+                new MessageDialog($"{TextResources.GetString("Word.Cause")}: {ex.Message}", TextResources.GetString("FileDeleteErrorDialog.Title")).ShowDialog();
                 ReloadBook();
             }
         }
@@ -234,7 +235,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                new MessageDialog(ex.Message, Properties.TextResources.GetString("Bookshelf.CopyToFolderFailed")).ShowDialog();
+                new MessageDialog(ex.Message, TextResources.GetString("Bookshelf.CopyToFolderFailed")).ShowDialog();
             }
         }
 
@@ -266,7 +267,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                new MessageDialog(ex.Message, Properties.TextResources.GetString("PageList.Message.MoveToFolderFailed")).ShowDialog();
+                new MessageDialog(ex.Message, TextResources.GetString("PageList.Message.MoveToFolderFailed")).ShowDialog();
             }
         }
 
@@ -341,7 +342,7 @@ namespace NeeView
             }
             catch (Exception e)
             {
-                new MessageDialog($"{Properties.TextResources.GetString("Word.Cause")}: {e.Message}", Properties.TextResources.GetString("CopyErrorDialog.Title")).ShowDialog();
+                new MessageDialog($"{TextResources.GetString("Word.Cause")}: {e.Message}", TextResources.GetString("CopyErrorDialog.Title")).ShowDialog();
             }
         }
 
@@ -372,7 +373,7 @@ namespace NeeView
             }
             catch (Exception e)
             {
-                new MessageDialog($"{Properties.TextResources.GetString("Word.Cause")}: {e.Message}", Properties.TextResources.GetString("CopyErrorDialog.Title")).ShowDialog();
+                new MessageDialog($"{TextResources.GetString("Word.Cause")}: {e.Message}", TextResources.GetString("CopyErrorDialog.Title")).ShowDialog();
             }
         }
 
@@ -400,7 +401,7 @@ namespace NeeView
                 }
                 catch (Exception e)
                 {
-                    new MessageDialog($"{Properties.TextResources.GetString("ImageExportErrorDialog.Message")}\n{Properties.TextResources.GetString("Word.Cause")}: {e.Message}", Properties.TextResources.GetString("ImageExportErrorDialog.Title")).ShowDialog();
+                    new MessageDialog($"{TextResources.GetString("ImageExportErrorDialog.Message")}\n{TextResources.GetString("Word.Cause")}: {e.Message}", TextResources.GetString("ImageExportErrorDialog.Title")).ShowDialog();
                     return;
                 }
             }
@@ -417,7 +418,7 @@ namespace NeeView
                 }
                 catch (Exception e)
                 {
-                    new MessageDialog($"{Properties.TextResources.GetString("ImageExportErrorDialog.Message")}\n{Properties.TextResources.GetString("Word.Cause")}: {e.Message}", Properties.TextResources.GetString("ImageExportErrorDialog.Title")).ShowDialog();
+                    new MessageDialog($"{TextResources.GetString("ImageExportErrorDialog.Message")}\n{TextResources.GetString("Word.Cause")}: {e.Message}", TextResources.GetString("ImageExportErrorDialog.Title")).ShowDialog();
                     return;
                 }
             }

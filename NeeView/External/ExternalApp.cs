@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -19,7 +20,7 @@ namespace NeeView
 
         // 表示名
         [JsonIgnore]
-        public string DisplayName => _name ?? (string.IsNullOrWhiteSpace(_command) ? Properties.TextResources.GetString("Word.DefaultApp") : LoosePath.GetFileNameWithoutExtension(_command));
+        public string DisplayName => _name ?? (string.IsNullOrWhiteSpace(_command) ? TextResources.GetString("Word.DefaultApp") : LoosePath.GetFileNameWithoutExtension(_command));
 
         // 名前
         public string? Name
@@ -76,7 +77,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                new MessageDialog(ex.Message, Properties.TextResources.GetString("OpenApplicationErrorDialog.Title")).ShowDialog();
+                new MessageDialog(ex.Message, TextResources.GetString("OpenApplicationErrorDialog.Title")).ShowDialog();
             }
         }
 

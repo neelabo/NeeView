@@ -1,4 +1,5 @@
-﻿using NeeView.Windows.Controls;
+﻿using NeeView.Properties;
+using NeeView.Windows.Controls;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -102,27 +103,19 @@ namespace NeeView.Windows.Property
     {
         private static string GetResourceKey(PropertyInfo property, string? postfix = null)
         {
-            return $"@{property.DeclaringType?.Name}.{property.Name}{postfix}";
+            return $"{property.DeclaringType?.Name}.{property.Name}{postfix}";
         }
 
         public static string GetPropertyName(PropertyInfo property, PropertyMemberAttribute? attribute)
         {
             if (attribute is null)
             {
-                return property.Name;
+                return TextResources.GetLiteral(property.Name);
             }
 
             var resourceKey = attribute.Name ?? GetResourceKey(property);
-            var resourceValue = ResourceService.GetResourceString(resourceKey, true);
-
-#if DEBUG
-            if (resourceValue is null)
-            {
-                Debug.WriteLine($"Error: PropertyName not found: {resourceKey}");
-            }
-#endif
-
-            return resourceValue ?? resourceKey;
+            var resourceValue = TextResources.GetString(resourceKey, true);
+            return resourceValue;
         }
 
         public static string GetPropertyName(PropertyInfo property)
@@ -138,7 +131,7 @@ namespace NeeView.Windows.Property
             }
 
             var resourceKey = attribute.Tips ?? GetResourceKey(property, ".Remarks");
-            var resourceValue = ResourceService.GetResourceString(resourceKey, true);
+            var resourceValue = TextResources.GetStringRaw(resourceKey);
 
             return resourceValue;
         }
@@ -156,7 +149,7 @@ namespace NeeView.Windows.Property
             }
 
             var resourceKey = attribute.Title ?? GetResourceKey(property, ".Title");
-            var resourceValue = ResourceService.GetResourceString(resourceKey, true);
+            var resourceValue = TextResources.GetStringRaw(resourceKey);
 
             return resourceValue;
         }

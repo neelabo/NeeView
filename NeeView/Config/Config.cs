@@ -48,7 +48,7 @@ namespace NeeView
 
         public PageViewRecorderConfig PageViewRecorder { get; set; } = new PageViewRecorderConfig();
 
-        [PropertyMapLabel("@Word.Bookmark")]
+        [PropertyMapLabel("Word.Bookmark")]
         public BookmarkConfig Bookmark { get; set; } = new BookmarkConfig();
 
         public PlaylistConfig Playlist { get; set; } = new PlaylistConfig();
@@ -61,10 +61,10 @@ namespace NeeView
 
         public BackgroundConfig Background { get; set; } = new BackgroundConfig();
 
-        [PropertyMapLabel("@SettingPage.WindowTitle")]
+        [PropertyMapLabel("SettingPage.WindowTitle")]
         public WindowTitleConfig WindowTitle { get; set; } = new WindowTitleConfig();
 
-        [PropertyMapLabel("@SettingPage.PageTitle")]
+        [PropertyMapLabel("SettingPage.PageTitle")]
         public PageTitleConfig PageTitle { get; set; } = new PageTitleConfig();
 
         public AutoHideConfig AutoHide { get; set; } = new AutoHideConfig();
@@ -73,7 +73,7 @@ namespace NeeView
 
         public MenuBarConfig MenuBar { get; set; } = new MenuBarConfig();
 
-        [PropertyMapLabel("@SettingPage.Slider")]
+        [PropertyMapLabel("SettingPage.Slider")]
         public SliderConfig Slider { get; set; } = new SliderConfig();
 
         public FilmStripConfig FilmStrip { get; set; } = new FilmStripConfig();
@@ -82,10 +82,10 @@ namespace NeeView
 
         public PanelsConfig Panels { get; set; } = new PanelsConfig();
 
-        [PropertyMapLabel("@Word.Bookshelf")]
+        [PropertyMapLabel("Word.Bookshelf")]
         public BookshelfConfig Bookshelf { get; set; } = new BookshelfConfig();
 
-        [PropertyMapLabel("@Information.Title")]
+        [PropertyMapLabel("Information.Title")]
         public InformationConfig Information { get; set; } = new InformationConfig();
 
         public NavigatorConfig Navigator { get; set; } = new NavigatorConfig();
@@ -94,7 +94,7 @@ namespace NeeView
 
         public ThumbnailConfig Thumbnail { get; set; } = new ThumbnailConfig();
 
-        [PropertyMapLabel("@SettingPage.Slideshow")]
+        [PropertyMapLabel("SettingPage.Slideshow")]
         public SlideShowConfig SlideShow { get; set; } = new SlideShowConfig();
 
         public EffectConfig Effect { get; set; } = new EffectConfig();
@@ -103,15 +103,15 @@ namespace NeeView
 
         public ImageEffectConfig ImageEffect { get; set; } = new ImageEffectConfig();
 
-        [PropertyMapLabel("@Effect.CustomSize")]
+        [PropertyMapLabel("Effect.CustomSize")]
         public ImageCustomSizeConfig ImageCustomSize { get; set; } = new ImageCustomSizeConfig();
 
-        [PropertyMapLabel("@Effect.Trim")]
+        [PropertyMapLabel("Effect.Trim")]
         public ImageTrimConfig ImageTrim { get; set; } = new ImageTrimConfig();
 
         public ImageDotKeepConfig ImageDotKeep { get; set; } = new ImageDotKeepConfig();
 
-        [PropertyMapLabel("@Effect.Grid")]
+        [PropertyMapLabel("Effect.Grid")]
         public ImageGridConfig ImageGrid { get; set; } = new ImageGridConfig();
 
         public ImageResizeFilterConfig ImageResizeFilter { get; set; } = new ImageResizeFilterConfig();

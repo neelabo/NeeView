@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 
 namespace NeeView
 {
@@ -6,7 +7,7 @@ namespace NeeView
     {
         public ImportBackupCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Other");
+            this.Group = TextResources.GetString("CommandGroup.Other");
             this.IsShowMessage = false;
 
             this.ParameterSource = new CommandParameterSource(new ImportBackupCommandParameter());

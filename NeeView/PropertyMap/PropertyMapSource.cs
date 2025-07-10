@@ -1,4 +1,5 @@
-﻿using NeeView.Windows.Property;
+﻿using NeeView.Properties;
+using NeeView.Windows.Property;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -61,7 +62,7 @@ namespace NeeView
                 typeString = Converter.GetTypeName(PropertyInfo.PropertyType);
             }
 
-            var readOnly = (PropertyInfo.GetCustomAttribute<PropertyMapReadOnlyAttribute>() != null || !PropertyInfo.CanWrite) ? " (" + ResourceService.GetString("@Word.ReadOnly") + ")" : "";
+            var readOnly = (PropertyInfo.GetCustomAttribute<PropertyMapReadOnlyAttribute>() != null || !PropertyInfo.CanWrite) ? " (" + TextResources.GetString("Word.ReadOnly") + ")" : "";
 
             var description = "";
             var attribute = PropertyInfo.GetCustomAttribute<PropertyMemberAttribute>();

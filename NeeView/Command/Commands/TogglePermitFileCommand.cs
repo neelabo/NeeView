@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -9,7 +10,7 @@ namespace NeeView
     {
         public TogglePermitFileCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Other");
+            this.Group = TextResources.GetString("CommandGroup.Other");
             this.IsShowMessage = true;
         }
 
@@ -20,10 +21,10 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.System.IsFileWriteAccessEnabled ? Properties.TextResources.GetString("TogglePermitFileCommand.Off") : Properties.TextResources.GetString("TogglePermitFileCommand.On");
+            return Config.Current.System.IsFileWriteAccessEnabled ? TextResources.GetString("TogglePermitFileCommand.Off") : TextResources.GetString("TogglePermitFileCommand.On");
         }
 
-        [MethodArgument("@ToggleCommand.Execute.Remarks")]
+        [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
             if (e.Args.Length > 0)

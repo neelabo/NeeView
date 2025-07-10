@@ -1,4 +1,5 @@
 ﻿using NeeView.PageFrames;
+using NeeView.Properties;
 using System;
 using System.Diagnostics;
 using System.Windows;
@@ -9,7 +10,7 @@ namespace NeeView
     {
         public MoveScaleDragAction()
         {
-            Note = Properties.TextResources.GetString("DragActionType.MoveScale");
+            Note = TextResources.GetString("DragActionType.MoveScale");
             DragActionCategory = DragActionCategory.Point;
 
             ParameterSource = new DragActionParameterSource(typeof(MoveScaleDragActionParameter));

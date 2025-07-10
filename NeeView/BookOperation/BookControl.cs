@@ -1,6 +1,7 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.Collections.Generic;
 using NeeView.PageFrames;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -89,7 +90,7 @@ namespace NeeView
                 else if (FileIO.ExistsPath(bookAddress))
                 {
                     var entry = StaticFolderArchive.Default.CreateArchiveEntry(bookAddress, ArchiveHint.None);
-                    await ConfirmFileIO.DeleteAsync(entry, Properties.TextResources.GetString("FileDeleteBookDialog.Title"), null);
+                    await ConfirmFileIO.DeleteAsync(entry, TextResources.GetString("FileDeleteBookDialog.Title"), null);
                 }
             }
         }
@@ -116,7 +117,7 @@ namespace NeeView
                     parentNode = BookmarkCollectionService.FindBookmarkFolder(parentQuery);
                     if (parentNode is null)
                     {
-                        ToastService.Current.Show(new Toast($"{ResourceService.GetString("@Bookmark.Message.FolderNotFoundError")}\n{parentQuery.GetSimplePath(QueryScheme.Bookmark)}", "", ToastIcon.Error));
+                        ToastService.Current.Show(new Toast($"{TextResources.GetString("Bookmark.Message.FolderNotFoundError")}\n{parentQuery.GetSimplePath(QueryScheme.Bookmark)}", "", ToastIcon.Error));
                         return;
                     }
                 }
@@ -126,7 +127,7 @@ namespace NeeView
                     // ignore temporary directory
                     if (_book.Path.StartsWith(Temporary.Current.TempDirectory, StringComparison.Ordinal))
                     {
-                        ToastService.Current.Show(new Toast(ResourceService.GetString("@Bookmark.Message.TemporaryNotSupportedError"), "", ToastIcon.Error));
+                        ToastService.Current.Show(new Toast(TextResources.GetString("Bookmark.Message.TemporaryNotSupportedError"), "", ToastIcon.Error));
                         return;
                     }
 

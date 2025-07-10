@@ -3,6 +3,7 @@ using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
 using NeeLaboratory.IO.Search;
 using NeeLaboratory.Linq;
+using NeeView.Properties;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -238,7 +239,7 @@ namespace NeeView
             var emptyArchiveEntry = new ArchiveEntry(StaticFolderArchive.Default)
             {
                 IsEmpty = true,
-                RawEntryName = Properties.TextResources.GetString("Notice.NoFiles"),
+                RawEntryName = TextResources.GetString("Notice.NoFiles"),
             };
             return new Page(new EmptyPageContent(emptyArchiveEntry, null));
         }

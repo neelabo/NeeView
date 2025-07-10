@@ -65,10 +65,10 @@ namespace NeeView
 
             if (_retryCount > 0)
             {
-                ToastService.Current.Show("ArchiveKey", new Toast(ResourceService.GetString("@ArchiveKeyDialog.IncorrectPassword"), null, ToastIcon.Warning));
+                ToastService.Current.Show("ArchiveKey", new Toast(TextResources.GetString("ArchiveKeyDialog.IncorrectPassword"), null, ToastIcon.Warning));
             }
 
-            var title = ResourceService.GetString("@ArchiveKeyDialog.Title");
+            var title = TextResources.GetString("ArchiveKeyDialog.Title");
             var message = TextResources.GetFormatString("ArchiveKeyDialog.Message", LoosePath.GetFileName(_fileName));
             var inputText = App.Current.Dispatcher.Invoke(() => ShowArchiveKeyDialog(message, title));
 

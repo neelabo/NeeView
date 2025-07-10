@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Windows.Input;
+using NeeView.Properties;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -134,10 +135,10 @@ namespace NeeView
         private RelayCommand? _toggleVisibleFoldersTree;
         private RelayCommand? _clearHistoryInPlace;
 
-        public string MoveToHomeToolTip { get; } = CommandTools.CreateToolTipText("@Bookshelf.Home.ToolTip", Key.Home, ModifierKeys.Alt);
-        public string MoveToPreviousToolTip { get; } = CommandTools.CreateToolTipText("@Bookshelf.Back.ToolTip", Key.Left, ModifierKeys.Alt);
-        public string MoveToNextToolTip { get; } = CommandTools.CreateToolTipText("@Bookshelf.Next.ToolTip", Key.Right, ModifierKeys.Alt);
-        public string MoveToUpToolTip { get; } = CommandTools.CreateToolTipText("@Bookshelf.Up.ToolTip", Key.Up, ModifierKeys.Alt);
+        public string MoveToHomeToolTip { get; } = CommandTools.CreateToolTipText("Bookshelf.Home.ToolTip", Key.Home, ModifierKeys.Alt);
+        public string MoveToPreviousToolTip { get; } = CommandTools.CreateToolTipText("Bookshelf.Back.ToolTip", Key.Left, ModifierKeys.Alt);
+        public string MoveToNextToolTip { get; } = CommandTools.CreateToolTipText("Bookshelf.Next.ToolTip", Key.Right, ModifierKeys.Alt);
+        public string MoveToUpToolTip { get; } = CommandTools.CreateToolTipText("Bookshelf.Up.ToolTip", Key.Up, ModifierKeys.Alt);
 
 
         public RelayCommand ToggleVisibleFoldersTree
@@ -303,19 +304,19 @@ namespace NeeView
                 var items = menu.Items;
 
                 items.Clear();
-                items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleList"), PanelListItemStyle.Normal));
-                items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleContent"), PanelListItemStyle.Content));
-                items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleBanner"), PanelListItemStyle.Banner));
-                items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleThumbnail"), PanelListItemStyle.Thumbnail));
+                items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleList"), PanelListItemStyle.Normal));
+                items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleContent"), PanelListItemStyle.Content));
+                items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleBanner"), PanelListItemStyle.Banner));
+                items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleThumbnail"), PanelListItemStyle.Thumbnail));
                 items.Add(new Separator());
-                items.Add(CreateCommandMenuItem(Properties.TextResources.GetString("Bookshelf.MoreMenu.AddQuickAccess"), _vm.AddQuickAccess));
-                items.Add(CreateCommandMenuItem(Properties.TextResources.GetString("Bookshelf.MoreMenu.ClearHistory"), "ClearHistoryInPlace"));
+                items.Add(CreateCommandMenuItem(TextResources.GetString("Bookshelf.MoreMenu.AddQuickAccess"), _vm.AddQuickAccess));
+                items.Add(CreateCommandMenuItem(TextResources.GetString("Bookshelf.MoreMenu.ClearHistory"), "ClearHistoryInPlace"));
 
                 switch (_vm._model.FolderCollection)
                 {
                     case FolderEntryCollection:
                         items.Add(new Separator());
-                        items.Add(CreateCommandMenuItem(Properties.TextResources.GetString("Bookshelf.MoreMenu.Subfolder"), _vm.ToggleFolderRecursive, new Binding("FolderCollection.FolderParameter.IsFolderRecursive") { Source = _vm._model }));
+                        items.Add(CreateCommandMenuItem(TextResources.GetString("Bookshelf.MoreMenu.Subfolder"), _vm.ToggleFolderRecursive, new Binding("FolderCollection.FolderParameter.IsFolderRecursive") { Source = _vm._model }));
                         break;
 
                     case FolderArchiveCollection:
@@ -326,16 +327,16 @@ namespace NeeView
 
                     case BookmarkFolderCollection:
                         items.Add(new Separator());
-                        items.Add(CreateCommandMenuItem(Properties.TextResources.GetString("Word.NewFolder"), _vm.NewFolderCommand));
-                        items.Add(CreateCommandMenuItem(Properties.TextResources.GetString("FolderTree.Menu.AddBookmark"), _vm.AddBookmarkCommand));
+                        items.Add(CreateCommandMenuItem(TextResources.GetString("Word.NewFolder"), _vm.NewFolderCommand));
+                        items.Add(CreateCommandMenuItem(TextResources.GetString("FolderTree.Menu.AddBookmark"), _vm.AddBookmarkCommand));
                         break;
                 }
 
                 if (_vm._model.IsFolderSearchEnabled)
                 {
-                    var subItem = new MenuItem() { Header = Properties.TextResources.GetString("Bookshelf.MoreMenu.SearchOptions") };
-                    //subItem.Items.Add(CreateCheckMenuItem(Properties.TextResources.GetString("Bookshelf.MoreMenu.SearchIncremental"), new Binding(nameof(SystemConfig.IsIncrementalSearchEnabled)) { Source = Config.Current.System }));
-                    subItem.Items.Add(CreateCheckMenuItem(Properties.TextResources.GetString("Bookshelf.MoreMenu.SearchIncludeSubdirectories"), new Binding(nameof(BookshelfConfig.IsSearchIncludeSubdirectories)) { Source = Config.Current.Bookshelf }));
+                    var subItem = new MenuItem() { Header = TextResources.GetString("Bookshelf.MoreMenu.SearchOptions") };
+                    //subItem.Items.Add(CreateCheckMenuItem(TextResources.GetString("Bookshelf.MoreMenu.SearchIncremental"), new Binding(nameof(SystemConfig.IsIncrementalSearchEnabled)) { Source = Config.Current.System }));
+                    subItem.Items.Add(CreateCheckMenuItem(TextResources.GetString("Bookshelf.MoreMenu.SearchIncludeSubdirectories"), new Binding(nameof(BookshelfConfig.IsSearchIncludeSubdirectories)) { Source = Config.Current.Bookshelf }));
                     items.Add(new Separator());
                     items.Add(subItem);
                 }

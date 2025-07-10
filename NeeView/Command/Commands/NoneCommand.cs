@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class NoneCommand : CommandElement
     {
         public NoneCommand() : base("")
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.None");
+            this.Group = TextResources.GetString("CommandGroup.None");
         }
 
         public override bool CanExecute(object? sender, CommandContext e)

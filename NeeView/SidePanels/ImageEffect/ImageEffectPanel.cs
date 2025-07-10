@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.Effects;
+using NeeView.Properties;
 using NeeView.Windows.Controls;
 using System;
 using System.Collections.Generic;
@@ -36,7 +37,7 @@ namespace NeeView
 
         public ImageSource Icon { get; private set; }
 
-        public string IconTips => Properties.TextResources.GetString("Effect.Title");
+        public string IconTips => TextResources.GetString("Effect.Title");
 
         public Lazy<FrameworkElement> View => _view;
 

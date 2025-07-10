@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.Collections.Generic;
+using NeeView.Properties;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -37,12 +38,12 @@ namespace NeeView
 
             if (_edit.IsEdit)
             {
-                TitleText = ResourceService.GetString("@BookmarkDialog.Edit");
+                TitleText = TextResources.GetString("BookmarkDialog.Edit");
                 IsAddButtonVisible = true;
             }
             else
             {
-                TitleText = ResourceService.GetString("@BookmarkDialog.Add");
+                TitleText = TextResources.GetString("BookmarkDialog.Add");
                 IsAddButtonVisible = false;
             }
         }
@@ -77,9 +78,9 @@ namespace NeeView
         public bool IsEdit => _edit.IsEdit;
 
         public string TitleText { get; } 
-        public string OKButtonText => ResourceService.GetString("@Word.Done");
-        public string AddButtonText => ResourceService.GetString("@Word.Add");
-        public string DeleteButtonText => ResourceService.GetString("@Word.Remove");
+        public string OKButtonText => TextResources.GetString("Word.Done");
+        public string AddButtonText => TextResources.GetString("Word.Add");
+        public string DeleteButtonText => TextResources.GetString("Word.Remove");
         public bool IsAddButtonVisible { get; }
 
 

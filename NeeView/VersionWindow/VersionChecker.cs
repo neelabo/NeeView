@@ -9,6 +9,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading;
+using NeeView.Properties;
 
 namespace NeeView
 {
@@ -62,7 +63,7 @@ namespace NeeView
             {
                 // チェック開始
                 LatestVersion = new FormatVersion(Environment.SolutionName, 0, 0, 0);
-                Message = Properties.TextResources.GetString("VersionChecker.Message.Checking");
+                Message = TextResources.GetString("VersionChecker.Message.Checking");
                 Task.Run(async () => await CheckVersionAsync(CancellationToken.None));
             }
         }
@@ -83,27 +84,27 @@ namespace NeeView
 
                     if (LatestVersion == CurrentVersion)
                     {
-                        Message = Properties.TextResources.GetString("VersionChecker.Message.Latest");
+                        Message = TextResources.GetString("VersionChecker.Message.Latest");
                     }
                     else if (LatestVersion.CompareTo(CurrentVersion) < 0)
                     {
-                        Message = Properties.TextResources.GetString("VersionChecker.Message.Unknown");
+                        Message = TextResources.GetString("VersionChecker.Message.Unknown");
                     }
                     else
                     {
-                        Message = Properties.TextResources.GetString("VersionChecker.Message.New");
+                        Message = TextResources.GetString("VersionChecker.Message.New");
                         IsExistNewVersion = true;
                     }
                 }
                 else
                 {
-                    Message = Properties.TextResources.GetString("VersionChecker.Message.Failed");
+                    Message = TextResources.GetString("VersionChecker.Message.Failed");
                 }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                Message = Properties.TextResources.GetString("VersionChecker.Message.Failed");
+                Message = TextResources.GetString("VersionChecker.Message.Failed");
             }
             finally
             {

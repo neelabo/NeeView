@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.IO;
 using NeeView.IO;
+using NeeView.Properties;
 using NeeView.Text;
 using NeeView.Windows;
 using System;
@@ -113,7 +114,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                BookHub.Current.RequestUnload(this, true, ex.Message ?? Properties.TextResources.GetString("Notice.ContentFailed"));
+                BookHub.Current.RequestUnload(this, true, ex.Message ?? TextResources.GetString("Notice.ContentFailed"));
                 NeeView.NowLoading.Current.ResetLoading();
             }
         }
@@ -186,7 +187,7 @@ namespace NeeView
             DumpDragData(data);
 
             //  読み込めなかったエラー表示
-            throw new ApplicationException(errorMessage ?? Properties.TextResources.GetString("Notice.ContentFailed"));
+            throw new ApplicationException(errorMessage ?? TextResources.GetString("Notice.ContentFailed"));
         }
 
 
@@ -275,7 +276,7 @@ namespace NeeView
             }
             catch (Exception e)
             {
-                if (!System.IO.Directory.Exists(downloadPath)) throw new DropException(Properties.TextResources.GetString("Notice.OutputFailed") + "\n" + e.Message, e);
+                if (!System.IO.Directory.Exists(downloadPath)) throw new DropException(TextResources.GetString("Notice.OutputFailed") + "\n" + e.Message, e);
             }
 
             return fileName;
@@ -401,7 +402,7 @@ namespace NeeView
                 }
                 catch (COMException ex)
                 {
-                    throw new DropException(ResourceService.GetString("@FileDropComError.Message"), ex);
+                    throw new DropException(TextResources.GetString("FileDropComError.Message"), ex);
                 }
             }
 
@@ -492,7 +493,7 @@ namespace NeeView
         public override async ValueTask<List<string>?> DropAsync(object sender, IDataObject data, string downloadPath, Action<string> nowLoading)
         {
             // Webアクセス時はNowLoading表示を行う
-            nowLoading(Properties.TextResources.GetString("Notice.DropContent"));
+            nowLoading(TextResources.GetString("Notice.DropContent"));
 
             using (var client = new System.Net.Http.HttpClient())
             {

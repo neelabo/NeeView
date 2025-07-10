@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using NeeView.Properties;
+using System.Runtime.Serialization;
 
 namespace NeeView
 {
@@ -6,7 +7,7 @@ namespace NeeView
     {
         public FocusMainViewCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Panel");
+            this.Group = TextResources.GetString("CommandGroup.Panel");
             this.IsShowMessage = false;
 
             this.ParameterSource = new CommandParameterSource(new FocusMainViewCommandParameter());

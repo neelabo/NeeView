@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Globalization;
 using System.Windows.Input;
 
@@ -28,7 +29,7 @@ namespace NeeView
         /// <returns></returns>
         public static string CreateToolTipText(string name, Key key, ModifierKeys modifiers = ModifierKeys.None)
         {
-            var text = ResourceService.GetString(name);
+            var text = TextResources.GetString(name);
             var gesture = new KeyGestureSource(key, modifiers)?.GetDisplayString();
             return string.IsNullOrEmpty(gesture) ? text : $"{text} ({gesture})";
         }

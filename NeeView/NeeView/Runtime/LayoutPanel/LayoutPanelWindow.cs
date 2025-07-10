@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.Windows.Input;
+using NeeView.Properties;
 using NeeView.Windows;
 using System;
 using System.ComponentModel;
@@ -100,7 +101,7 @@ namespace NeeView.Runtime.LayoutPanel
 
         private string GetResource(string key)
         {
-            return LayoutPanelWindowManager?.Resources[key] ?? $"@{key}";
+            return LayoutPanelWindowManager?.Resources[key] ?? TextResources.GetLiteral(key);
         }
 
         private void OpenDockCommand_Execute()

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Windows;
 
 namespace NeeView
@@ -7,7 +8,7 @@ namespace NeeView
     {
         public FlipVerticalDragAction()
         {
-            Note = Properties.TextResources.GetString("DragActionType.FlipVertical");
+            Note = TextResources.GetString("DragActionType.FlipVertical");
             //DragKey = new DragKey("Alt+RightButton");
             DragActionCategory = DragActionCategory.Flip;
         }

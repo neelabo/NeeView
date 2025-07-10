@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using NeeView.Properties;
 using System;
 using System.Diagnostics;
 
@@ -40,7 +41,7 @@ namespace NeeView
             dialog.FileName = $"NeeView{Environment.DisplayVersionShort}-{DateTime.Now:yyyyMMdd}";
             dialog.DefaultExt = ExportDataFileExtension;
             dialog.Filter = ExportDataFileDialogFilter;
-            dialog.Title = Properties.TextResources.GetString("ExportDialog.Title");
+            dialog.Title = TextResources.GetString("ExportDialog.Title");
 
             var result = dialog.ShowDialog(MainWindow.Current);
 
@@ -68,7 +69,7 @@ namespace NeeView
             dialog.AddExtension = true;
             dialog.DefaultExt = SaveExportDataDialog.ExportDataFileExtension;
             dialog.Filter = SaveExportDataDialog.ExportDataFileDialogFilter;
-            dialog.Title = Properties.TextResources.GetString("ImportDialog.Title");
+            dialog.Title = TextResources.GetString("ImportDialog.Title");
 
             var result = dialog.ShowDialog(MainWindow.Current);
 
@@ -87,8 +88,8 @@ namespace NeeView
 
             var vm = new ImportControlViewModel(importer);
             var dialogContent = new ImportControl(vm);
-            var dialog = new MessageDialog(dialogContent, Properties.TextResources.GetString("ImportSelectDialog.Title"));
-            dialog.Commands.Add(new UICommand("@Word.Import") { IsPossible = true });
+            var dialog = new MessageDialog(dialogContent, TextResources.GetString("ImportSelectDialog.Title"));
+            dialog.Commands.Add(new UICommand("Word.Import") { IsPossible = true });
             dialog.Commands.Add(UICommands.Cancel);
             var result = dialog.ShowDialog();
             return result.IsPossible;

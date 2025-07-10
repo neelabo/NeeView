@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using NeeView.Properties;
 using System;
 using System.Linq;
 
@@ -33,8 +34,8 @@ namespace NeeView
             if (!options.HasFlag(FileAssociationCollectionCreateOptions.OnlyRegistered))
             {
                 // システム
-                collection.TryAdd(".nvpls", FileAssociationCategory.ForNeeView, ResourceService.GetString("@FileType.Playlist"));
-                collection.TryAdd(".nvzip", FileAssociationCategory.ForNeeView, ResourceService.GetString("@FileType.ExportData"));
+                collection.TryAdd(".nvpls", FileAssociationCategory.ForNeeView, TextResources.GetString("FileType.Playlist"));
+                collection.TryAdd(".nvzip", FileAssociationCategory.ForNeeView, TextResources.GetString("FileType.ExportData"));
 
                 // 画像拡張子
                 foreach (var ext in PictureProfile.Current.GetFileTypes(false))

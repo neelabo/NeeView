@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Windows.Data;
 
 
@@ -8,7 +9,7 @@ namespace NeeView
     {
         public AutoScrollOnCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.ViewManipulation");
+            this.Group = TextResources.GetString("CommandGroup.ViewManipulation");
             this.ShortCutKey = new ShortcutKey("MiddleClick");
             this.IsShowMessage = false;
         }

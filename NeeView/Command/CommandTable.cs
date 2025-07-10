@@ -1,6 +1,7 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
 using NeeView.Data;
+using NeeView.Properties;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -599,7 +600,7 @@ namespace NeeView
             var sb = new StringBuilder();
 
             sb.AppendLine(HtmlHelpUtility.CreateHeader("NeeView Command List"));
-            sb.AppendLine($"<body><h1>{Properties.TextResources.GetString("HelpCommandList.Title")}</h1>");
+            sb.AppendLine($"<body><h1>{TextResources.GetString("HelpCommandList.Title")}</h1>");
 
             if (version)
             {
@@ -607,7 +608,7 @@ namespace NeeView
             }
 
             sb.AppendLine("<!-- section: note -->");
-            sb.AppendLine($"<p>{Properties.TextResources.GetString("HelpCommandList.Message")}</p>");
+            sb.AppendLine($"<p>{TextResources.GetString("HelpCommandList.Message")}</p>");
             sb.AppendLine("<!-- section_end: note-->");
 
             foreach (var group in _elements.Values.GroupBy(e => e.Group))
@@ -615,11 +616,11 @@ namespace NeeView
                 sb.AppendLine($"<h3>{group.Key}</h3>");
                 sb.AppendLine("<table>");
                 sb.AppendLine("<tr>");
-                sb.AppendLine($"<th class=\"td-middle\">{Properties.TextResources.GetString("Word.Command")}</th>");
-                sb.AppendLine($"<th class=\"nowrap\">{Properties.TextResources.GetString("Word.Shortcut")}</th>");
-                sb.AppendLine($"<th class=\"nowrap\">{Properties.TextResources.GetString("Word.Gesture")}</th>");
-                sb.AppendLine($"<th class=\"nowrap\">{Properties.TextResources.GetString("Word.Touch")}</th>");
-                sb.AppendLine($"<th class=\"td-middle\">{Properties.TextResources.GetString("Word.Summary")}</th>");
+                sb.AppendLine($"<th class=\"td-middle\">{TextResources.GetString("Word.Command")}</th>");
+                sb.AppendLine($"<th class=\"nowrap\">{TextResources.GetString("Word.Shortcut")}</th>");
+                sb.AppendLine($"<th class=\"nowrap\">{TextResources.GetString("Word.Gesture")}</th>");
+                sb.AppendLine($"<th class=\"nowrap\">{TextResources.GetString("Word.Touch")}</th>");
+                sb.AppendLine($"<th class=\"td-middle\">{TextResources.GetString("Word.Summary")}</th>");
                 sb.AppendLine("</tr>");
                 foreach (var command in group.OrderBy(e => e.Order))
                 {

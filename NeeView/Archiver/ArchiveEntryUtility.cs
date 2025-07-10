@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -78,11 +79,11 @@ namespace NeeView
                 }
                 catch (Exception ex)
                 {
-                    throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("FileNotFoundException.Message"), path), ex);
+                    throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("FileNotFoundException.Message"), path), ex);
                 }
             }
 
-            throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("FileNotFoundException.Message"), path));
+            throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("FileNotFoundException.Message"), path));
         }
 
         /// <summary>

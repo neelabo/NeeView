@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -76,7 +77,7 @@ namespace NeeView.Setting
                     if (overlaps.Count > 0)
                     {
                         if (this.GestureTokenNote != null) this.GestureTokenNote += "\n";
-                        this.GestureTokenNote += string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("Notice.ConflictWith"), area.GetDisplayString(), ResourceService.Join(overlaps));
+                        this.GestureTokenNote += string.Format(CultureInfo.InvariantCulture, TextResources.GetString("Notice.ConflictWith"), area.GetDisplayString(), TextResources.Join(overlaps));
                     }
 
                     var element = new GestureElement();

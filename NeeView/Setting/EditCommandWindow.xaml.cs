@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.Generators;
 using NeeLaboratory.Windows.Input;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -95,7 +96,7 @@ namespace NeeView.Setting
 
             var commandMap = CommandTable.Current;
 
-            this.Title = $"{commandMap[key].Text} - {Properties.TextResources.GetString("EditCommandWindow.Title")}";
+            this.Title = $"{commandMap[key].Text} - {TextResources.GetString("EditCommandWindow.Title")}";
 
             this.Note = commandMap[key].Remarks;
             this.IsShowMessage = commandMap[key].IsShowMessage;

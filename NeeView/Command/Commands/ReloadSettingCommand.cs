@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class ReloadSettingCommand : CommandElement
     {
         public ReloadSettingCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Other");
+            this.Group = TextResources.GetString("CommandGroup.Other");
             this.IsShowMessage = false;
         }
 

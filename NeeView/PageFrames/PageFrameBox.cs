@@ -18,6 +18,7 @@ using NeeView.Collections.Generic;
 using NeeView.ComponentModel;
 using NeeView.Effects;
 using NeeView.Maths;
+using NeeView.Properties;
 using NeeView.Windows;
 
 namespace NeeView.PageFrames
@@ -1075,8 +1076,8 @@ namespace NeeView.PageFrames
         private void ShowMoveFolderPageMessage(int index, LinkedListDirection direction, bool isShowMessage)
         {
             var terminateMessage = direction == LinkedListDirection.Previous
-                ? Properties.TextResources.GetString("Notice.FirstFolderPage")
-                : Properties.TextResources.GetString("Notice.LastFolderPage");
+                ? TextResources.GetString("Notice.FirstFolderPage")
+                : TextResources.GetString("Notice.LastFolderPage");
 
             if (index < 0)
             {
@@ -1087,7 +1088,7 @@ namespace NeeView.PageFrames
                 var directory = _bookContext.Book.Pages[index].GetSmartDirectoryName();
                 if (string.IsNullOrEmpty(directory))
                 {
-                    directory = ResourceService.GetString("@Word.RootDirectory");
+                    directory = TextResources.GetString("Word.RootDirectory");
                 }
                 InfoMessage.Current.SetMessage(InfoMessageType.Notify, directory);
             }

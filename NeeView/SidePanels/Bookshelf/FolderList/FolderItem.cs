@@ -2,6 +2,7 @@
 using NeeLaboratory.IO;
 using NeeLaboratory.IO.Search;
 using NeeView.Collections;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -596,7 +597,7 @@ namespace NeeView
             var note = order switch
             {
                 FolderOrder.FileType or FolderOrder.FileTypeDescending
-                    => GetLastWriteTimeString() + (IsDirectoryMaybe() ? Properties.TextResources.GetString("Word.Folder") : LoosePath.GetExtension(Name)),
+                    => GetLastWriteTimeString() + (IsDirectoryMaybe() ? TextResources.GetString("Word.Folder") : LoosePath.GetExtension(Name)),
                 FolderOrder.Path or FolderOrder.PathDescending
                     => SidePanelProfile.GetDecoratePlaceName(LoosePath.GetDirectoryName(TargetPath.SimplePath)),
                 _

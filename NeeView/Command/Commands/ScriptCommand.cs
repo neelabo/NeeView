@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -50,7 +51,7 @@ namespace NeeView
             _path = path;
             _sourceMap = sourceMap ?? throw new ArgumentNullException(nameof(sourceMap));
 
-            this.Group = Properties.TextResources.GetString("CommandGroup.Script");
+            this.Group = TextResources.GetString("CommandGroup.Script");
             this.Text = LoosePath.GetFileNameWithoutExtension(_path);
 
             this.ParameterSource = new CommandParameterSource(new ScriptCommandParameter(), new ScriptCommandParameterDecorator(path, sourceMap));

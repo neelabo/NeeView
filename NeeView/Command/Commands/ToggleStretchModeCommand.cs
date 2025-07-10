@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeView.Properties;
 using System;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -10,7 +11,7 @@ namespace NeeView
     {
         public ToggleStretchModeCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.ImageScale");
+            this.Group = TextResources.GetString("CommandGroup.ImageScale");
             this.ShortCutKey = new ShortcutKey("LeftButton+WheelDown");
             this.IsShowMessage = true;
 

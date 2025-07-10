@@ -11,7 +11,7 @@ namespace NeeView
             _node = node;
         }
 
-        [WordNodeMember(AltName = "@Word.Name")]
+        [WordNodeMember(AltName = "Word.Name")]
         public string Name
         {
             get { return _node.DisplayName; }

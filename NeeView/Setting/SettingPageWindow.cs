@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.Windows.Input;
+using NeeView.Properties;
 using NeeView.Windows.Property;
 using System;
 using System.Collections.Generic;
@@ -43,7 +44,7 @@ namespace NeeView.Setting
     /// </summary>
     public class SettingPageWindow : SettingPage
     {
-        public SettingPageWindow() : base(Properties.TextResources.GetString("SettingPage.Window"))
+        public SettingPageWindow() : base(TextResources.GetString("SettingPage.Window"))
         {
             this.Children = new List<SettingPage>
             {
@@ -53,7 +54,7 @@ namespace NeeView.Setting
 
             this.Items = new List<SettingItem>();
 
-            var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.Window.Theme"));
+            var section = new SettingItemSection(TextResources.GetString("SettingPage.Window.Theme"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(ThemeManager.Current, nameof(ThemeManager.SelectedItem), new PropertyMemberElementOptions()
             {
                 GetStringMapFunc = ThemeManager.CreateItemsMap
@@ -61,16 +62,16 @@ namespace NeeView.Setting
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Theme, nameof(ThemeConfig.CustomThemeFolder)))
             {
                 IsStretch = true,
-                SubContent = UIElementTools.CreateHyperlink(Properties.TextResources.GetString("SettingPage.Window.Theme.OpenCustomThemeFolder"), OpenCustomThemeFolder),
+                SubContent = UIElementTools.CreateHyperlink(TextResources.GetString("SettingPage.Window.Theme.OpenCustomThemeFolder"), OpenCustomThemeFolder),
             });
             this.Items.Add(section);
 
-            section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.Window.Background"));
+            section = new SettingItemSection(TextResources.GetString("SettingPage.Window.Background"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Background, nameof(BackgroundConfig.CustomBackground)),
                 new BackgroundSettingControl(Config.Current.Background.CustomBackground)));
             this.Items.Add(section);
 
-            section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.Window.Advance"));
+            section = new SettingItemSection(TextResources.GetString("SettingPage.Window.Advance"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.MenuBar, nameof(MenuBarConfig.IsHamburgerMenu))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Window, nameof(WindowConfig.IsCaptionEmulateInFullScreen))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Window, nameof(WindowConfig.MouseActivateAndEat))));
@@ -99,11 +100,11 @@ namespace NeeView.Setting
     /// </summary>
     public class SettingPageFonts : SettingPage
     {
-        public SettingPageFonts() : base(Properties.TextResources.GetString("SettingPage.Fonts"))
+        public SettingPageFonts() : base(TextResources.GetString("SettingPage.Fonts"))
         {
             this.Items = new List<SettingItem>();
 
-            var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.Fonts"));
+            var section = new SettingItemSection(TextResources.GetString("SettingPage.Fonts"));
             section.Children.Add(new SettingItemPropertyFont(PropertyMemberElement.Create(Config.Current.Fonts, nameof(FontsConfig.FontName))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Fonts, nameof(FontsConfig.FontScale))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Fonts, nameof(FontsConfig.MenuFontScale))));
@@ -119,13 +120,13 @@ namespace NeeView.Setting
     /// </summary>
     public class SettingPageWindowTitle : SettingPage
     {
-        public SettingPageWindowTitle() : base(Properties.TextResources.GetString("SettingPage.WindowTitle"))
+        public SettingPageWindowTitle() : base(TextResources.GetString("SettingPage.WindowTitle"))
         {
-            var section = new SettingItemSection(Properties.TextResources.GetString("SettingPage.WindowTitle"));
+            var section = new SettingItemSection(TextResources.GetString("SettingPage.WindowTitle"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.WindowTitle, nameof(WindowTitleConfig.WindowTitleFormat1))) { IsStretch = true });
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.WindowTitle, nameof(WindowTitleConfig.WindowTitleFormat2))) { IsStretch = true });
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.WindowTitle, nameof(WindowTitleConfig.WindowTitleFormatMedia))) { IsStretch = true });
-            section.Children.Add(new SettingItemNote(Properties.TextResources.GetString("SettingPage.WindowTitle.Note"), Properties.TextResources.GetString("SettingPage.WindowTitle.Note.Title")));
+            section.Children.Add(new SettingItemNote(TextResources.GetString("SettingPage.WindowTitle.Note"), TextResources.GetString("SettingPage.WindowTitle.Note.Title")));
 
             this.Items = new List<SettingItem>() { section };
         }

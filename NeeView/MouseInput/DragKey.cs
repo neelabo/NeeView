@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using NeeView.Properties;
 
 namespace NeeView
 {
@@ -144,13 +145,13 @@ namespace NeeView
                     continue;
                 }
 
-                throw new NotSupportedException(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("NotSupportedKeyException.Message"), source, "DragKey"));
+                throw new NotSupportedException(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("NotSupportedKeyException.Message"), source, "DragKey"));
             }
 
             //
             if (mouseButtonBits == MouseButtonBits.None)
             {
-                throw new NotSupportedException(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("NotSupportedKeyException.Message"), source, "DragKey"));
+                throw new NotSupportedException(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("NotSupportedKeyException.Message"), source, "DragKey"));
             }
 
             return new DragKey(mouseButtonBits, modifierKeys);

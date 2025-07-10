@@ -297,7 +297,7 @@ namespace NeeView
             InputGestureDisplayString.Initialize(TextResources.Resource);
 
             // 開発用：テキストリソース検証
-            //ResourceService.ValidateAllCultures();
+            //TextResources.ValidateAllCultures();
         }
 
         /// <summary>
@@ -305,7 +305,7 @@ namespace NeeView
         /// </summary>
         private void InitializeHtmlNode()
         {
-            HtmlNode.DefaultTextEvaluator = ResourceService.ReplaceFallback;
+            HtmlNode.DefaultTextEvaluator = e => TextResources.Replace(e, true);
         }
 
         /// <summary>

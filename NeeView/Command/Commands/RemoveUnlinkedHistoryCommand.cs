@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using NeeView.Properties;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NeeView
@@ -7,7 +8,7 @@ namespace NeeView
     {
         public RemoveUnlinkedHistoryCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.File");
+            this.Group = TextResources.GetString("CommandGroup.File");
             this.IsShowMessage = true;
         }
 

@@ -91,22 +91,22 @@ namespace NeeView
             public override ContextMenu Create()
             {
                 var menu = new ContextMenu();
-                menu.Items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleList"), PanelListItemStyle.Normal));
-                menu.Items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleContent"), PanelListItemStyle.Content));
-                menu.Items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleBanner"), PanelListItemStyle.Banner));
-                menu.Items.Add(CreateListItemStyleMenuItem(Properties.TextResources.GetString("Word.StyleThumbnail"), PanelListItemStyle.Thumbnail));
+                menu.Items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleList"), PanelListItemStyle.Normal));
+                menu.Items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleContent"), PanelListItemStyle.Content));
+                menu.Items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleBanner"), PanelListItemStyle.Banner));
+                menu.Items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleThumbnail"), PanelListItemStyle.Thumbnail));
                 menu.Items.Add(new Separator());
-                menu.Items.Add(CreateCheckMenuItem(Properties.TextResources.GetString("Menu.GroupBy"), new Binding(nameof(PlaylistConfig.IsGroupBy)) { Source = Config.Current.Playlist }));
-                menu.Items.Add(CreateCheckMenuItem(Properties.TextResources.GetString("Playlist.MoreMenu.CurrentBook"), new Binding(nameof(PlaylistConfig.IsCurrentBookFilterEnabled)) { Source = Config.Current.Playlist }));
+                menu.Items.Add(CreateCheckMenuItem(TextResources.GetString("Menu.GroupBy"), new Binding(nameof(PlaylistConfig.IsGroupBy)) { Source = Config.Current.Playlist }));
+                menu.Items.Add(CreateCheckMenuItem(TextResources.GetString("Playlist.MoreMenu.CurrentBook"), new Binding(nameof(PlaylistConfig.IsCurrentBookFilterEnabled)) { Source = Config.Current.Playlist }));
                 menu.Items.Add(new Separator());
-                menu.Items.Add(CreateCommandMenuItem(Properties.TextResources.GetString("Playlist.MoreMenu.New"), _vm.NewCommand));
-                menu.Items.Add(CreateCommandMenuItem(Properties.TextResources.GetString("Playlist.MoreMenu.Open"), _vm.OpenCommand));
-                menu.Items.Add(CreateCommandMenuItem(Properties.TextResources.GetString("Playlist.MoreMenu.Delete"), _vm.DeleteCommand));
-                menu.Items.Add(CreateCommandMenuItem(Properties.TextResources.GetString("Playlist.MoreMenu.Rename"), _vm.RenameCommand));
+                menu.Items.Add(CreateCommandMenuItem(TextResources.GetString("Playlist.MoreMenu.New"), _vm.NewCommand));
+                menu.Items.Add(CreateCommandMenuItem(TextResources.GetString("Playlist.MoreMenu.Open"), _vm.OpenCommand));
+                menu.Items.Add(CreateCommandMenuItem(TextResources.GetString("Playlist.MoreMenu.Delete"), _vm.DeleteCommand));
+                menu.Items.Add(CreateCommandMenuItem(TextResources.GetString("Playlist.MoreMenu.Rename"), _vm.RenameCommand));
                 menu.Items.Add(new Separator());
-                menu.Items.Add(CreateCommandMenuItem(Properties.TextResources.GetString("Playlist.MoreMenu.DeleteInvalid"), _vm.DeleteInvalidItemsCommand));
+                menu.Items.Add(CreateCommandMenuItem(TextResources.GetString("Playlist.MoreMenu.DeleteInvalid"), _vm.DeleteInvalidItemsCommand));
                 menu.Items.Add(new Separator());
-                menu.Items.Add(CreateCommandMenuItem(Properties.TextResources.GetString("Playlist.MoreMenu.OpenAsBook"), _vm.OpenAsBookCommand));
+                menu.Items.Add(CreateCommandMenuItem(TextResources.GetString("Playlist.MoreMenu.OpenAsBook"), _vm.OpenAsBookCommand));
 
                 return menu;
             }

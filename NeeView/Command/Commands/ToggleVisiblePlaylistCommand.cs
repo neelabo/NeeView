@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 
@@ -9,7 +10,7 @@ namespace NeeView
     {
         public ToggleVisiblePlaylistCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Panel");
+            this.Group = TextResources.GetString("CommandGroup.Panel");
             this.ShortCutKey = new ShortcutKey("M");
             this.IsShowMessage = false;
         }
@@ -21,10 +22,10 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return SidePanelFrame.Current.IsVisiblePlaylist ? Properties.TextResources.GetString("ToggleVisiblePlaylistCommand.Off") : Properties.TextResources.GetString("ToggleVisiblePlaylistCommand.On");
+            return SidePanelFrame.Current.IsVisiblePlaylist ? TextResources.GetString("ToggleVisiblePlaylistCommand.Off") : TextResources.GetString("ToggleVisiblePlaylistCommand.On");
         }
 
-        [MethodArgument("@ToggleCommand.Execute.Remarks")]
+        [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
             if (e.Args.Length > 0)

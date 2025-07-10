@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using NeeView.Properties;
 using NeeView.Windows.Property;
 using System;
 using System.Collections.Generic;
@@ -96,16 +97,20 @@ namespace NeeView
         {
             if (!IsEnabled) return;
 
-            var s = GetSubKey(_keyFile, null);
-            if (s != GetMenuLabel())
+            var oldLabel = GetSubKey(_keyFile, null);
+            var newLabel = GetMenuLabel();
+
+            if (oldLabel != newLabel)
             {
-                Create();
+                UpdateSubKey(_keyFile, newLabel);
+                UpdateSubKey(_keyDirectory, newLabel);
+                UpdateSubKey(_keyDirectoryBackground, newLabel);
             }
         }
 
         private string GetMenuLabel()
         {
-            return Properties.TextResources.GetStringRaw("ExplorerContextMenu.OpenInNeeView") ?? "Nee&View";
+            return TextResources.GetString("ExplorerContextMenu.OpenInNeeView", false) ?? "Nee&View";
         }
 
         private bool IsExistSubKey(string keyName)
@@ -134,6 +139,21 @@ namespace NeeView
                 using (var reg = _root.CreateSubKey(key + @"\command"))
                 {
                     reg.SetValue(null, command);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        }
+
+        private void UpdateSubKey(string key, string label)
+        {
+            try
+            {
+                using (var reg = _root.CreateSubKey(key, true))
+                {
+                    reg.SetValue(null, label);
                 }
             }
             catch (Exception ex)

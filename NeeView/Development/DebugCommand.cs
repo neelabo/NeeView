@@ -1,4 +1,5 @@
 ﻿using NeeView.Data;
+using NeeView.Properties;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -27,11 +28,11 @@ namespace NeeView
         {
             try
             {
-                var culture = Properties.TextResources.Culture.Name.ToLower();
+                var culture = TextResources.Culture.Name.ToLower();
                 if (culture == "ja") culture = "ja-jp";
                 if (culture == "en") culture = "en-us";
 
-                Properties.TextResources.Resource.SetItem("_VersionTag", $"<p>Version {Environment.ApplicationVersion}</p>");
+                TextResources.Resource.SetItem("_VersionTag", $"<p>Version {Environment.ApplicationVersion}</p>");
 
                 var optionMap = new OptionMap<CommandLineOption>();
                 var markdown = optionMap.GetCommandLineHelpMarkdown(true);

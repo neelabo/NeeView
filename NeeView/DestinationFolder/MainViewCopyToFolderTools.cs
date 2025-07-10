@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.Generators;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,7 +22,7 @@ namespace NeeView
 
         public static MenuItem CreateCopyToFolderItem(ICommandParameterFactory<DestinationFolder> parameterFactory)
         {
-            var menuItem = DestinationFolderCollectionUtility.CreateDestinationFolderItem(ResourceService.GetString("@CopyToFolderAsCommand.Menu"), true, _command, _dialogCommand, parameterFactory);
+            var menuItem = DestinationFolderCollectionUtility.CreateDestinationFolderItem(TextResources.GetString("CopyToFolderAsCommand.Menu"), true, _command, _dialogCommand, parameterFactory);
             menuItem.SetBinding(MenuItem.IsEnabledProperty, new Binding(nameof(ViewPageBindingSource.AnyViewPages)) { Source = ViewPageBindingSource.Default });
             menuItem.SubmenuOpened += (s, e) => UpdateCopyToFolderMenu(menuItem.Items, parameterFactory);
             return menuItem;

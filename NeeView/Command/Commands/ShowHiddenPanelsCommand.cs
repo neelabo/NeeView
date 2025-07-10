@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class ShowHiddenPanelsCommand : CommandElement
     {
         public ShowHiddenPanelsCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Window");
+            this.Group = TextResources.GetString("CommandGroup.Window");
             this.TouchGesture = new TouchGesture("TouchCenter");
             this.IsShowMessage = false;
         }

@@ -1,4 +1,6 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class NextPlaylistCommand : CommandElement
     {
@@ -12,14 +14,14 @@
         {
             _offset = offset;
 
-            this.Group = Properties.TextResources.GetString("CommandGroup.Playlist");
+            this.Group = TextResources.GetString("CommandGroup.Playlist");
             this.IsShowMessage = true;
         }
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
             var path = PlaylistHub.Current.GetNextPlaylist(_offset);
-            return ResourceService.GetString("@Word.Playlist") + " - " + LoosePath.GetFileNameWithoutExtension(path);
+            return TextResources.GetString("Word.Playlist") + " - " + LoosePath.GetFileNameWithoutExtension(path);
         }
 
         public override bool CanExecute(object? sender, CommandContext e)

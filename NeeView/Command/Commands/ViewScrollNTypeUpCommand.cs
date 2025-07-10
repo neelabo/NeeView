@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class ViewScrollNTypeUpCommand : CommandElement
     {
         public ViewScrollNTypeUpCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.ViewManipulation");
+            this.Group = TextResources.GetString("CommandGroup.ViewManipulation");
             this.IsShowMessage = false;
 
             this.ParameterSource = new CommandParameterSource(new ViewScrollNTypeCommandParameter());

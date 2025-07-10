@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Globalization;
 using System.Reflection;
 
@@ -49,10 +50,10 @@ namespace NeeView
         {
             if (obsolete is null) return null;
 
-            var message = string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("ScriptErrorMessage.Obsolete"), name);
+            var message = string.Format(CultureInfo.InvariantCulture, TextResources.GetString("ScriptErrorMessage.Obsolete"), name);
             if (alternative?.Alternative != null)
             {
-                message += " " + string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("ScriptErrorMessage.Alternative"), alternative.Alternative);
+                message += " " + string.Format(CultureInfo.InvariantCulture, TextResources.GetString("ScriptErrorMessage.Alternative"), alternative.Alternative);
             }
 
             return message;

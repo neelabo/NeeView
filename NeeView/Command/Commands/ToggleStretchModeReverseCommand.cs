@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class ToggleStretchModeReverseCommand : CommandElement
     {
         public ToggleStretchModeReverseCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.ImageScale");
+            this.Group = TextResources.GetString("CommandGroup.ImageScale");
             this.ShortCutKey = new ShortcutKey("LeftButton+WheelUp");
             this.IsShowMessage = true;
 

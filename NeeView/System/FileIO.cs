@@ -1,6 +1,7 @@
 ﻿using NeeLaboratory.Linq;
 using NeeView.Interop;
 using NeeView.IO;
+using NeeView.Properties;
 using NeeView.Windows;
 using System;
 using System.Collections.Generic;
@@ -563,7 +564,7 @@ namespace NeeView
             {
                 if (showConfirmDialog)
                 {
-                    var dialog = new MessageDialog(Properties.TextResources.GetString("FileRenameWrongDialog.Message"), Properties.TextResources.GetString("FileRenameErrorDialog.Title"));
+                    var dialog = new MessageDialog(TextResources.GetString("FileRenameWrongDialog.Message"), TextResources.GetString("FileRenameErrorDialog.Title"));
                     dialog.ShowDialog();
                 }
                 return null;
@@ -577,7 +578,7 @@ namespace NeeView
                 if (showConfirmDialog)
                 {
                     var invalids = string.Join(" ", newName.Where(e => invalidChars.Contains(e)).Distinct());
-                    var dialog = new MessageDialog($"{Properties.TextResources.GetString("FileRenameInvalidDialog.Message")}\n\n{invalids}", Properties.TextResources.GetString("FileRenameErrorDialog.Title"));
+                    var dialog = new MessageDialog($"{TextResources.GetString("FileRenameInvalidDialog.Message")}\n\n{invalids}", TextResources.GetString("FileRenameErrorDialog.Title"));
                     dialog.ShowDialog();
                 }
                 return null;
@@ -589,7 +590,7 @@ namespace NeeView
             {
                 if (showConfirmDialog)
                 {
-                    var dialog = new MessageDialog($"{Properties.TextResources.GetString("FileRenameWrongDeviceDialog.Message")}\n\n{match.Groups[1].Value.ToUpperInvariant()}", Properties.TextResources.GetString("FileRenameErrorDialog.Title"));
+                    var dialog = new MessageDialog($"{TextResources.GetString("FileRenameWrongDeviceDialog.Message")}\n\n{match.Groups[1].Value.ToUpperInvariant()}", TextResources.GetString("FileRenameErrorDialog.Title"));
                     dialog.ShowDialog();
                 }
                 return null;
@@ -611,7 +612,7 @@ namespace NeeView
                 {
                     if (showConfirmDialog)
                     {
-                        var dialog = new MessageDialog(Properties.TextResources.GetString("FileRenameExtensionDialog.Message"), Properties.TextResources.GetString("FileRenameExtensionDialog.Title"));
+                        var dialog = new MessageDialog(TextResources.GetString("FileRenameExtensionDialog.Message"), TextResources.GetString("FileRenameExtensionDialog.Title"));
                         dialog.Commands.Add(UICommands.Yes);
                         dialog.Commands.Add(UICommands.No);
                         var answer = dialog.ShowDialog();
@@ -647,8 +648,8 @@ namespace NeeView
                 // 確認
                 if (showConfirmDialog)
                 {
-                    var dialog = new MessageDialog(string.Format(CultureInfo.InvariantCulture, Properties.TextResources.GetString("FileRenameConflictDialog.Message"), Path.GetFileName(dstBase), Path.GetFileName(dst)), Properties.TextResources.GetString("FileRenameConflictDialog.Title"));
-                    dialog.Commands.Add(new UICommand("@Word.Rename"));
+                    var dialog = new MessageDialog(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("FileRenameConflictDialog.Message"), Path.GetFileName(dstBase), Path.GetFileName(dst)), TextResources.GetString("FileRenameConflictDialog.Title"));
+                    dialog.Commands.Add(new UICommand("Word.Rename"));
                     dialog.Commands.Add(UICommands.Cancel);
                     var answer = dialog.ShowDialog();
                     if (answer.Command != dialog.Commands[0])
@@ -695,7 +696,7 @@ namespace NeeView
                     MessageDialogResult? answer = null;
                     AppDispatcher.Invoke(() =>
                     {
-                        var retryConfirm = new MessageDialog($"{Properties.TextResources.GetString("FileRenameFailedDialog.Message")}\n\n{ex.Message}", Properties.TextResources.GetString("FileRenameFailedDialog.Title"));
+                        var retryConfirm = new MessageDialog($"{TextResources.GetString("FileRenameFailedDialog.Message")}\n\n{ex.Message}", TextResources.GetString("FileRenameFailedDialog.Title"));
                         retryConfirm.Commands.Add(UICommands.Retry);
                         retryConfirm.Commands.Add(UICommands.Cancel);
                         answer = retryConfirm.ShowDialog();

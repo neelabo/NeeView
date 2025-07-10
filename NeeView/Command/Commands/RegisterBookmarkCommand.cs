@@ -1,10 +1,12 @@
-﻿namespace NeeView
+﻿using NeeView.Properties;
+
+namespace NeeView
 {
     public class RegisterBookmarkCommand : CommandElement
     {
         public RegisterBookmarkCommand()
         {
-            this.Group = Properties.TextResources.GetString("CommandGroup.Bookmark");
+            this.Group = TextResources.GetString("CommandGroup.Bookmark");
             this.IsShowMessage = false;
         }
 
