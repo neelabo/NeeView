@@ -144,35 +144,12 @@ namespace NeeView.PageFrames
             return _math.GetWidth(container.Rect) + _context.FrameMargin;
         }
 
-#if false
-        public void UpdateContainer(LinkedListNode<PageFrameContainer> node)
-        {
-            if (node.Value.Content is not PageFrameContent) return;
-            if (!node.Value.IsDirty) return;
-
-            var direction = GetContainerDirection(node);
-            var position = node.Value.FrameRange.Top(direction.ToSign());
-
-            var newer = _containers.EnsureLatestContainerNode(position, direction);
-            Debug.Assert(newer is not null && newer.Value.CompareTo(node.Value) == 0);
-        }
-
-        // TODO: これアンカー実装では？
-        private LinkedListDirection GetContainerDirection(LinkedListNode<PageFrameContainer> node)
-        {
-            return node == _containers.Anchor.Node
-                ? _containers.Anchor.Direction
-                : node.Value.Identifier < _containers.Anchor.Container.Identifier ? LinkedListDirection.Previous : LinkedListDirection.Next;
-        }
-#endif
-
 
         /// <summary>
         /// [inner class] 余白データ
         /// </summary>
         /// <param name="Previous"></param>
         /// <param name="Next"></param>
-
         private record struct BlankSpace(double Previous, double Next)
         {
             public readonly double GetSpace(LinkedListDirection direction)

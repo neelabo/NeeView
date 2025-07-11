@@ -207,20 +207,6 @@ namespace NeeView
 
             await Task.CompletedTask;
             throw new NotImplementedException();
-
-#if false
-            //from PlaylistListBoxViewModel.Rename();
-
-            if (!IsEditable) return false;
-            if (this.Name == name) return false;
-
-            var oldName = this.Name;
-            this.Name = name;
-            ItemRenamed?.Invoke(this, new PlaylistItemRenamedEventArgs(item, oldName));
-            _isDirty = true;
-
-            return await Task.FromResult(true);
-#endif
         }
     }
 }

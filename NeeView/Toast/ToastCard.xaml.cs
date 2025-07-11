@@ -48,16 +48,6 @@ namespace NeeView
         public Toast Toast
         {
             get { return _toast; }
-#if false
-            private set
-            {
-                if (_toast != value)
-                {
-                    _toast = value;
-                    Refresh();
-                }
-            }
-#endif
         }
 
         public bool IsCanceled { get; set; }

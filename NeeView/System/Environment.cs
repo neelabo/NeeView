@@ -538,19 +538,6 @@ namespace NeeView
         {
             var myDocuments = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
             return string.IsNullOrEmpty(myDocuments) ? "" : System.IO.Path.Combine(myDocuments, CompanyName, SolutionName);
-
-#if false
-            if (string.IsNullOrEmpty(myDocuments))
-            {
-                myDocuments = LoosePath.TrimDirectoryEnd(System.Environment.GetEnvironmentVariable("SystemDrive"));
-            }
-            if (string.IsNullOrEmpty(myDocuments))
-            {
-                myDocuments = @"C:\";
-            }
-
-            return System.IO.Path.Combine(myDocuments, CompanyName, SolutionName);
-#endif
         }
 
         /// <summary>

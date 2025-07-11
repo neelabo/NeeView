@@ -8,22 +8,9 @@ namespace NeeView.PageFrames
 {
     public class TerminalPageFrameContent : DummyPageFrameContent
     {
-        //private Rectangle _rectangle;
-
         public TerminalPageFrameContent(PageRange frameRange, PageFrameActivity activity) : base(activity)
         {
             FrameRange = frameRange;
-
-#if false
-            // [DEV]
-            _rectangle = new Rectangle()
-            {
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-                Fill = Brushes.Red,
-                Margin = new Thickness(-2.0),
-            };
-#endif
         }
 
         public override FrameworkElement? Content => null;

@@ -32,8 +32,8 @@ namespace NeeView.Native
             [return: MarshalAs(UnmanagedType.I1)]
             internal static extern bool NVGetFullPathFromShortcut([MarshalAs(UnmanagedType.LPWStr)] string shortcut, StringBuilder fullPath);
 
-
-#if false // FPU設定のテスト用
+            // NOTE: FPU設定のテスト用
+#if false 
             [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
             public extern static uint _controlfp(uint newcw, uint mask);
 

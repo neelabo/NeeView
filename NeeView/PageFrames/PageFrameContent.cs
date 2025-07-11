@@ -433,17 +433,6 @@ namespace NeeView.PageFrames
             _baseScaleTransform.ScaleChanged -= ViewBaseScaleTransform_ScaleChanged;
         }
 
-
-#if false
-        private double GetRenderScale()
-        {
-            // TODO: DPIスケール変更で更新されるように
-            // TODO: DPIスケールをRenderScaleに適用
-            var dpiScaleX = _staticFrame.DpiScale.DpiScaleX;
-            return _transform.Scale * _loupeContext.Scale * dpiScaleX;
-        }
-#endif
-
         private void ViewTransform_TransformChanged(object? sender, TransformChangedEventArgs e)
         {
             if (e.Action == TransformAction.Scale || e.Action == TransformAction.Angle)

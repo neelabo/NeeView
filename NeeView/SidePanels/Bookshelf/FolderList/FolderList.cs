@@ -710,13 +710,6 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
-#if false
-            if (IsLocked)
-            {
-                return;
-            }
-#endif
-
             // TODO: 
             var parent = new QueryPath(e.Parent);
             var path = new QueryPath(e.Path);

@@ -226,8 +226,8 @@ namespace NeeView
         // 起動時処理
         public void Loaded()
         {
-            // 必要であればエクスプローラーメニューを更新
-            // NOTE: 都度追従させるほどではないので、無効化している
+            // NOTE: 必要であればエクスプローラーメニューを更新
+            // NOTE: 都度追従させるほどではないので、無効化して様子を見る
 #if false
             if (App.Current.Option.Language is null)
             {

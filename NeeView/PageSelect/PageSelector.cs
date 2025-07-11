@@ -42,11 +42,6 @@ namespace NeeView
         [Subscribable]
         public event EventHandler? SelectionChanged;
 
-#if false
-        [Subscribable]
-        public event EventHandler<ViewContentsChangedEventArgs>? ViewContentsChanged;
-#endif
-
         [Subscribable]
         public event EventHandler<SelectedPagesChangedEventArgs>? SelectedPagesChanged;
 
@@ -169,47 +164,7 @@ namespace NeeView
             return indexes.Where(e => book.Pages.IsValidIndex(e)).Select(e => book.Pages[e]).ToList();
         }
 
-#if false
-        private void RaiseViewContentsChanged(object? sender, ViewContentSourceCollection? viewPageCollection, bool isBookOpen)
-        {
-            if (viewPageCollection is null) return;
-
-            var contents = viewPageCollection.Collection;
-            if (contents == null) return;
-
-            ViewContentsChanged?.Invoke(sender, new ViewContentsChangedEventArgs(viewPageCollection, isBookOpen));
-
-            var mainContent = contents.Count > 0 ? (contents.First().PagePart.Position < contents.Last().PagePart.Position ? contents.First() : contents.Last()) : null;
-            if (mainContent != null)
-            {
-                SetSelectedIndex(sender, mainContent.Page.Index, false);
-                SelectionChanged?.Invoke(sender, EventArgs.Empty);
-            }
-        }
-#endif
     }
 
-
-#if false
-    // 表示コンテンツ変更イベント
-    public class ViewContentsChangedEventArgs : EventArgs
-    {
-        public ViewContentsChangedEventArgs(ViewContentSourceCollection viewPageCollection, bool isBookOpen)
-        {
-            ViewPageCollection = viewPageCollection;
-            IsBookOpen = isBookOpen;
-        }
-
-        /// <summary>
-        /// 表示コンテンツ
-        /// </summary>
-        public ViewContentSourceCollection ViewPageCollection { get; private set; }
-
-        /// <summary>
-        /// 本を新しく開いたとき
-        /// </summary>
-        public bool IsBookOpen { get; private set; }
-    }
-#endif
 }
 

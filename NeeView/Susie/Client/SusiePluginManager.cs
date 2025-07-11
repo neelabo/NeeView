@@ -99,8 +99,9 @@ namespace NeeView
 
             UpdateSusiePluginCollection();
 
+
+            // NOTE: 開発用 Susie.IsEnable ON/OFF Loop
 #if false
-            // [DEBUG] Susie.IsEnable ON/OFF Loop
             Task.Run(async () =>
             {
                 while (true)

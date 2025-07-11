@@ -106,24 +106,6 @@ namespace NeeView
             base.Dispose(disposing);
         }
 
-
-#if false
-        private void SourceProvider_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (_disposedValue) return;
-            if (string.IsNullOrEmpty(e.PropertyName) || e.PropertyName == nameof(VlcVideoSourceProvider.VideoSource))
-            {
-                _videoBrush.ImageSource = _player.SourceProvider.VideoSource;
-
-                if (!_imageInitialized)
-                {
-                    _imageInitialized = true;
-                    UpdateBitmapScalingMode();
-                }
-            }
-        }
-#endif
-
         private void ContentSize_SizeChanged(object? sender, ViewContentSizeChangedEventArgs e)
         {
             UpdateBitmapScalingMode();

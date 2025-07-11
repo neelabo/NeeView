@@ -44,22 +44,6 @@ namespace NeeView
                 buff = stream.ToArray(0, (int)entry.Length);
             }
 
-#if false
-            byte[] buff;
-            var rawData = entry.GetRawData();
-            if (rawData != null)
-            {
-                ////Debug.WriteLine($"SusiePictureStream: {entry.EntryLastName} from RawData");
-                buff = rawData;
-            }
-            else
-            {
-                ////Debug.WriteLine($"SusiePictureStream: {entry.EntryLastName} from Stream");
-                using var stream = entry.OpenEntry();
-                buff = stream.ToArray(0, (int)entry.Length);
-            }
-#endif
-
             var accessor = SusiePluginManager.Current.GetImagePluginAccessor();
             var isCheckExtension = !Config.Current.Image.Standard.IsAllFileSupported;
             var result = accessor.GetPicture(entry.RawEntryName, buff, isCheckExtension); // TODO: await

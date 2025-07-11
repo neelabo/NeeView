@@ -131,37 +131,5 @@ namespace NeeView.PageFrames
                 && (PageRange.PartSize == 2 ||Direction == other.Direction);
         }
 
-
-#if false
-        public override bool Equals(object? obj)
-        {
-            return Equals(obj as PageSource);
-        }
-
-        public bool Equals(PageSource? other)
-        {
-            return other is not null
-                   && _range.Equals(other._range)
-                   && _isLoaded == other._isLoaded
-                   && _width == other._width
-                   && _height == other._height
-                   && _direction == other._direction;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(_range, _isLoaded, _width, _height, _direction);
-        }
-
-        public static bool operator ==(PageSource? left, PageSource? right)
-        {
-            return EqualityComparer<PageSource>.Default.Equals(left, right);
-        }
-
-        public static bool operator !=(PageSource? left, PageSource? right)
-        {
-            return !(left == right);
-        }
-#endif
     }
 }

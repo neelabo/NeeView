@@ -558,18 +558,7 @@ namespace NeeView
 
             lock (_lock)
             {
-                //_bookmarkPlace.Children.Contains(item);
-
-
-                // Observable なので Move() 命令が使える
                 this.Items.Move(oldIndex, newIndex);
-
-#if false
-                this.Items.Remove(item);
-
-                // TODO: 逆順の挿入位置に対応
-                this.Items.Insert(newIndex, item);
-#endif
             }
 
             CollectionChanged?.Invoke(this, new FolderCollectionChangedEventArgs(CollectionChangeAction.Refresh, item));

@@ -130,14 +130,14 @@ namespace NeeView
             }
         }
 
-#if false
+        // NOTE: SevenZipのテスト用コード
         class SevenZiPTest
         {
             private Dictionary<ArchiveFileInfo, MemoryStream> _map = new Dictionary<ArchiveFileInfo, MemoryStream>();
 
             public void Execute()
             {
-                SevenZipArchive.InitializeLibrary();
+                SevenZipAccessor.InitializeLibrary();
 
                 var path = @"E:\Work\Labo\サンプル\ソリッド圧縮ON.7z";
                 using (var extractor = new SevenZipExtractor(path))
@@ -155,8 +155,6 @@ namespace NeeView
 
                 Debug.WriteLine("done.");
 
-#region NEXT
-
                 using (var extractor = new SevenZipExtractor(path))
                 {
                     var directory = Temporary.Current.CreateCountedTempFileName("arc", "");
@@ -170,8 +168,6 @@ namespace NeeView
                 {
                     Debug.WriteLine($"{e.FileInfo.Index}: {e.FileName}");
                 }
-
-#endregion
             }
 
             private void Extractor_FileExtractionFinished(object? sender, FileInfoEventArgs e)
@@ -202,7 +198,6 @@ namespace NeeView
                 return ms;
             }
         }
-#endif
     }
 
 

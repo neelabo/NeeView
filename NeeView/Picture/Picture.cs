@@ -79,28 +79,6 @@ namespace NeeView
             return HashCode.Combine(Config.Current.ImageResizeFilter, Config.Current.ImageCustomSize);
         }
 
-#if false
-        // Imageが同じサイズであるか判定
-        private bool IsEqualImageSizeMaybe(Size size, bool keepAspectRatio)
-        {
-            if (this.ImageSource is null) return false;
-            if (this.PictureInfo is null) return false;
-
-            size = size.IsEmpty ? this.PictureInfo.Size : size;
-
-            const double margin = 1.1;
-            if (keepAspectRatio)
-            {
-                // アスペクト比固定のため、PixelHeightのみで判定
-                return Math.Abs(size.Height - this.ImageSource.GetPixelHeight()) < margin;
-            }
-            else
-            {
-                return Math.Abs(size.Height - this.ImageSource.GetPixelHeight()) < margin && Math.Abs(size.Width - this.ImageSource.GetPixelWidth()) < margin;
-            }
-        }
-#endif
-
         /// <summary>
         /// 生成済チェック
         /// </summary>
@@ -155,6 +133,7 @@ namespace NeeView
 
             // Debug.WriteLine($"## PDF: {_sizeSource.Size:f2}");
 
+            // NOTE: 開発用パラメータ出力
 #if false
             Debug.WriteLine($"Resize: {this.PictureSource.ArchiveEntry.EntryLastName}");
             var nowSize = new Size(this.PictureInfo.BitmapInfo.PixelWidth, this.PictureInfo.BitmapInfo.PixelHeight);

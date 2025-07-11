@@ -124,13 +124,8 @@ namespace NeeView.PageFrames
 
             _selected = new SelectedContainer(_containers, SelectCenterNode);
             _disposables.Add(_selected);
-#if false
-            _disposables.Add(_selected.SubscribePropertyChanged(nameof(_selected.NextPageRange),
-                (s, e) => _bookContext.SelectedRange = _selected.NextPageRange));
-#else
             _disposables.Add(_selected.SubscribePropertyChanged(nameof(_selected.PageRange),
                 (s, e) => _bookContext.SelectedRange = _selected.PageRange));
-#endif
             _disposables.Add(_selected.SubscribeViewContentChanged(
                  (s, e) => ViewContentChanged?.Invoke(this, e)));
 

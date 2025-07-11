@@ -202,24 +202,4 @@ namespace NeeView
         }
     }
 
-
-
-#if false
-    /// <summary>
-    /// 入力値に-0.5をかけた値にする。
-    /// Canvasのセンタリング計算用
-    /// </summary>
-    public class DoubleToMinusHalf : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (double)value * -0.5;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-#endif
 }

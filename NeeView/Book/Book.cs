@@ -280,27 +280,6 @@ namespace NeeView
             return memento;
         }
 
-#if false
-        // bookに設定を反映させる
-        public void Restore(BookMemento memento)
-        {
-            if (memento == null) return;
-
-            if (_disposedValue) return;
-
-            _setting.PageMode = memento.PageMode;
-            _setting.BookReadOrder = memento.BookReadOrder;
-            _setting.IsSupportedDividePage = memento.IsSupportedDividePage;
-            _setting.IsSupportedSingleFirstPage = memento.IsSupportedSingleFirstPage;
-            _setting.IsSupportedSingleLastPage = memento.IsSupportedSingleLastPage;
-            _setting.IsSupportedWidePage = memento.IsSupportedWidePage;
-            _source.IsRecursiveFolder = memento.IsRecursiveFolder;
-            _source.Pages.SortMode = memento.SortMode;
-            _setting.AutoRotate = memento.AutoRotate;
-            _setting.BaseScale = memento.BaseScale;
-        }
-#endif
-
         #endregion
     }
 

@@ -33,6 +33,7 @@ namespace NeeView
             {
                 token.ThrowIfCancellationRequested();
 
+                // NOTE: 開発テスト用の読み込み処理遅延エミュレート
 #if false
 #if DEBUG
                 if (Debugger.IsAttached)

@@ -239,16 +239,6 @@ namespace NeeView
             this.ViewItems = e.Pages;
         }
 
-#if false
-        private void PageSelector_ViewContentsChanged(object? sender, ViewContentsChangedEventArgs e)
-        {
-            var contents = e?.ViewPageCollection?.Collection;
-            if (contents == null) return;
-
-            this.ViewItems = contents.Where(i => i != null).Select(i => i.Page).OrderBy(i => i.Index).ToList();
-        }
-#endif
-
         private int GetIndexWithDirectionReverse(int value)
         {
             return Math.Max(-1, IsSliderDirectionReversed ? PageSelector.Current.MaxIndex - value : value);

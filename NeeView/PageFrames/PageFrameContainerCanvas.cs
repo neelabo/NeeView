@@ -29,8 +29,8 @@ namespace NeeView.PageFrames
             var containerInitializer = new PageFrameContainerInitializer(this);
             _containers.SetContainerInitializer(containerInitializer);
 
+            // NOTE: 開発用フレームマーカー
 #if false
-            // [DEV]
             var rectangle = new Rectangle()
             {
                 Width = 5,
@@ -43,6 +43,7 @@ namespace NeeView.PageFrames
 
 #endif
 
+            // NOTE: 開発用に背景をチェック模様にして領域を可視化
 #if false
             var grid = new Grid()
             {

@@ -45,24 +45,11 @@ namespace NeeView
         private readonly DisposableCollection _disposables = new();
         private bool _disposedValue = false;
         private readonly DelayAction _delayResume = new();
-        //private readonly RateCollection? _rates;
+
 
         public MediaPlayerOperator(ViewContentMediaPlayer player)
         {
             _player = player;
-            //_player.ScrubbingEnabled = true;
-
-#if false
-            if (_player.RateEnabled)
-            {
-                _rates = new RateCollection();
-                _rates.Value = _player.Rate;
-                _rates.SubscribePropertyChanged(nameof(_rates.Value), (s, e) =>
-                {
-                    _player.Rate = _rates.Value > 0.0 ? _rates.Value : 1.0;
-                });
-            }
-#endif
 
             _player.MediaOpened += Player_MediaOpened;
             _player.MediaEnded += Player_MediaEnded;
@@ -347,17 +334,6 @@ namespace NeeView
             _player.IsActive = true;
             Duration = _player.Duration;
         }
-
-#if false
-        private MediaState GetMediaState(MediaElement myMedia)
-        {
-            FieldInfo hlp = typeof(MediaElement).GetField("_helper", BindingFlags.NonPublic | BindingFlags.Instance);
-            object helperObject = hlp.GetValue(myMedia);
-            FieldInfo stateField = helperObject.GetType().GetField("_currentState", BindingFlags.NonPublic | BindingFlags.Instance);
-            MediaState state = (MediaState)stateField.GetValue(helperObject);
-            return state;
-        }
-#endif
 
         public void Play()
         {

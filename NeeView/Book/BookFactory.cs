@@ -12,7 +12,7 @@ namespace NeeView
 
             var bookSource = await BookSourceFactory.CreateAsync(address, setting, token);
 
-            // メディアブック移動で前のブックに戻ったときにフレーム終端から再生させるためのフラグ設定
+            // NOTE: メディアブック移動で前のブックに戻ったときにフレーム終端から再生させるためのフラグ設定
             // NOTE: 不要な機能と思われるので無効にしておく
 #if false
             if (bookSource.IsMedia)

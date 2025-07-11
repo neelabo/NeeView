@@ -10,18 +10,6 @@ namespace NeeView
         public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return MetadataValueTools.ToDisplayString(value);
-
-#if false
-            if (value is null) return null;
-
-            return value switch
-            {
-                IEnumerable<string> strings => string.Join("; ", strings),
-                DateTime dateTime => dateTime != default ? dateTime.ToString(Config.Current.Information.DateTimeFormat) : null,
-                Enum _ => AliasNameExtensions.GetAliasName(value),
-                _ => value.ToString(),
-            };
-#endif
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

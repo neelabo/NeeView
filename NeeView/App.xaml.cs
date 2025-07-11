@@ -484,7 +484,7 @@ namespace NeeView
         /// <seealso href="https://github.com/microsoft/CsWinRT/issues/1249"/>
         private static void CallProcessTerminator()
         {
-            // 未使用
+            // NOTE: PdfDocument を使用していないので不要
 #if false
             // NOTE: PDFでWinRTのレンダラーを使用している場合のみ機能させる
             if (PdfArchiveConfig.GetPdfRenderer() != PdfRenderer.WinRT) return;

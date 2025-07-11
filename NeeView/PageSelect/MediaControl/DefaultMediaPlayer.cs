@@ -347,8 +347,8 @@ namespace NeeView
             _player.Close();
             IsPlaying = false;
 
-#if false
             // NOTE: 一瞬黒い画像が表示されるのを防ぐために開放タイミングをずらす。今作では不要か？
+#if false
             DelayAction(() =>
             {
                 _player.Close();

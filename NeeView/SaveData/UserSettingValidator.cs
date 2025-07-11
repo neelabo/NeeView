@@ -205,8 +205,9 @@ namespace NeeView
                 }
             }
 
+
+            // NOTE: ver.99 (バージョン変更処理テスト)
 #if false
-            // ver.99 (バージョン変更処理テスト)
             if (self.Format.CompareTo(new FormatVersion(Environment.SolutionName, 99, 0, 0)) < 0)
             {
                 self.Commands?.ValidateRename(CommandNameValidator.RenameMap_99_0_0);
@@ -285,8 +286,8 @@ namespace NeeView
             ["NextPagemarkInBook"] = "NextPlaylistItemInBook",
         };
 
+        // NOTE: バージョン変更処理テスト用
 #if false
-        // バージョン変更処理テスト用
         public static Dictionary<string, string> RenameMap_99_0_0 { get; } = new Dictionary<string, string>()
         {
             ["ExportImageAs"] = "XXX_ExportImageAs",

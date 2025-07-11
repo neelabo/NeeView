@@ -47,8 +47,6 @@ namespace NeeView.Media.Imaging.Metadata
             ////Dump();
         }
 
-
-#if false
         [Conditional("DEBUG")]
         private void Dump()
         {
@@ -68,7 +66,6 @@ namespace NeeView.Media.Imaging.Metadata
                 }
             }
         }
-#endif
 
         public override string GetFormat()
         {
