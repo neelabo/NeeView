@@ -350,7 +350,7 @@ namespace NeeView.Setting
                         if (overlaps.Count > 0)
                         {
                             if (item.ShortCutNote != null) item.ShortCutNote += "\n";
-                            item.ShortCutNote += string.Format(CultureInfo.InvariantCulture, TextResources.GetString("Notice.ConflictWith"), key, TextResources.Join(overlaps));
+                            item.ShortCutNote += string.Format(CultureInfo.InvariantCulture, TextResources.GetString("Notice.ConflictWith"), key.GetDisplayString(), TextResources.Join(overlaps));
                         }
 
                         var element = new GestureElement();

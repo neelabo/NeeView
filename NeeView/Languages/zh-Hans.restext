@@ -19,7 +19,7 @@ _ScriptManual.S1.P3.T51=默认触控操作
 _ScriptManual.S1.P3.T61=默认参数
 _ScriptManual.S2=命令脚本
 _ScriptManual.S2.P1=存放在脚本文件夹中的脚本文件可以作为命令使用。一个文件一个命令。
-_ScriptManual.S2.P1.I1=快捷键可以像普通命令一样在设置的 "命令设置" 中进行设置。
+_ScriptManual.S2.P1.I1=快捷键可以像普通命令一样在设置的 "@SettingPage.Command.Main" 中进行设置。
 _ScriptManual.S2.P1.I2=文件名就是命令名。
 _ScriptManual.S3=事件脚本
 _ScriptManual.S3.P1=具有特定名称的脚本文件将被自动执行。
@@ -58,8 +58,6 @@ _SearchManual.S13.P1.I5=UNICODE 标准化 (NFKC)。(例如: 日语中的 "㌫" �
 _SearchManual.S14=日期时间格式
 _SearchManual.S14.P1=通常以 "2019-04-01" 的格式指定。因为使用了 @Homepage.DotNetDateTime，也可以指定其他格式。
 _SearchManual.S14.P2=注意: 日期 "2019-04-01" 被解释为 "2019-04-01 00:00:00"，因此 "/until 2019-04-01" 不包括 4 月 1 日。
-
-
 _SearchManual.S14.P3=也可以用 "-12days"、"-6months" 和 "-1years" 等格式指定相对日期和时间。"/since -5days" 表示 "过去 5 天内"。
 _SearchManual.S15=数值格式
 _SearchManual.S15.P1=支持整数。
@@ -1279,7 +1277,7 @@ Notice.CannotOpen=无法打开 {0}
 Notice.CannotOpenBookmarkFolder={0} 是一个书签文件夹
 Notice.CannotOpenThisItem=无法打开该项目
 Notice.Conflict=同 {0} 冲突
-Notice.ConflictWith="{0}" 和 {1} 冲突
+Notice.ConflictWith={0} 和 {1} 冲突
 Notice.ContentFailed=读取内容失败
 Notice.DropContent=丢弃的内容
 Notice.FirstFolderPage=起始文件夹
