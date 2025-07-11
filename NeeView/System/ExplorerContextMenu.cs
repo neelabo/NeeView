@@ -110,7 +110,7 @@ namespace NeeView
 
         private string GetMenuLabel()
         {
-            return TextResources.GetString("ExplorerContextMenu.OpenInNeeView", false) ?? "Nee&View";
+            return TextResources.GetString("ExplorerContextMenu.OpenInNeeView", false)?.Replace('_', '&') ?? "Nee&View";
         }
 
         private bool IsExistSubKey(string keyName)

@@ -18,6 +18,11 @@ namespace NeeLaboratory.Resources
         [GeneratedRegex(@"@([a-zA-Z0-9_\.\-#]+[a-zA-Z0-9])")]
         private static partial Regex _keyRegex { get; }
 
+        /// <summary>
+        /// メニュー装飾文字
+        /// </summary>
+        [GeneratedRegex(@"\(_[A-Z]\)|\.\.\.|_")]
+        private static partial Regex _menuLiteralRegex { get; }
 
 
         private readonly ITextResource _resource;
@@ -57,9 +62,29 @@ namespace NeeLaboratory.Resources
                 _wordReplaceCount++;
 
                 var key = m.Groups[1].Value;
+                var deleteMenuLiteral = false;
+
+                // "@#" で始まるキーワードの場合、メニュー装飾文字を削除する
+                if (key[0] == '#')
+                {
+                    deleteMenuLiteral = true;
+                    key = key[1..];
+                }
+
                 var s = _resource.GetResourceString(key)?.String;
+                if (deleteMenuLiteral)
+                {
+                    s = DeleteMenuLiteral(s);
+                }
+
                 return s is not null ? ReplaceCore(s, fallback, depth + 1) : (fallback ? m.Value : "");
             }
+        }
+
+        private static string? DeleteMenuLiteral(string? s)
+        {
+            if (s is null) return null;
+            return _menuLiteralRegex.Replace(s, "");
         }
 
         /// <summary>
