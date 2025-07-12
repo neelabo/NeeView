@@ -24,6 +24,10 @@ namespace NeeView.Windows
 
             // NOTE: SnapLayoutPresenter の WndProc をここで登録。順番によっては WM_NCHITTEST 等のメッセージが受信できなくなるため。
             _snapLayoutPresenter = new SnapLayoutPresenter(_window);
+
+            // 操作無効を伝達
+            _window.IsEnabledChanged += (s, e) => UpdateSnapLayoutEnabled();
+            _window.IsHitTestVisibleChanged += (s, e) => UpdateSnapLayoutEnabled();
         }
 
 
@@ -46,6 +50,11 @@ namespace NeeView.Windows
         public void SetMaximizeButtonSource(IMaximizeButtonSource? maximizeButton)
         {
             _snapLayoutPresenter.SetMaximizeButtonSource(maximizeButton);
+        }
+
+        private void UpdateSnapLayoutEnabled()
+        {
+            _snapLayoutPresenter.IsEnabled = _window.IsEnabled && _window.IsHitTestVisible;
         }
     }
 }

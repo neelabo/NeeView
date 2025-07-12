@@ -34,6 +34,9 @@ namespace NeeView.Windows
         }
 
 
+        public bool IsEnabled { get; set; } = true;
+
+
         /// <summary>
         /// MaximizeButton を登録することで処理が機能します。
         /// </summary>
@@ -65,6 +68,8 @@ namespace NeeView.Windows
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             if (_maximizeButton is null) return IntPtr.Zero;
+
+            if (!IsEnabled) return IntPtr.Zero;
 
             return (WindowMessages)msg switch
             {

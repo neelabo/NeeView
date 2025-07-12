@@ -34,13 +34,24 @@ namespace NeeView
 
             this.Loaded += PrintWindow_Loaded;
             this.Closed += PrintWindow_Closed;
+            this.PreviewKeyDown += PrintWindow_PreviewKeyDown;
             this.KeyDown += PrintWindow_KeyDown;
         }
-
 
         private void PrintWindow_Loaded(object? sender, RoutedEventArgs e)
         {
             this.PrintButton.Focus();
+        }
+
+        private void PrintWindow_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (_vm is null) return;
+
+            // ウィンドウ無効時のキー入力を無効化する
+            if (!_vm.IsEnabled)
+            {
+                e.Handled = true;
+            }
         }
 
         private void PrintWindow_KeyDown(object? sender, KeyEventArgs e)
@@ -52,9 +63,6 @@ namespace NeeView
             }
         }
 
-        /// <summary>
-        /// ウィンドウ終了イベント処理
-        /// </summary>
         private void PrintWindow_Closed(object? sender, EventArgs e)
         {
             _vm?.Closed();

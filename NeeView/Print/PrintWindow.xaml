@@ -7,6 +7,7 @@
         xmlns:properties="clr-namespace:NeeView.Properties"
         xmlns:nvc="clr-namespace:NeeView.Windows.Controls"
         mc:Ignorable="d"
+        IsHitTestVisible="{Binding IsEnabled}"
         Style="{StaticResource ChromeWindowStyle}"
         Title="{properties:TextBinding PrintWindow.Title}" Height="600" Width="800" ResizeMode="CanResizeWithGrip">
 
@@ -143,6 +144,9 @@
                                                     <nvc:EnterTriggerTextBox Text="{Binding Model.Rows}" Margin="2" TabIndex="2" />
                                                 </DockPanel>
                                             </UniformGrid>
+                                            <Button x:Name="ResetButton" Style="{StaticResource IconButton}" HorizontalAlignment="Right" Margin="0,20,0,0" Command="{Binding ResetCommand}">
+                                                <TextBlock Margin="5" Text="{properties:TextBinding Word.Reset}" Foreground="{DynamicResource Control.Accent}" />
+                                            </Button>
                                         </StackPanel>
 
                                     </StackPanel>

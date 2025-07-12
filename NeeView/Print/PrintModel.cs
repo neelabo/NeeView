@@ -43,8 +43,11 @@ namespace NeeView
     /// </summary>
     public class PrintModel : BindableBase
     {
+        // NOTE: アプリ起動中の PrintDialog 設定を維持するため、静的にする
+        private static PrintDialog _printDialog = new PrintDialog();
+        private static bool _printDialogShown = false;
+
         private readonly PrintContext _context;
-        private readonly PrintDialog _printDialog;
         private double _printableAreaWidth;
         private double _printableAreaHeight;
         private PageImageableArea? _area;
@@ -64,16 +67,14 @@ namespace NeeView
         private Margin _margin = new();
 
 
-
         public PrintModel(PrintContext context)
         {
             _context = context;
-            _printDialog = new PrintDialog();
-
-            UpdatePrintDialog();
+            Initialize();
         }
 
 
+        public bool PrintDialogShown => _printDialogShown;
 
         public PageOrientation PageOrientation
         {
@@ -173,6 +174,36 @@ namespace NeeView
         }
 
 
+        /// <summary>
+        /// パラメーター初期化
+        /// </summary>
+        private void Initialize()
+        {
+            // PageOrientation は PrintDialog から取得する
+            PrintMode = PrintMode.View;
+            IsBackground = false;
+            IsDotScale = false;
+            Columns = 1;
+            Rows = 1;
+            HorizontalAlignment = HorizontalAlignment.Center;
+            VerticalAlignment = VerticalAlignment.Center;
+            Margin = new();
+            UpdatePrintDialog();
+        }
+
+        /// <summary>
+        /// 設定リセット
+        /// </summary>
+        /// <remarks>
+        /// PrintDialog を作り直すことでプリンター設定もリセットする
+        /// </remarks>
+        public void ResetDialog()
+        {
+            if (_printDialogShown) return;
+
+            _printDialog = new PrintDialog();
+            Initialize();
+        }
 
         /// <summary>
         /// プリント方向更新
@@ -202,9 +233,19 @@ namespace NeeView
         /// <returns></returns>
         public bool? ShowPrintDialog()
         {
-            var result = _printDialog.ShowDialog();
-            UpdatePrintDialog();
-            return result;
+            if (_printDialogShown) return null;
+            _printDialogShown = true;
+
+            try
+            {
+                var result = _printDialog.ShowDialog();
+                UpdatePrintDialog();
+                return result;
+            }
+            finally
+            {
+                _printDialogShown = false;
+            }
         }
 
         /// <summary>
@@ -511,7 +552,7 @@ namespace NeeView
 
             string GetFileName(ViewContent? content)
             {
-               return LoosePath.GetFileName(content?.Element.Page.EntryName.TrimEnd('\\'));
+                return LoosePath.GetFileName(content?.Element.Page.EntryName.TrimEnd('\\'));
             }
         }
 
@@ -529,7 +570,6 @@ namespace NeeView
                 VerticalAlignment = VerticalAlignment.Center;
                 Margin = new Margin();
             }
-
 
             public PageOrientation PageOrientation { get; set; }
             public PrintMode PrintMode { get; set; }
