@@ -39,6 +39,7 @@ namespace NeeView
         private WidePageStretch _widePageStretch = WidePageStretch.UniformHeight;
         private WidePageVerticalAlignment _widePageVerticalAlignment = WidePageVerticalAlignment.Center;
         private Color _loadingPageColor = Color.FromRgb(0xE0, 0xE0, 0xE0);
+        private int _bookThumbnailDepth = 2;
 
 
         /// <summary>
@@ -259,6 +260,15 @@ namespace NeeView
             set { SetProperty(ref _loadingPageColor, value); }
         }
 
+        /// <summary>
+        /// ブックサムネイル生成時の検索フォルダの最大深度
+        /// </summary>
+        [PropertyRange(1, 4)]
+        public int BookThumbnailDepth
+        {
+            get { return _bookThumbnailDepth; }
+            set { SetProperty(ref _bookThumbnailDepth, Math.Max(value, 1)); }
+        }
 
         #region Obsolete
 

@@ -37,7 +37,8 @@ namespace NeeView
                     return entry;
                 }
 
-                return await ArchiveEntryUtility.CreateFirstImageArchiveEntryAsync(entry, 2, decrypt, token) ?? entry;
+                var depth = Config.Current.Book.BookThumbnailDepth;
+                return await ArchiveEntryUtility.CreateFirstImageArchiveEntryAsync(entry, depth, decrypt, token) ?? entry;
             }
             else
             {
