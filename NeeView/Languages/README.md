@@ -15,6 +15,8 @@ You will be able to select it from “Language” in the settings.
 
 Once you have added or edited the .restext to this folder, please pull request it.
 
+> [!NOTE]  
+> The English version was created using machine translation, so there are likely to be many errors. We welcome requests for corrections.
 
 # .restext format
 
@@ -39,6 +41,9 @@ e.g., "BookAddressInfo.Page={0} pages"
 
 **@Key** specifies a key to be replaced by another resource.  
 e.g., "BookConfig.ContentsSpace=Distance between pages in "@PageMode.WidePage" (pixels)"
+
+**@#Key** specifies a key that will be replaced with another resource and remove menu decoration characters.  
+For example, "@#OpenOptionsWindowCommand.Menu" is "_Settings...", but it is converted to "Settings" with the menu decoration removed.
 
 ## Pattern (optional)
 **Pattern** is a regular expression to select a variation of the expression depending on the argument. Define it only if necessary.
