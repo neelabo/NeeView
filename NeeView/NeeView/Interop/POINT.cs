@@ -16,6 +16,14 @@ namespace NeeView.Interop
             this.y = y;
         }
 
+        public static POINT operator +(POINT pt, POINT sz) => Add(pt, sz);
+
+        public static POINT operator -(POINT pt, POINT sz) => Subtract(pt, sz);
+
+        public static POINT Add(POINT pt, POINT sz) => new POINT(pt.x + sz.x, pt.y + sz.y);
+
+        public static POINT Subtract(POINT pt, POINT sz) => new POINT(pt.x - sz.x, pt.y - sz.y);
+
         public override string ToString()
         {
             return $"(x={x}, y={y})";

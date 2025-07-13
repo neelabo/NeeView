@@ -58,6 +58,10 @@ namespace NeeView.Interop
         internal static extern bool GetCursorPos(out POINT pt);
 
         [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool SetCursorPos(int x, int y);
+
+        [DllImport("user32.dll")]
         internal static extern bool ScreenToClient(IntPtr hwnd, ref POINT pt);
 
         [DllImport("user32.dll")]

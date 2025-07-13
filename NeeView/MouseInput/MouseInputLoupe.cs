@@ -1,5 +1,7 @@
 ﻿using NeeLaboratory;
 using NeeLaboratory.ComponentModel;
+using NeeView.Interop;
+using NeeView.Windows;
 using NeeView.Windows.Property;
 using System;
 using System.ComponentModel;
@@ -20,6 +22,8 @@ namespace NeeView
         private bool _isButtonDown;
         private DragActionProxy _action = new DragActionProxy();
         private LoupeDragTransformContext? _transformContext;
+        private POINT _nativePoint;
+        private POINT _nativeDelta;
 
         // TODO: LoupeDragAction 操作でなくてもここで LoupeDragTransformControl 直接操作でいけそう？
 
@@ -115,11 +119,18 @@ namespace NeeView
 
         public override void OnCaptureOpened(FrameworkElement sender)
         {
+            _nativePoint = CursorInfo.GetNativeCursorPos();
+            _nativeDelta = new();
+
             MouseInputHelper.CaptureMouse(this, sender);
         }
 
         public override void OnCaptureClosed(FrameworkElement sender)
         {
+            _nativePoint += _nativeDelta;
+            _nativeDelta = new();
+            CursorInfo.SetNativeCursorPos(_nativePoint);
+
             MouseInputHelper.ReleaseMouseCapture(this, sender);
         }
 
@@ -186,7 +197,10 @@ namespace NeeView
         /// <param name="e"></param>
         public override void OnMouseMove(object? sender, MouseEventArgs e)
         {
-            var point = e.GetPosition(_context.Sender);
+            _nativeDelta += CursorInfo.GetNativeCursorPos() - _nativePoint;
+            CursorInfo.SetNativeCursorPos(_nativePoint);
+
+            var point = CursorInfo.GetPosition(_nativePoint + _nativeDelta, _context.Sender);
             _action.Execute(ToDragCoord(point), e.Timestamp, DragActionUpdateOptions.None);
             e.Handled = true;
         }
