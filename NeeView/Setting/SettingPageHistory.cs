@@ -32,6 +32,10 @@ namespace NeeView.Setting
             section.Children.Add(new SettingItemIndexValue<TimeSpan>(PropertyMemberElement.Create(Config.Current.History, nameof(HistoryConfig.LimitSpan)), new HistoryLimitSpan(), false));
             this.Items.Add(section);
 
+            section = new SettingItemSection(TextResources.GetString("SettingPage.History.RecentBook"));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.History, nameof(HistoryConfig.RecentBookCount))));
+            this.Items.Add(section);
+
             section = new SettingItemSection(TextResources.GetString("SettingPage.History.PageViewRecord"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.PageViewRecorder, nameof(PageViewRecorderConfig.IsSavePageViewRecord))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.PageViewRecorder, nameof(PageViewRecorderConfig.PageViewRecordFilePath))) { IsStretch = true });

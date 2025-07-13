@@ -438,6 +438,7 @@ SettingPage.History.General=@Word.History
 SettingPage.History.GeneralAdvance=@Word.AdvancedSetting
 SettingPage.History.GeneralBookshelf=@Word.Bookshelf
 SettingPage.History.GeneralGeneral=@Word.History
+SettingPage.History.RecentBook=@LoadRecentBookCommand
 SettingPage.History=@Word.History
 SettingPage.Information.Visual=@Word.InformationPanel
 SettingPage.Information=@Word.InformationPanel

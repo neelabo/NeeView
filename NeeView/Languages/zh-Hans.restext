@@ -838,6 +838,7 @@ HistoryConfig.IsUncHistoryEnabled.Remarks=在历史记录中保存像 "\\\\计�
 HistoryConfig.LimitSize=数量限制
 HistoryConfig.LimitSpan=保留期限
 HistoryConfig.PanelListItemStyle=历史记录项目样式
+HistoryConfig.RecentBookCount=
 HistoryDeleteAllDialog.Message=删除所有历史记录。确定么?
 HistoryDeleteAllDialog.Title=删除历史记录
 HistoryDeletedDialog.Title=已删除历史记录

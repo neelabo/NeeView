@@ -838,6 +838,7 @@ HistoryConfig.IsUncHistoryEnabled.Remarks=儲存 "\\\\電腦名稱\\~"  之類�
 HistoryConfig.LimitSize=儲存數量上限
 HistoryConfig.LimitSpan=儲存時間
 HistoryConfig.PanelListItemStyle=歷史記錄項目樣式
+HistoryConfig.RecentBookCount=
 HistoryDeleteAllDialog.Message=刪除所有的歷史記錄。確定嗎？
 HistoryDeleteAllDialog.Title=刪除歷史記錄
 HistoryDeletedDialog.Title=歷史記錄已刪除

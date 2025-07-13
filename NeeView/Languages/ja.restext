@@ -838,6 +838,7 @@ HistoryConfig.IsUncHistoryEnabled.Remarks="\\\\コンピューター名\\~" の�
 HistoryConfig.LimitSize=保存数上限
 HistoryConfig.LimitSpan=保存期間
 HistoryConfig.PanelListItemStyle=履歴項目スタイル
+HistoryConfig.RecentBookCount=最近使ったブックの表示数
 HistoryDeleteAllDialog.Message=すべての履歴を削除します。よろしいですか？
 HistoryDeleteAllDialog.Title=履歴を削除します
 HistoryDeletedDialog.Title=履歴を削除しました

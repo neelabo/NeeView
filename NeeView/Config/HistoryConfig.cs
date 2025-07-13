@@ -21,6 +21,7 @@ namespace NeeView
         private bool _isCurrentFolder;
         private bool _isAutoCleanupEnabled;
         private bool _isGroupBy;
+        private int _recentBookCount = 10;
 
         [JsonInclude, JsonPropertyName(nameof(HistoryFilePath))]
         public string? _historyFilePath;
@@ -146,6 +147,13 @@ namespace NeeView
             set { SetProperty(ref _isGroupBy, value); }
         }
 
+        // 最近開いたブックのリストサイズ
+        [PropertyMember]
+        public int RecentBookCount
+        {
+            get { return _recentBookCount; }
+            set { SetProperty(ref _recentBookCount, Math.Max(value, 1)); }
+        }
     }
 }
 

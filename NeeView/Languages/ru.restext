@@ -841,6 +841,7 @@ HistoryConfig.IsUncHistoryEnabled.Remarks=Сохранять в истории �
 HistoryConfig.LimitSize=Ограничение размера
 HistoryConfig.LimitSpan=Срок хранения
 HistoryConfig.PanelListItemStyle=Стиль элементов списка истории
+HistoryConfig.RecentBookCount=
 HistoryDeleteAllDialog.Message=Удалить всю историю? Вы уверены?
 HistoryDeleteAllDialog.Title=Удаление истории
 HistoryDeletedDialog.Title=История удалена

@@ -838,6 +838,7 @@ HistoryConfig.IsUncHistoryEnabled.Remarks="\\\\컴퓨터\\~"와 같은 네트워
 HistoryConfig.LimitSize=저장 수 상한
 HistoryConfig.LimitSpan=저장 기간
 HistoryConfig.PanelListItemStyle=내역 항목 스타일
+HistoryConfig.RecentBookCount=
 HistoryDeleteAllDialog.Message=모든 내역을 삭제합니다. 계속하시겠습니까?
 HistoryDeleteAllDialog.Title=내역 삭제
 HistoryDeletedDialog.Title=내역 삭제 완료

@@ -841,6 +841,7 @@ HistoryConfig.IsUncHistoryEnabled.Remarks=Salva il percorso nella rete come "\\\
 HistoryConfig.LimitSize=Dimensione limite
 HistoryConfig.LimitSpan=Periodo di conservazione
 HistoryConfig.PanelListItemStyle=Stile cronologia elementi
+HistoryConfig.RecentBookCount=
 HistoryDeleteAllDialog.Message=Cancella tutta la cronologia. OK?
 HistoryDeleteAllDialog.Title=Cancella cronologia
 HistoryDeletedDialog.Title=Cronologia cancellata

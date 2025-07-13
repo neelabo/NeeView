@@ -29,6 +29,9 @@ namespace NeeView
                             break;
                     }
                 };
+
+            Config.Current.History.SubscribePropertyChanged(nameof(HistoryConfig.RecentBookCount),
+                (s, e) => _isDirty = true);
         }
 
 
@@ -61,7 +64,7 @@ namespace NeeView
             if (!_isDirty) return;
             _isDirty = false;
 
-            Books = BookHistoryCollection.Current.ListUp(10);
+            Books = BookHistoryCollection.Current.ListUp(Config.Current.History.RecentBookCount);
         }
     }
 }

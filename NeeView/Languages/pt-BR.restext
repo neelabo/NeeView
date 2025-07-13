@@ -841,6 +841,7 @@ HistoryConfig.IsUncHistoryEnabled.Remarks=Salve o caminho na rede como "\\\\comp
 HistoryConfig.LimitSize=Limite de tamanho
 HistoryConfig.LimitSpan=Período de retenção
 HistoryConfig.PanelListItemStyle=Estilo do item histórico
+HistoryConfig.RecentBookCount=
 HistoryDeleteAllDialog.Message=Excluir todo o histórico. Está tudo bem?
 HistoryDeleteAllDialog.Title=Excluir histórico
 HistoryDeletedDialog.Title=Excluir histórico

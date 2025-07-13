@@ -841,6 +841,7 @@ HistoryConfig.IsUncHistoryEnabled.Remarks=Save the path on the network like "\\\
 HistoryConfig.LimitSize=Size limit
 HistoryConfig.LimitSpan=Retention period
 HistoryConfig.PanelListItemStyle=History item style
+HistoryConfig.RecentBookCount=Number of recent books
 HistoryDeleteAllDialog.Message=Delete all history. Is it OK?
 HistoryDeleteAllDialog.Title=Delete history
 HistoryDeletedDialog.Title=Deleted history
