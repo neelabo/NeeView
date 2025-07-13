@@ -149,12 +149,11 @@
                     </StackPanel>
                     <WrapPanel Orientation="Horizontal" VerticalAlignment="Top" MinWidth="150">
                         <Button x:Name="FolderHomeButton" Style="{StaticResource FolderListButtonStyle}" Command="{Binding MoveToHome}" TabIndex="1"
+                                ContextMenuOpening="FolderHomeButton_ContextMenuOpening"
                                 ToolTip="{Binding MoveToHomeToolTip}">
                             <Image Source="{StaticResource ic_home_24px_a}" />
                             <Button.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="{properties:TextBinding Bookshelf.Home.Menu.Set}" Command="{Binding SetHome}" />
-                                </ContextMenu>
+                                <ContextMenu/>
                             </Button.ContextMenu>
                         </Button>
                         <Button x:Name="FolderPrevButton" Style="{StaticResource FolderListButtonStyle}" Command="{Binding MoveToPrevious}" TabIndex="1" ContextMenuService.Placement="Bottom"

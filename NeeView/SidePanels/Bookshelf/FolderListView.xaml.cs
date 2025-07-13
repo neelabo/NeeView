@@ -1,17 +1,18 @@
-﻿using System;
+﻿using NeeView.Collections.Generic;
+using NeeView.Data;
+using NeeView.Properties;
+using NeeView.Windows;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Diagnostics;
 using System.Windows.Input;
-using System.Windows.Media.Animation;
-using NeeView.Windows;
-using System.Threading;
-using NeeView.Data;
-using System.Diagnostics.CodeAnalysis;
 
 namespace NeeView
 {
@@ -262,6 +263,68 @@ namespace NeeView
                     e.Handled = true;
                 }
             }
+        }
+
+        private void FolderHomeButton_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            var menu = (sender as FrameworkElement)?.ContextMenu;
+            if (menu == null) return;
+
+            menu.Items.Clear();
+
+            if (QuickAccessCollection.Current.Root.Children.Count > 0)
+            {
+                var items = CreateQuickAccessMenuItems(QuickAccessCollection.Current.Root);
+                foreach (var item in items)
+                {
+                    menu.Items.Add(item);
+                }
+                menu.Items.Add(new Separator());
+            }
+
+            menu.Items.Add(new MenuItem() { Header = TextResources.GetString("Bookshelf.Home.Menu.Set"), Command = _vm.SetHome });
+        }
+
+        private List<MenuItem> CreateQuickAccessMenuItems(TreeListNode<QuickAccessEntry> node)
+        {
+            if (node.Value is not QuickAccessFolder)
+            {
+                throw new InvalidOperationException();
+            }
+
+            var items = new List<MenuItem>();
+
+            if (node.Children.Count == 0)
+            {
+                items.Add(new MenuItem() { Header = TextResources.GetString("Word.ItemNone"), IsEnabled = false });
+            }
+            else
+            {
+                foreach (var child in node.Children)
+                {
+                    var menuItem = new MenuItem() { Header = child.Name };
+                    switch (child.Value)
+                    {
+                        case QuickAccess quickAccess:
+                            menuItem.Command = _vm.MoveTo;
+                            menuItem.CommandParameter = new QueryPath(quickAccess.Path);
+                            break;
+                        case QuickAccessFolder folder:
+                            var subChildren = CreateQuickAccessMenuItems(child);
+                            foreach (var subChild in subChildren)
+                            {
+                                menuItem.Items.Add(subChild);
+                            }
+                            break;
+                        default:
+                            Debug.Assert(false, "Not supported");
+                            break;
+                    }
+                    items.Add(menuItem);
+                }
+            }
+
+            return items;
         }
 
 
