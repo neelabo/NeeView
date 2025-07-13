@@ -116,19 +116,19 @@
                                         <UniformGrid Columns="2" Rows="2" Margin="20,0,0,0">
                                             <DockPanel>
                                                 <TextBlock Style="{StaticResource BoxHeader}" Text="{properties:TextBinding Word.Left}" />
-                                                <nvc:EnterTriggerTextBox Text="{Binding Model.Margin.Left}" Margin="2" TabIndex="2" />
+                                                <nvc:EnterTriggerTextBox Text="{Binding MarginLeft}" Margin="2" TabIndex="2" />
                                             </DockPanel>
                                             <DockPanel>
                                                 <TextBlock Style="{StaticResource BoxHeader}" Text="{properties:TextBinding Word.Right}" />
-                                                <nvc:EnterTriggerTextBox Text="{Binding Model.Margin.Right}" Margin="2" TabIndex="2" />
+                                                <nvc:EnterTriggerTextBox Text="{Binding MarginRight}" Margin="2" TabIndex="2" />
                                             </DockPanel>
                                             <DockPanel>
                                                 <TextBlock Style="{StaticResource BoxHeader}" Text="{properties:TextBinding Word.Up}" />
-                                                <nvc:EnterTriggerTextBox Text="{Binding Model.Margin.Top}" Margin="2" TabIndex="2" />
+                                                <nvc:EnterTriggerTextBox Text="{Binding MarginTop}" Margin="2" TabIndex="2" />
                                             </DockPanel>
                                             <DockPanel>
                                                 <TextBlock Style="{StaticResource BoxHeader}" Text="{properties:TextBinding Word.Down}" />
-                                                <nvc:EnterTriggerTextBox Text="{Binding Model.Margin.Bottom}" Margin="2" TabIndex="2" />
+                                                <nvc:EnterTriggerTextBox Text="{Binding MarginBottom}" Margin="2" TabIndex="2" />
                                             </DockPanel>
                                         </UniformGrid>
 

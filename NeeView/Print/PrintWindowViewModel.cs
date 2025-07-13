@@ -35,7 +35,6 @@ namespace NeeView
             _model.Restore(Config.Current.Print);
 
             _model.PropertyChanged += PrintService_PropertyChanged;
-            _model.Margin.PropertyChanged += PrintService_PropertyChanged;
 
             UpdatePreview();
         }
@@ -69,6 +68,30 @@ namespace NeeView
         {
             get { return _pageCollection; }
             set { if (_pageCollection != value) { _pageCollection = value; RaisePropertyChanged(); } }
+        }
+
+        public double MarginLeft
+        {
+            get { return _model.Margin.Left; }
+            set { if (_model.Margin.Left != value) { _model.Margin = _model.Margin with { Left = value }; } }
+        }
+
+        public double MarginRight
+        {
+            get { return _model.Margin.Right; }
+            set { if (_model.Margin.Right != value) { _model.Margin = _model.Margin with { Right = value }; } }
+        }
+
+        public double MarginTop
+        {
+            get { return _model.Margin.Top; }
+            set { if (_model.Margin.Top != value) { _model.Margin = _model.Margin with { Top = value }; } }
+        }
+
+        public double MarginBottom
+        {
+            get { return _model.Margin.Bottom; }
+            set { if (_model.Margin.Bottom != value) { _model.Margin = _model.Margin with { Bottom = value }; } }
         }
 
         public RelayCommand ResetCommand

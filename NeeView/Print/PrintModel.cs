@@ -56,7 +56,7 @@ namespace NeeView
         private double _extentWidth;
         private double _extentHeight;
         private PageOrientation _pageOrientation;
-        private PrintMode _printMode = PrintMode.View;
+        private PrintMode _printMode = PrintMode.RawImage;
         private bool _isBackground;
         private bool _isDotScale;
         private PrintQueue? _printQueue;
@@ -180,7 +180,7 @@ namespace NeeView
         private void Initialize()
         {
             // PageOrientation は PrintDialog から取得する
-            PrintMode = PrintMode.View;
+            PrintMode = PrintMode.RawImage;
             IsBackground = false;
             IsDotScale = false;
             Columns = 1;
@@ -339,17 +339,21 @@ namespace NeeView
                 double extentHeight = isLandscape ? _area.ExtentWidth : _area.ExtentHeight;
 
                 // 既定の余白
-                margin.Left = originWidth;
-                margin.Right = _printableAreaWidth - extentWidth - originWidth;
-                margin.Top = originHeight;
-                margin.Bottom = _printableAreaHeight - extentHeight - originHeight;
+                margin = new Margin(
+                    Left: originWidth,
+                    Right: _printableAreaWidth - extentWidth - originWidth,
+                    Top: originHeight,
+                    Bottom: _printableAreaHeight - extentHeight - originHeight
+                );
             }
 
             // 余白補正
-            margin.Left = Math.Max(0, margin.Left + MillimeterToPixel(Margin.Left));
-            margin.Right = Math.Max(0, margin.Right + MillimeterToPixel(Margin.Right));
-            margin.Top = Math.Max(0, margin.Top + MillimeterToPixel(Margin.Top));
-            margin.Bottom = Math.Max(0, margin.Bottom + MillimeterToPixel(Margin.Bottom));
+            margin = new Margin(
+                Left: Math.Max(0, margin.Left + MillimeterToPixel(Margin.Left)),
+                Right: Math.Max(0, margin.Right + MillimeterToPixel(Margin.Right)),
+                Top: Math.Max(0, margin.Top + MillimeterToPixel(Margin.Top)),
+                Bottom: Math.Max(0, margin.Bottom + MillimeterToPixel(Margin.Bottom))
+            );
 
             // 領域補正
             _originWidth = margin.Left;
@@ -565,7 +569,7 @@ namespace NeeView
             public Memento()
             {
                 PageOrientation = PageOrientation.Portrait;
-                PrintMode = PrintMode.View;
+                PrintMode = PrintMode.RawImage;
                 HorizontalAlignment = HorizontalAlignment.Center;
                 VerticalAlignment = VerticalAlignment.Center;
                 Margin = new Margin();
@@ -621,37 +625,9 @@ namespace NeeView
     /// <summary>
     /// 余白
     /// </summary>
-    public class Margin : BindableBase
+    public record class Margin(double Left, double Right, double Top, double Bottom)
     {
-        private double _top;
-        private double _bottom;
-        private double _left;
-        private double _right;
-
-
-        public double Top
-        {
-            get { return _top; }
-            set { if (_top != value) { _top = value; RaisePropertyChanged(); } }
-        }
-
-        public double Bottom
-        {
-            get { return _bottom; }
-            set { if (_bottom != value) { _bottom = value; RaisePropertyChanged(); } }
-        }
-
-        public double Left
-        {
-            get { return _left; }
-            set { if (_left != value) { _left = value; RaisePropertyChanged(); } }
-        }
-
-        public double Right
-        {
-            get { return _right; }
-            set { if (_right != value) { _right = value; RaisePropertyChanged(); } }
-        }
+        public Margin() : this(0, 0, 0, 0) { }
     }
 
     /// <summary>
