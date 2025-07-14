@@ -230,7 +230,7 @@ namespace NeeView.Setting
 
             var section = new SettingItemSection(TextResources.GetString("SettingPage.Thumbnail.Cache"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Thumbnail, nameof(ThumbnailConfig.IsCacheEnabled))));
-            section.Children.Add(new SettingItemIndexValue<TimeSpan>(PropertyMemberElement.Create(Config.Current.Thumbnail, nameof(ThumbnailConfig.CacheLimitSpan)), new CacheLimitSpan(), false));
+            section.Children.Add(new SettingItemIndexValue<TimeSpan>(PropertyMemberElement.Create(Config.Current.Thumbnail, nameof(ThumbnailConfig.CacheLimitSpan)), new CacheLimitSpan(), true));
             section.Children.Add(new SettingItemButton(TextResources.GetString("SettingPage.Thumbnail.CacheClear"), TextResources.GetString("SettingPage.Thumbnail.CacheClearButton"), RemoveCache));
             this.Items.Add(section);
 
@@ -296,14 +296,21 @@ namespace NeeView.Setting
 
             public CacheLimitSpan() : base(_values)
             {
+                IsValueSyncIndex = false;
             }
 
             public CacheLimitSpan(TimeSpan value) : base(_values)
             {
+                IsValueSyncIndex = false;
                 Value = value;
             }
 
-            public override string ValueString => Value == default ? TextResources.GetString("Word.NoLimit") : TextResources.GetFormatString("Word.DaysAgo", Value.Days);
+            public override IValueConverter? Converter { get; } = new TimeSpanToDaysStringConverter();
+
+            protected override string GetValueString(TimeSpan value)
+            {
+                return value == default ? TextResources.GetString("Word.NoLimit") : TextResources.GetFormatString("Word.DaysAgo", value.Days);
+            }
         }
     }
 

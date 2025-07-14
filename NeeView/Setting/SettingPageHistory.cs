@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
+using System.Windows.Data;
 
 namespace NeeView.Setting
 {
@@ -28,8 +29,8 @@ namespace NeeView.Setting
             this.Items.Add(section);
 
             section = new SettingItemSection(TextResources.GetString("SettingPage.History.GeneralLimit"), TextResources.GetString("SettingPage.History.GeneralLimit.Remarks"));
-            section.Children.Add(new SettingItemIndexValue<int>(PropertyMemberElement.Create(Config.Current.History, nameof(HistoryConfig.LimitSize)), new HistoryLimitSize(), false));
-            section.Children.Add(new SettingItemIndexValue<TimeSpan>(PropertyMemberElement.Create(Config.Current.History, nameof(HistoryConfig.LimitSpan)), new HistoryLimitSpan(), false));
+            section.Children.Add(new SettingItemIndexValue<int>(PropertyMemberElement.Create(Config.Current.History, nameof(HistoryConfig.LimitSize)), new HistoryLimitSize(), true));
+            section.Children.Add(new SettingItemIndexValue<TimeSpan>(PropertyMemberElement.Create(Config.Current.History, nameof(HistoryConfig.LimitSpan)), new HistoryLimitSpan(), true));
             this.Items.Add(section);
 
             section = new SettingItemSection(TextResources.GetString("SettingPage.History.RecentBook"));
@@ -66,8 +67,6 @@ namespace NeeView.Setting
 
         #region IndexValues
 
-        #region IndexValue
-
         /// <summary>
         /// 履歴登録開始テーブル
         /// </summary>
@@ -89,10 +88,11 @@ namespace NeeView.Setting
                 Value = value;
             }
 
-            public override string ValueString => $"{Value} {TextResources.GetString("Word.Page")}";
+            protected override string GetValueString(int value)
+            {
+                return $"{value} {TextResources.GetString("Word.Page")}";
+            }
         }
-
-        #endregion
 
         /// <summary>
         /// 履歴サイズテーブル
@@ -106,14 +106,19 @@ namespace NeeView.Setting
 
             public HistoryLimitSize() : base(_values)
             {
+                IsValueSyncIndex = false;
             }
 
             public HistoryLimitSize(int value) : base(_values)
             {
+                IsValueSyncIndex = false;
                 Value = value;
             }
 
-            public override string ValueString => Value == -1 ? TextResources.GetString("Word.NoLimit") : Value.ToString(CultureInfo.InvariantCulture);
+            protected override string GetValueString(int value)
+            {
+                return value == -1 ? TextResources.GetString("Word.NoLimit") : value.ToString(CultureInfo.InvariantCulture);
+            }
         }
 
         /// <summary>
@@ -135,14 +140,21 @@ namespace NeeView.Setting
 
             public HistoryLimitSpan() : base(_values)
             {
+                IsValueSyncIndex = false;
             }
 
             public HistoryLimitSpan(TimeSpan value) : base(_values)
             {
+                IsValueSyncIndex = false;
                 Value = value;
             }
 
-            public override string ValueString => Value == default ? TextResources.GetString("Word.NoLimit") : TextResources.GetFormatString("Word.DaysAgo", Value.Days);
+            public override IValueConverter? Converter { get; } = new TimeSpanToDaysStringConverter();
+
+            protected override string GetValueString(TimeSpan value)
+            {
+                return value == default ? TextResources.GetString("Word.NoLimit") : TextResources.GetFormatString("Word.DaysAgo", value.Days);
+            }
         }
 
         #endregion

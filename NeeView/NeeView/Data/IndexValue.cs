@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace NeeView.Data
 {
@@ -50,9 +51,11 @@ namespace NeeView.Data
             _values = values;
             _index = 0;
             _value = _values[_index];
+
+            FormatConverter = new ValueToFormatString<T>(GetValueString);
         }
 
-        
+
         public event EventHandler<ValueChangedEventArgs<T>>? ValueChanged;
 
 
@@ -110,7 +113,9 @@ namespace NeeView.Data
             }
         }
 
-        virtual public string ValueString => Value.ToString() ?? "";
+        public string ValueString => GetValueString(Value);
+        public virtual IValueConverter? Converter => null;
+        public virtual IValueConverter? FormatConverter { get; }
 
 
         public override string? ToString()
@@ -137,6 +142,11 @@ namespace NeeView.Data
 
             RaisePropertyChanged(null);
             ValueChanged?.Invoke(this, new ValueChangedEventArgs<T>() { NewValue = value });
+        }
+
+        protected virtual string GetValueString(T value)
+        {
+            return value.ToString() ?? "";
         }
     }
 

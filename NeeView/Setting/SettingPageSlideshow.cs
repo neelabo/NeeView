@@ -44,7 +44,10 @@ namespace NeeView.Setting
                 Value = value;
             }
 
-            public override string ValueString => $"{Value}{TextResources.GetString("Word.Sec")}";
+            protected override string GetValueString(double value)
+            {
+                return $"{value} {TextResources.GetString("Word.Sec")}";
+            }
         }
 
         #endregion

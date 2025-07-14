@@ -38,6 +38,7 @@ namespace NeeView.Windows.Controls
         public static readonly DependencyProperty FormatProperty =
             DependencyProperty.Register("Format", typeof(string), typeof(FormattedTextBox), new PropertyMetadata(null, FormatProperty_Changed));
 
+        // 入力時のコンバーター
         public IValueConverter Converter
         {
             get { return (IValueConverter)GetValue(ConverterProperty); }
@@ -47,6 +48,7 @@ namespace NeeView.Windows.Controls
         public static readonly DependencyProperty ConverterProperty =
             DependencyProperty.Register("Converter", typeof(IValueConverter), typeof(FormattedTextBox), new PropertyMetadata(null, FormatProperty_Changed));
 
+        // 表示時のコンバーター
         public IValueConverter FormatConverter
         {
             get { return (IValueConverter)GetValue(FormatConverterProperty); }

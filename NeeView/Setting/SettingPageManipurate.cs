@@ -50,7 +50,10 @@ namespace NeeView.Setting
                 Value = value;
             }
 
-            public override string ValueString => Value == 0 ? TextResources.GetString("Word.Stepless") : $"{Value} {TextResources.GetString("Word.Degree")}";
+            protected override string GetValueString(double value)
+            {
+                return value == 0 ? TextResources.GetString("Word.Stepless") : $"{value} {TextResources.GetString("Word.Degree")}";
+            }
         }
     }
 

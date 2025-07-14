@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NeeView.Setting"
+             xmlns:nvc="clr-namespace:NeeView.Windows.Controls"
              xmlns:nvd="clr-namespace:NeeView.Windows.Data"
              mc:Ignorable="d"
              d:DesignHeight="50" d:DesignWidth="300">
@@ -14,7 +15,8 @@
     </UserControl.Resources>
     
     <StackPanel x:Name="Root">
-        <TextBox Text="{Binding IndexValue.Value}" Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        <nvc:FormattedTextBox Value="{Binding IndexValue.Value}" Converter="{Binding IndexValue.Converter}" FormatConverter="{Binding IndexValue.FormatConverter}"
+                              Visibility="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityConverter}}" />
         <TextBlock Text="{Binding IndexValue.ValueString}" HorizontalAlignment="Left" Visibility="{Binding IsEditable, Converter={StaticResource NotBoolToVisiblityConverter}}" />
         <Slider Value="{Binding IndexValue.Index}" Minimum="0" Maximum="{Binding IndexValue.IndexMax}" TickFrequency="1" Margin="0,5,0,0" />
     </StackPanel>

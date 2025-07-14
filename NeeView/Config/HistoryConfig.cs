@@ -112,7 +112,7 @@ namespace NeeView
         public int LimitSize
         {
             get { return _limitSize; }
-            set { SetProperty(ref _limitSize, value); }
+            set { SetProperty(ref _limitSize, Math.Max(value, -1)); }
         }
 
         // 履歴制限(時間)
@@ -120,7 +120,7 @@ namespace NeeView
         public TimeSpan LimitSpan
         {
             get { return _limitSpan; }
-            set { SetProperty(ref _limitSpan, value); }
+            set { SetProperty(ref _limitSpan, value < TimeSpan.Zero ? TimeSpan.Zero : value); }
         }
 
         // ブックのあるフォルダーのみ

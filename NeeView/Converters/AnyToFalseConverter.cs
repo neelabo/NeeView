@@ -3,9 +3,9 @@ using System.Windows.Data;
 
 namespace NeeView
 {
-    // 常にfalseを返すコンバータ
+    // 常に false を返すコンバータ
     [ValueConversion(typeof(object), typeof(bool))]
-    public class AnytToFalseConverter : IValueConverter
+    public class AnyToFalseConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {

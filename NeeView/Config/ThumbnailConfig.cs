@@ -49,7 +49,7 @@ namespace NeeView
         public TimeSpan CacheLimitSpan
         {
             get { return _cacheLimitSpan; }
-            set { SetProperty(ref _cacheLimitSpan, value); }
+            set { SetProperty(ref _cacheLimitSpan, value < TimeSpan.Zero ? TimeSpan.Zero : value); }
         }
 
         /// <summary>
