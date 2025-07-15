@@ -20,6 +20,7 @@ namespace NeeView.Setting
 
             var section = new SettingItemSection(TextResources.GetString("SettingPage.Manipulate.GeneralViewOperation"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.View, nameof(ViewConfig.IsLimitMove))));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.View, nameof(ViewConfig.IsMoveLockStart))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.View, nameof(ViewConfig.ViewHorizontalOrigin))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.View, nameof(ViewConfig.ViewVerticalOrigin))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.View, nameof(ViewConfig.RotateCenter), new PropertyMemberElementOptions() { EnumMap = centerEnumMapWithoutAuto })));

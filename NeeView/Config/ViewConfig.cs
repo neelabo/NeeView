@@ -13,6 +13,7 @@ namespace NeeView
         private bool _allowStretchScaleDown = true;
         private bool _allowFileContentAutoRotate;
         private bool _isLimitMove = true;
+        private bool _isMoveLockStart = true;
         private DragControlCenter _rotateCenter;
         private DragControlCenter _scaleCenter;
         private DragControlCenter _flipCenter;
@@ -146,6 +147,14 @@ namespace NeeView
         {
             get { return _isLimitMove; }
             set { SetProperty(ref _isLimitMove, value); }
+        }
+
+        // 移動ロック状態で開始する
+        [PropertyMember]
+        public bool IsMoveLockStart
+        {
+            get { return _isMoveLockStart; }
+            set { SetProperty(ref _isMoveLockStart, value); }
         }
 
         // スケールモード

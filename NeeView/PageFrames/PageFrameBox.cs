@@ -830,7 +830,7 @@ namespace NeeView.PageFrames
             ScrollToViewOrigin(next, direction);
             Cleanup();
 
-            _scrollLock.Lock();
+            _scrollLock.SetLock(_context.ViewConfig.IsMoveLockStart);
             SetSnapAnchor();
 
             if (flush || _context.IsAutoStretch)
@@ -916,7 +916,7 @@ namespace NeeView.PageFrames
                 ViewHorizontalOrigin.Left => HorizontalAlignment.Left,
                 ViewHorizontalOrigin.Right => HorizontalAlignment.Right,
                 ViewHorizontalOrigin.DirectionDependent => math.GetHorizontalAlignment(dir),
-                ViewHorizontalOrigin.CenterOrLeft=> math.ContainsHorizontal() ? HorizontalAlignment.Center : HorizontalAlignment.Left,
+                ViewHorizontalOrigin.CenterOrLeft => math.ContainsHorizontal() ? HorizontalAlignment.Center : HorizontalAlignment.Left,
                 ViewHorizontalOrigin.CenterOrRight => math.ContainsHorizontal() ? HorizontalAlignment.Center : HorizontalAlignment.Right,
                 ViewHorizontalOrigin.CenterOrDirectionDependent => math.ContainsHorizontal() ? HorizontalAlignment.Center : math.GetHorizontalAlignment(dir),
                 _ => throw new InvalidEnumArgumentException(nameof(origin), (int)origin, typeof(ViewHorizontalOrigin)),

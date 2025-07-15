@@ -4,7 +4,7 @@ using System.Windows;
 namespace NeeView.Maths
 {
     /// <summary>
-    /// fron NeeView.DragTransformControl
+    /// from NeeView.DragTransformControl
     /// スクロールロック
     /// </summary>
     public class ScrollLock
@@ -41,14 +41,18 @@ namespace NeeView.Maths
 
         public void Lock()
         {
-            _lockMoveX = true;
-            _lockMoveY = true;
+            SetLock(true);
         }
 
         public void Unlock()
         {
-            _lockMoveX = false;
-            _lockMoveY = false;
+            SetLock(false);
+        }
+
+        public void SetLock(bool value)
+        {
+            _lockMoveX = value;
+            _lockMoveY = value;
         }
 
         /// <summary>
