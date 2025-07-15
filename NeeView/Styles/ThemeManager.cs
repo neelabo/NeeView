@@ -33,9 +33,6 @@ namespace NeeView
         private static readonly string _customThemeTemplateContentPath = "Libraries/Themes/CustomThemeTemplate.json";
 
         private ThemeProfile? _themeProfile;
-        private string? _selectedItem;
-
-
 
 
         private ThemeManager()
@@ -63,20 +60,6 @@ namespace NeeView
         {
             get { return _themeProfile; }
             private set { SetProperty(ref _themeProfile, value); }
-        }
-
-
-        [PropertyStrings(Name = "ThemeConfig.ThemeType")]
-        public string? SelectedItem
-        {
-            get { return _selectedItem; }
-            set
-            {
-                if (SetProperty(ref _selectedItem, value))
-                {
-                    Config.Current.Theme.ThemeType = ThemeSource.Parse(_selectedItem);
-                }
-            }
         }
 
 
@@ -121,8 +104,6 @@ namespace NeeView
 
         public void RefreshThemeColor()
         {
-            _selectedItem = Config.Current.Theme.ThemeType.ToString();
-
             var themeProfile = GeThemeProfile(Config.Current.Theme.ThemeType);
 
             foreach (var key in ThemeProfile.Keys)

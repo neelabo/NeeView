@@ -148,6 +148,12 @@ namespace NeeView.Data
         {
             return value.ToString() ?? "";
         }
+
+        public void Update()
+        {
+            _index = IndexOfNear(Value, _values);
+            RaisePropertyChanged(null);
+        }
     }
 
     /// <summary>

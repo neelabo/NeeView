@@ -24,7 +24,7 @@ namespace NeeView.Setting
     /// SettingItemCollectionControl.xaml の相互作用ロジック
     /// </summary>
     [NotifyPropertyChanged]
-    public partial class SettingItemCollectionControl : UserControl, INotifyPropertyChanged
+    public partial class SettingItemCollectionControl : UserControl, INotifyPropertyChanged, IValueInitializable
     {
         public SettingItemCollectionControl()
         {
@@ -184,6 +184,11 @@ namespace NeeView.Setting
 
         private void ResetButton_Click(object? sender, RoutedEventArgs e)
         {
+            Reset();
+        }
+
+        private void Reset()
+        { 
             var defaultCollection = DefaultCollection ?? Description?.GetDefaultCollection();
 
             if (Collection == null || defaultCollection == null) return;
@@ -202,6 +207,11 @@ namespace NeeView.Setting
                 RemoveButton_Click(sender, e);
                 e.Handled = true;
             }
+        }
+
+        public void InitializeValue()
+        {
+            Reset();
         }
     }
 

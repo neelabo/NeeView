@@ -45,7 +45,11 @@ namespace NeeView.Setting
             var section = new SettingItemSection(TextResources.GetString("SettingPage.General"));
             var cultureMap = TextResources.LanguageResource.Cultures.ToKeyValuePairList(e => e.Name, e => e.NativeName);
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.Language), new PropertyMemberElementOptions() { StringMap = cultureMap }))
-            { Icon = new FontIcon("\uE774"), Header = "Language" });
+            {
+                Icon = new FontIcon("\uE774"),
+                Header = "Language",
+                ResetAction = () => { } // nop.
+            });
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.DateTimeFormat))));
             this.Items.Add(section);
 

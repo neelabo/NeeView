@@ -25,7 +25,7 @@ namespace NeeView
         // テーマ (スクリプトアクセス用)
         [JsonIgnore]
         [ObjectMergeIgnore]
-        [PropertyMember]
+        [PropertyStrings(Name = "ThemeConfig.ThemeType")]
         [PropertyMapName(nameof(ThemeType))]
         public string ThemeString
         {

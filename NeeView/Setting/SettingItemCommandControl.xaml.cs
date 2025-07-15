@@ -272,8 +272,8 @@ namespace NeeView.Setting
         }
 
 
-        // 全コマンド初期化ボタン処理
-        private void ResetGestureSettingButton_Click(object? sender, RoutedEventArgs e)
+        // 全コマンド初期化
+        public void Reset()
         {
             var dialog = new CommandResetWindow();
             dialog.Owner = Window.GetWindow(this);

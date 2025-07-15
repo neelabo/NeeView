@@ -113,6 +113,8 @@ namespace NeeView.Setting
             var linkCommand = new RelayCommand(() => this.IsSelected = true);
 
             this.IsScrollEnabled = false;
+            this.IsResetButtonConfirm = false;
+            this.ResetButtonMargin = new Thickness(0, 0, 10, 15);
 
             var section = new SettingItemSection(TextResources.GetString("SettingPage.Command.Main"));
             section.Children.Add(new SettingItemCommand() { SearchResultItem = new SettingItemLink(TextResources.GetString("SettingPage.Command.Main"), linkCommand) { IsContentOnly = true } });
@@ -130,6 +132,7 @@ namespace NeeView.Setting
             var linkCommand = new RelayCommand(() => this.IsSelected = true);
 
             this.IsScrollEnabled = false;
+            this.ResetButtonMargin = new Thickness(0, 0, 10, 15);
 
             var section = new SettingItemSection(TextResources.GetString("SettingPage.ContextMenu.Edit"));
             section.Children.Add(new SettingItemContextMenu() { SearchResultItem = new SettingItemLink(TextResources.GetString("SettingPage.ContextMenu.Edit"), linkCommand) { IsContentOnly = true } });

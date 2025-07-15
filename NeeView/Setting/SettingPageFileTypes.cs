@@ -207,6 +207,12 @@ namespace NeeView.Setting
             section.Children.Add(new SettingItemSusiePlugin(SusiePluginType.Archive));
             this.Items.Add(section);
         }
+
+        public override void InitializeValue()
+        {
+            base.InitializeValue();
+            SusiePluginManager.Current.ClearUnauthorizedPlugins();
+        }
     }
 
 }

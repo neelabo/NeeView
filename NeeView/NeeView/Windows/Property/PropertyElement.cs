@@ -355,6 +355,29 @@ namespace NeeView.Windows.Property
             SetValue(Default);
         }
 
+        public void InitializeValue()
+        {
+            var defaultValueAttribute = _info.GetCustomAttribute<DefaultValueAttribute>();
+            if (defaultValueAttribute is not null)
+            {
+                //Debug.WriteLine($"Reset DefaultValue: {Source.GetType().FullName}.{_info.Name} = {defaultValueAttribute.Value}");
+                SetValue(defaultValueAttribute.Value);
+            }
+            else
+            {
+                var defaultSource = Options?.GetDefaultSource?.Invoke() ?? CreateDefaultSource();
+                var value = GetValue(defaultSource);
+                //Debug.WriteLine($"Reset DefaultSource: {Source.GetType().FullName}.{_info.Name} = {value}");
+                SetValue(value);
+            }
+        }
+
+        private object CreateDefaultSource()
+        {
+            var type = this.Source.GetType();
+            return Activator.CreateInstance(type) ?? throw new InvalidOperationException("Cannot create instance from object.");
+        }
+
         public void SetValue(object? value)
         {
             _info.SetValue(this.Source, value);

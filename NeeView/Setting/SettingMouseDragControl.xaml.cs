@@ -21,7 +21,7 @@ namespace NeeView.Setting
     /// <summary>
     /// SettingMouseDragControl.xaml の相互作用ロジック
     /// </summary>
-    public partial class SettingMouseDragControl : UserControl
+    public partial class SettingMouseDragControl : UserControl, IValueInitializable
     {
         public SettingMouseDragControl()
         {
@@ -150,12 +150,17 @@ namespace NeeView.Setting
 
             if (answer.Command == UICommands.Yes)
             {
-                var memento = DragActionTable.Current.CreateDefaultMemento();
-                DragActionTable.Current.RestoreDragActionCollection(memento);
-                DragActionTable.Current.UpdateGestureDragAction();
-
-                this.DragActionListView.Items.Refresh();
+                Reset();
             }
+        }
+
+        private void Reset()
+        {
+            var memento = DragActionTable.Current.CreateDefaultMemento();
+            DragActionTable.Current.RestoreDragActionCollection(memento);
+            DragActionTable.Current.UpdateGestureDragAction();
+
+            this.DragActionListView.Items.Refresh();
         }
 
         private void EditCommandParameterButton_Click(object? sender, RoutedEventArgs e)
@@ -164,6 +169,11 @@ namespace NeeView.Setting
 
             this.DragActionListView.SelectedItem = dragActionParam;
             OpenDragActionSettingDialog(dragActionParam, MouseDragSettingWindowTab.Parameter);
+        }
+
+        public void InitializeValue()
+        {
+            Reset();
         }
     }
 }

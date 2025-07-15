@@ -38,6 +38,8 @@ namespace NeeView
     /// </summary>
     public class BrushSource : BindableBase, ICloneable
     {
+        public static Dictionary<BrushType, string> BrushTypeList => AliasNameExtensions.GetAliasNameDictionary<BrushType>();
+
         private BrushType _type;
         private Color _color;
         private string? _imageFileName;
@@ -45,12 +47,9 @@ namespace NeeView
 
         public BrushSource()
         {
-            _type = BrushType.SolidColor;
-            _color = Colors.LightGray;
+            Reset();
         }
 
-
-        public static Dictionary<BrushType, string> BrushTypeList => AliasNameExtensions.GetAliasNameDictionary<BrushType>();
 
         [PropertyMember]
         public BrushType Type
@@ -71,6 +70,15 @@ namespace NeeView
         {
             get { return _imageFileName; }
             set { if (_imageFileName != value) { _imageFileName = value; RaisePropertyChanged(); } }
+        }
+
+
+        public void Reset()
+        {
+            _type = BrushType.SolidColor;
+            _color = Colors.LightGray;
+            _imageFileName = null;
+            RaisePropertyChanged(null);
         }
 
         public Brush CreateBackBrush()

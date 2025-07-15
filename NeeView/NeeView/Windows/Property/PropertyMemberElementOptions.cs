@@ -32,6 +32,11 @@ namespace NeeView.Windows.Property
         /// Stringsでの選択項目取得
         /// </summary>
         public Func<KeyValuePairList<string, string>>? GetStringMapFunc { get; set; }
+
+        /// <summary>
+        /// ソースのデフォルトインスタンス取得
+        /// </summary>
+        public Func<object>? GetDefaultSource { get; set; }
     }
 
 }

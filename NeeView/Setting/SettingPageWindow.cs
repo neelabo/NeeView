@@ -55,7 +55,7 @@ namespace NeeView.Setting
             this.Items = new List<SettingItem>();
 
             var section = new SettingItemSection(TextResources.GetString("SettingPage.Window.Theme"));
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(ThemeManager.Current, nameof(ThemeManager.SelectedItem), new PropertyMemberElementOptions()
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Theme, nameof(ThemeConfig.ThemeString), new PropertyMemberElementOptions()
             {
                 GetStringMapFunc = ThemeManager.CreateItemsMap
             })));

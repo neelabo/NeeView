@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using NeeLaboratory.ComponentModel;
 using NeeView.Properties;
 using NeeView.Windows.Property;
 using System;
@@ -18,7 +19,7 @@ namespace NeeView
     /// ユーザー単位の設定になる(HKCU)。
     /// Zip版のみの機能で、インストーラー版はインストール時にHKLMに設定される。
     /// </summary>
-    public class ExplorerContextMenu
+    public class ExplorerContextMenu : BindableBase
     {
         static ExplorerContextMenu() => Current = new ExplorerContextMenu();
         public static ExplorerContextMenu Current { get; }
@@ -32,7 +33,7 @@ namespace NeeView
         private bool _isEnabled;
 
 
-        public ExplorerContextMenu()
+        private ExplorerContextMenu()
         {
             _root = Registry.CurrentUser.OpenSubKey(@"Software\Classes", true) ?? throw new InvalidOperationException("Cannot get registry");
 
@@ -43,6 +44,7 @@ namespace NeeView
         /// Explorer ContextMenu 登録状態。セーブデータには保存されない。
         /// </summary>
         [PropertyMember]
+        [DefaultValue(false)]
         public bool IsEnabled
         {
             get
@@ -61,8 +63,8 @@ namespace NeeView
                     {
                         Delete();
                     }
-
                     _isEnabled = Exists();
+                    RaisePropertyChanged();
                 }
             }
         }

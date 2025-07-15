@@ -166,6 +166,11 @@ namespace NeeView.Windows.Property
                 ?? setter.Options?.StringMap
                 ?? strings?.ToKeyValuePairList(e => e, e => e)
                 ?? new KeyValuePairList<string, string>();
+
+            Setter.ValueChanged += (s, e) =>
+            {
+                RaisePropertyChanged(nameof(SelectedValue));
+            };
         }
 
         public override void SetValueFromString(string value)
@@ -233,6 +238,11 @@ namespace NeeView.Windows.Property
         {
             _type = enumType;
             this.Map = setter.Options?.EnumMap ?? _type.VisibleAliasNameDictionary();
+
+            Setter.ValueChanged += (s, e) =>
+            {
+                RaisePropertyChanged(nameof(SelectedValue));
+            };
         }
 
         public override void SetValueFromString(string value)

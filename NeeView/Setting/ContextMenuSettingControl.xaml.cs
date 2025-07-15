@@ -238,7 +238,7 @@ namespace NeeView.Setting
         }
 
 
-        private void ResetButton_Click(object? sender, RoutedEventArgs e)
+        public void Reset()
         {
             _vm.Reset();
         }

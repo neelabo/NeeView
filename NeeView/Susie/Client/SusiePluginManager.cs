@@ -363,6 +363,11 @@ namespace NeeView
             }
         }
 
+        public void ClearUnauthorizedPlugins()
+        {
+            UnauthorizedPlugins = new();
+        }
+
         #region Memento
 
         public SusiePluginCollection CreateSusiePluginCollection()

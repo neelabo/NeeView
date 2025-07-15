@@ -35,7 +35,7 @@ namespace NeeView
         }
 
         [Conditional("DEBUG")]
-        public static void RegistFocusChanged()
+        public static void RegisterFocusChanged()
         {
             EventManager.RegisterClassHandler(
                 typeof(UIElement),
@@ -66,26 +66,26 @@ namespace NeeView
             {
                 if (e == null) return;
 
-                var isKeyboardFocused = e is FrameworkElement framewrkElement && framewrkElement.IsKeyboardFocused;
+                var isKeyboardFocused = e is FrameworkElement frameworkElement && frameworkElement.IsKeyboardFocused;
 
                 var name = (e as FrameworkElement)?.Name;
 
 
-                var typename = e.GetType().ToString();
-                var valuestring = e.ToString();
+                var typeName = e.GetType().ToString();
+                var valueString = e.ToString();
 
 
-                if (typename == valuestring)
+                if (typeName == valueString)
                 {
-                    Debug.WriteLine($"FocusTree: {isKeyboardFocused} {name} ({typename})");
+                    Debug.WriteLine($"FocusTree: {isKeyboardFocused} {name} ({typeName})");
                 }
-                else if (valuestring is not null && valuestring.StartsWith(typename, StringComparison.Ordinal))
+                else if (valueString is not null && valueString.StartsWith(typeName, StringComparison.Ordinal))
                 {
-                    Debug.WriteLine($"FocusTree: {isKeyboardFocused} {name} ({valuestring})");
+                    Debug.WriteLine($"FocusTree: {isKeyboardFocused} {name} ({valueString})");
                 }
                 else
                 {
-                    Debug.WriteLine($"FocusTree: {isKeyboardFocused} {name} ({typename}: {valuestring})");
+                    Debug.WriteLine($"FocusTree: {isKeyboardFocused} {name} ({typeName}: {valueString})");
                 }
 
                 if (VisualTreeHelper.GetParent(e) is Visual parent)

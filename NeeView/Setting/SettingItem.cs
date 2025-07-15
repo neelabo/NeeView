@@ -20,7 +20,7 @@ namespace NeeView.Setting
     /// <summary>
     /// 設定ウィンドウ項目基底
     /// </summary>
-    public class SettingItem 
+    public class SettingItem
     {
         private SettingItem? _searchResultItem;
 
@@ -86,6 +86,10 @@ namespace NeeView.Setting
         public virtual IEnumerable<SettingItem> GetItemCollection()
         {
             yield return this;
+        }
+
+        public virtual void InitializeValue()
+        {
         }
     }
 
@@ -184,13 +188,13 @@ namespace NeeView.Setting
                 : Enumerable.Empty<UIElement>();
         }
 
-        public override  IEnumerable<SettingItem> GetItemCollection()
+        public override IEnumerable<SettingItem> GetItemCollection()
         {
             if (Children != null)
             {
                 foreach (var child in Children)
                 {
-                    foreach(var item in child.GetItemCollection())
+                    foreach (var item in child.GetItemCollection())
                     {
                         yield return item;
                     }
@@ -199,6 +203,14 @@ namespace NeeView.Setting
             else
             {
                 yield return this;
+            }
+        }
+
+        public override void InitializeValue()
+        {
+            foreach (var child in Children)
+            {
+                child.InitializeValue();
             }
         }
     }
@@ -307,6 +319,8 @@ namespace NeeView.Setting
 
         public bool IsStretch { get; set; }
 
+        public Action? ResetAction { get; set; }
+
         protected override UIElement CreateContentInner()
         {
             return new SettingItemControl(this.Icon, this.Header, this.Tips, _content ?? _element.TypeValue, this.SubContent, this.IsStretch);
@@ -315,6 +329,22 @@ namespace NeeView.Setting
         public override string GetSearchText()
         {
             return this.Header + " " + this.Tips;
+        }
+
+        public override void InitializeValue()
+        {
+            if (ResetAction is not null)
+            {
+                ResetAction.Invoke();
+            }
+            else if (_content is IValueInitializable initializable)
+            {
+                initializable.InitializeValue();
+            }
+            else
+            {
+                _element.InitializeValue();
+            }
         }
     }
 
@@ -390,6 +420,12 @@ namespace NeeView.Setting
         {
             return _element1.Name + " " + (_element1.Tips ?? this.Tips);
         }
+
+        public override void InitializeValue()
+        {
+            _element1.InitializeValue();
+            _element2.InitializeValue();
+        }
     }
 
     /// <summary>
@@ -422,6 +458,11 @@ namespace NeeView.Setting
         public override string GetSearchText()
         {
             return this.Header + " " + this.Tips;
+        }
+
+        public override void InitializeValue()
+        {
+            _element.InitializeValue();
         }
     }
 
@@ -456,6 +497,11 @@ namespace NeeView.Setting
         public override string GetSearchText()
         {
             return _element.Name + " " + (_element.Tips ?? this.Tips);
+        }
+
+        public override void InitializeValue()
+        {
+            _element.InitializeValue();
         }
     }
 
@@ -495,6 +541,12 @@ namespace NeeView.Setting
         public override string GetSearchText()
         {
             return _element.Name + " " + (_element.Tips ?? this.Tips);
+        }
+
+        public override void InitializeValue()
+        {
+            _element.InitializeValue();
+            _indexValue.Update();
         }
     }
 
@@ -675,13 +727,16 @@ namespace NeeView.Setting
     /// </summary>
     public class SettingItemCommand : SettingItem
     {
+        private SettingItemCommandControl? _control;
+
         public SettingItemCommand() : base(null)
         {
         }
 
         protected override UIElement CreateContentInner()
         {
-            return new SettingItemCommandControl();
+            _control = new SettingItemCommandControl();
+            return _control;
         }
 
         public override string GetSearchText()
@@ -693,6 +748,11 @@ namespace NeeView.Setting
                 TextResources.GetString("EditCommandWindow.Tab.Touch"),
                 TextResources.GetString("EditCommandWindow.Tab.Parameter"));
         }
+
+        public override void InitializeValue()
+        {
+            _control?.Reset();
+        }
     }
 
     /// <summary>
@@ -700,18 +760,25 @@ namespace NeeView.Setting
     /// </summary>
     public class SettingItemContextMenu : SettingItem
     {
+        private ContextMenuSettingControl? _control;
+
         public SettingItemContextMenu() : base(null)
         {
         }
 
         protected override UIElement CreateContentInner()
         {
-            var control = new ContextMenuSettingControl()
+            _control = new ContextMenuSettingControl()
             {
                 ContextMenuSetting = ContextMenuSource.Current
             };
 
-            return control;
+            return _control;
+        }
+
+        public override void InitializeValue()
+        {
+            _control?.Reset();
         }
     }
 

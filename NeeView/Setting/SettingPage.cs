@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeView.Properties;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -75,6 +76,13 @@ namespace NeeView.Setting
         public bool IsScrollEnabled { get; set; } = true;
 
         /// <summary>
+        /// リセットボタン
+        /// </summary>
+        public bool IsResetButtonEnabled { get; set; } = true;
+        public bool IsResetButtonConfirm { get; set; } = true;
+        public Thickness ResetButtonMargin { get; set; } = new Thickness(0, 10, 10, 15);
+
+        /// <summary>
         /// 表示ページ。
         /// コンテンツがない場合、子のページを返す
         /// </summary>
@@ -109,6 +117,9 @@ namespace NeeView.Setting
                 }
             }
 
+            dockPanel.Margin = new Thickness(20, 0, 0, 0);
+            UIElement panel = dockPanel;
+
             if (this.IsScrollEnabled)
             {
                 dockPanel.Margin = new Thickness(20, 0, 20, 20);
@@ -119,12 +130,47 @@ namespace NeeView.Setting
                 scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
                 scrollViewer.Content = dockPanel;
                 scrollViewer.Focusable = false;
-                return scrollViewer;
+                panel = scrollViewer;
+            }
+
+            if (IsResetButtonEnabled)
+            {
+                var button = new Button();
+                button.Content = TextResources.GetString("Word.Reset");
+                button.HorizontalAlignment = HorizontalAlignment.Right;
+                button.Margin = ResetButtonMargin;
+                button.Padding = new Thickness(10, 5, 10, 5);
+                button.MinWidth = 100.0;
+                button.TabIndex = 2;
+                button.Click += ResetButton_Click;
+                DockPanel.SetDock(button, Dock.Bottom);
+
+                var topPanel = new DockPanel();
+                topPanel.Children.Add(button);
+                topPanel.Children.Add(panel);
+
+                panel = topPanel;
+            }
+
+            return panel;
+        }
+
+        private void ResetButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsResetButtonConfirm)
+            {
+                var dialog = new MessageDialog(TextResources.GetString("SettingResetDialog.Message"), TextResources.GetString("SettingResetDialog.Title"));
+                dialog.Commands.Add(UICommands.OK);
+                dialog.Commands.Add(UICommands.Cancel);
+                var result = dialog.ShowDialog(Window.GetWindow(_content));
+                if (result.IsPossible)
+                {
+                    InitializeValue();
+                }
             }
             else
             {
-                dockPanel.Margin = new Thickness(20, 0, 0, 0);
-                return dockPanel;
+                InitializeValue();
             }
         }
 
@@ -139,9 +185,9 @@ namespace NeeView.Setting
         {
             if (Items == null) yield break;
 
-            foreach(var item in Items)
+            foreach (var item in Items)
             {
-                foreach(var subItem in item.GetItemCollection())
+                foreach (var subItem in item.GetItemCollection())
                 {
                     yield return subItem;
                 }
@@ -151,6 +197,16 @@ namespace NeeView.Setting
         public string GetSearchText()
         {
             return Header;
+        }
+
+        public virtual void InitializeValue()
+        {
+            if (Items == null) return;
+
+            foreach (var item in Items)
+            {
+                item.InitializeValue();
+            }
         }
     }
 }
