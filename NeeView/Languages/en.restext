@@ -1636,6 +1636,7 @@ ScriptErrorMessage.Alternative=Use {0} instead.
 ScriptErrorMessage.Obsolete={0} is obsolete.
 ScriptOnBookLoadedCommand.Remarks=Executes when the book is opened.
 ScriptOnPageChangedCommand.Remarks=Executes when the page view is changed.
+ScriptOnPageEndCommand.Remarks=This is executed when attempting to move beyond the end of the page. The argument is 1 (last) or -1 (first).
 ScriptOnStartupCommand.Remarks=Executed when the application is launched.
 ScriptOnWindowStateChangedCommand.Remarks=Executed when the window state is changed.
 ScrollPageCommandParameter.EndMargin=Scroll end margin

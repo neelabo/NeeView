@@ -1628,6 +1628,7 @@ ScriptErrorMessage.Alternative=대신 "{0}"(을)를 사용하세요.
 ScriptErrorMessage.Obsolete="{0}"(은)는 폐지되었습니다.
 ScriptOnBookLoadedCommand.Remarks=책을 열었을 때 실행됩니다.
 ScriptOnPageChangedCommand.Remarks=표시 페이지가 변경되었을 때 실행됩니다.
+ScriptOnPageEndCommand.Remarks=
 ScriptOnStartupCommand.Remarks=앱 시작 시 실행됩니다.
 ScriptOnWindowStateChangedCommand.Remarks=창 상태가 변경되었을 때 실행됩니다.
 ScrollPageCommandParameter.EndMargin=스크롤 가장자리 여백 (픽셀)

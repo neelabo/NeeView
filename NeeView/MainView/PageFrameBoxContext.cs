@@ -46,6 +46,7 @@ namespace NeeView
             _disposables.Add(_box.SubscribeSelectedContainerLayoutChanged((s, e) => SelectedContainerLayoutChanged?.Invoke(s, e)));
             _disposables.Add(_box.SubscribeSelectedContentSizeChanged((s, e) => SelectedContentSizeChanged?.Invoke(s, e)));
             _disposables.Add(_box.SubscribeSizeChanged((s, e) => ViewSizeChanged?.Invoke(s, e)));
+            _disposables.Add(_box.SubscribePageTerminated((s, e) => PageTerminated?.Invoke(s, e)));
 
             _bookMementoControl = new BookMementoControl(book, BookHistoryCollection.Current);
             _disposables.Add(_bookMementoControl);
@@ -79,6 +80,9 @@ namespace NeeView
 
         [Subscribable]
         public event SizeChangedEventHandler? ViewSizeChanged;
+
+        [Subscribable]
+        public event EventHandler<PageTerminatedEventArgs>? PageTerminated;
 
 
         public Book Book => _book;

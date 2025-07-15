@@ -1628,6 +1628,7 @@ ScriptErrorMessage.Alternative=請改用替代的 {0} 。
 ScriptErrorMessage.Obsolete={0} 已被廢除。
 ScriptOnBookLoadedCommand.Remarks=當開啟書本時執行。
 ScriptOnPageChangedCommand.Remarks=當顯示頁面被更改時執行。
+ScriptOnPageEndCommand.Remarks=
 ScriptOnStartupCommand.Remarks=
 ScriptOnWindowStateChangedCommand.Remarks=
 ScrollPageCommandParameter.EndMargin=捲動結尾邊距 (像素)

@@ -20,6 +20,7 @@ namespace NeeView
             _presenter = PageFrameBoxPresenter.Current;
             _presenter.PageFrameBoxChanged += Presenter_PageFrameBoxChanged;
             _presenter.ViewPageChanged += Presenter_ViewPageChanged;
+            _presenter.PageTerminated += Presenter_PageTerminated;
         }
 
 
@@ -51,7 +52,7 @@ namespace NeeView
             {
                 return;
             }
- 
+
             // Script: OnBookLoaded
             CommandTable.Current.TryExecute(this, ScriptCommand.EventOnBookLoaded, null, CommandOption.None);
         }
@@ -63,6 +64,15 @@ namespace NeeView
 
             // Script: OnPageChanged
             CommandTable.Current.TryExecute(this, ScriptCommand.EventOnPageChanged, null, CommandOption.None);
+        }
+
+        private void Presenter_PageTerminated(object? sender, PageTerminatedEventArgs e)
+        {
+            NVDebug.AssertSTA();
+
+            // Script: OnPageEnd
+            var args = new object[] { e.Direction };
+            CommandTable.Current.TryExecute(this, ScriptCommand.EventOnPageEnd, args, CommandOption.None);
         }
     }
 }

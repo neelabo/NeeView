@@ -1,8 +1,10 @@
 ﻿using NeeView.Properties;
+using NeeView.Text;
 using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Data;
 
@@ -37,6 +39,7 @@ namespace NeeView
         public const string EventOnStartup = Prefix + ScriptCommandSource.OnStartupFilename;
         public const string EventOnBookLoaded = Prefix + ScriptCommandSource.OnBookLoadedFilename;
         public const string EventOnPageChanged = Prefix + ScriptCommandSource.OnPageChangedFilename;
+        public const string EventOnPageEnd = Prefix + ScriptCommandSource.OnPageEndFilename;
         public const string EventOnWindowStateChanged = Prefix + ScriptCommandSource.OnWindowStateChangedFilename;
 
         private readonly string _path;

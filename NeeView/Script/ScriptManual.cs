@@ -76,6 +76,7 @@ namespace NeeView
                     <tr><td>OnStartup.nvjs</td><td>@ScriptOnStartupCommand.Remarks</td></tr>
                     <tr><td>OnBookLoaded.nvjs</td><td>@ScriptOnBookLoadedCommand.Remarks</td></tr>
                     <tr><td>OnPageChanged.nvjs</td><td>@ScriptOnPageChangedCommand.Remarks</td></tr>
+                    <tr><td>OnPageEnd.nvjs</td><td>@ScriptOnPageEndCommand.Remarks</td></tr>
                     <tr><td>OnWindowStateChanged.nvjs</td><td>@ScriptOnWindowStateChangedCommand.Remarks</td></tr>
                 </table>
             </p>

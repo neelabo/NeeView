@@ -133,6 +133,9 @@ namespace NeeView
         [Subscribable]
         private event EventHandler<IsSortBusyChangedEventArgs>? IsSortBusyChanged;
 
+        [Subscribable]
+        public event EventHandler<PageTerminatedEventArgs>? PageTerminated;
+
 
         public ViewScrollContext ViewScrollContext { get; } = new();
 
@@ -521,6 +524,11 @@ namespace NeeView
             SelectedRangeChanged?.Invoke(this, e);
         }
 
+        private void Box_PageTerminated(object? sender, PageTerminatedEventArgs e)
+        {
+            PageTerminated?.Invoke(this, e);
+        }
+
         #endregion Box events
 
         private static void ShowLoupeTransformMessage(ITransformControlObject source, TransformAction action)
@@ -662,6 +670,7 @@ namespace NeeView
                 boxContext.SubscribeSelectedContainerLayoutChanged(Box_SelectedContainerLayoutChanged),
                 boxContext.SubscribeSelectedContentSizeChanged(Box_SelectedContentSizeChanged),
                 boxContext.SubscribeViewSizeChanged(Box_ViewSizeChanged),
+                boxContext.SubscribePageTerminated(Box_PageTerminated),
             ];
 
             _box = boxContext;

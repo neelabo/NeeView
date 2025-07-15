@@ -11,6 +11,7 @@ namespace NeeView
         public const string OnStartupFilename = "OnStartup";
         public const string OnBookLoadedFilename = "OnBookLoaded";
         public const string OnPageChangedFilename = "OnPageChanged";
+        public const string OnPageEndFilename = "OnPageEnd";
         public const string OnWindowStateChangedFilename = "OnWindowStateChanged";
 
         [GeneratedRegex(@"^\s*/{2,}")]
@@ -55,6 +56,10 @@ namespace NeeView
 
                 case OnPageChangedFilename:
                     source.Remarks = TextResources.GetString("ScriptOnPageChangedCommand.Remarks");
+                    break;
+
+                case OnPageEndFilename:
+                    source.Remarks = TextResources.GetString("ScriptOnPageEndCommand.Remarks");
                     break;
 
                 case OnWindowStateChangedFilename:
