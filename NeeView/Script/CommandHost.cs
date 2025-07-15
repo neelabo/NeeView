@@ -18,7 +18,7 @@ namespace NeeView
         private readonly ScriptAccessDiagnostics _accessDiagnostics;
         private readonly IHasScriptPath _scriptPath;
         private CommandAccessor? _command;
-        private List<string> _args = new();
+        private List<object> _args = new();
         private CancellationToken _cancellationToken;
 
 
@@ -58,7 +58,7 @@ namespace NeeView
         public string? ScriptPath => _scriptPath.ScriptPath;
 
         [WordNodeMember]
-        public List<string> Args => _args;
+        public List<object> Args => _args;
 
         [WordNodeMember]
         public IDictionary<string, object> Values => _resource.Values;
@@ -145,7 +145,7 @@ namespace NeeView
             _command = Command.TryGetCommand(name, out var command) ? command as CommandAccessor : null;
         }
 
-        internal void SetArgs(List<string> args)
+        internal void SetArgs(List<object> args)
         {
             _args = args;
         }

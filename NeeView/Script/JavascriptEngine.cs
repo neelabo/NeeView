@@ -60,7 +60,7 @@ namespace NeeView
             _commandHost.SetCommandName(name);
         }
 
-        public void SetArgs(List<string> args)
+        public void SetArgs(List<object> args)
         {
             _commandHost.SetArgs(args);
         }

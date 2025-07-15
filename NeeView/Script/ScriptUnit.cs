@@ -1,5 +1,6 @@
 ﻿using NeeView.Text;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -20,13 +21,13 @@ namespace NeeView
             _pool = pool;
         }
 
-        public void Execute(object? sender, string path, string? name, string? argument)
+        public void Execute(object? sender, string path, string? name, List<object>? args)
         {
-            Task.Run(() => ExecuteInner(sender, path, name, argument));
+            Task.Run(() => ExecuteInner(sender, path, name, args));
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:未使用のパラメーターを削除します", Justification = "<保留中>")]
-        private void ExecuteInner(object? sender, string path, string? name, string? argument)
+        private void ExecuteInner(object? sender, string path, string? name, List<object>? args)
         {
             var engine = new JavaScriptEngine() { IsToastEnable = true };
 
@@ -35,7 +36,7 @@ namespace NeeView
             {
                 ////engine.Log($"Script: {LoosePath.GetFileName(path)} ...");
                 engine.SetCommandName(name);
-                engine.SetArgs(StringTools.SplitArgument(argument));
+                engine.SetArgs(args ?? []);
                 engine.ExecuteFile(path, _cancellationTokenSource.Token);
                 ////engine.Log($"Script: {LoosePath.GetFileName(path)} done.");
             }

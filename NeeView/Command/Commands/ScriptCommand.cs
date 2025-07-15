@@ -89,7 +89,8 @@ namespace NeeView
 
         public override void Execute(object? sender, CommandContext e)
         {
-            ScriptManager.Current.Execute(sender, _path, Name, (e.Parameter.Cast<ScriptCommandParameter>()).Argument);
+            var args = e.Args.Length > 0 ? e.Args.ToList() : StringTools.SplitArgument((e.Parameter.Cast<ScriptCommandParameter>()).Argument).ToList<object>();
+            ScriptManager.Current.Execute(sender, _path, Name, args);
         }
 
         public override void UpdateDefaultParameter()

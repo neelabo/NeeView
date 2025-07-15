@@ -1,6 +1,7 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.Properties;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -129,11 +130,11 @@ namespace NeeView
         }
 
 
-        public void Execute(object? sender, string path, string? name, string? argument)
+        public void Execute(object? sender, string path, string? name, List<object>? args)
         {
             if (_disposedValue) return;
 
-            _pool.Run(sender, path, name, argument);
+            _pool.Run(sender, path, name, args);
         }
 
         public void CancelAll()
