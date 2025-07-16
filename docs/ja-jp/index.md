@@ -57,6 +57,7 @@ title: HOME
 
 * [ユーザーガイド](userguide.md)
 * [コマンドラインオプション](commandline-options.md)
+* [アプリ設定ファイル](appsettings.md)
 * [環境変数](environment-value.md)
 * [メインメニュー](main-menu.html)
 * [コマンド一覧](command-list.html)

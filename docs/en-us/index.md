@@ -57,6 +57,7 @@ Powerful customization is available.
 
  * [User's Guide](userguide.md)
  * [Commandline Options](commandline-options.md)
+ * [App Settings File](appsettings.md)
  * [Environment Variable](environment-value.md)
  * [Main Menu](main-menu.html)
  * [Command List](command-list.html)

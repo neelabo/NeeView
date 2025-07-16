@@ -43,12 +43,12 @@ namespace NeeView
         public bool SelfContained { get; set; }
 
         /// <summary>
-        /// [開発用] パッケージタイプウォーターマークを表示する
+        /// パッケージタイプウォーターマークを表示する
         /// </summary>
         public bool Watermark { get; set; }
 
         /// <summary>
-        /// LocalApplicationData にデータを保存するか
+        /// LocalApplicationData にプロファイルを保存するか
         /// </summary>
         /// <remarks>
         /// Msi, Appx は true。
@@ -67,7 +67,7 @@ namespace NeeView
         public string DateVersion { get; set; } = "??";
 
         /// <summary>
-        /// PDFレンダラー指定 (未使用)
+        /// PDFレンダラー指定 (未使用。機能しません)
         /// </summary>
         /// <remarks>
         /// Pdfium, WinRT
@@ -91,7 +91,7 @@ namespace NeeView
         public string? CheckVersion { get; set; }
 
         /// <summary>
-        /// JSON保存データにデフォルト値を出力しないようにして軽量化する
+        /// JSON保存データにデフォルト値を出力しないようにして軽量化する (ほぼ未実装)
         /// </summary>
         public bool TrimSaveData { get; set; } = true;
 
@@ -103,6 +103,14 @@ namespace NeeView
         /// false のときはプロセス名のみで判別する
         /// </remarks>
         public bool PathProcessGroup { get; set; }
+
+        /// <summary>
+        /// 既定のテンポラリフォルダーをプロファイル内に作る
+        /// </summary>
+        /// <remarks>
+        /// false の場合、システムのテンポラリフォルダーを使用します。
+        /// </remarks>
+        public bool TemporaryFilesInProfileFolder { get; set; }
     }
 
 }

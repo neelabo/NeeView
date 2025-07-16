@@ -111,7 +111,7 @@ Control.GrayText | 汎用：コントロールの灰色文字色
 Control.Accent | 汎用：コントロールのアクセントカラー
 Control.AccentText | 汎用：コントロールのアクセントカラー上の文字色
 Control.Focus | 汎用：コントロールのフォーカス色
-Control.MouseOver.Background | 汎用：マウスカーソルがあるときの背景色 (v43.0)
+Control.MouseOver.Background | 汎用：マウスカーソルがあるときの背景色
 Item.Separator | リスト項目の区切りの色
 Item.MouseOver.Background | リスト項目上にマウスカーソルがあるときの背景色
 Item.MouseOver.Border | リスト項目にマウスカーソルがあるときのボーダー色
@@ -141,7 +141,7 @@ Slider.Background | スライダーコントロールの背景色
 Slider.Foreground | スライダーコントロールの文字色
 Slider.Border | スライダーコントロールのボーダー色
 Slider.Thumb | スライダーコントロールのつまみ部分の色
-Slider.Thumb.MouseOver | スライダーコントロールのつまみ部分にマウスカーソルがあるときの色 (v43.0)
+Slider.Thumb.MouseOver | スライダーコントロールのつまみ部分にマウスカーソルがあるときの色
 Slider.Track | スライダーコントロールのトラック部分の色
 ScrollBar.Background | スクロールバーの背景色
 ScrollBar.Foreground | スクロールバーの文字色
@@ -151,7 +151,7 @@ ScrollBar.Pressed | スクロールバーが押されたときの色
 TextBox.Background | テキストボックスの背景色
 TextBox.Foreground | テキストボックスの文字色
 TextBox.Border | テキストボックスのボーダー色
-TextBox.MouseOver.Background | テキストボックスにマウスカーソルがあるときの背景色 (v43.0)
+TextBox.MouseOver.Background | テキストボックスにマウスカーソルがあるときの背景色
 Menu.Background | メニューの背景色
 Menu.Foreground | メニューの文字色
 Menu.Border | メニューのボーダー色

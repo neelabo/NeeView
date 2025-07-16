@@ -25,7 +25,7 @@ namespace NeeView
 
 
         // テンポラリーフォルダー作成場所(既定)
-        public static string TempRootPathDefault => System.IO.Path.GetTempPath().TrimEnd('\\');
+        public static string TempRootPathDefault => Environment.DefaultTempPath;
 
         // テンポラリーフォルダー作成場所
         public string TempRootPath { get; private set; }

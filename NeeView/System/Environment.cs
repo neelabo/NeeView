@@ -1,4 +1,7 @@
-﻿using NeeView.Properties;
+﻿#define LOCAL_DEBUG
+
+using NeeLaboratory.Generators;
+using NeeView.Properties;
 using PdfiumViewer;
 using System;
 using System.Collections.Generic;
@@ -19,10 +22,12 @@ namespace NeeView
     /// <summary>
     /// アプリの環境
     /// </summary>
-    public static class Environment
+    [LocalDebug]
+    public static partial class Environment
     {
         private static string? _localApplicationDataPath;
         private static string? _userDataPath;
+        private static string? _defaultTempPath;
         private static string? _packageType;
         private static string? _revision;
         private static string? _dateVersion;
@@ -234,7 +239,7 @@ namespace NeeView
                         _localApplicationDataPath = Path.Combine(AssemblyFolder, "Profile");
                         CreateFolder(_localApplicationDataPath);
                     }
-                    Debug.WriteLine($"LocalApplicationDataPath: {_localApplicationDataPath}");
+                    LocalDebug.WriteLine($"LocalApplicationDataPath: {_localApplicationDataPath}");
                 }
 
                 return _localApplicationDataPath;
@@ -271,11 +276,36 @@ namespace NeeView
                     {
                         _userDataPath = LocalApplicationDataPath;
                     }
-                    Debug.WriteLine($"UserDataPath: {_userDataPath}");
+                    LocalDebug.WriteLine($"UserDataPath: {_userDataPath}");
                 }
                 return _userDataPath;
             }
         }
+
+
+        /// <summary>
+        /// 既定のテンポラリフォルダー
+        /// </summary>
+        public static string DefaultTempPath
+        {
+            get
+            {
+                if (_defaultTempPath == null)
+                {
+                    if (AppSettings.Current.TemporaryFilesInProfileFolder)
+                    {
+                        _defaultTempPath = Path.Combine(Environment.LocalApplicationDataPath, "Temp");
+                    }
+                    else
+                    {
+                        _defaultTempPath = System.IO.Path.GetTempPath().TrimEnd('\\');
+                    }
+                    LocalDebug.WriteLine($"DefaultTempPath: {_defaultTempPath}");
+                }
+                return _defaultTempPath;
+            }
+        }
+
 
         /// <summary>
         /// ライブラリーパス
@@ -637,7 +667,7 @@ namespace NeeView
                 throw new ApplicationException(TextResources.GetString("CannotDeleteDataException.Message"));
             }
 
-            Debug.WriteLine("RemoveAllApplicationData ...");
+            LocalDebug.WriteLine("RemoveAllApplicationData ...");
 
             var productFolder = GetLocalAppDataPath();
             Directory.Delete(productFolder, true);
@@ -652,7 +682,7 @@ namespace NeeView
                 }
             }
 
-            Debug.WriteLine("RemoveAllApplicationData done.");
+            LocalDebug.WriteLine("RemoveAllApplicationData done.");
             return true;
         }
 
@@ -687,7 +717,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(nameof(CorrectLocalAppDataFolder) + " failed: " + ex.Message);
+                LocalDebug.WriteLine(nameof(CorrectLocalAppDataFolder) + " failed: " + ex.Message);
             }
         }
 

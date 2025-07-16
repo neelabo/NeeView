@@ -1,10 +1,11 @@
 {
   "PackageType": "Dev",
-  "SelfContained": false,
-  "Watermark": true,
-  "UseLocalApplicationData": false,
   "Revision": "12345678",
   "DateVersion": "0000",
+  "SelfContained": false,
+  "UseLocalApplicationData": false,
+  "TemporaryFilesInProfileFolder": false,
   "PathProcessGroup": true,
+  "Watermark": true,
   "LogFile": null
 }
