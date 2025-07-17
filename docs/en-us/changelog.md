@@ -1,5 +1,83 @@
 # Changelog
 
+## 44.0
+(2025-08-??)
+
+#### Added
+
+- Language: Russian added.
+- System: Added "Search depth for generating book thumbnail" setting. (Settings > Book)
+- System: Added "Number of recent books" setting. (Settings > History)
+- AppSettings: Added app setting to create a temporary folder in the profile. For details, refer to the [App Configuration File](https://neelabo.github.io/NeeView/appsettings.html).
+- Command: "Next playlist" and "Prev playlist" commands added. Switches between playlists.
+- Command: Added the ability to specify the destination bookmark folder in the "Toggle bookmark" command parameters.
+- Command: Added "Register bookmark" command. Calls up the Bookmark Registration dialog.
+- Command: Added "Select Archiver" command. Selects the archiver that opens the current book.
+- Command: Commandize "Recently books."
+- Settings: Added a reset button to each settings page.
+- Book: Password support for archives. Only valid when using 7z.dll.
+- View: Added "Start with movement locked" setting. (Settings > View operation)
+- View: Added setting to display only icons while loading books. (Settings > Notification > Show Now Loading)
+- Panels: Added top and bottom margin size settings for when side panels overlap with menus, etc. (Settings > Panels)
+- Panels: Added setting to enable/disable detailed pop-ups for panel items. (Settings > Panels)
+- Panels: Added plural form to relative date specification for search keywords (e.g., -5days). Singular form (e.g., -5day) can still be used as before.
+- Bookshelf: Added the option to select Quick Access from the context menu of the Home button.
+- History: Thumbnail display of history, group display support.
+- PageList: Group display support for page list.
+- Playlist: Support for thumbnail display in playlist.
+- Script: Add nv.OpenFileDialog() and nv.OpenFolderDialog().
+- Script: Added WindowAccessor. Allows you to get/set window size, etc.
+- Script: Corresponds to the page end event OnPageEnd.nvjs.
+
+#### Changed
+
+- System: When restoring the bookshelf at startup, selected items are now also restored.
+- System: When both books and bookshelves are specified for restoration at startup, the restoration information for each is respected.
+- System: Synchronization of saved data is now performed by file monitoring rather than interprocess communication.
+- System: Susie Plug-in Server has been AOT-ized. Installation of .NET Runtime x86 is no longer required.
+- System: The thumbnails cache retention period can now be edited directly. (Settings > Thumbnail)
+- System: Changed the "Use natural sort" setting to "Name order type" to enable sorting by "Character code order." (Settings > General)
+- Susie: Only valid Susie plugins are loaded.
+- Settings: Organize the order of pages in the settings menu.
+- Settings: New context menu editing based on drag-and-drop editing.
+- Settings: Display point size in font size settings.
+- Printing: Printing settings are now saved. However, printer settings are not saved and are only maintained while the app is running.
+- Book: Changed the "Sort pages by file first" setting to "Folder sort order." (Settings > Book)
+- Book: Restored the order of pages when the order is set to "Shuffle."
+- View: Enabled cursor movement without restrictions while using the loupe.
+- View: In hover scroll, the initial position is now immediately reflected when switching pages.
+- AddressBar: Address is now displayed as a breadcrumb bar.
+- AddressBar: Changed so that the bookmark registration dialog box is displayed when the bookmark button on the address bar is clicked.
+- Menu: Removed "Bookmark" from the menu and added "Book."
+- Panels: Added the ability to set automatic hiding of side panels separately for the left and right panels.
+- Panels: If there are no icons in the sidebar, hide it.
+- Panels: Suppress continuous display of tooltips.
+- Panels: Added display of drag insertion position in list.
+- Panels: When searching for "/bookmark," exclude bookmark folders.
+- Bookshelf: Display addresses as breadcrumb bar.
+- Bookshelf: Changed the "Sort without types" setting in the bookshelf to "Folder sort order" and made it possible to specify the sort position of folders. (Settings > Bookshelf)
+- Bookshelf: Restored the order of books when the order is set to "Shuffle."
+- Bookshelf: Quick access adapted to hierarchy.
+- Bookshelf: Added the location of each item to the tooltips for bookshelf search results.
+- History: Direct editing of retention period and number of entries now possible. (Settings > History)
+- History: When closing the app, the history is saved regardless of the number of page changes.
+- Bookmark: You can now change the names of bookmarks. The actual file names will remain unchanged. 
+- Bookmarks: Manual sorting is now possible only when the sorting order is set to "Entry."
+- Playlist: Supports manual sorting.
+- Slideshow: Minimum transition time limited to 0.1 seconds.
+- Script: Made it possible to change Name in BookItemAccessor.
+
+#### Fixed
+
+- System: Fixed a bug where the bookshelf would sometimes be restored to the root folder of the bookmarks when starting up.
+- System: Fixed an issue where window size might not be adjusted properly.
+- Susie: Fixed a bug where short path names were not used for archives. 
+- Printing: Fixed a bug where margin settings were not reflected in the preview.
+- Panels: Fixed a bug where the drag display and drag content sometimes differed.
+- Bookshelf: Fixed a bug where the bookshelf item selection was deselected when deleting a ZIP file page.
+- Script: Fixed a bug where script command arguments were not passed.
+
+
 ## 43.3
 (2025-05-09)
 

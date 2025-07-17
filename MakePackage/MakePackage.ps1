@@ -405,6 +405,7 @@ function New-Readme {
 	$source += $licenseContent
 
 	$thirdPartyLicenseContent = Get-Content "$solutionDir\THIRDPARTY_LICENSES.md"
+	$thirdPartyLicenseContent += @("")
 	$thirdPartyLicenseContent += Get-Content "$solutionDir\NeeLaboratory.IO.Search\THIRDPARTY_LICENSES.md"
 	$source += @("")
 	$source += $thirdPartyLicenseContent

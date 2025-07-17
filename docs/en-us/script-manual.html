@@ -6,7 +6,7 @@ title: Script Manual
 
 <h1>Script Manual</h1>
 
-<p>Version 43.0</p>
+<p>Version 44.0</p>
 
 <ul>
     <li><a href="#s1">Overview</a></li>
@@ -53,7 +53,7 @@ title: Script Manual
     If the script file is placed in the script folder, it can be used as a command. One file is one command.
 
     <ul>
-        <li>Shortcuts can be set in the "Command settings" of the Options like normal commands.</li>
+        <li>Shortcuts can be set in the "Edit commands" of the Options like normal commands.</li>
         <li>The file name becomes the command name.</li>
     </ul>
 </p>
@@ -66,13 +66,14 @@ title: Script Manual
         <tr><td>OnStartup.nvjs</td><td>Executed when the application is launched.</td></tr>
         <tr><td>OnBookLoaded.nvjs</td><td>Executes when the book is opened.</td></tr>
         <tr><td>OnPageChanged.nvjs</td><td>Executes when the page view is changed.</td></tr>
+        <tr><td>OnPageEnd.nvjs</td><td>This is executed when attempting to move beyond the end of the page. The argument is 1 (last) or -1 (first).</td></tr>
         <tr><td>OnWindowStateChanged.nvjs</td><td>Executed when the window state is changed.</td></tr>
     </table>
 </p>
 
 <h2 id="s4">Console</h2>
 <p>
-    A console for testing scripts. To open it, select "Options > Open console" from the menu.
+    A console for testing scripts. To open it, select "Option > Open script console" from the menu.
 </p>
 
 <h4>Console-only command</h4>
@@ -87,9 +88,9 @@ title: Script Manual
 <p>This section explains how to use NeeView-specific commands.</p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>include(string)</td><td>object</td><td class="td-middle">Load and execute the script.<details><h4>Parameters</h4>
+<tr><td>include(string)</td><td>object</td><td class="td-middle">Load and execute the script.<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>path</td><td>string</td><td class="td-middle">Script path. Relative paths are relative to the current script location.</td></tr>
+<tr><td>path</td><td>string</td><td class="td-middle">Script path. Relative paths are relative to the current script location.<br /></td></tr>
 </table></p>
 <h4>Returns</h4>
 <p><table>
@@ -99,20 +100,20 @@ title: Script Manual
 <p><pre><code class="example">// Load and run Sample.nvjs
 include("Sample.nvjs")</code></pre></p>
 </details></td></tr>
-<tr><td>log(object)</td><td>void</td><td class="td-middle">Print a message to the console. It only works when you run the script from the console. For script testing.<details><h4>Parameters</h4>
+<tr><td>log(object)</td><td>void</td><td class="td-middle">Print a message to the console. It only works when you run the script from the console. For script testing.<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>log</td><td>object</td><td class="td-middle">Output message</td></tr>
+<tr><td>log</td><td>object</td><td class="td-middle">Output message<br /></td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>sleep(int)</td><td>void</td><td class="td-middle">Suspends the script for the specified amount of time.<details><h4>Parameters</h4>
+<tr><td>sleep(int)</td><td>void</td><td class="td-middle">Suspends the script for the specified amount of time.<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>millisecond</td><td>int</td><td class="td-middle">Pause time (milliseconds)</td></tr>
+<tr><td>millisecond</td><td>int</td><td class="td-middle">Pause time (milliseconds)<br /></td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>system(string, string)</td><td>void</td><td class="td-middle">Run the external app.<details><h4>Parameters</h4>
+<tr><td>system(string, string)</td><td>void</td><td class="td-middle">Run the external app.<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>filename</td><td>string</td><td class="td-middle">Executable path. If you specify a URL or file path, the associated app will be executed.</td></tr>
-<tr><td>args</td><td>string</td><td class="td-middle">App arguments (optional)</td></tr>
+<tr><td>filename</td><td>string</td><td class="td-middle">Executable path. If you specify a URL or file path, the associated app will be executed.<br /></td></tr>
+<tr><td>args</td><td>string</td><td class="td-middle">App arguments (optional)<br /></td></tr>
 </table></p>
 </details></td></tr>
 </table></p>
@@ -120,63 +121,83 @@ include("Sample.nvjs")</code></pre></p>
 <p>Provides app-specific features.</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>Args</td><td>dictionary</td><td>r</td><td class="td-middle">Command arguments are stored in this array.</td></tr>
-<tr><td>Book</td><td><a href="#BookAccessor">BookAccessor</a></td><td>r</td><td class="td-middle">Current book accessor</td></tr>
-<tr><td>Bookmark</td><td><a href="#BookmarkPanelAccessor">BookmarkPanelAccessor</a></td><td>r</td><td class="td-middle">Bookmark panel accessor</td></tr>
-<tr><td>Bookshelf</td><td><a href="#BookshelfPanelAccessor">BookshelfPanelAccessor</a></td><td>r</td><td class="td-middle">Bookshelf panel accessor</td></tr>
-<tr><td>Command</td><td><a href="#CommandAccessor">CommandAccessor</a>[]</td><td>r</td><td class="td-middle">An associative array of command accessors. The commands are the same as those displayed under Options > Command Settings. For details, refer to <a href="#CommandList"/>Command list</a>.<details><h4>e.g.</h4>
+<tr><td>Args</td><td>dictionary</td><td>r</td><td class="td-middle">Command arguments are stored in this array.<br /></td></tr>
+<tr><td>Book</td><td><a href="#BookAccessor">BookAccessor</a></td><td>r</td><td class="td-middle">Current book accessor<br /></td></tr>
+<tr><td>Bookmark</td><td><a href="#BookmarkPanelAccessor">BookmarkPanelAccessor</a></td><td>r</td><td class="td-middle">Bookmark panel accessor<br /></td></tr>
+<tr><td>Bookshelf</td><td><a href="#BookshelfPanelAccessor">BookshelfPanelAccessor</a></td><td>r</td><td class="td-middle">Bookshelf panel accessor<br /></td></tr>
+<tr><td>Command</td><td><a href="#CommandAccessor">CommandAccessor</a>[]</td><td>r</td><td class="td-middle">An associative array of command accessors. The commands are the same as those displayed under "Settings > Edit commands". For details, refer to <a href="#CommandList"/>Command list</a>.<br /><details><h4>e.g.</h4>
 <p><pre><code class="example">// Execute "NextPage" command
 nv.Command["NextPage"].Execute()
 // As well
 nv.Command.NextPage.Execute()</code></pre></p>
 </details></td></tr>
-<tr><td>Config</td><td>dictionary</td><td>r</td><td class="td-middle">An associative array of application settings. Refers to and changes the set value. For the types of set values, refer to <a href="#ConfigList">Config list</a>.<details><h4>e.g.</h4>
+<tr><td>Config</td><td>dictionary</td><td>r</td><td class="td-middle">An associative array of application settings. Refers to and changes the set value. For the types of set values, refer to <a href="#ConfigList">Config list</a>.<br /><details><h4>e.g.</h4>
 <p><pre><code class="example">// Change the theme color to dark
 nv.Config.Theme.ThemeType = "Dark"</code></pre></p>
 </details></td></tr>
-<tr><td>CurrentCommand</td><td><a href="#CommandAccessor">CommandAccessor</a></td><td>r</td><td class="td-middle">Currently running command</td></tr>
-<tr><td>DestinationFolderCollection</td><td><a href="#DestinationFolderCollectionAccessor">DestinationFolderCollectionAccessor</a></td><td>r</td><td class="td-middle">Destination folder list accessor</td></tr>
-<tr><td>Effect</td><td><a href="#EffectPanelAccessor">EffectPanelAccessor</a></td><td>r</td><td class="td-middle">Effects panel accessor</td></tr>
-<tr><td>Environment</td><td><a href="#EnvironmentAccessor">EnvironmentAccessor</a></td><td>r</td><td class="td-middle">Environment accessor</td></tr>
-<tr><td>ExternalAppCollection</td><td><a href="#ExternalAppCollectionAccessor">ExternalAppCollectionAccessor</a></td><td>r</td><td class="td-middle">External app list accessor</td></tr>
-<tr><td>History</td><td><a href="#HistoryPanelAccessor">HistoryPanelAccessor</a></td><td>r</td><td class="td-middle">History panel accessor</td></tr>
-<tr><td>Information</td><td><a href="#InformationPanelAccessor">InformationPanelAccessor</a></td><td>r</td><td class="td-middle">Information panel accessor</td></tr>
-<tr><td>Navigator</td><td><a href="#NavigatorPanelAccessor">NavigatorPanelAccessor</a></td><td>r</td><td class="td-middle">Navigator panel accessor</td></tr>
-<tr><td>PageList</td><td><a href="#PageListPanelAccessor">PageListPanelAccessor</a></td><td>r</td><td class="td-middle">PageList panel accessor</td></tr>
-<tr><td>Playlist</td><td><a href="#PlaylistPanelAccessor">PlaylistPanelAccessor</a></td><td>r</td><td class="td-middle">Playlist panel accessor</td></tr>
-<tr><td>ScriptPath</td><td>string</td><td>r</td><td class="td-middle">Path of currently running script file</td></tr>
-<tr><td>SusiePluginCollection</td><td><a href="#SusiePluginCollectionAccessor">SusiePluginCollectionAccessor</a></td><td>r</td><td class="td-middle">Susie plugin collection</td></tr>
-<tr><td>Values</td><td>dictionary</td><td>r</td><td class="td-middle">An associative array for storing values. The value saved in this object will be retained during app execution.<details><h4>e.g.</h4>
+<tr><td>CurrentCommand</td><td><a href="#CommandAccessor">CommandAccessor</a></td><td>r</td><td class="td-middle">Currently running command<br /></td></tr>
+<tr><td>DestinationFolderCollection</td><td><a href="#DestinationFolderCollectionAccessor">DestinationFolderCollectionAccessor</a></td><td>r</td><td class="td-middle">Destination folder list accessor<br /></td></tr>
+<tr><td>Effect</td><td><a href="#EffectPanelAccessor">EffectPanelAccessor</a></td><td>r</td><td class="td-middle">Effects panel accessor<br /></td></tr>
+<tr><td>Environment</td><td><a href="#EnvironmentAccessor">EnvironmentAccessor</a></td><td>r</td><td class="td-middle">Environment accessor<br /></td></tr>
+<tr><td>ExternalAppCollection</td><td><a href="#ExternalAppCollectionAccessor">ExternalAppCollectionAccessor</a></td><td>r</td><td class="td-middle">External app list accessor<br /></td></tr>
+<tr><td>History</td><td><a href="#HistoryPanelAccessor">HistoryPanelAccessor</a></td><td>r</td><td class="td-middle">History panel accessor<br /></td></tr>
+<tr><td>Information</td><td><a href="#InformationPanelAccessor">InformationPanelAccessor</a></td><td>r</td><td class="td-middle">Information panel accessor<br /></td></tr>
+<tr><td>MainView</td><td><a href="#MainViewPanelAccessor">MainViewPanelAccessor</a></td><td>r</td><td class="td-middle">Main view accessor<br /></td></tr>
+<tr><td>Navigator</td><td><a href="#NavigatorPanelAccessor">NavigatorPanelAccessor</a></td><td>r</td><td class="td-middle">Navigator panel accessor<br /></td></tr>
+<tr><td>PageList</td><td><a href="#PageListPanelAccessor">PageListPanelAccessor</a></td><td>r</td><td class="td-middle">PageList panel accessor<br /></td></tr>
+<tr><td>Playlist</td><td><a href="#PlaylistPanelAccessor">PlaylistPanelAccessor</a></td><td>r</td><td class="td-middle">Playlist panel accessor<br /></td></tr>
+<tr><td>ScriptPath</td><td>string</td><td>r</td><td class="td-middle">Path of currently running script file<br /></td></tr>
+<tr><td>SusiePluginCollection</td><td><a href="#SusiePluginCollectionAccessor">SusiePluginCollectionAccessor</a></td><td>r</td><td class="td-middle">Susie plugin collection<br /></td></tr>
+<tr><td>Values</td><td>dictionary</td><td>r</td><td class="td-middle">An associative array for storing values. The value saved in this object will be retained during app execution.<br /><details><h4>e.g.</h4>
 <p><pre><code class="example">// Store value
 nv.Values["Test"] = "Hello!"
 // As well
 nv.Values.Test = "Hello!"</code></pre></p>
 </details></td></tr>
+<tr><td>Window</td><td><a href="#WindowAccessor">WindowAccessor</a></td><td>r</td><td class="td-middle">Window accessor in the main window<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>CopyFile(string, string)</td><td>void</td><td class="td-middle">Copy a file or directory<details><h4>Parameters</h4>
+<tr><td>CopyFile(string, string)</td><td>void</td><td class="td-middle">Copy a file or directory<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>source</td><td>string</td><td class="td-middle">Path of the copy source</td></tr>
-<tr><td>destination</td><td>string</td><td class="td-middle">Destination path</td></tr>
+<tr><td>source</td><td>string</td><td class="td-middle">Path of the copy source<br /></td></tr>
+<tr><td>destination</td><td>string</td><td class="td-middle">Destination path<br /></td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>DeleteFile(string)</td><td>void</td><td class="td-middle">Delete a file or directory<details><h4>Parameters</h4>
+<tr><td>DeleteFile(string)</td><td>void</td><td class="td-middle">Delete a file or directory<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>path</td><td>string</td><td class="td-middle">Path to be deleted</td></tr>
+<tr><td>path</td><td>string</td><td class="td-middle">Path to be deleted<br /></td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>MoveFile(string, string)</td><td>void</td><td class="td-middle">Move a file or directory<details><h4>Parameters</h4>
+<tr><td>MoveFile(string, string)</td><td>void</td><td class="td-middle">Move a file or directory<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>source</td><td>string</td><td class="td-middle">Path of the move source</td></tr>
-<tr><td>destination</td><td>string</td><td class="td-middle">Destination path</td></tr>
+<tr><td>source</td><td>string</td><td class="td-middle">Path of the move source<br /></td></tr>
+<tr><td>destination</td><td>string</td><td class="td-middle">Destination path<br /></td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>ShowDialog(string, string, int)</td><td>bool</td><td class="td-middle">Display the dialog.<details><h4>Parameters</h4>
+<tr><td>OpenFileDialog(string)</td><td>string</td><td class="td-middle">Open file selection dialog<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>title</td><td>string</td><td class="td-middle">Main text</td></tr>
-<tr><td>message</td><td>string</td><td class="td-middle">Message (optional)</td></tr>
-<tr><td>commands</td><td>int</td><td class="td-middle">0: OK / 1: OKCancel / 2: YesNo<br />Button types (optional)</td></tr>
+<tr><td>initialDirectory</td><td>string</td><td class="td-middle">Initial directory (optional)<br /></td></tr>
+</table></p>
+<h4>Returns</h4>
+<p><table>
+<tr><td>string</td><td>Selected file path</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>OpenFolderDialog(string)</td><td>string</td><td class="td-middle">Open folder selection dialog<br /><details><h4>Parameters</h4>
+<p><table>
+<tr><td>initialDirectory</td><td>string</td><td class="td-middle">Initial directory (optional)<br /></td></tr>
+</table></p>
+<h4>Returns</h4>
+<p><table>
+<tr><td>string</td><td>Selected folder path</td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>ShowDialog(string, string, int)</td><td>bool</td><td class="td-middle">Display the dialog.<br /><details><h4>Parameters</h4>
+<p><table>
+<tr><td>title</td><td>string</td><td class="td-middle">Main text<br /></td></tr>
+<tr><td>message</td><td>string</td><td class="td-middle">Message (optional)<br /></td></tr>
+<tr><td>commands</td><td>int</td><td class="td-middle">0: OK / 1: OKCancel / 2: YesNo<br />Button types (optional)<br /></td></tr>
 </table></p>
 <h4>Returns</h4>
 <p><table>
@@ -188,44 +209,44 @@ if (isYes) {
     nv.ShowDialog("Good.")
 }</code></pre></p>
 </details></td></tr>
-<tr><td>ShowInputDialog(string)</td><td>string</td><td class="td-middle">Display the input dialog.<details><h4>Parameters</h4>
+<tr><td>ShowInputDialog(string)</td><td>string</td><td class="td-middle">Display the input dialog.<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>title</td><td>string</td><td class="td-middle">Main text</td></tr>
+<tr><td>title</td><td>string</td><td class="td-middle">Main text<br /></td></tr>
 </table></p>
 <h4>Returns</h4>
 <p><table>
 <tr><td>string</td><td>Input text. Null when canceled</td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>ShowInputDialog(string, string)</td><td>string</td><td class="td-middle">Display the input dialog.<details><h4>Parameters</h4>
+<tr><td>ShowInputDialog(string, string)</td><td>string</td><td class="td-middle">Display the input dialog.<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>title</td><td>string</td><td class="td-middle">Main text</td></tr>
-<tr><td>text</td><td>string</td><td class="td-middle">Default text</td></tr>
+<tr><td>title</td><td>string</td><td class="td-middle">Main text<br /></td></tr>
+<tr><td>text</td><td>string</td><td class="td-middle">Default text<br /></td></tr>
 </table></p>
 <h4>Returns</h4>
 <p><table>
 <tr><td>string</td><td>Input text. Null when canceled</td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>ShowInputDialog(string, string, string)</td><td>string</td><td class="td-middle">Display the input dialog.<details><h4>Parameters</h4>
+<tr><td>ShowInputDialog(string, string, string)</td><td>string</td><td class="td-middle">Display the input dialog.<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>title</td><td>string</td><td class="td-middle">Main text</td></tr>
-<tr><td>message</td><td>string</td><td class="td-middle">Message</td></tr>
-<tr><td>text</td><td>string</td><td class="td-middle">Default text</td></tr>
+<tr><td>title</td><td>string</td><td class="td-middle">Main text<br /></td></tr>
+<tr><td>message</td><td>string</td><td class="td-middle">Message<br /></td></tr>
+<tr><td>text</td><td>string</td><td class="td-middle">Default text<br /></td></tr>
 </table></p>
 <h4>Returns</h4>
 <p><table>
 <tr><td>string</td><td>Input text. Null when canceled</td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>ShowMessage(string)</td><td>void</td><td class="td-middle">Display a message on the screen.<details><h4>Parameters</h4>
+<tr><td>ShowMessage(string)</td><td>void</td><td class="td-middle">Display a message on the screen.<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>message</td><td>string</td><td class="td-middle">Output message</td></tr>
+<tr><td>message</td><td>string</td><td class="td-middle">Output message<br /></td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>ShowToast(string)</td><td>void</td><td class="td-middle">Display the message as a toast.<details><h4>Parameters</h4>
+<tr><td>ShowToast(string)</td><td>void</td><td class="td-middle">Display the message as a toast.<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>message</td><td>string</td><td class="td-middle">Output message</td></tr>
+<tr><td>message</td><td>string</td><td class="td-middle">Output message<br /></td></tr>
 </table></p>
 </details></td></tr>
 </table></p>
@@ -233,53 +254,53 @@ if (isYes) {
 <p>Book accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>Config</td><td><a href="#BookConfigAccessor">BookConfigAccessor</a></td><td>r</td><td class="td-middle">Book config</td></tr>
-<tr><td>CreationTime</td><td>Date</td><td>r</td><td class="td-middle">Creation time</td></tr>
-<tr><td>IsBookmarked</td><td>bool</td><td>rw</td><td class="td-middle">Bookmarked or not</td></tr>
-<tr><td>IsMedia</td><td>bool</td><td>r</td><td class="td-middle">Whether the book is a video</td></tr>
-<tr><td>IsNew</td><td>bool</td><td>r</td><td class="td-middle">Whether the book is a newly opened book with no history</td></tr>
-<tr><td>LastWriteTime</td><td>Date</td><td>r</td><td class="td-middle">Last write time</td></tr>
-<tr><td>Pages</td><td><a href="#PageAccessor">PageAccessor</a>[]</td><td>r</td><td class="td-middle">Pages that make up the book</td></tr>
-<tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Book path. Null if no book is open</td></tr>
-<tr><td>Size</td><td>int</td><td>r</td><td class="td-middle">File size. For directory, -1.</td></tr>
-<tr><td>ViewPages</td><td><a href="#ViewPageAccessor">ViewPageAccessor</a>[]</td><td>r</td><td class="td-middle">Displaying pages</td></tr>
+<tr><td>Config</td><td><a href="#BookConfigAccessor">BookConfigAccessor</a></td><td>r</td><td class="td-middle">Book config<br /></td></tr>
+<tr><td>CreationTime</td><td>Date</td><td>r</td><td class="td-middle">Creation time<br /></td></tr>
+<tr><td>IsBookmarked</td><td>bool</td><td>rw</td><td class="td-middle">Bookmarked or not<br /></td></tr>
+<tr><td>IsMedia</td><td>bool</td><td>r</td><td class="td-middle">Whether the book is a video<br /></td></tr>
+<tr><td>IsNew</td><td>bool</td><td>r</td><td class="td-middle">Whether the book is a newly opened book with no history<br /></td></tr>
+<tr><td>LastWriteTime</td><td>Date</td><td>r</td><td class="td-middle">Last write time<br /></td></tr>
+<tr><td>Pages</td><td><a href="#PageAccessor">PageAccessor</a>[]</td><td>r</td><td class="td-middle">Pages that make up the book<br /></td></tr>
+<tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Book path. Null if no book is open<br /></td></tr>
+<tr><td>Size</td><td>int</td><td>r</td><td class="td-middle">File size. For directory, -1.<br /></td></tr>
+<tr><td>ViewPages</td><td><a href="#ViewPageAccessor">ViewPageAccessor</a>[]</td><td>r</td><td class="td-middle">Displaying pages<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>Wait()</td><td>void</td><td class="td-middle">Wait for the view pages to finish loading</td></tr>
+<tr><td>Wait()</td><td>void</td><td class="td-middle">Wait for the view pages to finish loading<br /></td></tr>
 </table></p>
 <h3 id="BookConfigAccessor">[Class] BookConfigAccessor</h3>
 <p>Book config accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>AutoRotate</td><td>string (<a href="#AutoRotateType">AutoRotateType</a>)</td><td>rw</td><td class="td-middle">Automatic rotation</td></tr>
-<tr><td>BaseScale</td><td>double</td><td>rw</td><td class="td-middle">Base scale</td></tr>
-<tr><td>BookReadOrder</td><td>string (<a href="#PageReadOrder">PageReadOrder</a>)</td><td>rw</td><td class="td-middle">Left Open / Right Open</td></tr>
-<tr><td>IsRecursiveFolder</td><td>bool</td><td>rw</td><td class="td-middle">Load subfolders</td></tr>
-<tr><td>IsSupportedDividePage</td><td>bool</td><td>rw</td><td class="td-middle">Divide wide page</td></tr>
-<tr><td>IsSupportedSingleFirstPage</td><td>bool</td><td>rw</td><td class="td-middle">Show first page alone</td></tr>
-<tr><td>IsSupportedSingleLastPage</td><td>bool</td><td>rw</td><td class="td-middle">Show last page alone</td></tr>
-<tr><td>IsSupportedWidePage</td><td>bool</td><td>rw</td><td class="td-middle">Consider landscape pages as two pages</td></tr>
-<tr><td>SortMode</td><td>string (<a href="#PageSortMode">PageSortMode</a>)</td><td>rw</td><td class="td-middle">Sort order</td></tr>
-<tr><td>ViewPageSize</td><td>int</td><td>rw</td><td class="td-middle">Number of pages to display</td></tr>
+<tr><td>AutoRotate</td><td>string (<a href="#AutoRotateType">AutoRotateType</a>)</td><td>rw</td><td class="td-middle">Automatic rotation<br /></td></tr>
+<tr><td>BaseScale</td><td>double</td><td>rw</td><td class="td-middle">Base scale<br /></td></tr>
+<tr><td>BookReadOrder</td><td>string (<a href="#PageReadOrder">PageReadOrder</a>)</td><td>rw</td><td class="td-middle">Left Open / Right Open<br /></td></tr>
+<tr><td>IsRecursiveFolder</td><td>bool</td><td>rw</td><td class="td-middle">Load subfolders<br /></td></tr>
+<tr><td>IsSupportedDividePage</td><td>bool</td><td>rw</td><td class="td-middle">Divide wide page<br /></td></tr>
+<tr><td>IsSupportedSingleFirstPage</td><td>bool</td><td>rw</td><td class="td-middle">Show first page alone<br /></td></tr>
+<tr><td>IsSupportedSingleLastPage</td><td>bool</td><td>rw</td><td class="td-middle">Show last page alone<br /></td></tr>
+<tr><td>IsSupportedWidePage</td><td>bool</td><td>rw</td><td class="td-middle">Consider landscape pages as two pages<br /></td></tr>
+<tr><td>SortMode</td><td>string (<a href="#PageSortMode">PageSortMode</a>)</td><td>rw</td><td class="td-middle">Sort order<br /></td></tr>
+<tr><td>ViewPageSize</td><td>int</td><td>rw</td><td class="td-middle">Number of pages to display<br /></td></tr>
 </table></p>
 <h3 id="BookmarkFolderNodeAccessor">[Class] BookmarkFolderNodeAccessor</h3>
 <p>Bookmark folder node accessor</p>
 <p>This class inherits from <a href="#NodeAccessor">NodeAccessor</a>.</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>Children</td><td><a href="#NodeAccessor">NodeAccessor</a>[]</td><td>r</td><td class="td-middle">Child nodes</td></tr>
-<tr><td>Index</td><td>int</td><td>r</td><td class="td-middle">Index number</td></tr>
-<tr><td>IsDisposed</td><td>bool</td><td>r</td><td class="td-middle">"true" if it is a destroyed node.</td></tr>
-<tr><td>IsExpanded</td><td>bool</td><td>rw</td><td class="td-middle">"true" if the node is in the expanded state</td></tr>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Node name</td></tr>
-<tr><td>Parent</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>r</td><td class="td-middle">Parent node</td></tr>
-<tr><td>Value</td><td><a href="#BookmarkFolderNodeSource">BookmarkFolderNodeSource</a></td><td>r</td><td class="td-middle">Properties of bookmark folder</td></tr>
-<tr><td>ValueType</td><td>string</td><td>r</td><td class="td-middle">Node value type</td></tr>
+<tr><td>Children</td><td><a href="#NodeAccessor">NodeAccessor</a>[]</td><td>r</td><td class="td-middle">Child nodes<br /></td></tr>
+<tr><td>Index</td><td>int</td><td>r</td><td class="td-middle">Index number<br /></td></tr>
+<tr><td>IsDisposed</td><td>bool</td><td>r</td><td class="td-middle">"true" if it is a destroyed node.<br /></td></tr>
+<tr><td>IsExpanded</td><td>bool</td><td>rw</td><td class="td-middle">"true" if the node is in the expanded state<br /></td></tr>
+<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Node name<br /></td></tr>
+<tr><td>Parent</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>r</td><td class="td-middle">Parent node<br /></td></tr>
+<tr><td>Value</td><td><a href="#BookmarkFolderNodeSource">BookmarkFolderNodeSource</a></td><td>r</td><td class="td-middle">Properties of bookmark folder<br /></td></tr>
+<tr><td>ValueType</td><td>string</td><td>r</td><td class="td-middle">Node value type<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>Add(dictionary)</td><td><a href="#BookmarkFolderNodeAccessor">BookmarkFolderNodeAccessor</a></td><td class="td-middle">Create and add a new bookmark folder<details><h4>Parameters</h4>
+<tr><td>Add(dictionary)</td><td><a href="#BookmarkFolderNodeAccessor">BookmarkFolderNodeAccessor</a></td><td class="td-middle">Create and add a new bookmark folder<br /><details><h4>Parameters</h4>
 <p><table>
 <tr><td>parameter</td><td>dictionary</td><td class="td-middle">New bookmark folder parameters (optional)<br />Parameter "Name" can be specified.</td></tr>
 </table></p>
@@ -291,7 +312,7 @@ if (isYes) {
 <p><pre><code class="example">// Create a bookmark folder by name
 nv.Bookshelf.FolderTree.BookmarkNode.Add({Name:"AAA"})</code></pre></p>
 </details></td></tr>
-<tr><td>Insert(int, dictionary)</td><td><a href="#BookmarkFolderNodeAccessor">BookmarkFolderNodeAccessor</a></td><td class="td-middle">Create and insert a new bookmark folder<details><h4>Parameters</h4>
+<tr><td>Insert(int, dictionary)</td><td><a href="#BookmarkFolderNodeAccessor">BookmarkFolderNodeAccessor</a></td><td class="td-middle">Create and insert a new bookmark folder<br /><details><h4>Parameters</h4>
 <p><table>
 <tr><td>index</td><td>int</td><td class="td-middle">Invalid parameter<br />Note: This parameter is ignored because bookmark folders do not control their order.</td></tr>
 <tr><td>parameter</td><td>dictionary</td><td class="td-middle">New bookmark folder parameters (optional)<br />Parameter "Name" can be specified.</td></tr>
@@ -301,7 +322,7 @@ nv.Bookshelf.FolderTree.BookmarkNode.Add({Name:"AAA"})</code></pre></p>
 <tr><td><a href="#BookmarkFolderNodeAccessor">BookmarkFolderNodeAccessor</a></td><td>New bookmark folder</td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>Remove()</td><td>bool</td><td class="td-middle">Delete itself<details><h4>Returns</h4>
+<tr><td>Remove()</td><td>bool</td><td class="td-middle">Delete itself<br /><details><h4>Returns</h4>
 <p><table>
 <tr><td>bool</td><td>Returns "true" if deletion succeeds</td></tr>
 </table></p>
@@ -311,32 +332,32 @@ nv.Bookshelf.FolderTree.BookmarkNode.Add({Name:"AAA"})</code></pre></p>
 <p>Properties of bookmark folder</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>Name</td><td>string</td><td>rw</td><td class="td-middle">Name</td></tr>
-<tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Path of bookmark folder</td></tr>
+<tr><td>Name</td><td>string</td><td>rw</td><td class="td-middle">Name<br /></td></tr>
+<tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Path of bookmark folder<br /></td></tr>
 </table></p>
 <h3 id="BookmarkFolderTreeAccessor">[Class] BookmarkFolderTreeAccessor</h3>
 <p>Bookmark folder tree accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>BookmarkNode</td><td><a href="#BookmarkFolderNodeAccessor">BookmarkFolderNodeAccessor</a></td><td>r</td><td class="td-middle">Root node of the bookmark folder tree</td></tr>
-<tr><td>SelectedItem</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>rw</td><td class="td-middle">Selected item</td></tr>
+<tr><td>BookmarkNode</td><td><a href="#BookmarkFolderNodeAccessor">BookmarkFolderNodeAccessor</a></td><td>r</td><td class="td-middle">Root node of the bookmark folder tree<br /></td></tr>
+<tr><td>SelectedItem</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>rw</td><td class="td-middle">Selected item<br /></td></tr>
 </table></p>
 <h3 id="BookmarkItemAccessor">[Class] BookmarkItemAccessor</h3>
 <p>Bookmark item accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>CreationTime</td><td>Date</td><td>r</td><td class="td-middle">Creation time</td></tr>
-<tr><td>LastWriteTime</td><td>Date</td><td>r</td><td class="td-middle">Last write time</td></tr>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Name</td></tr>
-<tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Path</td></tr>
-<tr><td>Size</td><td>int</td><td>r</td><td class="td-middle">File size. For directory, -1.</td></tr>
+<tr><td>CreationTime</td><td>Date</td><td>r</td><td class="td-middle">Creation time<br /></td></tr>
+<tr><td>LastWriteTime</td><td>Date</td><td>r</td><td class="td-middle">Last write time<br /></td></tr>
+<tr><td>Name</td><td>string</td><td>rw</td><td class="td-middle">Name<br /></td></tr>
+<tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Path<br /></td></tr>
+<tr><td>Size</td><td>int</td><td>r</td><td class="td-middle">File size. For directory, -1.<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>Open()</td><td>void</td><td class="td-middle">Open book</td></tr>
-<tr><td>Open(bool)</td><td>void</td><td class="td-middle">Open book<details><h4>Parameters</h4>
+<tr><td>Open()</td><td>void</td><td class="td-middle">Open book<br /></td></tr>
+<tr><td>Open(bool)</td><td>void</td><td class="td-middle">Open book<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>isRecursive</td><td>bool</td><td class="td-middle">Load subfolders</td></tr>
+<tr><td>isRecursive</td><td>bool</td><td class="td-middle">Load subfolders<br /></td></tr>
 </table></p>
 </details></td></tr>
 </table></p>
@@ -344,44 +365,45 @@ nv.Bookshelf.FolderTree.BookmarkNode.Add({Name:"AAA"})</code></pre></p>
 <p>Bookmark panel accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>FolderOrder</td><td>string (<a href="#FolderOrder">FolderOrder</a>)</td><td>rw</td><td class="td-middle">List item order</td></tr>
-<tr><td>FolderTree</td><td><a href="#BookmarkFolderTreeAccessor">BookmarkFolderTreeAccessor</a></td><td>r</td><td class="td-middle">Folder tree in the Bookmark panel</td></tr>
-<tr><td>IsFloating</td><td>bool</td><td>r</td><td class="td-middle">Panel is floating</td></tr>
-<tr><td>IsSelected</td><td>bool</td><td>rw</td><td class="td-middle">Panel selected</td></tr>
-<tr><td>IsVisible</td><td>bool</td><td>r</td><td class="td-middle">Panel visibility</td></tr>
-<tr><td>Items</td><td><a href="#BookmarkItemAccessor">BookmarkItemAccessor</a>[]</td><td>r</td><td class="td-middle">List items</td></tr>
-<tr><td>Path</td><td>string</td><td>rw</td><td class="td-middle">Current bookmark folder path</td></tr>
-<tr><td>SearchWord</td><td>string</td><td>rw</td><td class="td-middle">Search box text</td></tr>
-<tr><td>SelectedItems</td><td><a href="#BookmarkItemAccessor">BookmarkItemAccessor</a>[]</td><td>rw</td><td class="td-middle">Selected items</td></tr>
-<tr><td>Style</td><td>string (<a href="#PanelListItemStyle">PanelListItemStyle</a>)</td><td>rw</td><td class="td-middle">List item style</td></tr>
+<tr><td>FolderOrder</td><td>string (<a href="#FolderOrder">FolderOrder</a>)</td><td>rw</td><td class="td-middle">List item order<br /></td></tr>
+<tr><td>FolderTree</td><td><a href="#BookmarkFolderTreeAccessor">BookmarkFolderTreeAccessor</a></td><td>r</td><td class="td-middle">Folder tree in the Bookmark panel<br /></td></tr>
+<tr><td>IsFloating</td><td>bool</td><td>r</td><td class="td-middle">Panel is floating<br /></td></tr>
+<tr><td>IsSelected</td><td>bool</td><td>rw</td><td class="td-middle">Panel selected<br /></td></tr>
+<tr><td>IsVisible</td><td>bool</td><td>r</td><td class="td-middle">Panel visibility<br /></td></tr>
+<tr><td>Items</td><td><a href="#BookmarkItemAccessor">BookmarkItemAccessor</a>[]</td><td>r</td><td class="td-middle">List items<br /></td></tr>
+<tr><td>Path</td><td>string</td><td>rw</td><td class="td-middle">Current bookmark folder path<br /></td></tr>
+<tr><td>SearchWord</td><td>string</td><td>rw</td><td class="td-middle">Search box text<br /></td></tr>
+<tr><td>SelectedItems</td><td><a href="#BookmarkItemAccessor">BookmarkItemAccessor</a>[]</td><td>rw</td><td class="td-middle">Selected items<br /></td></tr>
+<tr><td>Style</td><td>string (<a href="#PanelListItemStyle">PanelListItemStyle</a>)</td><td>rw</td><td class="td-middle">List item style<br /></td></tr>
+<tr><td>Window</td><td><a href="#WindowAccessor">WindowAccessor</a></td><td>r</td><td class="td-middle">Window accessor<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>Close()</td><td>void</td><td class="td-middle">Close panel</td></tr>
-<tr><td>MoveToParent()</td><td>void</td><td class="td-middle">Up</td></tr>
-<tr><td>NewFolder(string)</td><td>void</td><td class="td-middle">Create a new bookmark folder<details><h4>Parameters</h4>
+<tr><td>Close()</td><td>void</td><td class="td-middle">Close panel<br /></td></tr>
+<tr><td>MoveToParent()</td><td>void</td><td class="td-middle">Up<br /></td></tr>
+<tr><td>NewFolder(string)</td><td>void</td><td class="td-middle">Create a new bookmark folder<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>name</td><td>string</td><td class="td-middle">Name</td></tr>
+<tr><td>name</td><td>string</td><td class="td-middle">Name<br /></td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>Open()</td><td>void</td><td class="td-middle">Open panel</td></tr>
-<tr><td>OpenDock()</td><td>void</td><td class="td-middle">Open panel in docking mode</td></tr>
-<tr><td>OpenFloat()</td><td>void</td><td class="td-middle">Open panel in floating mode</td></tr>
+<tr><td>Open()</td><td>void</td><td class="td-middle">Open panel<br /></td></tr>
+<tr><td>OpenDock()</td><td>void</td><td class="td-middle">Open panel in docking mode<br /></td></tr>
+<tr><td>OpenFloat()</td><td>void</td><td class="td-middle">Open panel in floating mode<br /></td></tr>
 </table></p>
 <h3 id="BookshelfFolderTreeAccessor">[Class] BookshelfFolderTreeAccessor</h3>
 <p>Bookshelf folder tree accessory</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>BookmarkNode</td><td><a href="#BookmarkFolderNodeAccessor">BookmarkFolderNodeAccessor</a></td><td>r</td><td class="td-middle">Root node of the bookmark folder tree</td></tr>
-<tr><td>DirectoryNode</td><td><a href="#DirectoryNodeAccessor">DirectoryNodeAccessor</a></td><td>r</td><td class="td-middle">Root node of the folder tree</td></tr>
-<tr><td>QuickAccessNode</td><td><a href="#QuickAccessFolderNodeAccessor">QuickAccessFolderNodeAccessor</a></td><td>r</td><td class="td-middle">Quick access root node</td></tr>
-<tr><td>SelectedItem</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>rw</td><td class="td-middle">Selected item</td></tr>
+<tr><td>BookmarkNode</td><td><a href="#BookmarkFolderNodeAccessor">BookmarkFolderNodeAccessor</a></td><td>r</td><td class="td-middle">Root node of the bookmark folder tree<br /></td></tr>
+<tr><td>DirectoryNode</td><td><a href="#DirectoryNodeAccessor">DirectoryNodeAccessor</a></td><td>r</td><td class="td-middle">Root node of the folder tree<br /></td></tr>
+<tr><td>QuickAccessNode</td><td><a href="#QuickAccessFolderNodeAccessor">QuickAccessFolderNodeAccessor</a></td><td>r</td><td class="td-middle">Quick access root node<br /></td></tr>
+<tr><td>SelectedItem</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>rw</td><td class="td-middle">Selected item<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>Expand(string)</td><td>void</td><td class="td-middle">Expand to the specified folder<details><h4>Parameters</h4>
+<tr><td>Expand(string)</td><td>void</td><td class="td-middle">Expand to the specified folder<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>path</td><td>string</td><td class="td-middle">Folder path</td></tr>
+<tr><td>path</td><td>string</td><td class="td-middle">Folder path<br /></td></tr>
 </table></p>
 </details></td></tr>
 </table></p>
@@ -389,18 +411,18 @@ nv.Bookshelf.FolderTree.BookmarkNode.Add({Name:"AAA"})</code></pre></p>
 <p>Bookshelf item accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>CreationTime</td><td>Date</td><td>r</td><td class="td-middle">Creation time</td></tr>
-<tr><td>LastWriteTime</td><td>Date</td><td>r</td><td class="td-middle">Last write time</td></tr>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Name</td></tr>
-<tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Path</td></tr>
-<tr><td>Size</td><td>int</td><td>r</td><td class="td-middle">File size. For directory, -1.</td></tr>
+<tr><td>CreationTime</td><td>Date</td><td>r</td><td class="td-middle">Creation time<br /></td></tr>
+<tr><td>LastWriteTime</td><td>Date</td><td>r</td><td class="td-middle">Last write time<br /></td></tr>
+<tr><td>Name</td><td>string</td><td>rw</td><td class="td-middle">Name<br /></td></tr>
+<tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Path<br /></td></tr>
+<tr><td>Size</td><td>int</td><td>r</td><td class="td-middle">File size. For directory, -1.<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>Open()</td><td>void</td><td class="td-middle">Open book</td></tr>
-<tr><td>Open(bool)</td><td>void</td><td class="td-middle">Open book<details><h4>Parameters</h4>
+<tr><td>Open()</td><td>void</td><td class="td-middle">Open book<br /></td></tr>
+<tr><td>Open(bool)</td><td>void</td><td class="td-middle">Open book<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>isRecursive</td><td>bool</td><td class="td-middle">Load subfolders</td></tr>
+<tr><td>isRecursive</td><td>bool</td><td class="td-middle">Load subfolders<br /></td></tr>
 </table></p>
 </details></td></tr>
 </table></p>
@@ -408,50 +430,51 @@ nv.Bookshelf.FolderTree.BookmarkNode.Add({Name:"AAA"})</code></pre></p>
 <p>Bookshelf panel accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>FolderOrder</td><td>string (<a href="#FolderOrder">FolderOrder</a>)</td><td>rw</td><td class="td-middle">List item order</td></tr>
-<tr><td>FolderTree</td><td><a href="#BookshelfFolderTreeAccessor">BookshelfFolderTreeAccessor</a></td><td>r</td><td class="td-middle">Bookshelf folder tree</td></tr>
-<tr><td>IsFloating</td><td>bool</td><td>r</td><td class="td-middle">Panel is floating</td></tr>
-<tr><td>IsSelected</td><td>bool</td><td>rw</td><td class="td-middle">Panel selected</td></tr>
-<tr><td>IsVisible</td><td>bool</td><td>r</td><td class="td-middle">Panel visibility</td></tr>
-<tr><td>Items</td><td><a href="#BookshelfItemAccessor">BookshelfItemAccessor</a>[]</td><td>r</td><td class="td-middle">List items</td></tr>
-<tr><td>NextHistory</td><td>string[]</td><td>r</td><td class="td-middle">Later history on the bookshelf</td></tr>
-<tr><td>Path</td><td>string</td><td>rw</td><td class="td-middle">Current bookshelf path</td></tr>
-<tr><td>PreviousHistory</td><td>string[]</td><td>r</td><td class="td-middle">Previous history on bookshelf</td></tr>
-<tr><td>SearchWord</td><td>string</td><td>rw</td><td class="td-middle">Search box text</td></tr>
-<tr><td>SelectedItems</td><td><a href="#BookshelfItemAccessor">BookshelfItemAccessor</a>[]</td><td>rw</td><td class="td-middle">Selected items</td></tr>
-<tr><td>Style</td><td>string (<a href="#PanelListItemStyle">PanelListItemStyle</a>)</td><td>rw</td><td class="td-middle">List item style</td></tr>
+<tr><td>FolderOrder</td><td>string (<a href="#FolderOrder">FolderOrder</a>)</td><td>rw</td><td class="td-middle">List item order<br /></td></tr>
+<tr><td>FolderTree</td><td><a href="#BookshelfFolderTreeAccessor">BookshelfFolderTreeAccessor</a></td><td>r</td><td class="td-middle">Bookshelf folder tree<br /></td></tr>
+<tr><td>IsFloating</td><td>bool</td><td>r</td><td class="td-middle">Panel is floating<br /></td></tr>
+<tr><td>IsSelected</td><td>bool</td><td>rw</td><td class="td-middle">Panel selected<br /></td></tr>
+<tr><td>IsVisible</td><td>bool</td><td>r</td><td class="td-middle">Panel visibility<br /></td></tr>
+<tr><td>Items</td><td><a href="#BookshelfItemAccessor">BookshelfItemAccessor</a>[]</td><td>r</td><td class="td-middle">List items<br /></td></tr>
+<tr><td>NextHistory</td><td>string[]</td><td>r</td><td class="td-middle">Later history on the bookshelf<br /></td></tr>
+<tr><td>Path</td><td>string</td><td>rw</td><td class="td-middle">Current bookshelf path<br /></td></tr>
+<tr><td>PreviousHistory</td><td>string[]</td><td>r</td><td class="td-middle">Previous history on bookshelf<br /></td></tr>
+<tr><td>SearchWord</td><td>string</td><td>rw</td><td class="td-middle">Search box text<br /></td></tr>
+<tr><td>SelectedItems</td><td><a href="#BookshelfItemAccessor">BookshelfItemAccessor</a>[]</td><td>rw</td><td class="td-middle">Selected items<br /></td></tr>
+<tr><td>Style</td><td>string (<a href="#PanelListItemStyle">PanelListItemStyle</a>)</td><td>rw</td><td class="td-middle">List item style<br /></td></tr>
+<tr><td>Window</td><td><a href="#WindowAccessor">WindowAccessor</a></td><td>r</td><td class="td-middle">Window accessor<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>Close()</td><td>void</td><td class="td-middle">Close panel</td></tr>
-<tr><td>MoveToNext()</td><td>void</td><td class="td-middle">Next</td></tr>
-<tr><td>MoveToParent()</td><td>void</td><td class="td-middle">Up</td></tr>
-<tr><td>MoveToPrevious()</td><td>void</td><td class="td-middle">Back</td></tr>
-<tr><td>Open()</td><td>void</td><td class="td-middle">Open panel</td></tr>
-<tr><td>OpenDock()</td><td>void</td><td class="td-middle">Open panel in docking mode</td></tr>
-<tr><td>OpenFloat()</td><td>void</td><td class="td-middle">Open panel in floating mode</td></tr>
-<tr><td>Sync()</td><td>void</td><td class="td-middle">Move to current book place</td></tr>
-<tr><td>Wait()</td><td>void</td><td class="td-middle">Wait for display to complete</td></tr>
+<tr><td>Close()</td><td>void</td><td class="td-middle">Close panel<br /></td></tr>
+<tr><td>MoveToNext()</td><td>void</td><td class="td-middle">Next<br /></td></tr>
+<tr><td>MoveToParent()</td><td>void</td><td class="td-middle">Up<br /></td></tr>
+<tr><td>MoveToPrevious()</td><td>void</td><td class="td-middle">Back<br /></td></tr>
+<tr><td>Open()</td><td>void</td><td class="td-middle">Open panel<br /></td></tr>
+<tr><td>OpenDock()</td><td>void</td><td class="td-middle">Open panel in docking mode<br /></td></tr>
+<tr><td>OpenFloat()</td><td>void</td><td class="td-middle">Open panel in floating mode<br /></td></tr>
+<tr><td>Sync()</td><td>void</td><td class="td-middle">Move to current book location<br /></td></tr>
+<tr><td>Wait()</td><td>void</td><td class="td-middle">Wait for display to complete<br /></td></tr>
 </table></p>
 <h3 id="CommandAccessor">[Class] CommandAccessor</h3>
 <p>Command accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>IsShowMessage</td><td>bool</td><td>rw</td><td class="td-middle">Display a message when executing a command</td></tr>
-<tr><td>MouseGesture</td><td>string</td><td>rw</td><td class="td-middle">Mouse gestures<details><h4>e.g.</h4>
+<tr><td>IsShowMessage</td><td>bool</td><td>rw</td><td class="td-middle">Display a message when executing a command<br /></td></tr>
+<tr><td>MouseGesture</td><td>string</td><td>rw</td><td class="td-middle">Mouse gestures<br /><details><h4>e.g.</h4>
 <p><pre><code class="example">// Set "↑←↓" to the mouse gesture of ViewRotateLeft command
 nv.Command.ViewRotateLeft.MouseGesture = "ULD"</code></pre></p>
 </details></td></tr>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Command name</td></tr>
-<tr><td>Parameter</td><td>dictionary</td><td>r</td><td class="td-middle">You can get and set command parameters. The settings are permanent. The properties differ for each command. For details, see the command list below.<details><h4>e.g.</h4>
+<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Command name<br /></td></tr>
+<tr><td>Parameter</td><td>dictionary</td><td>r</td><td class="td-middle">You can get and set command parameters. The settings are permanent. The properties differ for each command. For details, see the command list below.<br /><details><h4>e.g.</h4>
 <p><pre><code class="example">// Change the rotation amount of "ViewRotateLeft" command to 45 degrees
 nv.Command.ViewRotateLeft.Parameter.Angle = 45</code></pre></p>
 </details></td></tr>
-<tr><td>ShortCutKey</td><td>string</td><td>rw</td><td class="td-middle">Shortcut<details><h4>e.g.</h4>
+<tr><td>ShortCutKey</td><td>string</td><td>rw</td><td class="td-middle">Shortcut<br /><details><h4>e.g.</h4>
 <p><pre><code class="example">// Set "Ctrl+A" as shortcut for ViewRotateLeft command
 nv.Command.ViewRotateLeft.ShortCutKey = "Ctrl+A"</code></pre></p>
 </details></td></tr>
-<tr><td>TouchGesture</td><td>string</td><td>rw</td><td class="td-middle">Touch operation<details><h4>e.g.</h4>
+<tr><td>TouchGesture</td><td>string</td><td>rw</td><td class="td-middle">Touch operation<br /><details><h4>e.g.</h4>
 <p><pre><code class="example">// Set "TouchCenter" for touch operation of ViewRotateLeft command
 nv.Command.ViewRotateLeft.TouchGesture = "TouchCenter"</code></pre></p>
 </details></td></tr>
@@ -460,7 +483,7 @@ nv.Command.ViewRotateLeft.TouchGesture = "TouchCenter"</code></pre></p>
 <p><table>
 <tr><td>Execute(object[])</td><td>bool</td><td class="td-middle">Execute the command.<br />Some commands allow you to specify arguments. These can be used for the purpose of omitting the user's selection by specifying the argument in the command that normally displays the dialog.<details><h4>Parameters</h4>
 <p><table>
-<tr><td>args</td><td>object[]</td><td class="td-middle">Command argument. The contents vary depending on the command. It is a variable length argument. (Optional)</td></tr>
+<tr><td>args</td><td>object[]</td><td class="td-middle">Command argument. The contents vary depending on the command. It is a variable length argument. (Optional)<br /></td></tr>
 </table></p>
 <h4>Returns</h4>
 <p><table>
@@ -470,9 +493,9 @@ nv.Command.ViewRotateLeft.TouchGesture = "TouchCenter"</code></pre></p>
 <p><pre><code class="example">// open C:\Foo\Bar.zip
 nv.Command.LoadAs.Execute("C:\\Foo\\Bar.zip")</code></pre></p>
 </details></td></tr>
-<tr><td>Patch(dictionary)</td><td><a href="#CommandAccessor">CommandAccessor</a></td><td class="td-middle">Temporarily change the command parameter.<details><h4>Parameters</h4>
+<tr><td>Patch(dictionary)</td><td><a href="#CommandAccessor">CommandAccessor</a></td><td class="td-middle">Temporarily change the command parameter.<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>patch</td><td>dictionary</td><td class="td-middle">Specify the command parameter to be overwritten temporarily in JSON format.</td></tr>
+<tr><td>patch</td><td>dictionary</td><td class="td-middle">Specify the command parameter to be overwritten temporarily in JSON format.<br /></td></tr>
 </table></p>
 <h4>Returns</h4>
 <p><table>
@@ -487,49 +510,49 @@ nv.Command.ViewRotateLeft.Patch({"Angle": 5}).Execute()</code></pre></p>
 <p>Destination folder accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>Name</td><td>string</td><td>rw</td><td class="td-middle">Name</td></tr>
-<tr><td>Path</td><td>string</td><td>rw</td><td class="td-middle">Path</td></tr>
+<tr><td>Name</td><td>string</td><td>rw</td><td class="td-middle">Name<br /></td></tr>
+<tr><td>Path</td><td>string</td><td>rw</td><td class="td-middle">Path<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>Copy(string)</td><td>void</td><td class="td-middle">Copy to destination folder<details><h4>Parameters</h4>
+<tr><td>Copy(string)</td><td>void</td><td class="td-middle">Copy to destination folder<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>path</td><td>string</td><td class="td-middle">File to copy</td></tr>
+<tr><td>path</td><td>string</td><td class="td-middle">File to copy<br /></td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>Copy(string[])</td><td>void</td><td class="td-middle">Copy to destination folder<details><h4>Parameters</h4>
+<tr><td>Copy(string[])</td><td>void</td><td class="td-middle">Copy to destination folder<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>paths</td><td>string[]</td><td class="td-middle">List of files to copy</td></tr>
+<tr><td>paths</td><td>string[]</td><td class="td-middle">List of files to copy<br /></td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>CopyPage(<a href="#PageAccessor">PageAccessor</a>)</td><td>void</td><td class="td-middle">Copy to destination folder<details><h4>Parameters</h4>
+<tr><td>CopyPage(<a href="#PageAccessor">PageAccessor</a>)</td><td>void</td><td class="td-middle">Copy to destination folder<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>page</td><td><a href="#PageAccessor">PageAccessor</a></td><td class="td-middle">Page to copy</td></tr>
+<tr><td>page</td><td><a href="#PageAccessor">PageAccessor</a></td><td class="td-middle">Page to copy<br /></td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>CopyPage(<a href="#PageAccessor">PageAccessor</a>[])</td><td>void</td><td class="td-middle">Copy to destination folder<details><h4>Parameters</h4>
+<tr><td>CopyPage(<a href="#PageAccessor">PageAccessor</a>[])</td><td>void</td><td class="td-middle">Copy to destination folder<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>pages</td><td><a href="#PageAccessor">PageAccessor</a>[]</td><td class="td-middle">List of pages to copy</td></tr>
+<tr><td>pages</td><td><a href="#PageAccessor">PageAccessor</a>[]</td><td class="td-middle">List of pages to copy<br /></td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>Move(string)</td><td>void</td><td class="td-middle">Move to destination folder<details><h4>Parameters</h4>
+<tr><td>Move(string)</td><td>void</td><td class="td-middle">Move to destination folder<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>path</td><td>string</td><td class="td-middle">File to move</td></tr>
+<tr><td>path</td><td>string</td><td class="td-middle">File to move<br /></td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>Move(string[])</td><td>void</td><td class="td-middle">Move to destination folder<details><h4>Parameters</h4>
+<tr><td>Move(string[])</td><td>void</td><td class="td-middle">Move to destination folder<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>paths</td><td>string[]</td><td class="td-middle">List of files to move</td></tr>
+<tr><td>paths</td><td>string[]</td><td class="td-middle">List of files to move<br /></td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>MovePage(<a href="#PageAccessor">PageAccessor</a>)</td><td>void</td><td class="td-middle">Move to destination folder<details><h4>Parameters</h4>
+<tr><td>MovePage(<a href="#PageAccessor">PageAccessor</a>)</td><td>void</td><td class="td-middle">Move to destination folder<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>page</td><td><a href="#PageAccessor">PageAccessor</a></td><td class="td-middle">Page to move</td></tr>
+<tr><td>page</td><td><a href="#PageAccessor">PageAccessor</a></td><td class="td-middle">Page to move<br /></td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>MovePage(<a href="#PageAccessor">PageAccessor</a>[])</td><td>void</td><td class="td-middle">Move to destination folder<details><h4>Parameters</h4>
+<tr><td>MovePage(<a href="#PageAccessor">PageAccessor</a>[])</td><td>void</td><td class="td-middle">Move to destination folder<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>pages</td><td><a href="#PageAccessor">PageAccessor</a>[]</td><td class="td-middle">List of pages to move</td></tr>
+<tr><td>pages</td><td><a href="#PageAccessor">PageAccessor</a>[]</td><td class="td-middle">List of pages to move<br /></td></tr>
 </table></p>
 </details></td></tr>
 </table></p>
@@ -537,18 +560,18 @@ nv.Command.ViewRotateLeft.Patch({"Angle": 5}).Execute()</code></pre></p>
 <p>Destination folder list accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>Items</td><td><a href="#DestinationFolderAccessor">DestinationFolderAccessor</a>[]</td><td>r</td><td class="td-middle">Destination folders</td></tr>
+<tr><td>Items</td><td><a href="#DestinationFolderAccessor">DestinationFolderAccessor</a>[]</td><td>r</td><td class="td-middle">Destination folders<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>CreateNew()</td><td><a href="#DestinationFolderAccessor">DestinationFolderAccessor</a></td><td class="td-middle">Create a new destination folder<details><h4>Returns</h4>
+<tr><td>CreateNew()</td><td><a href="#DestinationFolderAccessor">DestinationFolderAccessor</a></td><td class="td-middle">Create a new destination folder<br /><details><h4>Returns</h4>
 <p><table>
 <tr><td><a href="#DestinationFolderAccessor">DestinationFolderAccessor</a></td><td>New destination folder</td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>Remove(<a href="#DestinationFolderAccessor">DestinationFolderAccessor</a>)</td><td>void</td><td class="td-middle">Delete destination folder<details><h4>Parameters</h4>
+<tr><td>Remove(<a href="#DestinationFolderAccessor">DestinationFolderAccessor</a>)</td><td>void</td><td class="td-middle">Delete destination folder<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>item</td><td><a href="#DestinationFolderAccessor">DestinationFolderAccessor</a></td><td class="td-middle">Destination folder to be deleted</td></tr>
+<tr><td>item</td><td><a href="#DestinationFolderAccessor">DestinationFolderAccessor</a></td><td class="td-middle">Destination folder to be deleted<br /></td></tr>
 </table></p>
 </details></td></tr>
 </table></p>
@@ -557,82 +580,83 @@ nv.Command.ViewRotateLeft.Patch({"Angle": 5}).Execute()</code></pre></p>
 <p>This class inherits from <a href="#NodeAccessor">NodeAccessor</a>.</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>Children</td><td><a href="#NodeAccessor">NodeAccessor</a>[]</td><td>r</td><td class="td-middle">Child nodes</td></tr>
-<tr><td>Index</td><td>int</td><td>r</td><td class="td-middle">Index number</td></tr>
-<tr><td>IsDisposed</td><td>bool</td><td>r</td><td class="td-middle">"true" if it is a destroyed node.</td></tr>
-<tr><td>IsExpanded</td><td>bool</td><td>rw</td><td class="td-middle">"true" if the node is in the expanded state</td></tr>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Node name</td></tr>
-<tr><td>Parent</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>r</td><td class="td-middle">Parent node</td></tr>
-<tr><td>Value</td><td><a href="#DirectoryNodeSource">DirectoryNodeSource</a></td><td>r</td><td class="td-middle">Properties of folder node</td></tr>
-<tr><td>ValueType</td><td>string</td><td>r</td><td class="td-middle">Node value type</td></tr>
+<tr><td>Children</td><td><a href="#NodeAccessor">NodeAccessor</a>[]</td><td>r</td><td class="td-middle">Child nodes<br /></td></tr>
+<tr><td>Index</td><td>int</td><td>r</td><td class="td-middle">Index number<br /></td></tr>
+<tr><td>IsDisposed</td><td>bool</td><td>r</td><td class="td-middle">"true" if it is a destroyed node.<br /></td></tr>
+<tr><td>IsExpanded</td><td>bool</td><td>rw</td><td class="td-middle">"true" if the node is in the expanded state<br /></td></tr>
+<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Node name<br /></td></tr>
+<tr><td>Parent</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>r</td><td class="td-middle">Parent node<br /></td></tr>
+<tr><td>Value</td><td><a href="#DirectoryNodeSource">DirectoryNodeSource</a></td><td>r</td><td class="td-middle">Properties of folder node<br /></td></tr>
+<tr><td>ValueType</td><td>string</td><td>r</td><td class="td-middle">Node value type<br /></td></tr>
 </table></p>
 <h3 id="DirectoryNodeSource">[Class] DirectoryNodeSource</h3>
 <p>Properties of folder node</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Name</td></tr>
-<tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Path</td></tr>
+<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Name<br /></td></tr>
+<tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Path<br /></td></tr>
 </table></p>
 <h3 id="EffectPanelAccessor">[Class] EffectPanelAccessor</h3>
 <p>Effects panel accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>IsFloating</td><td>bool</td><td>r</td><td class="td-middle">Panel is floating</td></tr>
-<tr><td>IsSelected</td><td>bool</td><td>rw</td><td class="td-middle">Panel selected</td></tr>
-<tr><td>IsVisible</td><td>bool</td><td>r</td><td class="td-middle">Panel visibility</td></tr>
+<tr><td>IsFloating</td><td>bool</td><td>r</td><td class="td-middle">Panel is floating<br /></td></tr>
+<tr><td>IsSelected</td><td>bool</td><td>rw</td><td class="td-middle">Panel selected<br /></td></tr>
+<tr><td>IsVisible</td><td>bool</td><td>r</td><td class="td-middle">Panel visibility<br /></td></tr>
+<tr><td>Window</td><td><a href="#WindowAccessor">WindowAccessor</a></td><td>r</td><td class="td-middle">Window accessor<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>Close()</td><td>void</td><td class="td-middle">Close panel</td></tr>
-<tr><td>Open()</td><td>void</td><td class="td-middle">Open panel</td></tr>
-<tr><td>OpenDock()</td><td>void</td><td class="td-middle">Open panel in docking mode</td></tr>
-<tr><td>OpenFloat()</td><td>void</td><td class="td-middle">Open panel in floating mode</td></tr>
+<tr><td>Close()</td><td>void</td><td class="td-middle">Close panel<br /></td></tr>
+<tr><td>Open()</td><td>void</td><td class="td-middle">Open panel<br /></td></tr>
+<tr><td>OpenDock()</td><td>void</td><td class="td-middle">Open panel in docking mode<br /></td></tr>
+<tr><td>OpenFloat()</td><td>void</td><td class="td-middle">Open panel in floating mode<br /></td></tr>
 </table></p>
 <h3 id="EnvironmentAccessor">[Class] EnvironmentAccessor</h3>
 <p>Environment accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>DateVersion</td><td>string</td><td>r</td><td class="td-middle">Date version</td></tr>
-<tr><td>NeeViewPath</td><td>string</td><td>r</td><td class="td-middle">NeeView executable file path</td></tr>
-<tr><td>OSVersion</td><td>string</td><td>r</td><td class="td-middle">OS Version</td></tr>
-<tr><td>PackageType</td><td>string</td><td>r</td><td class="td-middle">Package type</td></tr>
-<tr><td>ProductVersion</td><td>string</td><td>r</td><td class="td-middle">Product version</td></tr>
-<tr><td>Revision</td><td>string</td><td>r</td><td class="td-middle">Git revision</td></tr>
-<tr><td>SelfContained</td><td>bool</td><td>r</td><td class="td-middle">Self-contained package; framework-dependent if false</td></tr>
-<tr><td>UserAgent</td><td>string</td><td>r</td><td class="td-middle">User agent</td></tr>
-<tr><td>UserSettingFilePath</td><td>string</td><td>r</td><td class="td-middle">Setting file path</td></tr>
-<tr><td>Version</td><td>string</td><td>r</td><td class="td-middle">Version</td></tr>
+<tr><td>DateVersion</td><td>string</td><td>r</td><td class="td-middle">Date version<br /></td></tr>
+<tr><td>NeeViewPath</td><td>string</td><td>r</td><td class="td-middle">NeeView executable file path<br /></td></tr>
+<tr><td>OSVersion</td><td>string</td><td>r</td><td class="td-middle">OS Version<br /></td></tr>
+<tr><td>PackageType</td><td>string</td><td>r</td><td class="td-middle">Package type<br /></td></tr>
+<tr><td>ProductVersion</td><td>string</td><td>r</td><td class="td-middle">Product version<br /></td></tr>
+<tr><td>Revision</td><td>string</td><td>r</td><td class="td-middle">Git revision<br /></td></tr>
+<tr><td>SelfContained</td><td>bool</td><td>r</td><td class="td-middle">Self-contained package; framework-dependent if false<br /></td></tr>
+<tr><td>UserAgent</td><td>string</td><td>r</td><td class="td-middle">User agent<br /></td></tr>
+<tr><td>UserSettingFilePath</td><td>string</td><td>r</td><td class="td-middle">Setting file path<br /></td></tr>
+<tr><td>Version</td><td>string</td><td>r</td><td class="td-middle">Version<br /></td></tr>
 </table></p>
 <h3 id="ExternalAppAccessor">[Class] ExternalAppAccessor</h3>
 <p>External app accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>ArchivePolicy</td><td>string (<a href="#ArchivePolicy">ArchivePolicy</a>)</td><td>rw</td><td class="td-middle">Compressed file processing policy</td></tr>
-<tr><td>Command</td><td>string</td><td>rw</td><td class="td-middle">External app path</td></tr>
-<tr><td>Name</td><td>string</td><td>rw</td><td class="td-middle">Display name</td></tr>
-<tr><td>Parameter</td><td>string</td><td>rw</td><td class="td-middle">External app parameters</td></tr>
-<tr><td>WorkingDirectory</td><td>string</td><td>rw</td><td class="td-middle">Working folder</td></tr>
+<tr><td>ArchivePolicy</td><td>string (<a href="#ArchivePolicy">ArchivePolicy</a>)</td><td>rw</td><td class="td-middle">Compressed file processing policy<br /></td></tr>
+<tr><td>Command</td><td>string</td><td>rw</td><td class="td-middle">External app path<br /></td></tr>
+<tr><td>Name</td><td>string</td><td>rw</td><td class="td-middle">Display name<br /></td></tr>
+<tr><td>Parameter</td><td>string</td><td>rw</td><td class="td-middle">External app parameters<br /></td></tr>
+<tr><td>WorkingDirectory</td><td>string</td><td>rw</td><td class="td-middle">Working folder<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>Execute(<a href="#PageAccessor">PageAccessor</a>)</td><td>void</td><td class="td-middle">Run external app<details><h4>Parameters</h4>
+<tr><td>Execute(<a href="#PageAccessor">PageAccessor</a>)</td><td>void</td><td class="td-middle">Run external app<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>page</td><td><a href="#PageAccessor">PageAccessor</a></td><td class="td-middle">Page to send</td></tr>
+<tr><td>page</td><td><a href="#PageAccessor">PageAccessor</a></td><td class="td-middle">Page to send<br /></td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>Execute(<a href="#PageAccessor">PageAccessor</a>[])</td><td>void</td><td class="td-middle">Run external app<details><h4>Parameters</h4>
+<tr><td>Execute(<a href="#PageAccessor">PageAccessor</a>[])</td><td>void</td><td class="td-middle">Run external app<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>pages</td><td><a href="#PageAccessor">PageAccessor</a>[]</td><td class="td-middle">List of pages to send</td></tr>
+<tr><td>pages</td><td><a href="#PageAccessor">PageAccessor</a>[]</td><td class="td-middle">List of pages to send<br /></td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>Execute(string)</td><td>void</td><td class="td-middle">Run external app<details><h4>Parameters</h4>
+<tr><td>Execute(string)</td><td>void</td><td class="td-middle">Run external app<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>path</td><td>string</td><td class="td-middle">File to send</td></tr>
+<tr><td>path</td><td>string</td><td class="td-middle">File to send<br /></td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>Execute(string[])</td><td>void</td><td class="td-middle">Run external app<details><h4>Parameters</h4>
+<tr><td>Execute(string[])</td><td>void</td><td class="td-middle">Run external app<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>paths</td><td>string[]</td><td class="td-middle">List of files to send</td></tr>
+<tr><td>paths</td><td>string[]</td><td class="td-middle">List of files to send<br /></td></tr>
 </table></p>
 </details></td></tr>
 </table></p>
@@ -640,18 +664,18 @@ nv.Command.ViewRotateLeft.Patch({"Angle": 5}).Execute()</code></pre></p>
 <p>External app list accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>Items</td><td><a href="#ExternalAppAccessor">ExternalAppAccessor</a>[]</td><td>r</td><td class="td-middle">External apps</td></tr>
+<tr><td>Items</td><td><a href="#ExternalAppAccessor">ExternalAppAccessor</a>[]</td><td>r</td><td class="td-middle">External apps<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>CreateNew()</td><td><a href="#ExternalAppAccessor">ExternalAppAccessor</a></td><td class="td-middle">Create a new external app<details><h4>Returns</h4>
+<tr><td>CreateNew()</td><td><a href="#ExternalAppAccessor">ExternalAppAccessor</a></td><td class="td-middle">Create a new external app<br /><details><h4>Returns</h4>
 <p><table>
 <tr><td><a href="#ExternalAppAccessor">ExternalAppAccessor</a></td><td>New external app</td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>Remove(<a href="#ExternalAppAccessor">ExternalAppAccessor</a>)</td><td>void</td><td class="td-middle">Delete external app<details><h4>Parameters</h4>
+<tr><td>Remove(<a href="#ExternalAppAccessor">ExternalAppAccessor</a>)</td><td>void</td><td class="td-middle">Delete external app<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>item</td><td><a href="#ExternalAppAccessor">ExternalAppAccessor</a></td><td class="td-middle">External app to be deleted</td></tr>
+<tr><td>item</td><td><a href="#ExternalAppAccessor">ExternalAppAccessor</a></td><td class="td-middle">External app to be deleted<br /></td></tr>
 </table></p>
 </details></td></tr>
 </table></p>
@@ -659,94 +683,108 @@ nv.Command.ViewRotateLeft.Patch({"Angle": 5}).Execute()</code></pre></p>
 <p>History item accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>LastAccessTime</td><td>Date</td><td>r</td><td class="td-middle">Last access time</td></tr>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Item name</td></tr>
-<tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">The path corresponding to the item</td></tr>
+<tr><td>LastAccessTime</td><td>Date</td><td>r</td><td class="td-middle">Last access time<br /></td></tr>
+<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Item name<br /></td></tr>
+<tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">The path corresponding to the item<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>Open()</td><td>void</td><td class="td-middle">Open book</td></tr>
+<tr><td>Open()</td><td>void</td><td class="td-middle">Open book<br /></td></tr>
 </table></p>
 <h3 id="HistoryPanelAccessor">[Class] HistoryPanelAccessor</h3>
 <p>History panel accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>IsFloating</td><td>bool</td><td>r</td><td class="td-middle">Panel is floating</td></tr>
-<tr><td>IsSelected</td><td>bool</td><td>rw</td><td class="td-middle">Panel selected</td></tr>
-<tr><td>IsVisible</td><td>bool</td><td>r</td><td class="td-middle">Panel visibility</td></tr>
-<tr><td>Items</td><td><a href="#HistoryItemAccessor">HistoryItemAccessor</a>[]</td><td>r</td><td class="td-middle">List items</td></tr>
-<tr><td>SearchWord</td><td>string</td><td>rw</td><td class="td-middle">Search box text</td></tr>
-<tr><td>SelectedItems</td><td><a href="#HistoryItemAccessor">HistoryItemAccessor</a>[]</td><td>rw</td><td class="td-middle">Selected items</td></tr>
-<tr><td>Style</td><td>string (<a href="#PanelListItemStyle">PanelListItemStyle</a>)</td><td>rw</td><td class="td-middle">List item style</td></tr>
+<tr><td>IsFloating</td><td>bool</td><td>r</td><td class="td-middle">Panel is floating<br /></td></tr>
+<tr><td>IsSelected</td><td>bool</td><td>rw</td><td class="td-middle">Panel selected<br /></td></tr>
+<tr><td>IsVisible</td><td>bool</td><td>r</td><td class="td-middle">Panel visibility<br /></td></tr>
+<tr><td>Items</td><td><a href="#HistoryItemAccessor">HistoryItemAccessor</a>[]</td><td>r</td><td class="td-middle">List items<br /></td></tr>
+<tr><td>SearchWord</td><td>string</td><td>rw</td><td class="td-middle">Search box text<br /></td></tr>
+<tr><td>SelectedItems</td><td><a href="#HistoryItemAccessor">HistoryItemAccessor</a>[]</td><td>rw</td><td class="td-middle">Selected items<br /></td></tr>
+<tr><td>Style</td><td>string (<a href="#PanelListItemStyle">PanelListItemStyle</a>)</td><td>rw</td><td class="td-middle">List item style<br /></td></tr>
+<tr><td>Window</td><td><a href="#WindowAccessor">WindowAccessor</a></td><td>r</td><td class="td-middle">Window accessor<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>Close()</td><td>void</td><td class="td-middle">Close panel</td></tr>
-<tr><td>Open()</td><td>void</td><td class="td-middle">Open panel</td></tr>
-<tr><td>OpenDock()</td><td>void</td><td class="td-middle">Open panel in docking mode</td></tr>
-<tr><td>OpenFloat()</td><td>void</td><td class="td-middle">Open panel in floating mode</td></tr>
+<tr><td>Close()</td><td>void</td><td class="td-middle">Close panel<br /></td></tr>
+<tr><td>Open()</td><td>void</td><td class="td-middle">Open panel<br /></td></tr>
+<tr><td>OpenDock()</td><td>void</td><td class="td-middle">Open panel in docking mode<br /></td></tr>
+<tr><td>OpenFloat()</td><td>void</td><td class="td-middle">Open panel in floating mode<br /></td></tr>
 </table></p>
 <h3 id="InformationPanelAccessor">[Class] InformationPanelAccessor</h3>
 <p>Information panel accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>IsFloating</td><td>bool</td><td>r</td><td class="td-middle">Panel is floating</td></tr>
-<tr><td>IsSelected</td><td>bool</td><td>rw</td><td class="td-middle">Panel selected</td></tr>
-<tr><td>IsVisible</td><td>bool</td><td>r</td><td class="td-middle">Panel visibility</td></tr>
+<tr><td>IsFloating</td><td>bool</td><td>r</td><td class="td-middle">Panel is floating<br /></td></tr>
+<tr><td>IsSelected</td><td>bool</td><td>rw</td><td class="td-middle">Panel selected<br /></td></tr>
+<tr><td>IsVisible</td><td>bool</td><td>r</td><td class="td-middle">Panel visibility<br /></td></tr>
+<tr><td>Window</td><td><a href="#WindowAccessor">WindowAccessor</a></td><td>r</td><td class="td-middle">Window accessor<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>Close()</td><td>void</td><td class="td-middle">Close panel</td></tr>
-<tr><td>Open()</td><td>void</td><td class="td-middle">Open panel</td></tr>
-<tr><td>OpenDock()</td><td>void</td><td class="td-middle">Open panel in docking mode</td></tr>
-<tr><td>OpenFloat()</td><td>void</td><td class="td-middle">Open panel in floating mode</td></tr>
+<tr><td>Close()</td><td>void</td><td class="td-middle">Close panel<br /></td></tr>
+<tr><td>Open()</td><td>void</td><td class="td-middle">Open panel<br /></td></tr>
+<tr><td>OpenDock()</td><td>void</td><td class="td-middle">Open panel in docking mode<br /></td></tr>
+<tr><td>OpenFloat()</td><td>void</td><td class="td-middle">Open panel in floating mode<br /></td></tr>
+</table></p>
+<h3 id="MainViewPanelAccessor">[Class] MainViewPanelAccessor</h3>
+<p>Main view accessor</p>
+<h4>Properties</h4>
+<p><table>
+<tr><td>Window</td><td><a href="#WindowAccessor">WindowAccessor</a></td><td>r</td><td class="td-middle">Window accessor<br /></td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table>
+<tr><td>Close()</td><td>void</td><td class="td-middle">Close window<br /></td></tr>
+<tr><td>Open()</td><td>void</td><td class="td-middle">Open window<br /></td></tr>
 </table></p>
 <h3 id="MediaPlayerAccessor">[Class] MediaPlayerAccessor</h3>
 <p>Media Player Accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>AudioTrack</td><td><a href="#TrackCollectionAccessor">TrackCollectionAccessor</a></td><td>r</td><td class="td-middle">Audio Track Management. If it does not exist, null</td></tr>
-<tr><td>Duration</td><td>double</td><td>r</td><td class="td-middle">Media duration (seconds)</td></tr>
-<tr><td>IsDisposed</td><td>bool</td><td>r</td><td class="td-middle">Disposed instance</td></tr>
-<tr><td>IsMuted</td><td>bool</td><td>rw</td><td class="td-middle">Mute mode ON/OFF</td></tr>
-<tr><td>IsPlaying</td><td>bool</td><td>rw</td><td class="td-middle">Playback ON/OFF</td></tr>
-<tr><td>IsRepeat</td><td>bool</td><td>rw</td><td class="td-middle">Repeat mode ON/OFF</td></tr>
-<tr><td>Position</td><td>double</td><td>rw</td><td class="td-middle">Current position (0.0-1.0)</td></tr>
-<tr><td>Rate</td><td>double</td><td>rw</td><td class="td-middle">Speed</td></tr>
-<tr><td>Subtitle</td><td><a href="#TrackCollectionAccessor">TrackCollectionAccessor</a></td><td>r</td><td class="td-middle">Subtitle Track Management. If it does not exist, null</td></tr>
-<tr><td>Volume</td><td>double</td><td>rw</td><td class="td-middle">Volume (0.0-1.0)</td></tr>
+<tr><td>AudioTrack</td><td><a href="#TrackCollectionAccessor">TrackCollectionAccessor</a></td><td>r</td><td class="td-middle">Audio Track Management. If it does not exist, null<br /></td></tr>
+<tr><td>Duration</td><td>double</td><td>r</td><td class="td-middle">Media duration (seconds)<br /></td></tr>
+<tr><td>IsDisposed</td><td>bool</td><td>r</td><td class="td-middle">Disposed instance<br /></td></tr>
+<tr><td>IsMuted</td><td>bool</td><td>rw</td><td class="td-middle">Mute mode ON/OFF<br /></td></tr>
+<tr><td>IsPlaying</td><td>bool</td><td>rw</td><td class="td-middle">Playback ON/OFF<br /></td></tr>
+<tr><td>IsRepeat</td><td>bool</td><td>rw</td><td class="td-middle">Repeat mode ON/OFF<br /></td></tr>
+<tr><td>Position</td><td>double</td><td>rw</td><td class="td-middle">Current position (0.0-1.0)<br /></td></tr>
+<tr><td>Rate</td><td>double</td><td>rw</td><td class="td-middle">Speed<br /></td></tr>
+<tr><td>Subtitle</td><td><a href="#TrackCollectionAccessor">TrackCollectionAccessor</a></td><td>r</td><td class="td-middle">Subtitle Track Management. If it does not exist, null<br /></td></tr>
+<tr><td>Volume</td><td>double</td><td>rw</td><td class="td-middle">Volume (0.0-1.0)<br /></td></tr>
 </table></p>
 <h3 id="NavigatorPanelAccessor">[Class] NavigatorPanelAccessor</h3>
 <p>Navigator panel accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>IsFloating</td><td>bool</td><td>r</td><td class="td-middle">Panel is floating</td></tr>
-<tr><td>IsSelected</td><td>bool</td><td>rw</td><td class="td-middle">Panel selected</td></tr>
-<tr><td>IsVisible</td><td>bool</td><td>r</td><td class="td-middle">Panel visibility</td></tr>
+<tr><td>IsFloating</td><td>bool</td><td>r</td><td class="td-middle">Panel is floating<br /></td></tr>
+<tr><td>IsSelected</td><td>bool</td><td>rw</td><td class="td-middle">Panel selected<br /></td></tr>
+<tr><td>IsVisible</td><td>bool</td><td>r</td><td class="td-middle">Panel visibility<br /></td></tr>
+<tr><td>Window</td><td><a href="#WindowAccessor">WindowAccessor</a></td><td>r</td><td class="td-middle">Window accessor<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>Close()</td><td>void</td><td class="td-middle">Close panel</td></tr>
-<tr><td>Open()</td><td>void</td><td class="td-middle">Open panel</td></tr>
-<tr><td>OpenDock()</td><td>void</td><td class="td-middle">Open panel in docking mode</td></tr>
-<tr><td>OpenFloat()</td><td>void</td><td class="td-middle">Open panel in floating mode</td></tr>
+<tr><td>Close()</td><td>void</td><td class="td-middle">Close panel<br /></td></tr>
+<tr><td>Open()</td><td>void</td><td class="td-middle">Open panel<br /></td></tr>
+<tr><td>OpenDock()</td><td>void</td><td class="td-middle">Open panel in docking mode<br /></td></tr>
+<tr><td>OpenFloat()</td><td>void</td><td class="td-middle">Open panel in floating mode<br /></td></tr>
 </table></p>
 <h3 id="NodeAccessor">[Class] NodeAccessor</h3>
 <p>Node accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>Children</td><td><a href="#NodeAccessor">NodeAccessor</a>[]</td><td>r</td><td class="td-middle">Child nodes</td></tr>
-<tr><td>Index</td><td>int</td><td>r</td><td class="td-middle">Index number</td></tr>
-<tr><td>IsDisposed</td><td>bool</td><td>r</td><td class="td-middle">"true" if it is a destroyed node.</td></tr>
-<tr><td>IsExpanded</td><td>bool</td><td>rw</td><td class="td-middle">"true" if the node is in the expanded state</td></tr>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Node name</td></tr>
-<tr><td>Parent</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>r</td><td class="td-middle">Parent node</td></tr>
-<tr><td>Value</td><td>object</td><td>r</td><td class="td-middle">Node Value</td></tr>
-<tr><td>ValueType</td><td>string</td><td>r</td><td class="td-middle">Node value type</td></tr>
+<tr><td>Children</td><td><a href="#NodeAccessor">NodeAccessor</a>[]</td><td>r</td><td class="td-middle">Child nodes<br /></td></tr>
+<tr><td>Index</td><td>int</td><td>r</td><td class="td-middle">Index number<br /></td></tr>
+<tr><td>IsDisposed</td><td>bool</td><td>r</td><td class="td-middle">"true" if it is a destroyed node.<br /></td></tr>
+<tr><td>IsExpanded</td><td>bool</td><td>rw</td><td class="td-middle">"true" if the node is in the expanded state<br /></td></tr>
+<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Node name<br /></td></tr>
+<tr><td>Parent</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>r</td><td class="td-middle">Parent node<br /></td></tr>
+<tr><td>Value</td><td>object</td><td>r</td><td class="td-middle">Node Value<br /></td></tr>
+<tr><td>ValueType</td><td>string</td><td>r</td><td class="td-middle">Node value type<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>Add(dictionary)</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td class="td-middle">Create and add a new item<details><h4>Parameters</h4>
+<tr><td>Add(dictionary)</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td class="td-middle">Create and add a new item<br /><details><h4>Parameters</h4>
 <p><table>
 <tr><td>parameter</td><td>dictionary</td><td class="td-middle">New item parameters (optional)<br />Specify parameters as an associative array. Refer to the description of the derived class for details, as it depends on the type of item to be created.</td></tr>
 </table></p>
@@ -755,9 +793,9 @@ nv.Command.ViewRotateLeft.Patch({"Angle": 5}).Execute()</code></pre></p>
 <tr><td><a href="#NodeAccessor">NodeAccessor</a></td><td>New item</td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>Insert(int, dictionary)</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td class="td-middle">Create and insert a new item<details><h4>Parameters</h4>
+<tr><td>Insert(int, dictionary)</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td class="td-middle">Create and insert a new item<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>index</td><td>int</td><td class="td-middle">Insertion position</td></tr>
+<tr><td>index</td><td>int</td><td class="td-middle">Insertion position<br /></td></tr>
 <tr><td>parameter</td><td>dictionary</td><td class="td-middle">New item parameters (optional)<br />Specify parameters as an associative array. Refer to the description of the derived class for details, as it depends on the type of item to be created.</td></tr>
 </table></p>
 <h4>Returns</h4>
@@ -765,12 +803,12 @@ nv.Command.ViewRotateLeft.Patch({"Angle": 5}).Execute()</code></pre></p>
 <tr><td><a href="#NodeAccessor">NodeAccessor</a></td><td>New item</td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>MoveTo(int)</td><td>void</td><td class="td-middle">Change the index position<details><h4>Parameters</h4>
+<tr><td>MoveTo(int)</td><td>void</td><td class="td-middle">Change the index position<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>newIndex</td><td>int</td><td class="td-middle">New index number</td></tr>
+<tr><td>newIndex</td><td>int</td><td class="td-middle">New index number<br /></td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>Remove()</td><td>bool</td><td class="td-middle">Delete itself<details><h4>Returns</h4>
+<tr><td>Remove()</td><td>bool</td><td class="td-middle">Delete itself<br /><details><h4>Returns</h4>
 <p><table>
 <tr><td>bool</td><td>Returns "true" if deletion succeeds</td></tr>
 </table></p>
@@ -780,154 +818,172 @@ nv.Command.ViewRotateLeft.Patch({"Angle": 5}).Execute()</code></pre></p>
 <p>Page accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>CreationTime</td><td>Date</td><td>r</td><td class="td-middle">Creation time</td></tr>
-<tr><td>Index</td><td>int</td><td>r</td><td class="td-middle">Page index. Numbers begin with 0.</td></tr>
-<tr><td>IsBook</td><td>bool</td><td>r</td><td class="td-middle">Can open as a book</td></tr>
-<tr><td>LastWriteTime</td><td>Date</td><td>r</td><td class="td-middle">Last write time</td></tr>
-<tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Page path</td></tr>
-<tr><td>RawPath</td><td>string</td><td>r</td><td class="td-middle">Raw path</td></tr>
-<tr><td>Size</td><td>int</td><td>r</td><td class="td-middle">File size (Byte)</td></tr>
+<tr><td>CreationTime</td><td>Date</td><td>r</td><td class="td-middle">Creation time<br /></td></tr>
+<tr><td>Index</td><td>int</td><td>r</td><td class="td-middle">Page index. Numbers begin with 0.<br /></td></tr>
+<tr><td>IsBook</td><td>bool</td><td>r</td><td class="td-middle">Can open as a book<br /></td></tr>
+<tr><td>LastWriteTime</td><td>Date</td><td>r</td><td class="td-middle">Last write time<br /></td></tr>
+<tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Page path<br /></td></tr>
+<tr><td>RawPath</td><td>string</td><td>r</td><td class="td-middle">Raw path<br /></td></tr>
+<tr><td>Size</td><td>int</td><td>r</td><td class="td-middle">File size (Byte)<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>GetMetaValue(string)</td><td>string</td><td class="td-middle">Get page meta information<details><h4>Parameters</h4>
+<tr><td>GetMetaValue(string)</td><td>string</td><td class="td-middle">Get page meta information<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>key</td><td>string</td><td class="td-middle">Meta information item name. See the search options help for more information.</td></tr>
+<tr><td>key</td><td>string</td><td class="td-middle">Meta information item name. See the search options help for more information.<br /></td></tr>
 </table></p>
 <h4>Returns</h4>
 <p><table>
 <tr><td>string</td><td>Meta information value</td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>GetMetaValueMap()</td><td>dictionary</td><td class="td-middle">Get a list of page meta information<details><h4>Returns</h4>
+<tr><td>GetMetaValueMap()</td><td>dictionary</td><td class="td-middle">Get a list of page meta information<br /><details><h4>Returns</h4>
 <p><table>
 <tr><td>dictionary</td><td>Associative array of page meta information</td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>Open()</td><td>void</td><td class="td-middle">Open page</td></tr>
-<tr><td>OpenAsBook()</td><td>void</td><td class="td-middle">Open as book</td></tr>
+<tr><td>Open()</td><td>void</td><td class="td-middle">Open page<br /></td></tr>
+<tr><td>OpenAsBook()</td><td>void</td><td class="td-middle">Open as book<br /></td></tr>
 </table></p>
 <h3 id="PageListPanelAccessor">[Class] PageListPanelAccessor</h3>
 <p>PageList panel accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>Format</td><td>string (<a href="#PageNameFormat">PageNameFormat</a>)</td><td>rw</td><td class="td-middle">Item name format</td></tr>
-<tr><td>IsFloating</td><td>bool</td><td>r</td><td class="td-middle">Panel is floating</td></tr>
-<tr><td>IsSelected</td><td>bool</td><td>rw</td><td class="td-middle">Panel selected</td></tr>
-<tr><td>IsVisible</td><td>bool</td><td>r</td><td class="td-middle">Panel visibility</td></tr>
-<tr><td>Items</td><td><a href="#PageAccessor">PageAccessor</a>[]</td><td>r</td><td class="td-middle">List items</td></tr>
-<tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Current book path</td></tr>
-<tr><td>SearchWord</td><td>string</td><td>rw</td><td class="td-middle">Search box text</td></tr>
-<tr><td>SelectedItems</td><td><a href="#PageAccessor">PageAccessor</a>[]</td><td>rw</td><td class="td-middle">Selected items</td></tr>
-<tr><td>SortMode</td><td>string (<a href="#PageSortMode">PageSortMode</a>)</td><td>rw</td><td class="td-middle">List item order</td></tr>
-<tr><td>Style</td><td>string (<a href="#PanelListItemStyle">PanelListItemStyle</a>)</td><td>rw</td><td class="td-middle">List item style</td></tr>
+<tr><td>Format</td><td>string (<a href="#PageNameFormat">PageNameFormat</a>)</td><td>rw</td><td class="td-middle">Item name format<br /></td></tr>
+<tr><td>IsFloating</td><td>bool</td><td>r</td><td class="td-middle">Panel is floating<br /></td></tr>
+<tr><td>IsSelected</td><td>bool</td><td>rw</td><td class="td-middle">Panel selected<br /></td></tr>
+<tr><td>IsVisible</td><td>bool</td><td>r</td><td class="td-middle">Panel visibility<br /></td></tr>
+<tr><td>Items</td><td><a href="#PageAccessor">PageAccessor</a>[]</td><td>r</td><td class="td-middle">List items<br /></td></tr>
+<tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Current book path<br /></td></tr>
+<tr><td>SearchWord</td><td>string</td><td>rw</td><td class="td-middle">Search box text<br /></td></tr>
+<tr><td>SelectedItems</td><td><a href="#PageAccessor">PageAccessor</a>[]</td><td>rw</td><td class="td-middle">Selected items<br /></td></tr>
+<tr><td>SortMode</td><td>string (<a href="#PageSortMode">PageSortMode</a>)</td><td>rw</td><td class="td-middle">List item order<br /></td></tr>
+<tr><td>Style</td><td>string (<a href="#PanelListItemStyle">PanelListItemStyle</a>)</td><td>rw</td><td class="td-middle">List item style<br /></td></tr>
+<tr><td>Window</td><td><a href="#WindowAccessor">WindowAccessor</a></td><td>r</td><td class="td-middle">Window accessor<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>Close()</td><td>void</td><td class="td-middle">Close panel</td></tr>
-<tr><td>Open()</td><td>void</td><td class="td-middle">Open panel</td></tr>
-<tr><td>OpenDock()</td><td>void</td><td class="td-middle">Open panel in docking mode</td></tr>
-<tr><td>OpenFloat()</td><td>void</td><td class="td-middle">Open panel in floating mode</td></tr>
+<tr><td>Close()</td><td>void</td><td class="td-middle">Close panel<br /></td></tr>
+<tr><td>Open()</td><td>void</td><td class="td-middle">Open panel<br /></td></tr>
+<tr><td>OpenDock()</td><td>void</td><td class="td-middle">Open panel in docking mode<br /></td></tr>
+<tr><td>OpenFloat()</td><td>void</td><td class="td-middle">Open panel in floating mode<br /></td></tr>
 </table></p>
 <h3 id="PlaylistItemAccessor">[Class] PlaylistItemAccessor</h3>
 <p>Playlist item accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Item name</td></tr>
-<tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">The path corresponding to the item</td></tr>
+<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Item name<br /></td></tr>
+<tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">The path corresponding to the item<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>Open()</td><td>void</td><td class="td-middle">Open item</td></tr>
+<tr><td>Open()</td><td>void</td><td class="td-middle">Open item<br /></td></tr>
 </table></p>
 <h3 id="PlaylistPanelAccessor">[Class] PlaylistPanelAccessor</h3>
 <p>Playlist panel accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>IsFloating</td><td>bool</td><td>r</td><td class="td-middle">Panel is floating</td></tr>
-<tr><td>IsSelected</td><td>bool</td><td>rw</td><td class="td-middle">Panel selected</td></tr>
-<tr><td>IsVisible</td><td>bool</td><td>r</td><td class="td-middle">Panel visibility</td></tr>
-<tr><td>Items</td><td><a href="#PlaylistItemAccessor">PlaylistItemAccessor</a>[]</td><td>r</td><td class="td-middle">List items</td></tr>
-<tr><td>Name</td><td>string</td><td>rw</td><td class="td-middle">Current playlist name</td></tr>
-<tr><td>Path</td><td>string</td><td>rw</td><td class="td-middle">Current playlist path</td></tr>
-<tr><td>SelectedItems</td><td><a href="#PlaylistItemAccessor">PlaylistItemAccessor</a>[]</td><td>rw</td><td class="td-middle">Selected items</td></tr>
-<tr><td>Style</td><td>string (<a href="#PanelListItemStyle">PanelListItemStyle</a>)</td><td>rw</td><td class="td-middle">List item style</td></tr>
+<tr><td>IsFloating</td><td>bool</td><td>r</td><td class="td-middle">Panel is floating<br /></td></tr>
+<tr><td>IsSelected</td><td>bool</td><td>rw</td><td class="td-middle">Panel selected<br /></td></tr>
+<tr><td>IsVisible</td><td>bool</td><td>r</td><td class="td-middle">Panel visibility<br /></td></tr>
+<tr><td>Items</td><td><a href="#PlaylistItemAccessor">PlaylistItemAccessor</a>[]</td><td>r</td><td class="td-middle">List items<br /></td></tr>
+<tr><td>Name</td><td>string</td><td>rw</td><td class="td-middle">Current playlist name<br /></td></tr>
+<tr><td>Path</td><td>string</td><td>rw</td><td class="td-middle">Current playlist path<br /></td></tr>
+<tr><td>SelectedItems</td><td><a href="#PlaylistItemAccessor">PlaylistItemAccessor</a>[]</td><td>rw</td><td class="td-middle">Selected items<br /></td></tr>
+<tr><td>Style</td><td>string (<a href="#PanelListItemStyle">PanelListItemStyle</a>)</td><td>rw</td><td class="td-middle">List item style<br /></td></tr>
+<tr><td>Window</td><td><a href="#WindowAccessor">WindowAccessor</a></td><td>r</td><td class="td-middle">Window accessor<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>Close()</td><td>void</td><td class="td-middle">Close panel</td></tr>
-<tr><td>Open()</td><td>void</td><td class="td-middle">Open panel</td></tr>
-<tr><td>OpenDock()</td><td>void</td><td class="td-middle">Open panel in docking mode</td></tr>
-<tr><td>OpenFloat()</td><td>void</td><td class="td-middle">Open panel in floating mode</td></tr>
+<tr><td>Close()</td><td>void</td><td class="td-middle">Close panel<br /></td></tr>
+<tr><td>Open()</td><td>void</td><td class="td-middle">Open panel<br /></td></tr>
+<tr><td>OpenDock()</td><td>void</td><td class="td-middle">Open panel in docking mode<br /></td></tr>
+<tr><td>OpenFloat()</td><td>void</td><td class="td-middle">Open panel in floating mode<br /></td></tr>
 </table></p>
 <h3 id="QuickAccessFolderNodeAccessor">[Class] QuickAccessFolderNodeAccessor</h3>
 <p>Quick access folder accessor</p>
 <p>This class inherits from <a href="#NodeAccessor">NodeAccessor</a>.</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>Children</td><td><a href="#NodeAccessor">NodeAccessor</a>[]</td><td>r</td><td class="td-middle">Child nodes</td></tr>
-<tr><td>Index</td><td>int</td><td>r</td><td class="td-middle">Index number</td></tr>
-<tr><td>IsDisposed</td><td>bool</td><td>r</td><td class="td-middle">"true" if it is a destroyed node.</td></tr>
-<tr><td>IsExpanded</td><td>bool</td><td>rw</td><td class="td-middle">"true" if the node is in the expanded state</td></tr>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Node name</td></tr>
-<tr><td>Parent</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>r</td><td class="td-middle">Parent node</td></tr>
-<tr><td>Value</td><td><a href="#QuickAccessFolderNodeSource">QuickAccessFolderNodeSource</a></td><td>r</td><td class="td-middle">Properties of the quick access folder</td></tr>
-<tr><td>ValueType</td><td>string</td><td>r</td><td class="td-middle">Node value type</td></tr>
+<tr><td>Children</td><td><a href="#NodeAccessor">NodeAccessor</a>[]</td><td>r</td><td class="td-middle">Child nodes<br /></td></tr>
+<tr><td>Index</td><td>int</td><td>r</td><td class="td-middle">Index number<br /></td></tr>
+<tr><td>IsDisposed</td><td>bool</td><td>r</td><td class="td-middle">"true" if it is a destroyed node.<br /></td></tr>
+<tr><td>IsExpanded</td><td>bool</td><td>rw</td><td class="td-middle">"true" if the node is in the expanded state<br /></td></tr>
+<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Node name<br /></td></tr>
+<tr><td>Parent</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>r</td><td class="td-middle">Parent node<br /></td></tr>
+<tr><td>Value</td><td><a href="#QuickAccessFolderNodeSource">QuickAccessFolderNodeSource</a></td><td>r</td><td class="td-middle">Properties of the quick access folder<br /></td></tr>
+<tr><td>ValueType</td><td>string</td><td>r</td><td class="td-middle">Node value type<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>Add(dictionary)</td><td><a href="#QuickAccessNodeAccessor">QuickAccessNodeAccessor</a></td><td class="td-middle">Create and add new quick access<details><h4>Parameters</h4>
+<tr><td>Add(dictionary)</td><td><a href="#QuickAccessNodeAccessor">QuickAccessNodeAccessor</a><br/><a href="#QuickAccessFolderNodeAccessor">QuickAccessFolderNodeAccessor</a></td><td class="td-middle">Create and add a new quick access or quick access folder.<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>parameter</td><td>dictionary</td><td class="td-middle">New quick access parameters (optional)<br />Parameters "Name" and "Path" can be specified.</td></tr>
+<tr><td>parameter</td><td>dictionary</td><td class="td-middle">New quick access parameters (optional)<br />Parameters  "Name", "Path" and "Type" can be specified. Specifying "folder" for "Type" will create a quick access folder.</td></tr>
 </table></p>
 <h4>Returns</h4>
 <p><table>
-<tr><td><a href="#QuickAccessNodeAccessor">QuickAccessNodeAccessor</a></td><td>New quick access</td></tr>
+<tr><td><a href="#QuickAccessNodeAccessor">QuickAccessNodeAccessor</a><br/><a href="#QuickAccessFolderNodeAccessor">QuickAccessFolderNodeAccessor</a></td><td>New QuickAccessNodeAccessor or QuickAccessFolderNodeAccessor</td></tr>
 </table></p>
 <h4>e.g.</h4>
 <p><pre><code class="example">// Create quick access by specifying only path
-nv.Bookshelf.FolderTree.QuickAccessNode.Add({Path:"C:\\FooBar"})</code></pre></p>
+nv.Bookshelf.FolderTree.QuickAccessNode.Add({Path:"C:\\FooBar"})
+
+// Create quick access folder
+nv.Bookshelf.FolderTree.QuickAccessNode.Add({Type:"folder"})</code></pre></p>
 </details></td></tr>
-<tr><td>Insert(int, dictionary)</td><td><a href="#QuickAccessNodeAccessor">QuickAccessNodeAccessor</a></td><td class="td-middle">Create and insert new quick access<details><h4>Parameters</h4>
+<tr><td>Insert(int, dictionary)</td><td><a href="#QuickAccessNodeAccessor">QuickAccessNodeAccessor</a><br/><a href="#QuickAccessFolderNodeAccessor">QuickAccessFolderNodeAccessor</a></td><td class="td-middle">Create and insert new quick access<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>index</td><td>int</td><td class="td-middle">Insertion position</td></tr>
-<tr><td>parameter</td><td>dictionary</td><td class="td-middle">New quick access parameters (optional)<br />Parameters "Name" and "Path" can be specified.</td></tr>
+<tr><td>index</td><td>int</td><td class="td-middle">Insertion position<br /></td></tr>
+<tr><td>parameter</td><td>dictionary</td><td class="td-middle">New quick access parameters (optional)<br />Parameters  "Name", "Path" and "Type" can be specified. Specifying "folder" for "Type" will create a quick access folder.</td></tr>
 </table></p>
 <h4>Returns</h4>
 <p><table>
-<tr><td><a href="#QuickAccessNodeAccessor">QuickAccessNodeAccessor</a></td><td>New quick access</td></tr>
+<tr><td><a href="#QuickAccessNodeAccessor">QuickAccessNodeAccessor</a><br/><a href="#QuickAccessFolderNodeAccessor">QuickAccessFolderNodeAccessor</a></td><td>New QuickAccessNodeAccessor or QuickAccessFolderNodeAccessor</td></tr>
 </table></p>
 <h4>e.g.</h4>
 <p><pre><code class="example">// Create quick access with name and path
-nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"})</code></pre></p>
+nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"})
+
+// Create quick access folder
+nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre></p>
+</details></td></tr>
+<tr><td>MoveTo(int)</td><td>void</td><td class="td-middle">Change the index position<br /><details><h4>Parameters</h4>
+<p><table>
+<tr><td>newIndex</td><td>int</td><td class="td-middle">New index number<br /></td></tr>
+</table></p>
+</details></td></tr>
+<tr><td>Remove()</td><td>bool</td><td class="td-middle">Delete itself<br /><details><h4>Returns</h4>
+<p><table>
+<tr><td>bool</td><td>Returns "true" if deletion succeeds</td></tr>
+</table></p>
 </details></td></tr>
 </table></p>
 <h3 id="QuickAccessFolderNodeSource">[Class] QuickAccessFolderNodeSource</h3>
 <p>Properties of the quick access folder</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Name</td></tr>
+<tr><td>Name</td><td>string</td><td>rw</td><td class="td-middle">Name<br /></td></tr>
 </table></p>
 <h3 id="QuickAccessNodeAccessor">[Class] QuickAccessNodeAccessor</h3>
 <p>Quick access node accessor</p>
 <p>This class inherits from <a href="#NodeAccessor">NodeAccessor</a>.</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>Index</td><td>int</td><td>r</td><td class="td-middle">Index number</td></tr>
-<tr><td>IsDisposed</td><td>bool</td><td>r</td><td class="td-middle">"true" if it is a destroyed node.</td></tr>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Node name</td></tr>
-<tr><td>Parent</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>r</td><td class="td-middle">Parent node</td></tr>
-<tr><td>Value</td><td><a href="#QuickAccessNodeSource">QuickAccessNodeSource</a></td><td>r</td><td class="td-middle">Properties of the quick access</td></tr>
-<tr><td>ValueType</td><td>string</td><td>r</td><td class="td-middle">Node value type</td></tr>
+<tr><td>Index</td><td>int</td><td>r</td><td class="td-middle">Index number<br /></td></tr>
+<tr><td>IsDisposed</td><td>bool</td><td>r</td><td class="td-middle">"true" if it is a destroyed node.<br /></td></tr>
+<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Node name<br /></td></tr>
+<tr><td>Parent</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>r</td><td class="td-middle">Parent node<br /></td></tr>
+<tr><td>Value</td><td><a href="#QuickAccessNodeSource">QuickAccessNodeSource</a></td><td>r</td><td class="td-middle">Properties of the quick access<br /></td></tr>
+<tr><td>ValueType</td><td>string</td><td>r</td><td class="td-middle">Node value type<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>MoveTo(int)</td><td>void</td><td class="td-middle">Change the index position<details><h4>Parameters</h4>
+<tr><td>MoveTo(int)</td><td>void</td><td class="td-middle">Change the index position<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>newIndex</td><td>int</td><td class="td-middle">New index number</td></tr>
+<tr><td>newIndex</td><td>int</td><td class="td-middle">New index number<br /></td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>Remove()</td><td>bool</td><td class="td-middle">Delete itself<details><h4>Returns</h4>
+<tr><td>Remove()</td><td>bool</td><td class="td-middle">Delete itself<br /><details><h4>Returns</h4>
 <p><table>
 <tr><td>bool</td><td>Returns "true" if deletion succeeds</td></tr>
 </table></p>
@@ -937,82 +993,99 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <p>Properties of the quick access</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>Name</td><td>string</td><td>rw</td><td class="td-middle">Name</td></tr>
-<tr><td>Path</td><td>string</td><td>rw</td><td class="td-middle">Quick access path</td></tr>
+<tr><td>Name</td><td>string</td><td>rw</td><td class="td-middle">Name<br /></td></tr>
+<tr><td>Path</td><td>string</td><td>rw</td><td class="td-middle">Quick access path<br /></td></tr>
 </table></p>
 <h3 id="SusiePluginAccessor">[Class] SusiePluginAccessor</h3>
 <p>Susie plugin accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>ApiVersion</td><td>string</td><td>r</td><td class="td-middle">API version</td></tr>
-<tr><td>DetailText</td><td>string</td><td>r</td><td class="td-middle">Detailed text</td></tr>
-<tr><td>Extensions</td><td>string</td><td>rw</td><td class="td-middle">Extensions. Multiple extensions can be specified by semicolon, initialized by null.</td></tr>
-<tr><td>HasConfigDialog</td><td>bool</td><td>r</td><td class="td-middle">Configuration dialog exists</td></tr>
-<tr><td>IsCacheEnabled</td><td>bool</td><td>rw</td><td class="td-middle">Cache plugin</td></tr>
-<tr><td>IsEnabled</td><td>bool</td><td>rw</td><td class="td-middle">Enable</td></tr>
-<tr><td>IsPreExtract</td><td>bool</td><td>rw</td><td class="td-middle">Pre extract</td></tr>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Name</td></tr>
-<tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Path</td></tr>
-<tr><td>PluginType</td><td>string (<a href="#SusiePluginType">SusiePluginType</a>)</td><td>r</td><td class="td-middle">Susie plugin type</td></tr>
-<tr><td>PluginVersion</td><td>string</td><td>r</td><td class="td-middle">Plugin version</td></tr>
+<tr><td>ApiVersion</td><td>string</td><td>r</td><td class="td-middle">API version<br /></td></tr>
+<tr><td>DetailText</td><td>string</td><td>r</td><td class="td-middle">Detailed text<br /></td></tr>
+<tr><td>Extensions</td><td>string</td><td>rw</td><td class="td-middle">Extensions. Multiple extensions can be specified by semicolon, initialized by null.<br /></td></tr>
+<tr><td>HasConfigDialog</td><td>bool</td><td>r</td><td class="td-middle">Configuration dialog exists<br /></td></tr>
+<tr><td>IsCacheEnabled</td><td>bool</td><td>rw</td><td class="td-middle">Cache plugin<br /></td></tr>
+<tr><td>IsEnabled</td><td>bool</td><td>rw</td><td class="td-middle">Enable<br /></td></tr>
+<tr><td>IsPreExtract</td><td>bool</td><td>rw</td><td class="td-middle">Pre extract<br /></td></tr>
+<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Name<br /></td></tr>
+<tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Path<br /></td></tr>
+<tr><td>PluginType</td><td>string (<a href="#SusiePluginType">SusiePluginType</a>)</td><td>r</td><td class="td-middle">Susie plugin type<br /></td></tr>
+<tr><td>PluginVersion</td><td>string</td><td>r</td><td class="td-middle">Plugin version<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>ShowConfigDialog()</td><td>void</td><td class="td-middle">Open the Configuration dialog</td></tr>
+<tr><td>ShowConfigDialog()</td><td>void</td><td class="td-middle">Open the Configuration dialog<br /></td></tr>
 </table></p>
 <h3 id="SusiePluginCollectionAccessor">[Class] SusiePluginCollectionAccessor</h3>
 <p>Susie plugin collection accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>AMPlugins</td><td><a href="#SusiePluginAccessor">SusiePluginAccessor</a>[]</td><td>r</td><td class="td-middle">Archive plugins</td></tr>
-<tr><td>INPlugins</td><td><a href="#SusiePluginAccessor">SusiePluginAccessor</a>[]</td><td>r</td><td class="td-middle">Image plugins</td></tr>
+<tr><td>AMPlugins</td><td><a href="#SusiePluginAccessor">SusiePluginAccessor</a>[]</td><td>r</td><td class="td-middle">Archive plugins<br /></td></tr>
+<tr><td>INPlugins</td><td><a href="#SusiePluginAccessor">SusiePluginAccessor</a>[]</td><td>r</td><td class="td-middle">Image plugins<br /></td></tr>
 </table></p>
 <h3 id="TrackCollectionAccessor">[Class] TrackCollectionAccessor</h3>
 <p>Media player track accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>SelectedIndex</td><td>int</td><td>rw</td><td class="td-middle">Selected track number</td></tr>
-<tr><td>Tracks</td><td>string[]</td><td>r</td><td class="td-middle">Track list</td></tr>
+<tr><td>SelectedIndex</td><td>int</td><td>rw</td><td class="td-middle">Selected track number<br /></td></tr>
+<tr><td>Tracks</td><td>string[]</td><td>r</td><td class="td-middle">Track list<br /></td></tr>
 </table></p>
 <h3 id="ViewPageAccessor">[Class] ViewPageAccessor</h3>
 <p>ViewPage accessor</p>
 <p>This class inherits from <a href="#PageAccessor">PageAccessor</a>.</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>CreationTime</td><td>Date</td><td>r</td><td class="td-middle">Creation time</td></tr>
-<tr><td>Height</td><td>double</td><td>r</td><td class="td-middle">Page height</td></tr>
-<tr><td>Index</td><td>int</td><td>r</td><td class="td-middle">Page index. Numbers begin with 0.</td></tr>
-<tr><td>IsBook</td><td>bool</td><td>r</td><td class="td-middle">Can open as a book</td></tr>
-<tr><td>LastWriteTime</td><td>Date</td><td>r</td><td class="td-middle">Last write time</td></tr>
-<tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Page path</td></tr>
-<tr><td>Player</td><td><a href="#MediaPlayerAccessor">MediaPlayerAccessor</a></td><td>r</td><td class="td-middle">Media player. If not media, null</td></tr>
-<tr><td>RawPath</td><td>string</td><td>r</td><td class="td-middle">Raw path</td></tr>
-<tr><td>Size</td><td>int</td><td>r</td><td class="td-middle">File size (Byte)</td></tr>
-<tr><td>Width</td><td>double</td><td>r</td><td class="td-middle">Page width</td></tr>
+<tr><td>CreationTime</td><td>Date</td><td>r</td><td class="td-middle">Creation time<br /></td></tr>
+<tr><td>Height</td><td>double</td><td>r</td><td class="td-middle">Page height<br /></td></tr>
+<tr><td>Index</td><td>int</td><td>r</td><td class="td-middle">Page index. Numbers begin with 0.<br /></td></tr>
+<tr><td>IsBook</td><td>bool</td><td>r</td><td class="td-middle">Can open as a book<br /></td></tr>
+<tr><td>LastWriteTime</td><td>Date</td><td>r</td><td class="td-middle">Last write time<br /></td></tr>
+<tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Page path<br /></td></tr>
+<tr><td>Player</td><td><a href="#MediaPlayerAccessor">MediaPlayerAccessor</a></td><td>r</td><td class="td-middle">Media player. If not media, null<br /></td></tr>
+<tr><td>RawPath</td><td>string</td><td>r</td><td class="td-middle">Raw path<br /></td></tr>
+<tr><td>Size</td><td>int</td><td>r</td><td class="td-middle">File size (Byte)<br /></td></tr>
+<tr><td>Width</td><td>double</td><td>r</td><td class="td-middle">Page width<br /></td></tr>
 </table></p>
 <h4>Methods</h4>
 <p><table>
-<tr><td>GetMetaValue(string)</td><td>string</td><td class="td-middle">Get page meta information<details><h4>Parameters</h4>
+<tr><td>GetMetaValue(string)</td><td>string</td><td class="td-middle">Get page meta information<br /><details><h4>Parameters</h4>
 <p><table>
-<tr><td>key</td><td>string</td><td class="td-middle">Meta information item name. See the search options help for more information.</td></tr>
+<tr><td>key</td><td>string</td><td class="td-middle">Meta information item name. See the search options help for more information.<br /></td></tr>
 </table></p>
 <h4>Returns</h4>
 <p><table>
 <tr><td>string</td><td>Meta information value</td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>GetMetaValueMap()</td><td>dictionary</td><td class="td-middle">Get a list of page meta information<details><h4>Returns</h4>
+<tr><td>GetMetaValueMap()</td><td>dictionary</td><td class="td-middle">Get a list of page meta information<br /><details><h4>Returns</h4>
 <p><table>
 <tr><td>dictionary</td><td>Associative array of page meta information</td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>GetPageAccessor()</td><td><a href="#PageAccessor">PageAccessor</a></td><td class="td-middle">Get PageAccessor for this page<details><h4>Returns</h4>
+<tr><td>GetPageAccessor()</td><td><a href="#PageAccessor">PageAccessor</a></td><td class="td-middle">Get PageAccessor for this page<br /><details><h4>Returns</h4>
 <p><table>
 <tr><td><a href="#PageAccessor">PageAccessor</a></td><td>Page accessor</td></tr>
 </table></p>
 </details></td></tr>
-<tr><td>Open()</td><td>void</td><td class="td-middle">Open page</td></tr>
-<tr><td>OpenAsBook()</td><td>void</td><td class="td-middle">Open as book</td></tr>
+<tr><td>Open()</td><td>void</td><td class="td-middle">Open page<br /></td></tr>
+<tr><td>OpenAsBook()</td><td>void</td><td class="td-middle">Open as book<br /></td></tr>
+</table></p>
+<h3 id="WindowAccessor">[Class] WindowAccessor</h3>
+<p>Window accessor</p>
+<h4>Properties</h4>
+<p><table>
+<tr><td>Height</td><td>double</td><td>rw</td><td class="td-middle">Window height<br /></td></tr>
+<tr><td>IsOpen</td><td>bool</td><td>rw</td><td class="td-middle">Whether the window is visible<br /></td></tr>
+<tr><td>Left</td><td>double</td><td>rw</td><td class="td-middle">Position of the window's left edge<br /></td></tr>
+<tr><td>State</td><td>string (<a href="#WindowStateEx">WindowStateEx</a>)</td><td>rw</td><td class="td-middle">Window state<br /></td></tr>
+<tr><td>Top</td><td>double</td><td>rw</td><td class="td-middle">Position of the window's top edge<br /></td></tr>
+<tr><td>Width</td><td>double</td><td>rw</td><td class="td-middle">Window width<br /></td></tr>
+</table></p>
+<h4>Methods</h4>
+<p><table>
+<tr><td>Close()</td><td>void</td><td class="td-middle">Close window<br /></td></tr>
+<tr><td>Focus()</td><td>void</td><td class="td-middle">Focus the window<br /></td></tr>
+<tr><td>Open()</td><td>void</td><td class="td-middle">Open window<br /></td></tr>
 </table></p>
 <h3 id="ArchivePolicy">[Enum] ArchivePolicy</h3>
 <p>Compressed file processing policy</p>
@@ -1098,6 +1171,16 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>Image</td><td>Image</td></tr>
 <tr><td>Archive</td><td>Archive</td></tr>
 </table></p>
+<h3 id="WindowStateEx">[Enum] WindowStateEx</h3>
+<p>Window state</p>
+<h4>Fields</h4>
+<p><table>
+<tr><td>None</td><td>None</td></tr>
+<tr><td>Normal</td><td>Normal</td></tr>
+<tr><td>Minimized</td><td>Minimized</td></tr>
+<tr><td>Maximized</td><td>Maximized</td></tr>
+<tr><td>FullScreen</td><td>Full screen</td></tr>
+</table></p>
 <h2 id="ConfigList">Config list</h2>
 <table>
 <tr>
@@ -1141,10 +1224,12 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.Background.CustomBackground.Type</td><td><dl><dt>"SolidColor"</dt><dd>Solid color</dd><dt>"ImageTile"</dt><dd>Image tile</dd><dt>"ImageFill"</dt><dd>Enlarge and display the image</dd><dt>"ImageUniform"</dt><dd>Fit image to window size</dd><dt>"ImageUniformToFill"</dt><dd>Extend the image to the full window</dd></dl></td><td><b>Custom background: Brush type</b></td></tr>
 <tr><td>nv.Config.Background.IsPageBackgroundChecker</td><td>bool</td><td><b>Checkered background transparent image</b><p class="remarks">It will be a check pattern of "Transparent image background color".</p></td></tr>
 <tr><td>nv.Config.Background.PageBackgroundColor</td><td>"#AARRGGBB"</td><td><b>Transparent image background color</b></td></tr>
+<tr><td>nv.Config.Book.BookThumbnailDepth</td><td>int</td><td><b>Search depth for generating book thumbnail</b><p class="remarks">Find for image to use as thumbnail from folders within this depth range.</p></td></tr>
 <tr><td>nv.Config.Book.ContentsSpace</td><td>double</td><td><b>Distance between pages in "Two pages" (pixels)</b><p class="remarks">Sets the gap between page and page. Negative values ​​mean overlapping. Because each page is scaled, it is rare that there will be no gap just at 0.</p></td></tr>
 <tr><td>nv.Config.Book.DividePageRate</td><td>double</td><td><b>Rate of divide page</b><p class="remarks">Division rate when "Divide wide page".</p></td></tr>
 <tr><td>nv.Config.Book.DummyPageColor</td><td>"#AARRGGBB"</td><td><b>Dummy page color</b></td></tr>
 <tr><td>nv.Config.Book.Excludes</td><td>"str1;str2;str3"</td><td><b>Excluded folders</b></td></tr>
+<tr><td>nv.Config.Book.FolderSortOrder</td><td><dl><dt>"None"</dt><dd>No distinction</dd><dt>"First"</dt><dd>Arrange first</dd><dt>"Last"</dt><dd>Arrange last</dd></dl></td><td><b>Folder sort order</b></td></tr>
 <tr><td>nv.Config.Book.FrameSpace</td><td>double</td><td><b>Distance between pages in "Panorama" (pixels)</b><p class="remarks">Sets the gap between page and page. Negative values ​​mean overlapping. Because each page is scaled, it is rare that there will be no gap just at 0.</p></td></tr>
 <tr><td>nv.Config.Book.IsAutoRecursive</td><td>bool</td><td><b>If the subfolder is independent, read it without checking</b><p class="remarks">Automatically loads subfolders if there are no pages and only one subfolder exists.</p></td></tr>
 <tr><td>nv.Config.Book.IsConfirmRecursive</td><td>bool</td><td><b>Ask if you want to load it when you only have a subfolder</b><p class="remarks">If there is no page that can be displayed when the book is opened, and a subfolder exists, a dialog is displayed asking whether to load the subfolder.</p></td></tr>
@@ -1156,7 +1241,6 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.Book.IsPrioritizeBookMove</td><td>bool</td><td><b>Book movement priority</b></td></tr>
 <tr><td>nv.Config.Book.IsPrioritizePageMove</td><td>bool</td><td><b>Page movement priority</b><p class="remarks">Perform page movement without waiting for page display.</p></td></tr>
 <tr><td>nv.Config.Book.IsReadyToPageMove</td><td>bool</td><td><b>Ready to page move</b><p class="remarks">Switch display when page is ready. Not valid in "Panorama".</p></td></tr>
-<tr><td>nv.Config.Book.IsSortFileFirst</td><td>bool</td><td><b>Sort pages by file first</b><p class="remarks">Arrange files before folders.</p></td></tr>
 <tr><td>nv.Config.Book.IsStaticWidePage</td><td>bool</td><td><b>Static two pages</b><p class="remarks">The base page for the two pages display is determined by numbers only. Slider movement follows suit.</p></td></tr>
 <tr><td>nv.Config.Book.LoadingPageColor</td><td>"#AARRGGBB"</td><td><b>Loading page color</b></td></tr>
 <tr><td>nv.Config.Book.Orientation</td><td><dl><dt>"Horizontal"</dt><dd>Horizontal</dd><dt>"Vertical"</dt><dd>Vertical</dd></dl></td><td><b>Page layout orientation</b></td></tr>
@@ -1208,6 +1292,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.BookSettingPolicy.SortMode</td><td><dl><dt>"Default"</dt><dd>Default</dd><dt>"Continue"</dt><dd>Continue</dd><dt>"RestoreOrDefault"</dt><dd>Restore, else default</dd><dt>"RestoreOrContinue"</dt><dd>Restore, else continue</dd></dl></td><td><b>Setting policy of "Page sort mode" when opening a book</b></td></tr>
 <tr><td>nv.Config.Bookshelf.DefaultFolderOrder</td><td><dl><dt>"FileName"</dt><dd>Name↑</dd><dt>"FileNameDescending"</dt><dd>Name↓</dd><dt>"Path"</dt><dd>Path↑</dd><dt>"PathDescending"</dt><dd>Path↓</dd><dt>"FileType"</dt><dd>Type↑</dd><dt>"FileTypeDescending"</dt><dd>Type↓</dd><dt>"TimeStamp"</dt><dd>Date↑</dd><dt>"TimeStampDescending"</dt><dd>Date↓</dd><dt>"Size"</dt><dd>Size↑</dd><dt>"SizeDescending"</dt><dd>Size↓</dd><dt>"EntryTime"</dt><dd>Entry↑</dd><dt>"EntryTimeDescending"</dt><dd>Entry↓</dd><dt>"Random"</dt><dd>Shuffle</dd></dl></td><td><b>Bookshelf: Standard default order</b></td></tr>
 <tr><td>nv.Config.Bookshelf.ExcludePattern</td><td>string</td><td><b>Bookshelf: Filename pattern to exclude from display</b><p class="remarks">It is specified with .NET regular expression. Capital letters and lower case letters are not distinguished.</p></td></tr>
+<tr><td>nv.Config.Bookshelf.FolderSortOrder</td><td><dl><dt>"None"</dt><dd>No distinction</dd><dt>"First"</dt><dd>Arrange first</dd><dt>"Last"</dt><dd>Arrange last</dd></dl></td><td><b>Bookshelf: Folder sort order</b></td></tr>
 <tr><td>nv.Config.Bookshelf.FolderTreeLayout</td><td><dl><dt>"Top"</dt><dd>Place to the top</dd><dt>"Left"</dt><dd>Place to the left</dd></dl></td><td><b>Bookshelf: Folder tree layout</b></td></tr>
 <tr><td>nv.Config.Bookshelf.Home</td><td>string</td><td><b>Bookshelf: Home location</b></td></tr>
 <tr><td>nv.Config.Bookshelf.IsCloseBookWhenMove</td><td>bool</td><td><b>Bookshelf: Close the book when changing the location</b></td></tr>
@@ -1216,7 +1301,6 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.Bookshelf.IsInsertItem</td><td>bool</td><td><b>Bookshelf: Insert additional file at sort position</b><p class="remarks">The bookshelf reflects information in real time. If this setting is on, inserts the added file in the current sort order position. When turned off, it is added to the end of the list.</p></td></tr>
 <tr><td>nv.Config.Bookshelf.IsMultipleRarFilterEnabled</td><td>bool</td><td><b>Bookshelf: Filter RAR split files from display</b><p class="remarks">For an RAR split file called ".part[number].rar", only the file with the smallest number is displayed in the list.</p></td></tr>
 <tr><td>nv.Config.Bookshelf.IsOpenNextBookWhenRemove</td><td>bool</td><td><b>Bookshelf: After deleting the viewing book, open the next book</b></td></tr>
-<tr><td>nv.Config.Bookshelf.IsOrderWithoutFileType</td><td>bool</td><td><b>Bookshelf: Sort without file type</b></td></tr>
 <tr><td>nv.Config.Bookshelf.IsSearchIncludeSubdirectories</td><td>bool</td><td><b>Bookshelf: Perform a search including subfolders</b></td></tr>
 <tr><td>nv.Config.Bookshelf.IsSyncFolderTree</td><td>bool</td><td><b>Bookshelf: Synchronize Folders tree with sync button</b></td></tr>
 <tr><td>nv.Config.Bookshelf.IsVisibleBookmarkMark</td><td>bool</td><td><b>Bookshelf: Display bookmark symbols</b><p class="remarks">★ mark is displayed in the bookmarked book.</p></td></tr>
@@ -1231,6 +1315,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.Control.IsSelected</td><td>bool</td><td><b>Panel selected</b></td></tr>
 <tr><td>nv.Config.Control.IsVisible</td><td>bool</td><td><b>Panel visibility (Read only)</b></td></tr>
 <tr><td>nv.Config.FilmStrip.ImageWidth</td><td>double</td><td><b>Page thumbnail size</b></td></tr>
+<tr><td>nv.Config.FilmStrip.IsDetailPopupEnabled</td><td>bool</td><td><b>Detail popup</b></td></tr>
 <tr><td>nv.Config.FilmStrip.IsEnabled</td><td>bool</td><td><b>Show filmstrip</b></td></tr>
 <tr><td>nv.Config.FilmStrip.IsHideFilmStrip</td><td>bool</td><td><b>Automatically hide filmstrip</b></td></tr>
 <tr><td>nv.Config.FilmStrip.IsManipulationBoundaryFeedbackEnabled</td><td>bool</td><td><b>Touch scroll termination bound on filmstrip</b></td></tr>
@@ -1249,7 +1334,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.History.IsAutoCleanupEnabled</td><td>bool</td><td><b>Automatically delete invalid history at startup</b></td></tr>
 <tr><td>nv.Config.History.IsCurrentFolder</td><td>bool</td><td><b>Current folder only</b><p class="remarks">Shows the history of only the folders of the currently open book.</p></td></tr>
 <tr><td>nv.Config.History.IsForceUpdateHistory</td><td>bool</td><td><b>Even if you open a book from history, it updates the last browsing date</b></td></tr>
-<tr><td>nv.Config.History.IsGroupBy</td><td>bool</td><td><b>@HistoryConfig.IsGroupBy</b></td></tr>
+<tr><td>nv.Config.History.IsGroupBy</td><td>bool</td><td><b>Group by</b></td></tr>
 <tr><td>nv.Config.History.IsInnerArchiveHistoryEnabled</td><td>bool</td><td><b>Save recursive compressed file in history</b></td></tr>
 <tr><td>nv.Config.History.IsKeepFolderStatus</td><td>bool</td><td><b>Save folder state</b></td></tr>
 <tr><td>nv.Config.History.IsKeepSearchHistory</td><td>bool</td><td><b>Save search history</b></td></tr>
@@ -1258,6 +1343,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.History.LimitSize</td><td>int</td><td><b>Size limit</b></td></tr>
 <tr><td>nv.Config.History.LimitSpan</td><td>System.TimeSpan</td><td><b>Retention period</b></td></tr>
 <tr><td>nv.Config.History.PanelListItemStyle</td><td><dl><dt>"Normal"</dt><dd>Text</dd><dt>"Content"</dt><dd>Content</dd><dt>"Banner"</dt><dd>Banner</dd><dt>"Thumbnail"</dt><dd>Thumbnail</dd></dl></td><td><b>History item style</b></td></tr>
+<tr><td>nv.Config.History.RecentBookCount</td><td>int</td><td><b>Number of recent books</b></td></tr>
 <tr><td>nv.Config.Image.IsMediaRepeat</td><td>bool</td><td><b>Video page repeat</b></td></tr>
 <tr><td>nv.Config.Image.Standard.IsAllFileSupported</td><td>bool</td><td><b>A file whose extension is unknown is regarded as an image file</b><p class="remarks">This function works when "File type to be used as page" is "All files".</p></td></tr>
 <tr><td>nv.Config.Image.Standard.IsAnimatedGifEnabled</td><td>bool</td><td><b>Play animated GIF</b><p class="remarks">Perform animated GIF playback. Memory consumption problems may occur with long GIFs.</p></td></tr>
@@ -1388,17 +1474,18 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.Navigator.IsVisibleControlBar</td><td>bool</td><td><b>Control bar in the navigator panel</b></td></tr>
 <tr><td>nv.Config.Navigator.IsVisibleThumbnail</td><td>bool</td><td><b>Show thumbnail</b></td></tr>
 <tr><td>nv.Config.Navigator.ThumbnailHeight</td><td>double</td><td><b>Thumbnail area height</b></td></tr>
-<tr><td>nv.Config.Notice.BookNameShowMessageStyle</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Normal"</dt><dd>Visible</dd><dt>"Tiny"</dt><dd>Tiny</dd></dl></td><td><b>Show open book name</b></td></tr>
-<tr><td>nv.Config.Notice.CommandShowMessageStyle</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Normal"</dt><dd>Visible</dd><dt>"Tiny"</dt><dd>Tiny</dd></dl></td><td><b>Show command execution message</b></td></tr>
-<tr><td>nv.Config.Notice.GestureShowMessageStyle</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Normal"</dt><dd>Visible</dd><dt>"Tiny"</dt><dd>Tiny</dd></dl></td><td><b>Show gesture status</b></td></tr>
+<tr><td>nv.Config.Notice.BookNameShowMessageStyle</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Normal"</dt><dd>Visible</dd><dt>"NormalIconOnly"</dt><dd>Icon only</dd><dt>"Tiny"</dt><dd>Tiny</dd><dt>"TinyIconOnly"</dt><dd>Tiny icon only</dd></dl></td><td><b>Show open book name</b></td></tr>
+<tr><td>nv.Config.Notice.CommandShowMessageStyle</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Normal"</dt><dd>Visible</dd><dt>"NormalIconOnly"</dt><dd>Icon only</dd><dt>"Tiny"</dt><dd>Tiny</dd><dt>"TinyIconOnly"</dt><dd>Tiny icon only</dd></dl></td><td><b>Show command execution message</b></td></tr>
+<tr><td>nv.Config.Notice.GestureShowMessageStyle</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Normal"</dt><dd>Visible</dd><dt>"NormalIconOnly"</dt><dd>Icon only</dd><dt>"Tiny"</dt><dd>Tiny</dd><dt>"TinyIconOnly"</dt><dd>Tiny icon only</dd></dl></td><td><b>Show gesture status</b></td></tr>
 <tr><td>nv.Config.Notice.IsBusyMarkEnabled</td><td>bool</td><td><b>The image reading processing in progress mark is displayed on the upper left of the screen</b></td></tr>
 <tr><td>nv.Config.Notice.IsEmptyMessageEnabled</td><td>bool</td><td><b>Show message when there are no pages in the book</b></td></tr>
 <tr><td>nv.Config.Notice.IsOriginalScaleShowMessage</td><td>bool</td><td><b>Make the scale display of the view operation the original image size standard</b><p class="remarks">In case of 2 page display, we refer to the page with the smaller number.</p></td></tr>
-<tr><td>nv.Config.Notice.NoticeShowMessageStyle</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Normal"</dt><dd>Visible</dd><dt>"Tiny"</dt><dd>Tiny</dd></dl></td><td><b>General information</b></td></tr>
-<tr><td>nv.Config.Notice.NowLoadingShowMessageStyle</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Normal"</dt><dd>Visible</dd><dt>"Tiny"</dt><dd>Tiny</dd></dl></td><td><b>Show Now Loading</b></td></tr>
-<tr><td>nv.Config.Notice.ViewTransformShowMessageStyle</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Normal"</dt><dd>Visible</dd><dt>"Tiny"</dt><dd>Tiny</dd></dl></td><td><b>Show status change by drag operation</b></td></tr>
+<tr><td>nv.Config.Notice.NoticeShowMessageStyle</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Normal"</dt><dd>Visible</dd><dt>"NormalIconOnly"</dt><dd>Icon only</dd><dt>"Tiny"</dt><dd>Tiny</dd><dt>"TinyIconOnly"</dt><dd>Tiny icon only</dd></dl></td><td><b>General information</b></td></tr>
+<tr><td>nv.Config.Notice.NowLoadingShowMessageStyle</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Normal"</dt><dd>Visible</dd><dt>"NormalIconOnly"</dt><dd>Icon only</dd><dt>"Tiny"</dt><dd>Tiny</dd><dt>"TinyIconOnly"</dt><dd>Tiny icon only</dd></dl></td><td><b>Show "Now Loading"</b></td></tr>
+<tr><td>nv.Config.Notice.ViewTransformShowMessageStyle</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Normal"</dt><dd>Visible</dd><dt>"NormalIconOnly"</dt><dd>Icon only</dd><dt>"Tiny"</dt><dd>Tiny</dd><dt>"TinyIconOnly"</dt><dd>Tiny icon only</dd></dl></td><td><b>Show status change by drag operation</b></td></tr>
 <tr><td>nv.Config.PageList.FocusMainView</td><td>bool</td><td><b>Focus to main view</b><p class="remarks">After selecting a page, move the focus to the main view.</p></td></tr>
 <tr><td>nv.Config.PageList.Format</td><td><dl><dt>"Smart"</dt><dd>Smart</dd><dt>"NameOnly"</dt><dd>Name</dd><dt>"Raw"</dt><dd>Raw</dd><dt>"PageNumber"</dt><dd>Page number</dd></dl></td><td><b>Page name display format of PageList</b></td></tr>
+<tr><td>nv.Config.PageList.IsGroupBy</td><td>bool</td><td><b>Group by</b></td></tr>
 <tr><td>nv.Config.PageList.PanelListItemStyle</td><td><dl><dt>"Normal"</dt><dd>Text</dd><dt>"Content"</dt><dd>Content</dd><dt>"Banner"</dt><dd>Banner</dd><dt>"Thumbnail"</dt><dd>Thumbnail</dd></dl></td><td><b>PageList item style</b></td></tr>
 <tr><td>nv.Config.PageList.ShowBookTitle</td><td>bool</td><td><b>Show book title</b></td></tr>
 <tr><td>nv.Config.PageTitle.IsEnabled</td><td>bool</td><td><b>Page title: Show page title</b><p class="remarks">Appears when the cursor is over a slider or filmstrip.</p></td></tr>
@@ -1409,17 +1496,23 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.PageViewRecorder.PageViewRecordFilePath</td><td>string</td><td><b>Page view recording path</b></td></tr>
 <tr><td>nv.Config.Panels.BannerItemProfile.ImageShape</td><td><dl><dt>"Original"</dt><dd>Original</dd><dt>"Square"</dt><dd>Square</dd><dt>"BookShape"</dt><dd>Book shape</dd><dt>"Banner"</dt><dd>Banner</dd></dl></td><td><b>Banner style: Shape of Icon</b></td></tr>
 <tr><td>nv.Config.Panels.BannerItemProfile.ImageWidth</td><td>int</td><td><b>Banner style: Icon size</b><p class="remarks">The width of the icon image. The aspect ratio depends on the shape of the icon. If the thumbnail image resolution is exceeded, the image will be grainy.</p></td></tr>
+<tr><td>nv.Config.Panels.BannerItemProfile.IsDetailPopupEnabled</td><td>bool</td><td><b>Banner style: Detail popup</b></td></tr>
 <tr><td>nv.Config.Panels.BannerItemProfile.IsImagePopupEnabled</td><td>bool</td><td><b>Banner style: Icon popup</b><p class="remarks">When placing the cursor on the icon, a large image will be displayed in the popup.</p></td></tr>
 <tr><td>nv.Config.Panels.BannerItemProfile.IsTextVisible</td><td>bool</td><td><b>Banner style: Display the name</b></td></tr>
 <tr><td>nv.Config.Panels.BannerItemProfile.IsTextWrapped</td><td>bool</td><td><b>Banner style: Wrap name</b></td></tr>
+<tr><td>nv.Config.Panels.ConflictBottomMargin</td><td>double</td><td><b>Bottom margin of side panel when slider is automatically displayed (pixel)</b></td></tr>
+<tr><td>nv.Config.Panels.ConflictTopMargin</td><td>double</td><td><b>Top margin of side panel when menu bar is automatically displayed (pixel)</b></td></tr>
 <tr><td>nv.Config.Panels.ContentItemProfile.ImageShape</td><td><dl><dt>"Original"</dt><dd>Original</dd><dt>"Square"</dt><dd>Square</dd><dt>"BookShape"</dt><dd>Book shape</dd><dt>"Banner"</dt><dd>Banner</dd></dl></td><td><b>Content style: Shape of Icon</b></td></tr>
 <tr><td>nv.Config.Panels.ContentItemProfile.ImageWidth</td><td>int</td><td><b>Content style: Icon size</b><p class="remarks">The width of the icon image. The aspect ratio depends on the shape of the icon. If the thumbnail image resolution is exceeded, the image will be grainy.</p></td></tr>
+<tr><td>nv.Config.Panels.ContentItemProfile.IsDetailPopupEnabled</td><td>bool</td><td><b>Content style: Detail popup</b></td></tr>
 <tr><td>nv.Config.Panels.ContentItemProfile.IsImagePopupEnabled</td><td>bool</td><td><b>Content style: Icon popup</b><p class="remarks">When placing the cursor on the icon, a large image will be displayed in the popup.</p></td></tr>
 <tr><td>nv.Config.Panels.ContentItemProfile.IsTextVisible</td><td>bool</td><td><b>Content style: Display the name</b></td></tr>
 <tr><td>nv.Config.Panels.ContentItemProfile.IsTextWrapped</td><td>bool</td><td><b>Content style: Wrap name</b></td></tr>
 <tr><td>nv.Config.Panels.IsDecoratePlace</td><td>bool</td><td><b>Format path display of supplemental text</b><p class="remarks">Format as "AAA (C:\BBB\CCC)".</p></td></tr>
-<tr><td>nv.Config.Panels.IsHidePanel</td><td>bool</td><td><b>Hide side panels automatically</b></td></tr>
-<tr><td>nv.Config.Panels.IsHidePanelInAutoHideMode</td><td>bool</td><td><b>Automatically hide the side panel when it is auto-hide mode</b></td></tr>
+<tr><td>nv.Config.Panels.IsHideLeftPanel</td><td>bool</td><td><b>Hide left panel automatically</b></td></tr>
+<tr><td>nv.Config.Panels.IsHideLeftPanelInAutoHideMode</td><td>bool</td><td><b>Automatically hide the left panel when it is auto-hide mode</b></td></tr>
+<tr><td>nv.Config.Panels.IsHideRightPanel</td><td>bool</td><td><b>Hide right panel automatically</b></td></tr>
+<tr><td>nv.Config.Panels.IsHideRightPanelInAutoHideMode</td><td>bool</td><td><b>Automatically hide the right panel when it is auto-hide mode</b></td></tr>
 <tr><td>nv.Config.Panels.IsLeftRightKeyEnabled</td><td>bool</td><td><b>The left and right key input of the side panel is valid</b><p class="remarks">Activate left / right key operation on the side panel. In the bookshelf, move the folder hierarchically.</p></td></tr>
 <tr><td>nv.Config.Panels.IsLimitPanelWidth</td><td>bool</td><td><b>Limit panel width</b><p class="remarks">Limit the width of the panel to fit in the window</p></td></tr>
 <tr><td>nv.Config.Panels.IsManipulationBoundaryFeedbackEnabled</td><td>bool</td><td><b>Touch scroll termination bound on side panel</b></td></tr>
@@ -1427,10 +1520,17 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.Panels.IsTextSearchEnabled</td><td>bool</td><td><b>Select item with input text</b><p class="remarks">Single-key shortcuts on the list are disabled.</p></td></tr>
 <tr><td>nv.Config.Panels.IsVisibleItemsCount</td><td>bool</td><td><b>Show number of items</b></td></tr>
 <tr><td>nv.Config.Panels.MouseWheelSpeedRate</td><td>double</td><td><b>Mouse wheel scroll speed rate in thumbnail view</b></td></tr>
+<tr><td>nv.Config.Panels.NormalItemProfile.ImageShape</td><td><dl><dt>"Original"</dt><dd>Original</dd><dt>"Square"</dt><dd>Square</dd><dt>"BookShape"</dt><dd>Book shape</dd><dt>"Banner"</dt><dd>Banner</dd></dl></td><td><b>List style: Shape of Icon</b></td></tr>
+<tr><td>nv.Config.Panels.NormalItemProfile.ImageWidth</td><td>int</td><td><b>List style: Icon size</b><p class="remarks">The width of the icon image. The aspect ratio depends on the shape of the icon. If the thumbnail image resolution is exceeded, the image will be grainy.</p></td></tr>
+<tr><td>nv.Config.Panels.NormalItemProfile.IsDetailPopupEnabled</td><td>bool</td><td><b>List style: Detail popup</b></td></tr>
+<tr><td>nv.Config.Panels.NormalItemProfile.IsImagePopupEnabled</td><td>bool</td><td><b>List style: Icon popup</b><p class="remarks">When placing the cursor on the icon, a large image will be displayed in the popup.</p></td></tr>
+<tr><td>nv.Config.Panels.NormalItemProfile.IsTextVisible</td><td>bool</td><td><b>List style: Display the name</b></td></tr>
+<tr><td>nv.Config.Panels.NormalItemProfile.IsTextWrapped</td><td>bool</td><td><b>List style: Wrap name</b></td></tr>
 <tr><td>nv.Config.Panels.Opacity</td><td>double</td><td><b>Panel opacity</b><p class="remarks">It is effective in auto-hide mode.</p></td></tr>
 <tr><td>nv.Config.Panels.OpenWithDoubleClick</td><td>bool</td><td><b>Double click to open book</b><p class="remarks">Effective on bookshelf, bookmark panel, and history panel.</p></td></tr>
 <tr><td>nv.Config.Panels.ThumbnailItemProfile.ImageShape</td><td><dl><dt>"Original"</dt><dd>Original</dd><dt>"Square"</dt><dd>Square</dd><dt>"BookShape"</dt><dd>Book shape</dd><dt>"Banner"</dt><dd>Banner</dd></dl></td><td><b>Thumbnail style: Shape of Icon</b></td></tr>
 <tr><td>nv.Config.Panels.ThumbnailItemProfile.ImageWidth</td><td>int</td><td><b>Thumbnail style: Icon size</b><p class="remarks">The width of the icon image. The aspect ratio depends on the shape of the icon. If the thumbnail image resolution is exceeded, the image will be grainy.</p></td></tr>
+<tr><td>nv.Config.Panels.ThumbnailItemProfile.IsDetailPopupEnabled</td><td>bool</td><td><b>Thumbnail style: Detail popup</b></td></tr>
 <tr><td>nv.Config.Panels.ThumbnailItemProfile.IsImagePopupEnabled</td><td>bool</td><td><b>Thumbnail style: Icon popup</b><p class="remarks">When placing the cursor on the icon, a large image will be displayed in the popup.</p></td></tr>
 <tr><td>nv.Config.Panels.ThumbnailItemProfile.IsTextVisible</td><td>bool</td><td><b>Thumbnail style: Display the name</b></td></tr>
 <tr><td>nv.Config.Panels.ThumbnailItemProfile.IsTextWrapped</td><td>bool</td><td><b>Thumbnail style: Wrap name</b></td></tr>
@@ -1444,7 +1544,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.Playlist.CurrentPlaylist</td><td>string</td><td><b>Current playlist</b></td></tr>
 <tr><td>nv.Config.Playlist.IsCurrentBookFilterEnabled</td><td>bool</td><td><b>Show only open book pages</b></td></tr>
 <tr><td>nv.Config.Playlist.IsFirstIn</td><td>bool</td><td><b>Add to the top of the list</b><p class="remarks">This is the insertion position for additional commands. If it is turned off, it will be added at the end.</p></td></tr>
-<tr><td>nv.Config.Playlist.IsGroupBy</td><td>bool</td><td><b>Group and display by folder</b></td></tr>
+<tr><td>nv.Config.Playlist.IsGroupBy</td><td>bool</td><td><b>Group by</b></td></tr>
 <tr><td>nv.Config.Playlist.PanelListItemStyle</td><td><dl><dt>"Normal"</dt><dd>Text</dd><dt>"Content"</dt><dd>Content</dd><dt>"Banner"</dt><dd>Banner</dd><dt>"Thumbnail"</dt><dd>Thumbnail</dd></dl></td><td><b>List item style</b></td></tr>
 <tr><td>nv.Config.Playlist.PlaylistFolder</td><td>string</td><td><b>Playlist file storage location</b><p class="remarks">Playlist files in this folder are managed.</p></td></tr>
 <tr><td>nv.Config.Script.ErrorLevel</td><td><dl><dt>"Info"</dt><dd>Lv1: Info</dd><dt>"Warning"</dt><dd>Lv2: Warning</dd><dt>"Error"</dt><dd>Lv3: Error</dd></dl></td><td><b>Obsolete member access error level</b><p class="remarks">This is a debug setting. Select the error handling of member access that can no longer be used due to version upgrade.</p></td></tr>
@@ -1470,7 +1570,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.StartUp.IsAutoPlaySlideShow</td><td>bool</td><td><b>Start playing slideshow</b></td></tr>
 <tr><td>nv.Config.StartUp.IsMultiBootEnabled</td><td>bool</td><td><b>Allow multiple activations</b></td></tr>
 <tr><td>nv.Config.StartUp.IsOpenLastBook</td><td>bool</td><td><b>Restore an open book</b></td></tr>
-<tr><td>nv.Config.StartUp.IsOpenLastFolder</td><td>bool</td><td><b>Restore bookshelf location</b><p class="remarks">The location of the bookshelf if you do not open the book at startup.</p></td></tr>
+<tr><td>nv.Config.StartUp.IsOpenLastFolder</td><td>bool</td><td><b>Restore bookshelf location</b></td></tr>
 <tr><td>nv.Config.StartUp.IsRestoreFullScreen</td><td>bool</td><td><b>Restore full screen state</b></td></tr>
 <tr><td>nv.Config.StartUp.IsRestoreSecondWindowPlacement</td><td>bool</td><td><b>Restore the second window coordinates</b><p class="remarks">Restores window coordinates even after duplicate launches. If turned off, the window will be displayed with the initial coordinates.</p></td></tr>
 <tr><td>nv.Config.StartUp.IsRestoreWindowPlacement</td><td>bool</td><td><b>Restore window coordinates</b></td></tr>
@@ -1483,7 +1583,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.System.ArchiveRecursiveMode</td><td><dl><dt>"CurrentDirectory"</dt><dd>Expand for each directory</dd><dt>"IncludeSubDirectories"</dt><dd>Expand by compressed file unit</dd><dt>"IncludeSubArchives"</dt><dd>Expand all</dd></dl></td><td><b>Compressed file handling</b><p class="remarks">Extended range when opening compressed file</p></td></tr>
 <tr><td>nv.Config.System.BookPageCollectMode</td><td><dl><dt>"Image"</dt><dd>Image files</dd><dt>"ImageAndBook"</dt><dd>Image files and folders</dd><dt>"All"</dt><dd>All files</dd></dl></td><td><b>File type to be used as page</b><p class="remarks">If you make a folder a page, you can open the folder from that page.</p></td></tr>
 <tr><td>nv.Config.System.DateTimeFormat</td><td>string</td><td><b>Date time format</b></td></tr>
-<tr><td>nv.Config.System.DownloadPath</td><td>string</td><td><b>Download folder</b><p class="remarks">It is a storage place of the image dropped by the browser etc. If not specified, temporary folder is used.</p></td></tr>
+<tr><td>nv.Config.System.DownloadPath</td><td>string</td><td><b>Download folder</b><p class="remarks">It is a storage location of the image dropped by the browser etc. If not specified, temporary folder is used.</p></td></tr>
 <tr><td>nv.Config.System.FileManager</td><td>string</td><td><b>File Manager</b><p class="remarks">If not set, use Explorer.</p></td></tr>
 <tr><td>nv.Config.System.FileManagerFileArgs</td><td>string</td><td><b>File Type Arguments</b><p class="remarks">Arguments for displaying file as selections in the parent folder in File Manager. $File is replaced by the file path.</p></td></tr>
 <tr><td>nv.Config.System.FileManagerFolderArgs</td><td>string</td><td><b>Folder Type Arguments</b><p class="remarks">Arguments for opening a folder in File Manager. $File is replaced by the file path.</p></td></tr>
@@ -1492,7 +1592,6 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.System.IsIgnoreImageDpi</td><td>bool</td><td><b>Dot-by-dot display of image</b><p class="remarks">When displaying at the original size, it matches the pixels of the display independently of the display scale of the display.</p></td></tr>
 <tr><td>nv.Config.System.IsIncrementalSearchEnabled</td><td>bool</td><td><b>Incremental search enabled</b></td></tr>
 <tr><td>nv.Config.System.IsInputMethodEnabled</td><td>bool</td><td><b>Enable IME outside the text box</b><p class="remarks">* It is applied from the next startup. Always valid for text boxes.</p></td></tr>
-<tr><td>nv.Config.System.IsNaturalSortEnabled</td><td>bool</td><td><b>Use natural sort</b><p class="remarks">Makes sorting by name, such as numbers separated by periods, kanji numbers, etc. more natural. When off, same as Explorer.</p></td></tr>
 <tr><td>nv.Config.System.IsNetworkEnabled</td><td>bool</td><td><b>Allow network access</b><p class="remarks">When turned off, the version update confirmation from the "About" dialog is stopped and a confirmation dialog is displayed before connecting to the Internet with a web browser.</p></td></tr>
 <tr><td>nv.Config.System.IsOpenBookAtCurrentPlace</td><td>bool</td><td><b>Make the start position of the file selection dialog in "Open file" the location of the currently opened book</b></td></tr>
 <tr><td>nv.Config.System.IsRemoveConfirmed</td><td>bool</td><td><b>Show confirmation dialog when deleting files</b></td></tr>
@@ -1501,6 +1600,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.System.IsSyncUserSetting</td><td>bool</td><td><b>Synchronize settings</b><p class="remarks">When multi-booting, all NeeView settings are updated when closing the options window.</p></td></tr>
 <tr><td>nv.Config.System.Language</td><td>string</td><td><b>Language</b><p class="remarks">* It is applied from the next startup.</p></td></tr>
 <tr><td>nv.Config.System.SearchHistorySize</td><td>int</td><td><b>Search history size</b></td></tr>
+<tr><td>nv.Config.System.StringComparerType</td><td><dl><dt>"Ascii"</dt><dd>Character code order</dd><dt>"Native"</dt><dd>Same order as Explorer</dd><dt>"Natural"</dt><dd>Natual name order</dd></dl></td><td><b>Name order type</b></td></tr>
 <tr><td>nv.Config.System.TemporaryDirectory</td><td>string</td><td><b>Temporary location</b><p class="remarks">It is used for pre-extraction and recursive compression files.</p></td></tr>
 <tr><td>nv.Config.System.TextCopyPolicy</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"CopyFilePath"</dt><dd>Temporary file path</dd><dt>"OriginalPath"</dt><dd>Original path</dd></dl></td><td><b>Text copy</b><p class="remarks">If "Original path" is set, the text for temporary files will be the pathname of the original file.</p></td></tr>
 <tr><td>nv.Config.System.TextEditor</td><td>string</td><td><b>Text editor</b><p class="remarks">If not set, use Notepad.</p></td></tr>
@@ -1540,6 +1640,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr><td>nv.Config.View.IsKeepScale</td><td>bool</td><td><b>Maintain scaling even when changing pages</b></td></tr>
 <tr><td>nv.Config.View.IsKeepScaleBooks</td><td>bool</td><td><b>Maintain reversal even when changing books</b></td></tr>
 <tr><td>nv.Config.View.IsLimitMove</td><td>bool</td><td><b>Limit movement to within a window</b></td></tr>
+<tr><td>nv.Config.View.IsMoveLockStart</td><td>bool</td><td><b>Start with movement locked.</b><p class="remarks">Displays the page with movement locked. When the page becomes larger than the view area and scrolling becomes necessary, the lock is automatically released.</p></td></tr>
 <tr><td>nv.Config.View.IsRotateStretchEnabled</td><td>bool</td><td><b>Apply stretch to navigator rotation buttons</b></td></tr>
 <tr><td>nv.Config.View.IsScaleStretchTracking</td><td>bool</td><td><b>Stretch tracking</b><p class="remarks">Adjusts the scale according to the stretch mode when rotating.</p></td></tr>
 <tr><td>nv.Config.View.MainViewMargin</td><td>double</td><td><b>Main view margin (pixel)</b></td></tr>
@@ -1579,6 +1680,12 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <td><b>Open file</b><p class="remarks">Select and open the compressed file or image file.</p></td>
 </tr>
 <tr>
+<td class="nowrap">LoadRecentBook</td>
+</td><td></td>
+<td></td>
+<td><b>Recent books</b><p class="remarks">Open from the list of recent books</p></td>
+</tr>
+<tr>
 <td class="nowrap">ReLoad</td>
 </td><td></td>
 <td></td>
@@ -1601,6 +1708,12 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 </td><td></td>
 <td><dl><dt><b>MultiPagePolicy</b>: enum</dt><dd>"Once": Run only one page / "All": Run all pages / "AllLeftToRight": Run all pages (Left to right)<br/>For 2 pages.<dd/><dt><b>Index</b>: int</dt><dd>Selected index. Directly executes the selection number.<dd/></dl></td>
 <td><b>External app</b><p class="remarks">Select an external application to open the displayed images.</p></td>
+</tr>
+<tr>
+<td class="nowrap">OpenExternalAppAs:2</td>
+</td><td></td>
+<td><dl><dt><b>MultiPagePolicy</b>: enum</dt><dd>"Once": Run only one page / "All": Run all pages / "AllLeftToRight": Run all pages (Left to right)<br/>For 2 pages.<dd/><dt><b>Index</b>: int</dt><dd>Selected index. Directly executes the selection number.<dd/></dl></td>
+<td><b>External app 2</b><p class="remarks">Select an external application to open the displayed images.</p></td>
 </tr>
 <tr>
 <td class="nowrap">OpenExplorer</td>
@@ -1669,10 +1782,28 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <td><b>Copy to folder</b><p class="remarks">Select the folder where you want to copy the displayed images.</p></td>
 </tr>
 <tr>
+<td class="nowrap">CopyToFolderAs:2</td>
+</td><td></td>
+<td><dl><dt><b>MultiPagePolicy</b>: enum</dt><dd>"Once": Run only one page / "All": Run all pages / "AllLeftToRight": Run all pages (Left to right)<br/>For 2 pages.<dd/><dt><b>Index</b>: int</dt><dd>Selected index. Directly executes the selection number.<dd/></dl></td>
+<td><b>Copy to folder 2</b><p class="remarks">Select the folder where you want to copy the displayed images.</p></td>
+</tr>
+<tr>
 <td class="nowrap">MoveToFolderAs</td>
 </td><td></td>
 <td><dl><dt><b>MultiPagePolicy</b>: enum</dt><dd>"Once": Run only one page / "All": Run all pages / "AllLeftToRight": Run all pages (Left to right)<br/>For 2 pages.<dd/><dt><b>Index</b>: int</dt><dd>Selected index. Directly executes the selection number.<dd/></dl></td>
 <td><b>Move to folder</b><p class="remarks">Select the folder where you want to move the displayed images.</p></td>
+</tr>
+<tr>
+<td class="nowrap">MoveToFolderAs:2</td>
+</td><td></td>
+<td><dl><dt><b>MultiPagePolicy</b>: enum</dt><dd>"Once": Run only one page / "All": Run all pages / "AllLeftToRight": Run all pages (Left to right)<br/>For 2 pages.<dd/><dt><b>Index</b>: int</dt><dd>Selected index. Directly executes the selection number.<dd/></dl></td>
+<td><b>Move to folder 2</b><p class="remarks">Select the folder where you want to move the displayed images.</p></td>
+</tr>
+<tr>
+<td class="nowrap">SelectArchiver</td>
+</td><td></td>
+<td></td>
+<td><b>Select Archiver</b><p class="remarks">Select the archiver that opens the current book</p></td>
 </tr>
 <tr>
 <td class="nowrap">ClearHistory</td>
@@ -1684,7 +1815,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <td class="nowrap">ClearHistoryInPlace</td>
 </td><td></td>
 <td></td>
-<td><b>Delete history in place</b><p class="remarks">Delete all history in the current location of the bookshelf.</p></td>
+<td><b>Delete history in the current location</b><p class="remarks">Delete all history in the current location of the bookshelf.</p></td>
 </tr>
 <tr>
 <td class="nowrap">RemoveUnlinkedHistory</td>
@@ -1885,7 +2016,19 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <td class="nowrap">ToggleHidePanel</td>
 </td><td></td>
 <td></td>
-<td><b>Toggle auto hide panels</b><p class="remarks">Automatically hide the left and right panels. It is displayed by moving the cursor to the left and right edges of the window.</p></td>
+<td><b>Toggle auto hide panels</b><p class="remarks">(Deprecated) Automatically hide the left and right panels. It is displayed by moving the cursor to the left and right edges of the window.</p></td>
+</tr>
+<tr>
+<td class="nowrap">ToggleHideLeftPanel</td>
+</td><td></td>
+<td></td>
+<td><b>Toggle auto hide left panel</b><p class="remarks">Automatically hide the left panels It is displayed by moving the cursor to the left edge of the window.</p></td>
+</tr>
+<tr>
+<td class="nowrap">ToggleHideRightPanel</td>
+</td><td></td>
+<td></td>
+<td><b>Toggle auto hide right panel</b><p class="remarks">Automatically hide the right panels It is displayed by moving the cursor to the right edge of the window.</p></td>
 </tr>
 <tr>
 <td class="nowrap">ToggleVisiblePageSlider</td>
@@ -2754,8 +2897,14 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <tr>
 <td class="nowrap">ToggleBookmark</td>
 </td><td><dl><dt>switch: bool</dt><dd>ON / OFF. Toggle if omitted.</dd></dl></td>
-<td></td>
+<td><dl><dt><b>Folder</b>: string</dt><dd>Destination bookmark folder. "bookmark:" prefix is required. If blank, the folder is determined automatically.<dd/></dl></td>
 <td><b>Toggle bookmark</b><p class="remarks">Toggle bookmark for currently open book.</p></td>
+</tr>
+<tr>
+<td class="nowrap">RegisterBookmark</td>
+</td><td></td>
+<td></td>
+<td><b>Register bookmark</b><p class="remarks">Register or delete bookmark by specifying a bookmark folder.</p></td>
 </tr>
 </table>
 <h3>Playlist</h3>
@@ -2765,6 +2914,18 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <th class="td-middle">Argument</th>
 <th class="td-middle">Command parameter</th>
 <th class="td-middle">Summary</th></tr>
+</tr>
+<tr>
+<td class="nowrap">NextPlaylist</td>
+</td><td></td>
+<td></td>
+<td><b>Next playlist</b><p class="remarks">Switch to the next playlist.</p></td>
+</tr>
+<tr>
+<td class="nowrap">PrevPlaylist</td>
+</td><td></td>
+<td></td>
+<td><b>Prev playlist</b><p class="remarks">Switch to the previous playlist.</p></td>
 </tr>
 <tr>
 <td class="nowrap">TogglePlaylistItem</td>
@@ -2926,6 +3087,45 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Name:"AAA", Path:"C:\\FooBar"
 <h2 id="ObsoleteList">Breaking changes by version</h2>
 <h4>Severity</h4>
 <p><table><tr><td>Error</td><td>This change is fatal and causes errors.</td></tr><tr><td>Warning</td><td>This effect is disabled and does not work.</td></tr><tr><td>Info</td><td>Compatible and works the same. Spelling errors corrected, etc.</td></tr></table></p>
+
+<h3>Version 44.0</h3><table>
+  <tr>
+    <th>Severity</th>
+    <th>Name</th>
+    <th class="nowrap">Category</th>
+    <th class="td-middle">Alternative</th>
+  </tr>
+  <tr>
+    <td>Warning</td>
+    <td>nv.Config.Book.IsSortFileFirst</td>
+    <td class="nowrap">Obsolete</td>
+    <td>nv.Config.Book.FolderSortOrder</td>
+  </tr>
+  <tr>
+    <td>Warning</td>
+    <td>nv.Config.Bookshelf.IsOrderWithoutFileType</td>
+    <td class="nowrap">Obsolete</td>
+    <td>nv.Config.Bookshelf.FolderSortOrder</td>
+  </tr>
+  <tr>
+    <td>Warning</td>
+    <td>nv.Config.System.IsNaturalSortEnabled</td>
+    <td class="nowrap">Obsolete</td>
+    <td>nv.Config.System.StringComparerType</td>
+  </tr>
+  <tr>
+    <td>Info</td>
+    <td>nv.Config.Panels.IsHidePanel</td>
+    <td class="nowrap">Obsolete</td>
+    <td>nv.Config.Panels.IsHideLeftPanel, IsHideRightPanel</td>
+  </tr>
+  <tr>
+    <td>Info</td>
+    <td>nv.Config.Panels.IsHidePanelInAutoHideMode</td>
+    <td class="nowrap">Obsolete</td>
+    <td>nv.Config.Panels.IsHideLeftPanelInAutoHideMode, IsHideRightPanelInAutoHideMode</td>
+  </tr>
+</table>
 
 <h3>Version 42.0</h3><table>
   <tr>
