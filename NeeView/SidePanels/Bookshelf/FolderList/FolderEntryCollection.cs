@@ -123,8 +123,6 @@ namespace NeeView
                 }
             }
 
-            BindingOperations.EnableCollectionSynchronization(this.Items, new object());
-
             if (_isWatchFileSystem)
             {
                 // フォルダー監視

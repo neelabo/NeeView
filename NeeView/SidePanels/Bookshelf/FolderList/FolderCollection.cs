@@ -99,13 +99,11 @@ namespace NeeView
                     if (_items != _itemsEmpty)
                     {
                         _items.CollectionChanged -= Items_CollectionChanged;
-                        BindingOperations.DisableCollectionSynchronization(_items);
                     }
                     _items = value;
                     if (_items != _itemsEmpty)
                     {
                         _items.CollectionChanged += Items_CollectionChanged;
-                        BindingOperations.EnableCollectionSynchronization(_items, new object());
                     }
                     RaisePropertyChanged();
                 }

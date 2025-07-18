@@ -56,7 +56,6 @@ namespace NeeView
             // 内部履歴の並びを反転する。SortDescriptions での並び替えより軽い。
             var items = new ReverseObservableCollection<BookHistory>(BookHistoryCollection.Current.Items);
             items.CollectionChanged += Items_CollectionChanged;
-            BindingOperations.EnableCollectionSynchronization(items, new object());
             
             _collectionViewSource.Source = items;
             _collectionViewSource.Culture = TextResources.Culture;

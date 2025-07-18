@@ -258,7 +258,6 @@ namespace NeeView
 
             var pages = BookOperation.Current.Control.Pages;
             Items = new ObservableCollection<Page>(pages);
-            BindingOperations.EnableCollectionSynchronization(this.Items, new object());
 
             RaisePropertyChanged(nameof(PlaceDisplayString));
 
