@@ -42,7 +42,6 @@ namespace NeeView
             }
 
             this.Items = new ObservableCollection<FolderItem>(list);
-            BindingOperations.EnableCollectionSynchronization(this.Items, new object());
 
             // 変更監視
             BookmarkCollection.Current.BookmarkChanged += BookmarkCollection_BookmarkChanged;

@@ -74,7 +74,6 @@ namespace NeeView
             }
 
             this.Items = new ObservableCollection<FolderItem>(list);
-            BindingOperations.EnableCollectionSynchronization(this.Items, new object());
         }
 
 
