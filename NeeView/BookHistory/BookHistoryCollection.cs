@@ -98,7 +98,7 @@ namespace NeeView
         {
             lock (_lock)
             {
-                _items.Clear();
+                AppDispatcher.Invoke(() => _items.Clear());
                 BookMementoCollection.Current.CleanUp();
             }
 
@@ -109,7 +109,7 @@ namespace NeeView
         {
             lock (_lock)
             {
-                _items.Clear();
+                AppDispatcher.Invoke(() => _items.Clear());
                 BookMementoCollection.Current.CleanUp();
 
                 foreach (var book in books)
@@ -124,7 +124,7 @@ namespace NeeView
                     {
                         items = items.Reverse();
                     }
-                    _items.Reset(items.Select(e => new BookHistory(e.Path, e.LastAccessTime)));
+                    AppDispatcher.Invoke(() => _items.Reset(items.Select(e => new BookHistory(e.Path, e.LastAccessTime))));
                 }
                 catch (Exception ex)
                 {
@@ -282,7 +282,7 @@ namespace NeeView
                     var dstNode = _itemsMap.Find(dst);
                     if (dstNode is not null)
                     {
-                        _items.Remove(dstNode);
+                        AppDispatcher.Invoke(() => _items.Remove(dstNode));
                     }
                     node.Path = dst;
                     _itemsMap.Remap(src, node);
@@ -301,7 +301,7 @@ namespace NeeView
             lock (_lock)
             {
                 Debug.Assert(!_itemsMap.ContainsKey(item.Key));
-                _items.Add(item);
+                AppDispatcher.Invoke(() => _items.Add(item));
             }
         }
 
@@ -310,7 +310,7 @@ namespace NeeView
             lock (_lock)
             {
                 Debug.Assert(!_itemsMap.ContainsKey(item.Key));
-                _items.Insert(index, item);
+                AppDispatcher.Invoke(() => _items.Insert(index, item));
             }
         }
 
@@ -321,7 +321,7 @@ namespace NeeView
                 var oldIndex = _items.LastIndexOf(item);
                 if (oldIndex < 0) throw new ArgumentException("Cannot found item.");
                 if (oldIndex == index) return false;
-                _items.Move(oldIndex, index);
+                AppDispatcher.Invoke(() => _items.Move(oldIndex, index));
                 return true;
             }
         }
@@ -333,7 +333,7 @@ namespace NeeView
                 var item = _itemsMap.Find(place);
                 if (item != null)
                 {
-                    _items.Remove(item);
+                    AppDispatcher.Invoke(() => _items.Remove(item));
                 }
                 return item;
             }
@@ -349,7 +349,7 @@ namespace NeeView
                     foreach (var item in unlinked)
                     {
                         LocalDebug.WriteLine($"Remove {item.Path}");
-                        _items.Remove(item);
+                        AppDispatcher.Invoke(() => _items.Remove(item));
                     }
                 }
                 return unlinked;

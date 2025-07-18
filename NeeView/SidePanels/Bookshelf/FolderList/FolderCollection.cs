@@ -157,6 +157,8 @@ namespace NeeView
 
         private void Items_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
+            NVDebug.AssertSTA();
+
             RaisePropertyChanged(nameof(ValidCount));
         }
 

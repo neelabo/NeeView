@@ -5,6 +5,7 @@ using NeeView.PageFrames;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -13,6 +14,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace NeeView
 {
@@ -132,8 +134,18 @@ namespace NeeView
             get { return _items; }
             private set
             {
-                if (SetProperty(ref _items, value))
+                if (_items != value)
                 {
+                    if (_items is not null)
+                    {
+                        _items.CollectionChanged -= Items_CollectionChanged;
+                    }
+                    _items = value;
+                    if (_items is not null)
+                    {
+                        _items.CollectionChanged += Items_CollectionChanged;
+                    }
+                    RaisePropertyChanged();
                     RaisePropertyChanged(nameof(ValidCount));
                     ValidateViewItems();
                 }
@@ -173,6 +185,11 @@ namespace NeeView
         /// </summary>
         public int ValidCount => IsEmpty() ? 0 : _items.Count;
 
+
+        private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            NVDebug.AssertSTA();
+        }
 
         [MemberNotNullWhen(false, nameof(_items))]
         public bool IsEmpty()
@@ -241,6 +258,7 @@ namespace NeeView
 
             var pages = BookOperation.Current.Control.Pages;
             Items = new ObservableCollection<Page>(pages);
+            BindingOperations.EnableCollectionSynchronization(this.Items, new object());
 
             RaisePropertyChanged(nameof(PlaceDisplayString));
 

@@ -159,6 +159,8 @@ namespace NeeView
 
         private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
+            NVDebug.AssertSTA();
+
             var oldItems = e.OldItems?.Cast<PlaylistItem>();
             var newItems = e.NewItems?.Cast<PlaylistItem>();
 
