@@ -131,6 +131,8 @@ namespace NeeView
         }
 
         // NOTE: SevenZipのテスト用コード
+        // NOTE: 未使用のためコメントアウト
+#if false
         class SevenZiPTest
         {
             private Dictionary<ArchiveFileInfo, MemoryStream> _map = new Dictionary<ArchiveFileInfo, MemoryStream>();
@@ -198,9 +200,9 @@ namespace NeeView
                 return ms;
             }
         }
+#endif
+
     }
-
-
 }
 #endif
 
