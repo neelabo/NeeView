@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
+using System;
 
 namespace NeeView
 {
@@ -17,7 +18,7 @@ namespace NeeView
         public double SlideShowInterval
         {
             get { return _slideShowInterval; }
-            set { SetProperty(ref _slideShowInterval, value); }
+            set { SetProperty(ref _slideShowInterval, Math.Max(value, 0.1)); }
         }
 
         /// <summary>
