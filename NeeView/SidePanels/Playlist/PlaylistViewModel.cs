@@ -105,6 +105,7 @@ namespace NeeView
                 menu.Items.Add(CreateCommandMenuItem(TextResources.GetString("Playlist.MoreMenu.Rename"), _vm.RenameCommand));
                 menu.Items.Add(new Separator());
                 menu.Items.Add(CreateCommandMenuItem(TextResources.GetString("Playlist.MoreMenu.DeleteInvalid"), _vm.DeleteInvalidItemsCommand));
+                menu.Items.Add(CreateCommandMenuItem(TextResources.GetString("Playlist.MoreMenu.Sort"), _vm.SortItemsCommand));
                 menu.Items.Add(new Separator());
                 menu.Items.Add(CreateCommandMenuItem(TextResources.GetString("Playlist.MoreMenu.OpenAsBook"), _vm.OpenAsBookCommand));
 
@@ -217,6 +218,26 @@ namespace NeeView
         private async void DeleteInvalidItemsCommand_Execute()
         {
             await _model.DeleteInvalidItemsAsync();
+        }
+
+
+        private RelayCommand? _SortItemsCommand;
+        public RelayCommand SortItemsCommand
+        {
+            get { return _SortItemsCommand = _SortItemsCommand ?? new RelayCommand(SortItemsCommand_Execute); }
+        }
+
+        private void SortItemsCommand_Execute()
+        {
+            var dialog = new MessageDialog(TextResources.GetString("PlaylistSortDialog.Message"), TextResources.GetString("PlaylistSortDialog.Title"));
+            dialog.Commands.AddRange(UICommands.OKCancel);
+            var result = dialog.ShowDialog();
+            if (!result.IsPossible)
+            {
+                return;
+            }
+
+            _model.SortItems();
         }
 
         #endregion

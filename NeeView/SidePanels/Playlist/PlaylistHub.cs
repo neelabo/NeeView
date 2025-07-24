@@ -402,6 +402,11 @@ namespace NeeView
             await _playlist.DeleteInvalidItemsAsync(_deleteInvalidItemsCancellationToken.Token);
         }
 
+        public void SortItems()
+        {
+            _playlist.Sort();
+        }
+
         #endregion
     }
 }
