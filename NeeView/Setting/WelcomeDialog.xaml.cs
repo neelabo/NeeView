@@ -53,6 +53,8 @@ namespace NeeView.Setting
 
         public SettingPageWelcome() : base("Welcome")
         {
+            this.IsResetButtonEnabled = false;
+
             _commandResetControl = new CommandResetControl();
 
             this.Items = new List<SettingItem>();
