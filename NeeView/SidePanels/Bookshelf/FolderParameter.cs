@@ -81,6 +81,12 @@ namespace NeeView
         {
             var memento = BookHistoryCollection.Current.GetFolderMemento(Path);
             Restore(memento);
+
+            // NOTE: ver44 前はシード値が保存されていないので、Restore()でシード値が補正された場合は保存しなおす。
+            if (_seed != memento.Seed)
+            {
+                Save();
+            }
         }
 
         /// <summary>
