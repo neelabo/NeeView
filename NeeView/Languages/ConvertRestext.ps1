@@ -334,9 +334,9 @@ function Test-RestextTable {
         $value = $property.Value
         foreach ($item in $value.psobject.properties) {
             $culture = $item.Name
-            $m = [regex]::Matches($item.Value, "@[a-zA-Z0-9_\.\-#]+[a-zA-Z0-9]")
+            $m = [regex]::Matches($item.Value, "@#?[a-zA-Z0-9_\.\-#]+[a-zA-Z0-9]")
             for ($i = 0; $i -lt $m.Count; $i++) {
-                $refKey = $m[$i].Value.Trim("@")
+                $refKey = $m[$i].Value.Trim("@#")
                 if (-not ($allKeys -ccontains $refKey)) {
                     Write-Output "@$refKey is undefined. in $key at $culture"
                     $failureCount++
