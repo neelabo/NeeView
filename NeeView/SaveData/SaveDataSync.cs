@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
 using NeeLaboratory.IO;
 using NeeView.Collections.Generic;
@@ -31,8 +32,8 @@ namespace NeeView
         private readonly UserSettingWatcher _userSettingWatcher = new UserSettingWatcher();
         private readonly BookmarkWatcher _bookmarkWatcher = new BookmarkWatcher();
         private readonly PlaylistWatcher _playlistWatcher = new PlaylistWatcher();
+        private readonly DisposableCollection _disposables = new();
         private bool _disposedValue = false;
-
 
         private SaveDataSync()
         {
@@ -43,11 +44,12 @@ namespace NeeView
 
         public void Initialize()
         {
-            BookmarkCollection.Current.BookmarkChanged += BookmarkCollection_BookmarkChanged;
-            QuickAccessCollection.Current.RoutedValuePropertyChanged += QuickAccessCollection_RoutedValuePropertyChanged;
-            QuickAccessCollection.Current.RoutedCollectionChanged += QuickAccessCollection_RoutedCollectionChanged;
-            BookHistoryCollection.Current.HistoryChanged += BookHistoryCollection_HistoryChanged;
-            BookHistoryCollection.Current.SearchChanged += Search_HistoryChanged;
+            _disposables.Add(BookmarkCollection.Current.SubscribeBookmarkChanged(BookmarkCollection_BookmarkChanged));
+            _disposables.Add(QuickAccessCollection.Current.SubscribeRoutedValuePropertyChanged(QuickAccessCollection_RoutedValuePropertyChanged));
+            _disposables.Add(QuickAccessCollection.Current.SubscribeRoutedCollectionChanged(QuickAccessCollection_RoutedCollectionChanged));
+            _disposables.Add(BookHistoryCollection.Current.SubscribeHistoryChanged(BookHistoryCollection_HistoryChanged));
+            _disposables.Add(BookHistoryCollection.Current.SubscribeSearchChanged(BookHistoryCollection_SearchChanged));
+            _disposables.Add(Config.Current.Bookmark.SubscribePropertyChanged(nameof(BookmarkConfig.BookmarkFilePath), BookmarkConfig_BookmarkFilePathChanged));
         }
 
         protected virtual void Dispose(bool disposing)
@@ -59,11 +61,7 @@ namespace NeeView
                     _playlistWatcher.Dispose();
                     _bookmarkWatcher.Dispose();
                     _userSettingWatcher.Dispose();
-                    BookmarkCollection.Current.BookmarkChanged -= BookmarkCollection_BookmarkChanged;
-                    QuickAccessCollection.Current.RoutedValuePropertyChanged -= QuickAccessCollection_RoutedValuePropertyChanged;
-                    QuickAccessCollection.Current.RoutedCollectionChanged -= QuickAccessCollection_RoutedCollectionChanged;
-                    BookHistoryCollection.Current.HistoryChanged -= BookHistoryCollection_HistoryChanged;
-                    BookHistoryCollection.Current.SearchChanged -= Search_HistoryChanged;
+                    _disposables.Dispose();
                     _delaySaveBookmark.Dispose();
                     _delaySaveHistory.Dispose();
                 }
@@ -112,15 +110,23 @@ namespace NeeView
             _delaySaveHistory.Request();
         }
 
-        private void Search_HistoryChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        private void BookHistoryCollection_SearchChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Reset) return;
             LocalDebug.WriteLine($"Sender={sender}, Action={e.Action}");
             _delaySaveHistory.Request();
         }
 
+        private void BookmarkConfig_BookmarkFilePathChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            LocalDebug.WriteLine($"");
+            _bookmarkWatcher.Reload();
+        }
+
         public void Flush()
         {
+            if (_disposedValue) return;
+
             _delaySaveBookmark.Flush();
             _delaySaveHistory.Flush();
             PlaylistHub.Current.Flush();
@@ -128,6 +134,8 @@ namespace NeeView
 
         public void SaveUserSetting(bool sync, bool handleException)
         {
+            if (_disposedValue) return;
+
             LocalDebug.WriteLine($"Save UserSetting");
 
             try
@@ -151,6 +159,8 @@ namespace NeeView
 
         public void SaveHistory(bool handleException)
         {
+            if (_disposedValue) return;
+
             LocalDebug.WriteLine($"Save History");
 
             try
@@ -175,12 +185,15 @@ namespace NeeView
 
         public void SaveBookmark(bool sync, bool handleException)
         {
+            if (_disposedValue) return;
+
             LocalDebug.WriteLine($"Save Bookmark");
 
             try
             {
                 _delaySaveBookmark?.Cancel();
                 SaveData.Current.SaveBookmark();
+                _bookmarkWatcher.Reset();
             }
             catch (Exception ex)
             {
@@ -212,11 +225,21 @@ namespace NeeView
         /// </summary>
         public void SaveAll(bool sync, bool handleException)
         {
+            if (_disposedValue) return;
+
             Flush();
             SaveUserSetting(sync, handleException);
 
             RemoveHistoryIfNotSave();
             RemoveBookmarkIfNotSave();
+        }
+
+        public void ResetWatcher()
+        {
+            if (_disposedValue) return;
+
+            _bookmarkWatcher.Reset();
+            _playlistWatcher.Reset();
         }
     }
 }

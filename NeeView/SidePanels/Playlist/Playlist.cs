@@ -58,6 +58,8 @@ namespace NeeView
 
         public event EventHandler<PlaylistItemRenamedEventArgs>? ItemRenamed;
 
+        public event EventHandler<PlaylistSavedEventArgs>? Saved;
+
 
         public string Path => _fileStamp.Path;
 
@@ -726,6 +728,8 @@ namespace NeeView
                         SaveCore(this.Path);
                         this.FileStamp = FileStamp.Create(this.Path);
                     }
+
+                    Saved?.Invoke(this, new PlaylistSavedEventArgs(this.Path));
 
                     return true;
                 }

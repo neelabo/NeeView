@@ -216,6 +216,7 @@ namespace NeeView
             if (IsClosing) return;
 
             RoutedCommandTable.Current.UpdateInputGestures();
+            SaveDataSync.Current.ResetWatcher();
         }
 
         /// <summary>

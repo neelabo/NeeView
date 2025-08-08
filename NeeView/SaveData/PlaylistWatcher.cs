@@ -28,12 +28,21 @@ namespace NeeView
             _watcher.Deleted += PlaylistWatcher_Changed; // ファイル削除や名前変更にも追従
             _disposables.Add(_watcher);
 
-            _disposables.Add(Config.Current.Playlist.SubscribePropertyChanged(nameof(PlaylistConfig.CurrentPlaylist), (s, e) =>
-            {
-                _watcher.Start(Config.Current.Playlist.CurrentPlaylist);
-            }));
+            _disposables.Add(Config.Current.Playlist.SubscribePropertyChanged(nameof(PlaylistConfig.CurrentPlaylist),
+                (s, e) => Reset()));
+
+            _disposables.Add(PlaylistHub.Current.SubscribePlaylistSaved(
+                (s, e) => Reset()));
+
+            _disposables.Add(PlaylistHub.Current.SubscribeRefreshed(
+                (s, e) => Reset()));
 
             _disposables.Add(_delayAction);
+        }
+
+        public void Reset()
+        {
+            _watcher.Start(Config.Current.Playlist.CurrentPlaylist);
         }
 
         private void PlaylistWatcher_Changed(object sender, FileSystemEventArgs e)

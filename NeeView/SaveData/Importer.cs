@@ -237,8 +237,7 @@ namespace NeeView
                 entry.ExtractToFile(path, true);
             }
 
-            PlaylistHub.Current.UpdatePlaylistCollection();
-            PlaylistHub.Current.ReloadPlaylist();
+            PlaylistHub.Current.Refresh();
         }
 
         public void ImportThemes()

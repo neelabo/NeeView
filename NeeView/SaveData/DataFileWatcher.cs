@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using NeeLaboratory.Generators;
 
@@ -39,29 +40,43 @@ namespace NeeView
 
             Stop();
 
-
-            if (string.IsNullOrEmpty(path) || !FileIO.ExistsPath(path))
+            if (string.IsNullOrEmpty(path))
             {
                 return;
             }
 
-            _path = path;
-            _name = Path.GetFileName(_path);
-            if (string.IsNullOrEmpty(_name))
+            try
             {
-                return;
+                _path = path;
+
+                var directory = Path.GetDirectoryName(_path) ?? "";
+                if (!Directory.Exists(directory))
+                {
+                    throw new DirectoryNotFoundException($"The directory '{directory}' does not exist.");
+                }
+
+                _name = Path.GetFileName(_path);
+                if (string.IsNullOrEmpty(_name))
+                {
+                    throw new ArgumentException("The file name cannot be empty.", nameof(path));
+                }
+
+                _watcher = new FileSystemWatcher();
+                _watcher.Path = directory;
+                _watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName;
+                _watcher.IncludeSubdirectories = false;
+                _watcher.Created += Watcher_Created;
+                _watcher.Changed += Watcher_Changed;
+                _watcher.Deleted += Watcher_Deleted;
+                _watcher.Renamed += Watcher_Renamed;
+
+                _watcher.EnableRaisingEvents = true;
             }
-
-            _watcher = new FileSystemWatcher();
-            _watcher.Path = Path.GetDirectoryName(_path) ?? "";
-            _watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName;
-            _watcher.IncludeSubdirectories = false;
-            _watcher.Created += Watcher_Created;
-            _watcher.Changed += Watcher_Changed;
-            _watcher.Deleted += Watcher_Deleted;
-            _watcher.Renamed += Watcher_Renamed;
-
-            _watcher.EnableRaisingEvents = true;
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"DataFileWatcher: Failed to start watching '{path}'. {ex.Message}");
+                Stop();
+            }
         }
 
         public void Stop()
@@ -75,6 +90,7 @@ namespace NeeView
 
         private void Watcher_Created(object sender, FileSystemEventArgs e)
         {
+            if (_disposedValue) return;
             if (e.Name != _name) return;
 
             Changed?.Invoke(sender, e);
@@ -82,14 +98,15 @@ namespace NeeView
 
         private void Watcher_Changed(object sender, FileSystemEventArgs e)
         {
+            if (_disposedValue) return;
             if (e.Name != _name) return;
 
             Changed?.Invoke(sender, e);
         }
 
-
         private void Watcher_Deleted(object sender, FileSystemEventArgs e)
         {
+            if (_disposedValue) return;
             if (e.Name != _name) return;
 
             Deleted?.Invoke(sender, e);
@@ -97,6 +114,7 @@ namespace NeeView
 
         private void Watcher_Renamed(object sender, RenamedEventArgs e)
         {
+            if (_disposedValue) return;
             if (e.Name != _name && e.OldName != _name) return;
 
             if (e.Name == _name)

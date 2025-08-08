@@ -27,15 +27,23 @@ namespace NeeView
             _watcher.Changed += BookmarkWatcher_Changed;
             _disposables.Add(_watcher);
 
-            _disposables.Add(Config.Current.Bookmark.SubscribePropertyChanged(nameof(BookmarkConfig.BookmarkFilePath), (s, e) =>
-            {
-                _watcher.Start(Config.Current.Bookmark.BookmarkFilePath);
-            }));
+            _disposables.Add(Config.Current.Bookmark.SubscribePropertyChanged(nameof(BookmarkConfig.BookmarkFilePath),
+                (s, e) => Reset()));
 
             _disposables.Add(_delayAction);
         }
 
+        public void Reset()
+        {
+            _watcher.Start(Config.Current.Bookmark.BookmarkFilePath);
+        }
+
         private void BookmarkWatcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            Reload();
+        }
+
+        public void Reload()
         {
             _delayAction.Request(() => SaveData.Current.LoadBookmark(), TimeSpan.FromMilliseconds(_delayTime));
         }

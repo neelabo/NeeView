@@ -70,7 +70,14 @@ namespace NeeView
         }
 
 
+        [Subscribable]
         public event NotifyCollectionChangedEventHandler? PlaylistCollectionChanged;
+
+        [Subscribable]
+        public event EventHandler<PlaylistSavedEventArgs>? PlaylistSaved;
+
+        [Subscribable]
+        public event EventHandler? Refreshed;
 
 
         public string DefaultPlaylist => Config.Current.Playlist.DefaultPlaylist;
@@ -135,6 +142,11 @@ namespace NeeView
         private void Playlist_ItemRenamed(object? sender, PlaylistItemRenamedEventArgs e)
         {
             _playlist.DelaySave();
+        }
+
+        private void Playlist_Saved(object? sender, PlaylistSavedEventArgs e)
+        {
+            PlaylistSaved?.Invoke(this, e);
         }
 
         private void SelectedItemChanged()
@@ -258,6 +270,19 @@ namespace NeeView
         }
 
         /// <summary>
+        /// プレイリストの状態をリフレッシュ
+        /// </summary>
+        /// <remarks>
+        /// インポート後に呼ばれる
+        /// </remarks>
+        public void Refresh()
+        {
+            PlaylistHub.Current.UpdatePlaylistCollection();
+            PlaylistHub.Current.ReloadPlaylist();
+            Refreshed?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
         /// 再読み込みするプレイリストのパスを決定する。
         /// </summary>
         /// <param name="path">現在のプレイリストが存在しないときの代替。ファイル名が変更されたとき用</param>
@@ -291,12 +316,14 @@ namespace NeeView
         {
             playlist.CollectionChanged += Playlist_CollectionChanged;
             playlist.ItemRenamed += Playlist_ItemRenamed;
+            playlist.Saved += Playlist_Saved;
         }
 
         private void DetachPlaylistEvents(Playlist playlist)
         {
             playlist.CollectionChanged -= Playlist_CollectionChanged;
             playlist.ItemRenamed -= Playlist_ItemRenamed;
+            playlist.Saved -= Playlist_Saved;
         }
 
         public void Flush()
