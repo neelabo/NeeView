@@ -20,7 +20,7 @@ namespace NeeView.Susie.Server
 
         // APIデリゲートリスト
         private readonly Dictionary<Type, object> _apiDelegateList = new();
-        
+
         private bool _disposedValue = false;
 
 
@@ -407,55 +407,27 @@ namespace NeeView.Susie.Server
                 throw new SusieException("Memory error.");
             }
 
-            var bi = Marshal.PtrToStructure<BitmapInfoHeader>(pBInfo);
-            var bf = CreateBitmapFileHeader(bi);
+            var bf = CreateBitmapFileHeader(pBInfoSize, pBmSize);
             byte[] mem = new byte[bf.bfSize];
             GCHandle gch = GCHandle.Alloc(mem, GCHandleType.Pinned);
             try { Marshal.StructureToPtr<BitmapFileHeader>(bf, gch.AddrOfPinnedObject(), false); }
             finally { gch.Free(); }
-
-            int infoSize = (int)bf.bfOffBits - Marshal.SizeOf(bf);
-            int infoSizeReal = pBInfoSize;
-            if (infoSizeReal < infoSize)
-            {
-                Trace.WriteLine($"SusiePluginApi.CreateBitmapImage: Illegal pBInfo size: request={infoSize}, real={infoSizeReal}");
-                infoSize = infoSizeReal;
-                if (infoSize <= 0) throw new SusieException("Memory error.");
-            }
-            Marshal.Copy(pBInfo, mem, Marshal.SizeOf(bf), infoSize);
-
-            int dataSize = (int)(bf.bfSize - bf.bfOffBits);
-            int dataSizeReal = pBmSize;
-            if (dataSizeReal < dataSize)
-            {
-                Trace.WriteLine($"SusiePluginApi.CreateBitmapImage: Illegal pBm size: request={dataSize}, real={dataSizeReal}");
-                dataSize = dataSizeReal;
-                if (dataSize <= 0) throw new SusieException("Memory error.");
-            }
-            Marshal.Copy(pBm, mem, (int)bf.bfOffBits, dataSize);
-
+            Marshal.Copy(pBInfo, mem, Marshal.SizeOf(bf), pBInfoSize);
+            Marshal.Copy(pBm, mem, (int)bf.bfOffBits, pBmSize);
             return mem;
         }
 
 
         // BitmapFileHeader作成
-        private static BitmapFileHeader CreateBitmapFileHeader(BitmapInfoHeader bi)
+        private static BitmapFileHeader CreateBitmapFileHeader(int pBInfoSize, int pBmSize)
         {
             var bf = new BitmapFileHeader();
-            bf.bfSize = (uint)((((bi.biWidth * bi.biBitCount + 0x1f) >> 3) & ~3) * bi.biHeight);
-            bf.bfOffBits = (uint)(Marshal.SizeOf(bf) + Marshal.SizeOf(bi));
-            if (bi.biBitCount <= 8)
-            {
-                uint palettes = bi.biClrUsed;
-                if (palettes == 0)
-                    palettes = 1u << bi.biBitCount;
-                bf.bfOffBits += palettes << 2;
-            }
             bf.bfSize += bf.bfOffBits;
             bf.bfType = 0x4d42;
+            bf.bfSize = (uint)Marshal.SizeOf(bf) + (uint)pBInfoSize + (uint)pBmSize;
             bf.bfReserved1 = 0;
             bf.bfReserved2 = 0;
-
+            bf.bfOffBits = (uint)Marshal.SizeOf(bf) + (uint)pBInfoSize;
             return bf;
         }
         #endregion
