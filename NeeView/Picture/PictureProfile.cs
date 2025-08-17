@@ -16,6 +16,7 @@ namespace NeeView
 
         public static string[] _animatedGifExtensions = new string[] { ".gif" };
         public static string[] _animatedPngExtensions = new string[] { ".png", ".apng" };
+        public static string[] _animatedWebpExtensions = new string[] { ".webp" };
 
 
         private PictureProfile()
@@ -146,6 +147,15 @@ namespace NeeView
 
             string ext = LoosePath.GetExtension(fileName);
             return _animatedPngExtensions.Contains(ext);
+        }
+
+        // 拡張子判定 (Animated Webp)
+        public bool IsAnimatedWebpSupported(string fileName)
+        {
+            if (!Config.Current.Image.Standard.IsAnimatedWebpEnabled) return false;
+
+            string ext = LoosePath.GetExtension(fileName);
+            return _animatedWebpExtensions.Contains(ext);
         }
 
         // 最大サイズ内におさまるサイズを返す

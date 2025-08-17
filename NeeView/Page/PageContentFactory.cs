@@ -47,6 +47,10 @@ namespace NeeView
                 {
                     return new AnimatedPageContent(entry, _bookMemoryService, AnimatedImageType.Png);
                 }
+                else if (_allowAnimatedImage && PictureProfile.Current.IsAnimatedWebpSupported(path))
+                {
+                    return new AnimatedPageContent(entry, _bookMemoryService, AnimatedImageType.Webp);
+                }
                 else
                 {
                     return new BitmapPageContent(entry, _bookMemoryService);

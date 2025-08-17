@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Buffers.Binary;
+using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Drawing;
-using System.Diagnostics;
-using System.Buffers.Binary;
+using System.Security.Cryptography.Xml;
 using System.Text;
 
 namespace NeeView
@@ -17,13 +18,18 @@ namespace NeeView
         private static readonly byte[] _pngChunkACTL = Encoding.ASCII.GetBytes("acTL");
         private static readonly byte[] _pngChunkIEND = Encoding.ASCII.GetBytes("IEND");
 
+        private static readonly byte[] _webpHead = new byte[] { 0x52, 0x49, 0x46, 0x46 }; // RIFF
+        private static readonly byte[] _webpHead2 = new byte[] { 0x57, 0x45, 0x42, 0x50 }; // WEBP
+
+
         public static bool IsAnimatedImage(Stream stream, AnimatedImageType imageType)
         {
             return imageType switch
             {
                 AnimatedImageType.Gif => IsAnimatedGif(stream),
                 AnimatedImageType.Png => IsAnimatedPng(stream),
-                _ => IsAnimatedGif(stream) || IsAnimatedPng(stream),
+                AnimatedImageType.Webp => IsAnimatedWebp(stream),
+                _ => IsAnimatedGif(stream) || IsAnimatedPng(stream) || IsAnimatedWebp(stream),
             };
         }
 
@@ -43,6 +49,30 @@ namespace NeeView
             var signature = new byte[8].AsSpan();
             _ = stream.Read(signature);
             return signature.SequenceEqual(_pngSignature);
+        }
+
+        public static bool IsWebp(Stream stream)
+        {
+            stream.Seek(0, SeekOrigin.Begin);
+            var signature = new byte[12];
+            stream.ReadExactly(signature);
+            stream.Position = 0;
+
+            if (signature.Length < 12)
+                return false;
+
+            // WebP signature
+            // "RIFF" [4 bytes chunksize] "WEBP"
+
+            for (var i = 0; i < _webpHead.Length; ++i)
+                if (signature[i] != _webpHead[i])
+                    return false;
+
+            for (var i = 8; i < _webpHead2.Length; ++i)
+                if (signature[i] != _webpHead2[i])
+                    return false;
+
+            return true;
         }
 
         /// <summary>
@@ -93,6 +123,35 @@ namespace NeeView
             using var image = Image.FromStream(stream);
             return ImageAnimator.CanAnimate(image);
         }
-    }
 
+        public static bool IsAnimatedWebp(Stream stream)
+        {
+            if (!IsWebp(stream)) return false;
+
+            stream.Seek(0, SeekOrigin.Begin);
+
+            const int kMaxBufferLength = 64;
+            byte[] buff = new byte[kMaxBufferLength];
+            int readBytesLength = stream.Read(buff, 0, buff.Length);
+
+            // WEBP
+            if (System.Text.Encoding.ASCII.GetString(buff, 0, 4).Equals("RIFF"))
+            {
+                for (int i = 12; i < readBytesLength - 8; i += 8)
+                {
+                    string chname = System.Text.Encoding.ASCII.GetString(buff, i, 4);
+                    int chsize = BitConverter.ToInt32(buff, i + 4);
+
+                    if (chname.Equals("ANMF") || chname.Equals("ANIM"))
+                    {
+                        // ANMF chunk found
+                        return true;
+                    }
+                    i += chsize;
+                }
+            }
+
+            return false;
+        }
+    }
 }

@@ -5,6 +5,7 @@
         None,
         Gif,
         Png,
+        Webp,
     }
 
 }
