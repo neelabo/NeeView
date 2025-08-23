@@ -94,6 +94,7 @@ namespace NeeView
             {
                 var restore = memory?.ToBookSetting();
                 memento = Config.Current.BookSettingPolicy.Mix(Config.Current.BookSettingDefault, Config.Current.BookSetting, restore, option.HasFlag(BookLoadOption.DefaultRecursive)).ToBookMemento();
+                memento.SortSeed = memory?.SortSeed ?? 0;
             }
 
             if (option.HasFlag(BookLoadOption.ReLoad) && memento.SortMode == PageSortMode.Random)
