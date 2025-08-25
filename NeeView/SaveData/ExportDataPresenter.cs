@@ -1,5 +1,7 @@
 ﻿using NeeView.Properties;
 using System;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace NeeView
 {
@@ -62,9 +64,32 @@ namespace NeeView
                 }
                 catch (Exception ex)
                 {
-                    new MessageDialog($"{TextResources.GetString("Word.Cause")}: {ex.Message}", TextResources.GetString("ImportErrorDialog.Title")).ShowDialog();
+                    new MessageDialog(CreateExceptionContent(ex), TextResources.GetString("ImportErrorDialog.Title")).ShowDialog();
                 }
             }
+        }
+
+        private static StackPanel CreateExceptionContent(Exception ex)
+        {
+            var textBlock = new TextBlock()
+            {
+                Text = ex.Message,
+                TextWrapping = TextWrapping.Wrap
+            };
+
+            var textBox = new TextBox()
+            {
+                Text = ex.ToString(),
+                IsReadOnly = true,
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                MaxHeight = 256,
+                Margin = new Thickness(0, 16, 0, 0)
+            };
+
+            var panel = new StackPanel();
+            panel.Children.Add(textBlock);
+            panel.Children.Add(textBox);
+            return panel;
         }
 
     }
