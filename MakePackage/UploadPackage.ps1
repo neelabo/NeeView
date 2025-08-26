@@ -176,15 +176,15 @@ $latest_tag = git tag | Where-Object { $_ -match "^\d+\.\d+$" } | Select-Object 
 
 if (-not $SkipCheckRepository) {
 
-    # git ブランチが master であるか
+    # git ブランチが master または version-XX であるか
     $branch = git rev-parse --abbrev-ref HEAD
-    if ($branch -ne "master") {
-        throw "Must be a master branch: $branch"
+    if (-not (($branch -eq "master") -or $branch.StartsWith("version-"))) {
+        throw "Must be a release branch: $branch"
     }
     
     # git リポジトリが最新版であるかチェック
     git fetch
-    $rev_count = git rev-list origin/master..master  --count      
+    $rev_count = git rev-list origin/$branch..$branch  --count      
     if ($rev_count -gt 0) {
         Write-Host "There are $rev_count differences from the remote repository."
         throw "There are differences with remote repositories. Please git push."
@@ -221,7 +221,7 @@ $dotNetVersion = Get-DotNetVersion  ..\NeeView\NeeView.csproj
 # リリースを作成
 
 $product_body = @"
-This is the official version of NeeView $version.
+This is the stable version of NeeView $version.
 This version runs on .NET $dotNetVersion.
 
 ### Main changes
@@ -278,6 +278,7 @@ else {
 
 $release_data = @{
     tag_name   = $tag_name
+    target_commitish = $branch
     name       = $release_name
     body       = $release_body
     draft      = $true
