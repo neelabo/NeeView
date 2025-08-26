@@ -12,6 +12,9 @@ namespace NeeView.Text
     {
         public int Compare(string? x, string? y)
         {
+            if (x is null) return (y is null) ? 0 : -1;
+            if (y is null) return 1;
+
             return NativeMethods.StrCmpLogicalW(x, y);
         }
 

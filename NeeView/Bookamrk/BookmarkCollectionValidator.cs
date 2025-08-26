@@ -57,7 +57,7 @@ namespace NeeView
                     => source.OrderBy(e => 0),
             };
 
-            return nodes.ThenBy(e => e.EntryTime).ThenBy(e => e, new ComparerTaskNodeName()).ToList();
+            return nodes.ThenBy(e => e.EntryTime).ToList();
         }
 
         private class ComparerTaskNodeName : IComparer<BookmarkNode>
