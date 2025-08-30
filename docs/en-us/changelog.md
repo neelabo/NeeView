@@ -1,5 +1,15 @@
 # Changelog
 
+## 44.1
+(2025-08-30)
+
+### Fixed
+
+- Fixed an issue where some images displayed color distortion when using SusiePlugin. (#1796)
+- Fixed an issue where shuffle order was not restored when restoring books. (#1801)
+- Mitigate issues that may cause import failures. (#1802)
+
+
 ## 44.0
 (2025-08-15)
 
