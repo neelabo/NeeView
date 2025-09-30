@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.Xml;
 using System.Text;
 
 namespace NeeView
@@ -21,6 +20,11 @@ namespace NeeView
         private static readonly byte[] _webpHead = new byte[] { 0x52, 0x49, 0x46, 0x46 }; // RIFF
         private static readonly byte[] _webpHead2 = new byte[] { 0x57, 0x45, 0x42, 0x50 }; // WEBP
 
+
+        public static void InitializeLibrary()
+        {
+            AnimatedImage.Config.SetNativeLibraryPath(Environment.LibrariesPlatformPath);
+        }
 
         public static bool IsAnimatedImage(Stream stream, AnimatedImageType imageType)
         {

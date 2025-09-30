@@ -156,7 +156,11 @@ DLL: AnimatedImage.dll, AnimatedImage.Wpf.dll
 * Copyright 2019 Thomas Levesque
 * URL: [AnimatedImage](https://github.com/whistyun/AnimatedImage)
 * URL: [WPF Animated GIF](https://github.com/XamlAnimatedGif/WpfAnimatedGif/)
-* License: [Apache-2.0 license](https://github.com/XamlAnimatedGif/WpfAnimatedGif/blob/master/LICENSE.txt)
+* License: [Apache-2.0 license](https://github.com/whistyun/AnimatedImage/blob/master/LICENSE.txt)
+* Copyright (c) 2020 Jose M. Piñeiro and others
+* URL: [WebP-wrapper-animatedWebP](https://github.com/thomas694/WebP-wrapper-animatedWebP)
+* URL: [WebP-wrapper](https://github.com/JosePineiro/WebP-wrapper)
+* License: [MIT License](https://github.com/thomas694/WebP-wrapper-animatedWebP/blob/master/LICENSE)
 
 ### NetBeauty 2
 
@@ -168,6 +172,15 @@ DLL: AnimatedImage.dll, AnimatedImage.Wpf.dll
 
 DLL: VirtualizingWrapPanel.dll
 
-* Copyright (c) 2019 S. B?umlisberger
+* Copyright (c) 2019 S. Bäumlisberger
 * URL: [VirtualizingWrapPanel](https://github.com/sbaeumlisberger/VirtualizingWrapPanel)
 * License: [MIT License](https://github.com/sbaeumlisberger/VirtualizingWrapPanel/blob/master/LICENSE)
+
+### libwebp
+
+DLL: libwebp.dll, libsharpyuv.dll, libwebpdemux.dll
+
+* Copyright (c) 2010, Google Inc. All rights reserved.
+* URL: [libwebp](https://github.com/webmproject/libwebp)
+* License: [BSD 3-Clause License](https://github.com/webmproject/libwebp/blob/main/COPYING)
+ 

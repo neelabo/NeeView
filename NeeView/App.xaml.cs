@@ -153,6 +153,9 @@ namespace NeeView
 
             this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
+            // AnimatedImage ライブラリ初期化
+            AnimatedImageChecker.InitializeLibrary();
+
             // APPXデータフォルダ移動 (ver.38)
             Environment.CorrectLocalAppDataFolder();
 
