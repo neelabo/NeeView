@@ -9,6 +9,7 @@ namespace NeeView
         private bool _isAspectRatioEnabled;
         private bool _isAnimatedGifEnabled = true;
         private bool _isAnimatedPngEnabled = true;
+        private bool _isAnimatedWebpEnabled = true;
         private bool _isAllFileSupported;
         private FileTypeCollection? _supportFileTypes = null;
 
@@ -50,6 +51,14 @@ namespace NeeView
         {
             get { return _isAnimatedPngEnabled; }
             set { SetProperty(ref _isAnimatedPngEnabled, value); }
+        }
+
+        // WEBPアニメ有効
+        [PropertyMember]
+        public bool IsAnimatedWebpEnabled
+        {
+            get { return _isAnimatedWebpEnabled; }
+            set { SetProperty(ref _isAnimatedWebpEnabled, value); }
         }
 
         // サポート外ファイル有効のときに、すべてのファイルを画像とみなす
