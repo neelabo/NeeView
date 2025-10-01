@@ -195,6 +195,9 @@
     <None Update="Languages\en.restext">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Languages\es.restext">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Languages\it-IT.restext">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
