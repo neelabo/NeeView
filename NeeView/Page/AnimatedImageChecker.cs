@@ -10,15 +10,16 @@ namespace NeeView
 {
     public static class AnimatedImageChecker
     {
-        private static readonly byte[] _pngSignature = new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
         private static readonly byte[] _gif89aSignature = new byte[] { 0x47, 0x49, 0x46, 0x38, 0x39, 0x61 };
         private static readonly byte[] _gif87aSignature = new byte[] { 0x47, 0x49, 0x46, 0x38, 0x37, 0x61 };
 
-        private static readonly byte[] _pngChunkACTL = Encoding.ASCII.GetBytes("acTL");
-        private static readonly byte[] _pngChunkIEND = Encoding.ASCII.GetBytes("IEND");
+        private static readonly byte[] _pngSignature = new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
+        private static readonly int _pngChunkACTL = BitConverter.ToInt32("acTL"u8);
+        private static readonly int _pngChunkIEND = BitConverter.ToInt32("IEND"u8);
 
-        private static readonly byte[] _webpHead = new byte[] { 0x52, 0x49, 0x46, 0x46 }; // RIFF
-        private static readonly byte[] _webpHead2 = new byte[] { 0x57, 0x45, 0x42, 0x50 }; // WEBP
+        private static readonly int _webpHeaderRIFF = BitConverter.ToInt32("RIFF"u8);
+        private static readonly int _webpHeaderWEBP = BitConverter.ToInt32("WEBP"u8);
+        private static readonly int _webpChunkVP8X = BitConverter.ToInt32("VP8X"u8);
 
 
         public static void InitializeLibrary()
@@ -57,25 +58,20 @@ namespace NeeView
 
         public static bool IsWebp(Stream stream)
         {
-            stream.Seek(0, SeekOrigin.Begin);
-            var signature = new byte[12];
-            stream.ReadExactly(signature);
-            stream.Position = 0;
-
-            if (signature.Length < 12)
-                return false;
-
             // WebP signature
             // "RIFF" [4 bytes chunksize] "WEBP"
 
-            for (var i = 0; i < _webpHead.Length; ++i)
-                if (signature[i] != _webpHead[i])
-                    return false;
-
-            for (var i = 8; i < _webpHead2.Length; ++i)
-                if (signature[i] != _webpHead2[i])
-                    return false;
-
+            stream.Seek(0, SeekOrigin.Begin);
+            var reader = new BinaryReader(stream);
+            if (reader.ReadInt32() != _webpHeaderRIFF)
+            {
+                return false;
+            }
+            _ = reader.ReadInt32(); // skip file size
+            if (reader.ReadInt32() != _webpHeaderWEBP)
+            {
+                return false;
+            }
             return true;
         }
 
@@ -89,24 +85,26 @@ namespace NeeView
         /// <returns></returns>
         public static bool IsAnimatedPng(Stream stream)
         {
-            if (!IsPng(stream)) return false;
-
             try
             {
+                if (!IsPng(stream)) return false;
+
                 using var reader = new BinaryReader(stream);
                 while (stream.Position < stream.Length)
                 {
                     var buff = reader.ReadBytes(8);
                     var length = BinaryPrimitives.ReadInt32BigEndian(new Span<byte>(buff, 0, 4));
                     var chunk = new Span<byte>(buff, 4, 4);
+                    var chunkId = BitConverter.ToInt32(chunk);
 
                     //var s = new string(Encoding.ASCII.GetString(chunk));
                     //Debug.WriteLine($"PNG.Chunk: {s}, {length}");
 
-                    if (chunk.SequenceEqual(_pngChunkIEND))
+                    if (chunkId == _pngChunkIEND)
                         return false;
-                    if (chunk.SequenceEqual(_pngChunkACTL))
+                    if (chunkId == _pngChunkACTL)
                         return true;
+
                     stream.Position += length + 4; // 4 is chunk check sum data
                 }
             }
@@ -121,38 +119,47 @@ namespace NeeView
 
         public static bool IsAnimatedGif(Stream stream)
         {
-            if (!IsGif(stream)) return false;
+            try
+            {
+                if (!IsGif(stream)) return false;
 
-            stream.Seek(0, SeekOrigin.Begin);
-            using var image = Image.FromStream(stream);
-            return ImageAnimator.CanAnimate(image);
+                stream.Seek(0, SeekOrigin.Begin);
+                using var image = Image.FromStream(stream);
+                return ImageAnimator.CanAnimate(image);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                // nop.
+            }
+
+            return false;
         }
 
         public static bool IsAnimatedWebp(Stream stream)
         {
-            if (!IsWebp(stream)) return false;
-
-            stream.Seek(0, SeekOrigin.Begin);
-
-            const int kMaxBufferLength = 64;
-            byte[] buff = new byte[kMaxBufferLength];
-            int readBytesLength = stream.Read(buff, 0, buff.Length);
-
-            // WEBP
-            if (System.Text.Encoding.ASCII.GetString(buff, 0, 4).Equals("RIFF"))
+            try
             {
-                for (int i = 12; i < readBytesLength - 8; i += 8)
-                {
-                    string chname = System.Text.Encoding.ASCII.GetString(buff, i, 4);
-                    int chsize = BitConverter.ToInt32(buff, i + 4);
+                if (!IsWebp(stream)) return false;
 
-                    if (chname.Equals("ANMF") || chname.Equals("ANIM"))
-                    {
-                        // ANMF chunk found
-                        return true;
-                    }
-                    i += chsize;
+                // skip RIFF header
+                stream.Seek(12, SeekOrigin.Begin);
+
+                // check VP8X chunk
+                using var reader = new BinaryReader(stream);
+                var firstChunkID = reader.ReadInt32();
+                var firstChunkSize = reader.ReadInt32();
+                if (firstChunkID == _webpChunkVP8X)
+                {
+                    // Animation flag is 2nd bit of flags
+                    var flags = reader.ReadByte();
+                    return (flags & 0b0000_0010) != 0;
                 }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                // nop.
             }
 
             return false;
