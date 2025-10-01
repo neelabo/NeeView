@@ -5,16 +5,13 @@
 #   - pandoc
 
 Param(
-	[ValidateSet("All", "Zip", "Installer", "Appx", "Canary", "Beta", "Dev")]$Target = "All",
+	[ValidateSet("All", "Zip", "Installer", "Appx", "Alpha", "Beta", "Dev")]$Target = "All",
 
 	# ビルドをスキップする
 	[switch]$continue,
 
 	# ログ出力のあるパッケージ作成
 	[switch]$trace,
-
-	# Postfix. Canary や Beta での番号重複回避用
-	[string]$versionPostfix = "",
 
 	# ビルドバージョンは更新しない
 	[switch]$noVersionUp
@@ -30,7 +27,6 @@ Write-Host "[Properties] ..." -fore Cyan
 Write-Host "Target: $Target"
 Write-Host "Continue: $continue"
 Write-Host "Trace: $trace"
-Write-Host "VersionPostfix: $versionPostfix" 
 Write-Host
 Read-Host "Press Enter to continue"
 
@@ -197,9 +193,9 @@ function Get-DefaultOptions($platform)
 	)
 
 	switch ($Target) {
-		"Dev" { $defaultOptions += "-p:VersionSuffix=dev${dateVersion}"; break; }
-		"Canary" { $defaultOptions += "-p:VersionSuffix=canary${dateVersion}"; break; }
-		"Beta" { $defaultOptions += "-p:VersionSuffix=beta${dateVersion}"; break; }
+		"Dev" { $defaultOptions += "-p:VersionSuffix=dev.${dateVersion}"; break; }
+		"Alpha" { $defaultOptions += "-p:VersionSuffix=alpha.${packageAlphaVersion}"; break; }
+		"Beta" { $defaultOptions += "-p:VersionSuffix=beta.${packageBetaVersion}"; break; }
 	}
 
 	return $defaultOptions
@@ -345,18 +341,18 @@ function New-Readme {
 	$readmeSource = "$solutionDir\docs\$culture"
 
 	$postfix = $appVersion
-	if ($target.StartsWith("Canary")) {
-		$postfix = "$appVersion-Canary${dateVersion}"
+	if ($target.StartsWith("Alpha")) {
+		$postfix = "$appVersion-Alpha.${packageAlphaVersion}"
 	}
 	elseif ($target.StartsWith("Beta")) {
-		$postfix = "$appVersion-Beta${dateVersion}"
+		$postfix = "$appVersion-Beta.${packageBetaVersion}"
 	}
 
 	$source = @()
 
 	$rev = "Rev. ${revision}"
-	if ($target.StartsWith("Canary")) {
-		$source += Get-Content "$readmeSource\package-canary.md" | Edit-Markdown -IncrementDepth | ForEach-Object { $_.replace("<custom-revision/>", $rev) }
+	if ($target.StartsWith("Alpha")) {
+		$source += Get-Content "$readmeSource\package-alpha.md" | Edit-Markdown -IncrementDepth | ForEach-Object { $_.replace("<custom-revision/>", $rev) }
 	}
 	elseif ($target.StartsWith("Beta")) {
 		$source += Get-Content "$readmeSource\package-beta.md" | Edit-Markdown -IncrementDepth | ForEach-Object { $_.replace("<custom-revision/>", $rev) }
@@ -367,10 +363,10 @@ function New-Readme {
 	$source += $overviewContent
 	
 	$source += @("")
-	if (($target -eq "Zip") -or ($target -eq "Canary") -or ($target -eq "Beta")) {
+	if (($target -eq "Zip") -or ($target -eq "Alpha") -or ($target -eq "Beta")) {
 		$source += Get-Content "$readmeSource\package-zip.md" | Edit-Markdown -IncrementDepth
 	}
-	elseif (($target -eq "Zip-fd") -or ($target -eq "Canary-fd") -or ($target -eq "Beta-fd")) {
+	elseif (($target -eq "Zip-fd") -or ($target -eq "Alpha-fd") -or ($target -eq "Beta-fd")) {
 		$source += Get-Content "$readmeSource\package-zip-fd.md" | Edit-Markdown -IncrementDepth
 	}
 	elseif ($target -eq "Msi") {
@@ -410,7 +406,7 @@ function New-Readme {
 	$source += @("")
 	$source += $thirdPartyLicenseContent
 
-	if ($target.StartsWith("Canary")) {
+	if ($target.StartsWith("Alpha")) {
 		$changeLogContent = Get-GitLogMarkdown -Title "$product $postfix - Changelog"  -IssuesUrl $issuesUrl
 	}
 	else {
@@ -462,7 +458,6 @@ function New-ConfigForZip($inputDir, $config, $outputDir) {
 	$jsonObject.Watermark = $false
 	$jsonObject.UseLocalApplicationData = $false
 	$jsonObject.Revision = $revision
-	$jsonObject.DateVersion = $dateVersion
 	$jsonObject.PathProcessGroup = $true
 	$jsonObject.LogFile = $trace ? "TraceLog.txt" : $null
 
@@ -479,7 +474,6 @@ function New-ConfigForMsi($inputDir, $config, $outputDir) {
 	$jsonObject.Watermark = $false
 	$jsonObject.UseLocalApplicationData = $true
 	$jsonObject.Revision = $revision
-	$jsonObject.DateVersion = $dateVersion
 	$jsonObject.PathProcessGroup = $true
 	$jsonObject.LogFile = $trace ? "TraceLog.txt" : $null
 
@@ -496,7 +490,6 @@ function New-ConfigForAppx($inputDir, $config, $outputDir) {
 	$jsonObject.Watermark = $false
 	$jsonObject.UseLocalApplicationData = $true
 	$jsonObject.Revision = $revision
-	$jsonObject.DateVersion = $dateVersion
 	$jsonObject.PathProcessGroup = $true
 	$jsonObject.LogFile = $trace ? "TraceLog.txt" : $null
 
@@ -504,16 +497,15 @@ function New-ConfigForAppx($inputDir, $config, $outputDir) {
 	ConvertTo-Json $jsonObject | Out-File $outputFile
 }
 
-# make config for canary / beta
+# make config for alpha / beta
 function New-ConfigForDevPackage($inputDir, $config, $target, $outputDir) {
 	$jsonObject = (Get-Content "$inputDir\$config" | ConvertFrom-Json)
 
-	$jsonObject.PackageType = $target
+	$jsonObject.PackageType = "Zip"
 	$jsonObject.SelfContained = Test-Path("$inputDir\hostfxr.dll")
 	$jsonObject.Watermark = $true
 	$jsonObject.UseLocalApplicationData = $false
 	$jsonObject.Revision = $revision
-	$jsonObject.DateVersion = $dateVersion
 	$jsonObject.PathProcessGroup = $true
 	$jsonObject.LogFile = $trace ? "TraceLog.txt" : $null
 
@@ -683,8 +675,8 @@ function New-AppxUpload($arch, $publishDir, $packageDir, $packageAppendDir, $nam
 	Compress-Archive -Path $appx, $appxSym -DestinationPath $appxupload
 }
 
-# archive to Canary.ZIP
-function Remove-Canary($packageDir, $packageZip) {
+# archive to Alpha.ZIP
+function Remove-Alpha($packageDir, $packageZip) {
 	if (Test-Path $packageZip) {
 		Remove-Item $packageZip
 	}
@@ -694,8 +686,8 @@ function Remove-Canary($packageDir, $packageZip) {
 	}
 }
 
-function New-Canary($referenceDir, $packageDir, $packageZip, $fd) {
-	New-DevPackage $referenceDir $packageDir $packageZip "Canary" $fd
+function New-Alpha($referenceDir, $packageDir, $packageZip, $fd) {
+	New-DevPackage $referenceDir $packageDir $packageZip "Alpha" $fd
 }
 
 # archive to Beta.ZIP
@@ -713,7 +705,7 @@ function New-Beta($referenceDir, $packageDir, $packageZip, $fd) {
 	New-DevPackage $referenceDir $packageDir $packageZip "Beta" $fd
 }
 
-# archive to Canary/Beta.ZIP
+# archive to Alpha/Beta.ZIP
 function New-DevPackage($packageDir, $devPackageDir, $devPackage, $target, $fd) {
 	# update assembly
 	Copy-Item $packageDir $devPackageDir -Recurse
@@ -753,11 +745,11 @@ function Remove-BuildObjects {
 	if (Test-Path $publishDir) {
 		Remove-Item $publishDir -Recurse
 	}
-	if (Test-Path $packageCanaryDir) {
-		Remove-Item $packageCanaryDir -Recurse -Force
+	if (Test-Path $packageAlphaDir) {
+		Remove-Item $packageAlphaDir -Recurse -Force
 	}
-	if (Test-Path $packageCanaryDir_fd) {
-		Remove-Item $packageCanaryDir_fd -Recurse -Force
+	if (Test-Path $packageAlphaDir_fd) {
+		Remove-Item $packageAlphaDir_fd -Recurse -Force
 	}
 	if (Test-Path $packageBetaDir) {
 		Remove-Item $packageBetaDir -Recurse -Force
@@ -765,8 +757,8 @@ function Remove-BuildObjects {
 	if (Test-Path $packageBetaDir_fd) {
 		Remove-Item $packageBetaDir_fd -Recurse -Force
 	}
-	if (Test-Path $packageCanaryWild) {
-		Remove-Item $packageCanaryWild
+	if (Test-Path $packageAlphaWild) {
+		Remove-Item $packageAlphaWild
 	}
 	if (Test-Path $packageBetaWild) {
 		Remove-Item $packageBetaWild
@@ -859,18 +851,18 @@ function Build-Appx-x64 {
 	}
 }
 
-function Build-Canary {
-	Write-Host "`n[Canary] ...`n" -fore Cyan
-	Remove-Canary $packageCanaryDir $packageCanary
-	New-Canary $packageDir_x64 $packageCanaryDir $packageCanary $false
-	Write-Host "`nExport $packageCanary succeeded.`n" -fore Green
+function Build-Alpha {
+	Write-Host "`n[Alpha] ...`n" -fore Cyan
+	Remove-Alpha $packageAlphaDir $packageAlpha
+	New-Alpha $packageDir_x64 $packageAlphaDir $packageAlpha $false
+	Write-Host "`nExport $packageAlpha succeeded.`n" -fore Green
 }
 
-function Build-Canary-fd {
-	Write-Host "`n[Canary fd] ...`n" -fore Cyan
-	Remove-Canary $packageCanaryDir_fd $packageCanary_fd
-	New-Canary $packageDir_x64_fd $packageCanaryDir_fd $packageCanary_fd $true
-	Write-Host "`nExport $packageCanary_fd succeeded.`n" -fore Green
+function Build-Alpha-fd {
+	Write-Host "`n[Alpha fd] ...`n" -fore Cyan
+	Remove-Alpha $packageAlphaDir_fd $packageAlpha_fd
+	New-Alpha $packageDir_x64_fd $packageAlphaDir_fd $packageAlpha_fd $true
+	Write-Host "`nExport $packageAlpha_fd succeeded.`n" -fore Green
 }
 
 function Build-Beta {
@@ -907,12 +899,29 @@ function Update-Version {
 	
 	Write-Host "`n`[Update NeeView Version] ...`n" -fore Cyan
 	$versionSuffix = switch ( $Target ) {
-		"Dev" { "dev$dateVersion" }
-		"Canary" { "canary$dateVersion" }
-		"Beta" { "beta$dateVersion" }
+		"Dev" { "dev.$dateVersion" }
+		"Alpha" { "alpha.$packageAlphaVersion" }
+		"Beta" { "beta.$packageBetaVersion" }
 		default { "" }
 	}
 	..\CreateVersionProps.ps1 -suffix $versionSuffix
+}
+
+function Get-LatestPreReleaseVersion($version, $preRelease) {
+
+	$regexVersion = [Regex]::Escape($version)
+	$tagPreRelease = $preRelease.ToLower()
+	
+	$tag = git tag | Where-Object { $_ -match "^$regexVersion-$tagPreRelease\." } | Select-Object -Last 1
+
+	#Write-Host "Get latest $preRelease version tag: $tag" 
+
+	if ($tag -match "$tagPreRelease\.(\d+)$") {
+		return = [int]$Matches[1]
+	}
+	else {
+		return 0
+	}
 }
 
 
@@ -936,8 +945,12 @@ $build_x64_fd = $false
 
 # versions
 $revision = (& git rev-parse --short HEAD).ToString()
-$dateVersion = (Get-Date).ToString("MMdd") + $versionPostfix
+
+$dateVersion = (Get-Date).ToString("MMdd") 
+$packageAlphaVersion = (Get-LatestPreReleaseVersion $version "Alpha") + 1
+$packageBetaVersion = (Get-LatestPreReleaseVersion $version "Beta") + 1
 Update-Version
+
 $version = Get-Version $versionProps
 $appVersion = Get-AppVersion $version
 $assemblyVersion = "$version.0"
@@ -959,14 +972,14 @@ $packageX64Appx = "${product}${appVersion}.msix"
 $packageAppxWild = "${product}${appVersion}.appx*"
 $packageMsixWild = "${product}${appVersion}.msix*"
 
-$packageNameCanary = "${product}${appVersion}-Canary${dateVersion}"
-$packageCanaryDir = "$packageNameCanary"
-$packageCanaryDir_fd = "$packageNameCanary-fd"
-$packageCanary = "$packageNameCanary.zip"
-$packageCanary_fd = "$packageNameCanary-fd.zip"
-$packageCanaryWild = "${product}${appVersion}-Canary*.zip"
+$packageNameAlpha = "${product}${appVersion}-Alpha.${packageAlphaVersion}"
+$packageAlphaDir = "$packageNameAlpha"
+$packageAlphaDir_fd = "$packageNameAlpha-fd"
+$packageAlpha = "$packageNameAlpha.zip"
+$packageAlpha_fd = "$packageNameAlpha-fd.zip"
+$packageAlphaWild = "${product}${appVersion}-Alpha*.zip"
 
-$packageNameBeta = "${product}${appVersion}-Beta${dateVersion}"
+$packageNameBeta = "${product}${appVersion}-Beta.${packageBetaVersion}"
 $packageBetaDir = "$packageNameBeta"
 $packageBetaDir_fd = "$packageNameBeta-fd"
 $packageBeta = "$packageNameBeta.zip"
@@ -996,11 +1009,11 @@ if (($Target -eq "All") -or ($Target -eq "Appx")) {
 	Build-Appx-x64
 }
 
-if ($Target -eq "Canary") {
+if ($Target -eq "Alpha") {
 	Build-PackageSource-x64
-	Build-Canary
+	Build-Alpha
 	Build-PackageSource-x64-fd
-	Build-Canary-fd
+	Build-Alpha-fd
 }
 
 if ($Target -eq "Beta") {

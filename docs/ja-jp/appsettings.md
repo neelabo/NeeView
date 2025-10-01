@@ -15,11 +15,6 @@
 表示用。  
 アプリ ソースコードのリポジトリのリビジョン番号です。
 
-### DateVersion
-
-表示用。  
-アプリの作成日です。Canary や Beta 版の補足バージョンになります。
-
 ### SelfContained
 
 表示用。  
@@ -45,7 +40,7 @@ false のときはプロセス名のみで判別します。
 ### Watermark
 
 パッケージ種類のウォーターマークを表示します。  
-Canary, Beta は true です。
+Alpha, Beta は true です。
 
 ### LogFile
 

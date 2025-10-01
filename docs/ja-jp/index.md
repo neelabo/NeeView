@@ -46,7 +46,7 @@ title: HOME
 * [ZIP-fd版について](package-zip-fd.md)
 * [インストーラー版について](package-installer.md)
 * [ストアアプリについて](package-storeapp.md)
-* [Canary版について](package-canary.md)
+* [Alpha版について](package-alpha.md)
 * [Beta版について](package-beta.md)
 
 #### 更新履歴

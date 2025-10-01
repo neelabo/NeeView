@@ -1,5 +1,7 @@
 ﻿#pragma warning disable CA1822
 
+using System;
+
 namespace NeeView
 {
     [WordNodeMember]
@@ -15,13 +17,13 @@ namespace NeeView
         public string PackageType => Environment.PackageType;
 
         [WordNodeMember]
+        public string ReleaseType => Environment.ReleaseType;
+
+        [WordNodeMember]
         public string Version => Environment.DisplayVersionShort;
 
         [WordNodeMember]
         public string ProductVersion => Environment.ProductVersion;
-
-        [WordNodeMember]
-        public string DateVersion => Environment.DateVersion;
 
         [WordNodeMember]
         public string Revision => Environment.Revision;
@@ -35,5 +37,13 @@ namespace NeeView
         [WordNodeMember]
         public string UserAgent => Environment.UserAgent;
 
+
+        #region Obsolete
+
+        [WordNodeMember]
+        [Obsolete("no used"), Alternative(null, 45, ScriptErrorLevel.Warning)]
+        public string DateVersion => "";
+
+        #endregion Obsolete
     }
 }

@@ -1,8 +1,8 @@
-# Canary 版について
+# Alpha 版について
 
 <custom-revision/>
 
-NeeView Canary は、開発中のスナップショットです。  
+NeeView Alpha は、開発中のスナップショットです。  
 安定版で提供される予定の機能を先行体験するためのものです。
 
 > [!WARNING]  

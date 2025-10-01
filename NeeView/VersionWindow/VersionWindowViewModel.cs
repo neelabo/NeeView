@@ -26,7 +26,7 @@ namespace NeeView
 
 
         public string ApplicationName => Environment.ApplicationName;
-        public string DisplayVersion => Environment.DisplayVersion + $" ({(Environment.IsX64 ? "64bit" : "32bit")})";
+        public string DisplayVersion => Environment.DisplayVersion;
         public string LicenseUri { get; private set; }
         public string ProjectUri => "https://neelabo.github.io/NeeView";
         public bool IsCheckerEnabled => Checker.IsEnabled;
@@ -39,14 +39,7 @@ namespace NeeView
 
         public void CopyVersionToClipboard()
         {
-            var s = new StringBuilder();
-            s.AppendLine(CultureInfo.InvariantCulture, $"Version: {ApplicationName} {DisplayVersion}");
-            s.AppendLine(CultureInfo.InvariantCulture, $"Package: {Environment.PackageType} {Environment.DateVersion}");
-            s.AppendLine(CultureInfo.InvariantCulture, $"OS: {System.Environment.OSVersion}");
-
-            Debug.WriteLine(s);
-
-            Clipboard.SetText(s.ToString());
+            Clipboard.SetText(Environment.VersionNote);
         }
 
     }

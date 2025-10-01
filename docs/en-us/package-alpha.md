@@ -1,8 +1,8 @@
-# About Canary Version
+# About Alpha Version
 
 <custom-revision/>
 
-NeeView Canary is a snapshot of the development process.  
+NeeView Alpha is a snapshot of the development process.  
 It is intended to give you a preview of features that will be available in a future stable version.
 
 > [!WARNING]  

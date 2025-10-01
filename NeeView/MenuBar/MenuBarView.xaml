@@ -50,7 +50,7 @@
 
             <Grid DockPanel.Dock="Right" Visibility="{Binding MainMenu, Converter={StaticResource NullableToVisibilityConverter}}">
                 <Border x:Name="Watermark" Background="#F3BC2D" Height="18" VerticalAlignment="Top" Visibility="Collapsed">
-                    <TextBlock x:Name="WatermarkText" Foreground="#202020" Margin="10,0" FontSize="14" VerticalAlignment="Center" FontWeight="Normal" Text="Canary 0000" />
+                    <TextBlock x:Name="WatermarkText" Foreground="#202020" Margin="10,0" FontSize="14" VerticalAlignment="Center" FontWeight="Normal" Text="Alpha 0000" />
                 </Border>
             </Grid>
 

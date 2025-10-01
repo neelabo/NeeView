@@ -1,7 +1,6 @@
 {
   "PackageType": "Dev",
   "Revision": "12345678",
-  "DateVersion": "0000",
   "SelfContained": false,
   "UseLocalApplicationData": false,
   "TemporaryFilesInProfileFolder": false,

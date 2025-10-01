@@ -33,17 +33,23 @@ namespace NeeView
 
             this.Watermark.Visibility = Environment.Watermark ? Visibility.Visible : Visibility.Collapsed;
 
-            if (Environment.IsCanaryPackage)
+            if (Environment.IsDevPackage)
+            {
+                this.Watermark.Background = Brushes.DimGray;
+                this.WatermarkText.Foreground = Brushes.White;
+                this.WatermarkText.Text = "Dev";
+            }
+            else if (Environment.IsAlphaRelease)
             {
                 this.Watermark.Background = new SolidColorBrush(Color.FromRgb(0xF3, 0xBC, 0x2D));
                 this.WatermarkText.Foreground = new SolidColorBrush(Color.FromRgb(0x20, 0x20, 0x20));
-                this.WatermarkText.Text = "Canary" + Environment.DateVersion;
+                this.WatermarkText.Text = Environment.ReleaseType + Environment.ReleaseNumber;
             }
-            else if (Environment.IsBetaPackage)
+            else if (Environment.IsBetaRelease)
             {
                 this.Watermark.Background = new SolidColorBrush(Color.FromRgb(0x2E, 0x69, 0xD1));
                 this.WatermarkText.Foreground = Brushes.White;
-                this.WatermarkText.Text = "Beta" + Environment.DateVersion;
+                this.WatermarkText.Text = Environment.ReleaseType + Environment.ReleaseNumber;
             }
             else
             {

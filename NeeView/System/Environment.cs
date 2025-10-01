@@ -1,6 +1,7 @@
 ﻿#define LOCAL_DEBUG
 
 using NeeLaboratory.Generators;
+using NeeLaboratory.Text;
 using NeeView.Properties;
 using PdfiumViewer;
 using System;
@@ -13,6 +14,7 @@ using System.Net;
 using System.Reflection;
 using System.Security;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Linq;
@@ -25,12 +27,19 @@ namespace NeeView
     [LocalDebug]
     public static partial class Environment
     {
+        private const string ReleaseDevTag = "Dev";
+        private const string ReleaseAlphaTag = "Alpha";
+        private const string ReleaseBetaTag = "Beta";
+        private const string ReleaseStableTag = "Stable";
+
+        [GeneratedRegex(@"-(?<tag>[a-z]+)(?<ver>\.\d+)+")]
+        private static partial Regex _releaseTypeRegex { get; }
+
         private static string? _localApplicationDataPath;
         private static string? _userDataPath;
         private static string? _defaultTempPath;
         private static string? _packageType;
         private static string? _revision;
-        private static string? _dateVersion;
         private static bool? _isUseLocalApplicationDataFolder;
         private static bool? _selfContained;
         private static string? _pdfRenderer;
@@ -129,22 +138,15 @@ namespace NeeView
         {
             get
             {
-                if (IsDevPackage)
+                return ReleaseType switch
                 {
-                    return ProductVersion + "-Dev";
-                }
-                else if (IsCanaryPackage)
-                {
-                    return ApplicationVersion + $"-Canary{DateVersion} / Rev. {Revision}";
-                }
-                else if (IsBetaPackage)
-                {
-                    return ApplicationVersion + $"-Beta{DateVersion} / Rev. {Revision}";
-                }
-                else
-                {
-                    return ApplicationVersion;
-                }
+                    ReleaseDevTag
+                        => ProductVersion + "-Dev",
+                    ReleaseStableTag
+                        => ApplicationVersion,
+                    _
+                        => ApplicationVersion + $"-{ReleaseType}{ReleaseNumber} / Rev {Revision}"
+                };
             }
         }
 
@@ -155,22 +157,15 @@ namespace NeeView
         {
             get
             {
-                if (IsDevPackage)
+                return ReleaseType switch
                 {
-                    return ProductVersion + "-Dev";
-                }
-                else if (IsCanaryPackage)
-                {
-                    return ApplicationVersion + $"-Canary{DateVersion}";
-                }
-                else if (IsBetaPackage)
-                {
-                    return ApplicationVersion + $"-Beta{DateVersion}";
-                }
-                else
-                {
-                    return ApplicationVersion;
-                }
+                    ReleaseDevTag
+                        => ProductVersion + "-Dev",
+                    ReleaseStableTag
+                        => ApplicationVersion,
+                    _
+                        => ApplicationVersion + $"-{ReleaseType}{ReleaseNumber}"
+                };
             }
         }
 
@@ -178,11 +173,16 @@ namespace NeeView
         {
             get
             {
-                return SolutionName + "/" + ProductVersion + $" ({OSVersion}) {PackageType}/{DateVersion} (Rev {Revision}{(SelfContained ? "" : "; fd")})";
+                return SolutionName + "/" + ProductVersion + $" ({OSVersion}) {DisplayVersionShort} (Rev {Revision}{(SelfContained ? "" : "; fd")})";
             }
         }
 
-        public static string OSVersion => $"{System.Environment.OSVersion}; {(IsX64 ? "x64" : "x86")}";
+        public static string OSVersion => $"{System.Environment.OSVersion}; {(System.Environment.Is64BitOperatingSystem ? "x64" : "x86")}";
+
+        public static string VersionNote =>
+                        $"Version: {ApplicationName} {DisplayVersion}\r\n" +
+                        $"Package: {PackageType}\r\n" +
+                        $"OS: {OSVersion}";
 
         /// <summary>
         /// 環境変数 NEEVIEW_PROFILE 取得
@@ -325,7 +325,7 @@ namespace NeeView
         /// </summary>
         public static bool IsX64
         {
-            get { return IntPtr.Size == 8; }
+            get { return System.Environment.Is64BitProcess; }
         }
 
         public static string PlatformName
@@ -372,34 +372,22 @@ namespace NeeView
             }
         }
 
-        /// <summary>
-        /// パッケージタイプに対応した拡張子を取得
-        /// </summary>
-        public static string PackageTypeExtension
-        {
-            get
-            {
-                return PackageType switch
-                {
-                    "Dev" => ".zip",
-                    "Zip" => ".zip",
-                    "Msi" => ".msi",
-                    "Appx" => ".appx",
-                    "Canary" => ".zip",
-                    "Beta" => ".zip",
-                    _ => throw new NotSupportedException(),
-                };
-            }
-        }
+
+        // Dev, Alpha, Beta, "" のいずれか
+        public static string ReleaseType { get; private set; } = "";
+        public static string ReleaseNumber { get; private set; } = "";
 
         public static bool IsDevPackage => PackageType == "Dev";
         public static bool IsZipPackage => PackageType == "Zip";
         public static bool IsMsiPackage => PackageType == "Msi";
         public static bool IsAppxPackage => PackageType == "Appx";
-        public static bool IsCanaryPackage => PackageType == "Canary";
-        public static bool IsBetaPackage => PackageType == "Beta";
 
-        public static bool IsZipLikePackage => IsZipPackage || IsCanaryPackage || IsBetaPackage || IsDevPackage;
+        public static bool IsZipLikePackage => IsZipPackage || IsDevPackage;
+
+        public static bool IsDevRelease => ReleaseType == ReleaseDevTag;
+        public static bool IsAlphaRelease => ReleaseType == ReleaseAlphaTag;
+        public static bool IsBetaRelease => ReleaseType == ReleaseBetaTag;
+        public static bool IsStableRelease => ReleaseType == ReleaseStableTag;
 
 #if DEBUG
         public static readonly string ConfigType = "Debug";
@@ -407,6 +395,7 @@ namespace NeeView
         public static readonly string ConfigType = "Release";
 #endif
 
+        // リビジョン番号 (GitのコミットID)
         public static string Revision
         {
             get
@@ -416,18 +405,6 @@ namespace NeeView
                     _revision = AppSettings.Current.Revision;
                 }
                 return _revision;
-            }
-        }
-
-        public static string DateVersion
-        {
-            get
-            {
-                if (_dateVersion == null)
-                {
-                    _dateVersion = AppSettings.Current.DateVersion;
-                }
-                return _dateVersion;
             }
         }
 
@@ -558,6 +535,38 @@ namespace NeeView
             AssemblyVersion = asm.GetName().Version ?? throw new InvalidOperationException("Cannot get AssemblyVersion");
             ProductVersion = $"{AssemblyVersion.Major}.{AssemblyVersion.Minor}.{AssemblyVersion.Build}";
             ApplicationVersion = $"{AssemblyVersion.Major}.{AssemblyVersion.Minor}";
+
+            // リリースタイプの取得
+            (ReleaseType, ReleaseNumber) = GetReleaseType(asm);
+        }
+
+        /// <summary>
+        /// リリースタイプの取得
+        /// </summary>
+        /// <param name="asm"></param>
+        /// <returns></returns>
+        private static (string type, string number) GetReleaseType(Assembly asm)
+        {
+            // Dev版
+            if (IsDevPackage)
+            {
+                return (ReleaseDevTag, "");
+            }
+
+            // Alpha,Beta版はファイルのバージョン情報から取得
+            var informationalVersionAttribute = asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+            var informationalVersion = informationalVersionAttribute?.InformationalVersion;
+            if (informationalVersion is not null)
+            {
+                var match = _releaseTypeRegex.Match(informationalVersion);
+                if (match.Success)
+                {
+                    return (match.Groups["tag"].Value.ToTitleCase(), match.Groups["ver"].Value);
+                }
+            }
+
+            // それ以外は安定版とみなす
+            return (ReleaseStableTag, "");
         }
 
         /// <summary>

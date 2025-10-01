@@ -46,7 +46,7 @@ Powerful customization is available.
 * [About ZIP-fd Version](package-zip-fd.md)
 * [About Installer Version](package-installer.md)
 * [About Store App](package-storeapp.md)
-* [About Canary Version](package-canary.md)
+* [About Alpha Version](package-alpha.md)
 * [About Beta Version](package-beta.md)
 
 #### Changelog

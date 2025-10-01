@@ -31,7 +31,7 @@ namespace NeeView
             LatestVersion = new FormatVersion(Environment.SolutionName, 0, 0, 0);
         }
 
-        public bool IsEnabled => Config.Current.System.IsNetworkEnabled && !Environment.IsAppxPackage && !Environment.IsCanaryPackage && !Environment.IsBetaPackage;
+        public bool IsEnabled => Config.Current.System.IsNetworkEnabled && !Environment.IsAppxPackage && !Environment.IsAlphaRelease && !Environment.IsBetaRelease;
 
         public FormatVersion CurrentVersion { get; set; }
         public FormatVersion LatestVersion { get; set; }

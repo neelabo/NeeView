@@ -125,8 +125,7 @@ namespace NeeView
             string errorLog;
             using (var writer = new StringWriter())
             {
-                writer.WriteLine("OS Version: " + System.Environment.OSVersion + (Environment.IsX64 ? " (64bit)" : " (32bit)"));
-                writer.WriteLine("NeeView Version: " + Environment.DisplayVersion + $" ({Environment.PackageType} {Environment.DateVersion})");
+                writer.WriteLine(Environment.VersionNote);
                 writer.WriteLine("");
                 writer.WriteLine(exception.ToStackString());
 

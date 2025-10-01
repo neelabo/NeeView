@@ -25,12 +25,11 @@ namespace NeeView
             }
         }
 
-
         /// <summary>
         /// パッケージタイプ
         /// </summary>
         /// <remarks>
-        /// Dev, Canary, Beta, Zip, Msi, Appx
+        /// Dev, Zip, Msi, Appx
         /// </remarks>
         public string PackageType { get; set; } = "Dev";
 
@@ -60,11 +59,6 @@ namespace NeeView
         /// Git のリビジョン番号
         /// </summary>
         public string Revision { get; set; } = "??";
-
-        /// <summary>
-        /// ビルド日時バージョン "0000"
-        /// </summary>
-        public string DateVersion { get; set; } = "??";
 
         /// <summary>
         /// PDFレンダラー指定 (未使用。機能しません)

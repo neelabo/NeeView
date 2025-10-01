@@ -1,5 +1,5 @@
 
-# Canary, Beta のアップロード
+# Alpha, Beta のアップロード
 
 param (
     [string]$log = "_UploadPackage.log",
@@ -123,7 +123,7 @@ function Upload-Asset {
 #================================
 
 # アップロードするファイルを選択
-$packages = Get-ChildItem -File | Where-Object Name -match "^NeeView(\d+\.\d+)(-Canary\d+|-Beta\d+)?\.zip$"
+$packages = Get-ChildItem -File | Where-Object Name -match "^NeeView(\d+\.\d+)(-Alpha\d+|-Beta\d+)?\.zip$"
 
 if ($packages.Count -eq 0) {
     throw "Version file not found."
@@ -135,7 +135,7 @@ else {
     $package = Select-OneFromArray $packages
 }
 
-if ($package -match "(Canary|Beta)") {
+if ($package -match "(Alpha|Beta)") {
     $package_type = $Matches[1]
 }
 else {
@@ -232,15 +232,18 @@ This version runs on .NET $dotNetVersion.
 Changelog: [Version $version](https://neelabo.github.io/NeeView/changelog.html#$version_id)
 "@
 
-$canary_body = @"
-## Canary Version
+$alpha_body = @"
+## Alpha Version
 
-NeeView Canary is a snapshot of the development process.
+NeeView Alpha is a snapshot of the development process.
 It is intended to give you a preview of features that will be available in a future stable version.
 
 This version runs on .NET $dotNetVersion.
 
-See also: [About Canary Version](https://neelabo.github.io/NeeView/package-canary.html)
+See also: [About Alpha Version](https://neelabo.github.io/NeeView/package-alpha.html)
+
+> [!NOTE]
+> Alpha is the same as what was previously called Canary.
 "@
 
 $beta_body = @"
@@ -263,8 +266,8 @@ if ($package_type -eq "Product") {
     $release_body += $product_body
     $prerelease = $false
 }
-elseif ($package_type -eq "Canary") {
-    $release_body += $canary_body
+elseif ($package_type -eq "Alpha") {
+    $release_body += $alpha_body
     $prerelease = $true
 }
 elseif ($package_type -eq "Beta") {

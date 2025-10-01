@@ -15,11 +15,6 @@ The app will run in the specified mode.
 For display.  
 This is the revision number of the app source code repository.
 
-### DateVersion
-
-For display.  
-This is the date the app was created. It is a supplementary version of Canary and Beta.
-
 ### SelfContained
 
 For display.  
@@ -45,7 +40,7 @@ When false, only the process name is used for identification.
 ### Watermark
 
 Displays the watermark for the package type.    
-Canary and Beta are true.
+Alpha and Beta are true.
 
 ### LogFile
 
