@@ -123,7 +123,7 @@ function Upload-Asset {
 #================================
 
 # アップロードするファイルを選択
-$packages = Get-ChildItem -File | Where-Object Name -match "^NeeView(\d+\.\d+)(-Alpha\d+|-Beta\d+)?\.zip$"
+$packages = Get-ChildItem -File | Where-Object Name -match "^NeeView(\d+\.\d+)(-Alpha\.\d+|-Beta\.\d+)?\.zip$"
 
 if ($packages.Count -eq 0) {
     throw "Version file not found."
