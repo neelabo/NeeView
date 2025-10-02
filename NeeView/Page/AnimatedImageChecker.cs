@@ -15,7 +15,7 @@ namespace NeeView
 
         private static readonly byte[] _pngSignature = new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
         private static readonly int _pngChunkACTL = BitConverter.ToInt32("acTL"u8);
-        private static readonly int _pngChunkIEND = BitConverter.ToInt32("IEND"u8);
+        private static readonly int _pngChunkIDAT = BitConverter.ToInt32("IDAT"u8);
 
         private static readonly int _webpHeaderRIFF = BitConverter.ToInt32("RIFF"u8);
         private static readonly int _webpHeaderWEBP = BitConverter.ToInt32("WEBP"u8);
@@ -79,7 +79,11 @@ namespace NeeView
         /// Animated PNG 判定
         /// </summary>
         /// <remarks>
-        /// "acTL" チャンクが存在したら Animated PNG であると判定
+        /// "IDAT" チャンクの前に "acTL" チャンクが存在したら Animated PNG であると判定。
+        /// <para>
+        /// https://www.w3.org/TR/png-3/#apng-frame-based-animation<br/>
+        /// > To be recognized as an APNG, an acTL chunk must appear in the stream before any IDAT chunks.
+        /// </para>
         /// </remarks>
         /// <param name="stream"></param>
         /// <returns></returns>
@@ -100,7 +104,7 @@ namespace NeeView
                     //var s = new string(Encoding.ASCII.GetString(chunk));
                     //Debug.WriteLine($"PNG.Chunk: {s}, {length}");
 
-                    if (chunkId == _pngChunkIEND)
+                    if (chunkId == _pngChunkIDAT)
                         return false;
                     if (chunkId == _pngChunkACTL)
                         return true;
