@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.Generators;
+using NeeView.Windows.Controls;
 using System;
 using System.ComponentModel;
 using System.Windows;
@@ -204,8 +205,11 @@ namespace NeeView.Windows
 
             SetFullScreenMode(false);
             _resumeState = WindowStateEx.Maximized;
-
             _window.ResizeMode = ResizeMode.CanResize;
+            if (CurrentState == WindowStateEx.FullScreen && Windows11Tools.IsWindows11OrGreater)
+            {
+                _window.WindowState = WindowState.Normal;
+            }
             _window.WindowStyle = WindowStyle.SingleBorderWindow;
             _window.WindowState = WindowState.Maximized;
 
