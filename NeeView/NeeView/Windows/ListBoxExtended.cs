@@ -33,8 +33,37 @@ namespace NeeView.Windows
         public static readonly DependencyProperty IsSimpleTextSearchEnabledProperty =
             DependencyProperty.Register(nameof(IsSimpleTextSearchEnabled), typeof(bool), typeof(ListBoxExtended), new PropertyMetadata(true));
 
-        public int ItemsCount => this.Items.Count;
+        public bool FixHomeAndEndKeyBehavior
+        {
+            get { return (bool)GetValue(FixHomeAndEndKeyBehaviorProperty); }
+            set { SetValue(FixHomeAndEndKeyBehaviorProperty, value); }
+        }
 
+        public static readonly DependencyProperty FixHomeAndEndKeyBehaviorProperty =
+            DependencyProperty.Register(nameof(FixHomeAndEndKeyBehavior), typeof(bool), typeof(ListBoxExtended), new PropertyMetadata(false));
+
+        public int ItemsCount => this.Items is not null ? this.Items.Count : 0;
+
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+
+            // Home/Endキーで正しくリストの先頭/末尾項目を選択するようにする
+            if (FixHomeAndEndKeyBehavior && ItemsCount > 0)
+            {
+                if (e.Key == Key.Home)
+                {
+                    this.SelectedIndex = 0;
+                    FocusSelectedItem(false);
+                }
+                else if (e.Key == Key.End)
+                {
+                    this.SelectedIndex = ItemsCount - 1;
+                    FocusSelectedItem(false);
+                }
+            }
+        }
 
         protected override void OnIsKeyboardFocusWithinChanged(DependencyPropertyChangedEventArgs e)
         {

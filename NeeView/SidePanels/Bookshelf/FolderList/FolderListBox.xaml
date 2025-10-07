@@ -230,7 +230,7 @@
             </b:Interaction.Behaviors>
 
             <ListBox.Style>
-                <Style TargetType="ListBox" BasedOn="{StaticResource NVListBox}">
+                <Style TargetType="{x:Type nw:ListBoxExtended}" BasedOn="{StaticResource NVListBox}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Model.PanelListItemStyle}" Value="Normal">
                             <Setter Property="ItemTemplate" Value="{StaticResource NormalTemplate}"/>
@@ -247,6 +247,7 @@
                         <DataTrigger Binding="{Binding Model.PanelListItemStyle}" Value="Thumbnail">
                             <Setter Property="ItemTemplate" Value="{StaticResource ThumbnailTemplate}"/>
                             <Setter Property="ItemContainerStyle" Value="{StaticResource ListBoxItemThumbnailStyle}" />
+                            <Setter Property="FixHomeAndEndKeyBehavior" Value="True"/>
                             <Setter Property="ItemsPanel">
                                 <Setter.Value>
                                     <ItemsPanelTemplate>

@@ -296,7 +296,7 @@
                                 IsSimpleTextSearchEnabled="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsTextSearchEnabled}">
 
                 <ListBox.Style>
-                    <Style TargetType="ListBox" BasedOn="{StaticResource NVListBox}">
+                    <Style TargetType="{x:Type nw:ListBoxExtended}" BasedOn="{StaticResource NVListBox}">
                         <Setter Property="ItemTemplate" Value="{StaticResource NormalTemplate}" />
                         <Setter Property="ItemContainerStyle" Value="{StaticResource ListBoxItemStyle}" />
                         <Setter Property="FocusVisualStyle" Value="{StaticResource NVFocusVisual}" />
@@ -324,6 +324,7 @@
                             <DataTrigger Binding="{Binding Source={x:Static local:Config.Current}, Path=Playlist.PanelListItemStyle}" Value="Thumbnail">
                                 <Setter Property="ItemTemplate" Value="{StaticResource ThumbnailTemplate}"/>
                                 <Setter Property="ItemContainerStyle" Value="{StaticResource ListBoxItemThumbnailStyle}" />
+                                <Setter Property="FixHomeAndEndKeyBehavior" Value="True"/>
                                 <Setter Property="ItemsPanel">
                                     <Setter.Value>
                                         <ItemsPanelTemplate>
