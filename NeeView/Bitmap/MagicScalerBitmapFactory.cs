@@ -14,7 +14,10 @@ namespace NeeView
     {
         static MagicScalerBitmapFactory()
         {
-            ////MagicImageProcessor.EnableXmpOrientation = true;
+            CodecManager.Configure(codecs => {
+                codecs.Clear();
+                codecs.UseWicCodecs(WicCodecPolicy.Microsoft);
+            });
         }
 
 
