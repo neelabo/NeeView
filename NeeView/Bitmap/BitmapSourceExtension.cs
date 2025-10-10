@@ -11,6 +11,8 @@ namespace NeeView
 {
     public static class BitmapSourceExtension
     {
+        private static readonly string _defaultFormatLabel = PixelFormats.Default.ToString();
+
         // from http://www.nminoru.jp/~nminoru/programming/bitcount.html
         public static int BitCount(int bits)
         {
@@ -130,9 +132,14 @@ namespace NeeView
         /// </summary>
         /// <param name="bitmap"></param>
         /// <returns></returns>
-        public static bool HasAlpha(this BitmapSource bitmap)
+        public static bool? HasAlpha(this BitmapSource bitmap)
         {
-            _supportedAlphaFormats.Contains(bitmap.Format);
+            // DelayCreation などでフォーマットが確定していない状態。
+            if (bitmap.Format.ToString() == _defaultFormatLabel)
+            {
+                return null;
+            }
+
             return _supportedAlphaFormats.Contains(bitmap.Format) || bitmap.Palette?.Colors.Any(e => e.A < 0xff) == true;
         }
     }

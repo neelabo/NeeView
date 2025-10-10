@@ -89,7 +89,7 @@ namespace NeeView
         /// <summary>
         /// アルファ所持
         /// </summary>
-        public bool HasAlpha { get; private set; }
+        public bool? HasAlpha { get; private set; }
 
 
         private static BitmapMetadataDatabase CreateMetadataDatabase(BitmapFrame bitmapFrame, Stream stream)

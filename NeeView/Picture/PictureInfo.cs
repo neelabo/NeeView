@@ -86,7 +86,7 @@ namespace NeeView
         /// <summary>
         /// アルファ所持
         /// </summary>
-        public bool HasAlpha { get; set; }
+        public bool? HasAlpha { get; set; }
 
 
 

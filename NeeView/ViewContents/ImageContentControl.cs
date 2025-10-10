@@ -33,14 +33,24 @@ namespace NeeView
             var grid = new Grid();
 
             // background
-            if (source.PageDataSource.PictureInfo?.HasAlpha == true)
+            var pictureInfo = source.PageDataSource.PictureInfo;
+            if (pictureInfo is not null)
             {
-                var background = new Rectangle();
-                background.SetBinding(Rectangle.FillProperty, new Binding(nameof(PageBackgroundSource.Brush)) { Source = backgroundSource });
-                background.Margin = new Thickness(1);
-                background.HorizontalAlignment = HorizontalAlignment.Stretch;
-                background.VerticalAlignment = VerticalAlignment.Stretch;
-                grid.Children.Add(background);
+                var hasAlpha = pictureInfo.HasAlpha;
+                if (image is BitmapSource bitmapSource)
+                {
+                    // リサイズフィルターによってフォーマットが切り替わることがあるため、都度取得する
+                    hasAlpha = bitmapSource.HasAlpha();
+                }
+                if (hasAlpha == true)
+                {
+                    var background = new Rectangle();
+                    background.SetBinding(Rectangle.FillProperty, new Binding(nameof(PageBackgroundSource.Brush)) { Source = backgroundSource });
+                    background.Margin = new Thickness(1);
+                    background.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    background.VerticalAlignment = VerticalAlignment.Stretch;
+                    grid.Children.Add(background);
+                }
             }
 
             // target image
