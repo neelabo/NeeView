@@ -501,6 +501,7 @@ namespace NeeView
 
             foreach (var page in removes)
             {
+                _sourcePages.Remove(page);
                 Pages.Remove(page);
                 PageMap.Remove(page.EntryFullName, page);
                 DetachPage(page);
