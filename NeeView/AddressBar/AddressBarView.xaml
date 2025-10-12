@@ -149,6 +149,11 @@
                     </Grid>
                 </Popup>
 
+                <Button x:Name="SettingButton" Style="{StaticResource AddressIconButton}" Command="{Binding ToggleSettingWindowCommand}" TabIndex="23"
+                        ToolTip="{properties:TextBinding Word.Settings}">
+                    <Image Source="{StaticResource ic_settings_24px}" />
+                </Button>
+                
             </StackPanel>
 
             <Button x:Name="PrevHistoryButton" Command="{Binding BookCommands[PrevBookHistory]}" Style="{StaticResource AddressIconButton}" TabIndex="1"

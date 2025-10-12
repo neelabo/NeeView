@@ -372,6 +372,19 @@ namespace NeeView
             }
         }
 
+        // 設定ウィンドウの表示/非表示を切り替える
+        public void ToggleSettingWindow()
+        {
+            if (Setting.SettingWindow.Current is null || Setting.SettingWindow.Current.WindowState == WindowState.Minimized)
+            {
+                OpenSettingWindow();
+            }
+            else
+            {
+                CloseSettingWindow();
+            }
+        }
+
         // コマンド設定を開く
         public void OpenCommandParameterDialog(string command)
         {

@@ -18,6 +18,7 @@ namespace NeeView
         private RelayCommand? _togglePageModeCommand;
         private RelayCommand? _toggleBookmarkCommand;
         private RelayCommand? _moveToParentBookCommand;
+        private RelayCommand? _toggleSettingWindowCommand;
         private readonly DelayValue<bool> _isLoading;
 
 
@@ -88,6 +89,12 @@ namespace NeeView
             get { return _moveToParentBookCommand = _moveToParentBookCommand ?? new RelayCommand(MoveToParentBookCommand_Execute, MoveToParentBookCommand_CanExecute); }
         }
 
+        public RelayCommand ToggleSettingWindowCommand
+        {
+            get { return _toggleSettingWindowCommand ??= new RelayCommand(ToggleSettingWindowCommand_Execute); }
+        }
+
+
         private void Presenter_Loading(object? sender, BookPathEventArgs e)
         {
             if (e.Path != null)
@@ -104,7 +111,7 @@ namespace NeeView
         {
             BookHubHistory.Current.MoveToHistory(item);
         }
-        
+
         private void ToggleBookLockCommand_Execute()
         {
             _model.IsBookLocked = !_model.IsBookLocked;
@@ -133,6 +140,11 @@ namespace NeeView
         private void MoveToParentBookCommand_Execute()
         {
             BookHub.Current.RequestLoadParent(this);
+        }
+
+        private void ToggleSettingWindowCommand_Execute()
+        {
+            MainWindowModel.Current.ToggleSettingWindow();
         }
     }
 }
