@@ -3,13 +3,15 @@ using System.Runtime.Serialization;
 using System.ComponentModel;
 using NeeView.Windows.Property;
 using System;
+using NeeLaboratory.Generators;
+using NeeView.Data;
 
 namespace NeeView
 {
     /// <summary>
     /// PageSlider : Model
     /// </summary>
-    public class PageSlider : BindableBase
+    public partial class PageSlider : BindableBase
     {
         static PageSlider() => Current = new PageSlider();
         public static PageSlider Current { get; }
@@ -37,6 +39,10 @@ namespace NeeView
         }
 
 
+        [Subscribable]
+        public event EventHandler<ValueChangedEventArgs<bool>>? SliderDirectionChanged;
+
+
         /// <summary>
         /// ページマーカー表示のモデル
         /// </summary>
@@ -56,6 +62,7 @@ namespace NeeView
                     RaisePropertyChanged();
                     ThumbnailList.Current.IsSliderDirectionReversed = _isSliderDirectionReversed;
                     this.PageMarkers.IsSliderDirectionReversed = _isSliderDirectionReversed;
+                    SliderDirectionChanged?.Invoke(this, new ValueChangedEventArgs<bool>() { NewValue = _isSliderDirectionReversed });
                 }
             }
         }

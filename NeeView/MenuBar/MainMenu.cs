@@ -31,6 +31,12 @@ namespace NeeView
             RoutedCommandTable.Current.Changed +=
                 (s, e) => AppDispatcher.Invoke(() => UpdateInputGestureText());
 
+            PageSlider.Current.SliderDirectionChanged +=
+                (s, e) => AppDispatcher.Invoke(() => UpdateInputGestureText());
+
+            Config.Current.Command.SubscribePropertyChanged(nameof(CommandConfig.IsReversePageMove),
+                (s, e) => AppDispatcher.Invoke(() => UpdateInputGestureText()));
+
             Update();
         }
 

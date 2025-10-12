@@ -39,6 +39,12 @@ namespace NeeView
             RoutedCommandTable.Current.Changed +=
                 (s, e) => SetContextMenuDirty();
 
+            PageSlider.Current.SliderDirectionChanged +=
+                (s, e) => SetContextMenuDirty();
+
+            Config.Current.Command.SubscribePropertyChanged(nameof(CommandConfig.IsReversePageMove),
+                (s, e) => SetContextMenuDirty());
+
             // busy visibility
             //_viewComponent.ContentRebuild.AddPropertyChanged(nameof(ContentRebuild.IsBusy),
             //    (s, e) => UpdateBusyVisibility());
