@@ -23,7 +23,7 @@ namespace NeeView
         private bool _disposedValue;
         private readonly DisposableCollection _disposables = new();
         private int _pageChangeCount;
-       
+
 
         public BookMementoControl(Book book, BookHistoryCollection historyCollection)
         {
@@ -109,16 +109,15 @@ namespace NeeView
 
             LocalDebug.WriteLine("Try save BookMemento...");
 
-            bool allowUpdateHistory = !book.IsKeepHistoryOrder || Config.Current.History.IsForceUpdateHistory;
-
             // 履歴更新
-            if (allowUpdateHistory && !_historyEntry && CanHistory(book))
+            if (!_historyEntry && CanHistory(book))
             {
                 _historyEntry = true;
                 var memento = book.CreateMemento();
                 if (memento is not null)
                 {
-                    BookHistoryCollection.Current.Add(memento, false);
+                    bool isKeepHistoryOrder = book.IsKeepHistoryOrder && !Config.Current.History.IsForceUpdateHistory;
+                    BookHistoryCollection.Current.Add(memento, isKeepHistoryOrder);
                     LocalDebug.WriteLine("Try save BookMemento: Saved");
                 }
             }
@@ -136,7 +135,7 @@ namespace NeeView
                 return null;
             }
 
-            return  BookMementoTools.CreateBookMemento(book);
+            return BookMementoTools.CreateBookMemento(book);
         }
 
         /// <summary>
@@ -164,7 +163,7 @@ namespace NeeView
             var memento = BookMementoTools.CreateBookMemento(book);
             if (memento is null) return;
 
-            bool isKeepHistoryOrder = book.IsKeepHistoryOrder || Config.Current.History.IsForceUpdateHistory;
+            bool isKeepHistoryOrder = book.IsKeepHistoryOrder && !Config.Current.History.IsForceUpdateHistory;
             SaveBookMemento(book, memento, isKeepHistoryOrder);
         }
 
@@ -188,9 +187,11 @@ namespace NeeView
         {
             if (book is null) return false;
 
-            // 履歴閲覧時の履歴更新は最低１操作を必要とする
+            // 履歴登録開始ページ操作回数
             var historyEntryPageCount = Config.Current.History.HistoryEntryPageCount;
-            if (book.IsKeepHistoryOrder && Config.Current.History.IsForceUpdateHistory && historyEntryPageCount <= 0)
+
+            // 既に履歴登録されている場合は１操作で更新可能とする
+            if (!book.IsNew)
             {
                 historyEntryPageCount = 1;
             }

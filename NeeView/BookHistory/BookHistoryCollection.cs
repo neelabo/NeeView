@@ -176,8 +176,8 @@ namespace NeeView
                             item.LastAccessTime = DateTime.Now;
                             //HistoryChanged?.Invoke(this, BookMementoCollectionChangedArgs.Create(BookMementoCollectionChangedType.UpdateLastAccessTime, [item]));
                             MoveCore(_items.Count - 1, item);
-                            changeType = BookMementoCollectionChangedType.Replace;
                         }
+                        changeType = BookMementoCollectionChangedType.Replace;
                     }
                     else
                     {
