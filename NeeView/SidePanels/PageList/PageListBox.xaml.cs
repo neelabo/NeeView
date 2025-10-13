@@ -99,6 +99,8 @@ namespace NeeView
 
         private void ViewModel_CollectionChanged(object? sender, EventArgs e)
         {
+            this.ListBox.UpdateLayout();
+
             _thumbnailLoader?.Load();
 
             if (this.ListBox.IsFocused)

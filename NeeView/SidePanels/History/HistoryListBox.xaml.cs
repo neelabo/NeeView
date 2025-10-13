@@ -344,7 +344,12 @@ namespace NeeView
         // リスト全体が変化したときにサムネイルを更新する
         private void HistoryListBox_TargetUpdated(object? sender, DataTransferEventArgs e)
         {
-            AppDispatcher.BeginInvoke(() => _thumbnailLoader?.Load());
+            AppDispatcher.BeginInvoke(() =>
+            {
+                this.ListBox.UpdateLayout();
+
+                _thumbnailLoader?.Load();
+            });
         }
 
         #region UI Accessor
