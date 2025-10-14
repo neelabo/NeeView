@@ -13,16 +13,15 @@ namespace NeeView
         private bool _isResizeFilterEnabled = false;
         private ResizeInterpolation _resizeInterpolation = ResizeInterpolation.Lanczos;
         private bool _isUnsharpMaskEnabled;
+        private UnsharpMaskConfig _unsharpMask = new();
 
         public ImageResizeFilterConfig()
         {
             var setting = new ProcessImageSettings(); // default values.
             _isUnsharpMaskEnabled = setting.Sharpen;
-            this.UnsharpMask = new UnsharpMaskConfig();
             this.UnsharpMask.Amount = setting.UnsharpMask.Amount;
             this.UnsharpMask.Radius = setting.UnsharpMask.Radius;
             this.UnsharpMask.Threshold = setting.UnsharpMask.Threshold;
-            this.UnsharpMask.PropertyChanged += (s, e) => RaisePropertyChanged(nameof(UnsharpMask));
         }
 
         [PropertyMember]
@@ -47,8 +46,25 @@ namespace NeeView
         }
 
         [PropertyMapLabel("Word.UnsharpMask")]
-        public UnsharpMaskConfig UnsharpMask { get; set; }
+        public UnsharpMaskConfig UnsharpMask
+        {
+            get { return _unsharpMask; }
+            set
+            {
+                if (_unsharpMask != value)
+                {
+                    _unsharpMask.PropertyChanged -= UnsharpMask_PropertyChanged;
+                    _unsharpMask = value;
+                    _unsharpMask.PropertyChanged += UnsharpMask_PropertyChanged;
+                    RaisePropertyChanged(nameof(UnsharpMask));
+                }
 
+                void UnsharpMask_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+                {
+                    RaisePropertyChanged(nameof(UnsharpMask));
+                }
+            }
+        }
 
         public override int GetHashCode()
         {
