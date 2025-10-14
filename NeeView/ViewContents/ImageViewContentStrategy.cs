@@ -15,7 +15,6 @@ namespace NeeView
     public partial class ImageViewContentStrategy : IDisposable, IViewContentStrategy, IHasImageSource, IHasScalingMode
     {
         private readonly ViewContent _viewContent;
-        private readonly DelayAction _delayAction = new();
         private ImageContentControl? _imageControl;
         private bool _disposedValue;
         private BitmapScalingMode? _scalingMode;
@@ -52,7 +51,6 @@ namespace NeeView
             {
                 if (disposing)
                 {
-                    _delayAction.Dispose();
                     _imageControl?.Dispose();
                 }
                 _disposedValue = true;
@@ -70,10 +68,7 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
-            _delayAction.Request(
-                () => _viewContent.RequestLoadViewSource(CancellationToken.None),
-                TimeSpan.FromMilliseconds(200)
-            );
+            _viewContent.RequestLoadViewSource(CancellationToken.None);
         }
 
         public FrameworkElement CreateLoadedContent(object data)

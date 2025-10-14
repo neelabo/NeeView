@@ -1,5 +1,9 @@
 ﻿//#define LOCAL_DEBUG
 
+using NeeLaboratory.ComponentModel;
+using NeeLaboratory.Generators;
+using NeeView.ComponentModel;
+using NeeView.PageFrames;
 using System;
 using System.ComponentModel;
 using System.Data.Common;
@@ -9,19 +13,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Xml.Linq;
-using NeeLaboratory.ComponentModel;
-using NeeView.ComponentModel;
-using NeeView.PageFrames;
-using NeeView;
 using System.Windows.Input;
-using System.Windows.Threading;
-using NeeView.Windows;
-using NeeLaboratory.Generators;
-using System.Windows.Data;
-using System.Windows.Shapes;
 using System.Windows.Media;
-using System.Globalization;
 
 namespace NeeView
 {
@@ -40,8 +33,8 @@ namespace NeeView
         private readonly SizeSource _sizeSource;
         private readonly PageBackgroundSource _backgroundSource;
         private readonly int _index;
+        private readonly ViewContentLoadQueue _loadQueue;
         private IViewContentStrategy? _strategy;
-
 
 
         /// <summary>
@@ -62,6 +55,7 @@ namespace NeeView
             _viewSource = viewSource;
             _activity = activity;
             _index = index;
+            _loadQueue = new(this);
 
             _viewContentSize = ViewContentSizeFactory.Create(element, scale);
 
@@ -227,8 +221,19 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
-            if (!_element.Page.Content.IsLoaded) return;
-            Task.Run(() => LoadViewSourceAsync(token));
+            _loadQueue.RequestLoadViewSource(token);
+        }
+
+        /// <summary>
+        /// Can load ViewSource?
+        /// </summary>
+        /// <returns></returns>
+        public bool CanLoadViewSource()
+        {
+            if (_disposedValue) return false;
+
+            if (!_element.Page.Content.IsLoaded) return false;
+            return true;
         }
 
         /// <summary>
