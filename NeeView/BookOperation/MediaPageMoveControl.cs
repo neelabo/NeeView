@@ -101,6 +101,8 @@ namespace NeeView
         {
             if (MediaPlayerOperator.BookMediaOperator == null) return;
 
+            _box.RaisePageChangeActionEvent(sender, PageChangeAction.Move, true);
+
             var isTerminated = MediaPlayerOperator.BookMediaOperator.AddPosition(TimeSpan.FromSeconds(delta * Config.Current.Archive.Media.PageSeconds));
 
             if (isTerminated)

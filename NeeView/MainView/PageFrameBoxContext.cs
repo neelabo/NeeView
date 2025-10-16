@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define LOCAL_DEBUG
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -15,6 +17,7 @@ namespace NeeView
     /// <remarks>
     /// この単位で切り替える
     /// </remarks>
+    [LocalDebug]
     public partial class PageFrameBoxContext : IDisposable, IDragTransformContextFactory
     {
         private readonly Book _book;
@@ -51,7 +54,22 @@ namespace NeeView
             _bookMementoControl = new BookMementoControl(book, BookHistoryCollection.Current);
             _disposables.Add(_bookMementoControl);
 
-            _disposables.Add(Config.Current.BookSetting.SubscribePropertyChanged((s, e) => _bookMementoControl.RequestSaveBookMemento()));
+            _disposables.Add(Config.Current.BookSetting.SubscribePropertyChanged((s, e) => _bookMementoControl.RequestSaveBookMemento(false)));
+
+            _disposables.Add(_box.SubscribePageTerminated((s, e) =>
+            {
+                LocalDebug.WriteLine($"Event.PageTerminated: {e.IsMedia}, {e.Direction}");
+                var checkHistoryRemove = e.IsMedia;
+                _bookMementoControl.RequestSaveBookMemento(checkHistoryRemove);
+            }));
+
+            _disposables.Add(_box.SubscribePageChangeAction((s, e) =>
+            {
+                Debug.Assert(e.IsMedia, "The current version only supports media.");
+                LocalDebug.WriteLine($"Event.PageAction: {e.IsMedia}, {e.Action}");
+                var checkHistoryRemove = e.IsMedia && (e.Action == PageChangeAction.Reward || e.Action == PageChangeAction.PlayTimeElapsed);
+                _bookMementoControl.RequestSaveBookMemento(checkHistoryRemove);
+            }));
         }
 
         [Subscribable]

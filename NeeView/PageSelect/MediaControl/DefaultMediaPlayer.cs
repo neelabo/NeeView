@@ -53,11 +53,7 @@ namespace NeeView
 
         public event EventHandler<ExceptionEventArgs>? MediaFailed;
 
-        public event EventHandler? MediaEnded
-        {
-            add => _player.MediaEnded += value;
-            remove => _player.MediaEnded -= value;
-        }
+        public event EventHandler? MediaEnded;
 
         public event EventHandler? MediaOpened
         {
@@ -203,7 +199,11 @@ namespace NeeView
             if (_disposedValue) return;
 
             if (mediaSource.Path is null) throw new ArgumentException("MediaPlayer requests a Path from mediaSource.");
-            var uri = new Uri(mediaSource.Path);
+
+#pragma warning disable CS0618 // 型またはメンバーが旧型式です
+            // NOTE: "#"を含むファイルパスがエスケープされると同じパスでの２回目の MediaPlayer がメディアを見つけられなくなるのでエスケープさせない。
+            var uri = new Uri(mediaSource.Path, true);
+#pragma warning restore CS0618 // 型またはメンバーが旧型式です
 
             _startDelay = delay;
 
@@ -316,6 +316,7 @@ namespace NeeView
             else
             {
                 _isEnded = true;
+                MediaEnded?.Invoke(this, EventArgs.Empty);
             }
         }
 

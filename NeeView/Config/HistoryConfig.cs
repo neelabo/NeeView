@@ -16,6 +16,7 @@ namespace NeeView
         private bool _isUncHistoryEnabled = true;
         private bool _isForceUpdateHistory;
         private int _historyEntryPageCount = 0;
+        private double _historyEntryPlayTime = 10.0;
         private int _limitSize = -1;
         private TimeSpan _limitSpan;
         private bool _isCurrentFolder;
@@ -105,6 +106,16 @@ namespace NeeView
         {
             get { return _historyEntryPageCount; }
             set { SetProperty(ref _historyEntryPageCount, value); }
+        }
+
+        /// <summary>
+        /// 何秒動画再生したら履歴登録するか
+        /// </summary>
+        [PropertyRange(0.0, 30.0, TickFrequency = 1.0, IsEditable = true)]
+        public double HistoryEntryPlayTime
+        {
+            get { return _historyEntryPlayTime; }
+            set { SetProperty(ref _historyEntryPlayTime, value); }
         }
 
         // 履歴制限

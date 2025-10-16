@@ -45,6 +45,11 @@ namespace NeeView
         private readonly DisposableCollection _disposables = new();
         private bool _disposedValue = false;
         private readonly DelayAction _delayResume = new();
+        private double _oldPosition;
+        private readonly int _playTimeTrigger;
+        private int _playTime;
+        private bool _playTimeElapsed;
+        private int _oldTickCount;
 
 
         public MediaPlayerOperator(ViewContentMediaPlayer player)
@@ -54,6 +59,8 @@ namespace NeeView
             _player.MediaOpened += Player_MediaOpened;
             _player.MediaEnded += Player_MediaEnded;
             _player.MediaFailed += Player_MediaFailed;
+
+            _playTimeTrigger = (int)(Config.Current.History.HistoryEntryPlayTime * 1000.0);
 
             _disposables.Add(_player.SubscribePropertyChanged(nameof(_player.Duration),
                 (s, e) => Duration = _player.Duration));
@@ -88,6 +95,8 @@ namespace NeeView
             _disposables.Add(_player.SubscribePropertyChanged(nameof(_player.Rate),
                 (s, e) => RaisePropertyChanged(nameof(Rate))));
 
+            _oldTickCount = System.Environment.TickCount;
+
             _timer = new DispatcherTimer(DispatcherPriority.Normal, App.Current.Dispatcher);
             _timer.Interval = TimeSpan.FromSeconds(0.1);
             _timer.Tick += DispatcherTimer_Tick;
@@ -99,6 +108,19 @@ namespace NeeView
         /// 再生が終端に達したときのイベント
         /// </summary>
         public event EventHandler? MediaEnded;
+
+        /// <summary>
+        /// 再生が巻き戻ったときのイベント
+        /// </summary>
+        public event EventHandler? MediaRewind;
+
+        /// <summary>
+        /// 再生時間経イベント
+        /// </summary>
+        /// <remarks>
+        /// 一定の再生時間が経過したら一度だけイベントを発生させる。履歴登録用
+        /// </remarks>
+        public event EventHandler<PlayTimeElapsedEventArgs>? PlayTimeElapsed;
 
 
         public IMediaPlayer Player => _player;
@@ -304,10 +326,8 @@ namespace NeeView
         private void Player_MediaEnded(object? sender, EventArgs e)
         {
             if (_disposedValue) return;
-            if (!IsRepeat)
-            {
-                MediaEnded?.Invoke(this, EventArgs.Empty);
-            }
+
+            MediaEnded?.Invoke(this, EventArgs.Empty);
         }
 
         private void Player_MediaOpened(object? sender, EventArgs e)
@@ -319,12 +339,61 @@ namespace NeeView
         private void DispatcherTimer_Tick(object? sender, EventArgs e)
         {
             if (_disposedValue) return;
-            if (! _player.IsActive || _player.IsScrubbing) return;
+
+            var playTimeDelta = GetPlayTimeDelta();
+
+            if (!_player.IsActive || _player.IsScrubbing) return;
 
             if (_player.ScrubbingEnabled)
             {
                 //Debug.WriteLine($"## Player: {_player.Position}");
                 RaisePositionPropertyChanged();
+            }
+
+            var positionDelta = GetPositionDelta();
+            if (positionDelta < 0.0)
+            {
+                MediaRewind?.Invoke(this, EventArgs.Empty);
+            }
+
+            if (IsPlaying)
+            {
+                AddPlayTime(Math.Abs(playTimeDelta));
+            }
+        }
+
+        /// <summary>
+        /// 位置の差分を取得
+        /// </summary>
+        /// <returns>[-1.0, 1.0]</returns>
+        private double GetPositionDelta()
+        {
+            var p1 = _player.Position;
+            var p0 = _oldPosition;
+            _oldPosition = p1;
+            return p1 - p0;
+        }
+
+        /// <summary>
+        /// 実時間の差分を取得
+        /// </summary>
+        /// <returns>ms</returns>
+        private int GetPlayTimeDelta()
+        {
+            var t1 = System.Environment.TickCount;
+            var t0 = _oldTickCount;
+            _oldTickCount = t1;
+            return t1 - t0;
+        }
+
+        private void AddPlayTime(int ms)
+        {
+            _playTime += ms;
+
+            if (!_playTimeElapsed && _playTime > _playTimeTrigger)
+            {
+                _playTimeElapsed = true;
+                PlayTimeElapsed?.Invoke(this, new PlayTimeElapsedEventArgs(_playTimeTrigger));
             }
         }
 
@@ -375,35 +444,20 @@ namespace NeeView
             if (!_player.ScrubbingEnabled) return false;
 
             var delta = span.Divide(_durationTimeSpan);
+            var pos = Position + delta;
 
-            var t0 = Position;
-            var t1 = t0 + delta;
-
-            if (delta < 0.0 && t1 < 0.0&& t0 < 0.01)
+            if (delta < 0.0 && pos < 0.0)
             {
-                if (IsRepeat)
-                {
-                    t1 = Math.Max(0.0, 1.0 + t1);
-                }
-                else
-                {
-                    return true;
-                }
+                SetPosition(0.0);
+                return true;
             }
-            if (delta > 0.0 && t1 > 1.0)
+            else if (delta > 0.0 && pos > 1.0)
             {
-                if (IsRepeat)
-                {
-                    t1 = 0.0;
-                }
-                else
-                {
-                    return true;
-                }
+                SetPosition(1.0);
+                return true;
             }
 
-            SetPosition(t1);
-
+            SetPosition(Math.Clamp(pos, 0.0, 1.0));
             return false;
         }
 
@@ -451,6 +505,13 @@ namespace NeeView
 
     }
 
+
+    public class PlayTimeElapsedEventArgs(int ms) : EventArgs
+    {
+        public int Milliseconds { get; } = ms;
+    }
+
+
     public static class TimeSpanExtensions
     {
         public static int GetHours(this TimeSpan timeSpan)
@@ -458,7 +519,5 @@ namespace NeeView
             return Math.Abs(timeSpan.Days * 24 + timeSpan.Hours);
         }
     }
-
-
 
 }

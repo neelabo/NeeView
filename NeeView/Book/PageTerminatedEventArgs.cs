@@ -2,17 +2,19 @@
 
 namespace NeeView
 {
-    // ページ終端イベント
+    /// <summary>
+    /// ページ終端イベントのパラメーター
+    /// </summary>
     public class PageTerminatedEventArgs : EventArgs
     {
-        public PageTerminatedEventArgs(int direction)
+        public PageTerminatedEventArgs(int direction, bool isMedia)
         {
             Direction = direction;
+            IsMedia = isMedia;
         }
 
-        public int Direction { get; set; }
+        public int Direction { get; }
+        public bool IsMedia { get; }
     }
-
-
 }
 

@@ -119,6 +119,8 @@ namespace NeeView
                     Operator?.Dispose();
                     Operator = new MediaPlayerOperator(mediaPlayer);
                     Operator.MediaEnded += Operator_MediaEnded;
+                    Operator.MediaRewind += Operator_MediaRewind;
+                    Operator.PlayTimeElapsed += Operator_PlayTimeElapsed;
                     Operator.Attach();
                 }
             }
@@ -141,9 +143,19 @@ namespace NeeView
             }
         }
 
+        private void Operator_PlayTimeElapsed(object? sender, PlayTimeElapsedEventArgs e)
+        {
+            PageFrameBoxPresenter.Current.View?.RaisePageChangeActionEvent(this, PageChangeAction.PlayTimeElapsed, true);
+        }
+
         private void Operator_MediaEnded(object? sender, System.EventArgs e)
         {
             PageFrameBoxPresenter.Current.View?.RaisePageTerminatedEvent(this, 1, true);
+        }
+
+        private void Operator_MediaRewind(object? sender, EventArgs e)
+        {
+            PageFrameBoxPresenter.Current.View?.RaisePageChangeActionEvent(this, PageChangeAction.Reward, true);
         }
 
         public void SetScrubbing(bool isScrubbing)
@@ -153,7 +165,14 @@ namespace NeeView
                 return;
             }
 
-            _operator.IsScrubbing = isScrubbing;
+            if (_operator.IsScrubbing != isScrubbing)
+            {
+                _operator.IsScrubbing = isScrubbing;
+                if (_operator.IsScrubbing)
+                {
+                    PageFrameBoxPresenter.Current.View?.RaisePageChangeActionEvent(this, PageChangeAction.Scrubbing, true);
+                }
+            }
         }
 
         public void ToggleTimeFormat()

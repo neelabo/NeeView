@@ -184,10 +184,20 @@ namespace NeeView.PageFrames
         [Subscribable]
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        // ページ終端を超えて移動しようとした
-        // 次の本への移動を要求
+        /// <summary>
+        /// ページ終端を超えて移動しようとした
+        /// </summary>
         [Subscribable]
         public event EventHandler<PageTerminatedEventArgs>? PageTerminated;
+
+        /// <summary>
+        /// ページ変更アクションイベント
+        /// </summary>
+        /// <remarks>
+        /// 注意：現状ではメディアでのみイベントを発行している
+        /// </remarks>
+        [Subscribable]
+        public event EventHandler<PageChangeActionEventArgs>? PageChangeAction;
 
         [Subscribable]
         public event EventHandler<FrameViewContentChangedEventArgs>? ViewContentChanged;
@@ -971,7 +981,7 @@ namespace NeeView.PageFrames
             }
             else if (!_bookContext.ContainsIndex(nextIndex))
             {
-                PageTerminated?.Invoke(this, new PageTerminatedEventArgs(direction.ToSign()));
+                PageTerminated?.Invoke(this, new PageTerminatedEventArgs(direction.ToSign(), false));
                 return;
             }
 
@@ -1007,7 +1017,7 @@ namespace NeeView.PageFrames
             }
             else if (!_bookContext.ContainsIndex(pos.Index))
             {
-                PageTerminated?.Invoke(this, new PageTerminatedEventArgs(direction.ToSign()));
+                PageTerminated?.Invoke(this, new PageTerminatedEventArgs(direction.ToSign(), false));
                 return;
             }
 
@@ -1033,7 +1043,7 @@ namespace NeeView.PageFrames
                 (var nextPosition, var nextDirection) = CorrectPosition(new(position, direction), true);
                 if ((nextDirection == LinkedListDirection.Next ? SelectedRange.Min.Index : SelectedRange.Max.Index) == nextPosition.Index)
                 {
-                    PageTerminated?.Invoke(this, new PageTerminatedEventArgs(Math.Sign(delta)));
+                    PageTerminated?.Invoke(this, new PageTerminatedEventArgs(Math.Sign(delta), false));
                     return;
                 }
             }
@@ -1572,9 +1582,27 @@ namespace NeeView.PageFrames
             if (_disposedValue) return;
 
             if (isMedia && !_bookContext.IsMedia) return;
-            PageTerminated?.Invoke(sender, new PageTerminatedEventArgs(direction));
+            PageTerminated?.Invoke(sender, new PageTerminatedEventArgs(direction, isMedia));
         }
 
+        /// <summary>
+        /// ブックアクションイベント発行
+        /// </summary>
+        /// <remarks>
+        /// 注意：現在のバージョンではメディアにのみ対応
+        /// </remarks>
+        /// <param name="sender"></param>
+        /// <param name="action">アクション</param>
+        /// <param name="isMedia">メディア操作か</param>
+        public void RaisePageChangeActionEvent(object? sender, PageChangeAction action, bool isMedia)
+        {
+            Debug.Assert(isMedia);
+
+            if (_disposedValue) return;
+
+            if (isMedia && !_bookContext.IsMedia) return;
+            PageChangeAction?.Invoke(sender, new PageChangeActionEventArgs(action, isMedia));
+        }
     }
 
     public interface ICanvasToViewTranslator

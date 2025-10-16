@@ -71,7 +71,9 @@ namespace NeeView
             // 履歴削除されたものを履歴登録しないようにする
             if (e.HistoryChangedType == BookMementoCollectionChangedType.Remove && e.OldItems.Any(e => e.Path == book.Path))
             {
+                _pageChangeCount = 0;
                 _historyRemoved = true;
+                _historyEntry = false;
             }
         }
 
@@ -93,8 +95,13 @@ namespace NeeView
         /// <summary>
         /// 履歴保存要求
         /// </summary>
-        public void RequestSaveBookMemento()
+        public void RequestSaveBookMemento(bool checkHitoryRemoved)
         {
+            if (_disposedValue) return;
+
+            if (checkHitoryRemoved && _historyRemoved) return;
+
+            _historyRemoved = false;
             IsPageChangeCountEnabled = false;
             TrySaveBookMemento();
         }
@@ -116,11 +123,29 @@ namespace NeeView
                 var memento = book.CreateMemento();
                 if (memento is not null)
                 {
-                    bool isKeepHistoryOrder = book.IsKeepHistoryOrder && !Config.Current.History.IsForceUpdateHistory;
-                    BookHistoryCollection.Current.Add(memento, isKeepHistoryOrder);
+                    BookHistoryCollection.Current.Add(memento, IsKeepHistoryOrder(book));
                     LocalDebug.WriteLine("Try save BookMemento: Saved");
                 }
             }
+        }
+
+        /// <summary>
+        /// 履歴順位維持判定
+        /// </summary>
+        private bool IsKeepHistoryOrder(Book book)
+        {
+            // 履歴からのブックなので順番を維持する
+            if (book.IsKeepHistoryOrder && !Config.Current.History.IsForceUpdateHistory)
+            {
+                return true;
+            }
+            // 無操作なので順番を維持する
+            if (IsPageChangeCountEnabled && _pageChangeCount <= 0)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -163,42 +188,36 @@ namespace NeeView
             var memento = BookMementoTools.CreateBookMemento(book);
             if (memento is null) return;
 
-            bool isKeepHistoryOrder = book.IsKeepHistoryOrder && !Config.Current.History.IsForceUpdateHistory;
-            SaveBookMemento(book, memento, isKeepHistoryOrder);
+            SaveBookMemento(book, memento);
         }
 
-        private void SaveBookMemento(Book book, BookMemento memento, bool isKeepHistoryOrder)
+        private void SaveBookMemento(Book book, BookMemento memento)
         {
             if (memento == null) return;
 
             // ブックマークの更新
-            BookmarkCollection.Current.Update(memento, _pageChangeCount > 1);
+            BookmarkCollection.Current.Update(memento, false);
 
             // 履歴の保存
             if (CanHistory(book))
             {
                 LocalDebug.WriteLine("Save BookMemento.");
-                BookHistoryCollection.Current.Add(memento, isKeepHistoryOrder);
+                BookHistoryCollection.Current.Add(memento, IsKeepHistoryOrder(book));
             }
         }
 
-        // 履歴登録可
+        /// <summary>
+        /// 履歴登録判定
+        /// </summary>
         private bool CanHistory(Book book)
         {
             if (book is null) return false;
 
-            // 履歴登録開始ページ操作回数
-            var historyEntryPageCount = Config.Current.History.HistoryEntryPageCount;
-
-            // 既に履歴登録されている場合は１操作で更新可能とする
-            if (!book.IsNew)
-            {
-                historyEntryPageCount = 1;
-            }
-
+            // ページのないブックは登録できない。
+            // 既に履歴登録されている場合もカウントを無視する。
             return !_historyRemoved
                 && book.Pages.Count > 0
-                && (!IsPageChangeCountEnabled || _historyEntry || _pageChangeCount >= historyEntryPageCount || book.CurrentPages.LastOrDefault() == book.Pages.Last())
+                && (!IsPageChangeCountEnabled || _historyEntry || !book.IsNew || _pageChangeCount >= Config.Current.History.HistoryEntryPageCount)
                 && (Config.Current.History.IsInnerArchiveHistoryEnabled || book.Source.ArchiveEntryCollection.Archive?.Parent == null)
                 && (Config.Current.History.IsUncHistoryEnabled || !LoosePath.IsUnc(book.Path));
         }
