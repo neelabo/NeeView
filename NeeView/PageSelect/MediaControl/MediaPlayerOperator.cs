@@ -5,6 +5,8 @@ using NeeView.Threading;
 using System;
 using System.Diagnostics;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -50,6 +52,8 @@ namespace NeeView
         private int _playTime;
         private bool _playTimeElapsed;
         private int _oldTickCount;
+        private readonly ExclusiveAction _exclusiveDelay;
+        private double _requestPosition = double.NaN;
 
 
         public MediaPlayerOperator(ViewContentMediaPlayer player)
@@ -61,6 +65,8 @@ namespace NeeView
             _player.MediaFailed += Player_MediaFailed;
 
             _playTimeTrigger = (int)(Config.Current.History.HistoryEntryPlayTime * 1000.0);
+
+            _exclusiveDelay = new() { Prefix = nameof(MediaPlayerOperator) };
 
             _disposables.Add(_player.SubscribePropertyChanged(nameof(_player.Duration),
                 (s, e) => Duration = _player.Duration));
@@ -164,9 +170,8 @@ namespace NeeView
                 if (_disposedValue) return;
                 if (SetProperty(ref _position, MathUtility.Clamp(value, 0.0, 1.0)))
                 {
-                    _player.Position = _position;
-                    RaisePropertyChanged(nameof(Position));
-                    RaisePropertyChanged(nameof(DisplayTime));
+                    _requestPosition = _position;
+                    _exclusiveDelay.Request(() => UpdatePositionAsync(), CancellationToken.None);
                 }
             }
         }
@@ -311,9 +316,30 @@ namespace NeeView
             GC.SuppressFinalize(this);
         }
 
+        private async Task UpdatePositionAsync()
+        {
+            var pos = _requestPosition;
+            if (double.IsNaN(pos)) return;
+
+            await AppDispatcher.InvokeAsync(() =>
+            {
+                //Debug.WriteLine($"{System.Environment.TickCount}: Position={pos:f3}");
+                _player.Position = pos;
+                _requestPosition = double.NaN;
+                RaisePropertyChanged(nameof(Position));
+                RaisePropertyChanged(nameof(DisplayTime));
+            });
+
+            // interval 200ms
+            await Task.Delay(200);
+        }
+
         private void RaisePositionPropertyChanged()
         {
-            _position = _player.Position;
+            if (double.IsNaN(_requestPosition))
+            {
+                _position = _player.Position;
+            }
             RaisePropertyChanged(nameof(Position));
             RaisePropertyChanged(nameof(DisplayTime));
         }
@@ -487,9 +513,7 @@ namespace NeeView
             if (_disposedValue) return;
             if (!_player.ScrubbingEnabled) return;
 
-            _player.SetPauseFlag(MediaPlayerPauseBit.SetPosition);
             this.Position = position;
-            _delayResume.Request(() => _player.ResetPauseFlag(MediaPlayerPauseBit.SetPosition), TimeSpan.FromMilliseconds(500));
         }
 
         /// <summary>
