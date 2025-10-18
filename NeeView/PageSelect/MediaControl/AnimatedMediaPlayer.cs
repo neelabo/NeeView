@@ -152,6 +152,9 @@ namespace NeeView
         public TrackCollection? AudioTracks => null;
         public TrackCollection? Subtitles => null;
 
+        public int PositionChangeInterval => 200;
+        public int ScrubbingInterval => 0;
+
         public bool IsDisposed => _disposedValue;
 
 

@@ -23,6 +23,8 @@ namespace NeeView
         TrackCollection? AudioTracks { get; }
         TrackCollection? Subtitles { get; }
         bool CanControlTracks { get; }
+        int PositionChangeInterval { get; }
+        int ScrubbingInterval { get; }
 
         event EventHandler? MediaEnded;
         event EventHandler<ExceptionEventArgs>? MediaFailed;

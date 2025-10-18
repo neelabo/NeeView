@@ -244,6 +244,9 @@ namespace NeeView
             }
         }
 
+        public int PositionChangeInterval => _player.PositionChangeInterval;
+        public int ScrubbingInterval => _player.ScrubbingInterval;
+
         public bool IsDisposed => _disposedValue;
 
 

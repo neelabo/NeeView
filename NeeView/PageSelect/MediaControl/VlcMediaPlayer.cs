@@ -354,6 +354,9 @@ namespace NeeView
             }
         }
 
+        public int PositionChangeInterval => 200;
+        public int ScrubbingInterval => 0;
+
         public bool IsDisposed => _disposedValue;
 
 

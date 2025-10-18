@@ -3,6 +3,7 @@ using NeeLaboratory.Generators;
 using NeeView.Collections.Generic;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -171,6 +172,9 @@ namespace NeeView
         public TrackCollection? AudioTracks => null;
         public TrackCollection? Subtitles => null;
 
+        public int PositionChangeInterval => 500;
+        public int ScrubbingInterval => 500;
+
         public bool IsDisposed => _disposedValue;
 
 
@@ -323,6 +327,8 @@ namespace NeeView
         private void Player_MediaFailed(object? sender, System.Windows.Media.ExceptionEventArgs e)
         {
             if (_disposedValue) return;
+
+            Debug.WriteLine($"MediaPlayer.MediaFailed: {e.ErrorException}, DownloadProgress={_player.DownloadProgress}, IsBuffering={_player.IsBuffering}, BufferingProgress={_player.BufferingProgress}");
 
             MediaFailed?.Invoke(sender, new ExceptionEventArgs(e.ErrorException));
         }

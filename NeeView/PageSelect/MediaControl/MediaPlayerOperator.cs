@@ -52,8 +52,9 @@ namespace NeeView
         private int _playTime;
         private bool _playTimeElapsed;
         private int _oldTickCount;
-        private readonly ExclusiveAction _exclusiveDelay;
+        private readonly JobAction _jobs;
         private double _requestPosition = double.NaN;
+        private bool _isScrubbing;
 
 
         public MediaPlayerOperator(ViewContentMediaPlayer player)
@@ -66,7 +67,8 @@ namespace NeeView
 
             _playTimeTrigger = (int)(Config.Current.History.HistoryEntryPlayTime * 1000.0);
 
-            _exclusiveDelay = new() { Prefix = nameof(MediaPlayerOperator) };
+            _jobs = new() { Prefix = nameof(MediaPlayerOperator) };
+            _disposables.Add(_jobs);
 
             _disposables.Add(_player.SubscribePropertyChanged(nameof(_player.Duration),
                 (s, e) => Duration = _player.Duration));
@@ -171,7 +173,7 @@ namespace NeeView
                 if (SetProperty(ref _position, MathUtility.Clamp(value, 0.0, 1.0)))
                 {
                     _requestPosition = _position;
-                    _exclusiveDelay.Request(() => UpdatePositionAsync(), CancellationToken.None);
+                    _jobs.Request(0, token => UpdatePositionAsync(token));
                 }
             }
         }
@@ -259,11 +261,14 @@ namespace NeeView
 
         public bool IsScrubbing
         {
-            get => _player.IsScrubbing;
+            get => _isScrubbing;
             set
             {
                 if (_disposedValue) return;
-                _player.IsScrubbing = value;
+                if (SetProperty(ref _isScrubbing, value))
+                {
+                    _jobs.Request(1, token => UpdateScrubbingAsync(_isScrubbing, token));
+                }
             }
         }
 
@@ -316,7 +321,20 @@ namespace NeeView
             GC.SuppressFinalize(this);
         }
 
-        private async Task UpdatePositionAsync()
+        private async Task UpdateScrubbingAsync(bool isScrubbing, CancellationToken token)
+        {
+            await AppDispatcher.InvokeAsync(() =>
+            {
+                //Debug.WriteLine($"{System.Environment.TickCount}: IsScrubbing={isScrubbing}");
+                _player.IsScrubbing = isScrubbing;
+            });
+
+            // interval
+            var interval = isScrubbing ? 0 : _player.ScrubbingInterval;
+            await Task.Delay(interval, token);
+        }
+
+        private async Task UpdatePositionAsync(CancellationToken token)
         {
             var pos = _requestPosition;
             if (double.IsNaN(pos)) return;
@@ -330,8 +348,8 @@ namespace NeeView
                 RaisePropertyChanged(nameof(DisplayTime));
             });
 
-            // interval 200ms
-            await Task.Delay(200);
+            // interval 
+            await Task.Delay(_player.PositionChangeInterval, token);
         }
 
         private void RaisePositionPropertyChanged()
