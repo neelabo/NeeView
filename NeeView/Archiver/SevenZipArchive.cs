@@ -216,7 +216,7 @@ namespace NeeView
                 if (disposing)
                 {
                 }
-                _accessor.Dispose();
+                _accessor?.Dispose();
                 _disposedValue = true;
                 base.Dispose(disposing);
             }

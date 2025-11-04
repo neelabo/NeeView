@@ -654,7 +654,7 @@ namespace NeeView
                 {
                     _archiveTemporary.Dispose();
                 }
-                _preExtractor.Dispose();
+                _preExtractor?.Dispose();
                 _disposedValue = true;
             }
         }
