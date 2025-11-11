@@ -48,6 +48,19 @@ function Get-FileVersion($fileName) {
 	"$major.$minor"
 }
 
+# get base version from Version.xml
+function Get-BaseVersion($versionXml) {
+	$xml = [xml](Get-Content $versionXml)
+	
+	$version = [String]$xml.Version
+	
+	if ($version -match '\d+\.\d+') {
+		return $version
+	}
+	
+	throw "Cannot get base version."
+}
+
 # get version from _Version.props
 function Get-Version($projectFile) {
 	$xml = [xml](Get-Content $projectFile)
@@ -892,7 +905,7 @@ function Export-Current {
 	}
 }
 
-function Update-Version {
+function Update-Version($baseVersion) {
 	
 	Write-Host "`n`[Update NeeLaboratory.IO.Search Version] ...`n" -fore Cyan
 	..\NeeLaboratory.IO.Search\CreateVersionProps.ps1
@@ -904,7 +917,7 @@ function Update-Version {
 		"Beta" { "beta.$packageBetaVersion" }
 		default { "" }
 	}
-	..\CreateVersionProps.ps1 -suffix $versionSuffix
+	..\CreateVersionProps.ps1 -baseVersion $baseVersion -suffix $versionSuffix
 }
 
 function Get-LatestPreReleaseVersion($version, $preRelease) {
@@ -917,7 +930,7 @@ function Get-LatestPreReleaseVersion($version, $preRelease) {
 	#Write-Host "Get latest $preRelease version tag: $tag" 
 
 	if ($tag -match "$tagPreRelease\.(\d+)$") {
-		return = [int]$Matches[1]
+		return [int]$Matches[1]
 	}
 	else {
 		return 0
@@ -946,10 +959,11 @@ $build_x64_fd = $false
 # versions
 $revision = (& git rev-parse --short HEAD).ToString()
 
+$baseVersion = Get-BaseVersion ..\NeeViewVersion.xml
 $dateVersion = (Get-Date).ToString("MMdd") 
-$packageAlphaVersion = (Get-LatestPreReleaseVersion $version "Alpha") + 1
-$packageBetaVersion = (Get-LatestPreReleaseVersion $version "Beta") + 1
-Update-Version
+$packageAlphaVersion = (Get-LatestPreReleaseVersion $baseVersion "Alpha") + 1
+$packageBetaVersion = (Get-LatestPreReleaseVersion $baseVersion "Beta") + 1
+Update-Version $baseVersion
 
 $version = Get-Version $versionProps
 $appVersion = Get-AppVersion $version
