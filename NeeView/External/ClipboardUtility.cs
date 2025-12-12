@@ -109,7 +109,7 @@ namespace NeeView
         public static void Paste()
         {
             var data = Clipboard.GetDataObject(); // クリップボードからオブジェクトを取得する。
-            if (data.GetDataPresent(DataFormats.FileDrop)) // テキストデータかどうか確認する。
+            if (data is not null && data.GetDataPresent(DataFormats.FileDrop)) // テキストデータかどうか確認する。
             {
                 var files = (string[])data.GetData(DataFormats.FileDrop); // オブジェクトからテキストを取得する。
                 Debug.WriteLine("=> " + files[0]);

@@ -98,7 +98,9 @@ namespace NeeView
         // コピー＆ペーストで処理を開始する
         public async void LoadFromClipboard(object sender)
         {
-            await LoadDataObjectAsync(sender, Clipboard.GetDataObject());
+            var data = Clipboard.GetDataObject();
+            if (data == null) return;
+            await LoadDataObjectAsync(sender, data);
         }
 
         // データオブジェクトからのロード処理

@@ -85,9 +85,13 @@ namespace NeeView
 
         private void CopyCommand_Execute(object sender, ExecutedRoutedEventArgs e)
         {
-            if (this.PropertyListBox.SelectedItem is FileInformationRecord record && record.Value?.ToString() != null)
+            if (this.PropertyListBox.SelectedItem is FileInformationRecord record)
             {
-                Clipboard.SetText(record.Value.ToString());
+                var text = record.Value?.ToString();
+                if (text != null)
+                {
+                    Clipboard.SetText(text);
+                }
             }
         }
 
