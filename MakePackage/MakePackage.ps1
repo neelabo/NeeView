@@ -217,6 +217,8 @@ function Get-DefaultOptions($platform)
 function Build-Project($platform, $outputDir, $options) {
 	$defaultOptions = Get-DefaultOptions $platform
 
+	Write-Host "> dotnet publish $project $defaultOptions $options -o Publish\$outputDir`n" -fore Cyan
+
 	& dotnet publish $project $defaultOptions $options -o Publish\$outputDir
 	if ($? -ne $true) {
 		throw "build error"
@@ -235,7 +237,7 @@ function Build-SusieProject($platform, $outputDir)
 
 function Build-ProjectSelfContained($platform) {
 	$options = @(
-		"--self-contained", "true"
+		"-p:SelfContained=true"
 	)
 	Build-Project $platform "$product-$platform" $options
 	Build-SusieProject $platform "$product-$platform"
@@ -243,7 +245,7 @@ function Build-ProjectSelfContained($platform) {
 
 function Build-ProjectFrameworkDependent($platform) {
 	$options = @(
-		"--self-contained", "false"
+		"-p:SelfContained=false"
 	)
 
 	Build-Project $platform "$product-$platform-fd" $options
