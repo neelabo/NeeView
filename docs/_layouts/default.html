@@ -22,7 +22,7 @@
             <a id="forkme_banner" href="{{ site.github.repository_url }}">View on GitHub</a>
           {% endif %}
 
-          <div id="project_title"><img id="project_icon" src="/assets/images/AppIcon.png" align="absmiddle"/> {{ site.title | default: site.github.repository_name }}</div>
+          <div id="project_title"><img id="project_icon" src="{{ site.baseurl }}/assets/images/AppIcon.png" align="absmiddle"/> {{ site.title | default: site.github.repository_name }}</div>
           <div id="project_tagline">{{ page.description | default: site.description | default: site.github.project_tagline }}</div>
 
           {% if site.show_downloads %}
