@@ -1,4 +1,4 @@
-#  NeeView
+# <img src="docs/assets/images/AppIcon.png" align="absmiddle"/>  NeeView
 
 **[NeeView Portal Site (English/日本語)](https://neelabo.github.io/NeeView)**
 
@@ -39,7 +39,7 @@ Powerful customization is available.
 
 ## Development Environment
 
-* VisualStudio 2022
+* VisualStudio 2026
     -  .NET Desktop Development
     - Desktop development in C++
 
