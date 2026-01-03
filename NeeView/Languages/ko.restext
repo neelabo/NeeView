@@ -1163,6 +1163,7 @@ MouseConfig.GestureMinimumDistance=마우스 제스처 스트로크 (픽셀)
 MouseConfig.GestureMinimumDistance.Remarks=이 거리 이동으로 제스처 스트로크로 판단합니다.
 MouseConfig.HoverScrollDuration=호버 스크롤 시간 (초)
 MouseConfig.HoverScrollDuration.Remarks=시간이 길수록 스크롤이 부드러워집니다.
+MouseConfig.HoverScrollSensitivity=
 MouseConfig.InertiaSensitivity=관성 감도
 MouseConfig.IsCursorHideEnabled=마우스 조작이 없으면 마우스 포인터 숨기기
 MouseConfig.IsCursorHideEnabled.Remarks=일정 시간 마우스를 움직이지 않으면 포인터를 숨깁니다.

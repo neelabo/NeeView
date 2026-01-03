@@ -1163,6 +1163,7 @@ MouseConfig.GestureMinimumDistance=滑鼠手勢筆畫 (像素)
 MouseConfig.GestureMinimumDistance.Remarks=以這個距離的移動判斷手勢筆觸。
 MouseConfig.HoverScrollDuration=懸浮捲動時間 (秒)
 MouseConfig.HoverScrollDuration.Remarks=時間越長，捲動就會越平滑。
+MouseConfig.HoverScrollSensitivity=
 MouseConfig.InertiaSensitivity=
 MouseConfig.IsCursorHideEnabled=滑鼠沒有操作時隱藏滑鼠指標
 MouseConfig.IsCursorHideEnabled.Remarks=在設定的時間，沒有使用滑鼠操作時隱藏滑鼠指標。

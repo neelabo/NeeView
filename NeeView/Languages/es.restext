@@ -1170,6 +1170,7 @@ MouseConfig.GestureMinimumDistance=Trazo de gesto de mouse (píxel)
 MouseConfig.GestureMinimumDistance.Remarks=Al mover esta distancia, se juzga como trazo de gesto.
 MouseConfig.HoverScrollDuration=Tiempo de desplazamiento al pasar (seg)
 MouseConfig.HoverScrollDuration.Remarks=Cuanto mayor el tiempo, más suave el desplazamiento.
+MouseConfig.HoverScrollSensitivity=
 MouseConfig.InertiaSensitivity=Sensibilidad de inercia
 MouseConfig.IsCursorHideEnabled=Ocultar cursor sin operación de mouse
 MouseConfig.IsCursorHideEnabled.Remarks=Ocultar cursor si mouse no se opera durante tiempo establecido.

@@ -1163,6 +1163,7 @@ MouseConfig.GestureMinimumDistance=マウス ジェスチャーのストロー�
 MouseConfig.GestureMinimumDistance.Remarks=この距離の移動でジェスチャー ストロークと判断されます。
 MouseConfig.HoverScrollDuration=ホバー スクロール時間 (秒)
 MouseConfig.HoverScrollDuration.Remarks=時間が長いほどスクロールが滑らかになります。
+MouseConfig.HoverScrollSensitivity=ホバー スクロールの感度
 MouseConfig.InertiaSensitivity=慣性感度
 MouseConfig.IsCursorHideEnabled=マウスの無操作でマウス ポインターを非表示にする
 MouseConfig.IsCursorHideEnabled.Remarks=設定した時間、マウスを操作しなかった場合にマウス ポインターを非表示にします。

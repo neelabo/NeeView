@@ -84,6 +84,7 @@ namespace NeeView.Setting
             this.Items.Add(section);
 
             section = new SettingItemSection(TextResources.GetString("SettingPage.Manipulate.HoverScroll"));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Mouse, nameof(MouseConfig.HoverScrollSensitivity))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Mouse, nameof(MouseConfig.HoverScrollDuration))));
             this.Items.Add(section);
 

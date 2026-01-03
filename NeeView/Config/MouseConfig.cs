@@ -21,6 +21,7 @@ namespace NeeView
         private bool _isCursorHideReleaseAction = true;
         private double _cursorHideReleaseDistance = 5.0;
         private bool _isHoverScroll;
+        private double _hoverScrollSensitivity = 2.0;
         private double _hoverScrollDuration = 0.5;
         private double _inertiaSensitivity = 0.5;
         private double _autoScrollSensitivity = 1.0;
@@ -124,6 +125,13 @@ namespace NeeView
         {
             get { return _isHoverScroll; }
             set { SetProperty(ref _isHoverScroll, value); }
+        }
+
+        [PropertyRange(1.0, 10.0, TickFrequency = 0.1, IsEditable = true, HasDecimalPoint = true)]
+        public double HoverScrollSensitivity
+        {
+            get { return _hoverScrollSensitivity; }
+            set { SetProperty(ref _hoverScrollSensitivity, value); }
         }
 
         [PropertyRange(0.0, 1.0, TickFrequency = 0.1, IsEditable = true, HasDecimalPoint = true)]

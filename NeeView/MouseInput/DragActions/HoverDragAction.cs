@@ -61,8 +61,9 @@ namespace NeeView
             /// <param name="span">scroll time</param>
             private void HoverScroll(Point point, TimeSpan span)
             {
-                var rateX = point.X / Context.ViewRect.Width * -2.0;
-                var rateY = point.Y / Context.ViewRect.Height * -2.0;
+                var rate = _mouseConfig.HoverScrollSensitivity * -1.0;
+                var rateX = point.X / Context.ViewRect.Width * rate;
+                var rateY = point.Y / Context.ViewRect.Height * rate;
                 HoverScroll(rateX, rateY, span);
             }
 

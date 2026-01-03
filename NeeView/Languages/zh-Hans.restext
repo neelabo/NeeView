@@ -1163,6 +1163,7 @@ MouseConfig.GestureMinimumDistance=鼠标手势笔划 (像素)
 MouseConfig.GestureMinimumDistance.Remarks=移动这个距离则视为手势笔划。
 MouseConfig.HoverScrollDuration=悬停滚动时间 (秒)
 MouseConfig.HoverScrollDuration.Remarks=时间越长，滚动越平滑。
+MouseConfig.HoverScrollSensitivity=
 MouseConfig.InertiaSensitivity=惯性灵敏度
 MouseConfig.IsCursorHideEnabled=没有鼠标操作时隐藏光标
 MouseConfig.IsCursorHideEnabled.Remarks=如果在设定时间内未操作鼠标，则隐藏光标。
@@ -2043,7 +2044,6 @@ ToggleBookmarkCommand.On=已添加书签
 ToggleBookmarkCommand.Remarks=切换当前已打开书籍的书签。
 ToggleBookmarkCommandParameter.Folder=目标书签文件夹
 ToggleBookmarkCommandParameter.Folder.Remarks=需要“bookmark:”前缀。如果留空，则自动检测文件夹。
-”
 ToggleBookOrderCommand=切换书籍顺序
 ToggleBookOrderCommand.Remarks=依次切换书籍顺序。
 ToggleBookReadOrderCommand=切换右开/左开

@@ -1170,6 +1170,7 @@ MouseConfig.GestureMinimumDistance=Mouse gesture stroke (pixel)
 MouseConfig.GestureMinimumDistance.Remarks=By moving this distance, it is judged as a gesture stroke.
 MouseConfig.HoverScrollDuration=Hover scroll time (sec)
 MouseConfig.HoverScrollDuration.Remarks=The longer the time, the smoother the scroll.
+MouseConfig.HoverScrollSensitivity=Hover Scroll Sensitivity
 MouseConfig.InertiaSensitivity=Inertia sensitivity
 MouseConfig.IsCursorHideEnabled=Hide the cursor with no mouse operation
 MouseConfig.IsCursorHideEnabled.Remarks=Hide the cursor if the mouse is not operated for the set time.

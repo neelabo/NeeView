@@ -1170,6 +1170,7 @@ MouseConfig.GestureMinimumDistance=Ход жеста мыши (пикс.)
 MouseConfig.GestureMinimumDistance.Remarks=При перемещении на это расстояние оно расценивается как ход жеста.
 MouseConfig.HoverScrollDuration=Время прокрутки при наведении (сек)
 MouseConfig.HoverScrollDuration.Remarks=Чем дольше время, тем плавнее прокрутка.
+MouseConfig.HoverScrollSensitivity=
 MouseConfig.InertiaSensitivity=Чувствительность инерции
 MouseConfig.IsCursorHideEnabled=Скрывать курсор при бездействии мыши
 MouseConfig.IsCursorHideEnabled.Remarks=Скрывать курсор, если мышь не используется в течение установленного времени.
