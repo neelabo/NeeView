@@ -962,7 +962,7 @@ $build_x64_fd = $false
 $revision = (& git rev-parse --short HEAD).ToString()
 
 $baseVersion = Get-BaseVersion ..\NeeViewVersion.xml
-$dateVersion = (Get-Date).ToString("MMdd") 
+$dateVersion = (Get-Date).ToString("yyMMdd") 
 $packageAlphaVersion = (Get-LatestPreReleaseVersion $baseVersion "Alpha") + 1
 $packageBetaVersion = (Get-LatestPreReleaseVersion $baseVersion "Beta") + 1
 Update-Version $baseVersion
