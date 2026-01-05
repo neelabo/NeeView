@@ -745,8 +745,7 @@ namespace NeeView.Media.Imaging.Metadata
         {
             foreach (var directory in directories)
             {
-                var location = directory.GetGeoLocation();
-                if (location != null)
+                if (directory.TryGetGeoLocation(out GeoLocation location))
                 {
                     var reference = location.Latitude < 0.0 ? "S" : "N";
                     var degree = Math.Abs(location.Latitude);
@@ -761,8 +760,7 @@ namespace NeeView.Media.Imaging.Metadata
         {
             foreach (var directory in directories)
             {
-                var location = directory.GetGeoLocation();
-                if (location != null)
+                if (directory.TryGetGeoLocation(out GeoLocation location))
                 {
                     var reference = location.Longitude < 0.0 ? "W" : "E";
                     var degree = Math.Abs(location.Longitude);
@@ -772,7 +770,6 @@ namespace NeeView.Media.Imaging.Metadata
 
             return null;
         }
-
 
         private double? GetGPSAltitude(GpsDirectory directory)
         {
