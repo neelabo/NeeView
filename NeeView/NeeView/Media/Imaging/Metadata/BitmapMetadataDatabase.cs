@@ -51,9 +51,22 @@ namespace NeeView.Media.Imaging.Metadata
             _extraMap = CreateExtraMap(accessor);
             this.Format = accessor.GetFormat();
 
-            // NOTE: 既定のフォーマット以外はすべてOrientation適用済として処理する。
-            // NOTE: おそらくコーデックによって変わるが、それを判断する情報がないため。
-            this.IsOrientationEnabled = false;
+            this.IsOrientationEnabled = IsOriantationEnabled(this.Format);
+        }
+
+        // ピクセルデータの回転補正を行うかどうか
+        // コーデックによって Orientation 適用済みだったりする
+        // TODO: 確認が取れ次第対応する
+        private bool IsOriantationEnabled(string? format)
+        {
+            switch (format?.ToLowerInvariant())
+            {
+                case "avif":
+                case "heif":
+                   return false;
+                default:
+                    return true;
+            }
         }
 
 
