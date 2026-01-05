@@ -35,7 +35,7 @@ namespace NeeView
 
             if (_cache.Array is not null)
             {
-                return new MemoryStream(_cache.Array, _cache.Offset, _cache.Count, false);
+                return new MemoryStream(_cache.Array, _cache.Offset, _cache.Count, false, true);
             }
             else
             {

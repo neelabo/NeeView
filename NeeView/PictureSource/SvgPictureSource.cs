@@ -37,7 +37,7 @@ namespace NeeView
 
             using (var outStream = new MemoryStream())
             {
-                var encoder = DefaultBitmapFactory.CreateEncoder(format, quality);
+                var encoder = BitmapFactoryTools.CreateEncoder(format, quality);
                 encoder.Frames.Add(BitmapFrame.Create(bitmap));
                 encoder.Save(outStream);
                 return outStream.ToArray();

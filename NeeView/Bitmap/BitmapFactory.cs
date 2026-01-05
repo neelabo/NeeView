@@ -12,13 +12,13 @@ namespace NeeView
     /// <summary>
     /// Bitmap生成
     /// </summary>
-    public class BitmapFactory
+    public class BitmapFactory 
     {
         private readonly DefaultBitmapFactory _default = new();
         private readonly MagicScalerBitmapFactory _magicScaler = new();
 
 
-        public BitmapImage CreateBitmapSource(Stream stream, BitmapInfo? info, Size size, BitmapCreateSetting setting, CancellationToken token)
+        public BitmapSource CreateBitmapSource(Stream stream, BitmapInfo? info, Size size, BitmapCreateSetting setting, CancellationToken token)
         {
             // by MagicScaler
             if (!size.IsEmpty && setting.Mode == BitmapCreateMode.HighQuality)
@@ -63,7 +63,7 @@ namespace NeeView
         /// <remarks>
         /// This is the processing for WIC that MagicScaler does not support.
         /// </remarks>
-        private BitmapImage CreateBitmapSourceWithMagicScaler(Stream stream, BitmapInfo? info, Size size, BitmapCreateSetting setting, CancellationToken token)
+        private BitmapSource CreateBitmapSourceWithMagicScaler(Stream stream, BitmapInfo? info, Size size, BitmapCreateSetting setting, CancellationToken token)
         {
             // convert stream to raw size BitmapImage using default decoder
             BitmapSource bitmap = _default.Create(stream, info, Size.Empty, token);

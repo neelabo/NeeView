@@ -11,7 +11,7 @@ namespace NeeView
         {
             try
             {
-                var pictureInfo = createPictureInfo ? await PictureInfo.CreateAsync(streamSource, ".NET BitmapImage", token) : null;
+                var pictureInfo = createPictureInfo ? await PictureInfo.CreateAsync(streamSource, "Default", token) : null;
                 await Task.CompletedTask;
                 var data = createSource ? new BitmapPageData(streamSource) : null;
                 return BitmapPageSource.Create(data, pictureInfo, this);
