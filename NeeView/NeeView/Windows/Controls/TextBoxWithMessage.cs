@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Interop;
 
 namespace NeeView.Windows.Controls
 {
@@ -29,7 +19,7 @@ namespace NeeView.Windows.Controls
         }
 
         public static readonly DependencyProperty TextProperty =
-            DependencyProperty.Register("Text", typeof(string), typeof(TextBoxWithMessage), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(Text), typeof(string), typeof(TextBoxWithMessage), new PropertyMetadata(null));
 
 
         public string EmptyMessage
@@ -39,6 +29,33 @@ namespace NeeView.Windows.Controls
         }
 
         public static readonly DependencyProperty EmptyMessageProperty =
-            DependencyProperty.Register("EmptyMessage", typeof(string), typeof(TextBoxWithMessage), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(EmptyMessage), typeof(string), typeof(TextBoxWithMessage), new PropertyMetadata(null));
+
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            UpdateTextBinding();
+        }
+
+        // NOTE: Text の Binding 自体の変更には対応していない。現状では初期化時だけ。
+        private void UpdateTextBinding()
+        {
+            var textBox = GetTemplateChild("PART_InputTextBox") as TextBox;
+            if (textBox is null) return;
+
+            var textBinding = BindingOperations.GetBinding(this, TextProperty);
+            var updateSourceTrigger = textBinding?.UpdateSourceTrigger ?? UpdateSourceTrigger.Default;
+
+            var binding = new Binding(nameof(Text))
+            {
+                Source = this,
+                Mode = BindingMode.TwoWay,
+                UpdateSourceTrigger = updateSourceTrigger,
+            };
+
+            textBox.SetBinding(TextBox.TextProperty, binding);
+        }
+
     }
 }

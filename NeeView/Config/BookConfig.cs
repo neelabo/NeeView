@@ -3,18 +3,21 @@ using NeeLaboratory.ComponentModel;
 using NeeView.Text;
 using NeeView.Windows.Property;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using System.Windows.Media;
 
 namespace NeeView
 {
     public class BookConfig : BindableBase
     {
-        public static StringCollection DefaultExcludes { get; } = new StringCollection("__MACOSX;.DS_Store");
+        public static StringCollection DefaultExcludeRegexes { get; } = new StringCollection("^__MACOSX$;^\\.DS_Store$");
 
         private double _wideRatio = 1.0;
-        private StringCollection _excludes = (StringCollection)DefaultExcludes.Clone();
+        private StringCollection _excludeRegexes = (StringCollection)DefaultExcludeRegexes.Clone();
         private PageEndAction _pageEndAction;
         private bool _resetNextBookPage = true;
         private bool _isPrioritizeBookMove = false;
@@ -40,7 +43,7 @@ namespace NeeView
         private WidePageVerticalAlignment _widePageVerticalAlignment = WidePageVerticalAlignment.Center;
         private Color _loadingPageColor = Color.FromRgb(0xE0, 0xE0, 0xE0);
         private int _bookThumbnailDepth = 2;
-
+        private readonly RegexCollectionCache _excludeRegexCache = new();
 
         /// <summary>
         /// 横長画像判定用比率
@@ -53,13 +56,13 @@ namespace NeeView
         }
 
         /// <summary>
-        /// 除外フォルダー
+        /// ページ除外パターン (正規表現)
         /// </summary>
         [PropertyMember]
-        public StringCollection Excludes
+        public StringCollection ExcludeRegexes
         {
-            get { return _excludes; }
-            set { SetProperty(ref _excludes, value); }
+            get { return _excludeRegexes; }
+            set { SetProperty(ref _excludeRegexes, value); }
         }
 
         /// <summary>
@@ -301,6 +304,51 @@ namespace NeeView
             set { FolderSortOrder = value ? FolderSortOrder.Last : FolderSortOrder.First; }
         }
 
+        /// <summary>
+        /// 除外フォルダー
+        /// </summary>
+        [Obsolete("no used"), Alternative(nameof(ExcludeRegexes), 45, ScriptErrorLevel.Warning)] // ver.45
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public StringCollection? Excludes
+        {
+            get { return null; }
+            set
+            {
+                if (value is null) return;
+                ExcludeRegexes = new StringCollection(value.Items.Select(e => $"^{Regex.Escape(e)}$"));
+            }
+        }
+
         #endregion
+
+
+        /// <summary>
+        /// 除外パターンを正規表現で取得する
+        /// </summary>
+        /// <returns></returns>
+        public List<Regex> GetExcludeRegexes()
+        {
+            return _excludeRegexCache.GetRegexs(ExcludeRegexes);
+        }
+    }
+
+
+    /// <summary>
+    /// StringCollectionで定義された正規表現の正規表現インスタンス キャッシュ
+    /// </summary>
+    public class RegexCollectionCache
+    {
+        private List<Regex> _regexs = new();
+        private StringCollection _sourceCache = new();
+
+        public List<Regex> GetRegexs(StringCollection source)
+        {
+            if (!source.Equals(_sourceCache))
+            {
+                _sourceCache = (StringCollection)source.Clone();
+                _regexs = _sourceCache.Items.Select(e => new Regex(e, RegexOptions.IgnoreCase | RegexOptions.Compiled)).ToList();
+            }
+            return _regexs;
+        }
     }
 }

@@ -340,7 +340,7 @@ namespace NeeView
                 PagesSorting?.Invoke(this, EventArgs.Empty);
 
                 //Debug.WriteLine($"Sort {sortMode} ...");
-                var pages = SelectSearchPages(_sourcePages, searchKeyword, token);
+                var pages = SearchPages(_sourcePages, searchKeyword, token);
                 pages = SortPages(pages, sortMode, sortSeed, token);
 
                 if (!pages.Any())
@@ -373,7 +373,7 @@ namespace NeeView
             return _searcher.Analyze(keyword);
         }
 
-        private IEnumerable<Page> SelectSearchPages(IEnumerable<Page> pages, string keyword, CancellationToken token)
+        private IEnumerable<Page> SearchPages(IEnumerable<Page> pages, string keyword, CancellationToken token)
         {
             if (!pages.Any()) return pages;
             if (string.IsNullOrEmpty(keyword)) return pages;
@@ -468,8 +468,8 @@ namespace NeeView
                 if (x is null) return (y is null) ? 0 : -1;
                 if (y is null) return 1;
 
-                var xName = x.GetEntryFullNameTokens();
-                var yName = y.GetEntryFullNameTokens();
+                var xName = x.GetEntryNameTokens();
+                var yName = y.GetEntryNameTokens();
 
                 var limit = Math.Min(xName.Length, yName.Length);
                 for (int i = 0; i < limit; ++i)

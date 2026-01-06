@@ -1,6 +1,7 @@
 ﻿using NeeLaboratory.Generators;
 using NeeView.Properties;
 using NeeView.Text;
+using NeeView.Windows.Property;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -30,7 +31,8 @@ namespace NeeView.Setting
         {
             InitializeComponent();
             this.Root.DataContext = this;
-            this.AddButton.Content = TextResources.GetString("Word.Add") + "...";
+            this.AddButton.Content = TextResources.GetString("Word.Add");
+            this.EditButton.Content = TextResources.GetString("Word.Edit");
             this.RemoveButton.Content = TextResources.GetString("Word.Remove");
             this.ResetButton.Content = TextResources.GetString("Word.Reset");
 
@@ -130,6 +132,10 @@ namespace NeeView.Setting
 
         public bool IsResetVisible => IsAlwaysResetEnabled || DefaultCollection != null;
 
+        public bool IsRegexRuleEnabled { get; set; }
+
+        public bool IsEditable { get; set; }
+
 
         private void SettingItemCollectionControl_CollectionChanged(object? sender, CollectionChangeEventArgs e)
         {
@@ -140,21 +146,32 @@ namespace NeeView.Setting
         {
             if (Collection == null) return;
 
-            var dialog = new AddParameterDialog();
-            dialog.Title = AddDialogTitle ?? TextResources.GetString("AddParameterDialog.Tile");
-            dialog.Header = AddDialogHeader ?? "";
-            dialog.Owner = Window.GetWindow(this);
-            dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            var dialog = CreateAddParameterDialog(TextResources.GetString("AddParameterDialog.Tile"), string.Empty);
             var result = dialog.ShowDialog();
+            var newItem = dialog.Input?.Trim();
             if (result == true)
             {
-                var input = this.Collection.Add(dialog.Input);
-                RaisePropertyChanged(nameof(Items));
-                this.CollectionListBox.Items.Refresh();
-                this.CollectionListBox.SelectedItem = input;
-                this.CollectionListBox.ScrollIntoView(input);
+                AddItem(newItem, true, true);
+            }
+        }
 
-                CollectionChanged?.Invoke(this, new CollectionChangeEventArgs(CollectionChangeAction.Add, input));
+        private void EditButton_Click(object? sender, RoutedEventArgs e)
+        {
+            if (!IsEditable) return;
+            if (Collection == null) return;
+
+            if (this.CollectionListBox.SelectedItem is not string item)
+            {
+                return;
+            }
+
+            var dialog = CreateAddParameterDialog(TextResources.GetString("AddParameterDialog.Tile.Edit"), item);
+            var result = dialog.ShowDialog();
+            var newItem = dialog.Input?.Trim();
+            if (result == true && newItem != item)
+            {
+                RemoveItem(item, true, true);
+                AddItem(newItem, true, true);
             }
         }
 
@@ -167,16 +184,62 @@ namespace NeeView.Setting
                 return;
             }
 
-            var index = Collection.Items.IndexOf(item);
+            RemoveItem(item, true, true);
+        }
 
-            Collection.Remove(item);
-            RaisePropertyChanged(nameof(Items));
-            this.CollectionListBox.Items.Refresh();
+        private AddParameterDialog CreateAddParameterDialog(string defaultTitle, string input)
+        {
+            var rule = IsRegexRuleEnabled ? new RegexValidationRule() : null;
+            var dialog = new AddParameterDialog(rule);
+            dialog.Title = AddDialogTitle ?? defaultTitle;
+            dialog.Header = AddDialogHeader ?? ""; ;
+            dialog.Owner = Window.GetWindow(this);
+            dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            dialog.Input = input;
+            return dialog;
+        }
 
-            index = Math.Min(index, Collection.Items.Count - 1);
-            if (index >= 0)
+        public void AddItem(string? item, bool updateView, bool updateSelect)
+        {
+            if (string.IsNullOrEmpty(item)) return;
+
+            item = this.Collection.Add(item);
+
+            if (updateView)
             {
-                this.CollectionListBox.SelectedIndex = index;
+                RaisePropertyChanged(nameof(Items));
+                this.CollectionListBox.Items.Refresh();
+            }
+
+            if (updateSelect)
+            {
+                this.CollectionListBox.SelectedItem = item;
+                this.CollectionListBox.ScrollIntoView(item);
+            }
+
+            CollectionChanged?.Invoke(this, new CollectionChangeEventArgs(CollectionChangeAction.Add, item));
+        }
+
+        private void RemoveItem(string item, bool updateView, bool updateSelect)
+        {
+            var index = Collection.Items.IndexOf(item);
+            if (index < 0) return;
+
+            this.Collection.Remove(item);
+
+            if (updateView)
+            {
+                RaisePropertyChanged(nameof(Items));
+                this.CollectionListBox.Items.Refresh();
+            }
+
+            if (updateSelect)
+            {
+                index = Math.Min(index, Collection.Items.Count - 1);
+                if (index >= 0)
+                {
+                    this.CollectionListBox.SelectedIndex = index;
+                }
             }
 
             CollectionChanged?.Invoke(this, new CollectionChangeEventArgs(CollectionChangeAction.Remove, item));
@@ -188,7 +251,7 @@ namespace NeeView.Setting
         }
 
         private void Reset()
-        { 
+        {
             var defaultCollection = DefaultCollection ?? Description?.GetDefaultCollection();
 
             if (Collection == null || defaultCollection == null) return;
@@ -205,6 +268,11 @@ namespace NeeView.Setting
             if (e.Key == Key.Delete)
             {
                 RemoveButton_Click(sender, e);
+                e.Handled = true;
+            }
+            else if (e.Key == Key.F2)
+            {
+                EditButton_Click(sender, e);
                 e.Handled = true;
             }
         }

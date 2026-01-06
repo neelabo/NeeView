@@ -350,18 +350,6 @@ namespace NeeView
         }
 
         /// <summary>
-        /// 除外フォルダー判定
-        /// </summary>
-        /// <param name="path">判定するパス</param>
-        /// <returns></returns>
-        public bool IsExcludedFolder(string path)
-        {
-            if (_disposedValue) return false;
-
-            return Config.Current.Book.Excludes.Contains(LoosePath.GetFileName(path));
-        }
-
-        /// <summary>
         /// アーカイバー作成
         /// stream に null 以外を指定すると、そのストリームを使用してアーカイブを開きます。
         /// この stream はアーカイブ廃棄時に Dispose されます。

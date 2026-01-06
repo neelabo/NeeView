@@ -187,7 +187,14 @@ namespace NeeView.Windows.Property
                 case TypeCode.Boolean:
                     return new PropertyValue_Boolean(this);
                 case TypeCode.String:
-                    return new PropertyValue_String(this);
+                    if (attribute.IsRegex)
+                    {
+                        return new PropertyValue_StringRegex(this);
+                    }
+                    else
+                    {
+                        return new PropertyValue_String(this);
+                    }
                 case TypeCode.Int32:
                     return new PropertyValue_Integer(this);
                 case TypeCode.Double:

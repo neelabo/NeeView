@@ -140,6 +140,14 @@ namespace NeeView.Windows.Property
     }
 
 
+    public class PropertyValue_StringRegex : PropertyValue_String
+    {
+        public PropertyValue_StringRegex(PropertyMemberElement setter) : base(setter)
+        {
+        }
+    }
+
+
     public class PropertyValue_StringMap : PropertyValue<string>
     {
         private readonly Func<KeyValuePairList<string, string>>? _getMap;

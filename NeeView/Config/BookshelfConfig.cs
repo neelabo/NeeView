@@ -120,7 +120,7 @@ namespace NeeView
         /// <summary>
         /// 項目除外パターン
         /// </summary>
-        [PropertyMember]
+        [PropertyMember(IsRegex = true)]
         public string? ExcludePattern
         {
             get { return _excludePattern; }

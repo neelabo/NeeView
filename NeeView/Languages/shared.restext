@@ -11,6 +11,7 @@ AutoScrollOnCommand=@Word.AutoScroll
 BackgroundConfig.CustomBackground=@Word.CustomBackground
 BookAccessor.CreationTime=@Word.CreationTime
 BookAccessor.LastWriteTime=@Word.LastWriteTime
+BookConfig.ExcludeRegexes.Remarks=@BookshelfConfig.ExcludePattern.Remarks
 BookConfig.FolderSortOrder=@FolderSortOrder
 BookConfig.FrameSpace.Remarks=@BookConfig.ContentsSpace.Remarks
 BookConfigAccessor.AutoRotate=@Word.AutoRotate

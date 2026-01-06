@@ -318,7 +318,7 @@ namespace NeeView
         {
             return format switch
             {
-                PageNameFormat.Smart => GetSmartFullName(),
+                PageNameFormat.Smart => GetSmartlDisplayString(),
                 PageNameFormat.NameOnly => EntryLastName,
                 PageNameFormat.PageNumber => (Index + 1).ToString(),
                 _ => EntryName,
@@ -339,18 +339,18 @@ namespace NeeView
         #region Page functions
 
         // ページ名：ソート用分割
-        public string[] GetEntryFullNameTokens()
+        public string[] GetEntryNameTokens()
         {
             return LoosePath.Split(EntryName);
         }
 
         // ページ名：プレフィックスを除いたフルパス
-        public string GetSmartFullName()
+        public string GetSmartlDisplayString()
         {
             return EntrySmartName.Replace("\\", " > ", StringComparison.Ordinal);
         }
 
-        public string GetSmartDirectoryName()
+        public string GetSmartDirectoryDisplayString()
         {
             return LoosePath.GetDirectoryName(EntrySmartName).Replace("\\", " > ", StringComparison.Ordinal);
         }

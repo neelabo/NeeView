@@ -9,6 +9,7 @@
         Style="{StaticResource ChromeDialogStyle}"
         UseLayoutRounding="True"
         Title="AddParameterDialog" SizeToContent="Height" Width="512" ResizeMode="NoResize">
+
     <DockPanel Margin="5">
         <DockPanel.Resources>
             <Style TargetType="{x:Type Button}" BasedOn="{StaticResource NVButton}">
@@ -25,7 +26,8 @@
 
         <StackPanel VerticalAlignment="Top" Margin="5" FocusManager.FocusedElement="{Binding ElementName=InputTextBox}">
             <TextBlock x:Name="HeaderLabel" Text="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=Header}" Margin="5"/>
-            <TextBox x:Name="InputTextBox" Text="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=Input}" Margin="5" PreviewKeyDown="InputTextBox_PreviewKeyDown"/>
+            <TextBox x:Name="InputTextBox" Validation.ErrorTemplate="{StaticResource NVValidationTemplate}"
+                Margin="5" PreviewKeyDown="InputTextBox_PreviewKeyDown"/>
         </StackPanel>
 
     </DockPanel>

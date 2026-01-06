@@ -541,7 +541,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type nwc:TextBoxWithMessage}">
                     <Grid>
-                        <TextBox x:Name="PART_InputTextBox" VerticalContentAlignment="Center" Text="{Binding Text, RelativeSource={RelativeSource Mode=TemplatedParent}}"/>
+                        <TextBox x:Name="PART_InputTextBox" VerticalContentAlignment="Center"/>
                         <TextBlock Text="{Binding EmptyMessage, RelativeSource={RelativeSource Mode=TemplatedParent}}" VerticalAlignment="Center" Margin="4,0" Foreground="Gray" IsHitTestVisible="False">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">

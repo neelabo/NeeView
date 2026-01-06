@@ -7,6 +7,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
 
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </UserControl.Resources>
+
     <DockPanel x:Name="Root" Height="150" KeyboardNavigation.TabNavigation="Local">
         <DockPanel.Resources>
             <Style x:Key="MyButton" TargetType="{x:Type Button}" BasedOn="{StaticResource NVButton}">
@@ -20,7 +24,19 @@
         </DockPanel.Resources>
         
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button x:Name="AddButton" DockPanel.Dock="Right" Style="{StaticResource MyButton}" Content="Add..." Click="AddButton_Click" TabIndex="2"/>
+            <Button x:Name="AddButton" DockPanel.Dock="Right" Style="{StaticResource MyButton}" Content="Add" Click="AddButton_Click" TabIndex="2"/>
+            <Button x:Name="EditButton" DockPanel.Dock="Right" Content="Edit" Click="EditButton_Click" TabIndex="2">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource MyButton}">
+                        <Setter Property="Visibility" Value="{Binding IsEditable, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=CollectionListBox, Path=SelectedItem}" Value="{x:Null}">
+                                <Setter Property="IsEnabled" Value="False"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
             <Button x:Name="RemoveButton" DockPanel.Dock="Right" Content="Remove" Click="RemoveButton_Click" TabIndex="3">
                 <Button.Style>
                     <Style TargetType="Button" BasedOn="{StaticResource MyButton}">

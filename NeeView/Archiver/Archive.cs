@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -282,11 +283,13 @@ namespace NeeView
                 return _entries;
             }
 
+            var excludeRegexes = Config.Current.Book.GetExcludeRegexes();
+
             // NOTE: MTAスレッドで実行。SevenZipSharpのCOM例外対策
             _entries = await Task.Run(async () =>
             {
                 return (await GetEntriesInnerAsync(decrypt, token))
-                    .Where(e => !IsExcludedPath(e.EntryName))
+                    .Where(e => !IsExcludedPath(excludeRegexes, e.EntryName))
                     .ToList();
             });
 
@@ -296,9 +299,9 @@ namespace NeeView
         /// <summary>
         /// 除外パス判定
         /// </summary>
-        private bool IsExcludedPath(string path)
+        private static bool IsExcludedPath(IEnumerable<Regex> regexes, string path)
         {
-            return path.Split('/', '\\').Any(e => Config.Current.Book.Excludes.ConainsOrdinalIgnoreCase(e));
+            return path.Split('/', '\\').Any(e => regexes.Any(r => r.IsMatch(e)));
         }
 
         /// <summary>

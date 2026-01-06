@@ -24,6 +24,18 @@
         <nvc:TextBoxWithMessage Text="{Binding Value, Mode=TwoWay}" EmptyMessage="{Binding EmptyMessage}"/>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type local:PropertyValue_StringRegex}">
+        <nvc:TextBoxWithMessage EmptyMessage="{Binding EmptyMessage}" Validation.ErrorTemplate="{StaticResource NVValidationTemplate}">
+            <nvc:TextBoxWithMessage.Text>
+                <Binding Path="Value" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <local:RegexValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+            </nvc:TextBoxWithMessage.Text>
+        </nvc:TextBoxWithMessage>
+    </DataTemplate>
+
     <DataTemplate DataType="{x:Type local:PropertyValue_Integer}">
         <nvc:EnterTriggerTextBox Text="{Binding Value}"/>
     </DataTemplate>

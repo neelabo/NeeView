@@ -85,6 +85,13 @@
 
     <!--#endregion NVFocusVisual-->
 
+    <ControlTemplate x:Key="NVValidationTemplate">
+        <Grid>
+            <AdornedElementPlaceholder/>
+            <Border BorderBrush="Crimson" BorderThickness="1"/>
+        </Grid>
+    </ControlTemplate>
+
     <Style x:Key="ResizeGripStyle" TargetType="{x:Type FrameworkElement}">
         <Setter Property="WindowChrome.ResizeGripDirection" Value="BottomRight"/>
         <Setter Property="Visibility" Value="Visible"/>

@@ -20,15 +20,22 @@ namespace NeeView.Setting
     /// </summary>
     public partial class AddParameterDialog : Window
     {
-        public AddParameterDialog()
+        public AddParameterDialog(ValidationRule? rule)
         {
             InitializeComponent();
 
-            this.AddButton.Content = TextResources.GetString("Word.Add");
+            this.AddButton.Content = TextResources.GetString("Word.OK");
             this.CancelButton.Content = TextResources.GetString("Word.Cancel");
 
             this.Loaded += AddParameterDialog_Loaded;
             this.KeyDown += AddParameterDialog_KeyDown;
+
+            var binding = new Binding(nameof(Input)) { Source = this, Mode = BindingMode.TwoWay, UpdateSourceTrigger=UpdateSourceTrigger.PropertyChanged };
+            if (rule != null)
+            {
+                binding.ValidationRules.Add(rule);
+            }
+            this.InputTextBox.SetBinding(TextBox.TextProperty, binding);
         }
 
         private void AddParameterDialog_KeyDown(object sender, KeyEventArgs e)
@@ -40,7 +47,6 @@ namespace NeeView.Setting
             }
         }
 
-        #region DependencyProperties
 
         public string Header
         {
@@ -61,9 +67,6 @@ namespace NeeView.Setting
         public static readonly DependencyProperty InputProperty =
             DependencyProperty.Register("Input", typeof(string), typeof(AddParameterDialog), new PropertyMetadata(null));
 
-        #endregion
-
-        #region Methods
 
         private void AddParameterDialog_Loaded(object sender, RoutedEventArgs e)
         {
@@ -72,6 +75,9 @@ namespace NeeView.Setting
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
+            if (Validation.GetHasError(this.InputTextBox)) return;
+            if (string.IsNullOrEmpty(Input.Trim())) return;
+            
             this.DialogResult = true;
             Close();
         }
@@ -97,8 +103,5 @@ namespace NeeView.Setting
                 e.Handled = true;
             }
         }
-
-        #endregion
-
     }
 }
