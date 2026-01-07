@@ -150,6 +150,7 @@
                 </Popup>
 
                 <Button x:Name="SettingButton" Style="{StaticResource AddressIconButton}" Command="{Binding ToggleSettingWindowCommand}" TabIndex="23"
+                        Visibility="{Binding Config.MenuBar.IsSettingsButtonEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"
                         ToolTip="{properties:TextBinding Word.Settings}">
                     <Image Source="{StaticResource ic_settings_24px}" />
                 </Button>

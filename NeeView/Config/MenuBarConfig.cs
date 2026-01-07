@@ -11,6 +11,8 @@ namespace NeeView
         private bool _isAddressBarEnabled = true;
         private bool _isHamburgerMenu;
         private bool _isHideMenuInAutoHideMode = true;
+        private bool _isBookmarkDialogEnabled = true;
+        private bool _isSettingsButtonEnabled = true;
 
 
         [JsonIgnore]
@@ -21,7 +23,6 @@ namespace NeeView
             get { return _isVisible; }
             set { SetProperty(ref _isVisible, value); }
         }
-
 
         // メニューを自動的に隠す
         [PropertyMember]
@@ -39,14 +40,6 @@ namespace NeeView
             set { SetProperty(ref _isHideMenuInAutoHideMode, value); }
         }
 
-        // アドレスバーON/OFF
-        [PropertyMember]
-        public bool IsAddressBarEnabled
-        {
-            get { return _isAddressBarEnabled; }
-            set { SetProperty(ref _isAddressBarEnabled, value); }
-        }
-
         /// <summary>
         /// ハンバーガーメニューにする
         /// </summary>
@@ -55,6 +48,37 @@ namespace NeeView
         {
             get { return _isHamburgerMenu; }
             set { SetProperty(ref _isHamburgerMenu, value); }
+        }
+
+
+        /// <summary>
+        /// アドレスバーON/OFF
+        /// </summary>
+        [PropertyMember]
+        public bool IsAddressBarEnabled
+        {
+            get { return _isAddressBarEnabled; }
+            set { SetProperty(ref _isAddressBarEnabled, value); }
+        }
+
+        /// <summary>
+        /// アドレスバーのブックマークボタンでのダイアログ表示ON/OFF
+        /// </summary>
+        [PropertyMember]
+        public bool IsBookmarkDialogEnabled
+        {
+            get { return _isBookmarkDialogEnabled; }
+            set { SetProperty(ref _isBookmarkDialogEnabled, value); }
+        }
+
+        /// <summary>
+        /// アドレスバーの設定ボタンON/OFF
+        /// </summary>
+        [PropertyMember]
+        public bool IsSettingsButtonEnabled
+        {
+            get { return _isSettingsButtonEnabled; }
+            set { SetProperty(ref _isSettingsButtonEnabled, value); }
         }
     }
 }

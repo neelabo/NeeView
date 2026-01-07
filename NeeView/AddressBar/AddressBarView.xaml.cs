@@ -158,9 +158,16 @@ namespace NeeView
 
         private void BookmarkButton_Click(object sender, RoutedEventArgs e)
         {
-            if (CanOpenPopup(this.BookmarkPopup))
+            if (Config.Current.MenuBar.IsBookmarkDialogEnabled)
             {
-                this.BookmarkPopup.IsOpen = true;
+                if (CanOpenPopup(this.BookmarkPopup))
+                {
+                    this.BookmarkPopup.IsOpen = true;
+                }
+            }
+            else
+            {
+                BookOperation.Current.BookControl.ToggleBookmark();
             }
         }
 

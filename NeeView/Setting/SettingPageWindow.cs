@@ -50,6 +50,7 @@ namespace NeeView.Setting
             {
                 new SettingPageFonts(),
                 new SettingPageWindowTitle(),
+                new SettingPageMenuBar(),
             };
 
             this.Items = new List<SettingItem>();
@@ -72,7 +73,6 @@ namespace NeeView.Setting
             this.Items.Add(section);
 
             section = new SettingItemSection(TextResources.GetString("SettingPage.Window.Advance"));
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.MenuBar, nameof(MenuBarConfig.IsHamburgerMenu))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Window, nameof(WindowConfig.IsCaptionEmulateInFullScreen))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Window, nameof(WindowConfig.MouseActivateAndEat))));
             this.Items.Add(section);
@@ -129,6 +129,27 @@ namespace NeeView.Setting
             section.Children.Add(new SettingItemNote(TextResources.GetString("SettingPage.WindowTitle.Note"), TextResources.GetString("SettingPage.WindowTitle.Note.Title")));
 
             this.Items = new List<SettingItem>() { section };
+        }
+    }
+
+    /// <summary>
+    /// Setting: MenuBar
+    /// </summary>
+    public class SettingPageMenuBar : SettingPage
+    {
+        public SettingPageMenuBar() : base(TextResources.GetString("SettingPage.MenuBar"))
+        {
+            this.Items = new List<SettingItem>();
+
+            var section = new SettingItemSection(TextResources.GetString("SettingPage.MenuBar"));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.MenuBar, nameof(MenuBarConfig.IsHamburgerMenu))));
+            this.Items.Add(section);
+
+            section = new SettingItemSection(TextResources.GetString("SettingPage.AddressBar"));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.MenuBar, nameof(MenuBarConfig.IsAddressBarEnabled))));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.MenuBar, nameof(MenuBarConfig.IsSettingsButtonEnabled))));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.MenuBar, nameof(MenuBarConfig.IsBookmarkDialogEnabled))));
+            this.Items.Add(section);
         }
     }
 
