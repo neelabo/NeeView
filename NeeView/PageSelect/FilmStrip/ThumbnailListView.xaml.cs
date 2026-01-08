@@ -72,9 +72,11 @@ namespace NeeView
         // フィルムストリップのパネルコントロール
         private VirtualizingStackPanel? _listPanel;
 
+        // 項目を中央表示するためのTransform
+        private TranslateTransform _layoutTransform = new();
+
         private ThumbnailListViewModel? _vm;
         private bool _isThumbnailDirty;
-
 
         /// <summary>
         /// サムネイル更新要求を拒否する
@@ -96,6 +98,9 @@ namespace NeeView
 
             _commandResource = new ThumbnailListItemCommandResource(ThumbnailListItemDetailToolTip.Current);
             InitializeCommand();
+
+            this.ThumbnailListBox.HorizontalAlignment = HorizontalAlignment.Center;
+            this.ThumbnailListBox.RenderTransform = _layoutTransform;
 
             this.Root.IsVisibleChanged +=
                 (s, e) => this.IsContentVisible = (bool)e.NewValue;
@@ -221,39 +226,17 @@ namespace NeeView
             if (!this.IsVisible) return;
             if (!Config.Current.FilmStrip.IsEnabled) return;
 
+            // レイアウト補正をリセット
+            _layoutTransform.X = 0.0;
+
+            // 中央表示モードなら中央表示、そうでなければ通常表示
             if (Config.Current.FilmStrip.IsSelectedCenter)
             {
                 ScrollIntoViewIndexCenter(index);
             }
             else
             {
-                this.ThumbnailListBox.Width = double.NaN;
                 ScrollIntoViewIndex(this.ThumbnailListBox.SelectedIndex);
-            }
-
-            UpdateThumbnailListBoxAlign();
-        }
-
-        private void UpdateThumbnailListBoxAlign()
-        {
-            if (this.ThumbnailListBox.Width > this.Root.ActualWidth)
-            {
-                if (this.ThumbnailListBox.SelectedIndex <= 0)
-                {
-                    this.ThumbnailListBox.HorizontalAlignment = HorizontalAlignment.Left;
-                }
-                else if (this.ThumbnailListBox.SelectedIndex >= this.ThumbnailListBox.Items.Count - 1)
-                {
-                    this.ThumbnailListBox.HorizontalAlignment = HorizontalAlignment.Right;
-                }
-                else
-                {
-                    this.ThumbnailListBox.HorizontalAlignment = HorizontalAlignment.Center;
-                }
-            }
-            else
-            {
-                this.ThumbnailListBox.HorizontalAlignment = HorizontalAlignment.Center;
             }
         }
 
@@ -263,38 +246,33 @@ namespace NeeView
         private void ScrollIntoViewIndexCenter(int index)
         {
             if (index < 0) return;
+            if (_listPanel is null) return;
 
             Debug.Assert(VirtualizingStackPanel.GetScrollUnit(this.ThumbnailListBox) == ScrollUnit.Pixel);
 
-            // 項目の幅 取得
             double itemWidth = GetItemWidth();
             if (itemWidth <= 0.0) return;
 
-            // 表示領域の幅
-            double panelWidth = this.Root.ActualWidth;
+            // Set the horizontal offset to center the item
+            var viewWidth = _listPanel.ActualWidth;
+            var itemLeft = itemWidth * index;
+            var horizontalOffset = Math.Floor(itemLeft + itemWidth * 0.5 - viewWidth * 0.5);
+            _listPanel.SetHorizontalOffset(horizontalOffset);
 
-            // 表示項目数を計算 (なるべく奇数)
-            int itemsCount = (int)(panelWidth / itemWidth) / 2 * 2 + 3;
-            if (itemsCount < 1) itemsCount = 1;
-
-            // 表示先頭項目
-            int topIndex = index - itemsCount / 2;
-            if (topIndex < 0) topIndex = 0;
-
-            // 少項目数補正
-            var totalCount = this.ThumbnailListBox.Items.Count;
-            if (totalCount < itemsCount)
+            // Set the panel layout to center the item
+            var scrollableWidth = Math.Max(0, itemWidth * this.ThumbnailListBox.Items.Count - viewWidth);
+            var layoutX = 0.0;
+            if (horizontalOffset < 0)
             {
-                itemsCount = totalCount;
-                topIndex = 0;
+                layoutX = -horizontalOffset;
             }
+            else if (horizontalOffset > scrollableWidth)
+            {
+                layoutX = (scrollableWidth - horizontalOffset);
+            }
+            _layoutTransform.X = layoutX;
 
-            // ListBoxの幅を表示項目数にあわせる
-            this.ThumbnailListBox.Width = itemWidth * itemsCount + 18; // TODO: 余裕が必要？
-
-            // 表示項目先頭指定
-            var horizontalOffset = topIndex * itemWidth;
-            _listPanel?.SetHorizontalOffset(horizontalOffset);
+            //Debug.WriteLine($"scrolableWidth={scrollableWidth}, offset={horizontalOffset}, layoutX={layoutX}");
         }
 
         /// <summary>
