@@ -3,7 +3,7 @@
 <?endif ?>
 
 <?define UpgradeCode = "6db6317b-b2a3-42b3-aa6e-102b0d7bb0dc" ?>
-<?define IdentName = "NeeViewX64" ?>
+<?define IdentName = "NeeView" ?>
 
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
   <Package Name="$(var.ProductName)" Version="$(var.ProductVersion)" Language="!(loc.language)" Codepage="!(loc.codepage)" Manufacturer="NeeLaboratory" UpgradeCode="$(var.UpgradeCode)" Scope="perUser">
@@ -16,14 +16,11 @@
     <Feature Id="ProductFeature" Title="NeeView" Level="1" AllowAdvertise="no" Display="expand" ConfigurableDirectory="INSTALLFOLDER" AllowAbsent="no">
       <ComponentGroupRef Id="ProductComponents" />
       <ComponentGroupRef Id="MainComponents" />
-      <Feature Id="ContextMenuFeature" Title="ContextMenu" Description="!(loc.contextMenuFeatureDescription)" Level="1" AllowAdvertise="no">
-        <ComponentGroupRef Id="RegistryComponents" />
-      </Feature>
     </Feature>
 
     <Property Id="MSIINSTALLPERUSER" Secure="yes" Value="1" />
 
-     <Property Id="OLD_PERMACHINE_FOUND">
+    <Property Id="OLD_PERMACHINE_FOUND">
       <RegistrySearch Id="SearchOldPerMachine" Type="raw" Root="HKLM" Key="SOFTWARE\NeeLaboratory\NeeView" Name="InstallDir"  />
     </Property>
 
@@ -48,7 +45,7 @@
       <RemoveShortcuts Condition="Installed AND NOT UPGRADINGPRODUCTCODE" />
     </InstallExecuteSequence>
 
-    <!-- CustomAction: Clear HKCU registry when uninstall -->
+    <!-- CustomAction: Clear registries  when uninstall -->
     <CustomAction Id="EXECUTE_CLEANUP" Execute="immediate" Impersonate="yes" Return="ignore" ExeCommand="--clear-registry" FileRef="EXE" />
     <InstallExecuteSequence>
       <Custom Action="EXECUTE_CLEANUP" After="InstallInitialize" Condition="(REMOVE = &quot;ALL&quot;) AND (NOT UPGRADINGPRODUCTCODE)" />
@@ -56,23 +53,4 @@
 
   </Package>
 
-  <Fragment>
-    <ComponentGroup Id="RegistryComponents" Directory="INSTALLFOLDER">
-      <Component>
-        <RegistryValue Root="HKCU" Key="SOFTWARE\Classes\*\shell\OpenIn$(var.IdentName)" Type="string" Value="!(loc.openInNeeView)" KeyPath="yes" />
-        <RegistryValue Root="HKCU" Key="SOFTWARE\Classes\*\shell\OpenIn$(var.IdentName)" Name="Icon" Type="string" Value="&quot;[INSTALLFOLDER]\NeeView.exe&quot;,0" />
-        <RegistryValue Root="HKCU" Key="SOFTWARE\Classes\*\shell\OpenIn$(var.IdentName)\command" Type="string" Value="&quot;[INSTALLFOLDER]\NeeView.exe&quot; &quot;%1&quot;" />
-      </Component>
-      <Component>
-        <RegistryValue Root="HKCU" Key="SOFTWARE\Classes\Directory\shell\OpenIn$(var.IdentName)" Type="string" Value="!(loc.openInNeeView)" KeyPath="yes" />
-        <RegistryValue Root="HKCU" Key="SOFTWARE\Classes\Directory\shell\OpenIn$(var.IdentName)" Name="Icon" Type="string" Value="&quot;[INSTALLFOLDER]\NeeView.exe&quot;,0" />
-        <RegistryValue Root="HKCU" Key="SOFTWARE\Classes\Directory\shell\OpenIn$(var.IdentName)\command" Type="string" Value="&quot;[INSTALLFOLDER]\NeeView.exe&quot; &quot;%1&quot;" />
-      </Component>
-      <Component>
-        <RegistryValue Root="HKCU" Key="SOFTWARE\Classes\Directory\Background\shell\OpenIn$(var.IdentName)" Type="string" Value="!(loc.openInNeeView)" KeyPath="yes" />
-        <RegistryValue Root="HKCU" Key="SOFTWARE\Classes\Directory\Background\shell\OpenIn$(var.IdentName)" Name="Icon" Type="string" Value="&quot;[INSTALLFOLDER]\NeeView.exe&quot;,0" />
-        <RegistryValue Root="HKCU" Key="SOFTWARE\Classes\Directory\Background\shell\OpenIn$(var.IdentName)\command" Type="string" Value="&quot;[INSTALLFOLDER]\NeeView.exe&quot; &quot;%V&quot;" />
-      </Component>
-    </ComponentGroup>
-  </Fragment>
 </Wix>
