@@ -4,4 +4,5 @@
     <String Id="downgradeErrorMessage" Value="A new version of NeeView has already been installed." />
     <String Id="openInNeeView" Value="Open in Nee&amp;View" />
     <String Id="contextMenuFeatureDescription" Value="Add &quot;Open in NeeView&quot; to the context menu." />
+    <String Id="perMachineErrorMessage" Value="An older version is already installed. Please uninstall it before proceeding. The new version will be installed per user."/>
 </WixLocalization>

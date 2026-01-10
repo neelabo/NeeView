@@ -18,7 +18,7 @@
       <File Source="!(bindpath.Append)\README.html" />
       <File Source="!(bindpath.Append)\README.ja-jp.html" />
       <Component>
-        <RegistryValue Root="HKLM" Key="SOFTWARE\NeeLaboratory\NeeView" Name="InstallDir" Type="string" Value="[INSTALLFOLDER]" KeyPath="yes" />
+        <RegistryValue Root="HKCU" Key="SOFTWARE\NeeLaboratory\NeeView" Name="InstallDir" Type="string" Value="[INSTALLFOLDER]" KeyPath="yes" />
      </Component>
     </ComponentGroup>
 

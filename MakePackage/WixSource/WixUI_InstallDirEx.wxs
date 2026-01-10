@@ -1,7 +1,5 @@
 ﻿<!-- Copyright (c) .NET Foundation and contributors. All rights reserved. Licensed under the Microsoft Reciprocal License. See LICENSE.TXT file in the project root for full license information. -->
 
-
-
 <!--
 First-time install dialog sequence:
  - WixUI_WelcomeDlg
@@ -43,18 +41,23 @@ Patch dialog sequence:
             <DialogRef Id="ResumeDlg" />
             <DialogRef Id="UserExit" />
             
+            <Dialog Id="OldPerMachineDetectedDlg" Width="260" Height="85" Title="Per-Machine Version Detected">
+                <Control Id="Text" Type="Text" X="10" Y="10" Width="240" Height="40"
+                    Text="!(loc.perMachineErrorMessage)"/>
+                <Control Id="OK" Type="PushButton" X="100" Y="60" Width="60" Height="17"
+                    Default="yes" Cancel="yes" Text="OK">
+                    <Publish Event="EndDialog" Value="Exit" />
+                </Control>
+            </Dialog>
+            
             <Publish Dialog="BrowseDlg" Control="OK" Event="DoAction" Value="WixUIValidatePath_$(sys.BUILDARCHSHORT)" Order="3" />
             <Publish Dialog="BrowseDlg" Control="OK" Event="SpawnDialog" Value="InvalidDirDlg" Order="4" Condition="NOT WIXUI_DONTVALIDATEPATH AND WIXUI_INSTALLDIR_VALID&lt;&gt;&quot;1&quot;" />
 
             <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999" />
 
-            <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="InstallDirDlg" Condition="NOT Installed" />
-            <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Condition="Installed AND PATCH" />
-
-            <!--
-            <Publish Dialog="LicenseAgreementDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg">1</Publish>
-            <Publish Dialog="LicenseAgreementDlg" Control="Next" Event="NewDialog" Value="InstallDirDlg">LicenseAccepted = "1"</Publish>
-            -->
+            <Publish Dialog="WelcomeDlg" Control="Next" Event="SpawnDialog" Value="OldPerMachineDetectedDlg" Order="1" Condition="OLD_PERMACHINE_FOUND" />
+            <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="InstallDirDlg" Order="2" Condition="NOT Installed AND NOT OLD_PERMACHINE_FOUND" />
+            <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="3" Condition="Installed AND PATCH" />
 
             <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" />
             <Publish Dialog="InstallDirDlg" Control="Next" Event="SetTargetPath" Value="[WIXUI_INSTALLDIR]" Order="1" />
