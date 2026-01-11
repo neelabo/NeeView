@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:NeeView.Setting"
              xmlns:nv="clr-namespace:NeeView"
              mc:Ignorable="d" 
+            xmlns:properties="clr-namespace:NeeView.Properties"
              d:DesignHeight="450" d:DesignWidth="800">
     
     <UserControl.Resources>
@@ -13,9 +14,15 @@
             <StackPanel >
                 <CheckBox IsChecked="{Binding IsEnabled}">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Extension}" MinWidth="64"/>
-                        <TextBlock Text="{Binding Description}" Margin="5,0,0,0"/>
+                        <Image Width="16" Height="16" Source="{Binding BitmapSource}" Margin="2,0,0,0"/>
+                        <TextBlock Text="{Binding Extension}" MinWidth="64" Margin="2,0,0,0"/>
+                        <TextBlock Text="{Binding Description}" Margin="2,0,0,0"/>
                     </StackPanel>
+                    <CheckBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="{properties:TextBinding FileAssociation.Menu.ChangeIcon}" Command="{Binding ChangeIconCommand}"/>
+                        </ContextMenu>
+                    </CheckBox.ContextMenu>
                 </CheckBox>
             </StackPanel>
         </DataTemplate>
@@ -30,7 +37,13 @@
     <Grid>
         <GroupBox>
             <GroupBox.Header>
-                <CheckBox x:Name="HeaderCheckBox" Content="{Binding Title}" IsChecked="{Binding IsChecked}" />
+                <CheckBox x:Name="HeaderCheckBox" Content="{Binding Title}" IsChecked="{Binding IsChecked}">
+                    <CheckBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="{properties:TextBinding FileAssociation.Menu.ChangeCategoryIcon}" Command="{Binding ChangeCategoryIconCommand}"/>
+                        </ContextMenu>
+                    </CheckBox.ContextMenu>
+                </CheckBox>
             </GroupBox.Header>
             <ItemsControl x:Name="AssociationListBox" ItemsSource="{Binding Items}" Margin="20,5,5,5"/>
         </GroupBox>

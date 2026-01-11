@@ -7,16 +7,17 @@ namespace NeeView
 {
     public class FileAssociationCollection : List<FileAssociation>
     {
-        public void Add(string extension, FileAssociationCategory category, string? description = null)
+        public bool TryAdd(FileAssociation association)
         {
-            var association = new FileAssociation(extension, category) { Description = description };
+            if (this.Any(e => e.Extension == association.Extension)) return false;
             this.Add(association);
+            return true;
         }
 
-        public bool TryAdd(string extension, FileAssociationCategory category, string? description = null)
+        public bool TryAdd(string extension, FileAssociationCategory category)
         {
             if (this.Any(e => e.Extension == extension)) return false;
-            Add(extension, category, description);
+            this.Add(FileAssociationFactory.Create(extension, category));
             return true;
         }
     }

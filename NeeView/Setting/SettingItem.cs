@@ -712,13 +712,20 @@ namespace NeeView.Setting
     /// </summary>
     public class SettingItemFileAssociation : SettingItem
     {
+        private  SettingItemFileAssociationControl? _control;
+
         public SettingItemFileAssociation() : base(null)
         {
         }
 
         protected override UIElement CreateContentInner()
         {
-            return new SettingItemFileAssociationControl();
+            return _control ??= new SettingItemFileAssociationControl();
+        }
+
+        public override void InitializeValue()
+        {
+            _control?.InitializeValue();
         }
     }
 

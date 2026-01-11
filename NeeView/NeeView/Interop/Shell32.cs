@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows.Controls;
 
 namespace NeeView.Interop
 {
@@ -31,5 +30,11 @@ namespace NeeView.Interop
 
         [DllImport("shell32.dll", CharSet = CharSet.Auto)]
         internal static extern void SHChangeNotify(SHChangeNotifyEvents wEventId, SHChangeNotifyFlags uFlags, IntPtr dwItem1, IntPtr dwItem2);
+
+        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+        internal static extern int PickIconDlg(IntPtr hwndOwner, StringBuilder lpstrFile, int nMaxFile, ref int lpdwIconIndex);
+
+        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+        internal static extern IntPtr ExtractIcon(IntPtr hInst, string lpszExeFileName, int nIconIndex);
     }
 }

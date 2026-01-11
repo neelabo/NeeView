@@ -1,5 +1,4 @@
 ﻿using Microsoft.Win32;
-using NeeView.Properties;
 using System;
 using System.Linq;
 
@@ -18,24 +17,19 @@ namespace NeeView
                 var progIds = root.GetSubKeyNames().Where(e => e.StartsWith(FileAssociation.ProgIdPrefix)).ToList();
                 foreach (var progId in progIds)
                 {
-                    var ext = progId[FileAssociation.ProgIdPrefix.Length..];
-                    if (string.IsNullOrEmpty(ext) || ext[0] != '.') continue;
-
-                    using var prog = root.OpenSubKey(progId, false);
-                    if (prog is null) continue;
-
-                    var s = prog.GetValue("Category") as string;
-                    if (Enum.TryParse<FileAssociationCategory>(s, out var category) != true) continue;
-
-                    collection.Add(ext, category);
+                    var association = FileAssociationFactory.CreateFromRegistry(progId);
+                    if (association is not null)
+                    {
+                        collection.Add(association);
+                    }
                 }
             }
 
             if (!options.HasFlag(FileAssociationCollectionCreateOptions.OnlyRegistered))
             {
                 // システム
-                collection.TryAdd(".nvpls", FileAssociationCategory.ForNeeView, TextResources.GetString("FileType.Playlist"));
-                collection.TryAdd(".nvzip", FileAssociationCategory.ForNeeView, TextResources.GetString("FileType.ExportData"));
+                collection.TryAdd(".nvpls", FileAssociationCategory.ForNeeView);
+                collection.TryAdd(".nvzip", FileAssociationCategory.ForNeeView);
 
                 // 画像拡張子
                 foreach (var ext in PictureProfile.Current.GetFileTypes(false))

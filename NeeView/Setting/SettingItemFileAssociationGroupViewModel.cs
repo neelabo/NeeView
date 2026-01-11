@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
+using NeeLaboratory.Windows.Input;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,6 +22,7 @@ namespace NeeView.Setting
         {
             _category = category;
             _items = collection.Where(e => e.Category == category).ToList();
+            ChangeCategoryIconCommand = new RelayCommand(ChangeCategoryIconCommand_Execute);
             UpdateCheckedFlag();
         }
 
@@ -42,6 +44,20 @@ namespace NeeView.Setting
             set { SetCheckedFlag(value); }
         }
 
+        public RelayCommand ChangeCategoryIconCommand { get; }
+
+
+        void ChangeCategoryIconCommand_Execute()
+        {
+            var icon = FileAssociationTools.ShowIconDialog(new FileAssociationIcon(_category));
+            if (icon is not null)
+            {
+                foreach (var item in _items)
+                {
+                    item.Icon = icon;
+                }
+            }
+        }
 
         private void SetCheckedFlag(bool? flag)
         {

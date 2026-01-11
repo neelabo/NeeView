@@ -4,9 +4,6 @@ using Microsoft.Win32;
 using NeeLaboratory.Generators;
 using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Security.AccessControl;
-using System.Security.Principal;
 
 namespace NeeView
 {
@@ -18,14 +15,20 @@ namespace NeeView
         private readonly FileAssociationCategory _category;
         private readonly string _progId;
         private bool _isEnabled;
+        private FileAssociationIcon _icon;
 
-        public FileAssociation(string extension, FileAssociationCategory category)
+        public FileAssociation(string extension, FileAssociationCategory category, string? description) : this(extension, category, null, null)
+        {
+        }
+
+        public FileAssociation(string extension, FileAssociationCategory category, string? description, FileAssociationIcon? icon)
         {
             if (string.IsNullOrWhiteSpace(extension)) throw new ArgumentNullException(nameof(extension));
             if (extension[0] != '.') throw new ArgumentException($"{nameof(extension)} does not begin with a period.");
 
             _extension = extension;
             _category = category;
+            _icon = icon ?? new FileAssociationIcon(_category);
 
             // ProgID is "NeeView.[ext]"
             _progId = ProgIdPrefix + _extension;
@@ -49,6 +52,22 @@ namespace NeeView
                 {
                     _isEnabled = value;
                     UpdateAssociate();
+                }
+            }
+        }
+
+        public FileAssociationIcon Icon
+        {
+            get { return _icon; }
+            set
+            {
+                if (_icon != value)
+                {
+                    _icon = value;
+                    if (_isEnabled)
+                    {
+                        UpdateAssociate();
+                    }
                 }
             }
         }
@@ -106,7 +125,7 @@ namespace NeeView
         private void Associate()
         {
             var applicationFilePath = Environment.AssemblyLocation;
-            var fileIconPath = Category.ToIconPath();
+            var fileIconPath = Icon.CreateDefaultIconLiteral();
 
             // Register the ProgID
             // [HKCU\Software\Classes\NeeView.xxx]
@@ -151,22 +170,6 @@ namespace NeeView
             Registry.CurrentUser.DeleteSubKeyTree(@$"Software\Classes\{_progId}");
 
             Debug.WriteLine($"FileAssociate: OFF: {Extension}");
-        }
-    }
-
-
-    public class FileAssociationException : Exception
-    {
-        public FileAssociationException()
-        {
-        }
-
-        public FileAssociationException(string? message) : base(message)
-        {
-        }
-
-        public FileAssociationException(string? message, Exception? innerException) : base(message, innerException)
-        {
         }
     }
 }

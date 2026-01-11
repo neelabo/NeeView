@@ -6,9 +6,11 @@ namespace NeeView
 {
     public class FileAssociationAccessorCollection : List<FileAssociationAccessor>
     {
+        private readonly FileAssociationIconBitmapCache _cache = new();
+
         public FileAssociationAccessorCollection(FileAssociationCollection source)
         {
-            this.AddRange(source.Select(e => new FileAssociationAccessor(e)));
+            this.AddRange(source.Select(e => new FileAssociationAccessor(e, _cache)));
         }
 
 
@@ -35,6 +37,14 @@ namespace NeeView
             {
                 var message = string.Join(System.Environment.NewLine, exceptions.Select(e => e.Message));
                 ToastService.Current.Show("FileAssociation", new Toast(message, null, ToastIcon.Error));
+            }
+        }
+
+        public void InitializeValue()
+        {
+            foreach (var item in this)
+            {
+                item.InitializeValue();
             }
         }
     }

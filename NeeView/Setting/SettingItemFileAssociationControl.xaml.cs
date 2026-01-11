@@ -81,5 +81,10 @@ namespace NeeView.Setting
         {
             _collection?.Flush();
         }
+
+        public void InitializeValue()
+        {
+            _collection?.InitializeValue();
+        }
     }
 }

@@ -16,14 +16,13 @@
             <Setter Property="Margin" Value="5"/>
         </Style>
         <Style TargetType="{x:Type local:SettingItemFileAssociationGroupControl}">
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="Width" Value="300"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="Margin" Value="5"/>
         </Style>
     </UserControl.Resources>
 
     <Grid x:Name="Root">
-        <StackPanel x:Name="AssociationsPanel" Margin="5"/>
+        <StackPanel x:Name="AssociationsPanel" Margin="5" MinWidth="300" HorizontalAlignment="Left"/>
     </Grid>
     
 </UserControl>
