@@ -10,6 +10,5 @@ It is intended to give you a preview of features that will be available in a fut
 
   * It is more unstable than the stable version.
   * Saved data may not be compatible. It is recommended to operate separately from the stable version.
-  * ZIP version and ZIP-fd version are provided. .NET Desktop Runtime must be installed for the ZIP-fd version.
   * Irregular releases, no announcements.
   

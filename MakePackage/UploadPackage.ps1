@@ -3,7 +3,8 @@
 
 param (
     [string]$log = "_UploadPackage.log",
-    [switch]$SkipCheckRepository
+    [switch]$SkipCheckRepository,
+    [switch]$SkipUpload
 )
 
 
@@ -147,7 +148,8 @@ $name_fd = $package.Name -replace "\.zip$", "-fd.zip"
 $package_fd = Get-ChildItem -File -Path $name_fd
 
 #get MSI package
-if ($package_type -eq "Product") {
+#if ($package_type -eq "Product") {
+if ($true) {
     $name_msi = $package.Name -replace "\.zip$", ".msi"
     $package_msi = Get-CHildItem -File -Path $name_msi
 }
@@ -297,23 +299,41 @@ Write-Host $release_body
 Write-Host
 Read-Host "Press Enter to upload"
 
-"Upload $($package.Name) ..." | Out-File -FilePath $log
+if ($SkipUpload) {
+    Write-Host
+    Write-Host "> Skip upload."
+}
+else {
+    "Upload $($package.Name) ..." | Out-File -FilePath $log
 
-# GitHub REST API: Create a release
-Write-Host "REST API: Create $release_name" -fore Green
-$release_response = Invoke-RestMethod -Uri $release_url -Method Post -Headers @{
-    Authorization  = "token $token"
-    "Content-Type" = "application/json"
-} -Body $release_data
+    # GitHub REST API: Create a release
+    Write-Host "REST API: Create $release_name" -fore Green
+    $release_response = Invoke-RestMethod -Uri $release_url -Method Post -Headers @{
+        Authorization  = "token $token"
+        "Content-Type" = "application/json"
+    } -Body $release_data
 
-$release_response | Format-List  | Out-File -FilePath $log -Append
+    $release_response | Format-List  | Out-File -FilePath $log -Append
 
-# ファイルのアップロード
-$release_id = $release_response.id
-Upload-Asset $release_id $package "application/zip"
-Upload-Asset $release_id $package_fd "application/zip"
-if ($package_type -eq "Product") {
-    Upload-Asset $release_id $package_msi "application/x-msi"
+    # ファイルのアップロード
+    $release_id = $release_response.id
+    Upload-Asset $release_id $package "application/zip"
+    Upload-Asset $release_id $package_fd "application/zip"
+    #if ($package_type -eq "Product") {
+    if ($true) {
+        Upload-Asset $release_id $package_msi "application/x-msi"
+    }
+}
+
+# ファイルのコピー
+if (($package_type -eq "Alpha") -or ($package_type -eq "Beta")) {
+    $dir = "_$package_type"
+    Write-Host 
+    Write-Host  "[Copy] packages to $dir" -fore Cyan
+    New-Item -Path $dir -ItemType Directory -Force | Out-Null
+    Copy-Item $package $dir
+    Copy-Item $package_fd $dir
+    Copy-Item $package_msi $dir
 }
 
 Write-Host 
