@@ -37,14 +37,14 @@
         <StackPanel DockPanel.Dock="Top">
             <DockPanel LastChildFill="False" MinHeight="24" Margin="0,0,0,8">
                 <TextBlock DockPanel.Dock="Right" Text="{Binding Model.ViewItemsCount}" Foreground="{DynamicResource Panel.Foreground}" Margin="5,0"
-                        Visibility="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsVisibleItemsCount, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        Visibility="{Binding HistoryConfig.IsVisibleItemsCount, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 <TextBlock Text="{Binding FilterPath}" ToolTip="{Binding FilterPath}" HorizontalAlignment="Right" VerticalAlignment="Center" />
             </DockPanel>
             <DockPanel LastChildFill="False">
                 <local:MoreMenuButton Description="{Binding MoreMenuDescription}" DockPanel.Dock="Right" />
             </DockPanel>
 
-            <Grid Margin="0,2,0,5" IsEnabled="True">
+            <Grid Margin="0,2,0,5" IsEnabled="True" Visibility="{Binding HistoryConfig.IsVisibleSearchBox, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <local:SearchBox x:Name="SearchBox" 
                                  Text="{Binding SearchBoxModel.Keyword}"
                                  ItemsSource="{Binding SearchBoxModel.History}"

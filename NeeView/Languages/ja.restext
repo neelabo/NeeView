@@ -1482,6 +1482,7 @@ PanelsConfig.IsSideBarEnabled=サイド バーを表示する
 PanelsConfig.IsTextSearchEnabled=入力テキストで項目を選択
 PanelsConfig.IsTextSearchEnabled.Remarks=リスト上での単キーのショートカットは無効になります。
 PanelsConfig.IsVisibleItemsCount=項目数を表示
+PanelsConfig.IsVisibleSearchBox=検索ボックスを表示
 PanelsConfig.MouseWheelSpeedRate=サムネイル表示でのマウス ホイール スクロール速度倍率
 PanelsConfig.Opacity=パネル不透明度
 PanelsConfig.Opacity.Remarks=自動非表示の場合に有効です。

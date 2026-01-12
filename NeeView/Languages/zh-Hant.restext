@@ -1482,6 +1482,7 @@ PanelsConfig.IsSideBarEnabled=顯示側邊面板
 PanelsConfig.IsTextSearchEnabled=
 PanelsConfig.IsTextSearchEnabled.Remarks=
 PanelsConfig.IsVisibleItemsCount=顯示項目數
+PanelsConfig.IsVisibleSearchBox=
 PanelsConfig.MouseWheelSpeedRate=在縮圖顯示的滑鼠滾輪捲動速度倍率
 PanelsConfig.Opacity=面板不透明度
 PanelsConfig.Opacity.Remarks=在自動隱藏時有效。

@@ -63,9 +63,23 @@
         <StackPanel DockPanel.Dock="Top">
 
             <Border MinHeight="24" Margin="0,0,0,8">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding PageListConfig.IsVisibleItemsCount}" Value="False"/>
+                                    <Condition Binding="{Binding PageListConfig.ShowBookTitle}" Value="False"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
                 <DockPanel>
                     <TextBlock DockPanel.Dock="Right" Text="{Binding Model.ValidCount, StringFormat={}{0}}" Foreground="{DynamicResource Panel.Foreground}" Margin="5,0"
-                        Visibility="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsVisibleItemsCount, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        Visibility="{Binding PageListConfig.IsVisibleItemsCount, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     <nwc:LeftTrimmingTextBlock TextSource="{Binding Model.PlaceDisplayString}" ToolTip="{Binding Model.PlaceDisplayString}" VerticalAlignment="Center"
                         Visibility="{Binding PageListConfig.ShowBookTitle, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 </DockPanel>
@@ -100,7 +114,7 @@
                 </WrapPanel>
             </DockPanel>
 
-            <Grid Margin="0,2,0,5" IsEnabled="True">
+            <Grid Margin="0,2,0,5" IsEnabled="True" Visibility="{Binding PageListConfig.IsVisibleSearchBox, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <local:SearchBox x:Name="SearchBox"
                                  Text="{Binding SearchBoxModel.Keyword}"
                                  ItemsSource="{Binding SearchBoxModel.History}"

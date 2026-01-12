@@ -64,6 +64,8 @@ namespace NeeView
         }
 
 
+        public BookmarkConfig BookmarkConfig => Config.Current.Bookmark;
+
         public FolderCollection? FolderCollection => _model.FolderCollection;
 
         public string FullPath
@@ -237,6 +239,14 @@ namespace NeeView
                 items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleBanner"), PanelListItemStyle.Banner));
                 items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleThumbnail"), PanelListItemStyle.Thumbnail));
                 items.Add(new Separator());
+                menu.Items.Add(CreateCheckableMenuItem(TextResources.GetString("BookmarkConfig.IsVisibleItemsCount"), new Binding(nameof(BookmarkConfig.IsVisibleItemsCount)) { Source = Config.Current.Bookmark }));
+                menu.Items.Add(CreateCheckableMenuItem(TextResources.GetString("BookmarkConfig.IsVisibleSearchBox"), new Binding(nameof(BookmarkConfig.IsVisibleSearchBox)) { Source = Config.Current.Bookmark }));
+                
+                var subItem = new MenuItem() { Header = TextResources.GetString("Bookshelf.MoreMenu.SearchOptions") };
+                subItem.Items.Add(CreateCheckMenuItem(TextResources.GetString("Bookshelf.MoreMenu.SearchIncludeSubdirectories"), new Binding(nameof(BookmarkConfig.IsSearchIncludeSubdirectories)) { Source = Config.Current.Bookmark }));
+                items.Add(subItem);
+                
+                items.Add(new Separator());
                 items.Add(CreateCommandMenuItem(TextResources.GetString("FolderTree.Menu.DeleteInvalidBookmark"), _vm.DeleteInvalidBookmarkCommand));
                 items.Add(new Separator());
                 items.Add(CreateCommandMenuItem(TextResources.GetString("Word.NewFolder"), _vm.NewFolderCommand));
@@ -244,17 +254,23 @@ namespace NeeView
                 items.Add(new Separator());
                 items.Add(CreateCheckMenuItem(TextResources.GetString("BookmarkList.MoreMenu.SyncBookshelf"), new Binding(nameof(BookmarkConfig.IsSyncBookshelfEnabled)) { Source = Config.Current.Bookmark }));
 
-                var subItem = new MenuItem() { Header = TextResources.GetString("Bookshelf.MoreMenu.SearchOptions") };
-                subItem.Items.Add(CreateCheckMenuItem(TextResources.GetString("Bookshelf.MoreMenu.SearchIncludeSubdirectories"), new Binding(nameof(BookmarkConfig.IsSearchIncludeSubdirectories)) { Source = Config.Current.Bookmark }));
-                items.Add(new Separator());
-                items.Add(subItem);
-
                 return menu;
             }
 
             private MenuItem CreateListItemStyleMenuItem(string header, PanelListItemStyle style)
             {
                 return CreateListItemStyleMenuItem(header, _vm.SetListItemStyle, style, _vm.Model.FolderListConfig);
+            }
+
+            private MenuItem CreateCheckableMenuItem(string header, Binding binding)
+            {
+                var menuItem = new MenuItem()
+                {
+                    Header = header,
+                    IsCheckable = true,
+                };
+                menuItem.SetBinding(MenuItem.IsCheckedProperty, binding);
+                return menuItem;
             }
         }
 

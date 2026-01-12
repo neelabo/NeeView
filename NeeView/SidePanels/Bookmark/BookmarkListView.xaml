@@ -69,7 +69,7 @@
 
             <DockPanel HorizontalAlignment="Stretch" MinHeight="24" Margin="0,0,0,8">
                 <TextBlock DockPanel.Dock="Right" Text="{Binding FolderCollection.ValidCount, StringFormat={}{0}}" Foreground="{DynamicResource Panel.Foreground}" Margin="5,0" VerticalAlignment="Center"
-                                    Visibility="{Binding Source={x:Static local:Config.Current}, Path=Panels.IsVisibleItemsCount, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    Visibility="{Binding BookmarkConfig.IsVisibleItemsCount, Converter={StaticResource BooleanToVisibilityConverter}}" />
                 <Border x:Name="PlaceGrid" Margin="1,0" Background="Transparent">
                     <local:BreadcrumbBar Profile="{StaticResource BookmarkBreadcrumbProfile}" Path="{Binding FullPath}" />
                     <Border.ContextMenu>
@@ -113,7 +113,7 @@
                 </WrapPanel>
             </DockPanel>
 
-            <Grid Margin="0,2,0,5" IsEnabled="{Binding Model.IsFolderSearchEnabled}">
+            <Grid Margin="0,2,0,5" IsEnabled="{Binding Model.IsFolderSearchEnabled}" Visibility="{Binding BookmarkConfig.IsVisibleSearchBox, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <local:SearchBox x:Name="SearchBox"
                                  Text="{Binding SearchBoxModel.Keyword}"
                                  ItemsSource="{Binding SearchBoxModel.History}"

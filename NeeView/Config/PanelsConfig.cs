@@ -24,7 +24,7 @@ namespace NeeView
         private double _leftPanelWidth = 300.0;
         private double _rightPanelWidth = 300.0;
         private bool _isLimitPanelWidth;
-        private bool _isVisibleItemsCount = true;
+        private bool? _isVisibleItemsCount;
         private bool _isTextSearchEnabled;
         private double _conflictTopMargin = 32.0;
         private double _conflictBottomMargin = 20.0;
@@ -154,16 +154,6 @@ namespace NeeView
         {
             get { return _isLimitPanelWidth; }
             set { SetProperty(ref _isLimitPanelWidth, value); }
-        }
-
-        /// <summary>
-        /// コレクションアイテム数の表示
-        /// </summary>
-        [PropertyMember]
-        public bool IsVisibleItemsCount
-        {
-            get { return _isVisibleItemsCount; }
-            set { SetProperty(ref _isVisibleItemsCount, value); }
         }
 
         [PropertyMember]
@@ -346,8 +336,29 @@ namespace NeeView
             }
         }
 
+        [Obsolete("no used"), Alternative("IsVisibleItemsCount in nv.Config.Bookshelf, Bookmark, PageList and History", 45, ScriptErrorLevel.Warning)] // ver.45
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public bool? IsVisibleItemsCount
+        {
+            get { return default; }
+            set { _isVisibleItemsCount = value; }
+        }
+
         #endregion Obsolete
 
+        public bool TryGetIsVisibleItemsCount(out bool result)
+        {
+            if (_isVisibleItemsCount.HasValue)
+            {
+                result = _isVisibleItemsCount.Value;
+                return true;
+            }
+            else
+            {
+                result = false;
+                return false;
+            }
+        }
 
         public PanelListItemProfile GetPanelListItemProfile(PanelListItemStyle style)
         {

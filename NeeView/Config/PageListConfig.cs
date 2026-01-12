@@ -11,6 +11,8 @@ namespace NeeView
         private bool _showBookTitle = true;
         private bool _focusMainView;
         private bool _isGroupBy;
+        private bool _isVisibleItemsCount = true;
+        private bool _isVisibleSearchBox = true;
 
 
         /// <summary>
@@ -62,6 +64,26 @@ namespace NeeView
             get { return _isGroupBy; }
             set { SetProperty(ref _isGroupBy, value); }
         }
+
+        /// <summary>
+        /// コレクションアイテム数の表示
+        /// </summary>
+        [PropertyMember]
+        public bool IsVisibleItemsCount
+        {
+            get { return _isVisibleItemsCount; }
+            set { SetProperty(ref _isVisibleItemsCount, value); }
+        }
+
+        /// <summary>
+        /// 検索ボックスを表示
+        /// </summary>
+        public bool IsVisibleSearchBox
+        {
+            get { return _isVisibleSearchBox; }
+            set { SetProperty(ref _isVisibleSearchBox, value); }
+        }
+
     }
 
 }

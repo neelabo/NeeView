@@ -1490,6 +1490,7 @@ PanelsConfig.IsSideBarEnabled=Показывать боковые панели
 PanelsConfig.IsTextSearchEnabled=Выбирать элемент по введённому тексту
 PanelsConfig.IsTextSearchEnabled.Remarks=Горячие клавиши на одну кнопку в списке будут отключены.
 PanelsConfig.IsVisibleItemsCount=Показывать количество элементов
+PanelsConfig.IsVisibleSearchBox=
 PanelsConfig.MouseWheelSpeedRate=Коэффициент скорости прокрутки колесом мыши в виде эскизов
 PanelsConfig.Opacity=Прозрачность панели
 PanelsConfig.Opacity.Remarks=Действует в режиме автоскрытия.

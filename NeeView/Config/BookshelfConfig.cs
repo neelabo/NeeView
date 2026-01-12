@@ -21,6 +21,8 @@ namespace NeeView
         private FolderOrder _defaultFolderOrder;
         private FolderOrder _playlistFolderOrder;
         private FolderSortOrder _folderSortOrder = FolderSortOrder.First;
+        private bool _isVisibleItemsCount = true;
+        private bool _isVisibleSearchBox = true;
 
         [JsonInclude, JsonPropertyName(nameof(Home))]
         public string? _home;
@@ -167,6 +169,24 @@ namespace NeeView
             set { SetProperty(ref _folderSortOrder, value); }
         }
 
+        /// <summary>
+        /// コレクションアイテム数の表示
+        /// </summary>
+        [PropertyMember]
+        public bool IsVisibleItemsCount
+        {
+            get { return _isVisibleItemsCount; }
+            set { SetProperty(ref _isVisibleItemsCount, value); }
+        }
+
+        /// <summary>
+        /// 検索ボックスを表示
+        /// </summary>
+        public bool IsVisibleSearchBox
+        {
+            get { return _isVisibleSearchBox; }
+            set { SetProperty(ref _isVisibleSearchBox, value); }
+        }
 
         #region Obsolete
 
@@ -176,17 +196,6 @@ namespace NeeView
         [Obsolete("no used"), Alternative("nv.Config.System.IsIncrementalSearchEnabled", 40, ScriptErrorLevel.Warning, IsFullName = true)] // ver.40
         [JsonIgnore]
         public bool IsIncrementalSearchEnabled
-        {
-            get { return false; }
-            set { }
-        }
-
-        /// <summary>
-        /// コレクションアイテム数の表示
-        /// </summary>
-        [Obsolete("no used"), Alternative("nv.Config.Panels.IsVisibleItemsCount", 40, ScriptErrorLevel.Warning, IsFullName = true)] // ver.40
-        [JsonIgnore]
-        public bool IsVisibleItemsCount
         {
             get { return false; }
             set { }

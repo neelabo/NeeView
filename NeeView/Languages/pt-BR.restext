@@ -1490,6 +1490,7 @@ PanelsConfig.IsSideBarEnabled=Mostrar barra lateral
 PanelsConfig.IsTextSearchEnabled=Selecionar o item com texto de entrada
 PanelsConfig.IsTextSearchEnabled.Remarks=Os atalhos de tecla única na lista estão desativados.
 PanelsConfig.IsVisibleItemsCount=Mostrar número de itens
+PanelsConfig.IsVisibleSearchBox=
 PanelsConfig.MouseWheelSpeedRate=Taxa de velocidade de rolagem da roda do mouse na visualização de miniaturas
 PanelsConfig.Opacity=Opacidade do painel
 PanelsConfig.Opacity.Remarks=É eficaz no modo de ocultação automática.

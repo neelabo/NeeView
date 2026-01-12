@@ -1482,6 +1482,7 @@ PanelsConfig.IsSideBarEnabled=사이드 바 표시
 PanelsConfig.IsTextSearchEnabled=입력 텍스트로 항목 선택
 PanelsConfig.IsTextSearchEnabled.Remarks=목록에서 단축키는 무시됩니다.
 PanelsConfig.IsVisibleItemsCount=항목 수 표시
+PanelsConfig.IsVisibleSearchBox=
 PanelsConfig.MouseWheelSpeedRate=썸네일 보기 시 마우스 휠 스크롤 속도 배율
 PanelsConfig.Opacity=패널 불투명도
 PanelsConfig.Opacity.Remarks=자동 숨김 설정 시 적용됩니다.

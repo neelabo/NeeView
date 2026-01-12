@@ -11,6 +11,8 @@ namespace NeeView
         private bool _isSyncBookshelfEnabled = true;
         private FolderOrder _bookmarkFolderOrder;
         private bool _isSearchIncludeSubdirectories = true;
+        private bool _isVisibleItemsCount = true;
+        private bool _isVisibleSearchBox = true;
 
         [JsonInclude, JsonPropertyName(nameof(BookmarkFilePath))]
         public string? _bookmarkFilePath;
@@ -57,6 +59,25 @@ namespace NeeView
         {
             get { return _isSearchIncludeSubdirectories; }
             set { SetProperty(ref _isSearchIncludeSubdirectories, value); }
+        }
+
+        /// <summary>
+        /// コレクションアイテム数の表示
+        /// </summary>
+        [PropertyMember]
+        public bool IsVisibleItemsCount
+        {
+            get { return _isVisibleItemsCount; }
+            set { SetProperty(ref _isVisibleItemsCount, value); }
+        }
+
+        /// <summary>
+        /// 検索ボックスを表示
+        /// </summary>
+        public bool IsVisibleSearchBox
+        {
+            get { return _isVisibleSearchBox; }
+            set { SetProperty(ref _isVisibleSearchBox, value); }
         }
     }
 }

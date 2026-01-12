@@ -33,6 +33,8 @@ namespace NeeView
         }
 
 
+        public HistoryConfig HistoryConfig => Config.Current.History;
+
         public HistoryList Model => _model;
 
         public string FilterPath => string.IsNullOrEmpty(_model.FilterPath) ? TextResources.GetString("Word.AllHistory") : _model.FilterPath;
@@ -64,6 +66,9 @@ namespace NeeView
                 menu.Items.Add(CreateCheckMenuItem(TextResources.GetString("Menu.GroupBy"), new Binding(nameof(HistoryConfig.IsGroupBy)) { Source = Config.Current.History }));
                 menu.Items.Add(CreateCheckMenuItem(TextResources.GetString("History.MoreMenu.IsCurrentFolder"), new Binding(nameof(HistoryConfig.IsCurrentFolder)) { Source = Config.Current.History }));
                 menu.Items.Add(new Separator());
+                menu.Items.Add(CreateCheckableMenuItem(TextResources.GetString("HistoryConfig.IsVisibleItemsCount"), new Binding(nameof(HistoryConfig.IsVisibleItemsCount)) { Source = Config.Current.History }));
+                menu.Items.Add(CreateCheckableMenuItem(TextResources.GetString("HistoryConfig.IsVisibleSearchBox"), new Binding(nameof(HistoryConfig.IsVisibleSearchBox)) { Source = Config.Current.History }));
+                menu.Items.Add(new Separator());
                 menu.Items.Add(CreateCommandMenuItem(TextResources.GetString("History.MoreMenu.DeleteInvalid"), _vm.RemoveUnlinkedCommand));
                 menu.Items.Add(CreateCommandMenuItem(TextResources.GetString("History.MoreMenu.DeleteAll"), _vm.RemoveAllCommand));
                 return  menu;
@@ -72,6 +77,17 @@ namespace NeeView
             private MenuItem CreateListItemStyleMenuItem(string header, PanelListItemStyle style)
             {
                 return CreateListItemStyleMenuItem(header, _vm.SetListItemStyle, style, Config.Current.History);
+            }
+
+            private MenuItem CreateCheckableMenuItem(string header, Binding binding)
+            {
+                var menuItem = new MenuItem()
+                {
+                    Header = header,
+                    IsCheckable = true,
+                };
+                menuItem.SetBinding(MenuItem.IsCheckedProperty, binding);
+                return menuItem;
             }
         }
 

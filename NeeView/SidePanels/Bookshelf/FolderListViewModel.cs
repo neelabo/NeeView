@@ -62,6 +62,7 @@ namespace NeeView
         }
 
 
+        public BookshelfConfig BookshelfConfig => Config.Current.Bookshelf;
 
         public FolderCollection? FolderCollection => _model.FolderCollection;
 
@@ -309,6 +310,18 @@ namespace NeeView
                 items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleBanner"), PanelListItemStyle.Banner));
                 items.Add(CreateListItemStyleMenuItem(TextResources.GetString("Word.StyleThumbnail"), PanelListItemStyle.Thumbnail));
                 items.Add(new Separator());
+                menu.Items.Add(CreateCheckableMenuItem(TextResources.GetString("BookshelfConfig.IsVisibleItemsCount"), new Binding(nameof(BookshelfConfig.IsVisibleItemsCount)) { Source = Config.Current.Bookshelf }));
+                menu.Items.Add(CreateCheckableMenuItem(TextResources.GetString("BookshelfConfig.IsVisibleSearchBox"), new Binding(nameof(BookshelfConfig.IsVisibleSearchBox)) { Source = Config.Current.Bookshelf }));
+
+                if (_vm._model.IsFolderSearchEnabled)
+                {
+                    var subItem = new MenuItem() { Header = TextResources.GetString("Bookshelf.MoreMenu.SearchOptions") };
+                    //subItem.Items.Add(CreateCheckMenuItem(TextResources.GetString("Bookshelf.MoreMenu.SearchIncremental"), new Binding(nameof(SystemConfig.IsIncrementalSearchEnabled)) { Source = Config.Current.System }));
+                    subItem.Items.Add(CreateCheckMenuItem(TextResources.GetString("Bookshelf.MoreMenu.SearchIncludeSubdirectories"), new Binding(nameof(BookshelfConfig.IsSearchIncludeSubdirectories)) { Source = Config.Current.Bookshelf }));
+                    items.Add(subItem);
+                }
+
+                items.Add(new Separator());
                 items.Add(CreateCommandMenuItem(TextResources.GetString("Bookshelf.MoreMenu.AddQuickAccess"), _vm.AddQuickAccess));
                 items.Add(CreateCommandMenuItem(TextResources.GetString("Bookshelf.MoreMenu.ClearHistory"), "ClearHistoryInPlace"));
 
@@ -332,21 +345,23 @@ namespace NeeView
                         break;
                 }
 
-                if (_vm._model.IsFolderSearchEnabled)
-                {
-                    var subItem = new MenuItem() { Header = TextResources.GetString("Bookshelf.MoreMenu.SearchOptions") };
-                    //subItem.Items.Add(CreateCheckMenuItem(TextResources.GetString("Bookshelf.MoreMenu.SearchIncremental"), new Binding(nameof(SystemConfig.IsIncrementalSearchEnabled)) { Source = Config.Current.System }));
-                    subItem.Items.Add(CreateCheckMenuItem(TextResources.GetString("Bookshelf.MoreMenu.SearchIncludeSubdirectories"), new Binding(nameof(BookshelfConfig.IsSearchIncludeSubdirectories)) { Source = Config.Current.Bookshelf }));
-                    items.Add(new Separator());
-                    items.Add(subItem);
-                }
-
                 return menu;
             }
 
             private MenuItem CreateListItemStyleMenuItem(string header, PanelListItemStyle style)
             {
                 return CreateListItemStyleMenuItem(header, _vm.SetListItemStyle, style, _vm._model.FolderListConfig);
+            }
+
+            private MenuItem CreateCheckableMenuItem(string header, Binding binding)
+            {
+                var menuItem = new MenuItem()
+                {
+                    Header = header,
+                    IsCheckable = true,
+                };
+                menuItem.SetBinding(MenuItem.IsCheckedProperty, binding);
+                return menuItem;
             }
         }
 

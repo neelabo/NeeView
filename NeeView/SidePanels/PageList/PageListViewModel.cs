@@ -126,6 +126,9 @@ namespace NeeView
                 menu.Items.Add(CreateCheckMenuItem(TextResources.GetString("Menu.GroupBy"), new Binding(nameof(PageListConfig.IsGroupBy)) { Source = Config.Current.PageList }));
                 menu.Items.Add(new Separator());
                 menu.Items.Add(CreateCheckableMenuItem(TextResources.GetString("PageListConfig.ShowBookTitle"), new Binding(nameof(PageListConfig.ShowBookTitle)) { Source = Config.Current.PageList }));
+                menu.Items.Add(CreateCheckableMenuItem(TextResources.GetString("PageListConfig.IsVisibleItemsCount"), new Binding(nameof(PageListConfig.IsVisibleItemsCount)) { Source = Config.Current.PageList }));
+                menu.Items.Add(CreateCheckableMenuItem(TextResources.GetString("PageListConfig.IsVisibleSearchBox"), new Binding(nameof(PageListConfig.IsVisibleSearchBox)) { Source = Config.Current.PageList }));
+                menu.Items.Add(new Separator());
                 menu.Items.Add(CreateCheckableMenuItem(TextResources.GetString("PageListConfig.FocusMainView"), new Binding(nameof(PageListConfig.FocusMainView)) { Source = Config.Current.PageList }));
                 return menu;
             }

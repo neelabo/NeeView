@@ -205,6 +205,18 @@ namespace NeeView
                 }
             }
 
+            // ver 45.0
+            if (self.Format.CompareTo(new FormatVersion(Environment.SolutionName, 45, 0, 3973)) < 0)
+            {
+                if (self.Config.Panels.TryGetIsVisibleItemsCount(out var isVisible))
+                {
+                    self.Config.Bookshelf.IsVisibleItemsCount = isVisible;
+                    self.Config.Bookmark.IsVisibleItemsCount = isVisible;
+                    self.Config.PageList.IsVisibleItemsCount = isVisible;
+                    self.Config.History.IsVisibleItemsCount = isVisible;
+                }
+            }
+
 
             // NOTE: ver.99 (バージョン変更処理テスト)
 #if false
@@ -215,7 +227,7 @@ namespace NeeView
             }
 #endif
 
-                return self;
+            return self;
         }
 
 

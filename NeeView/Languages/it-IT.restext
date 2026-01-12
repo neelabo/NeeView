@@ -1496,6 +1496,7 @@ PanelsConfig.IsSideBarEnabled=Mostra barre laterali
 PanelsConfig.IsTextSearchEnabled=
 PanelsConfig.IsTextSearchEnabled.Remarks=
 PanelsConfig.IsVisibleItemsCount=Mostra numero di elementi
+PanelsConfig.IsVisibleSearchBox=
 PanelsConfig.MouseWheelSpeedRate=Tasso velocità scroll rotellina in vista miniatura
 PanelsConfig.Opacity=Opacità pannello
 PanelsConfig.Opacity.Remarks=È attivo in modalità auto-nascondi.

@@ -23,6 +23,8 @@ namespace NeeView
         private bool _isAutoCleanupEnabled;
         private bool _isGroupBy;
         private int _recentBookCount = 10;
+        private bool _isVisibleItemsCount = true;
+        private bool _isVisibleSearchBox = true;
 
         [JsonInclude, JsonPropertyName(nameof(HistoryFilePath))]
         public string? _historyFilePath;
@@ -164,6 +166,25 @@ namespace NeeView
         {
             get { return _recentBookCount; }
             set { SetProperty(ref _recentBookCount, Math.Max(value, 1)); }
+        }
+
+        /// <summary>
+        /// コレクションアイテム数の表示
+        /// </summary>
+        [PropertyMember]
+        public bool IsVisibleItemsCount
+        {
+            get { return _isVisibleItemsCount; }
+            set { SetProperty(ref _isVisibleItemsCount, value); }
+        }
+
+        /// <summary>
+        /// 検索ボックスを表示
+        /// </summary>
+        public bool IsVisibleSearchBox
+        {
+            get { return _isVisibleSearchBox; }
+            set { SetProperty(ref _isVisibleSearchBox, value); }
         }
     }
 }

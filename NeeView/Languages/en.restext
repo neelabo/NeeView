@@ -1490,6 +1490,7 @@ PanelsConfig.IsSideBarEnabled=Show side bars
 PanelsConfig.IsTextSearchEnabled=Select item with input text
 PanelsConfig.IsTextSearchEnabled.Remarks=Single-key shortcuts on the list are disabled.
 PanelsConfig.IsVisibleItemsCount=Show number of items
+PanelsConfig.IsVisibleSearchBox=Show search box
 PanelsConfig.MouseWheelSpeedRate=Mouse wheel scroll speed rate in thumbnail view
 PanelsConfig.Opacity=Panel opacity
 PanelsConfig.Opacity.Remarks=It is effective in auto-hide mode.
