@@ -1,11 +1,8 @@
 ﻿using NeeView.Windows;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace NeeView
 {
@@ -102,7 +99,14 @@ namespace NeeView
             // ウィンドウが最小化されていたら復元する
             if (_window.WindowState == WindowState.Minimized)
             {
-                _window.WindowState = WindowState.Normal;
+                if (_window.Topmost)
+                {
+                    _window.WindowState = WindowState.Normal;
+                }
+                else
+                {
+                    WindowTools.RestoreWindowBehind(_window, App.Current.MainWindow);
+                }
                 return true;
             }
             else

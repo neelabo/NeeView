@@ -95,5 +95,27 @@ namespace NeeView.Windows
         {
             return AppDispatcher.Invoke(() => GetWindowHandle(App.Current.MainWindow));
         }
+
+        /// <summary>
+        /// Window を背面に非アクティブ状態で復元
+        /// </summary>
+        /// <param name="window">ウィンドウ</param>
+        /// <param name="windowFront">手前に表示するウィンドウ</param>
+        public static void RestoreWindowBehind(Window window, Window windowFront)
+        {
+            IntPtr hWnd = window is not null ? new WindowInteropHelper(window).Handle : IntPtr.Zero;
+            if (hWnd == IntPtr.Zero) return;
+
+            // 非アクティブのまま復元
+            NativeMethods.ShowWindow(hWnd, NativeMethods.SW_SHOWNOACTIVATE);
+
+            // WindowChrome のアクティブ化を抑制
+            NativeMethods.SetWindowPos(hWnd, IntPtr.Zero, 0, 0, 0, 0, NativeMethods.SWP_NOACTIVATE | NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOSIZE);
+
+            // windowParent の直後ろに配置（Z-order 修正）
+            IntPtr hWndParent = windowFront is not null ? new WindowInteropHelper(windowFront).Handle : IntPtr.Zero;
+            if (hWndParent == IntPtr.Zero) return;
+            NativeMethods.SetWindowPos(hWnd, hWndParent, 0, 0, 0, 0, NativeMethods.SWP_NOACTIVATE | NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOSIZE);
+        }
     }
 }
