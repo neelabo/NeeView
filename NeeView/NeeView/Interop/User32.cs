@@ -136,6 +136,11 @@ namespace NeeView.Interop
         public const uint SWP_NOZORDER = 0x0004;
         public const uint SWP_SHOWWINDOW = 0x0040;
 
+        public const int HWND_TOP = 0;
+        public const int HWND_BOTTOM = 1;
+        public const int HWND_TOPMOST = -1;
+        public const int HWND_NOTOPMOST = -2;
+
         [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
         internal static extern int GetDoubleClickTime();
 

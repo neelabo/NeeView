@@ -79,12 +79,24 @@ namespace NeeView.Windows
         /// </summary>
         /// <param name="dependencyObject"></param>
         /// <returns></returns>
-        public static IntPtr GetWindowHandle(DependencyObject dependencyObject)
+        public static IntPtr GetWindowHandleFromObject(DependencyObject dependencyObject)
         {
             var window = dependencyObject as Window ?? Window.GetWindow(dependencyObject);
             if (window is null) return IntPtr.Zero;
 
             return new WindowInteropHelper(window).Handle;
+        }
+
+        /// <summary>
+        /// ウィンドウハンドルを取得
+        /// </summary>
+        /// <remarks>
+        /// もし window に null が渡されても例外を発生させない
+        /// </remarks>
+        /// <returns></returns>
+        public static IntPtr GetWindowHandle(Window window)
+        {
+            return window is not null ? new WindowInteropHelper(window).Handle : IntPtr.Zero;
         }
 
         /// <summary>
@@ -97,13 +109,13 @@ namespace NeeView.Windows
         }
 
         /// <summary>
-        /// Window を背面に非アクティブ状態で復元
+        /// Window を非アクティブ状態で復元
         /// </summary>
         /// <param name="window">ウィンドウ</param>
-        /// <param name="windowFront">手前に表示するウィンドウ</param>
-        public static void RestoreWindowBehind(Window window, Window windowFront)
+        /// <param name="referenceWindow">基準となるウィンドウ</param>
+        public static void RestoreNoActiveWindow(Window window, Window referenceWindow, bool isBehind)
         {
-            IntPtr hWnd = window is not null ? new WindowInteropHelper(window).Handle : IntPtr.Zero;
+            IntPtr hWnd = GetWindowHandle(window);
             if (hWnd == IntPtr.Zero) return;
 
             // 非アクティブのまま復元
@@ -112,10 +124,36 @@ namespace NeeView.Windows
             // WindowChrome のアクティブ化を抑制
             NativeMethods.SetWindowPos(hWnd, IntPtr.Zero, 0, 0, 0, 0, NativeMethods.SWP_NOACTIVATE | NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOSIZE);
 
-            // windowParent の直後ろに配置（Z-order 修正）
-            IntPtr hWndParent = windowFront is not null ? new WindowInteropHelper(windowFront).Handle : IntPtr.Zero;
-            if (hWndParent == IntPtr.Zero) return;
-            NativeMethods.SetWindowPos(hWnd, hWndParent, 0, 0, 0, 0, NativeMethods.SWP_NOACTIVATE | NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOSIZE);
+            // referenceWindow の前後に配置 (Z-order 修正)
+            IntPtr hWndReference = GetWindowHandle(referenceWindow);
+            if (hWndReference == IntPtr.Zero) return;
+
+            SetWindowZOrder(hWnd, hWndReference, isBehind);
         }
+
+        /// <summary>
+        /// Window の Z-order 修正
+        /// </summary>
+        public static void SetWindowZOrder(Window window, Window referenceWindow, bool isFront)
+        {
+            IntPtr hWnd = GetWindowHandle(window);
+            IntPtr hWndReference = GetWindowHandle(referenceWindow);
+
+            SetWindowZOrder(hWnd, hWndReference, isFront);
+        }
+
+        /// <summary>
+        /// Window の Z-order 修正
+        /// </summary>
+        private static void SetWindowZOrder(IntPtr hWnd, IntPtr hWndReference, bool isFront)
+        {
+            if (hWnd == IntPtr.Zero) return;
+
+            // 手前表示は通常ウィンドウの最前面にする
+            hWndReference = isFront ? NativeMethods.HWND_TOP : hWndReference;
+
+            NativeMethods.SetWindowPos(hWnd, hWndReference, 0, 0, 0, 0, NativeMethods.SWP_NOACTIVATE | NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOSIZE);
+        }
+
     }
 }

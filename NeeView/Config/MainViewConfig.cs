@@ -9,6 +9,7 @@ namespace NeeView
     {
         private bool _isFloating;
         private bool _isTopmost;
+        private bool _isFrontAsPossible;
         private bool _isHideTitleBar;
         private bool _isAutoStretch;
         private bool _isAutoHide = true;
@@ -56,6 +57,16 @@ namespace NeeView
         {
             get { return _isTopmost; }
             set { SetProperty(ref _isTopmost, value); }
+        }
+
+        /// <summary>
+        /// メインビューウィンドウ なるべく手前に表示
+        /// </summary>
+        [PropertyMember]
+        public bool IsFrontAsPossible
+        {
+            get { return _isFrontAsPossible; }
+            set { SetProperty(ref _isFrontAsPossible, value); }
         }
 
         /// <summary>

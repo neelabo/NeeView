@@ -94,25 +94,35 @@ namespace NeeView
         public bool RecoveryFloating()
         {
             if (_window is null) return false;
-            if (!Config.Current.MainView.IsAutoShow) return false;
+
+            var config = Config.Current.MainView;
 
             // ウィンドウが最小化されていたら復元する
             if (_window.WindowState == WindowState.Minimized)
             {
+                if (!config.IsAutoShow) return false;
+
                 if (_window.Topmost)
                 {
                     _window.WindowState = WindowState.Normal;
                 }
                 else
                 {
-                    WindowTools.RestoreWindowBehind(_window, App.Current.MainWindow);
+                    WindowTools.RestoreNoActiveWindow(_window, App.Current.MainWindow, config.IsFrontAsPossible);
                 }
                 return true;
             }
-            else
+            
+            // なるべく手前に表示
+            if (config.IsFrontAsPossible)
             {
-                return false;
+                if (!_window.Topmost)
+                {
+                    WindowTools.SetWindowZOrder(_window, App.Current.MainWindow, true);
+                }
             }
+
+            return false;
         }
 
         public void HideFloating()
