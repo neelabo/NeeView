@@ -1,21 +1,18 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿//#define LOCAL_DEBUG
+
+using NeeLaboratory.Generators;
 using NeeLaboratory.Linq;
 using NeeView.Collections.Generic;
 using NeeView.Properties;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace NeeView
 {
-    public class QuickAccessCollection : TreeCollection<QuickAccessEntry>
+    [LocalDebug]
+    public partial class QuickAccessCollection : TreeCollection<QuickAccessEntry>
     {
         static QuickAccessCollection() => Current = new QuickAccessCollection();
         public static QuickAccessCollection Current { get; }
@@ -109,6 +106,43 @@ namespace NeeView
             }
 
             return name;
+        }
+
+        public bool RenameRecursive(string src, string dst)
+        {
+            var items = CollectPathMembers(Root, src);
+            LocalDebug.WriteLine($"RenamePathItems.Count = {items.Count}");
+            if (items.Count == 0) return false;
+
+            foreach (var item in items)
+            {
+                var srcPath = item.Path;
+                var dstPath = dst + srcPath[src.Length..];
+                LocalDebug.WriteLine($"Rename: {srcPath} => {dstPath}");
+                item.Path = dstPath;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 指定パスに影響する項目を収集する
+        /// </summary>
+        /// <param name="src"></param>
+        /// <returns></returns>
+        private static List<QuickAccess> CollectPathMembers(TreeListNode<QuickAccessEntry> root, string src)
+        {
+            return root.WalkAll()
+                .OfType<TreeListNode<QuickAccessEntry>>()
+                .Select(e => e.Value)
+                .OfType<QuickAccess>()
+                .Where(e => Contains(e.Path, src))
+                .ToList();
+
+            static bool Contains(string src, string target)
+            {
+                return src.StartsWith(target, StringComparison.OrdinalIgnoreCase)
+                    && (src.Length == target.Length || src[target.Length] == LoosePath.DefaultSeparator || src[target.Length] == '?');
+            }
         }
 
 

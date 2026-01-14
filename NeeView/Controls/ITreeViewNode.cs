@@ -68,6 +68,22 @@ namespace NeeView
             }
         }
 
+        public static IEnumerable<ITreeViewNode> WalkAll(this ITreeViewNode item)
+        {
+            yield return item;
+
+            if (item.Children != null)
+            {
+                foreach (var child in item.Children)
+                {
+                    foreach (var subChild in child.WalkAll())
+                    {
+                        yield return subChild;
+                    }
+                }
+            }
+        }
+
         public static IEnumerable<T> WalkChildren<T>(this T item)
             where T : ITreeViewNode<T>
         {
@@ -94,6 +110,23 @@ namespace NeeView
             foreach (var child in WalkChildren(item))
             {
                 yield return child;
+            }
+        }
+
+        public static IEnumerable<T> WalkAll<T>(this T item)
+            where T : ITreeViewNode<T>
+        {
+            yield return item;
+
+            if (item.Children != null)
+            {
+                foreach (var child in item.Children)
+                {
+                    foreach (var subChild in child.WalkAll())
+                    {
+                        yield return subChild;
+                    }
+                }
             }
         }
     }
