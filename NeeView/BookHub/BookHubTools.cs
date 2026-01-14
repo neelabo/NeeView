@@ -133,6 +133,7 @@ namespace NeeView
             if (oldPath != null)
             {
                 BookMementoCollection.Current.RenameRecursive(oldPath, path);
+                PlaylistHub.Current.RenameItemPathRecursive(oldPath, path);
             }
 
             // 本を開く

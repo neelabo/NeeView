@@ -12,8 +12,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -394,7 +392,6 @@ namespace NeeView
             return false;
         }
 
-
         public void OpenAsBook()
         {
             _playlist.Flush();
@@ -418,6 +415,40 @@ namespace NeeView
 
             int index = (items.IndexOf(SelectedItem) + items.Count + offset) % items.Count;
             return items[index];
+        }
+
+        /// <summary>
+        /// すべてのプレイリストの項目のパスを一括変更
+        /// </summary>
+        /// <param name="src"></param>
+        /// <param name="dst"></param>
+        public void RenameItemPathRecursive(string src, string dst)
+        {
+            LocalDebug.WriteLine($"Begin: src={src}, dst={dst}");
+          
+            _playlist.Flush();
+            UpdatePlaylistCollection();
+
+            var files = _playlistCollection.OfType<string>();
+            foreach (var file in files)
+            {
+                try
+                {
+                    using (ProcessLock.Lock())
+                    {
+                        var playlist = PlaylistSourceEditor.Create(file);
+                        playlist?.RenamePathRecursive(src, dst);
+                        playlist?.Save();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // できるだけ編集できればよいので例外はスルー
+                    Debug.WriteLine(ex);
+                }
+            }
+
+            LocalDebug.WriteLine($"End");
         }
 
         #region Playlist Controls
