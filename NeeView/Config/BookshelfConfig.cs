@@ -12,6 +12,7 @@ namespace NeeView
         private bool _isVisibleBookmarkMark = true;
         private string? _excludePattern;
         private bool _isSyncFolderTree;
+        private bool _isSyncFolderTreeAuto;
         private bool _isCloseBookWhenMove;
         private bool _isOpenNextBookWhenRemove = true;
         private bool _isInsertItem = true;
@@ -59,13 +60,23 @@ namespace NeeView
         }
 
         /// <summary>
-        /// フォルダーツリーと連動する
+        /// 同期ボタンでフォルダーツリーと同期する
         /// </summary>
         [PropertyMember]
         public bool IsSyncFolderTree
         {
             get { return _isSyncFolderTree; }
             set { SetProperty(ref _isSyncFolderTree, value); }
+        }
+
+        /// <summary>
+        /// フォルダーツリーと自動同期する
+        /// </summary>
+        [PropertyMember]
+        public bool IsSyncFolderTreeAuto
+        {
+            get { return _isSyncFolderTreeAuto; }
+            set { SetProperty(ref _isSyncFolderTreeAuto, value); }
         }
 
         /// <summary>

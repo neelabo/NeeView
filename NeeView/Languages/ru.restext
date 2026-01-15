@@ -318,6 +318,7 @@ BookshelfConfig.IsMultipleRarFilterEnabled.Remarks=Для составного R
 BookshelfConfig.IsOpenNextBookWhenRemove=После удаления просматриваемой книги открывать следующую
 BookshelfConfig.IsSearchIncludeSubdirectories=Выполнять поиск, включая подпапки
 BookshelfConfig.IsSyncFolderTree=Синхронизировать дерево папок с помощью кнопки синхронизации
+BookshelfConfig.IsSyncFolderTreeAuto=
 BookshelfConfig.IsVisibleBookmarkMark=Отображать значки закладок
 BookshelfConfig.IsVisibleBookmarkMark.Remarks=В книге с закладкой отображается значок ★.
 BookshelfConfig.IsVisibleHistoryMark=Отображать значок истории

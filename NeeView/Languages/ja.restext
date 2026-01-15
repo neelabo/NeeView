@@ -316,6 +316,7 @@ BookshelfConfig.IsMultipleRarFilterEnabled.Remarks=".part[数字].rar" という
 BookshelfConfig.IsOpenNextBookWhenRemove=閲覧中のブックを削除したときに次のブックを開く
 BookshelfConfig.IsSearchIncludeSubdirectories=サブフォルダーを含めた検索を行う
 BookshelfConfig.IsSyncFolderTree=同期ボタンでフォルダー ツリーを同期する
+BookshelfConfig.IsSyncFolderTreeAuto=自動的にフォルダー ツリーを同期する
 BookshelfConfig.IsVisibleBookmarkMark=ブックマーク記号を表示する
 BookshelfConfig.IsVisibleBookmarkMark.Remarks=ブックマークされているブックに★マークを表示します。
 BookshelfConfig.IsVisibleHistoryMark=履歴記号を表示する

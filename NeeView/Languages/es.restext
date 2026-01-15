@@ -318,6 +318,7 @@ BookshelfConfig.IsMultipleRarFilterEnabled.Remarks=Para un archivo dividido RAR 
 BookshelfConfig.IsOpenNextBookWhenRemove=Después de eliminar el libro en visualización, abrir el siguiente libro
 BookshelfConfig.IsSearchIncludeSubdirectories=Realizar una búsqueda incluyendo subcarpetas
 BookshelfConfig.IsSyncFolderTree=Sincronizar árbol de carpetas con botón de sincronización
+BookshelfConfig.IsSyncFolderTreeAuto=
 BookshelfConfig.IsVisibleBookmarkMark=Mostrar símbolos de marcador
 BookshelfConfig.IsVisibleBookmarkMark.Remarks=Se muestra marca ★ en el libro marcado.
 BookshelfConfig.IsVisibleHistoryMark=Mostrar símbolo de historial

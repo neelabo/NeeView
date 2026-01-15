@@ -1,12 +1,9 @@
-﻿using NeeLaboratory.Windows.Input;
-using NeeView.Data;
-using NeeView.Properties;
+﻿using NeeView.Properties;
 using NeeView.Windows;
 using NeeView.Windows.Property;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 
 namespace NeeView.Setting
 {
@@ -138,8 +135,8 @@ namespace NeeView.Setting
 
             section = new SettingItemSection(TextResources.GetString("SettingPage.Bookshelf.Tree"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Bookshelf, nameof(BookshelfConfig.FolderTreeLayout))));
-            //section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Panels, nameof(PanelsConfig.FolderTreeFontSize))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Bookshelf, nameof(BookshelfConfig.IsSyncFolderTree))));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Bookshelf, nameof(BookshelfConfig.IsSyncFolderTreeAuto))));
             this.Items.Add(section);
         }
     }
@@ -154,7 +151,6 @@ namespace NeeView.Setting
         {
             var section = new SettingItemSection(TextResources.GetString("SettingPage.Information.Visual"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Information, nameof(InformationConfig.DateTimeFormat))));
-            ////section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Information, nameof(InformationConfig.MapProgramFormat))) { IsStretch = true });
 
             this.Items = new List<SettingItem>() { section };
         }

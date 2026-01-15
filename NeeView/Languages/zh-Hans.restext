@@ -316,6 +316,7 @@ BookshelfConfig.IsMultipleRarFilterEnabled.Remarks=对于名为 ".part[数字].r
 BookshelfConfig.IsOpenNextBookWhenRemove=删除正在阅读的书籍后打开下一本书
 BookshelfConfig.IsSearchIncludeSubdirectories=搜索包括子文件夹
 BookshelfConfig.IsSyncFolderTree=使用同步按钮同步目录树
+BookshelfConfig.IsSyncFolderTreeAuto=
 BookshelfConfig.IsVisibleBookmarkMark=显示书签符号
 BookshelfConfig.IsVisibleBookmarkMark.Remarks=用 ★ 标记已添加书签的书籍。
 BookshelfConfig.IsVisibleHistoryMark=显示历史记录符号

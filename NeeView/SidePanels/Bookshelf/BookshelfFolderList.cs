@@ -1,11 +1,9 @@
 ﻿using NeeLaboratory.ComponentModel;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -234,7 +232,7 @@ namespace NeeView
 
             if (Config.Current.Bookshelf.IsSyncFolderTree && Place != null)
             {
-                FolderPanel.Current.FolderTreeModel?.SyncDirectory(Place.SimplePath);
+                FolderPanel.Current.FolderTreeModel?.SyncDirectory(Place.SimplePath, true);
             }
         }
 
@@ -275,11 +273,19 @@ namespace NeeView
 
             base.OnPlaceChanged(sender, options);
 
+            if (Place is null) return;
+
+            // 本棚履歴に登録
             if (options.HasFlag(FolderSetPlaceOption.UpdateHistory))
             {
-                if (Place is null) return;
                 var place = Place with { Search = null };
                 this.History?.Add(place);
+            }
+
+            // フォルダーツリー自動同期
+            if (Config.Current.Bookshelf.IsSyncFolderTreeAuto)
+            {
+                FolderPanel.Current.FolderTreeModel?.SyncDirectory(Place.SimplePath, false);
             }
         }
 

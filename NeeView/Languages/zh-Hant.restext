@@ -316,6 +316,7 @@ BookshelfConfig.IsMultipleRarFilterEnabled.Remarks=當有 ".part[數字].rar" �
 BookshelfConfig.IsOpenNextBookWhenRemove=刪除閱覽中的書本時開啟下一個書本
 BookshelfConfig.IsSearchIncludeSubdirectories=搜尋包括子資料夾
 BookshelfConfig.IsSyncFolderTree=使用同步按鈕同步樹狀資料夾
+BookshelfConfig.IsSyncFolderTreeAuto=
 BookshelfConfig.IsVisibleBookmarkMark=顯示書籤標記
 BookshelfConfig.IsVisibleBookmarkMark.Remarks=在已被標記的書本中以★顯示標記。
 BookshelfConfig.IsVisibleHistoryMark=顯示歷史記錄標記

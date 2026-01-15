@@ -316,6 +316,7 @@ BookshelfConfig.IsMultipleRarFilterEnabled.Remarks=".part[숫자].rar" 형식의
 BookshelfConfig.IsOpenNextBookWhenRemove=열린 책 삭제 시 다음 책 열기
 BookshelfConfig.IsSearchIncludeSubdirectories=하위 폴더를 포함하여 검색
 BookshelfConfig.IsSyncFolderTree=동기화 버튼으로 폴더 트리 동기화
+BookshelfConfig.IsSyncFolderTreeAuto=
 BookshelfConfig.IsVisibleBookmarkMark=북마크 기호 표시
 BookshelfConfig.IsVisibleBookmarkMark.Remarks=북마크된 책에 "★" 마크를 붙입니다.
 BookshelfConfig.IsVisibleHistoryMark=내역 기호 표시

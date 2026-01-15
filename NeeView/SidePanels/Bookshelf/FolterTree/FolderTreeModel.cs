@@ -544,9 +544,25 @@ namespace NeeView
             folder.Move(oldIndex, newIndex);
         }
 
-        public void SyncDirectory(string place)
+        /// <summary>
+        /// フォルダーツリーの同期
+        /// </summary>
+        /// <remarks>
+        /// 指定パスまでフォルダーツリーを展開し、選択します。
+        /// </remarks>
+        /// <param name="place">同期するパス</param>
+        /// <param name="isForce">既に選択済みの場合も同期する</param>
+        public void SyncDirectory(string place, bool isForce)
         {
-            if (_rootDirectory is null) return;
+            if (_rootDirectory is null)
+            {
+                return;
+            }
+
+            if (!isForce && this.SelectedItem is DirectoryNode selectedNode && selectedNode.Path == place)
+            {
+                return;
+            }
 
             var path = new QueryPath(place);
             if (path.Scheme == QueryScheme.File)
