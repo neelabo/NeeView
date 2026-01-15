@@ -20,6 +20,30 @@ namespace NeeView
                 }
             }
 
+            // ver 45.0
+            if (self.Format.CompareTo(new FormatVersion(BookHistoryCollection.Memento.FormatName, 45, 0, 3978)) < 0)
+            {
+                // UNCパスの正規化。これにより重複したものは削除
+                if (self.Items is not null)
+                {
+                    foreach (var item in self.Items)
+                    {
+                        if (item.Path is not null)
+                        {
+                            item.Path = UncPathTools.ConvertPathToNormalized(item.Path);
+                        }
+                    }
+                    self.Items = self.Items.DistinctBy(e => e.Path).ToList();
+                }
+                if (self.Books is not null)
+                {
+                    foreach (var book in self.Books)
+                    {
+                        book.Path = UncPathTools.ConvertPathToNormalized(book.Path);
+                    }
+                }
+            }
+
             return self;
         }
     }

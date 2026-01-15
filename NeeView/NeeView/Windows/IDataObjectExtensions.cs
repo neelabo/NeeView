@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 
@@ -67,6 +68,19 @@ namespace NeeView.Windows
                 return [];
             }
         }
+
+        /// <summary>
+        /// UNC正規化された FileDrop データを取得
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static string[] GetNormalizedFileDrop(this IDataObject data)
+        {
+            var files = GetFileDrop(data);
+            var exactFiles = files.Select(e => UncPathTools.ConvertPathToNormalized(e)).ToArray();
+            return exactFiles;
+        }
+
     }
 
 }

@@ -274,7 +274,7 @@ namespace NeeView.Windows.Controls
 
         private void PathTextBox_Drop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetFileDrop() is not string[] dropFiles) return;
+            if (e.Data.GetNormalizedFileDrop() is not string[] dropFiles) return;
             if (dropFiles.Length == 0) return;
 
             if (FileDialogType == FileDialogType.Directory)

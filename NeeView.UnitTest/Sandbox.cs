@@ -260,7 +260,7 @@ namespace NeeView.UnitTest
             Assert.Equal(expected, result);
         }
 
-      
+
         [Theory]
         [InlineData(@"file:C:\Hoge\test.txt", @"C:\Hoge\test.txt")]
         [InlineData(@"file:\C:\Hoge\test.txt\", @"C:\Hoge\test.txt")]
@@ -284,6 +284,24 @@ namespace NeeView.UnitTest
             Assert.Equal(@"file:" + path, actual.FullPath);
             Assert.Equal(path, actual.SimplePath);
         }
+
+
+        [Theory]
+        [InlineData(@"\\Server\Share", @"\\Server\Share")]
+        [InlineData(@"\\server\share\", @"\\Server\Share")]
+        [InlineData(@"file:\\SERVER\share\", @"\\Server\Share")]
+        [InlineData(@"\\server\SHARE\File.txt", @"\\Server\Share\File.txt")]
+        public void QueryUncPathTest(string source, string path)
+        {
+            var query = new QueryPath(QueryScheme.File, path).Normalize();
+            var actual = new QueryPath(source).Normalize();
+
+            Assert.Equal(query, actual);
+            Assert.Equal(path, actual.Path);
+            Assert.Equal(@"file:" + path, actual.FullPath);
+            Assert.Equal(path, actual.SimplePath);
+        }
+
 
         [Theory]
         [InlineData(@"bookmark:folder\item1")]

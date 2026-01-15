@@ -1,6 +1,5 @@
 ﻿//#define LOCAL_DEBUG
 
-using NeeLaboratory;
 using NeeLaboratory.Collection;
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
@@ -16,7 +15,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,6 +23,8 @@ namespace NeeView
     [LocalDebug]
     public partial class Playlist : BindableBase
     {
+        public static Playlist Dummy { get; } = new Playlist("") { ErrorMessage = "This is dummy." };
+
         private ObservableCollection<PlaylistItem> _items = new();
         private MultiMap<string, PlaylistItem> _itemsMap = new();
         private FileStamp _fileStamp;
@@ -678,7 +678,7 @@ namespace NeeView
         public bool Save(bool isForce)
         {
             if (!this.IsEditable) return false;
-            if (this.Path is null) return false;
+            if (string.IsNullOrEmpty(this.Path)) return false;
 
             LocalDebug.WriteLine($"Path={this.Path}, IsForce={isForce}");
 

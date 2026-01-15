@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace NeeView
 {
     public class PlaylistSource
     {
-        public static readonly FormatVersion FormatVersion = new("NeeView.Playlist", 2, 0, 0);
+        public static string FormatName => Environment.SolutionName + ".Playlist";
 
         public PlaylistSource()
         {
@@ -26,9 +22,8 @@ namespace NeeView
             Items = items.ToList();
         }
 
-        public FormatVersion Format { get; set; } = FormatVersion;
+        public FormatVersion Format { get; set; } = new FormatVersion(FormatName);
 
         public List<PlaylistSourceItem> Items { get; set; }
     }
-
 }

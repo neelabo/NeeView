@@ -65,7 +65,7 @@ namespace NeeView
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop, true))
             {
-                e.Effects = e.Data.GetFileDrop().Any(x => Directory.Exists(x)) ? DragDropEffects.Copy : DragDropEffects.None;
+                e.Effects = e.Data.GetNormalizedFileDrop().Any(x => Directory.Exists(x)) ? DragDropEffects.Copy : DragDropEffects.None;
                 e.Handled = true;
             }
         }
@@ -74,7 +74,7 @@ namespace NeeView
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop, true))
             {
-                foreach (var path in e.Data.GetFileDrop().Where(x => Directory.Exists(x)))
+                foreach (var path in e.Data.GetNormalizedFileDrop().Where(x => Directory.Exists(x)))
                 {
                     _vm.Add(path);
                 }

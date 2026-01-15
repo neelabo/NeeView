@@ -634,6 +634,22 @@ namespace NeeView
         public List<BookmarkNode>? Children { get; set; }
 
         public bool IsFolder => Children != null;
+
+        public IEnumerable<BookmarkNode> Walk()
+        {
+            yield return this;
+
+            if (Children != null)
+            {
+                foreach(var child in Children)
+                {
+                    foreach(var subChild in child.Walk())
+                    {
+                        yield return subChild;
+                    }
+                }
+            }
+        }
     }
 
     public static class BookmarkNodeConverter

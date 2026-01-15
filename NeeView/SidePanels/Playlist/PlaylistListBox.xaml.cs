@@ -402,7 +402,7 @@ namespace NeeView
                 return queries.Any();
             }
 
-            var files = e.Data.GetFileDrop();
+            var files = e.Data.GetNormalizedFileDrop();
             if (files is not null)
             {
                 e.Effects = DragDropEffects.Copy;
@@ -435,7 +435,7 @@ namespace NeeView
                 return await CreatePlaylistItems(paths, token);
             }
 
-            var files = e.Data.GetFileDrop();
+            var files = e.Data.GetNormalizedFileDrop();
             if (files is not null)
             {
                 return await CreatePlaylistItems(files, token);

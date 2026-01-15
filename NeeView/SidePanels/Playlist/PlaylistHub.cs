@@ -26,45 +26,14 @@ namespace NeeView
         public static PlaylistHub Current { get; }
 
 
-        private List<object> _playlistCollection;
-        private Playlist _playlist;
+        private List<object> _playlistCollection = new();
+        private Playlist _playlist = Playlist.Dummy;
         private int _playlistLockCount;
         private CancellationTokenSource? _deleteInvalidItemsCancellationToken;
         private bool _isPlaylistDirty;
 
         private PlaylistHub()
         {
-            if (SelectedItem != Config.Current.Playlist.DefaultPlaylist)
-            {
-                if (!File.Exists(SelectedItem))
-                {
-                    SelectedItem = Config.Current.Playlist.DefaultPlaylist;
-                }
-            }
-
-            UpdatePlaylistCollection();
-
-            Config.Current.Playlist.AddPropertyChanged(nameof(PlaylistConfig.PlaylistFolder),
-                PlaylistFolder_Changed);
-
-            Config.Current.Playlist.AddPropertyChanged(nameof(PlaylistConfig.CurrentPlaylist),
-                (s, e) => RaisePropertyChanged(nameof(SelectedItem)));
-
-            Config.Current.Playlist.AddPropertyChanged(nameof(PlaylistConfig.IsCurrentBookFilterEnabled),
-                (s, e) => RaisePropertyChanged(nameof(FilterMessage)));
-
-            BookOperation.Current.BookChanged +=
-                (s, e) => RaisePropertyChanged(nameof(FilterMessage));
-
-            // NOTE: 応急処置
-            //BookOperation.Current.LinkPlaylistHub(this);
-
-            this.AddPropertyChanged(nameof(SelectedItem),
-                (s, e) => SelectedItemChanged());
-
-            // initialize first playlist
-            _playlist = LoadPlaylist(this.SelectedItem);
-            AttachPlaylistEvents(_playlist);
         }
 
 
@@ -98,7 +67,9 @@ namespace NeeView
         public string SelectedItem
         {
             get
-            { return Config.Current.Playlist.CurrentPlaylist; }
+            {
+                return Config.Current.Playlist.CurrentPlaylist;
+            }
             set
             {
                 if (Config.Current.Playlist.CurrentPlaylist != value)
@@ -116,6 +87,44 @@ namespace NeeView
         public string? FilterMessage
         {
             get { return Config.Current.Playlist.IsCurrentBookFilterEnabled ? LoosePath.GetFileName(BookOperation.Current.Address) : null; }
+        }
+
+
+        /// <summary>
+        /// 初期化
+        /// </summary>
+        public void Initialize()
+        {
+            if (SelectedItem != Config.Current.Playlist.DefaultPlaylist)
+            {
+                if (!File.Exists(SelectedItem))
+                {
+                    SelectedItem = Config.Current.Playlist.DefaultPlaylist;
+                }
+            }
+
+            UpdatePlaylistCollection();
+
+            Config.Current.Playlist.AddPropertyChanged(nameof(PlaylistConfig.PlaylistFolder),
+                PlaylistFolder_Changed);
+
+            Config.Current.Playlist.AddPropertyChanged(nameof(PlaylistConfig.CurrentPlaylist),
+                (s, e) => RaisePropertyChanged(nameof(SelectedItem)));
+
+            Config.Current.Playlist.AddPropertyChanged(nameof(PlaylistConfig.IsCurrentBookFilterEnabled),
+                (s, e) => RaisePropertyChanged(nameof(FilterMessage)));
+
+            BookOperation.Current.BookChanged +=
+                (s, e) => RaisePropertyChanged(nameof(FilterMessage));
+
+            // NOTE: 応急処置
+            //BookOperation.Current.LinkPlaylistHub(this);
+
+            this.AddPropertyChanged(nameof(SelectedItem),
+                (s, e) => SelectedItemChanged());
+
+            SetPlaylist(LoadPlaylist(this.SelectedItem));
+            _isPlaylistDirty = false;
         }
 
 

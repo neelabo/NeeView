@@ -597,7 +597,7 @@ namespace NeeView
                 return;
             }
 
-            path = path.ResolvePath();
+            path = path.ResolvePath().Normalize();
 
             using var busyLock = _busyLockEvent.CreateBusyLock();
 

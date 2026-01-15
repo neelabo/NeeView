@@ -646,7 +646,7 @@ namespace NeeView
                             DropToQuickAccess(sender, e, isDrop, quickAccessTarget, target.Delta, e.Data.GetQueryPathCollection());
                             if (e.Handled) return;
 
-                            DropToQuickAccess(sender, e, isDrop, quickAccessTarget, target.Delta, e.Data.GetFileDrop());
+                            DropToQuickAccess(sender, e, isDrop, quickAccessTarget, target.Delta, e.Data.GetNormalizedFileDrop());
                             if (e.Handled) return;
                         }
                         break;
@@ -659,7 +659,7 @@ namespace NeeView
                             DropToBookmark(sender, e, isDrop, bookmarkFolderTarget, e.Data.GetQueryPathCollection());
                             if (e.Handled) return;
 
-                            DropToBookmark(sender, e, isDrop, bookmarkFolderTarget, e.Data.GetFileDrop());
+                            DropToBookmark(sender, e, isDrop, bookmarkFolderTarget, e.Data.GetNormalizedFileDrop());
                             if (e.Handled) return;
                         }
                         break;

@@ -9,7 +9,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -109,7 +108,7 @@ namespace NeeView
         /// <returns></returns>
         public static string GetNormalizedPath(string? source)
         {
-            if (source == null) return "";
+            if (string.IsNullOrEmpty(source)) return "";
 
             // 区切り文字修正
             source = _separateRegex.Replace(source, "\\").TrimEnd('\\');
@@ -127,7 +126,9 @@ namespace NeeView
             if (FileIO.ExistsPath(source))
             {
                 // 大文字・小文字をファイルシステム情報にあわせる
-                return GetLongPathName(source);
+                var path = GetLongPathName(source);
+                // UNCパスの正規化
+                return UncPathTools.ConvertPathToNormalized(path);
             }
             else
             {
@@ -144,7 +145,8 @@ namespace NeeView
                         break;
                     }
                 }
-                return path;
+                // UNCパスの正規化
+                return UncPathTools.ConvertPathToNormalized(path);
             }
         }
 

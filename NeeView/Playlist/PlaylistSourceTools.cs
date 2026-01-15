@@ -92,7 +92,7 @@ namespace NeeView
             {
                 var playlistV1 = JsonSerializer.Deserialize<PlaylistSourceV1>(json, UserSettingTools.GetSerializerOptions());
                 if (playlistV1 is null) throw new FormatException();
-                return playlistV1.ToPlaylist();
+                return playlistV1.ToPlaylist().Validate();
             }
 #pragma warning restore CS0612, CS0618 // 型またはメンバーが旧型式です
 
@@ -100,7 +100,7 @@ namespace NeeView
             {
                 var playlistSource = JsonSerializer.Deserialize<PlaylistSource>(json, UserSettingTools.GetSerializerOptions());
                 if (playlistSource is null) throw new FormatException();
-                return playlistSource;
+                return playlistSource.Validate();
             }
         }
 

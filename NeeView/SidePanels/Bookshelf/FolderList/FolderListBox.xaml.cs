@@ -740,7 +740,7 @@ namespace NeeView
                 return queries.Any();
             }
 
-            var files = e.Data.GetFileDrop();
+            var files = e.Data.GetNormalizedFileDrop();
             if (files is not null)
             {
                 e.Effects = DragDropEffects.Copy;
@@ -771,7 +771,7 @@ namespace NeeView
                 return queries.Select(e => BookmarkCollectionService.CreateBookmarkNode(e)).WhereNotNull().ToList();
             }
 
-            var files = e.Data.GetFileDrop();
+            var files = e.Data.GetNormalizedFileDrop();
             if (files is not null)
             {
                 return files.Select(e => BookmarkCollectionService.CreateBookmarkNode(new QueryPath(e))).WhereNotNull().ToList();

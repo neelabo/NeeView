@@ -424,7 +424,7 @@ namespace NeeView
             // File drop (from browser)
             if (data.GetDataPresent(DataFormats.FileDrop))
             {
-                var files = data.GetFileDrop();
+                var files = data.GetNormalizedFileDrop();
                 if (files == null || files.Length <= 0) return null;
 
                 var fileNames = new List<string>();
