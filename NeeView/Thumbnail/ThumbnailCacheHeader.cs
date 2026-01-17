@@ -9,7 +9,6 @@ namespace NeeView
     {
         public static ThumbnailCacheHeader None { get; } = new("", 0, null, 0);
 
-
         public ThumbnailCacheHeader(string name, long length, string? appendix, int generateHash)
         {
             Key = appendix != null ? name + ":" + appendix : name;

@@ -128,6 +128,7 @@ namespace NeeView
         public static readonly RoutedCommand OpenDestinationFolderCommand = new("OpenDestinationFolderCommand", typeof(FolderListBox));
         public static readonly RoutedCommand OpenExternalAppDialogCommand = new("OpenExternalAppDialogCommand", typeof(FolderListBox));
         public static readonly RoutedCommand OpenInPlaylistCommand = new("OpenInPlaylistCommand", typeof(FolderListBox));
+        public static readonly RoutedCommand RegenerateThumbnailCommand = new("RegenerateThumbnailCommand", typeof(FolderListBox));
 
         private static void InitializeCommandStatic()
         {
@@ -158,6 +159,7 @@ namespace NeeView
             this.ListBox.CommandBindings.Add(new CommandBinding(OpenDestinationFolderCommand, OpenDestinationFolderDialog_Execute));
             this.ListBox.CommandBindings.Add(new CommandBinding(OpenExternalAppDialogCommand, OpenExternalAppDialog_Execute));
             this.ListBox.CommandBindings.Add(new CommandBinding(OpenInPlaylistCommand, OpenInPlaylistCommand_Execute));
+            this.ListBox.CommandBindings.Add(new CommandBinding(RegenerateThumbnailCommand, RegenerateThumbnailCommand_Execute));
         }
 
         /// <summary>
@@ -553,6 +555,19 @@ namespace NeeView
             }
         }
 
+        private void RegenerateThumbnailCommand_Execute(object? sender, ExecutedRoutedEventArgs e)
+        {
+            if (sender is not ListBox listBox) return;
+
+            var items = listBox.SelectedItems.OfType<FolderItem>().Where(e => !e.IsEmpty());
+            foreach(var item in items)
+            {
+                item.ClearThumbnailCache();
+            }
+
+            _thumbnailLoader?.Load();
+        }
+
 
         private RelayCommand? _NewFolderCommand;
         public RelayCommand NewFolderCommand
@@ -576,7 +591,7 @@ namespace NeeView
             _vm.Model.AddBookmark();
         }
 
-        #endregion
+#endregion
 
         #region DragDrop
 
@@ -1231,6 +1246,12 @@ namespace NeeView
                 contextMenu.Items.Add(new Separator());
                 contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Delete"), Command = RemoveCommand });
                 contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Rename"), Command = RenameCommand });
+
+                var menu = new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Thumbnail") };
+                menu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.SetThumbnail") });
+                menu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.RegenerateThumbnail"), Command = RegenerateThumbnailCommand });
+                contextMenu.Items.Add(menu);
+
                 if (item.IsPlaylist)
                 {
                     contextMenu.Items.Add(new Separator());

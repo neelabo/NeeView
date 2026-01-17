@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -621,7 +620,21 @@ namespace NeeView
     public enum ArchiveEntryAttributes
     {
         None = 0,
+
+        /// <summary>
+        /// エントリ名が重複した別エントリが存在する
+        /// </summary>
         Duplicate = (1 << 0),
+
+        /// <summary>
+        /// 共通指定ブックサムネイル用エントリ
+        /// </summary>
+        SpecifiedBookThumbnail = (1 << 1),
+
+        /// <summary>
+        /// 個別指定ブックサムネイル用エントリ
+        /// </summary>
+        IndivisualBookThumbnail = (1 << 2),
     }
 }
 

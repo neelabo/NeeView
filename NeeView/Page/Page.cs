@@ -204,22 +204,28 @@ namespace NeeView
         public bool IsThumbnailValid => _thumbnailSource.Thumbnail.IsValid;
 
         /// <summary>
+        /// サムネイルキャッシュ削除
+        /// </summary>
+        public void ClearThumbnailCache()
+        {
+            _thumbnailSource.ClearCache();
+        }
+
+        /// <summary>
         /// サムネイル読み込み
         /// </summary>
-        public async ValueTask<ImageSource?> LoadThumbnailAsync(CancellationToken token)
+        public async ValueTask LoadThumbnailAsync(CancellationToken token)
         {
-            if (_disposedValue) return null;
+            if (_disposedValue) return;
 
             try
             {
                 token.ThrowIfCancellationRequested();
                 await _thumbnailSource.LoadAsync(token);
-                return this.Thumbnail?.CreateImageSource();
             }
             catch
             {
                 // nop.
-                return null;
             }
         }
 

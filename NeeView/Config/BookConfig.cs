@@ -42,6 +42,7 @@ namespace NeeView
         private WidePageStretch _widePageStretch = WidePageStretch.UniformHeight;
         private WidePageVerticalAlignment _widePageVerticalAlignment = WidePageVerticalAlignment.Center;
         private Color _loadingPageColor = Color.FromRgb(0xE0, 0xE0, 0xE0);
+        private string _bookThumbnailFileName = "folder.jpg";
         private int _bookThumbnailDepth = 2;
         private readonly RegexCollectionCache _excludeRegexCache = new();
 
@@ -261,6 +262,16 @@ namespace NeeView
         {
             get { return _loadingPageColor; }
             set { SetProperty(ref _loadingPageColor, value); }
+        }
+
+        /// <summary>
+        /// ブックサムネイル生成に優先されるファイル名
+        /// </summary>
+        [PropertyMember]
+        public string BookThumbnailFileName
+        {
+            get { return _bookThumbnailFileName; }
+            set { SetProperty(ref _bookThumbnailFileName, value.Trim()); }
         }
 
         /// <summary>

@@ -1,13 +1,8 @@
-﻿using NeeView.Data;
-using NeeView.Threading;
+﻿using NeeView.Threading;
 using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -201,7 +196,7 @@ namespace NeeView
             var record = connection != null ? await connection.LoadAsync(header, token) : null;
             if (record != null)
             {
-                // 1日以上古い場合は更新する
+                // 1日以上古い場合はキャッシュのアクセス日時を更新する
                 if ((header.AccessTime - record.DateTime).TotalDays > 1.0)
                 {
                     EntryUpdateQueue(header);

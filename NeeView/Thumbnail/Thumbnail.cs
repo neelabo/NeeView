@@ -2,16 +2,11 @@
 
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
-using NeeView;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -79,7 +74,8 @@ namespace NeeView
                     {
                         var path = linkTarget.FullName;
                         var length = linkTarget.Attributes.HasFlag(FileAttributes.Directory) ? linkTarget.GetSafeLastWriteTime().ToBinary() : (linkTarget as FileInfo)?.Length ?? 0;
-                        _header = new ThumbnailCacheHeader(path, length, null, Config.Current.Thumbnail.GetThumbnailImageGenerateHash());
+                        var ghash = Config.Current.Thumbnail.GetThumbnailImageGenerateHash();
+                        _header = new ThumbnailCacheHeader(path, length, null, ghash);
                     }
                     else
                     {
@@ -90,7 +86,8 @@ namespace NeeView
                 {
                     var path = entry.TargetPath;
                     var length = entry.IsDirectory ? entry.LastWriteTime.ToBinary() : entry.Length;
-                    _header = new ThumbnailCacheHeader(path, length, null, Config.Current.Thumbnail.GetThumbnailImageGenerateHash());
+                    var ghash = Config.Current.Thumbnail.GetThumbnailImageGenerateHash();
+                    _header = new ThumbnailCacheHeader(path, length, null, ghash);
                 }
             }
             catch (Exception ex)
@@ -119,6 +116,15 @@ namespace NeeView
         public bool IsCacheEnabled { get; set; }
 
         /// <summary>
+        /// キャッシュの読み込み許可フラグ
+        /// </summary>
+        /// <remarks>
+        /// 再生成などでキャッシュ読み込みを回避したい場合に false にする。
+        /// 初期化されると true になる。
+        /// </remarks>
+        public bool IsCacheReadEnabled { get; set; } = true;
+
+        /// <summary>
         /// 有効判定
         /// </summary>
         public bool IsValid => _image != null;
@@ -135,6 +141,7 @@ namespace NeeView
                 if (_image != value)
                 {
                     _image = value;
+                    _imageSource = null;
                     LocalWriteLine($"Image={_image is not null}");
                     RaisePropertyChanged();
                     RaisePropertyChanged(nameof(IsValid));
@@ -267,6 +274,7 @@ namespace NeeView
         {
             if (_disposedValue) return;
             if (IsValid || !IsCacheEnabled) return;
+            if (!IsCacheReadEnabled) return;
 
 #if DEBUG
             if (DebugIgnoreCache)
@@ -295,6 +303,8 @@ namespace NeeView
             {
                 RaisePropertyChanged(nameof(ImageSource));
             }
+
+            IsCacheReadEnabled = true;
         }
 
         /// <summary>
@@ -310,6 +320,8 @@ namespace NeeView
             Image = image ?? ThumbnailResource.EmptyImage;
 
             SaveCacheAsync();
+            
+            IsCacheReadEnabled = true;
         }
 
         /// <summary>
@@ -328,6 +340,8 @@ namespace NeeView
                 ThumbnailType.NoEntry => ThumbnailResource.NoEntryImage,
                 _ => ThumbnailResource.EmptyImage,
             };
+
+            IsCacheReadEnabled = true;
         }
 
         /// <summary>
@@ -350,6 +364,8 @@ namespace NeeView
             {
                 Initialize(source.Type);
             }
+
+            IsCacheReadEnabled = true;
         }
 
         /// <summary>

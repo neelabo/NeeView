@@ -1,12 +1,10 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
-using NeeLaboratory.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace NeeView
 {
@@ -101,8 +99,8 @@ namespace NeeView
 
                 // TODO: 同じリクエストだったらなにもしない、とか、ここでする？
 
-                // 対象カテゴリのJOBの取得
-                var collection = Queue.Where(e => e.Category == sender.Category).ToList();
+                // 対象カテゴリの有効JOBの取得
+                var collection = Queue.Where(e => e.Category == sender.Category && e.Job.State != JobState.Closed).ToList();
 
                 // オーダーがcollectionにない場合はそのJOBを作成、追加。
                 var sources = new List<JobSource>();

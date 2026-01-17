@@ -441,6 +441,10 @@ namespace NeeView
             Interlocked.Decrement(ref _pendingCount);
             RaisePropertyChanged(nameof(PendingCount));
         }
+
+        public virtual void ClearThumbnailCache()
+        {
+        }
     }
 
 
@@ -572,6 +576,17 @@ namespace NeeView
             page.Thumbnail.IsCacheEnabled = true;
             page.Thumbnail.Touched += Thumbnail_Touched;
             return page;
+        }
+
+        public override void ClearThumbnailCache()
+        {
+            lock (_lock)
+            {
+                if (_disposedValue) return;
+                if (_archivePage is null) return;
+
+                _archivePage.ClearThumbnailCache();
+            }
         }
 
         private void DisposeArchivePage(Page? page)

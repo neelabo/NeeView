@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 namespace NeeView
@@ -16,6 +15,14 @@ namespace NeeView
 
         public Thumbnail Thumbnail { get; }
 
+        /// <summary>
+        /// キャッシュを無効化
+        /// </summary>
+        public void ClearCache()
+        {
+            Thumbnail.Clear();
+            Thumbnail.IsCacheReadEnabled = false;
+        }
 
         public async ValueTask LoadAsync(CancellationToken token)
         {
