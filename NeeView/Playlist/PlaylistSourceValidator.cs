@@ -9,8 +9,14 @@ namespace NeeView
             if (self is null) throw new ArgumentNullException(nameof(self));
             if (self.Format is null) throw new FormatException("Playlist.Format must not be null.");
 
-            // ver 45.0
-            if (self.Format.CompareTo(new FormatVersion(PlaylistSource.FormatName, 45, 0, 3978)) < 0)
+            // 45.0 alpha.4 でのフォーマットバージョンを修正
+            if (self.Format.CompareTo(new FormatVersion(PlaylistSource.FormatName, 45, 0, 3981)) == 0)
+            {
+                self.Format = new FormatVersion(PlaylistSource.FormatName, 2, 0, 0);
+            }
+
+            // playlist ver 2.0.1
+            if (self.Format.CompareTo(new FormatVersion(PlaylistSource.FormatName, 2, 0, 1)) < 0)
             {
                 // UNCパスの正規化
                 foreach (var item in self.Items)
@@ -22,6 +28,7 @@ namespace NeeView
                 }
             }
 
+            self.ResetFormat();
             return self;
         }
     }
