@@ -248,6 +248,9 @@ namespace NeeView
             // ブックマーク読み込み
             SaveData.Current.LoadBookmark();
 
+            // フォルダー設定読み込み
+            SaveData.Current.LoadFolderConfig();
+
             // プレイリスト読み込み
             PlaylistHub.Current.Initialize();
 

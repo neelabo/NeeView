@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Threading.Tasks;
-using System.Threading;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NeeView
 {
@@ -32,9 +32,18 @@ namespace NeeView
         {
             if (System.IO.Directory.Exists(entry.SystemPath) || entry.IsBook())
             {
-                if (ArchiveManager.Current.GetSupportedType(entry.SystemPath) == ArchiveType.MediaArchive)
+                try
                 {
-                    return entry;
+                    var target = FolderConfigTools.GetThumbnailTarget(entry.EntryFullName);
+                    if (target is not null)
+                    {
+                        return await ArchiveEntryUtility.CreateAsync(target, ArchiveHint.None, false, token);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // 取得時の例外は無視
+                    Debug.WriteLine(ex.Message);
                 }
 
                 var fileName = Config.Current.Book.BookThumbnailFileName;

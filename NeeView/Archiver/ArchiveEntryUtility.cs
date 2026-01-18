@@ -129,6 +129,11 @@ namespace NeeView
 
             try
             {
+                if (ArchiveManager.Current.GetSupportedType(source.SystemPath) == ArchiveType.MediaArchive)
+                {
+                    return source;
+                }
+
                 List<ArchiveEntry> entries;
                 if (!source.IsFileSystem && source.IsDirectory)
                 {

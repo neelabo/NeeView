@@ -1,6 +1,8 @@
-﻿using NeeLaboratory.Windows.Input;
-using NeeView.Windows.Media;
+﻿using NeeLaboratory.ComponentModel;
+using NeeLaboratory.Linq;
+using NeeLaboratory.Windows.Input;
 using NeeView.Collections.Generic;
+using NeeView.Properties;
 using NeeView.Windows;
 using System;
 using System.Collections.Generic;
@@ -13,12 +15,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media.Animation;
-using NeeLaboratory.ComponentModel;
-using NeeLaboratory.Linq;
-using NeeView.Properties;
 
 namespace NeeView
 {
@@ -129,6 +126,7 @@ namespace NeeView
         public static readonly RoutedCommand OpenExternalAppDialogCommand = new("OpenExternalAppDialogCommand", typeof(FolderListBox));
         public static readonly RoutedCommand OpenInPlaylistCommand = new("OpenInPlaylistCommand", typeof(FolderListBox));
         public static readonly RoutedCommand RegenerateThumbnailCommand = new("RegenerateThumbnailCommand", typeof(FolderListBox));
+        public static readonly RoutedCommand SetThumbnailCommand = new("SetThumbnailCommand", typeof(FolderListBox));
 
         private static void InitializeCommandStatic()
         {
@@ -160,6 +158,7 @@ namespace NeeView
             this.ListBox.CommandBindings.Add(new CommandBinding(OpenExternalAppDialogCommand, OpenExternalAppDialog_Execute));
             this.ListBox.CommandBindings.Add(new CommandBinding(OpenInPlaylistCommand, OpenInPlaylistCommand_Execute));
             this.ListBox.CommandBindings.Add(new CommandBinding(RegenerateThumbnailCommand, RegenerateThumbnailCommand_Execute));
+            this.ListBox.CommandBindings.Add(new CommandBinding(SetThumbnailCommand, SetThumbnailCommand_Execute, SetThumbnailCommand_CanExecute));
         }
 
         /// <summary>
@@ -560,12 +559,47 @@ namespace NeeView
             if (sender is not ListBox listBox) return;
 
             var items = listBox.SelectedItems.OfType<FolderItem>().Where(e => !e.IsEmpty());
-            foreach(var item in items)
+            foreach (var item in items)
             {
                 item.ClearThumbnailCache();
             }
 
             _thumbnailLoader?.Load();
+        }
+
+        private void SetThumbnailCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (sender is ListBox { SelectedItem: FolderItem item } && item.CanThumbnail())
+            {
+                var page = BookOperation.Current.Book?.CurrentPage;
+                // 画像ページと、登録解除用にページなしを許可
+                e.CanExecute = page is null || (page.ArchiveEntry.IsImage(false) && !page.ArchiveEntry.IsMedia());
+            }
+            else
+            {
+                e.CanExecute = false;
+            }
+        }
+
+        private void SetThumbnailCommand_Execute(object? sender, ExecutedRoutedEventArgs e)
+        {
+            if (sender is ListBox { SelectedItem: FolderItem item } && item.CanThumbnail())
+            {
+                try
+                {
+                    // 現在のページをサムネイルとして登録。画像でない場合は解除。
+                    var page = BookOperation.Current.Book?.CurrentPage;
+                    var target = (page is not null &&page.ArchiveEntry.IsImage(false) && !page.ArchiveEntry.IsMedia()) ? page.EntryFullName : null;
+                    FolderConfigTools.SetThumbnailTarget(item.TargetPath.SimplePath, target);
+                }
+                catch (Exception ex)
+                {
+                    ToastService.Current.Show(new Toast(ex.Message, "Thumbnail error", ToastIcon.Error));
+                }
+                // サムネイル更新
+                item.ClearThumbnailCache();
+                _thumbnailLoader?.Load();
+            }
         }
 
 
@@ -591,7 +625,7 @@ namespace NeeView
             _vm.Model.AddBookmark();
         }
 
-#endregion
+        #endregion
 
         #region DragDrop
 
@@ -1246,9 +1280,9 @@ namespace NeeView
                 contextMenu.Items.Add(new Separator());
                 contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Delete"), Command = RemoveCommand });
                 contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Rename"), Command = RenameCommand });
-
-                var menu = new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Thumbnail") };
-                menu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.SetThumbnail") });
+                contextMenu.Items.Add(new Separator());
+                var menu = new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Thumbnail"), IsEnabled = item.CanThumbnail() };
+                menu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.SetThumbnail"), Command = SetThumbnailCommand });
                 menu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.RegenerateThumbnail"), Command = RegenerateThumbnailCommand });
                 contextMenu.Items.Add(menu);
 

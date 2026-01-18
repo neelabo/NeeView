@@ -99,7 +99,7 @@ namespace NeeView
                 if (parent != null)
                 {
                     if (parent.Children is null) throw new InvalidOperationException("FolderNode parent.Children must be not null");
-                    var name = LoosePath.GetFileName(FullName, parent.FullName);
+                    var name = LoosePath.GetFileName(FullName, parent.FullName, StringComparison.OrdinalIgnoreCase);
                     var index = parent.Children.FindIndex(e => e.Name == name); // 重複名は区別できていない
                     if (index < 0) throw new KeyNotFoundException();
 

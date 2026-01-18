@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
-using System;
 
 namespace NeeLaboratory.IO
 {
@@ -33,6 +32,20 @@ namespace NeeLaboratory.IO
             using (FileStream stream = File.Open(path, FileMode.Create, FileAccess.Write))
             {
                 await stream.WriteAsync(bytes);
+            }
+        }
+
+        /// <summary>
+        /// ファイルに上書き
+        /// </summary>
+        /// <remarks>
+        /// Hidden ファイルに対しては WriteAllBytes が失敗することがあるのでその代わりに使用する
+        /// </remarks>
+        public static void TruncateAllBytes(string path, byte[] bytes)
+        {
+            using (var fs = new FileStream(path, FileMode.Truncate, FileAccess.Write))
+            {
+                fs.Write(bytes, 0, bytes.Length);
             }
         }
     }

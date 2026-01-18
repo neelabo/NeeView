@@ -426,6 +426,7 @@ namespace NeeView
                 var newPath = EntryFullName;
                 BookMementoCollection.Current.RenameRecursive(oldPath, newPath);
                 QuickAccessCollection.Current.RenameRecursive(oldPath, newPath);
+                FolderConfigTools.RenameRecursive(oldPath, newPath);
                 PlaylistHub.Current.RenameItemPathRecursive(oldPath, newPath);
             }
             return isSuccess;

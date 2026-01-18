@@ -3,13 +3,9 @@
 using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
-using NeeLaboratory.IO;
-using NeeView.Collections.Generic;
-using NeeView.Data;
 using NeeView.Properties;
 using NeeView.Threading;
 
@@ -29,9 +25,11 @@ namespace NeeView
 
         private readonly DelayAction _delaySaveBookmark;
         private readonly IntervalAction _delaySaveHistory;
+        private readonly DelayAction _delaySaveFolderConfig;
         private readonly UserSettingWatcher _userSettingWatcher = new UserSettingWatcher();
         private readonly BookmarkWatcher _bookmarkWatcher = new BookmarkWatcher();
         private readonly PlaylistWatcher _playlistWatcher = new PlaylistWatcher();
+        private readonly FolderConfigWatcher _folderConfigWatcher = new FolderConfigWatcher();
         private readonly DisposableCollection _disposables = new();
         private bool _disposedValue = false;
 
@@ -39,6 +37,7 @@ namespace NeeView
         {
             _delaySaveBookmark = new DelayAction(() => SaveBookmark(true, true), TimeSpan.FromSeconds(0.5));
             _delaySaveHistory = new IntervalAction(() => SaveHistory(true), TimeSpan.FromMinutes(5.0));
+            _delaySaveFolderConfig = new DelayAction(() => SaveFolderConfig(true, true), TimeSpan.FromSeconds(5.0));
         }
 
 
@@ -50,6 +49,7 @@ namespace NeeView
             _disposables.Add(BookHistoryCollection.Current.SubscribeHistoryChanged(BookHistoryCollection_HistoryChanged));
             _disposables.Add(BookHistoryCollection.Current.SubscribeSearchChanged(BookHistoryCollection_SearchChanged));
             _disposables.Add(Config.Current.Bookmark.SubscribePropertyChanged(nameof(BookmarkConfig.BookmarkFilePath), BookmarkConfig_BookmarkFilePathChanged));
+            _disposables.Add(FolderConfigCollection.Current.SubscribeFolderChanged(FolderConfigCollection_FolderChanged));
         }
 
         protected virtual void Dispose(bool disposing)
@@ -58,12 +58,14 @@ namespace NeeView
             {
                 if (disposing)
                 {
+                    _folderConfigWatcher.Dispose();
                     _playlistWatcher.Dispose();
                     _bookmarkWatcher.Dispose();
                     _userSettingWatcher.Dispose();
                     _disposables.Dispose();
                     _delaySaveBookmark.Dispose();
                     _delaySaveHistory.Dispose();
+                    _delaySaveFolderConfig.Dispose();
                 }
                 _disposedValue = true;
             }
@@ -123,12 +125,19 @@ namespace NeeView
             _bookmarkWatcher.Reload();
         }
 
+        private void FolderConfigCollection_FolderChanged(object? sender, FolderConfig config)
+        {
+            LocalDebug.WriteLine($"");
+            _delaySaveFolderConfig.Request();
+        }
+
         public void Flush()
         {
             if (_disposedValue) return;
 
             _delaySaveBookmark.Flush();
             _delaySaveHistory.Flush();
+            _delaySaveFolderConfig.Flush();
             PlaylistHub.Current.Flush();
         }
 
@@ -210,6 +219,34 @@ namespace NeeView
             }
         }
 
+        public void SaveFolderConfig(bool sync, bool handleException)
+        {
+            if (_disposedValue) return;
+
+            LocalDebug.WriteLine($"Save FolderConfig");
+
+            try
+            {
+                _delaySaveFolderConfig?.Cancel();
+                SaveData.Current.SaveFolderConfig();
+                _folderConfigWatcher.Reset();
+            }
+            catch (Exception ex)
+            {
+                var message = TextResources.GetString("FailedToSaveDataDialog.FolderConfig.Message") + System.Environment.NewLine + ex.Message;
+                if (handleException)
+                {
+                    ToastService.Current.Show(new Toast(message, TextResources.GetString("FailedToSaveDataDialog.Title"), ToastIcon.Error));
+                    return;
+                }
+                else
+                {
+                    throw new IOException(message, ex);
+                }
+            }
+        }
+
+
         private static void RemoveHistoryIfNotSave()
         {
             SaveData.Current.DeleteHistoryIfNotSave();
@@ -240,6 +277,7 @@ namespace NeeView
 
             _bookmarkWatcher.Reset();
             _playlistWatcher.Reset();
+            _folderConfigWatcher.Reset();
         }
     }
 }

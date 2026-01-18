@@ -28,6 +28,10 @@ namespace NeeView
         [JsonInclude, JsonPropertyName(nameof(Home))]
         public string? _home;
 
+        [JsonInclude, JsonPropertyName(nameof(FolderConfigFilePath))]
+        public string? _folderConfigFilePath;
+
+
         /// <summary>
         /// ホームのパス
         /// </summary>
@@ -198,6 +202,18 @@ namespace NeeView
             get { return _isVisibleSearchBox; }
             set { SetProperty(ref _isVisibleSearchBox, value); }
         }
+
+        /// <summary>
+        /// フォルダー設定の保存場所
+        /// </summary>
+        [JsonIgnore]
+        [PropertyPath(FileDialogType = FileDialogType.SaveFile, Filter = "JSON|*.json")]
+        public string FolderConfigFilePath
+        {
+            get { return _folderConfigFilePath ?? SaveDataProfile.DefaultFolderConfigFilePath; }
+            set { SetProperty(ref _folderConfigFilePath, (string.IsNullOrWhiteSpace(value) || value.Trim() == SaveDataProfile.DefaultFolderConfigFilePath) ? null : value.Trim()); }
+        }
+
 
         #region Obsolete
 

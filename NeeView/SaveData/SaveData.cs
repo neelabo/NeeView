@@ -21,6 +21,7 @@ namespace NeeView
         private DateTime _historyLastWriteTime;
         private FileStamp _userSettingFileStamp = new();
         private FileStamp _bookmarkFileStamp = new();
+        private FileStamp _folderConfigFileStamp = new();
 
         // 設定のバックアップを１起動に付き１回に制限するフラグ
         private bool _backupOnce = true;
@@ -35,6 +36,8 @@ namespace NeeView
         public static string UserSettingFilePath => App.Current.Option.SettingFilename ?? throw new InvalidOperationException("UserSettingFilePath must not be null");
         public static string HistoryFilePath => Config.Current.History.HistoryFilePath;
         public static string BookmarkFilePath => Config.Current.Bookmark.BookmarkFilePath;
+        public static string FolderConfigFilePath => Config.Current.Bookshelf.FolderConfigFilePath;
+
 
         public bool IsEnableSave { get; private set; } = true;
 
@@ -146,6 +149,33 @@ namespace NeeView
             }
         }
 
+        public void LoadFolderConfig()
+        {
+            LoadFolderConfig(FolderConfigFilePath);
+        }
+
+        // フォルダー設定読み込み
+        public void LoadFolderConfig(string filename)
+        {
+            using (ProcessLock.Lock())
+            {
+                if (!File.Exists(filename))
+                {
+                    return;
+                }
+
+                var fileStamp = FileStamp.Create(filename);
+                if (fileStamp == _folderConfigFileStamp)
+                {
+                    return;
+                }
+                _folderConfigFileStamp = fileStamp;
+                var failedDialog = new LoadFailedDialog("Notice.LoadFolderConfigFailed", "Notice.LoadFolderConfigFailedTitle");
+                FolderConfigCollection.Memento? memento = SafetyLoad(FolderConfigCollection.Memento.Load, filename, failedDialog);
+                FolderConfigCollection.Current.Restore(memento);
+            }
+        }
+
         /// <summary>
         /// 正規ファイルの読み込みに失敗したらバックアップからの復元を試みる。
         /// エラー時にはダイアログ表示。選択によってはOperationCancelExceptionを発生させる。
@@ -208,7 +238,7 @@ namespace NeeView
             }
         }
 
-        #endregion Load
+#endregion Load
 
         #region Save
 
@@ -337,6 +367,22 @@ namespace NeeView
 
             DeleteLegacyFile(_pagemarkFilenameToDelete);
             _pagemarkFilenameToDelete = null;
+        }
+
+        /// <summary>
+        /// フォルダー設定をファイルに保存
+        /// </summary>
+        public void SaveFolderConfig()
+        {
+            if (!IsEnableSave) return;
+            //if (!Config.Current.Bookshelf.IsSaveFolderConfig) return;
+
+            using (ProcessLock.Lock())
+            {
+                var folderConfigMemento = FolderConfigCollection.Current.CreateMemento();
+                SafetySave(folderConfigMemento.Save, FolderConfigFilePath, false);
+                _folderConfigFileStamp = FileStamp.Create(FolderConfigFilePath);
+            }
         }
 
         /// <summary>

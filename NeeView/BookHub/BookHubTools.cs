@@ -134,6 +134,7 @@ namespace NeeView
             {
                 BookMementoCollection.Current.RenameRecursive(oldPath, path);
                 QuickAccessCollection.Current.RenameRecursive(oldPath, path);
+                FolderConfigTools.RenameRecursive(oldPath, path);
                 PlaylistHub.Current.RenameItemPathRecursive(oldPath, path);
             }
 

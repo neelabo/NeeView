@@ -1,11 +1,9 @@
 ﻿using NeeLaboratory.Linq;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace NeeView
 {
@@ -90,11 +88,11 @@ namespace NeeView
         }
 
         // place部をディレクトリーとみなしたファイル名取得
-        public static string GetFileName(string? s, string? place)
+        public static string GetFileName(string? s, string? place, StringComparison comparison = StringComparison.Ordinal)
         {
             if (string.IsNullOrEmpty(s)) return "";
             if (string.IsNullOrEmpty(place)) return s;
-            if (string.Compare(s, 0, place, 0, place.Length, StringComparison.OrdinalIgnoreCase) != 0) throw new ArgumentException("s not contain place");
+            if (string.Compare(s, 0, place, 0, place.Length, comparison) != 0) throw new ArgumentException("s not contain place");
             return s[place.Length..].TrimStart(Separators);
         }
 
@@ -341,6 +339,44 @@ namespace NeeView
         {
             if (string.IsNullOrWhiteSpace(name)) return path;
             return Combine(GetDirectoryName(path), name);
+        }
+
+        /// <summary>
+        /// 先頭のディレクトリ名一致
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool IsDirectoryStartsWith(string path, string value, StringComparison comparison = StringComparison.Ordinal)
+        {
+            if (!path.StartsWith(value, comparison)) return false;
+
+            return path.Length == value.Length || path[value.Length] == DefaultSeparator;
+        }
+
+        /// <summary>
+        /// 先頭部分ののディレクトリ名を置換
+        /// </summary>
+        /// <param name="path">入力パス</param>
+        /// <param name="src">置換対象部分</param>
+        /// <param name="dst">置き換えるもの</param>
+        /// <param name="renamed"></param>
+        /// <returns></returns>
+        public static bool TryReplaceStartsWith(string path, string src, string dst, [NotNullWhen(true)] out string? renamed, StringComparison comparison = StringComparison.Ordinal)
+        {
+            var srcPath = src.TrimEnd(DefaultSeparator);
+            var dstPath = dst.TrimEnd(DefaultSeparator);
+
+            if (IsDirectoryStartsWith(path, srcPath, comparison))
+            {
+                renamed = dstPath + srcPath[srcPath.Length..];
+                return true;
+            }
+            else
+            {
+                renamed = null;
+                return false;
+            }
         }
     }
 }

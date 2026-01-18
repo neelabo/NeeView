@@ -1,14 +1,9 @@
 ﻿using NeeLaboratory.ComponentModel;
-using NeeLaboratory.IO;
 using NeeLaboratory.IO.Search;
 using NeeView.Collections;
 using NeeView.Properties;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -312,6 +307,9 @@ namespace NeeView
 
         // 拡張子の非表示
         public bool IsHideExtension() => IsShortcut || IsPlaylist;
+
+        // サムネイル変更可能
+        public bool CanThumbnail() => !IsEmpty() && !IsDrive() && !IsBookmark();
 
         /// <summary>
         /// ターゲットパスと名前の設定
