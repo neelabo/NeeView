@@ -24,37 +24,22 @@ namespace NeeView
             Place = place;
         }
 
+
         /// <summary>
         /// 設定ファイルの場所
         /// </summary>
         public string Place { get; set; }
 
         /// <summary>
-        /// 最終アクセス時間 (キャッシュの有効期限用)
+        /// フォルダーのソート順
         /// </summary>
-        public int LastTick { get; set; }
+        public FolderParameter.Memento? Parameter { get; set; }
 
         /// <summary>
         /// サムネイル設定
         /// </summary>
         public Dictionary<string, string> Thumbs { get; set; } = new();
 
-
-        /// <summary>
-        /// 最終アクセス時間更新。キャッシュ有効期限用
-        /// </summary>
-        public void UpdateLastAccessTime()
-        {
-            LastTick = System.Environment.TickCount;
-        }
-
-        /// <summary>
-        /// キャッシュの有効期限切れチェック
-        /// </summary>
-        public bool CacheExpired(int ms)
-        {
-            return System.Environment.TickCount - LastTick >= ms;
-        }
 
         /// <summary>
         /// サムネイルパス取得

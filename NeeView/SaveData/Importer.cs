@@ -13,6 +13,7 @@ namespace NeeView
         private readonly System.IO.Compression.ZipArchive _archive;
         private ZipArchiveEntry? _settingEntry;
         private ZipArchiveEntry? _historyEntry;
+        private ZipArchiveEntry? _folderConfigEntry;
         private ZipArchiveEntry? _bookmarkEntry;
         private ZipArchiveEntry? _pagemarkEntry;
         private bool _disposedValue;
@@ -112,6 +113,7 @@ namespace NeeView
         public void Initialize()
         {
             _settingEntry = _archive.GetEntry(SaveDataProfile.UserSettingFileName);
+            _folderConfigEntry = _archive.GetEntry(SaveDataProfile.FolderConfigFileName);
             _historyEntry = _archive.GetEntry(SaveDataProfile.HistoryFileName);
             _bookmarkEntry = _archive.GetEntry(SaveDataProfile.BookmarkFileName);
             _pagemarkEntry = _archive.GetEntry(SaveDataProfile.PagemarkFileName);
@@ -135,6 +137,7 @@ namespace NeeView
             bool recoverySettingWindow = MainWindowModel.Current.CloseSettingWindow();
 
             ImportUserSetting();
+            ImportFolderConfig();
             ImportHistory();
             ImportBookmark();
             ImportPlaylists();
@@ -171,6 +174,28 @@ namespace NeeView
                     setting.Config.Window.State = Config.Current.Window.State; // ウィンドウ状態は維持する
                 }
                 UserSettingTools.Restore(setting);
+            }
+        }
+
+        public void ImportFolderConfig()
+        {
+            // NOTE: フォルダー設定はユーザー設定の一部とみなす
+            if (!this.IsUserSettingEnabled) return;
+
+            FolderConfigCollection.Memento? folderConfig = null;
+
+            if (_folderConfigEntry != null)
+            {
+                using (var stream = _folderConfigEntry.Open())
+                {
+                    folderConfig = FolderConfigCollection.Memento.Load(stream);
+                }
+            }
+
+            if (folderConfig != null)
+            {
+                FolderConfigCollection.Current.Restore(folderConfig);
+                SaveDataSync.Current.SaveFolderConfig(true);
             }
         }
 
@@ -212,7 +237,7 @@ namespace NeeView
             if (bookmark != null)
             {
                 BookmarkCollection.Current.Restore(bookmark);
-                SaveDataSync.Current.SaveBookmark(true, true);
+                SaveDataSync.Current.SaveBookmark(true);
             }
         }
 

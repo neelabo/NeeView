@@ -18,7 +18,11 @@ namespace NeeView
                 using (var archive = new System.IO.Compression.ZipArchive(new FileStream(filename, FileMode.Create, FileAccess.ReadWrite), ZipArchiveMode.Update))
                 {
                     archive.CreateEntryFromFile(SaveData.UserSettingFilePath, SaveDataProfile.UserSettingFileName);
-
+                    
+                    if (File.Exists(SaveData.FolderConfigFilePath))
+                    {
+                        archive.CreateEntryFromFile(SaveData.FolderConfigFilePath, SaveDataProfile.FolderConfigFileName);
+                    }
                     if (File.Exists(SaveData.HistoryFilePath))
                     {
                         archive.CreateEntryFromFile(SaveData.HistoryFilePath, SaveDataProfile.HistoryFileName);

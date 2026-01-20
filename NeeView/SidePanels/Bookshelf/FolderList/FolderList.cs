@@ -972,7 +972,7 @@ namespace NeeView
         {
             if (path is null) return false;
 
-            var memento = BookHistoryCollection.Current.GetFolderMemento(path.SimplePath);
+            var memento = FolderConfigCollection.Current.GetFolderParameter(path.SimplePath);
             return memento.IsFolderRecursive;
         }
 

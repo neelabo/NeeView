@@ -1,12 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace NeeView
 {
@@ -74,12 +68,12 @@ namespace NeeView
 
         private void Save()
         {
-            BookHistoryCollection.Current.SetFolderMemento(Path, CreateMemento());
+            FolderConfigCollection.Current.SetFolderParameter(Path, CreateMemento());
         }
 
         private void Load()
         {
-            var memento = BookHistoryCollection.Current.GetFolderMemento(Path);
+            var memento = FolderConfigCollection.Current.GetFolderParameter(Path);
             Restore(memento);
 
             // NOTE: ver44 前はシード値が保存されていないので、Restore()でシード値が補正された場合は保存しなおす。
@@ -130,6 +124,7 @@ namespace NeeView
         {
             public FolderOrder FolderOrder { get; set; }
 
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
             public bool IsFolderRecursive { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]

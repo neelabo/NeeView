@@ -35,9 +35,9 @@ namespace NeeView
 
         private SaveDataSync()
         {
-            _delaySaveBookmark = new DelayAction(() => SaveBookmark(true, true), TimeSpan.FromSeconds(0.5));
+            _delaySaveBookmark = new DelayAction(() => SaveBookmark(true), TimeSpan.FromSeconds(0.5));
             _delaySaveHistory = new IntervalAction(() => SaveHistory(true), TimeSpan.FromMinutes(5.0));
-            _delaySaveFolderConfig = new DelayAction(() => SaveFolderConfig(true, true), TimeSpan.FromSeconds(5.0));
+            _delaySaveFolderConfig = new DelayAction(() => SaveFolderConfig(true), TimeSpan.FromSeconds(5.0));
         }
 
 
@@ -125,7 +125,7 @@ namespace NeeView
             _bookmarkWatcher.Reload();
         }
 
-        private void FolderConfigCollection_FolderChanged(object? sender, FolderConfig config)
+        private void FolderConfigCollection_FolderChanged(object? sender, FolderConfigChangedEventArgs e)
         {
             LocalDebug.WriteLine($"");
             _delaySaveFolderConfig.Request();
@@ -192,7 +192,7 @@ namespace NeeView
             }
         }
 
-        public void SaveBookmark(bool sync, bool handleException)
+        public void SaveBookmark(bool handleException)
         {
             if (_disposedValue) return;
 
@@ -219,7 +219,7 @@ namespace NeeView
             }
         }
 
-        public void SaveFolderConfig(bool sync, bool handleException)
+        public void SaveFolderConfig(bool handleException)
         {
             if (_disposedValue) return;
 

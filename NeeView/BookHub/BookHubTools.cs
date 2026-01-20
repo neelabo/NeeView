@@ -82,7 +82,7 @@ namespace NeeView
         /// </summary>
         public static bool IsFolderRecursive(QueryPath query)
         {
-            var memento = BookHistoryCollection.Current.GetFolderMemento(query.SimplePath);
+            var memento = FolderConfigCollection.Current.GetFolderParameter(query.SimplePath);
             return memento.IsFolderRecursive;
         }
 

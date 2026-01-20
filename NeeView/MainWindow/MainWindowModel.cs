@@ -226,15 +226,6 @@ namespace NeeView
         // 起動時処理
         public void Loaded()
         {
-            // NOTE: 必要であればエクスプローラーメニューを更新
-            // NOTE: 都度追従させるほどではないので、無効化して様子を見る
-#if false
-            if (App.Current.Option.Language is null)
-            {
-                ExplorerContextMenu.Current.Update();
-            }
-#endif
-
             // サイドパネル復元
             CustomLayoutPanelManager.Current.Restore();
 
@@ -242,14 +233,14 @@ namespace NeeView
             // TODO: 非同期化できないか？
             SusiePluginManager.Current.Initialize();
 
+            // フォルダー設定読み込み
+            SaveData.Current.LoadFolderConfig();
+
             // 履歴読み込み
             SaveData.Current.LoadHistory();
 
             // ブックマーク読み込み
             SaveData.Current.LoadBookmark();
-
-            // フォルダー設定読み込み
-            SaveData.Current.LoadFolderConfig();
 
             // プレイリスト読み込み
             PlaylistHub.Current.Initialize();

@@ -23,7 +23,7 @@
         public void Register()
         {
             var path = new QueryPath(Path).SimplePath;
-            BookHistoryCollection.Current.SetFolderMemento(path, this);
+            FolderConfigCollection.Current.SetFolderParameter(path, this);
         }
     }
 

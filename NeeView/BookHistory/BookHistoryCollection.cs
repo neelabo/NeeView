@@ -3,14 +3,11 @@
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
 using NeeLaboratory.Linq;
-using NeeView.Collections.Generic;
 using NeeView.Collections.ObjectModel;
 using NeeView.Properties;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -28,7 +25,6 @@ namespace NeeView
         public static BookHistoryCollection Current { get; }
 
 
-        private Dictionary<string, FolderParameter.Memento> _folders = new();
         private readonly Lock _lock = new();
 
         // 履歴は内部的には日時昇順の ObservableCollection として保持する。
@@ -357,36 +353,6 @@ namespace NeeView
         }
 
 
-        #region for Folders
-
-
-        // フォルダー設定
-        public void SetFolderMemento(string path, FolderParameter.Memento memento)
-        {
-            path = path ?? "<<root>>";
-
-            // 標準設定は記憶しない
-            if (memento.IsDefault(path))
-            {
-                _folders.Remove(path);
-            }
-            else
-            {
-                _folders[path] = memento;
-            }
-        }
-
-        // フォルダー設定取得
-        public FolderParameter.Memento GetFolderMemento(string path)
-        {
-            path = path ?? "<<root>>";
-
-            _folders.TryGetValue(path, out FolderParameter.Memento? memento);
-            return memento ?? FolderParameter.Memento.GetDefault(path);
-        }
-
-        #endregion for Folders
-
         #region Memento
 
         /// <summary>
@@ -403,6 +369,8 @@ namespace NeeView
 
             public List<BookMemento> Books { get; set; }
 
+            [Obsolete]
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             public Dictionary<string, FolderParameter.Memento>? Folders { get; set; }
 
             public List<string>? BookshelfSearchHistory { get; set; }
@@ -499,11 +467,6 @@ namespace NeeView
             memento.Items = Limit(this.Items.Reverse().Where(e => !e.Path.StartsWith(Temporary.Current.TempDirectory, StringComparison.Ordinal)), Config.Current.History.LimitSize, Config.Current.History.LimitSpan).ToList();
             memento.Books = memento.Items.Select(e => e.Unit.Memento).ToList();
 
-            if (Config.Current.History.IsKeepFolderStatus)
-            {
-                memento.Folders = _folders;
-            }
-
             if (Config.Current.History.IsKeepSearchHistory)
             {
                 memento.BookshelfSearchHistory = this.BookshelfSearchHistory.Any() ? this.BookshelfSearchHistory.ToList() : null;
@@ -520,8 +483,6 @@ namespace NeeView
         {
             if (memento == null) return;
 
-            _folders = memento.Folders ?? _folders;
-
 #pragma warning disable CS0612 // 型またはメンバーが旧型式です
             this.BookshelfSearchHistory.Replace(memento.BookshelfSearchHistory ?? memento.SearchHistory);
 #pragma warning restore CS0612 // 型またはメンバーが旧型式です
@@ -530,6 +491,19 @@ namespace NeeView
             this.PageListSearchHistory.Replace(memento.PageListSearchHistory);
 
             this.Load(fromLoad ? Limit(memento.Items, Config.Current.History.LimitSize, Config.Current.History.LimitSpan) : memento.Items, memento.Books);
+
+#pragma warning disable CS0612 // 型またはメンバーが旧型式です
+            if (memento.Folders is not null)
+            {
+                // Folders.json の読み込みが先なのでここで上書きできる
+                FolderConfigCollection.Current.ClearAllFolderParameter();
+                foreach (var folder in memento.Folders)
+                {
+                    FolderConfigCollection.Current.SetFolderParameter(folder.Key, folder.Value);
+                }
+                SaveDataSync.Current.SaveHistory(true);
+            }
+#pragma warning restore CS0612 // 型またはメンバーが旧型式です
         }
 
         // 履歴数制限

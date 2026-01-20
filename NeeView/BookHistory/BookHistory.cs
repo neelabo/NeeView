@@ -2,14 +2,8 @@
 using NeeLaboratory.IO.Search;
 using NeeView.Collections;
 using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
-using System.Runtime.Serialization;
-using System.Text;
 using System.Threading;
-using System.Windows.Data;
 
 namespace NeeView
 {
