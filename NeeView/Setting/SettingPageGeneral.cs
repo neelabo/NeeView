@@ -40,7 +40,11 @@ namespace NeeView.Setting
             this.Items = new List<SettingItem>();
 
             var section = new SettingItemSection(TextResources.GetString("SettingPage.General"));
+#if DEBUG
+            var cultureMap = TextResources.LanguageResource.Cultures.ToKeyValuePairList(e => e.Name, e => $"{e.Name}, {e.NativeName}");
+#else
             var cultureMap = TextResources.LanguageResource.Cultures.ToKeyValuePairList(e => e.Name, e => e.NativeName);
+#endif
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.Language), new PropertyMemberElementOptions() { StringMap = cultureMap }))
             {
                 Icon = new FontIcon("\uE774"),
