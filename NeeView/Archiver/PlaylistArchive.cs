@@ -1,13 +1,10 @@
 ﻿using NeeView;
-using NeeView.IO;
 using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Json;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -47,7 +44,7 @@ namespace NeeView
         {
             token.ThrowIfCancellationRequested();
 
-            var playlist = PlaylistSourceTools.Load(Path);
+            var playlist = PlaylistSourceTools.LoadFileResolved(Path);
             var list = new List<ArchiveEntry>();
 
             foreach (var item in playlist.Items)

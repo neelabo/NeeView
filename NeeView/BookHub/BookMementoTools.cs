@@ -159,8 +159,7 @@ namespace NeeView
         {
             if (src == dst) return;
 
-            FileResolver.Current.Remove(src);
-            FileResolver.Current.Add(dst);
+            FileResolver.Current.AddIfTargetExists(dst, src);
 
             BookMementoCollection.Current.RenameRecursive(src, dst);
             QuickAccessCollection.Current.RenameRecursive(src, dst);

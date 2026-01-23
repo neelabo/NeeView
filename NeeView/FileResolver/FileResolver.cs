@@ -4,6 +4,7 @@ using NeeLaboratory.Generators;
 using NeeLaboratory.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -25,9 +26,9 @@ namespace NeeView
 
         public FileResolver()
         {
-            BookmarkCollection.Current.SubscribeBookmarkChanged(BookmarkCollectino_Changed);
+            BookmarkCollection.Current.SubscribeBookmarkChanged(BookmarkCollection_Changed);
+            PlaylistHub.Current.SubscribePlaylistCollectionChanged(PlaylistCollection_Changed);
         }
-
 
         private FileIdDatabase FileIdTable => _fileIdTable.Value;
         private VolumeDatabaseCache VolumeTable => _volumeTable.Value;
@@ -38,7 +39,7 @@ namespace NeeView
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BookmarkCollectino_Changed(object? sender, BookmarkCollectionChangedEventArgs e)
+        private void BookmarkCollection_Changed(object? sender, BookmarkCollectionChangedEventArgs e)
         {
             if (e.Action == EntryCollectionChangedAction.Add)
             {
@@ -46,6 +47,25 @@ namespace NeeView
                 {
                     LocalDebug.WriteLine($"Bookmark.Add");
                     AddArchivePath(bookmark.Path);
+                }
+            }
+        }
+
+        /// <summary>
+        /// プレイリスト追加時に登録する
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        private void PlaylistCollection_Changed(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                LocalDebug.WriteLine($"Playlist.Add");
+                var newItems = e.NewItems?.Cast<PlaylistItem>().ToList() ?? throw new InvalidOperationException("newItems must not be null when Replace");
+                foreach (var item in newItems)
+                {
+                    AddArchivePath(item.Path);
                 }
             }
         }
@@ -95,6 +115,37 @@ namespace NeeView
         {
             var systemPath = ArchivePath.GetSystemPath(path, true);
             return systemPath is not null && Add(systemPath, false);
+        }
+
+
+        /// <summary>
+        /// ターゲットが存在する場合のみ パスを復元対象として登録する
+        /// </summary>
+        /// <remarks>
+        /// 復元対象のパスを追加するために使用する。
+        /// ターゲットが存在しない場合、そもそも復元対象ではないということ。
+        /// </remarks>
+        /// <param name="path">登録するパス</param>
+        /// <param name="target">存在チェック用パス</param>
+        /// <param name="excludeUnc">UNCパスを除外する</param>
+        /// <returns></returns>
+        public bool AddIfTargetExists(string path, string target, bool excludeUnc = true)
+        {
+            LocalDebug.WriteLine($"Path: {path}");
+
+            // UNCパスは除外
+            if (excludeUnc && LoosePath.IsUnc(path))
+            {
+                LocalDebug.WriteLine($"UNC skip.");
+                return false;
+            }
+
+            if (!FileIdTable.TargetExists(target))
+            {
+                return false;
+            }
+
+            return Add(path, false);
         }
 
         /// <summary>

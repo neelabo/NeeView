@@ -262,6 +262,7 @@ namespace NeeView
                 entry.ExtractToFile(path, true);
             }
 
+            PlaylistHub.Current.AddAllPlaylistToFileResolver();
             PlaylistHub.Current.Refresh();
         }
 

@@ -105,6 +105,11 @@ namespace NeeView
 
             UpdatePlaylistCollection();
 
+            if (UserSettingTools.UserSettingFormat?.CompareTo(new FormatVersion(Environment.SolutionName, 45, 0, 3978)) < 0)
+            {
+                AddAllPlaylistToFileResolver();
+            }
+
             Config.Current.Playlist.AddPropertyChanged(nameof(PlaylistConfig.PlaylistFolder),
                 PlaylistFolder_Changed);
 
@@ -116,9 +121,6 @@ namespace NeeView
 
             BookOperation.Current.BookChanged +=
                 (s, e) => RaisePropertyChanged(nameof(FilterMessage));
-
-            // NOTE: 応急処置
-            //BookOperation.Current.LinkPlaylistHub(this);
 
             this.AddPropertyChanged(nameof(SelectedItem),
                 (s, e) => SelectedItemChanged());
@@ -434,11 +436,15 @@ namespace NeeView
         public void RenameItemPathRecursive(string src, string dst)
         {
             LocalDebug.WriteLine($"Begin: src={src}, dst={dst}");
-          
-            _playlist.Flush();
+
+            // 現在のプレイリストの名前変更
+            _playlist.RenamePathRecursive(src, dst);
+
+            //_playlist.Flush();
+
             UpdatePlaylistCollection();
 
-            var files = _playlistCollection.OfType<string>();
+            var files = _playlistCollection.OfType<string>().Where(e => string.Compare(e, _playlist.Path, StringComparison.OrdinalIgnoreCase) != 0);
             foreach (var file in files)
             {
                 try
@@ -453,6 +459,34 @@ namespace NeeView
                 catch (Exception ex)
                 {
                     // できるだけ編集できればよいので例外はスルー
+                    Debug.WriteLine(ex);
+                }
+            }
+
+            LocalDebug.WriteLine($"End");
+        }
+
+
+        /// <summary>
+        /// すべてのプレイリストの項目をファイル追跡に登録
+        /// </summary>
+        /// <param name="src"></param>
+        /// <param name="dst"></param>
+        public void AddAllPlaylistToFileResolver()
+        {
+            _playlist.Flush();
+            UpdatePlaylistCollection();
+
+            var files = _playlistCollection.OfType<string>();
+            foreach (var file in files)
+            {
+                try
+                {
+                    PlaylistSourceTools.AddToFileResolver(file);
+                }
+                catch (Exception ex)
+                {
+                    // できるだけ登録できればよいので例外はスルー
                     Debug.WriteLine(ex);
                 }
             }

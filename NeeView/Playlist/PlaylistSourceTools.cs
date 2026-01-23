@@ -1,4 +1,7 @@
-﻿using NeeLaboratory.IO;
+﻿#define LOCAL_DEBUG
+
+using NeeLaboratory.Generators;
+using NeeLaboratory.IO;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,7 +13,8 @@ using System.Threading;
 
 namespace NeeView
 {
-    public static class PlaylistSourceTools
+    [LocalDebug]
+    public static partial class PlaylistSourceTools
     {
         private static readonly SemaphoreSlim _semaphore = new(1, 1);
 
@@ -105,6 +109,78 @@ namespace NeeView
             }
         }
 
+        /// <summary>
+        /// プレイリストを FileResolver に登録
+        /// </summary>
+        /// <param name="path">プレイリストファイル</param>
+        public static void AddToFileResolver(string path)
+        {
+            using (ProcessLock.Lock())
+            {
+                var playlist = Load(path);
+                if (playlist.AddToFileResolver())
+                {
+                    playlist.Save(path, true, false);
+                }
+            }
+        }
+
+        /// <summary>
+        /// プレイリストを FileResolver に登録
+        /// </summary>
+        /// <param name="playlist">プレイリスト</param>
+        public static bool AddToFileResolver(this PlaylistSource playlist)
+        {
+            // Ver 2.0.1 より古いプレイリストのみ処理する
+            if (playlist.Format.CompareTo(new FormatVersion(PlaylistSource.FormatName, 2, 0, 1)) < 0)
+            {
+                var count = FileResolver.Current.AddRangeArchivePath(playlist.Items.Select(e => e.Path));
+                LocalDebug.WriteLine($"Count = {count}");
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// プレイリスト項目のパスの復元と読み込み
+        /// </summary>
+        /// <param name="path"></param>
+        public static PlaylistSource LoadFileResolved(string path)
+        {
+            using (ProcessLock.Lock())
+            {
+                var playlist = Load(path);
+                if (playlist.ResolveFilePath())
+                {
+                    playlist.Save(path, true, false);
+                }
+                return playlist;
+            }
+        }
+
+        /// <summary>
+        /// プレイリスト項目のパスの復元
+        /// </summary>
+        /// <param name="playlist"></param>
+        /// <returns></returns>
+        public static bool ResolveFilePath(this PlaylistSource playlist)
+        {
+            int count = 0;
+            foreach (var item in playlist.Items)
+            {
+                // パスの復元
+                var sourcePath = item.Path;
+                var archivePath = FileResolver.Current.ResolveArchivePath(sourcePath);
+                if (archivePath != null && archivePath.Path != sourcePath)
+                {
+                    item.Path = archivePath.Path;
+                    FileResolver.Current.Add(archivePath.SystemPath);
+                    count++;
+                }
+            }
+            return count > 0;
+        }
 
         private class PlaylistFileHeader
         {

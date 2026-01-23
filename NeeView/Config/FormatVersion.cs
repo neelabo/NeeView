@@ -24,7 +24,15 @@ namespace NeeView
             MinorVersion = minorVersion;
             BuildVersion = buildVersion;
         }
-        
+
+        public FormatVersion(string name, VersionNumber version)
+        {
+            Name = name;
+            MajorVersion = version.MajorVersion;
+            MinorVersion = version.MinorVersion;
+            BuildVersion = version.BuildVersion;
+        }
+
         public FormatVersion(string name, string version)
         {
             Name = name;
@@ -116,4 +124,9 @@ namespace NeeView
         }
     }
 
+
+    public record class VersionNumber(int MajorVersion, int MinorVersion, int BuildVersion)
+    {
+        public static VersionNumber Ver45_Alpha_4 { get; } = new(45, 0, 3987);
+    }
 }

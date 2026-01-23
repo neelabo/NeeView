@@ -1,10 +1,7 @@
 ﻿using NeeView.Text.Json;
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
-using System.Reflection;
-using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 
@@ -13,6 +10,8 @@ namespace NeeView
     public static class UserSettingTools
     {
         private static JsonSerializerOptions? _serializerOptions;
+
+        public static FormatVersion? UserSettingFormat { get; private set; }
 
 
         public static UserSetting CreateUserSetting(bool trim)
@@ -116,6 +115,7 @@ namespace NeeView
                 if (replaceConfig)
                 {
                     Config.SetCurrent(setting.Config);
+                    UserSettingFormat = setting.Format;
                 }
                 else
                 {

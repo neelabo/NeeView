@@ -16,7 +16,7 @@ namespace NeeView
     {
         private readonly string _path;
         private readonly PlaylistSource _playlist;
-        private bool _isDarty;
+        private bool _isDirty;
 
         public PlaylistSourceEditor(string path, PlaylistSource playlist)
         {
@@ -40,9 +40,9 @@ namespace NeeView
 
         public void Save()
         {
-            if (!_isDarty) return;
+            if (!_isDirty) return;
 
-            _isDarty = false;
+            _isDirty = false;
             PlaylistSourceTools.Save(_playlist, _path, true, false);
         }
 
@@ -59,7 +59,7 @@ namespace NeeView
                 LocalDebug.WriteLine($"Rename: {item.Path} => {dst}");
                 item.Path = dst;
             }
-            _isDarty = true;
+            _isDirty = true;
             return true;
         }
 
@@ -79,7 +79,7 @@ namespace NeeView
                 item.Path = dstPath;
             }
 
-            _isDarty = true;
+            _isDirty = true;
             return true;
         }
 

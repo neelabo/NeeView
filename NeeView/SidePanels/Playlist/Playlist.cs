@@ -776,8 +776,26 @@ namespace NeeView
                     try
                     {
                         var playlistFile = PlaylistSourceTools.Load(path);
+                        var isEditable = !file.Attributes.HasFlag(FileAttributes.ReadOnly);
+                        if (isEditable)
+                        {
+                            try
+                            {
+                                if (playlistFile.AddToFileResolver())
+                                {
+                                    LocalDebug.WriteLine($"AddToFileResolver: Path={path}");
+                                    playlistFile.Save(path, true, false);
+                                    file = new FileInfo(path);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                // nop.
+                                Debug.WriteLine(ex);
+                            }
+                        }
                         var playlist = new Playlist(path, file.LastWriteTime, playlistFile, false);
-                        playlist.IsEditable = !file.Attributes.HasFlag(FileAttributes.ReadOnly);
+                        playlist.IsEditable = isEditable;
                         return playlist;
                     }
                     catch (Exception ex)
@@ -877,5 +895,51 @@ namespace NeeView
         }
 
         #endregion Rename
+
+        /// <summary>
+        /// パス変更追従
+        /// </summary>
+        /// <param name="src"></param>
+        /// <param name="dst"></param>
+        /// <returns></returns>
+        public bool RenamePathRecursive(string src, string dst)
+        {
+            if (!IsEditable) return false;
+            if (src == dst) return false;
+
+            var items = CollectPathMembers(Items, src);
+            LocalDebug.WriteLine($"RenamePathItems.Count = {items.Count}");
+            if (items.Count == 0) return false;
+
+            foreach (var item in items)
+            {
+                var index = _items.IndexOf(item);
+                if (index < 0) continue;
+                var srcPath = item.Path;
+                var dstPath = dst + srcPath[src.Length..];
+                LocalDebug.WriteLine($"Path: {srcPath} => {dstPath}");
+                _isDirty = true;
+                _items[index] = new PlaylistItem(dstPath, item.Name);
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 指定パスに影響する項目を収集する
+        /// </summary>
+        /// <param name="src"></param>
+        /// <returns></returns>
+        private static List<PlaylistItem> CollectPathMembers(IEnumerable<PlaylistItem> items, string src)
+        {
+            return items.Where(e => Contains(e.Path, src)).ToList();
+
+            static bool Contains(string src, string target)
+            {
+                return src.StartsWith(target, StringComparison.OrdinalIgnoreCase)
+                    && (src.Length == target.Length || src[target.Length] == LoosePath.DefaultSeparator);
+            }
+        }
+
     }
 }

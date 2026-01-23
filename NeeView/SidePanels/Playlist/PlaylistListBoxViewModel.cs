@@ -1,11 +1,9 @@
 ﻿using NeeLaboratory;
 using NeeLaboratory.ComponentModel;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -230,7 +228,25 @@ namespace NeeView
 
         private void CollectionView_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            EnsureSelectedItem();
+            if (_model is null) return;
+            if (this.CollectionViewSource.View is null) return;
+
+            if (e.Action == NotifyCollectionChangedAction.Replace)
+            {
+                var oldItems = e.OldItems?.Cast<PlaylistItem>().ToList();
+                var newItems = e.NewItems?.Cast<PlaylistItem>().ToList();
+
+                if (newItems is null) throw new InvalidOperationException("newItems must not be null when Replace");
+                if (oldItems is null) throw new InvalidOperationException("oldItems must not be null when Replace");
+                if (SelectedItem is not null && oldItems.Contains(SelectedItem))
+                {
+                    SelectedItem = newItems.FirstOrDefault();
+                }
+            }
+            else
+            {
+                EnsureSelectedItem();
+            }
         }
 
         private void EnsureSelectedItem()
