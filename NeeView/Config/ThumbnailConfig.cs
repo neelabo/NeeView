@@ -38,8 +38,8 @@ namespace NeeView
         [PropertyPath(FileDialogType = FileDialogType.SaveFile, Filter = "DB|*.db")]
         public string ThumbnailCacheFilePath
         {
-            get { return _thumbnailCacheFilePath ?? ThumbnailCache.DefaultThumbnailCacheFilePath; }
-            set { SetProperty(ref _thumbnailCacheFilePath, string.IsNullOrWhiteSpace(value) || value.Trim() == ThumbnailCache.DefaultThumbnailCacheFilePath ? null : value.Trim()); }
+            get { return _thumbnailCacheFilePath ?? Database.DefaultThumbnailCacheFilePath; }
+            set { SetProperty(ref _thumbnailCacheFilePath, string.IsNullOrWhiteSpace(value) || value.Trim() == Database.DefaultThumbnailCacheFilePath ? null : value.Trim()); }
         }
 
         /// <summary>

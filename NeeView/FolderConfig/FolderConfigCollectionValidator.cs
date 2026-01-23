@@ -11,7 +11,6 @@ namespace NeeView
             if (self is null) throw new ArgumentNullException(nameof(self));
             if (self.Format is null) throw new FormatException("FolderConfigCollection.Format must not be null.");
 
-            self.ResetFormat();
             return self;
         }
     }

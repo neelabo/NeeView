@@ -1,7 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
 using NeeLaboratory.Linq;
-using NeeView.Collections;
 using NeeView.Collections.Generic;
 using NeeView.Properties;
 using System;
@@ -9,7 +8,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -613,6 +611,12 @@ namespace NeeView
             {
                 var nodes = BookmarkNodeConverter.ConvertToTreeListNode(memento.Nodes) ?? CreateEmptyTree();
                 this.Load(nodes, memento.Books);
+            }
+
+            // 互換用 : FileResolver 登録
+            if (memento.Books is not null && memento.Format?.CompareTo(new FormatVersion(BookmarkCollection.Memento.FormatName, 45, 0, 3978)) < 0)
+            {
+                FileResolver.Current.AddRangeArchivePath(memento.Books.Select(e => e.Path));
             }
         }
 

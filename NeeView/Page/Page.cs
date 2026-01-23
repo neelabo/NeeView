@@ -424,10 +424,7 @@ namespace NeeView
 
                 // 名前変更をブックマーク等に反映
                 var newPath = EntryFullName;
-                BookMementoCollection.Current.RenameRecursive(oldPath, newPath);
-                QuickAccessCollection.Current.RenameRecursive(oldPath, newPath);
-                FolderConfigTools.RenameRecursive(oldPath, newPath);
-                PlaylistHub.Current.RenameItemPathRecursive(oldPath, newPath);
+                BookMementoTools.RenameRecursive(oldPath, newPath);
             }
             return isSuccess;
         }

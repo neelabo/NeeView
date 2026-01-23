@@ -651,7 +651,7 @@ namespace NeeView
             if (result.Command == UICommands.Delete)
             {
                 // キャッシュDBを閉じる
-                ThumbnailCache.Current.Close();
+                Database.DisposeIfExists();
 
                 try
                 {

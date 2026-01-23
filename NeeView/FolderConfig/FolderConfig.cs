@@ -11,10 +11,6 @@ namespace NeeView
 {
     public class FolderConfig
     {
-        private readonly static string _fileName = ".neeview.json";
-        public static string GetFileName(string place) => System.IO.Path.Combine(place, _fileName);
-
-
         public FolderConfig() : this("")
         {
         }
@@ -129,81 +125,5 @@ namespace NeeView
                 return target;
             }
         }
-
-
-        #region Memento
-
-        public class Memento
-        {
-            public static string FormatName { get; } = Environment.SolutionName + ".Folder";
-            public static FormatVersion FormatVersion { get; } = new FormatVersion(FormatName, 1, 0, 0);
-
-            /// <summary>
-            /// フォーマットID
-            /// </summary>
-            public FormatVersion Format { get; set; } = FormatVersion;
-
-            /// <summary>
-            /// サムネイル設定
-            /// </summary>
-            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            public Dictionary<string, string>? Thumbs { get; set; }
-
-
-            public void Save(string path)
-            {
-                var json = JsonSerializer.SerializeToUtf8Bytes(this, UserSettingTools.GetSerializerOptions());
-
-                if (File.Exists(path))
-                {
-                    FileTools.TruncateAllBytes(path, json);
-                }
-                else
-                {
-                    File.WriteAllBytes(path, json);
-                    File.SetAttributes(path, FileAttributes.Hidden);
-                }
-            }
-
-            public static Memento Load(string path)
-            {
-                var json = File.ReadAllBytes(path);
-                var memento = JsonSerializer.Deserialize<Memento>(json, UserSettingTools.GetSerializerOptions());
-                if (memento is null) throw new FormatException();
-                return memento.Validate();
-            }
-        }
-
-        public Memento CreateMemento()
-        {
-            var memento = new Memento();
-            memento.Thumbs = this.Thumbs.Count > 0 ? this.Thumbs : null;
-            return memento;
-        }
-
-        public void Restore(Memento? memento)
-        {
-            if (memento == null) return;
-            this.Thumbs = memento.Thumbs ?? new();
-        }
-
-        public static FolderConfig Load(string place)
-        {
-            var path = GetFileName(place);
-            var memento = Memento.Load(path);
-            var item = new FolderConfig(place);
-            item.Restore(memento);
-            return item;
-        }
-
-        public void Save()
-        {
-            var path = GetFileName(Place);
-            var memento = CreateMemento();
-            memento.Save(path);
-        }
-
-        #endregion
-
     }
 }

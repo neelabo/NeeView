@@ -45,6 +45,7 @@ namespace NeeView
             try
             {
                 Debug.WriteLine($"Save: {path}");
+                playlist.Format = PlaylistSource.FormatVersion;
                 var json = JsonSerializer.SerializeToUtf8Bytes(playlist, UserSettingTools.GetSerializerOptions());
 
                 var directory = Path.GetDirectoryName(path);

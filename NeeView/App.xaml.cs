@@ -453,6 +453,9 @@ namespace NeeView
                     // キャッシュDBを閉じる
                     ThumbnailCache.Current.Dispose();
 
+                    // DBを閉じる
+                    Database.DisposeIfExists();
+
                     // テンポラリファイル破棄
                     Temporary.Current.RemoveTempFolder();
                 }

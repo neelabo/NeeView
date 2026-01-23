@@ -28,7 +28,6 @@ namespace NeeView
                 }
             }
 
-            self.ResetFormat();
             return self;
         }
     }

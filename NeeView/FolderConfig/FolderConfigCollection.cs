@@ -208,11 +208,6 @@ namespace NeeView
             public List<FolderConfigUnit> Folders { get; set; } = new();
 
 
-            public void ResetFormat()
-            {
-                Format = FormatVersion;
-            }
-
             public void Save(string path)
             {
                 var json = JsonSerializer.SerializeToUtf8Bytes(this, UserSettingTools.GetSerializerOptions());

@@ -26,10 +26,5 @@ namespace NeeView
         public FormatVersion Format { get; set; } = FormatVersion;
 
         public List<PlaylistSourceItem> Items { get; set; }
-
-        public void ResetFormat()
-        {
-            Format = FormatVersion;
-        }
     }
 }

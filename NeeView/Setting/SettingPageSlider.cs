@@ -1,9 +1,6 @@
-﻿using NeeLaboratory.Windows.Input;
-using NeeView.Properties;
+﻿using NeeView.Properties;
 using NeeView.Windows.Property;
-using System;
 using System.Collections.Generic;
-using System.Windows;
 
 namespace NeeView.Setting
 {
@@ -52,40 +49,6 @@ namespace NeeView.Setting
 
             this.Items = new List<SettingItem>() { section };
         }
-
-        #region Commands
-
-        private RelayCommand<UIElement>? _RemoveCache;
-        public RelayCommand<UIElement> RemoveCache
-        {
-            get { return _RemoveCache = _RemoveCache ?? new RelayCommand<UIElement>(RemoveCache_Executed); }
-        }
-
-        private void RemoveCache_Executed(UIElement? element)
-        {
-            try
-            {
-                ThumbnailCache.Current.Remove();
-
-                var dialog = new MessageDialog("", TextResources.GetString("CacheDeletedDialog.Title"));
-                if (element != null)
-                {
-                    dialog.Owner = Window.GetWindow(element);
-                }
-                dialog.ShowDialog();
-            }
-            catch (Exception ex)
-            {
-                var dialog = new MessageDialog(ex.Message, TextResources.GetString("CacheDeletedFailedDialog.Title"));
-                if (element != null)
-                {
-                    dialog.Owner = Window.GetWindow(element);
-                }
-                dialog.ShowDialog();
-            }
-        }
-
-        #endregion
     }
 
 

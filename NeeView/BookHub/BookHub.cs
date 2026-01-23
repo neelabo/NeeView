@@ -1,23 +1,11 @@
-﻿using NeeLaboratory;
-using NeeLaboratory.ComponentModel;
-using NeeLaboratory.Diagnostics;
-using NeeView.IO;
+﻿using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Threading.Tasks;
-using NeeView.Windows.Property;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NeeLaboratory.Threading.Jobs;
-using NeeView.Interop;
 using NeeLaboratory.Generators;
 using System.Globalization;
 using NeeView.Properties;
@@ -222,6 +210,26 @@ namespace NeeView
             var query = new QueryPath(path).Normalize();
             var sourcePath = query.SimpleQuery;
 
+            // パスの追跡解決
+            var archivePath = FileResolver.Current.ResolveArchivePath(sourcePath);
+            if (archivePath != null)
+            {
+                // 復元？
+                if (archivePath.Path != sourcePath)
+                {
+                    // FileResolveデータ修正
+                    var src = archivePath.IsArchivePath ? sourcePath.Substring(0, sourcePath.Length - archivePath.EntryPathLength) : sourcePath;
+                    var dst = archivePath.SystemPath;
+
+                    // Rename伝播
+                    BookMementoTools.RenameRecursive(src, dst);
+
+                    query = new QueryPath(archivePath.Path).Normalize();
+                    sourcePath = query.SimpleQuery;
+                }
+            }
+
+
             query = query.ResolvePath();
 
             // Legacy:
@@ -235,7 +243,7 @@ namespace NeeView
                 archiveHint = _book?.ArchiveHint ?? archiveHint;
             }
 
-            ////DebugTimer.Start($"\nStart: {path}");
+            ////DebugTimer.Start($"\nStart: {sourcePath}");
             if (_address == query.SimplePath && option.HasFlag(BookLoadOption.SkipSamePlace) && _book?.ArchiveHint == archiveHint)
             {
                 return null;
@@ -254,8 +262,6 @@ namespace NeeView
             var command = new BookHubCommandLoad(this, new BookHubCommandLoadArgs(query.SimpleQuery, sourcePath)
             {
                 Sender = sender,
-                //Path = path,
-                //SourcePath = sourcePath,
                 StartEntry = start,
                 Option = option,
                 IsRefreshFolderList = isRefreshFolderList,
@@ -433,6 +439,7 @@ namespace NeeView
 
                 // address
                 var address = await BookAddress.CreateAsync(new QueryPath(args.Path), new QueryPath(args.SourcePath), args.StartEntry, Config.Current.System.ArchiveRecursiveMode, args.Option, token);
+
 
                 // 履歴リスト更新
                 if ((args.Option & BookLoadOption.SelectHistoryMaybe) != 0)
