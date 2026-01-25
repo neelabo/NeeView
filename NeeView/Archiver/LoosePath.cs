@@ -367,9 +367,15 @@ namespace NeeView
             var srcPath = src.TrimEnd(DefaultSeparator);
             var dstPath = dst.TrimEnd(DefaultSeparator);
 
+            if (srcPath == dstPath)
+            {
+                renamed = null;
+                return false;
+            }
+
             if (IsDirectoryStartsWith(path, srcPath, comparison))
             {
-                renamed = dstPath + srcPath[srcPath.Length..];
+                renamed = dstPath + path[srcPath.Length..];
                 return true;
             }
             else

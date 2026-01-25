@@ -23,7 +23,7 @@
         public void Register()
         {
             var path = new QueryPath(Path).SimplePath;
-            FolderConfigCollection.Current.SetFolderParameter(path, this);
+            FolderConfigCollection.Current.SetFolderParameter(path, new FolderParameter.Memento(this.FolderOrder, this.IsFolderRecursive, this.Seed));
         }
     }
 

@@ -1,4 +1,4 @@
-﻿//#define LOCAL_DEBUG
+﻿#define LOCAL_DEBUG
 
 using System;
 using System.Collections.Specialized;
@@ -127,7 +127,18 @@ namespace NeeView
 
         private void FolderConfigCollection_FolderChanged(object? sender, FolderConfigChangedEventArgs e)
         {
-            LocalDebug.WriteLine($"");
+            LocalDebug.WriteLine($"{e.Action}: {e.FolderConfig?.Place}");
+            switch (e.Action)
+            {
+                case FolderConfigChangedAction.Add:
+                    if (e.FolderConfig?.IsDefault() == true)
+                    {
+                        LocalDebug.WriteLine($"Skip (default)");
+                        return;
+                    }
+                    break;
+            }
+
             _delaySaveFolderConfig.Request();
         }
 

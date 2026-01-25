@@ -968,11 +968,11 @@ namespace NeeView
         /// <summary>
         /// 再帰フォルダーが既定の場所であるか
         /// </summary>
-        private static bool IsFolderRecursive(QueryPath? path)
+        private static bool IsFolderRecursive(QueryPath? query)
         {
-            if (path is null) return false;
+            if (query is null) return false;
 
-            var memento = FolderConfigCollection.Current.GetFolderParameter(path.SimplePath);
+            var memento = FolderConfigCollection.Current.GetFolderParameter(query);
             return memento.IsFolderRecursive;
         }
 

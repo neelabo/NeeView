@@ -38,36 +38,40 @@ namespace NeeView
             using (SQLiteCommand command = _db.Connection.CreateCommand())
             {
                 // thumbnails 
-                command.CommandText = "CREATE TABLE IF NOT EXISTS thumbs ("
-                            + "key TEXT NOT NULL PRIMARY KEY,"
-                            + "size INTEGER,"
-                            + "date DATETIME,"
-                            + "ghash INTEGER,"
-                            + "value BLOB"
-                            + ")";
+                command.CommandText = """
+                    CREATE TABLE IF NOT EXISTS thumbs (
+                        key TEXT NOT NULL PRIMARY KEY,
+                        size INTEGER,
+                        date DATETIME,
+                        ghash INTEGER,
+                        value BLOB
+                    )
+                    WITHOUT ROWID
+                    """;
                 command.ExecuteNonQuery();
             }
         }
 
         /// <summary>
-        /// すべてのサムネイルを削除
+        /// テーブルを作り直す
         /// </summary>
+        /// <remarks>
+        /// すべてのサムネイルを削除します。
+        /// </remarks>
         internal void DeleteAll()
         {
-            // TODO: とても重いので async 化すべきか？
-
             if (_db.Connection is null) return;
 
             LocalWriteLine($"Delete: All");
 
             using (SQLiteCommand command = _db.Connection.CreateCommand())
             {
-                command.CommandText = "DELETE FROM thumbs";
+                command.CommandText = "DROP TABLE IF EXISTS thumbs";
                 int count = command.ExecuteNonQuery();
                 LocalWriteLine($"Delete: {count}");
             }
 
-            _db.Vacuum();
+            CreateThumbsTable();
         }
 
         /// <summary>

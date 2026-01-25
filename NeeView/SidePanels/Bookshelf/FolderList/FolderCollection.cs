@@ -601,6 +601,7 @@ namespace NeeView
                 {
                     if (Items != null)
                     {
+                        this.FolderParameter.Save();
                         Items = _itemsEmpty;
                     }
                 }

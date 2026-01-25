@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Data.SQLite;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace NeeView
 {
+    /// <summary>
+    /// パスとFileIdの対応データベース
+    /// </summary>
     public class FileIdDatabase
     {
         private readonly Database _db;
@@ -30,6 +31,16 @@ namespace NeeView
                         volume_id INTEGER,
                         file_id BLOB
                     )
+                    WITHOUT ROWID
+                    """;
+                command.ExecuteNonQuery();
+            }
+
+            using (SQLiteCommand command = _db.Connection.CreateCommand())
+            {
+                command.CommandText = """
+                    CREATE INDEX IF NOT EXISTS idx_volume_file_path
+                    ON files (volume_id, file_id, path)
                     """;
                 command.ExecuteNonQuery();
             }
@@ -73,7 +84,8 @@ namespace NeeView
             {
                 command.CommandText = """
                     SELECT EXISTS(
-                        SELECT 1 FROM files WHERE path = @path
+                        SELECT 1 FROM files
+                        WHERE path = @path
                     );
                     """;
                 command.Parameters.Add(new SQLiteParameter("@path", path));
@@ -104,8 +116,8 @@ namespace NeeView
                 {
                     if (reader.Read())
                     {
-                        var volume = (int)reader.GetInt64(0); //(int)reader["vid"];
-                        var bytes = (byte[])reader.GetValue(1); //(byte[])reader["fileid"];
+                        var volume = (int)reader.GetInt64(0);
+                        var bytes = (byte[])reader.GetValue(1);
                         return new FileIdEx(volume, bytes);
                     }
                 }
@@ -114,26 +126,35 @@ namespace NeeView
             return null;
         }
 
-        internal async ValueTask<FileIdEx?> ReadAsync(string path, CancellationToken token)
+        /// <summary>
+        /// FileId からパスを取得
+        /// </summary>
+        /// <param name="fileId">FileId</param>
+        /// <param name="predicate">受け入れ条件</param>
+        /// <returns></returns>
+        internal string? GetPath(FileIdEx fileId, Func<string, bool> predicate)
         {
             if (_db.Connection is null) return null;
 
             using (SQLiteCommand command = _db.Connection.CreateCommand())
             {
                 command.CommandText = """
-                    SELECT volume_id, file_id
+                    SELECT path
                     FROM files
-                    WHERE path = @path
+                    WHERE volume_id = @volume_id AND file_id = @file_id
                     """;
-                command.Parameters.Add(new SQLiteParameter("@path", path));
+                command.Parameters.Add(new SQLiteParameter("@volume_id", fileId.VolumePathId));
+                command.Parameters.Add(new SQLiteParameter("@file_id", fileId.FileId128));
 
                 using (var reader = command.ExecuteReader())
                 {
-                    if (await reader.ReadAsync(token))
+                    while (reader.Read())
                     {
-                        var volumeId = (int)reader.GetInt64(0); // (int)reader["vid"];
-                        var bytes = (byte[])reader.GetValue(1); // (byte[])reader["fileid"];
-                        return new FileIdEx(volumeId, bytes);
+                        var path = reader.GetString(0);
+                        if (predicate(path))
+                        {
+                            return path;
+                        }
                     }
                 }
             }

@@ -127,6 +127,12 @@ namespace NeeView
 
     public record class VersionNumber(int MajorVersion, int MinorVersion, int BuildVersion)
     {
-        public static VersionNumber Ver45_Alpha_4 { get; } = new(45, 0, 3987);
+#if DEBUG
+        public static VersionNumber Ver45_Alpha4 { get; } = new(99, 0, 0);
+        public static VersionNumber Playlist2_0_1 { get; } = new(99, 0, 0);
+#else
+        public static VersionNumber Ver45_Alpha4 { get; } = new(45, 0, 3981);
+        public static VersionNumber Playlist2_0_1 { get; } = new(2, 0, 1);
+#endif
     }
 }

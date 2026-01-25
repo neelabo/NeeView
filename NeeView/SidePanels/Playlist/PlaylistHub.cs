@@ -105,7 +105,7 @@ namespace NeeView
 
             UpdatePlaylistCollection();
 
-            if (UserSettingTools.UserSettingFormat?.CompareTo(new FormatVersion(Environment.SolutionName, 45, 0, 3978)) < 0)
+            if (UserSettingTools.UserSettingFormat?.CompareTo(new FormatVersion(Environment.SolutionName, VersionNumber.Ver45_Alpha4)) <= 0)
             {
                 AddAllPlaylistToFileResolver();
             }

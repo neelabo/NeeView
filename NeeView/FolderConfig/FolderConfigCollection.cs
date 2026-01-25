@@ -1,9 +1,9 @@
-﻿//#define LOCAL_DEBUG
+﻿#define LOCAL_DEBUG
 
-using AnimatedImage;
 using NeeLaboratory.Generators;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -27,8 +27,9 @@ namespace NeeView
 
         public void SetFolderConfig(FolderConfig folder)
         {
+            var action = Folders.ContainsKey(folder.Place) ? FolderConfigChangedAction.Replace : FolderConfigChangedAction.Add;
             Folders[folder.Place] = folder;
-            FolderChanged?.Invoke(this, new FolderConfigChangedEventArgs(folder));
+            FolderChanged?.Invoke(this, new FolderConfigChangedEventArgs(action, folder));
         }
 
         public FolderConfig? GetFolderConfig(string place)
@@ -38,12 +39,25 @@ namespace NeeView
 
         public FolderConfig EnsureFolderConfig(string place)
         {
-            if (!Folders.TryGetValue(place, out var config))
+            if (!Folders.TryGetValue(place, out var folder))
             {
-                config = new FolderConfig(place);
-                Folders[config.Place] = config;
+                folder = new FolderConfig(place);
+                SetFolderConfig(folder);
             }
-            return config;
+            return folder;
+        }
+
+        /// <summary>
+        /// サムネイル設定
+        /// </summary>
+        /// <param name="place"></param>
+        /// <param name="name"></param>
+        /// <param name="target"></param>
+        public void SetThumbnail(string place, string name, string? target)
+        {
+            var folder = EnsureFolderConfig(place);
+            folder.SetThumbnail(name, target);
+            FolderChanged?.Invoke(this, new FolderConfigChangedEventArgs(FolderConfigChangedAction.Replace, folder) { ThumbsChanged = true });
         }
 
         /// <summary>
@@ -55,7 +69,7 @@ namespace NeeView
             {
                 folder.Parameter = null;
             }
-            FolderChanged?.Invoke(this, new FolderConfigChangedEventArgs(null));
+            FolderChanged?.Invoke(this, new FolderConfigChangedEventArgs(FolderConfigChangedAction.Reset, null));
         }
 
         /// <summary>
@@ -65,23 +79,24 @@ namespace NeeView
         /// <param name="parameter"></param>
         public void SetFolderParameter(string place, FolderParameter.Memento parameter)
         {
-            place = place ?? "<<root>>";
+            Debug.Assert(parameter.GetType() == typeof(FolderParameter.Memento));
 
-            // 標準設定は記憶しない
-            if (parameter.IsDefault(place))
+            place = place ?? "<<root>>";
+            var normalizedParameter = parameter.IsDefault(place) ? null : parameter;
+
+            if (Folders.TryGetValue(place, out var folder))
             {
-                var folder = GetFolderConfig(place);
-                if (folder is not null)
-                {
-                    folder.Parameter = null;
-                    FolderChanged?.Invoke(this, new FolderConfigChangedEventArgs(folder));
-                }
+                Debug.Assert(folder.Parameter is null || folder.Parameter.GetType() == typeof(FolderParameter.Memento));
+                //bool equalsAsMemento = FolderParameter.Memento.EqualsAsMemento(folder.Parameter, parameter);
+                if (folder.Parameter == normalizedParameter) return;
+                folder.Parameter = normalizedParameter;
+                FolderChanged?.Invoke(this, new FolderConfigChangedEventArgs(FolderConfigChangedAction.Replace, folder));
             }
             else
             {
-                var folder = EnsureFolderConfig(place);
-                folder.Parameter = parameter;
-                FolderChanged?.Invoke(this, new FolderConfigChangedEventArgs(folder));
+                folder = new FolderConfig(place) { Parameter = normalizedParameter };
+                Folders[folder.Place] = folder;
+                FolderChanged?.Invoke(this, new FolderConfigChangedEventArgs(FolderConfigChangedAction.Add, folder));
             }
         }
 
@@ -90,11 +105,23 @@ namespace NeeView
         /// </summary>
         /// <param name="place"></param>
         /// <returns></returns>
-        public FolderParameter.Memento GetFolderParameter(string place)
+        public FolderParameter.Memento GetFolderParameter(QueryPath query)
         {
-            place = place ?? "<<root>>";
+            var place = query.SimplePath ?? "<<root>>";
 
             var config = GetFolderConfig(place);
+
+            if (config is null && query.Scheme == QueryScheme.File && Directory.Exists(place))
+            {
+                // ファイルの古いパスを取得し、そのフォルダー設定取得を試みる
+                var oldPath = FileResolver.Current.GetOldPath(place, e => Folders.ContainsKey(e));
+                if (oldPath is not null)
+                {
+                    RenameRecursive(oldPath, place);
+                    config = GetFolderConfig(place);
+                }
+            }
+
             return config?.Parameter ?? FolderParameter.Memento.GetDefault(place);
         }
 
@@ -107,49 +134,25 @@ namespace NeeView
         {
             if (src == dst) return;
 
-            foreach (var folder in Folders.Values.ToList())
+            var list = Folders.Values.ToList();
+
+            foreach (var folderPair in Folders.ToList())
             {
-                var isChanged = false;
-
-                // folder place
-                if (LoosePath.TryReplaceStartsWith(folder.Place, src, dst, out var renamed))
-                {
-                    LocalDebug.WriteLine($"Folder: {folder.Place} => {renamed}");
-                    Folders.Remove(src);
-                    folder.Place = dst;
-                    Folders[dst] = folder;
-                    isChanged = true;
-                }
-
-                foreach (var thumb in folder.Thumbs.ToList())
-                {
-                    var name = thumb.Key;
-                    var bookPath = FolderConfig.GetBookPath(folder, name);
-
-                    // Rename thumbnail book
-                    if (LoosePath.TryReplaceStartsWith(bookPath, src, dst, out var newBookPath))
-                    {
-                        var newName = newBookPath.Substring(folder.Place.Length).TrimStart('\\');
-                        LocalDebug.WriteLine($"Thumbnail.Key: {name} => {newName}");
-                        folder.RemoveThumbnail(name);
-                        folder.SetThumbnail(newName, thumb.Value);
-                        name = newName;
-                        isChanged = true;
-                    }
-
-                    // Rename thumbnail target
-                    var target = folder.GetThumbnail(name);
-                    if (target is not null && LoosePath.TryReplaceStartsWith(target, src, dst, out var newTarget))
-                    {
-                        LocalDebug.WriteLine($"Thumbnail[{name}]: {target} => {newTarget}");
-                        folder.SetThumbnail(name, newTarget);
-                        isChanged = true;
-                    }
-                }
-
+                var folder = folderPair.Value;
+                var isChanged = folder.RenameRecursive(src, dst);
                 if (isChanged)
                 {
-                    FolderChanged?.Invoke(this, new FolderConfigChangedEventArgs(folder));
+                    if (folderPair.Key != folder.Place)
+                    {
+                        Folders.Remove(folderPair.Key);
+                        FolderChanged?.Invoke(this, new FolderConfigChangedEventArgs(FolderConfigChangedAction.Remove, folder));
+                        Folders[folder.Place] = folder;
+                        FolderChanged?.Invoke(this, new FolderConfigChangedEventArgs(FolderConfigChangedAction.Add, folder));
+                    }
+                    else
+                    {
+                        FolderChanged?.Invoke(this, new FolderConfigChangedEventArgs(FolderConfigChangedAction.Replace, folder));
+                    }
                 }
             }
         }
@@ -171,7 +174,7 @@ namespace NeeView
             {
                 var config = new FolderConfig(Place);
                 config.Parameter = Parameter;
-                config.Thumbs = Thumbs ?? new();
+                config.Thumbs = Thumbs;
                 return config;
             }
 
@@ -186,8 +189,8 @@ namespace NeeView
                 return new FolderConfigUnit()
                 {
                     Place = config.Place,
-                    Parameter = Config.Current.History.IsKeepFolderStatus ? config.Parameter : null,
-                    Thumbs = config.Thumbs.Count > 0 ? config.Thumbs : null,
+                    Parameter = config.Parameter is not null && Config.Current.History.IsKeepFolderStatus ? config.Parameter : null,
+                    Thumbs = config.Thumbs is not null && config.Thumbs.Count > 0 ? config.Thumbs : null,
                 };
             }
         }
@@ -246,12 +249,27 @@ namespace NeeView
 
     }
 
+
+
+
     public class FolderConfigChangedEventArgs : EventArgs
     {
-        public FolderConfig? FolderConfig { get; }
-        public FolderConfigChangedEventArgs(FolderConfig? folderConfig)
+        public FolderConfigChangedEventArgs(FolderConfigChangedAction action, FolderConfig? folderConfig)
         {
+            Action = action;
             FolderConfig = folderConfig;
         }
+
+        public FolderConfigChangedAction Action { get; }
+        public FolderConfig? FolderConfig { get; }
+        public bool ThumbsChanged { get; init; }
+    }
+
+    public enum FolderConfigChangedAction
+    {
+        Add,
+        Remove,
+        Replace,
+        Reset,
     }
 }

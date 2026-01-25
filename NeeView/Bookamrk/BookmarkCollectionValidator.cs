@@ -35,7 +35,7 @@ namespace NeeView
             }
 
             // ver 45.0
-            if (self.Format.CompareTo(new FormatVersion(BookmarkCollection.Memento.FormatName, 45, 0, 3978)) < 0)
+            if (self.Format.CompareTo(new FormatVersion(BookmarkCollection.Memento.FormatName, VersionNumber.Ver45_Alpha4)) <= 0)
             {
                 // UNCパスの正規化
                 if (self.Nodes is not null)

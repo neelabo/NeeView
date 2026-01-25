@@ -9,6 +9,8 @@ namespace NeeView
     /// </summary>
     public class FolderParameter : BindableBase
     {
+        // TODO: Path to QueryPath
+
         private FolderOrder _folderOrder;
         private bool _isFolderRecursive;
         private int _seed;
@@ -66,14 +68,14 @@ namespace NeeView
             }
         }
 
-        private void Save()
+        public void Save()
         {
             FolderConfigCollection.Current.SetFolderParameter(Path, CreateMemento());
         }
 
         private void Load()
         {
-            var memento = FolderConfigCollection.Current.GetFolderParameter(Path);
+            var memento = FolderConfigCollection.Current.GetFolderParameter(new QueryPath(Path));
             Restore(memento);
 
             // NOTE: ver44 前はシード値が保存されていないので、Restore()でシード値が補正された場合は保存しなおす。
@@ -122,6 +124,17 @@ namespace NeeView
         [Memento]
         public record class Memento
         {
+            public Memento()
+            {
+            }
+
+            public Memento(FolderOrder folderOrder, bool isFolderRecursive, int seed)
+            {
+                FolderOrder = folderOrder;
+                IsFolderRecursive = isFolderRecursive;
+                Seed = seed;
+            }
+
             public FolderOrder FolderOrder { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
@@ -165,6 +178,6 @@ namespace NeeView
             RaisePropertyChanged(null);
         }
 
-        #endregion
+#endregion
     }
 }

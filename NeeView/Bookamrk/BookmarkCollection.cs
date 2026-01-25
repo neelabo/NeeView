@@ -614,7 +614,7 @@ namespace NeeView
             }
 
             // 互換用 : FileResolver 登録
-            if (memento.Books is not null && memento.Format?.CompareTo(new FormatVersion(BookmarkCollection.Memento.FormatName, 45, 0, 3978)) < 0)
+            if (memento.Books is not null && memento.Format?.CompareTo(new FormatVersion(BookmarkCollection.Memento.FormatName, VersionNumber.Ver45_Alpha4)) <= 0)
             {
                 FileResolver.Current.AddRangeArchivePath(memento.Books.Select(e => e.Path));
             }

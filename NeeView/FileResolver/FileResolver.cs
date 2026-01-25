@@ -28,7 +28,9 @@ namespace NeeView
         {
             BookmarkCollection.Current.SubscribeBookmarkChanged(BookmarkCollection_Changed);
             PlaylistHub.Current.SubscribePlaylistCollectionChanged(PlaylistCollection_Changed);
+            FolderConfigCollection.Current.SubscribeFolderChanged(FolderConfigCollection_Changed);
         }
+
 
         private FileIdDatabase FileIdTable => _fileIdTable.Value;
         private VolumeDatabaseCache VolumeTable => _volumeTable.Value;
@@ -45,7 +47,7 @@ namespace NeeView
             {
                 if (e.Item?.Value is Bookmark bookmark)
                 {
-                    LocalDebug.WriteLine($"Bookmark.Add");
+                    LocalDebug.WriteLine($"Bookmark.Add: {bookmark.Path}");
                     AddArchivePath(bookmark.Path);
                 }
             }
@@ -61,12 +63,42 @@ namespace NeeView
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                LocalDebug.WriteLine($"Playlist.Add");
                 var newItems = e.NewItems?.Cast<PlaylistItem>().ToList() ?? throw new InvalidOperationException("newItems must not be null when Replace");
                 foreach (var item in newItems)
                 {
+                    LocalDebug.WriteLine($"Playlist.Add: {item.Path}");
                     AddArchivePath(item.Path);
                 }
+            }
+        }
+
+        /// <summary>
+        /// デフォルトでないフォルダー設定追加時に登録する
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FolderConfigCollection_Changed(object? sender, FolderConfigChangedEventArgs e)
+        {
+            if (e.FolderConfig is null) return;
+
+            switch (e.Action)
+            {
+                case FolderConfigChangedAction.Add:
+                    if (!e.FolderConfig.IsDefault())
+                    {
+                        LocalDebug.WriteLine($"FolderConfig.Add: {e.FolderConfig.Place}");
+                        if (QuerySchemeExtensions.GetScheme(e.FolderConfig.Place) == QueryScheme.File)
+                        {
+                            AddArchivePath(e.FolderConfig.Place);
+                        }
+                    }
+                    break;
+                case FolderConfigChangedAction.Replace:
+                    if (e.ThumbsChanged)
+                    {
+                        AddArchivePath(e.FolderConfig.Place);
+                    }
+                    break;
             }
         }
 
@@ -298,6 +330,27 @@ namespace NeeView
             return null;
         }
 
+        /// <summary>
+        /// データベースに登録された同じFileIdのパスを取得する
+        /// </summary>
+        /// <param name="path">FileIdのもととなるパス</param>
+        /// <param name="predicate">パスの受け入れ条件</param>
+        /// <param name="excludeUnc">UNCパスを除外し、nullを返す</param>
+        /// <returns></returns>
+        public string? GetOldPath(string path, Func<string, bool> predicate, bool excludeUnc = true)
+        {
+            Debug.Assert(System.IO.Path.IsPathFullyQualified(path));
+
+            if (excludeUnc && LoosePath.IsUnc(path))
+            {
+                LocalDebug.WriteLine($"UNC skip.");
+                return null;
+            }
+
+            var fileId = FileIdResolver.GetFileIdFromPath(path);
+            var resolved = FileIdTable.GetPath(fileId.ToFileIdEx(VolumeTable), predicate);
+            return resolved;
+        }
 
         /// <summary>
         /// 登録解除

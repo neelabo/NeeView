@@ -132,7 +132,7 @@ namespace NeeView
         public static bool AddToFileResolver(this PlaylistSource playlist)
         {
             // Ver 2.0.1 より古いプレイリストのみ処理する
-            if (playlist.Format.CompareTo(new FormatVersion(PlaylistSource.FormatName, 2, 0, 1)) < 0)
+            if (playlist.Format.CompareTo(new FormatVersion(PlaylistSource.FormatName, VersionNumber.Playlist2_0_1)) < 0)
             {
                 var count = FileResolver.Current.AddRangeArchivePath(playlist.Items.Select(e => e.Path));
                 LocalDebug.WriteLine($"Count = {count}");

@@ -26,11 +26,7 @@ namespace NeeView
             var name = bookPath.Substring(place.Length).TrimStart('\\');
             if (string.IsNullOrEmpty(name)) throw new IOException("Cannot get name");
 
-            var config = FolderConfigCollection.Current.GetFolderConfig(place) ?? new(place);
-
-            config.SetThumbnail(name, thumb);
-
-            FolderConfigCollection.Current.SetFolderConfig(config);
+            FolderConfigCollection.Current.SetThumbnail(place, name, thumb);
         }
 
         /// <summary>
@@ -47,10 +43,10 @@ namespace NeeView
             var name = bookPath.Substring(place.Length).TrimStart('\\');
             if (string.IsNullOrEmpty(name)) throw new IOException("Cannot get name");
 
-            var config = FolderConfigCollection.Current.GetFolderConfig(place);
-            if (config is null || config.Thumbs.Count == 0) return null;
+            var folder = FolderConfigCollection.Current.GetFolderConfig(place);
+            if (folder?.Thumbs is null || folder.Thumbs.Count == 0) return null;
 
-            return config.GetThumbnail(name);
+            return folder.GetThumbnail(name);
         }
 
         /// <summary>
