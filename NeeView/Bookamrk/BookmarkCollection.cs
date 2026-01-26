@@ -616,7 +616,12 @@ namespace NeeView
             // 互換用 : FileResolver 登録
             if (memento.Books is not null && memento.Format?.CompareTo(new FormatVersion(BookmarkCollection.Memento.FormatName, VersionNumber.Ver45_Alpha4)) <= 0)
             {
-                FileResolver.Current.AddRangeArchivePath(memento.Books.Select(e => e.Path));
+                var files = memento.Books.Select(e => e.Path).ToList();
+                ProcessJobEngine.Current.AddJob("Processing bookmarks",
+                    () =>
+                    {
+                        FileResolver.Current.AddRangeArchivePath(files);
+                    });
             }
         }
 
@@ -645,9 +650,9 @@ namespace NeeView
 
             if (Children != null)
             {
-                foreach(var child in Children)
+                foreach (var child in Children)
                 {
-                    foreach(var subChild in child.Walk())
+                    foreach (var subChild in child.Walk())
                     {
                         yield return subChild;
                     }

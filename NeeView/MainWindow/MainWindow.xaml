@@ -229,10 +229,13 @@
             <!-- Toast -->
             <ContentControl Content="{Binding ToastService.ToastCard}" Focusable="False" />
 
+            <!-- Processing Mask -->
+            <local:ProgressBox x:Name="ProgressBox"/>
+            
             <Grid x:Name="ResizeGrip" Style="{StaticResource ResizeGripStyle}" HorizontalAlignment="Right" VerticalAlignment="Bottom">
                 <Path Fill="Transparent" Data="M20,0V20H0Z"/>
             </Grid>
-
+            
         </Grid>
 
     </Border>

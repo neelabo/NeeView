@@ -224,7 +224,7 @@ namespace NeeView
         }
 
         // 起動時処理
-        public void Loaded()
+        public async ValueTask LoadedAsync()
         {
             // サイドパネル復元
             CustomLayoutPanelManager.Current.Restore();
@@ -248,6 +248,9 @@ namespace NeeView
             // SaveDataSync活動開始
             SaveDataSync.Current.Initialize();
 
+            // 非同期初期化処理を待機
+            await ProcessJobEngine.Current.WaitPropertyAsync(nameof(ProcessJobEngine.IsBusy), x => x.IsBusy == false);
+
             // 最初のブック、フォルダを開く
             new FirstLoader().Load();
 
@@ -266,25 +269,22 @@ namespace NeeView
                 SlideShow.Current.Play();
             }
 
-            AppDispatcher.BeginInvoke(async () =>
+            // パネル初期化待機
+            await BookmarkFolderList.Current.WaitAsync(CancellationToken.None);
+            await BookshelfFolderList.Current.WaitAsync(CancellationToken.None);
+
+            // 起動時スクリプトの実行
+            if (App.Current.Option.ScriptQuery is not null)
             {
-                // パネル初期化待機
-                await BookmarkFolderList.Current.WaitAsync(CancellationToken.None);
-                await BookshelfFolderList.Current.WaitAsync(CancellationToken.None);
-
-                // 起動時スクリプトの実行
-                if (App.Current.Option.ScriptQuery is not null)
+                var path = App.Current.Option.ScriptQuery.ResolvePath().SimplePath;
+                if (!string.IsNullOrEmpty(path))
                 {
-                    var path = App.Current.Option.ScriptQuery.ResolvePath().SimplePath;
-                    if (!string.IsNullOrEmpty(path))
-                    {
-                        ScriptManager.Current.Execute(this, path, null, null);
-                    }
+                    ScriptManager.Current.Execute(this, path, null, null);
                 }
+            }
 
-                // Script: OnStartup
-                CommandTable.Current.TryExecute(this, ScriptCommand.EventOnStartup, null, CommandOption.None);
-            });
+            // Script: OnStartup
+            CommandTable.Current.TryExecute(this, ScriptCommand.EventOnStartup, null, CommandOption.None);
 
 #if DEBUG
             // [開発用] デバッグアクションの実行

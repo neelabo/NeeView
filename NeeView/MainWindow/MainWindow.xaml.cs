@@ -2,7 +2,6 @@
 
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
-using NeeView.Data;
 using NeeView.Native;
 using NeeView.Setting;
 using NeeView.Threading;
@@ -10,18 +9,10 @@ using NeeView.Windows;
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
 
 namespace NeeView
 {
@@ -69,7 +60,7 @@ namespace NeeView
             // Window状態初期化
             InitializeWindowShapeSnap();
 
-            // winproc
+            // win proc
             _windowProcedure = new WindowProcedure(this);
 
             _windowStateManager = new WindowStateManager(this);
@@ -419,6 +410,8 @@ namespace NeeView
         {
             Debug.WriteLine($"App.MainWindow.Loaded: {App.Current.Stopwatch.ElapsedMilliseconds}ms");
 
+            App.Current.CloseSplashScreen();
+
             MessageDialog.OwnerWindow = this;
 
             _dpiProvider.SetDipScale(VisualTreeHelper.GetDpi(this));
@@ -452,11 +445,11 @@ namespace NeeView
         }
 
         // ウィンドウコンテンツ表示開始
-        private void MainWindow_ContentRendered(object sender, EventArgs e)
+        private async void MainWindow_ContentRendered(object sender, EventArgs e)
         {
             Debug.WriteLine($"App.MainWindow.ContentRendered: {App.Current.Stopwatch.ElapsedMilliseconds}ms");
 
-            _vm.ContentRendered();
+            await _vm.ContentRenderedAsync();
 
             // focus
             if (this.WindowState != WindowState.Minimized)
@@ -469,7 +462,7 @@ namespace NeeView
             // 初回起動ダイアログ
             if (!Config.Current.System.IsLoadedSettings)
             {
-                AppDispatcher.BeginInvoke(() => WelcomeDialog.ShowDialog(this));
+                WelcomeDialog.ShowDialog(this);
             }
         }
 
@@ -733,6 +726,8 @@ namespace NeeView
                 this.DockMenuSocket.Content = null;
                 this.LayerMenuSocket.Content = this.MenuArea; ;
             }
+
+            this.ProgressBox.HideMenu = MainWindowModel.Current.CanHideMenu;
         }
 
         /// <summary>

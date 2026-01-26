@@ -184,12 +184,12 @@ namespace NeeView
         /// <summary>
         /// 初期化
         /// </summary>
-        private void Initialize()
+        private async ValueTask InitializeAsync()
         {
             if (_initialized) return;
             _initialized = true;
 
-            _model.Loaded();
+            await _model.LoadedAsync();
             _model.ContentRendered();
         }
 
@@ -203,9 +203,9 @@ namespace NeeView
         /// <summary>
         /// Window OnContentRendered
         /// </summary>
-        public void ContentRendered()
+        public async ValueTask ContentRenderedAsync()
         {
-            Initialize();
+            await InitializeAsync();
         }
 
         /// <summary>

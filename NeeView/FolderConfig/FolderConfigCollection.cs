@@ -87,7 +87,6 @@ namespace NeeView
             if (Folders.TryGetValue(place, out var folder))
             {
                 Debug.Assert(folder.Parameter is null || folder.Parameter.GetType() == typeof(FolderParameter.Memento));
-                //bool equalsAsMemento = FolderParameter.Memento.EqualsAsMemento(folder.Parameter, parameter);
                 if (folder.Parameter == normalizedParameter) return;
                 folder.Parameter = normalizedParameter;
                 FolderChanged?.Invoke(this, new FolderConfigChangedEventArgs(FolderConfigChangedAction.Replace, folder));
@@ -243,6 +242,17 @@ namespace NeeView
             if (memento == null) return;
 
             Folders = memento.Folders.ToDictionary(e => e.Place, e => e.ToFolderConfig());
+
+            // 互換用 : FileResolver 登録
+            if (memento.Folders is not null && memento.Format?.CompareTo(new FormatVersion(FolderConfigCollection.Memento.FormatName, VersionNumber.Ver45_Alpha4)) <= 0)
+            {
+                var files = memento.Folders.Select(e => e.Place).Where(e => QuerySchemeExtensions.GetScheme(e) == QueryScheme.File).ToList();
+                ProcessJobEngine.Current.AddJob("Processing folders",
+                    () =>
+                    {
+                        FileResolver.Current.AddRangeArchivePath(files);
+                    });
+            }
         }
 
         #endregion

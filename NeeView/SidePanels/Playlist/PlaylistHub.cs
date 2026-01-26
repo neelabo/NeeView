@@ -480,15 +480,19 @@ namespace NeeView
             var files = _playlistCollection.OfType<string>();
             foreach (var file in files)
             {
-                try
-                {
-                    PlaylistSourceTools.AddToFileResolver(file);
-                }
-                catch (Exception ex)
-                {
-                    // できるだけ登録できればよいので例外はスルー
-                    Debug.WriteLine(ex);
-                }
+                ProcessJobEngine.Current.AddJob($"Processing Playlist: {LoosePath.GetFileName(file)}",
+                    () =>
+                    {
+                        try
+                        {
+                            PlaylistSourceTools.AddToFileResolver(file);
+                        }
+                        catch (Exception ex)
+                        {
+                            // できるだけ登録できればよいので例外はスルー
+                            Debug.WriteLine(ex);
+                        }
+                    });
             }
 
             LocalDebug.WriteLine($"End");

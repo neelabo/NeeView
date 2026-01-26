@@ -25,7 +25,7 @@ namespace NeeView
 
 
     /// <summary>
-    /// ページコンテンツ作成用 JobCateogry
+    /// ページコンテンツ作成用 JobCategory
     /// </summary>
     public class PageContentJobCategory : JobCategory
     {

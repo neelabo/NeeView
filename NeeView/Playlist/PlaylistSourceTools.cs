@@ -118,8 +118,11 @@ namespace NeeView
             using (ProcessLock.Lock())
             {
                 var playlist = Load(path);
-                if (playlist.AddToFileResolver())
+
+                // Ver 2.0.1 より古いプレイリストのみ処理する
+                if (playlist.Format.CompareTo(new FormatVersion(PlaylistSource.FormatName, VersionNumber.Playlist2_0_1)) < 0)
                 {
+                    playlist.AddToFileResolver();
                     playlist.Save(path, true, false);
                 }
             }
@@ -129,17 +132,11 @@ namespace NeeView
         /// プレイリストを FileResolver に登録
         /// </summary>
         /// <param name="playlist">プレイリスト</param>
-        public static bool AddToFileResolver(this PlaylistSource playlist)
+        public static void AddToFileResolver(this PlaylistSource playlist)
         {
-            // Ver 2.0.1 より古いプレイリストのみ処理する
-            if (playlist.Format.CompareTo(new FormatVersion(PlaylistSource.FormatName, VersionNumber.Playlist2_0_1)) < 0)
-            {
-                var count = FileResolver.Current.AddRangeArchivePath(playlist.Items.Select(e => e.Path));
-                LocalDebug.WriteLine($"Count = {count}");
-                return true;
-            }
-
-            return false;
+            var files = playlist.Items.Select(e => e.Path).ToList();
+            var count = FileResolver.Current.AddRangeArchivePath(files);
+            LocalDebug.WriteLine($"Count = {count}");
         }
 
         /// <summary>

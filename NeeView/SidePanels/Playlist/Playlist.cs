@@ -35,20 +35,27 @@ namespace NeeView
         private readonly DelayAction _delaySave;
 
 
-        public Playlist(string path) : this(path, default)
+        public Playlist(string path)
+            : this(path, default, [], false)
         {
         }
 
         public Playlist(string path, DateTime lastWriteTime)
+            : this(path, lastWriteTime, [], false)
         {
-            _fileStamp = new FileStamp(path, lastWriteTime);
-            _delaySave = new DelayAction(() => Save(false), TimeSpan.FromSeconds(1.0));
         }
 
-        public Playlist(string path, DateTime lastWriteTime, PlaylistSource playlistFile, bool isNew) : this(path)
+        public Playlist(string path, DateTime lastWriteTime, PlaylistSource playlistFile, bool isNew)
+            : this(path, lastWriteTime, playlistFile.Items.Select(e => new PlaylistItem(e)), isNew)
+        {
+        }
+
+        public Playlist(string path, DateTime lastWriteTime, IEnumerable<PlaylistItem> items, bool isNew)
         {
             _isNew = false;
-            this.Items = new ObservableCollection<PlaylistItem>(playlistFile.Items.Select(e => new PlaylistItem(e)));
+            _fileStamp = new FileStamp(path, lastWriteTime);
+            _delaySave = new DelayAction(() => Save(false), TimeSpan.FromSeconds(1.0));
+            this.Items = new ObservableCollection<PlaylistItem>(items);
             this.IsEditable = true;
             this.IsNew = isNew;
         }
@@ -777,23 +784,6 @@ namespace NeeView
                     {
                         var playlistFile = PlaylistSourceTools.Load(path);
                         var isEditable = !file.Attributes.HasFlag(FileAttributes.ReadOnly);
-                        if (isEditable)
-                        {
-                            try
-                            {
-                                if (playlistFile.AddToFileResolver())
-                                {
-                                    LocalDebug.WriteLine($"AddToFileResolver: Path={path}");
-                                    playlistFile.Save(path, true, false);
-                                    file = new FileInfo(path);
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                // nop.
-                                Debug.WriteLine(ex);
-                            }
-                        }
                         var playlist = new Playlist(path, file.LastWriteTime, playlistFile, false);
                         playlist.IsEditable = isEditable;
                         return playlist;
@@ -820,7 +810,7 @@ namespace NeeView
             }
         }
 
-        #endregion Load
+#endregion Load
 
         #region Move to another playlist
 
