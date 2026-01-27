@@ -2,15 +2,10 @@
 using NeeLaboratory.Generators;
 using System;
 using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.Globalization;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
 
 namespace NeeView.PageFrames
@@ -69,8 +64,8 @@ namespace NeeView.PageFrames
         {
             public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
             {
-                var x = (double)values[0];
-                var y = (double)values[1];
+                var x = values[0] as double?; // NOTE: Undefined になる時がある対策
+                var y = values[1] as double?;
                 return $"Canvas: {x:f0},{y:f0}";
             }
 

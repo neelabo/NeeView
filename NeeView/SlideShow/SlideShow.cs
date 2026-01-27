@@ -1,27 +1,20 @@
-﻿using NeeLaboratory;
+﻿//#define LOCAL_DEBUG
+
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
 using NeeView.Properties;
-using NeeView.Windows.Property;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
-using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace NeeView
 {
     /// <summary>
     /// スライドショー管理
     /// </summary>
-    [NotifyPropertyChanged]
-    public partial class SlideShow : INotifyPropertyChanged, IDisposable
+    [LocalDebug]
+    public partial class SlideShow : BindableBase, IDisposable
     {
         static SlideShow() => Current = new SlideShow();
         public static SlideShow Current { get; }
@@ -32,6 +25,9 @@ namespace NeeView
         private bool _isPlayingSlideShowMemento;
         private readonly DisposableCollection _disposables = new();
         private bool _isMoving;
+        private int _startTickCount;
+        private int _count;
+
 
         private SlideShow()
         {
@@ -50,9 +46,6 @@ namespace NeeView
             ApplicationDisposer.Current.Add(this);
         }
 
-
-        [Subscribable]
-        public event PropertyChangedEventHandler? PropertyChanged;
 
         [Subscribable]
         public event EventHandler<SlideShowPlayedEventArgs>? Played;
@@ -85,16 +78,18 @@ namespace NeeView
         }
 
 
-        private void PageFrameBoxPresenter_ViewPageChanged(object? sender, ViewPageChangedEventArgs e)
+        private void SlideShowConfig_SlideShowIntervalPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            //Debug.WriteLine($"ViewPageChanged: {string.Join(",", e.Pages.Select(e => e.Index.ToString()))}");
             ResetTimer();
         }
 
-        private void SlideShowConfig_SlideShowIntervalPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        private void PageFrameBoxPresenter_ViewPageChanged(object? sender, ViewPageChangedEventArgs e)
         {
-            UpdateTimerInterval();
-            Played?.Invoke(this, new SlideShowPlayedEventArgs(_isPlayingSlideShow, _timer.Interval));
+            if (!Config.Current.SlideShow.IsPrioritizeTime)
+            {
+                LocalDebug.WriteLine($"ViewPageChanged: {string.Join(",", e.Pages.Select(e => e.Index.ToString()))}");
+                ResetTimer();
+            }
         }
 
         private void BookOperation_BookChanged(object? sender, BookChangedEventArgs e)
@@ -103,7 +98,7 @@ namespace NeeView
             {
                 IsPlayingSlideShow = false;
             }
-            else
+            else if (!Config.Current.SlideShow.IsPrioritizeTime)
             {
                 ResetTimer();
             }
@@ -154,7 +149,18 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
-            _timer.Interval = Math.Max(Config.Current.SlideShow.SlideShowInterval * 1000.0, 1.0);
+            var interval = Config.Current.SlideShow.SlideShowInterval * 1000.0;
+            if (Config.Current.SlideShow.IsPrioritizeTime)
+            {
+                var nextTickCount = _startTickCount + _count * interval;
+                _timer.Interval = Math.Max(nextTickCount - System.Environment.TickCount, 1.0);
+            }
+            else
+            {
+                _timer.Interval = Math.Max(interval, 1.0);
+            }
+
+            LocalDebug.WriteLine($"Count = {_count}, Interval = {_timer.Interval:F1} ms");
         }
 
         /// <summary>
@@ -164,7 +170,7 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
-            UpdateTimerInterval();
+            ResetTimerInner();
             _timer.Start();
             Played?.Invoke(this, new SlideShowPlayedEventArgs(_isPlayingSlideShow, _timer.Interval));
         }
@@ -186,8 +192,18 @@ namespace NeeView
             if (_disposedValue) return;
             if (!_timer.Enabled) return;
 
-            UpdateTimerInterval();
+            ResetTimerInner();
             Played?.Invoke(this, new SlideShowPlayedEventArgs(_isPlayingSlideShow, _timer.Interval));
+        }
+
+        /// <summary>
+        /// スライドショータイマーリセット (内部用)
+        /// </summary>
+        private void ResetTimerInner()
+        {
+            _startTickCount = System.Environment.TickCount;
+            _count = 1;
+            UpdateTimerInterval();
         }
 
         /// <summary>
@@ -199,13 +215,6 @@ namespace NeeView
 
             AppDispatcher.BeginInvoke(() =>
             {
-                // ドラッグ中はキャンセル
-                if (Mouse.LeftButton == MouseButtonState.Pressed || Mouse.RightButton == MouseButtonState.Pressed)
-                {
-                    ResetTimer();
-                    return;
-                }
-
                 // ページ移動
                 try
                 {
@@ -218,6 +227,8 @@ namespace NeeView
                 }
             });
 
+            _count++;
+            UpdateTimerInterval();
             Played?.Invoke(this, new SlideShowPlayedEventArgs(_isPlayingSlideShow, _timer.Interval));
         }
 
