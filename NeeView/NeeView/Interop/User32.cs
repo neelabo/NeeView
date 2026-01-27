@@ -152,5 +152,11 @@ namespace NeeView.Interop
 
         [DllImport("user32", SetLastError = true, CharSet = CharSet.Auto)]
         internal extern static void RemoveClipboardFormatListener(nint hwnd);
+
+        [DllImport("user32", EntryPoint = "SetClassLongPtr")]
+        internal static extern IntPtr SetClassLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+
+        [DllImport("user32")]
+        internal static extern bool InvalidateRect(IntPtr hWnd, IntPtr rect, bool erase);
     }
 }

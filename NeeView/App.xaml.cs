@@ -24,7 +24,6 @@ namespace NeeView
 
 
         private bool _isSplashScreenVisible;
-        public SplashScreen? _splashScreen;
         private bool _isTerminated;
         private readonly int _tickBase = System.Environment.TickCount;
         private CommandLineOption? _option;
@@ -365,17 +364,9 @@ namespace NeeView
 
                 using var span = DebugSpan();
                 var resourceName = "Resources/SplashScreen.png";
-                _splashScreen = new SplashScreen(resourceName);
-                _splashScreen.Show(true, true);
+                var splashScreen = new SplashScreen(resourceName);
+                splashScreen.Show(true, true);
             }
-        }
-
-        /// <summary>
-        /// Close SplashScreen
-        /// </summary>
-        public void CloseSplashScreen()
-        {
-            //_splashScreen?.Close(TimeSpan.FromMilliseconds(0));
         }
 
         /// <summary>

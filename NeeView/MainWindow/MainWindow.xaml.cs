@@ -2,6 +2,7 @@
 
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
+using NeeView.Interop;
 using NeeView.Native;
 using NeeView.Setting;
 using NeeView.Threading;
@@ -12,6 +13,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 
 namespace NeeView
@@ -389,11 +391,23 @@ namespace NeeView
             LayoutFrame();
         }
 
-
-        // ウィンドウソース初期化後イベント
-        private void MainWindow_SourceInitialized(object sender, EventArgs e)
+        // ウィンドウソース初期化後
+        protected override void OnSourceInitialized(EventArgs e)
         {
+            base.OnSourceInitialized(e);
+
             Debug.WriteLine($"App.MainWindow.SourceInitialized: {App.Current.Stopwatch.ElapsedMilliseconds}ms");
+
+            if (App.Current.Resources["Window.Background"] is SolidColorBrush brush)
+            {
+                // Win32 の背景ブラシを設定して起動時のちらつきを軽減するテスト
+                var hwnd = new WindowInteropHelper(this).Handle;
+                int color = brush.Color.B << 16 | brush.Color.G << 8 | brush.Color.R;
+                IntPtr blackBrush = NativeMethods.CreateSolidBrush(color);
+                const int GCLP_HBRBACKGROUND = -10;
+                NativeMethods.SetClassLongPtr(hwnd, GCLP_HBRBACKGROUND, blackBrush);
+                NativeMethods.InvalidateRect(hwnd, IntPtr.Zero, true);
+            }
 
             // Chrome の情報を最新にする
             _windowController.Refresh();
@@ -405,12 +419,14 @@ namespace NeeView
             Debug.WriteLine($"App.MainWindow.SourceInitialized.Done: {App.Current.Stopwatch.ElapsedMilliseconds}ms");
         }
 
+        private void MainWindow_SourceInitialized(object sender, EventArgs e)
+        {
+        }
+
         // ウィンドウ表示開始
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine($"App.MainWindow.Loaded: {App.Current.Stopwatch.ElapsedMilliseconds}ms");
-
-            App.Current.CloseSplashScreen();
 
             MessageDialog.OwnerWindow = this;
 
