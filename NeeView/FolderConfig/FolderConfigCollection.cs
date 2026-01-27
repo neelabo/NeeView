@@ -233,7 +233,7 @@ namespace NeeView
         public Memento CreateMemento()
         {
             var memento = new Memento();
-            memento.Folders = Folders.Values.Select(e => FolderConfigUnit.Create(e)).Where(e => !e.IsDefault()).ToList();
+            memento.Folders = Folders.Values.Select(e => FolderConfigUnit.Create(e)).Where(e => !e.IsDefault()).OrderBy(e => e.Place).ToList();
             return memento;
         }
 
