@@ -1,4 +1,4 @@
-﻿#define LOCAL_DEBUG
+﻿//#define LOCAL_DEBUG
 
 using NeeLaboratory.Generators;
 using NeeLaboratory.Linq;

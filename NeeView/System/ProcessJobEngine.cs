@@ -1,4 +1,4 @@
-﻿#define LOCAL_DEBUG
+﻿//#define LOCAL_DEBUG
 
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
@@ -125,7 +125,7 @@ namespace NeeView
 
 #if DEBUG
                         // [開発用]
-                        await Task.Delay(500);
+                        //await Task.Delay(500);
 #endif
 
                         LocalDebug.WriteLine("Job done.");
