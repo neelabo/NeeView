@@ -539,6 +539,12 @@ namespace NeeView
         {
             if (item is null) return;
 
+            var isSuccess = BookOperation.Current.JumpPageWithPath(this, item.Path);
+            if (isSuccess)
+            {
+                return;
+            }
+
             var options = BookLoadOption.None;
             BookHub.Current.RequestLoad(this, item.Path, null, options, true);
         }
