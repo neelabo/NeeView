@@ -1,7 +1,5 @@
-﻿using NeeLaboratory.Generators;
-using NeeView.Properties;
+﻿using NeeView.Properties;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace NeeView
 {

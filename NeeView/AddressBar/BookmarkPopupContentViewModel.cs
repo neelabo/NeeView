@@ -77,7 +77,7 @@ namespace NeeView
 
         public bool IsEdit => _edit.IsEdit;
 
-        public string TitleText { get; } 
+        public string TitleText { get; }
         public string OKButtonText => TextResources.GetString("Word.Done");
         public string AddButtonText => TextResources.GetString("Word.Add");
         public string DeleteButtonText => TextResources.GetString("Word.Remove");

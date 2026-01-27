@@ -145,7 +145,7 @@ namespace NeeView
                     }
                     else
                     {
-                        throw new ArgumentException( $"Cannot convert string {keyToken} to type {typeof(Key)}");
+                        throw new ArgumentException($"Cannot convert string {keyToken} to type {typeof(Key)}");
                     }
                 }
                 else

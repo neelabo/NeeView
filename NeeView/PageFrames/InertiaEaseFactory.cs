@@ -1,8 +1,7 @@
-﻿using System.Diagnostics;
-using System.Globalization;
-using System.Windows;
-using NeeLaboratory.Generators;
+﻿using NeeLaboratory.Generators;
 using NeeView.ComponentModel;
+using System.Diagnostics;
+using System.Windows;
 
 namespace NeeView.PageFrames
 {

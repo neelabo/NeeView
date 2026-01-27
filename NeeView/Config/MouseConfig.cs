@@ -182,7 +182,7 @@ namespace NeeView
     /// 慣性パラメータ用
     /// </summary>
     public static class InertiaTools
-    { 
+    {
         /// <summary>
         /// 慣性感度から加速度を求める。設定用。
         /// </summary>

@@ -1,6 +1,5 @@
 ﻿using NeeView.Properties;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace NeeView
 {

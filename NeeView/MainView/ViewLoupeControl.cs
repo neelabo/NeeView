@@ -1,6 +1,6 @@
 ﻿namespace NeeView
 {
-    public class ViewLoupeControl: IViewLoupeControl
+    public class ViewLoupeControl : IViewLoupeControl
     {
         private readonly MainViewComponent _viewComponent;
 

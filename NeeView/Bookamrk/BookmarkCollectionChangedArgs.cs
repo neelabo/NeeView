@@ -1,5 +1,4 @@
-﻿using NeeView.Collections;
-using NeeView.Collections.Generic;
+﻿using NeeView.Collections.Generic;
 using System;
 
 namespace NeeView

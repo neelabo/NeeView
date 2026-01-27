@@ -40,7 +40,7 @@ namespace NeeView
                 // UNCパスの正規化
                 if (self.Nodes is not null)
                 {
-                    foreach(var node in self.Nodes.Walk())
+                    foreach (var node in self.Nodes.Walk())
                     {
                         if (node.Path is not null && !node.IsFolder)
                         {

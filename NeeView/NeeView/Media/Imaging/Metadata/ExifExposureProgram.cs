@@ -7,10 +7,10 @@
         NormalProgram = 2,
         AperturePriority = 3,
         ShutterPriority = 4,
-        CreativeProgram = 5, 
-        ActionProgram = 6, 
-        PortraitMode = 7, 
-        LandscapeMode = 8, 
+        CreativeProgram = 5,
+        ActionProgram = 6,
+        PortraitMode = 7,
+        LandscapeMode = 8,
     }
 
 }

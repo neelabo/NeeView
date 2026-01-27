@@ -1,6 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
-using System.Diagnostics.CodeAnalysis;
 using System.Windows.Media;
 
 namespace NeeView

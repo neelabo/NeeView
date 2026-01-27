@@ -1,9 +1,9 @@
-﻿using System;
+﻿using NeeLaboratory;
+using System;
 using System.Collections.Generic;
-using System.Windows.Media;
 using System.Diagnostics;
 using System.Linq;
-using NeeLaboratory;
+using System.Windows.Media;
 
 namespace NeeView
 {
@@ -181,7 +181,7 @@ namespace NeeView
         public ThemeProfile Validate()
         {
             var themeProfile = new ThemeProfile();
-            themeProfile.Colors =ThemeProfile.Keys.ToDictionary(e => e, e => new ThemeColor(this.GetColor(e, 1.0), 1.0));
+            themeProfile.Colors = ThemeProfile.Keys.ToDictionary(e => e, e => new ThemeColor(this.GetColor(e, 1.0), 1.0));
             return themeProfile;
         }
 

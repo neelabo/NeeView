@@ -53,7 +53,7 @@ namespace NeeView
             if (_handle == nint.Zero) throw new InvalidOperationException("Cannot get window handle.");
 
             NativeMethods.AddClipboardFormatListener(_handle);
-            
+
             HwndSource source = HwndSource.FromHwnd(_handle);
             source.AddHook(new HwndSourceHook(WndProc));
         }

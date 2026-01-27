@@ -8,7 +8,7 @@ namespace NeeView
     {
         private DragAction _source;
         private bool _disposedValue;
-        
+
         public DragActionControl(DragTransformContext context, DragAction source)
         {
             Context = context;

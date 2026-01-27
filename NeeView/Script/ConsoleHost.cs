@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Windows;
 
 namespace NeeView
 {
-    public class ConsoleHost : IConsoleHost 
+    public class ConsoleHost : IConsoleHost
     {
         private readonly Window _owner;
         private JavaScriptEngine _engine;

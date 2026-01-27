@@ -5,7 +5,7 @@ namespace NeeView
     public interface IBookPageAccessor
     {
         IReadOnlyList<Page> Pages { get; }
-        
+
         int FirstIndex { get; }
         int LastIndex { get; }
         PagePosition FirstPosition { get; }

@@ -29,7 +29,7 @@ namespace NeeView
         }
 
 
-        public void SetParameter(IDictionary<string, object?>? obj )
+        public void SetParameter(IDictionary<string, object?>? obj)
         {
             if (obj == null) return;
             var name = JavaScriptObjectTools.GetValue<string>(obj, nameof(Name));

@@ -1,5 +1,4 @@
-﻿using NeeView.Maths;
-using NeeView.Properties;
+﻿using NeeView.Properties;
 using System;
 using System.Windows;
 

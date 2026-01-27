@@ -2,7 +2,7 @@
 
 namespace NeeView
 {
-    public class ImageExporterContent 
+    public class ImageExporterContent
     {
         public ImageExporterContent(FrameworkElement view, Size size)
         {

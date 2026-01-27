@@ -18,7 +18,7 @@ namespace NeeView.Windows
             var data = e.Data.GetData(format) as T ?? throw new ArgumentException($"dropData must be type {typeof(T).Name}", nameof(e));
 
             Data = data;
-            DropTarget = dropTarget; 
+            DropTarget = dropTarget;
 
             var pos = e.GetPosition(dropTargetVisual);
             Position = pos.Y / dropTargetVisual.ActualHeight;

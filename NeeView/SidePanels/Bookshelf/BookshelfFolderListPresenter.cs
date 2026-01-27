@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NeeView
+﻿namespace NeeView
 {
     public class BookshelfFolderListPresenter : FolderListPresenter
     {

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NeeLaboratory.Diagnostics
 {
@@ -11,7 +7,7 @@ namespace NeeLaboratory.Diagnostics
     /// ログの管理を行う。
     /// SourceTraceのユーティリティクラスです。
     /// </summary>
-    public class Log : IDisposable 
+    public class Log : IDisposable
     {
         private readonly TraceSource _traceSource;
         private readonly int _id;

@@ -11,7 +11,7 @@ namespace NeeView
     /// <summary>
     /// JOBスケジューラー
     /// </summary>
-    public partial class JobScheduler : BindableBase 
+    public partial class JobScheduler : BindableBase
     {
         [Conditional("DEBUG")]
         protected void DebugRaisePropertyChanged([CallerMemberName] string? propertyName = null)

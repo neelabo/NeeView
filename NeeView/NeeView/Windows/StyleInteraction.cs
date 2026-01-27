@@ -1,11 +1,5 @@
 ﻿// from http://blog.okazuki.jp/entry/20110507/1304738683
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace NeeView.Windows
 {
     using Microsoft.Xaml.Behaviors;

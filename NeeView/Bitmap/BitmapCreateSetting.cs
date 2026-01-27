@@ -1,5 +1,4 @@
 ﻿using PhotoSauce.MagicScaler;
-using System.Windows.Media.Imaging;
 
 namespace NeeView
 {

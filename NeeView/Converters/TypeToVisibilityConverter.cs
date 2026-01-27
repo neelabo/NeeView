@@ -8,9 +8,9 @@ namespace NeeView
     public class TypeToVisibilityConverter : IValueConverter
     {
         public Type? Type { get; set; }
-        
+
         public bool IsInversed { get; set; }
-        
+
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             bool isType = value != null && value.GetType() == Type;

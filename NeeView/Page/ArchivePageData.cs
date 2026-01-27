@@ -1,6 +1,4 @@
-﻿using NeeView.ComponentModel;
-
-namespace NeeView
+﻿namespace NeeView
 {
     public class ArchivePageData
     {

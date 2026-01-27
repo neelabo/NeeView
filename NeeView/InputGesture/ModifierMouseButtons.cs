@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Input;
 
@@ -18,7 +17,7 @@ namespace NeeView
     }
 
 
-    public static class ModifierMouseButtonsExtensions 
+    public static class ModifierMouseButtonsExtensions
     {
         private const char _modifierDelimiter = '+';
 

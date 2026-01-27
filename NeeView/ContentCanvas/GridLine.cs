@@ -1,7 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
 using System;
-using System.ComponentModel;
-using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;

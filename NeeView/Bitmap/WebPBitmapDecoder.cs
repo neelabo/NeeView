@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Numerics;
-using System.Runtime.InteropServices;
+﻿using System.IO;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media;

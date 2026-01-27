@@ -25,7 +25,7 @@ namespace NeeView.PageFrames
         public double Milliseconds { get; private set; }
         public MultiEase EaseX { get; } = new();
         public MultiEase EaseY { get; } = new();
-        
+
         IEasingFunction IEaseSet.EaseX => EaseX;
         IEasingFunction IEaseSet.EaseY => EaseY;
     }

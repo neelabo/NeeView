@@ -1,8 +1,6 @@
-﻿using NeeLaboratory.ComponentModel;
-using NeeLaboratory.Generators;
+﻿using NeeLaboratory.Generators;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;

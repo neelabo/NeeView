@@ -1,11 +1,7 @@
-﻿using Jint.Native;
-using NeeLaboratory.ComponentModel;
-using NeeView.ComponentModel;
+﻿using NeeView.ComponentModel;
 using NeeView.PageFrames;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 
 namespace NeeView
 {

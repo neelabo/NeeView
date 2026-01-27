@@ -22,7 +22,7 @@ namespace NeeView.PageFrames
         /// 移動量
         /// </summary>
         public Vector Delta { get; init; }
-        
+
         /// <summary>
         /// 衝突位置のレート(0.0-1.0)
         /// </summary>

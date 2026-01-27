@@ -1,16 +1,10 @@
 ﻿using NeeLaboratory.ComponentModel;
-using NeeLaboratory.Windows.Input;
 using NeeView.Media.Imaging.Metadata;
-using NeeView.Text;
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 

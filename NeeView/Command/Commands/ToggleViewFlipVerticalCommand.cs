@@ -1,7 +1,6 @@
 ﻿using NeeView.Properties;
 using System;
 using System.Globalization;
-using System.Windows.Data;
 
 
 namespace NeeView

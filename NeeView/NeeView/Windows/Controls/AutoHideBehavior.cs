@@ -1,11 +1,8 @@
 ﻿using Microsoft.Xaml.Behaviors;
-using NeeView.Windows.Media;
 using NeeView.Windows.Data;
+using NeeView.Windows.Media;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;

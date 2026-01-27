@@ -1,18 +1,12 @@
 ﻿//#define LOCAL_DEBUG
 
 using NeeLaboratory.Generators;
-using NeeView.Maths;
 using NeeView.PageFrames;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Xml.Linq;
 
 namespace NeeView
 {
@@ -73,7 +67,7 @@ namespace NeeView
         public void Start()
         {
             if (_transform is null) return;
-            
+
             LocalDebug.WriteLine("Start");
             _origin = new TouchDragContext(_context.Sender, _context.TouchMap.Keys);
 
@@ -96,7 +90,7 @@ namespace NeeView
         {
             if (_transform is null) return;
             if (_goal is null) return;
-            
+
             LocalDebug.WriteLine("Stop");
             _transform.SetAngle(GetSnapAngle(_goal.Angle), TimeSpan.FromMilliseconds(200));
             _transform.DoInertia(_context.Speedometer.GetVelocity(), InertiaTools.GetAcceleration(Config.Current.Touch.InertiaSensitivity));
@@ -128,7 +122,7 @@ namespace NeeView
         private TouchDragTransform GetNowTransform()
         {
             if (_transform is null) return new TouchDragTransform();
-            
+
             Debug.Assert(_transformContext != null);
             return new TouchDragTransform((Vector)_transform.Point, _transform.Angle, _transform.Scale, (Vector)_transformContext.ContentCenter);
         }

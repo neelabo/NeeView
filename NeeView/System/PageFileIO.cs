@@ -1,10 +1,6 @@
-﻿using NeeLaboratory.Linq;
-using NeeView.Properties;
-using System;
+﻿using NeeView.Properties;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 

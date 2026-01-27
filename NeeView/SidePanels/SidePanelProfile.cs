@@ -1,17 +1,4 @@
-﻿using NeeLaboratory;
-using NeeLaboratory.ComponentModel;
-using NeeView.Windows.Property;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-
-namespace NeeView
+﻿namespace NeeView
 {
     public class SidePanelProfile
     {

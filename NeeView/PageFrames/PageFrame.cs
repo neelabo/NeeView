@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
 
 namespace NeeView.PageFrames
 {
@@ -82,7 +80,7 @@ namespace NeeView.PageFrames
         /// ストレッチスケール
         /// </summary>
         public double Scale => _scale;
-        
+
         /// <summary>
         /// コンテンツ間のスペース
         /// </summary>
@@ -149,7 +147,7 @@ namespace NeeView.PageFrames
         {
             var size = GetRawContentSize();
             var width = Math.Max(size.Width * _scale + _totalSpan, 0.0);
-            var height = Math.Max(size.Height * _scale, 0.0 );
+            var height = Math.Max(size.Height * _scale, 0.0);
             return new Size(width, height);
         }
 
@@ -278,7 +276,7 @@ namespace NeeView.PageFrames
             if (frame is null) return false;
 
             if (this.Elements.Count != frame.Elements.Count) return false;
-            
+
             return this.Elements
                 .Zip(frame.Elements, (first, second) => first.IsMatch(second))
                 .All(e => e);

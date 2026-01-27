@@ -1,11 +1,10 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using NeeLaboratory.ComponentModel;
+﻿using NeeLaboratory.ComponentModel;
 using NeeView.Runtime.LayoutPanel;
 using NeeView.Windows;
+using System;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace NeeView
 {

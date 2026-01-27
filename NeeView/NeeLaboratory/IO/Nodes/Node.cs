@@ -38,7 +38,7 @@ namespace NeeLaboratory.IO.Nodes
         public void ClearChildren()
         {
             if (Children is null) return;
-            foreach(var child in Children)
+            foreach (var child in Children)
             {
                 child.Parent = null;
             }

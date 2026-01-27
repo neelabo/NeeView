@@ -1,5 +1,4 @@
-﻿using NeeView.Effects;
-using NeeView.Properties;
+﻿using NeeView.Properties;
 using System;
 using System.Globalization;
 using System.Windows.Data;

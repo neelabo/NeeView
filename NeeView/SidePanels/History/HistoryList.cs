@@ -9,9 +9,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace NeeView
@@ -56,7 +53,7 @@ namespace NeeView
             // 内部履歴の並びを反転する。SortDescriptions での並び替えより軽い。
             var items = new ReverseObservableCollection<BookHistory>(BookHistoryCollection.Current.Items);
             items.CollectionChanged += Items_CollectionChanged;
-            
+
             _collectionViewSource.Source = items;
             _collectionViewSource.Culture = TextResources.Culture;
             _collectionViewSource.Filter += CollectionViewSource_Filter;

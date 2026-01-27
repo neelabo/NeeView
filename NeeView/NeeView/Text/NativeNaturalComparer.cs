@@ -1,7 +1,6 @@
 ﻿using NeeView.Interop;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 namespace NeeView.Text
 {

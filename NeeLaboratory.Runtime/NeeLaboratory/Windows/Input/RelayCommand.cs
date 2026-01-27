@@ -1,10 +1,6 @@
 ﻿// from http://sourcechord.hatenablog.com/entry/2014/01/13/200039
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using System.Windows.Input;
 
@@ -94,7 +90,7 @@ namespace NeeLaboratory.Windows.Input
         private readonly Action<T?> _execute;
         private readonly Func<T?, bool>? _canExecute;
 
-        
+
         /// <summary>
         /// 常に実行可能な新しいコマンドを作成します。
         /// </summary>
@@ -115,7 +111,7 @@ namespace NeeLaboratory.Windows.Input
             _canExecute = canExecute;
         }
 
-        
+
         /// <summary>
         /// RaiseCanExecuteChanged が呼び出されたときに生成されます。
         /// </summary>

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NeeView
+﻿namespace NeeView
 {
     // 複数ページのときの動作
     public enum MultiPagePolicy

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NeeView.Windows.Controls
+﻿namespace NeeView.Windows.Controls
 {
     public static class Windows11Tools
     {

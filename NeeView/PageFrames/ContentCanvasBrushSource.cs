@@ -1,8 +1,8 @@
-﻿using System;
+﻿using NeeLaboratory.ComponentModel;
+using NeeView.Windows;
+using System;
 using System.Windows;
 using System.Windows.Media;
-using NeeLaboratory.ComponentModel;
-using NeeView.Windows;
 
 
 namespace NeeView.PageFrames
@@ -56,7 +56,7 @@ namespace NeeView.PageFrames
         public void SetPage(Page? page)
         {
             if (_page == page) return;
-            
+
             if (_page is not null)
             {
                 _disposable?.Dispose();
@@ -64,7 +64,7 @@ namespace NeeView.PageFrames
             }
 
             _page = page;
-            
+
             if (_page is not null)
             {
                 _disposable = _page.SubscribeContentChanged((s, e) => ContentChanged?.Invoke(this, e));

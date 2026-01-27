@@ -3,10 +3,7 @@
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 
 namespace NeeView
 {
@@ -110,7 +107,7 @@ namespace NeeView
                 {
                     return 1;
                 }
-                
+
                 if (distanceX >= 0)
                 {
                     if (distanceY >= 0)

@@ -1,15 +1,10 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Linq;
 using NeeView.Properties;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NeeView.Setting
 {

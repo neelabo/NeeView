@@ -36,7 +36,9 @@ namespace NeeView
         public string? Command
         {
             get { return _model.Command; }
-            set { if (_model.Command != value)
+            set
+            {
+                if (_model.Command != value)
                 {
                     _model.Command = value;
                     RaisePropertyChanged();

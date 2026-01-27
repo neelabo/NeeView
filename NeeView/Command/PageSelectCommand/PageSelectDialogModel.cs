@@ -1,5 +1,4 @@
-﻿using NeeLaboratory;
-using NeeLaboratory.ComponentModel;
+﻿using NeeLaboratory.ComponentModel;
 using NeeView.Properties;
 using System;
 using System.Globalization;

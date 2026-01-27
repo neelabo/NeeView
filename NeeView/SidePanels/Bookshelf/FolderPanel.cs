@@ -1,10 +1,7 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.Properties;
-using NeeView.Windows.Controls;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Media;
 

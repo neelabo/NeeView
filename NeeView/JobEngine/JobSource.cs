@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,7 +15,7 @@ namespace NeeView
         {
             Category = category;
             Key = key;
-            Job = Category.CreateJob(Key, _cancellationTokenSource.Token); 
+            Job = Category.CreateJob(Key, _cancellationTokenSource.Token);
         }
 
         /// <summary>

@@ -1,5 +1,4 @@
-﻿using NeeView.ComponentModel;
-using System;
+﻿using System;
 
 namespace NeeView
 {

@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-// TODO: コマンド類の何時でも受付。ロード中だから弾く、ではない別の方法を。
+﻿// TODO: コマンド類の何時でも受付。ロード中だから弾く、ではない別の方法を。
 
 namespace NeeView
 {

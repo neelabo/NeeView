@@ -23,7 +23,7 @@ namespace NeeView
         {
             return MainViewComponent.Current.ViewPropertyControl.GetAutoRotateRight() ? TextResources.GetString("ToggleIsAutoRotateRightCommand.Off") : TextResources.GetString("ToggleIsAutoRotateRightCommand.On");
         }
-        
+
         public override bool CanExecute(object? sender, CommandContext e)
         {
             return !NowLoading.Current.IsDisplayNowLoading;

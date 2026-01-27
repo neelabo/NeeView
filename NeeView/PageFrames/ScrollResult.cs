@@ -1,6 +1,5 @@
-﻿using System;
+﻿using NeeView.ComponentModel;
 using System.Windows;
-using NeeView.ComponentModel;
 
 namespace NeeView.PageFrames
 {

@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using NeeLaboratory.ComponentModel;
+using NeeLaboratory.Generators;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using NeeLaboratory.ComponentModel;
-using NeeLaboratory.Generators;
 
 
 namespace NeeView.PageFrames
@@ -127,15 +126,15 @@ namespace NeeView.PageFrames
         }
 
 
-        [Subscribable] 
+        [Subscribable]
         public event TransformChangedEventHandler? TransformChanged;
-        
+
         [Subscribable]
         public event EventHandler? ContentSizeChanged;
 
         [Subscribable]
         public event EventHandler? ContainerLayoutChanged;
-        
+
         [Subscribable]
         public event EventHandler? ContentChanged;
 
@@ -423,7 +422,7 @@ namespace NeeView.PageFrames
         /// <returns>矩形</returns>
         public Rect GetContentRect(Point center)
         {
-            var rect  =_content.GetContentRect();
+            var rect = _content.GetContentRect();
             return new Rect(center.X - rect.Width * 0.5, center.Y - rect.Height * 0.5, rect.Width, rect.Height);
         }
 

@@ -91,7 +91,7 @@ namespace NeeView
             }
         }
 
-       // TODO: 外部からイベント起動はよろしくない
+        // TODO: 外部からイベント起動はよろしくない
         //public void UpdateMarkCondition()
         //{
         //    RaisePropertyChanged(nameof(IsMarked));

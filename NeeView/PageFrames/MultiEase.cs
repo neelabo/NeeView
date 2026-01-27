@@ -62,7 +62,7 @@ namespace NeeView.PageFrames
         protected override double EaseInCore(double normalizedTime)
         {
             var items = Items;
-            
+
             if (!items.Any()) return normalizedTime;
 
             var totalS = items.Last().S1;

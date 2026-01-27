@@ -1,12 +1,12 @@
-﻿using System.ComponentModel;
+﻿using NeeLaboratory.Generators;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Data;
-using NeeLaboratory.Generators;
 
 namespace NeeView
 {
     [NotifyPropertyChanged]
-    public partial class SizeSource : INotifyPropertyChanged 
+    public partial class SizeSource : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 

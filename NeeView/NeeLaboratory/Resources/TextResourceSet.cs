@@ -103,7 +103,7 @@ namespace NeeLaboratory.Resources
         {
 #if DEBUG
             Debug.WriteLine($"---- No Used ----");
-            
+
             var list = _map
                 .Where(e => !e.Value.Used)
                 .Where(e => !e.Key.StartsWith("Exif")) // Exif系を除外

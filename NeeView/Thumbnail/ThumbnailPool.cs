@@ -1,14 +1,8 @@
 ﻿//#define LOCAL_DEBUG
 
 using NeeLaboratory.Generators;
-using NeeView.Collections.Generic;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NeeView
 {
@@ -155,7 +149,7 @@ namespace NeeView
 
             int erase = _collection.Count - Limit;
 
-            for (int i=0; i<erase; i++)
+            for (int i = 0; i < erase; i++)
             {
                 _collection[i].Clear();
             }

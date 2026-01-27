@@ -1,10 +1,5 @@
-﻿using NeeLaboratory.Generators;
-using NeeView.Properties;
+﻿using NeeView.Properties;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;

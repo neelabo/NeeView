@@ -1,8 +1,5 @@
-﻿using NeeLaboratory.Threading.Jobs;
-using System;
-using System.Diagnostics;
+﻿using System;
 using System.Linq;
-using System.Threading;
 
 namespace NeeView
 {

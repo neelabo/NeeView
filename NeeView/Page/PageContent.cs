@@ -1,13 +1,13 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using NeeLaboratory.Generators;
+using NeeLaboratory.Threading;
+using NeeView.ComponentModel;
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using System.Diagnostics;
-using NeeView.ComponentModel;
-using System.ComponentModel;
-using NeeLaboratory.Generators;
-using NeeLaboratory.Threading;
 
 namespace NeeView
 {
@@ -50,7 +50,7 @@ namespace NeeView
         public IMemoryOwner Owner => this;
 
         public long MemorySize => DataSize;
-        
+
         public int Index { get; set; }
 
         /// <summary>

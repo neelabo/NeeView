@@ -158,7 +158,7 @@ namespace NeeLaboratory.IO
         {
             var count = ReadInt32();
             var chunks = new List<Chunk>(count);
-            for(int i=0; i<count; ++i)
+            for (int i = 0; i < count; ++i)
             {
                 chunks.Add(ReadChunk());
             }
@@ -179,7 +179,7 @@ namespace NeeLaboratory.IO
         public void WriteChunkArray(List<Chunk> chunks)
         {
             WriteInt32(chunks.Count);
-            foreach(var chunk in chunks)
+            foreach (var chunk in chunks)
             {
                 WriteChunk(chunk);
             }

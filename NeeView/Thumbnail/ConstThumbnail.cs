@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace NeeView
 {
@@ -37,7 +36,7 @@ namespace NeeView
         public bool IsUniqueImage => false;
         public bool IsNormalImage => false;
         public Brush Background => Brushes.Transparent;
-        public ImageSource? ImageSource  => _bitmapSource ?? _create?.Invoke();
+        public ImageSource? ImageSource => _bitmapSource ?? _create?.Invoke();
     }
 
 

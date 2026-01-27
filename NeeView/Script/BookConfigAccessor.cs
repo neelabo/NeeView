@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-
-#pragma warning disable CA1822
+﻿#pragma warning disable CA1822
 
 namespace NeeView
 {

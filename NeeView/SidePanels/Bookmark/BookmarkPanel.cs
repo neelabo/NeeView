@@ -1,10 +1,7 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.Properties;
-using NeeView.Windows.Controls;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Media;
 
@@ -41,7 +38,7 @@ namespace NeeView
 
         public string IconTips => TextResources.GetString("Bookmark.Title");
 
-        public Lazy<FrameworkElement> View => new(() =>_view.Value);
+        public Lazy<FrameworkElement> View => new(() => _view.Value);
 
         public bool IsVisibleLock => false;
 

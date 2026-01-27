@@ -1,12 +1,7 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.Collections.Generic;
 using System;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Globalization;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Data;
 
 namespace NeeView
 {

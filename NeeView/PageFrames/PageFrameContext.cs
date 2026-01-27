@@ -1,13 +1,11 @@
 ﻿//#define LOCAL_DEBUG
 
-using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Globalization;
-using System.Windows;
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
 using NeeView.ComponentModel;
+using System;
+using System.ComponentModel;
+using System.Windows;
 
 namespace NeeView.PageFrames
 {

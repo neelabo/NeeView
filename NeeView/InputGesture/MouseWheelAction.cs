@@ -27,7 +27,7 @@ namespace NeeView
 
         public static string GetDisplayString(this MouseWheelAction action)
         {
-            return  _displayStringConverter.Convert(_map.TryGetValue(action, out var s) ? s : action.ToString());
+            return _displayStringConverter.Convert(_map.TryGetValue(action, out var s) ? s : action.ToString());
         }
     }
 }

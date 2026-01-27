@@ -1,19 +1,7 @@
-﻿using NeeView.ComponentModel;
-using NeeView.Runtime.LayoutPanel;
+﻿using NeeView.Runtime.LayoutPanel;
 using NeeView.Windows;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace NeeView
 {
@@ -24,7 +12,7 @@ namespace NeeView
     {
         private RoutedCommandBinding? _routedCommandBinding;
         private bool _disposedValue;
-        
+
         // インスタンス保持用
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0052:読み取られていないプライベート メンバーを削除", Justification = "<保留中>")]
         private readonly WindowStateManager _windowStateManager;

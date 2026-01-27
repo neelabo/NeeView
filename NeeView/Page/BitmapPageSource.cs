@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Windows;
-
-namespace NeeView
+﻿namespace NeeView
 {
     public class BitmapPageSource : PageSource
     {

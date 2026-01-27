@@ -1,12 +1,7 @@
 ﻿using NeeView.Windows.Media;
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Runtime.Serialization;
-using System.Timers;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace NeeView
 {

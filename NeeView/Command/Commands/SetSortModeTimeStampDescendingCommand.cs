@@ -16,12 +16,12 @@ namespace NeeView
         {
             return BindingGenerator.SortMode(PageSortMode.TimeStampDescending);
         }
-        
+
         public override bool CanExecute(object? sender, CommandContext e)
         {
             return BookSettings.Current.CanEdit;
         }
-        
+
         public override void Execute(object? sender, CommandContext e)
         {
             BookSettings.Current.SetSortMode(PageSortMode.TimeStampDescending);

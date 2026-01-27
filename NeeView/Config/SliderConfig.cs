@@ -3,7 +3,6 @@ using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System;
 using System.Text.Json.Serialization;
-using System.Windows.Media;
 
 namespace NeeView
 {

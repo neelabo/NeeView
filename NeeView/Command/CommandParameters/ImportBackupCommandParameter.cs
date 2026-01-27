@@ -2,7 +2,7 @@
 
 namespace NeeView
 {
-    public class ImportBackupCommandParameter : CommandParameter 
+    public class ImportBackupCommandParameter : CommandParameter
     {
         private string? _fileName;
         private ImportAction _userSetting = ImportAction.Import;

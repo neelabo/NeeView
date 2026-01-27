@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Xml.Linq;
 
 namespace NeeView.ComponentModel
 {

@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
+﻿using NeeView.Windows.Media;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using NeeView.Windows.Media;
 
 namespace NeeView.Windows
 {

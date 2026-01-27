@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace NeeView
+﻿namespace NeeView
 {
     /// <summary>
     /// 一時ファイル名ポリシー

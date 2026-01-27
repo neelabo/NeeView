@@ -31,7 +31,8 @@ namespace NeeView
                 {
                     ThemeManager.Current.RefreshThemeColor();
                 }
-            };
+            }
+            ;
         }
 
         [Conditional("DEBUG")]

@@ -1,20 +1,12 @@
 ﻿using NeeView.Properties;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace NeeView.Windows.Controls
@@ -48,7 +40,7 @@ namespace NeeView.Windows.Controls
         {
             base.OnApplyTemplate();
 
-            _onAnimation = this.FindResource("OnAnimation") as Storyboard ?? throw new InvalidOperationException(); 
+            _onAnimation = this.FindResource("OnAnimation") as Storyboard ?? throw new InvalidOperationException();
             _offAnimation = this.FindResource("OffAnimation") as Storyboard ?? throw new InvalidOperationException();
 
             _root = this.GetTemplateChild("PART_Root") as Grid ?? throw new InvalidOperationException();

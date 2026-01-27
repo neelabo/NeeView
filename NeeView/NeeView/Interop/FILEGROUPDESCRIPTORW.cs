@@ -8,7 +8,7 @@ namespace NeeView.Interop
     public struct FILEGROUPDESCRIPTORW
     {
         public int cItems;
-        
+
         //[MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)] 
         public FILEDESCRIPTORW[] fgd;
     }

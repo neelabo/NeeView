@@ -2,7 +2,7 @@
 
 namespace NeeView
 {
-    public class SvgPageData : IHasRawData 
+    public class SvgPageData : IHasRawData
     {
         public SvgPageData(DrawingGroup? drawingGroup)
         {

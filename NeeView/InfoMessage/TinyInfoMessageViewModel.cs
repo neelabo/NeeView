@@ -1,6 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
 using System;
-using System.ComponentModel;
 using System.Windows;
 
 namespace NeeView

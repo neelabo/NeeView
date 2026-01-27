@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace NeeView
 {
@@ -26,7 +25,7 @@ namespace NeeView
             }
         }
 
-        
+
         public ICommandAccessor? this[string key]
         {
             get

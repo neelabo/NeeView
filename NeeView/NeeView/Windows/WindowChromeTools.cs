@@ -47,7 +47,7 @@ namespace NeeView.Windows
         public static void SetWindowChromeSource(Window window)
         {
             if (GetSource(window) is not null) return;
-            
+
             SetSource(window, new WindowChromeSource(window));
         }
     }

@@ -1,12 +1,10 @@
 ﻿using NeeLaboratory.Generators;
 using NeeLaboratory.Windows.Input;
 using NeeView.Properties;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace NeeView.Setting
@@ -80,7 +78,7 @@ namespace NeeView.Setting
 
             if (token.Gesture.IsValid)
             {
-                token.Conflicts = _sources 
+                token.Conflicts = _sources
                     .Where(i => i.Key != _key && i.Value.MouseButton == token.Gesture)
                     .Select(i => i.Key)
                     .ToList();

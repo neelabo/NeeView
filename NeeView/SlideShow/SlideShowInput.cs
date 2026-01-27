@@ -72,7 +72,7 @@ namespace NeeView
                 _disposedValue = true;
             }
         }
-        
+
         public void Dispose()
         {
             Dispose(disposing: true);

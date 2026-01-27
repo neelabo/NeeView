@@ -35,7 +35,7 @@ namespace NeeView.Text
         public char FirstChar { get; private set; }
 
         public List<char>? Chars { get; private set; }
-        
+
         public List<long>? Nums { get; private set; }
 
         [MemberNotNullWhen(true, nameof(Nums))]

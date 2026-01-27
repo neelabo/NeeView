@@ -1,7 +1,6 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using NeeView.PageFrames;
+using System.Windows;
 using System.Windows.Input;
-using NeeView.PageFrames;
 
 namespace NeeView
 {
@@ -19,7 +18,7 @@ namespace NeeView
         private IDragTransformContextFactory _transformContextFactory;
 
 
-        
+
         public DragTransformControl(IDragTransformContextFactory transformContextFactory, DragActionTable dragActionTable, ViewConfig viewConfig)
         {
             _dragActionTable = dragActionTable;

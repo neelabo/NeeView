@@ -7,7 +7,7 @@
 
         // メモリサイズ
         long MemorySize { get; }
-        
+
         // メモリ解放
         void Unload();
     }

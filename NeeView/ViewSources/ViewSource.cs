@@ -1,14 +1,12 @@
-﻿using System;
+﻿using NeeLaboratory.Generators;
+using NeeLaboratory.Threading;
+using NeeView.ComponentModel;
+using System;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using NeeLaboratory.Generators;
-using NeeView.ComponentModel;
-using NeeLaboratory.Threading;
 
 namespace NeeView
 {

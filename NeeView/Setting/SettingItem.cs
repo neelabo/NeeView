@@ -5,7 +5,6 @@ using NeeView.Susie;
 using NeeView.Windows.Property;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
@@ -712,7 +711,7 @@ namespace NeeView.Setting
     /// </summary>
     public class SettingItemFileAssociation : SettingItem
     {
-        private  SettingItemFileAssociationControl? _control;
+        private SettingItemFileAssociationControl? _control;
 
         public SettingItemFileAssociation() : base(null)
         {

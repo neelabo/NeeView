@@ -3,7 +3,6 @@ using NeeView.Windows.Controls;
 using System;
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Shell;
 
 namespace NeeView.Windows
 {

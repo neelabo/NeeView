@@ -16,7 +16,7 @@ namespace NeeView
             _panel = (BookmarkPanel)CustomLayoutPanelManager.Current.GetPanel(nameof(BookmarkPanel));
             _model = _panel.Presenter.BookmarkFolderList;
 
-            _folderTree = new (() =>new BookmarkFolderTreeAccessor());
+            _folderTree = new(() => new BookmarkFolderTreeAccessor());
         }
 
 

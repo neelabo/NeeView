@@ -1,8 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.PageFrames;
-using System.Runtime.Serialization;
 using System.Windows;
-using System.Windows.Input;
 
 namespace NeeView
 {

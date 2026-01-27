@@ -2,9 +2,8 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
 using System.Linq;
-using System.Globalization;
+using System.Threading;
 
 namespace NeeLaboratory.Threading.Jobs
 {

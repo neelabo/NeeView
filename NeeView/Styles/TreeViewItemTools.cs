@@ -1,6 +1,4 @@
-﻿using NeeView.Collections;
-using NeeView.Collections.Generic;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,7 +11,7 @@ namespace NeeView
     // from https://stackoverflow.com/questions/5047576/wpf-treeview-how-to-style-selected-items-with-rounded-corners-like-in-explorer
     // from  https://stackoverflow.com/questions/664632/highlight-whole-treeviewitem-line-in-wpf
 
-    public class TreeViewItemTools 
+    public class TreeViewItemTools
     {
         private static TreeViewItem? CurrentItem;
 

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
-using System.Windows;
 
 #pragma warning disable CA1822
 

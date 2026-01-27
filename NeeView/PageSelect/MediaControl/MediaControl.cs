@@ -1,9 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
-using NeeView.Windows.Property;
 using System;
-using System.ComponentModel;
-using System.Runtime.Serialization;
-using System.Windows.Media;
 
 namespace NeeView
 {

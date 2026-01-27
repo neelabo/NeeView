@@ -122,7 +122,7 @@ namespace NeeView.Setting
         {
             _map = Enum.GetValues(typeof(TouchArea)).Cast<TouchArea>().ToDictionary(e => e, e => false);
 
-            foreach(var area in areas)
+            foreach (var area in areas)
             {
                 _map[area] = true;
             }

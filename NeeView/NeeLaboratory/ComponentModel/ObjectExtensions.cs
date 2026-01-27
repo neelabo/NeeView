@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace NeeLaboratory.ComponentModel
 {
@@ -34,7 +28,7 @@ namespace NeeLaboratory.ComponentModel
         public static T DeepCopy<T>(T source)
         {
             var options = new JsonSerializerOptions() { IgnoreReadOnlyProperties = true };
-            ReadOnlySpan<byte> json =  JsonSerializer.SerializeToUtf8Bytes(source, options);
+            ReadOnlySpan<byte> json = JsonSerializer.SerializeToUtf8Bytes(source, options);
             return JsonSerializer.Deserialize<T>(json, options) ?? throw new InvalidOperationException("serialize must be succeed");
         }
 

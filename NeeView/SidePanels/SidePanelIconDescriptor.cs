@@ -1,7 +1,7 @@
-﻿using System;
+﻿using NeeView.Runtime.LayoutPanel;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using NeeView.Runtime.LayoutPanel;
 
 namespace NeeView
 {

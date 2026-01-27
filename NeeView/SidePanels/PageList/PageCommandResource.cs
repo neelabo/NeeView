@@ -2,7 +2,6 @@
 using NeeView.Properties;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -180,7 +179,7 @@ namespace NeeView
         public void Cut_CanExec(object sender, CanExecuteRoutedEventArgs e)
         {
             var items = GetSelectedPages(sender);
-            e.CanExecute =  Config.Current.System.IsFileWriteAccessEnabled && items != null && items.Any() && CanMoveToFolder(items);
+            e.CanExecute = Config.Current.System.IsFileWriteAccessEnabled && items != null && items.Any() && CanMoveToFolder(items);
         }
 
         public async void Cut_Exec(object sender, ExecutedRoutedEventArgs e)

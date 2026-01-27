@@ -1,10 +1,7 @@
-﻿using System.Text;
+﻿using NeeLaboratory.ComponentModel;
+using NeeView.Properties;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using System.Diagnostics;
-using NeeLaboratory.ComponentModel;
-using System.Globalization;
-using NeeView.Properties;
 
 namespace NeeView
 {

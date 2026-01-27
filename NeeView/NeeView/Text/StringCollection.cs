@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -26,7 +23,7 @@ namespace NeeView.Text
         {
             Restore(items);
         }
-        
+
         public StringCollection(IEnumerable<string> items)
         {
             Restore(items);

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -34,7 +33,7 @@ namespace NeeView
 
         public static readonly DependencyProperty IsTextSearchEnabledProperty =
             DependencyProperty.RegisterAttached("IsTextSearchEnabled", typeof(bool), typeof(TreeViewTextSearch), new FrameworkPropertyMetadata(false, IsTextSearchEnabled_PropertyChanged));
-        
+
         public static void SetIsTextSearchEnabled(DependencyObject element, bool value)
         {
             ArgumentNullException.ThrowIfNull(element);

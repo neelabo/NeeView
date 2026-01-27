@@ -1,5 +1,4 @@
-﻿using NeeLaboratory.ComponentModel;
-using NeeLaboratory.Generators;
+﻿using NeeLaboratory.Generators;
 using NeeView.Properties;
 using System;
 
@@ -12,9 +11,9 @@ namespace NeeView
             ArchiveEntryCollection = archiveEntryCollection;
             Pages = pages;
             BookMemoryService = bookMemoryService;
-            
+
             _isRecursiveFolder = ArchiveEntryCollection.Mode == ArchiveEntryCollectionMode.IncludeSubArchives;
-            
+
             AttachArchive();
         }
 

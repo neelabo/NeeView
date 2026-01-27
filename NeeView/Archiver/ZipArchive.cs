@@ -3,7 +3,6 @@ using NeeLaboratory.Threading;
 using NeeView.Properties;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;

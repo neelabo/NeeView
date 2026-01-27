@@ -1,6 +1,5 @@
-﻿using System.Windows;
-using System.Windows.Media.TextFormatting;
-using NeeView.Maths;
+﻿using NeeView.Maths;
+using System.Windows;
 
 namespace NeeView.PageFrames
 {

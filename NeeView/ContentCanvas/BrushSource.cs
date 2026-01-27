@@ -2,9 +2,6 @@
 using NeeView.Windows.Property;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.Serialization;
-using System.Text.Json.Serialization;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;

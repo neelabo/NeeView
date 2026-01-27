@@ -17,12 +17,12 @@ namespace NeeView.PageFrames
         /// 移動時間
         /// </summary>
         double Milliseconds { get; }
-        
+
         /// <summary>
         /// X座標の移動曲線
         /// </summary>
         IEasingFunction EaseX { get; }
-        
+
         /// <summary>
         /// Y座標の移動曲線
         /// </summary>

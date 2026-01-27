@@ -1,11 +1,8 @@
 ﻿using NeeView.Runtime.LayoutPanel;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace NeeView
 {
@@ -24,8 +21,8 @@ namespace NeeView
                 Height = 28,
                 Child = new Image()
                 {
-                    Width=28,
-                    Height=28,
+                    Width = 28,
+                    Height = 28,
                     HorizontalAlignment = HorizontalAlignment.Right,
                     VerticalAlignment = VerticalAlignment.Bottom,
                     Source = panel.Icon,

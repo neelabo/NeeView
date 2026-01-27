@@ -1,17 +1,16 @@
 ﻿//#define LOCAL_DEBUG
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
 using NeeLaboratory.Linq;
 using NeeView.PageFrames;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NeeView
 {
@@ -383,7 +382,7 @@ namespace NeeView
                 var pictureSize = viewContentSize.GetPictureSize();
                 await viewSource.LoadAsync(pictureSize, token);
             }
-        
+
             // 先読み完了したフレームを返す
             return frame;
         }

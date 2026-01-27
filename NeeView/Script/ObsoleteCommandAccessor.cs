@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace NeeView
 {
-    public class ObsoleteCommandAccessor : ICommandAccessor 
+    public class ObsoleteCommandAccessor : ICommandAccessor
     {
         private readonly string _name;
         private readonly ObsoleteCommandItem _obsoleteInfo;
@@ -24,7 +24,7 @@ namespace NeeView
             get => false;
             set { }
         }
-        
+
         public string MouseGesture
         {
             get => "";
@@ -36,7 +36,7 @@ namespace NeeView
             get => "";
             set { }
         }
-        
+
         public string TouchGesture
         {
             get => "";

@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace NeeView
@@ -12,7 +11,7 @@ namespace NeeView
     /// <summary>
     /// Bitmap生成
     /// </summary>
-    public class BitmapFactory 
+    public class BitmapFactory
     {
         private readonly DefaultBitmapFactory _default = new();
         private readonly MagicScalerBitmapFactory _magicScaler = new();

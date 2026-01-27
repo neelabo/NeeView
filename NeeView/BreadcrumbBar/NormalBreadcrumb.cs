@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -40,7 +38,7 @@ namespace NeeView
         public override QueryPath Path => _path;
 
         public override string Name => _name;
-        
+
         public override bool HasName => !string.IsNullOrEmpty(Name);
 
         public override List<BreadcrumbToken> Children
@@ -48,7 +46,7 @@ namespace NeeView
             get { return _children; }
             set { SetProperty(ref _children, value); }
         }
-        
+
         public override bool HasChildren => !_terminal || _profile.CanHasChild(_path);
 
 

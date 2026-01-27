@@ -1,9 +1,7 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.Collections.Generic;
-using NeeView.Windows;
 using System;
 using System.Windows;
-using System.Windows.Media.Imaging;
 
 namespace NeeView
 {

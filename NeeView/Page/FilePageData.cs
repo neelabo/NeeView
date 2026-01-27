@@ -1,6 +1,6 @@
 ﻿namespace NeeView
 {
-    public class FilePageData 
+    public class FilePageData
     {
         public FilePageData(ArchiveEntry entry, FilePageIcon icon, string? message)
         {

@@ -39,7 +39,7 @@ namespace NeeView
         public bool IsSlideShowByLoop
         {
             get { return _isSlideShowByLoop; }
-            set { SetProperty(ref _isSlideShowByLoop ,value); } 
+            set { SetProperty(ref _isSlideShowByLoop, value); }
         }
 
         /// <summary>

@@ -1,10 +1,9 @@
-﻿using System;
+﻿using NeeLaboratory.ComponentModel;
+using NeeLaboratory.Generators;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Controls;
-using NeeLaboratory.ComponentModel;
-using NeeLaboratory.Generators;
 
 namespace NeeView.PageFrames
 {

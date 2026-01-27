@@ -3,7 +3,7 @@ using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    public class ImageSvgConfig: BindableBase
+    public class ImageSvgConfig : BindableBase
     {
         public static FileTypeCollection DefaultSupportFileTypes { get; } = new FileTypeCollection(".svg");
 

@@ -112,7 +112,7 @@ namespace NeeView
                 }
                 return true;
             }
-            
+
             // なるべく手前に表示
             if (config.IsFrontAsPossible)
             {

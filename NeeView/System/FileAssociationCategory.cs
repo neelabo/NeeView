@@ -10,7 +10,7 @@
 
         [AliasName("Word.Archive")]
         Archive,
-        
+
         [AliasName("Word.Media")]
         Media,
     }

@@ -1,5 +1,4 @@
 ﻿using NeeView.Properties;
-using System;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -40,7 +39,7 @@ namespace NeeView
         public static ScriptCommandSource Create(string path)
         {
             var source = new ScriptCommandSource(path);
-            
+
             var filename = LoosePath.GetFileNameWithoutExtension(path);
             source.Text = filename;
 

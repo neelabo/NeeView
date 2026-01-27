@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using NeeLaboratory.Linq;
+﻿using NeeLaboratory.Linq;
 using NeeLaboratory.Text;
 using NeeView.PageFrames;
 using NeeView.Text;
 using NeeView.Windows;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 
 namespace NeeView
 {
@@ -95,7 +93,7 @@ namespace NeeView
             string GetPageNum(ViewContent? content)
             {
                 if (content is null) return "0";
-                var pageElement = content.Element; 
+                var pageElement = content.Element;
                 return (pageElement.PageRange.PartSize == 2) ? (pageElement.Page.Index + 1).ToString(CultureInfo.InvariantCulture) : (pageElement.Page.Index + 1).ToString(CultureInfo.InvariantCulture) + (pageElement.PageRange.Min.Part == 1 ? ".5" : ".0");
             }
 

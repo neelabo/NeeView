@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
-using System.Windows.Input;
-
-namespace NeeView
+﻿namespace NeeView
 {
     // 拡張マウスアクション
     public enum MouseExAction

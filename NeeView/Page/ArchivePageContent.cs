@@ -1,9 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Threading;
+﻿using NeeView.ComponentModel;
+using System;
 using System.Diagnostics;
-using System.Windows;
-using NeeView.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NeeView
 {

@@ -1,14 +1,6 @@
-﻿using NeeLaboratory;
-using NeeLaboratory.ComponentModel;
-using NeeView.Windows.Property;
+﻿using NeeLaboratory.ComponentModel;
 using PhotoSauce.MagicScaler;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace NeeView

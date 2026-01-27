@@ -33,7 +33,7 @@
 
         public static bool IsError(this ScriptErrorLevel self)
         {
-            return  ScriptErrorLevel.Error <= self;
+            return ScriptErrorLevel.Error <= self;
         }
     }
 }

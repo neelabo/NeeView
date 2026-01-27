@@ -8,7 +8,7 @@ namespace NeeView
     {
         private bool _isSavePageViewRecord;
         private string? _pageViewRecordFilePath;
-        
+
         // 履歴を保存するか
         [PropertyMember]
         public bool IsSavePageViewRecord

@@ -5,18 +5,10 @@ using NeeView.Windows.Media;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace NeeView
 {
@@ -161,7 +153,7 @@ namespace NeeView
         {
             return (DefaultCommandIndex >= 0 && DefaultCommandIndex < Commands.Count) ? Commands[DefaultCommandIndex] : null;
         }
-        
+
         private void Copy_Execute(object sender, ExecutedRoutedEventArgs e)
         {
             var caption = VisualTreeUtility.CollectElementText(this.Caption);

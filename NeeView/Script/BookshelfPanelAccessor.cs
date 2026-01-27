@@ -18,7 +18,7 @@ namespace NeeView
             _panel = (FolderPanel)CustomLayoutPanelManager.Current.GetPanel(nameof(FolderPanel));
             _model = _panel.Presenter.FolderList;
 
-            _folderTree = new (() => new BookshelfFolderTreeAccessor());
+            _folderTree = new(() => new BookshelfFolderTreeAccessor());
         }
 
 

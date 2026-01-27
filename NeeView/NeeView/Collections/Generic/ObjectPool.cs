@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace NeeView.Collections.Generic
@@ -11,7 +10,7 @@ namespace NeeView.Collections.Generic
     {
         private readonly Queue<T> _pool = new();
         private readonly System.Threading.Lock _lock = new();
-        
+
         // デバッグ用
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0052:読み取られていないプライベート メンバーを削除", Justification = "<保留中>")]
         private int _count;

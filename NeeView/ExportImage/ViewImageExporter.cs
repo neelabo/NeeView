@@ -192,12 +192,12 @@ namespace NeeView
                 viewContent.ScalingMode = scalingMode;
             }
         }
-        
+
         public bool CanExport()
         {
             return true;
         }
-        
+
         public void ThrowIfCannotExport()
         {
         }

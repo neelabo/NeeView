@@ -2,9 +2,7 @@
 using NeeView.Windows;
 using NeeView.Windows.Property;
 using System;
-using System.ComponentModel;
 using System.Text.Json.Serialization;
-using System.Windows;
 
 namespace NeeView
 {

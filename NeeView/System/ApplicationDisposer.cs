@@ -1,7 +1,4 @@
 ﻿using NeeLaboratory.ComponentModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace NeeView
 {

@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using NeeView.ComponentModel;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
-using NeeView.ComponentModel;
 
 namespace NeeView.PageFrames
 {

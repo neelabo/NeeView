@@ -42,7 +42,7 @@ namespace NeeView
             {
                 Print(Window.GetWindow(_mainView), pageFrameContent, frameworkElement, transform, _mainView.View.ActualWidth, _mainView.View.ActualHeight);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 new MessageDialog($"{TextResources.GetString("Word.Cause")}: {ex.Message}", TextResources.GetString("PrintErrorDialog.Title")).ShowDialog();
             }
@@ -60,7 +60,7 @@ namespace NeeView
 
             // アニメーション停止
             var medias = contents.Select(e => (e as IHasViewContentMediaPlayer)?.Player).WhereNotNull().Select(e => new MediaStorage(e, e.IsEnabled)).ToList();
-            foreach(var media in medias)
+            foreach (var media in medias)
             {
                 media.Player.IsEnabled = false;
             }

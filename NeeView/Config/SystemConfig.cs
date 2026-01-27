@@ -1,12 +1,10 @@
 ﻿using NeeLaboratory.ComponentModel;
-using NeeView.Windows;
 using NeeView.Windows.Controls;
 using NeeView.Windows.Property;
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
 namespace NeeView

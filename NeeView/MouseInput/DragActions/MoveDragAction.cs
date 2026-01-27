@@ -1,8 +1,6 @@
-﻿using NeeView.PageFrames;
-using NeeView.Properties;
+﻿using NeeView.Properties;
 using System;
 using System.Diagnostics;
-using System.Windows;
 
 namespace NeeView
 {

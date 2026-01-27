@@ -1,5 +1,4 @@
-﻿using NeeLaboratory.ComponentModel;
-using NeeLaboratory.Generators;
+﻿using NeeLaboratory.Generators;
 using NeeView.Threading;
 using System;
 using System.IO;

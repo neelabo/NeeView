@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace NeeView
 {
@@ -109,7 +107,7 @@ namespace NeeView
                     return Config.Current.Panels.ThumbnailItemProfile.Background;
                 }
             }
-              
+
             return DependencyProperty.UnsetValue;
         }
 

@@ -1,19 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Globalization;
+using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Reflection;
-using System.Diagnostics;
-using System.Globalization;
 
 namespace OpenSourceControls
 {
@@ -25,7 +16,7 @@ namespace OpenSourceControls
     /// 
     /// The code and accompanying article can be found at http://www.codeproject.com
     /// </summary>
-    
+
     public partial class ComboColorPicker : UserControl
     {
         #region Dependency properties
@@ -117,7 +108,7 @@ namespace OpenSourceControls
         #endregion
 
         static readonly Brush _CheckerBrush = CreateCheckerBrush();
-        public static Brush CheckerBrush { get { return _CheckerBrush;  } }
+        public static Brush CheckerBrush { get { return _CheckerBrush; } }
         // Todo: should this be disposed somewhere?
 
         public ComboColorPicker()
@@ -127,7 +118,8 @@ namespace OpenSourceControls
             InitializeColors();
         }
 
-        public  void InitializeColors() {
+        public void InitializeColors()
+        {
             ColorList1.Items.Clear();
 
             // Add some common colors
@@ -164,7 +156,7 @@ namespace OpenSourceControls
                 if (color is null) throw new InvalidOperationException();
                 AddColor((Color)color, pi.Name);
             }
-            
+
             // todo: does this work?
             ColorList1.SelectedValuePath = "Color";
         }
@@ -172,7 +164,7 @@ namespace OpenSourceControls
 
         private void AddColor(Color color, string name)
         {
-            if (!name.StartsWith("#",StringComparison.Ordinal))
+            if (!name.StartsWith("#", StringComparison.Ordinal))
                 name = NiceName(name);
             var cvm = new ColorViewModel() { Color = color, Name = name };
             ColorList1.Items.Add(cvm);

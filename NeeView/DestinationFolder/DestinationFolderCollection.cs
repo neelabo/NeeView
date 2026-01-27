@@ -21,7 +21,7 @@ namespace NeeView
 
         internal bool IsValidIndex(int index)
         {
-            return (0 <= index && index < this.Count) ;
+            return (0 <= index && index < this.Count);
         }
     }
 }

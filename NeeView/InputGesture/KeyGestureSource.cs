@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Windows.Input;
-using System.Windows.Data;
-using System.Windows;
 
 namespace NeeView
 {

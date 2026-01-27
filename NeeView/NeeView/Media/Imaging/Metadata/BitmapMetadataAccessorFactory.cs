@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows.Media.Imaging;
 
 namespace NeeView.Media.Imaging.Metadata

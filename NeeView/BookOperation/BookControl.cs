@@ -3,10 +3,7 @@ using NeeView.Collections.Generic;
 using NeeView.PageFrames;
 using NeeView.Properties;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Linq;
 
 namespace NeeView
 {
@@ -32,7 +29,7 @@ namespace NeeView
         public bool IsBookmark => BookmarkCollection.Current.Contains(_book.Path);
 
         public bool IsBusy => _box.IsBusy;
-        
+
         public PageSortModeClass PageSortModeClass => _book.PageSortModeClass;
 
         public string? Path => _book.Path;

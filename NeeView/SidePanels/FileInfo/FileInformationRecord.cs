@@ -1,5 +1,4 @@
 ﻿using NeeLaboratory.ComponentModel;
-using System;
 using System.Diagnostics;
 
 namespace NeeView

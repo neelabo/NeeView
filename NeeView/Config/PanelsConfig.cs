@@ -2,7 +2,6 @@
 using NeeView.Runtime.LayoutPanel;
 using NeeView.Windows.Property;
 using System;
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Windows;
 

@@ -1,5 +1,4 @@
-﻿using NeeView.Numetrics;
-using System;
+﻿using System;
 using System.Globalization;
 
 namespace NeeView.Text
@@ -19,7 +18,7 @@ namespace NeeView.Text
         }
 
         public FormatValue(object? value, string? format, Func<object, object?>? converter)
-        { 
+        {
             _value = value;
             _format = format;
             _converter = converter;

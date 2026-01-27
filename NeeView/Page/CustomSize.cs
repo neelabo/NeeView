@@ -1,6 +1,5 @@
 ﻿using NeeLaboratory;
 using System;
-using System.Diagnostics;
 using System.Windows;
 
 namespace NeeView

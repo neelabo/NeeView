@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace NeeView
 {
-        // コンバータ：ファイルサイズのKB表示
+    // コンバータ：ファイルサイズのKB表示
     [ValueConversion(typeof(PageMode), typeof(bool))]
     public class FileSizeToStringConverter : IValueConverter
     {

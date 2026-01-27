@@ -2,18 +2,7 @@
 using NeeLaboratory.Windows.Input;
 using NeeView.Properties;
 using NeeView.Windows;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -241,11 +230,11 @@ namespace NeeView
                 items.Add(new Separator());
                 menu.Items.Add(CreateCheckableMenuItem(TextResources.GetString("BookmarkConfig.IsVisibleItemsCount"), new Binding(nameof(BookmarkConfig.IsVisibleItemsCount)) { Source = Config.Current.Bookmark }));
                 menu.Items.Add(CreateCheckableMenuItem(TextResources.GetString("BookmarkConfig.IsVisibleSearchBox"), new Binding(nameof(BookmarkConfig.IsVisibleSearchBox)) { Source = Config.Current.Bookmark }));
-                
+
                 var subItem = new MenuItem() { Header = TextResources.GetString("Bookshelf.MoreMenu.SearchOptions") };
                 subItem.Items.Add(CreateCheckMenuItem(TextResources.GetString("Bookshelf.MoreMenu.SearchIncludeSubdirectories"), new Binding(nameof(BookmarkConfig.IsSearchIncludeSubdirectories)) { Source = Config.Current.Bookmark }));
                 items.Add(subItem);
-                
+
                 items.Add(new Separator());
                 items.Add(CreateCommandMenuItem(TextResources.GetString("FolderTree.Menu.DeleteInvalidBookmark"), _vm.DeleteInvalidBookmarkCommand));
                 items.Add(new Separator());

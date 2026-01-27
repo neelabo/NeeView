@@ -2,7 +2,6 @@
 using NeeLaboratory.Generators;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Windows.Threading;
 
 // TODO: 遅延処理を停止するための終了処理が必要。Disposableにするべきか？
@@ -46,7 +45,7 @@ namespace NeeView.Windows.Data
             _delayValue = value;
         }
 
-        
+
         /// <summary>
         /// 値が反映されたときのイベント
         /// </summary>

@@ -8,7 +8,7 @@ namespace NeeView
         {
             this.Group = TextResources.GetString("CommandGroup.ViewManipulation");
             this.IsShowMessage = false;
-            
+
             // ViewRotateLeft
             this.ParameterSource = new CommandParameterSource(new ViewRotateCommandParameter());
         }

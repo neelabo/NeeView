@@ -46,15 +46,15 @@ namespace NeeView
                 }
 
                 _mutex.Dispose();
-                
+
                 _disposedValue = true;
             }
         }
 
-         ~ProcessLockCore()
-         {
-             Dispose(disposing: false);
-         }
+        ~ProcessLockCore()
+        {
+            Dispose(disposing: false);
+        }
 
         public void Dispose()
         {

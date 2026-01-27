@@ -1,19 +1,10 @@
 ﻿using NeeLaboratory;
 using NeeLaboratory.ComponentModel;
-using NeeLaboratory.Windows.Input;
-using NeeView.Media.Imaging.Metadata;
 using NeeView.Properties;
-using NeeView.Windows.Data;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace NeeView
 {
@@ -29,7 +20,7 @@ namespace NeeView
 
             _model.AddPropertyChanged(nameof(_model.FileInformationCollection),
                 Model_FileInformationCollectionChanged);
-            
+
             SelectedItem = _model.GetMainFileInformation();
 
             MoreMenuDescription = new FileInformationMoreMenuDescription();

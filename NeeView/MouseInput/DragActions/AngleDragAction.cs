@@ -1,9 +1,7 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Media;
-using NeeLaboratory;
-using NeeView.Maths;
+﻿using NeeLaboratory;
 using NeeView.Properties;
+using System;
+using System.Windows;
 
 namespace NeeView
 {

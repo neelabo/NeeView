@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows;
-
-namespace NeeView
+﻿namespace NeeView
 {
     public enum WidePageStretch
     {

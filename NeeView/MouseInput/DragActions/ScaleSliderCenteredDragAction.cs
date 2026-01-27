@@ -1,6 +1,4 @@
 ﻿using NeeView.Properties;
-using System;
-using System.Diagnostics;
 
 namespace NeeView
 {

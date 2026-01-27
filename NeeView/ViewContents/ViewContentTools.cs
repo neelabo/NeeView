@@ -1,14 +1,11 @@
 ﻿//#define LOCAL_DEBUG
 
+using NeeLaboratory.Generators;
+using NeeView.PageFrames;
 using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Media.Effects;
-using System.Windows.Shapes;
-using NeeLaboratory.Generators;
-using NeeView.PageFrames;
 
 namespace NeeView
 {

@@ -1,8 +1,5 @@
 ﻿using NeeView.Threading;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Input;
 

@@ -1,10 +1,7 @@
 ﻿using NeeLaboratory.ComponentModel;
-using System.Runtime.Serialization;
-using System.ComponentModel;
-using NeeView.Windows.Property;
-using System;
 using NeeLaboratory.Generators;
 using NeeView.Data;
+using System;
 
 namespace NeeView
 {
@@ -24,7 +21,7 @@ namespace NeeView
         {
             this.PageMarkers = new PageMarkers(BookOperation.Current);
 
-            Config.Current.BookSetting.SubscribePropertyChanged(nameof(BookSettingConfig.BookReadOrder), (s, e) => UpdateIsSliderDirectionReversed()); 
+            Config.Current.BookSetting.SubscribePropertyChanged(nameof(BookSettingConfig.BookReadOrder), (s, e) => UpdateIsSliderDirectionReversed());
 
             ThumbnailList.Current.IsSliderDirectionReversed = this.IsSliderDirectionReversed;
 
@@ -141,14 +138,14 @@ namespace NeeView
             {
                 if (PageSelector.IsSupportedSingleFirstPage)
                 {
-                    return ((value-1) & ~1) + 1;
+                    return ((value - 1) & ~1) + 1;
                 }
                 else
                 {
                     return (value & ~1);
                 }
             }
-            
+
             // スライダーの移動量をページモードに従う
             if (Config.Current.Slider.IsSyncPageMode)
             {

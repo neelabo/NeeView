@@ -1,9 +1,7 @@
-﻿using System;
+﻿using NeeView.Maths;
+using System;
 using System.Windows;
 using System.Windows.Media.Animation;
-using NeeLaboratory.ComponentModel;
-using NeeView.Interop;
-using NeeView.Maths;
 
 namespace NeeView.PageFrames
 {

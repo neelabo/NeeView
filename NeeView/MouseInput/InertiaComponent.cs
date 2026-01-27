@@ -49,7 +49,7 @@ namespace NeeView
         }
 
         private void Update()
-        { 
+        {
             if (_disposedValue) return;
 
             var length = _speed.Length;

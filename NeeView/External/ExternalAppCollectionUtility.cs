@@ -1,7 +1,6 @@
 ﻿using NeeView.Properties;
 using System.Linq;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace NeeView

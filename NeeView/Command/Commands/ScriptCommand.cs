@@ -1,11 +1,8 @@
 ﻿using NeeView.Properties;
 using NeeView.Text;
 using System;
-using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Data;
 
 namespace NeeView

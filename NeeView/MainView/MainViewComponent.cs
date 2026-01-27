@@ -6,13 +6,7 @@ using NeeView.PageFrames;
 using NeeView.Threading;
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 
 namespace NeeView
 {

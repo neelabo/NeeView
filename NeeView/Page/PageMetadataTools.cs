@@ -1,10 +1,10 @@
-﻿using System;
+﻿using NeeView.Media.Imaging.Metadata;
+using NeeView.Text;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using NeeView.Media.Imaging.Metadata;
-using NeeView.Text;
 
 namespace NeeView
 {

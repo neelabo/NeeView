@@ -126,7 +126,7 @@ namespace NeeView
             // メインウィンドウ起動
             var mainWindow = new MainWindow();
             WindowParameters.Initialize(mainWindow);
-            
+
             NVInterop.NVFpReset();
             mainWindow.Show();
 

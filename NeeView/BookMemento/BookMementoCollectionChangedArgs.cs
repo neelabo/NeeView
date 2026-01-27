@@ -1,5 +1,4 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -9,7 +8,7 @@ namespace NeeView
     public enum BookMementoCollectionChangedType
     {
         None = 0,
-        
+
         Add,
         Remove,
         Replace,

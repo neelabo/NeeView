@@ -1,6 +1,5 @@
 ﻿using NeeView.Interop;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 namespace NeeView
 {
@@ -28,7 +27,7 @@ namespace NeeView
 
         public static bool AnyPressed(MouseButtonBits bits)
         {
-            foreach(var pair in _keyMap)
+            foreach (var pair in _keyMap)
             {
                 if ((bits & pair.Key) != 0)
                 {

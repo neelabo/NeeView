@@ -32,7 +32,7 @@ namespace NeeView
             return CreateObsoleteMessage(name, obsolete, alternative);
         }
 
-        public static string? CreateMethodObsoleteMessage(Type type, [System.Runtime.CompilerServices.CallerMemberName]  string? name = null)
+        public static string? CreateMethodObsoleteMessage(Type type, [System.Runtime.CompilerServices.CallerMemberName] string? name = null)
         {
             if (name is null) throw new ArgumentNullException(nameof(name));
 

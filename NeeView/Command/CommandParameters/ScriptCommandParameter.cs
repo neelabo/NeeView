@@ -1,5 +1,4 @@
 ﻿using NeeView.Windows.Property;
-using System;
 
 namespace NeeView
 {

@@ -1,7 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System;
-using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
 namespace NeeView
@@ -98,7 +97,7 @@ namespace NeeView
             get { return IsOpenLastBook ? _lastBookPath : null; }
             set { SetProperty(ref _lastBookPath, value); }
         }
-        
+
         [Obsolete, PropertyMapIgnore]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? LastFolderPath

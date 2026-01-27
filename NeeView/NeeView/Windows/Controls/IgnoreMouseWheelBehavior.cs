@@ -1,11 +1,6 @@
 ﻿// from http://stackoverflow.com/questions/2189053/disable-mouse-wheel-on-itemscontrol-in-wpf
 
 using Microsoft.Xaml.Behaviors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 

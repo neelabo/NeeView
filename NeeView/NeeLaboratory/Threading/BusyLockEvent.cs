@@ -2,7 +2,6 @@
 
 using NeeLaboratory.Generators;
 using System;
-using System.Diagnostics;
 using System.Threading;
 
 namespace NeeLaboratory.Threading

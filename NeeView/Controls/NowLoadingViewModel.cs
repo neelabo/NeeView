@@ -1,6 +1,4 @@
 ﻿using NeeLaboratory.ComponentModel;
-using System;
-using System.Windows.Threading;
 
 namespace NeeView
 {

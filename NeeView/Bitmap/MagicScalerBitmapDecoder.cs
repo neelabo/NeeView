@@ -11,7 +11,8 @@ namespace NeeView
     {
         static MagicScalerBitmapDecoder()
         {
-            CodecManager.Configure(codecs => {
+            CodecManager.Configure(codecs =>
+            {
                 codecs.Clear();
                 codecs.UseWicCodecs(WicCodecPolicy.Microsoft);
             });

@@ -1,8 +1,6 @@
 ﻿//#define LOCAL_DEBUG
 using NeeLaboratory.Generators;
 using System;
-using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
@@ -15,7 +13,7 @@ namespace NeeView
 
     [LocalDebug]
     public static partial class ObjectMerge
-    { 
+    {
         /// <summary>
         /// インスタンスのプロパティを上書き
         /// TODO: 配列や辞書の対応

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows.Media;
-using NeeLaboratory.ComponentModel;
+﻿using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
+using System;
+using System.Windows.Media;
 
 namespace NeeView.PageFrames
 {

@@ -22,7 +22,7 @@ namespace NeeView
         public QueryPath Path => _parent.Combine(_name);
         public string Name => _name;
         public string Label => _label ?? Name;
-  
+
 
         public override string ToString()
         {

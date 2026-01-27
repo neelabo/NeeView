@@ -1,7 +1,6 @@
 ﻿using NeeLaboratory.Linq;
 using NeeLaboratory.Text;
 using NeeView.Properties;
-using SharpVectors.Dom;
 using System;
 using System.Collections.Generic;
 using System.Data;

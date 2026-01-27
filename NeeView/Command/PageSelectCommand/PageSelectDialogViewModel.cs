@@ -2,8 +2,6 @@
 using NeeLaboratory.Windows.Input;
 using NeeView.Properties;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 
 namespace NeeView
@@ -18,7 +16,7 @@ namespace NeeView
         public bool Result { get; set; }
     }
 
-    public class PageSelectDialogViewModel : BindableBase 
+    public class PageSelectDialogViewModel : BindableBase
     {
         private readonly PageSelectDialogModel _model;
         private RelayCommand? _decideCommand;

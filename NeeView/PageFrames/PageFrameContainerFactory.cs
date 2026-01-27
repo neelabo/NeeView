@@ -1,9 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Media;
-
-namespace NeeView.PageFrames
+﻿namespace NeeView.PageFrames
 {
 
     public class PageFrameContainerFactory

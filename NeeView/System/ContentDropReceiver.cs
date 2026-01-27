@@ -1,5 +1,4 @@
-﻿using NeeLaboratory.IO;
-using NeeView.IO;
+﻿using NeeView.IO;
 using NeeView.Properties;
 using NeeView.Text;
 using NeeView.Windows;
@@ -9,8 +8,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;

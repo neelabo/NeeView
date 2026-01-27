@@ -1,5 +1,4 @@
 ﻿using NeeLaboratory.IO.Search;
-using System.Collections.Generic;
 
 namespace NeeView
 {

@@ -1,16 +1,9 @@
-﻿using NeeView.Data;
-using NeeView.Threading;
+﻿using NeeView.Threading;
 using NeeView.Windows.Property;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime;
-using System.Runtime.Serialization;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Threading;
 
 namespace NeeView
 {

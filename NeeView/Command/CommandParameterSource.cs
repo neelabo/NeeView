@@ -70,7 +70,7 @@ namespace NeeView
                 {
                     _parameter.PropertyChanged += Parameter_PropertyChanged;
                 }
-              
+
                 ParameterChanged?.Invoke(this, new ParameterChangedEventArgs(null));
             }
         }

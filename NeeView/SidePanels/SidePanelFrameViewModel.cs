@@ -1,9 +1,7 @@
-﻿using System;
+﻿using NeeLaboratory.ComponentModel;
+using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Windows;
-using NeeLaboratory.ComponentModel;
-using NeeView.Windows;
 
 namespace NeeView
 {

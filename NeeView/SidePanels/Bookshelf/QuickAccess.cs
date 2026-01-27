@@ -15,7 +15,7 @@ namespace NeeView
 
 
         public QuickAccess() : this(null, null)
-        { 
+        {
         }
 
         public QuickAccess(string? path) : this(null, path)
@@ -53,7 +53,7 @@ namespace NeeView
             set
             {
                 var name = GetValidateName(value?.Trim());
-                SetProperty(ref _name, string.IsNullOrEmpty(name) || name == DefaultName ? null : name); 
+                SetProperty(ref _name, string.IsNullOrEmpty(name) || name == DefaultName ? null : name);
             }
         }
 

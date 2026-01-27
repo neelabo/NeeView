@@ -1,18 +1,9 @@
-﻿using NeeView.ComponentModel;
-using NeeView.Native;
+﻿using NeeView.Native;
 using NeeView.Properties;
 using NeeView.Runtime.LayoutPanel;
-using NeeView.Windows;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Media;
-using System.Windows.Threading;
 
 namespace NeeView
 {

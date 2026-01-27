@@ -20,7 +20,7 @@ namespace NeeView
         public ArchiveEntry Entry { get; }
         public FilePageIcon Icon { get; }
         public string? Message { get; }
-        public ImageSource? ImageSource { get; } 
+        public ImageSource? ImageSource { get; }
     }
 
 }

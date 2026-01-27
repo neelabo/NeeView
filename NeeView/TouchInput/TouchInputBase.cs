@@ -36,7 +36,7 @@ namespace NeeView
         /// </summary>
         public EventHandler<TouchGestureEventArgs>? TouchGestureChanged;
 
-        
+
         /// <summary>
         /// 状態開始時処理
         /// </summary>
@@ -143,7 +143,7 @@ namespace NeeView
         {
             var xRate = point.X / _context.Sender.ActualWidth;
             var yRate = point.Y / _context.Sender.ActualHeight;
-            
+
             // TouchCenter を優先的に判定
             if (TouchArea.TouchCenter.IsTouched(xRate, yRate))
             {

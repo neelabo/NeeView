@@ -1,13 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.Properties;
-using NeeView.Windows.Controls;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 

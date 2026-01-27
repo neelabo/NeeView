@@ -1,15 +1,12 @@
-﻿using NeeView.Collections;
+﻿using NeeLaboratory.Linq;
 using NeeView.Collections.Generic;
-using NeeView.IO;
-using NeeLaboratory.Linq;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Data;
-using System.Collections.Generic;
 
 namespace NeeView
 {
@@ -352,7 +349,7 @@ namespace NeeView
     }
 
 
-    public class BookmarkFolderFolderItem : ConstFolderItem 
+    public class BookmarkFolderFolderItem : ConstFolderItem
     {
         private readonly BookmarkFolderItemRenameModule _rename;
 

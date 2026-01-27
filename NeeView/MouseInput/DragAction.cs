@@ -60,7 +60,7 @@ namespace NeeView
             {
                 return (Memento)MemberwiseClone();
             }
-            
+
             public bool MemberwiseEquals(Memento other)
             {
                 if (other is null) return false;

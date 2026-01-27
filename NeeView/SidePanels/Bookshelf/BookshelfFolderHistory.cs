@@ -76,7 +76,7 @@ namespace NeeView
         private async ValueTask LoadPageAsync(QueryPath? item)
         {
             if (item == null) return;
-          
+
             await _folderList.MoveToHistoryAsync(item);
         }
 

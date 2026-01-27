@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NeeView.PageFrames
+﻿namespace NeeView.PageFrames
 {
     public interface IDragTransformContextFactory
     {

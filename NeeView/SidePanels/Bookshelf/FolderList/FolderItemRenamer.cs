@@ -1,5 +1,4 @@
-﻿using NeeView.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace NeeView

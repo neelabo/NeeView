@@ -1,11 +1,9 @@
-﻿using System;
-using System.ComponentModel;
+﻿using NeeLaboratory.ComponentModel;
+using NeeView.Windows;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Media;
-using NeeLaboratory.ComponentModel;
-using NeeView.Windows;
 
 
 namespace NeeView.PageFrames

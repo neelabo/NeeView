@@ -250,10 +250,10 @@
         WM_PENWINFIRST = 0x0380,
         WM_PENWINLAST = 0x038F,
 
-    #region Windows 7
+        #region Windows 7
         WM_DWMSENDICONICTHUMBNAIL = 0x0323,
         WM_DWMSENDICONICLIVEPREVIEWBITMAP = 0x0326,
-    #endregion
+        #endregion
 
         WM_USER = 0x0400,
 

@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -17,7 +12,7 @@ namespace NeeView.Windows.Controls
     /// <remarks>
     /// 親コントロールの幅に収まるように文字列を編集します。
     /// </remarks>
-    public class LeftTrimmingTextBlock : TextBlock 
+    public class LeftTrimmingTextBlock : TextBlock
     {
         private FrameworkElement? _parentElement;
 

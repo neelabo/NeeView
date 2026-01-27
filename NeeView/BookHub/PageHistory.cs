@@ -4,8 +4,6 @@ using NeeView.Collections;
 using NeeView.PageFrames;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
 
 namespace NeeView

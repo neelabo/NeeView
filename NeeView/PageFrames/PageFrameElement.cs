@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using NeeView.Maths;
+using System;
 using System.Diagnostics;
 using System.Windows;
-using NeeView.Maths;
 
 namespace NeeView.PageFrames
 {
@@ -128,7 +127,7 @@ namespace NeeView.PageFrames
             return other is not null
                 && Page == other.Page
                 && PageRange.Equals(other.PageRange)
-                && (PageRange.PartSize == 2 ||Direction == other.Direction);
+                && (PageRange.PartSize == 2 || Direction == other.Direction);
         }
 
     }

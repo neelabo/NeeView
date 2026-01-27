@@ -1,13 +1,10 @@
 ﻿using NeeLaboratory;
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Windows.Input;
-using NeeView.Effects;
 using NeeView.Properties;
-using NeeView.Windows.Property;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Data;
 

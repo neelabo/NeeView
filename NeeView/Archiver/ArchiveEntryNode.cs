@@ -17,7 +17,7 @@ namespace NeeView
             Parent = parent;
             ArchiveEntry = archiveEntry;
             EntryPoint = LoosePath.TrimDirectoryEnd(entryPoint);
-            
+
             Debug.Assert(ArchiveEntry.EntryName.StartsWith(EntryPoint));
         }
 

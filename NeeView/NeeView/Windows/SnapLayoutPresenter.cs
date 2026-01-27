@@ -1,12 +1,10 @@
-﻿using System;
+﻿using NeeView.Interop;
+using System;
 using System.Windows;
-using System.Windows.Media;
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
 using System.Windows.Interop;
-using System.Collections.Generic;
-using System.Diagnostics;
-using NeeView.Interop;
+using System.Windows.Media;
 
 namespace NeeView.Windows
 {

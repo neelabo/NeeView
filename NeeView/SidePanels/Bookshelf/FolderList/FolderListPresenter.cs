@@ -1,8 +1,4 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
-
-namespace NeeView
+﻿namespace NeeView
 {
     public interface IHasFolderListBox
     {

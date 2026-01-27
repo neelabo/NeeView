@@ -1,6 +1,6 @@
 ﻿namespace NeeView
 {
-    public interface IViewTransformControl 
+    public interface IViewTransformControl
     {
         void ResetContentSizeAndTransform();
 

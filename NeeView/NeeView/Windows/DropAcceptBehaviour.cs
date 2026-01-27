@@ -34,7 +34,7 @@ namespace NeeView.Windows
         }
     }
 
-    
+
     /// <summary>
     /// ドロップ対象オブジェクト用ビヘイビア
     /// </summary>
@@ -76,13 +76,13 @@ namespace NeeView.Windows
             if (this.Description is null) return;
 
             this.Description.OnDragEnter(sender, e);
-            this.Description.OnDragOver(sender,e);
+            this.Description.OnDragOver(sender, e);
         }
 
         private void DragLeaveHandler(object sender, DragEventArgs e)
         {
             if (this.Description is null) return;
-            
+
             this.Description.OnDragLeave(sender, e);
         }
 

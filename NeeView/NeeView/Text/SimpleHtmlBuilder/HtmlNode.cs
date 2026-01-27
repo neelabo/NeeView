@@ -83,7 +83,7 @@ namespace NeeView.Text.SimpleHtmlBuilder
         {
             var tagWithAttribute = _name + (_attributes is null ? "" : " " + string.Join(" ", _attributes));
             var tag = _name;
-            
+
             var indent = new string(' ', depth * 2);
 
             if (_nodes is null)
@@ -96,7 +96,8 @@ namespace NeeView.Text.SimpleHtmlBuilder
                 _nodes.First().Append(builder);
                 builder.AppendLine(CultureInfo.InvariantCulture, $"</{tag}>");
             }
-            else {
+            else
+            {
                 builder.AppendLine(CultureInfo.InvariantCulture, $"{indent}<{tagWithAttribute}>");
                 foreach (var node in _nodes)
                 {

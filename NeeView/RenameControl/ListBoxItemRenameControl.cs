@@ -1,5 +1,4 @@
-﻿using NeeView.Collections.Generic;
-using NeeView.Windows.Media;
+﻿using NeeView.Windows.Media;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;

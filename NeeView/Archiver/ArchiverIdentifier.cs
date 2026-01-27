@@ -25,7 +25,7 @@ namespace NeeView
             }
             else
             {
-                return ArchiveType.ToAliasName() + " (" +  PluginName + ")";
+                return ArchiveType.ToAliasName() + " (" + PluginName + ")";
             }
         }
 

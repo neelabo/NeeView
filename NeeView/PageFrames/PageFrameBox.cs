@@ -1,17 +1,5 @@
 ﻿//#define LOCAL_DEBUG
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
 using NeeView.Collections.Generic;
@@ -20,6 +8,16 @@ using NeeView.Effects;
 using NeeView.Maths;
 using NeeView.Properties;
 using NeeView.Windows;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace NeeView.PageFrames
 {

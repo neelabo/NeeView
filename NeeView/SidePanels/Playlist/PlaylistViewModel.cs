@@ -1,19 +1,11 @@
-﻿using System;
-using System.Windows;
+﻿using NeeLaboratory.ComponentModel;
+using NeeLaboratory.Windows.Input;
+using NeeView.Properties;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.ComponentModel;
-using System.Collections.ObjectModel;
-using NeeLaboratory.Windows.Input;
-using System.Runtime.Serialization;
-using System.Windows.Input;
-using System.Linq;
-using System.Diagnostics;
-using NeeLaboratory.ComponentModel;
-using System.Threading;
-using NeeView.Properties;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 
 namespace NeeView
 {

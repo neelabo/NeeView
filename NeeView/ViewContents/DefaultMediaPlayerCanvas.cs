@@ -1,10 +1,6 @@
-﻿using NeeView.Collections.Generic;
-using NeeView.PageFrames;
-using NeeView.Susie;
+﻿using NeeView.PageFrames;
 using System;
-using System.Configuration;
 using System.Diagnostics;
-using System.Security.Cryptography.X509Certificates;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;

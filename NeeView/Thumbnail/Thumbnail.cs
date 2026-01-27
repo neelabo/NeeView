@@ -320,7 +320,7 @@ namespace NeeView
             Image = image ?? ThumbnailResource.EmptyImage;
 
             SaveCacheAsync();
-            
+
             IsCacheReadEnabled = true;
         }
 

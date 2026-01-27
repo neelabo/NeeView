@@ -1,7 +1,6 @@
-﻿using System;
+﻿using NeeView.PageFrames;
+using System;
 using System.Windows;
-using System.Windows.Input;
-using NeeView.PageFrames;
 
 namespace NeeView
 {

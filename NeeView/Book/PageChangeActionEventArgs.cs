@@ -11,7 +11,7 @@ namespace NeeView
         public PageChangeActionEventArgs(PageChangeAction action, bool isMedia)
         {
             Debug.Assert(isMedia, "The current version only supports media events.");
-            
+
             Action = action;
             IsMedia = isMedia;
         }

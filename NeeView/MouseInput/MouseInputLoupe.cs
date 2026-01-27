@@ -1,12 +1,6 @@
-﻿using NeeLaboratory;
-using NeeLaboratory.ComponentModel;
-using NeeView.Interop;
+﻿using NeeView.Interop;
 using NeeView.Windows;
-using NeeView.Windows.Property;
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Input;
 

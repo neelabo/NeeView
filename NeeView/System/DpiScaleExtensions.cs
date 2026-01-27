@@ -1,6 +1,4 @@
-﻿using NeeView.Windows;
-using System;
-using System.Windows;
+﻿using System.Windows;
 
 namespace NeeView
 {
@@ -13,7 +11,7 @@ namespace NeeView
         /// </summary>
         public static DpiScale ToFixedScale(this DpiScale self)
         {
-            return Config.Current.System.IsIgnoreImageDpi? self : OneDpiScale;
+            return Config.Current.System.IsIgnoreImageDpi ? self : OneDpiScale;
         }
     }
 }

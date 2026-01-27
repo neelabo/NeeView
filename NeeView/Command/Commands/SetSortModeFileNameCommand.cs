@@ -16,7 +16,7 @@ namespace NeeView
         {
             return BindingGenerator.SortMode(PageSortMode.FileName);
         }
-        
+
         public override bool CanExecute(object? sender, CommandContext e)
         {
             return BookSettings.Current.CanEdit;

@@ -1,13 +1,11 @@
-﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace NeeView
 {
     /// <summary>
     /// 画像情報項目キー (Immutable)
     /// </summary>
-    public record class FileInformationKey 
+    public record class FileInformationKey
     {
         public FileInformationKey(InformationKey key)
         {

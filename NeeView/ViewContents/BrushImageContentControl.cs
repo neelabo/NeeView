@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Diagnostics;
+﻿using NeeView.PageFrames;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using NeeView.PageFrames;
 
 namespace NeeView
 {

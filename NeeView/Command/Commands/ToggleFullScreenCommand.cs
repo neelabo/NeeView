@@ -16,7 +16,7 @@ namespace NeeView
 
         public override Binding CreateIsCheckedBinding()
         {
-            var windowStateManager =  MainWindow.Current.WindowStateManager;
+            var windowStateManager = MainWindow.Current.WindowStateManager;
             return new Binding(nameof(windowStateManager.IsFullScreen)) { Source = windowStateManager, Mode = BindingMode.OneWay };
         }
 

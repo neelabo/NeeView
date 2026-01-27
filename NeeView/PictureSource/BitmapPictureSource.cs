@@ -4,7 +4,6 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Documents;
 using System.Windows.Media;
 
 namespace NeeView
@@ -24,7 +23,7 @@ namespace NeeView
         }
 
 
-        public ArchiveEntry ArchiveEntry { get; } 
+        public ArchiveEntry ArchiveEntry { get; }
 
         public PictureInfo? PictureInfo { get; }
 

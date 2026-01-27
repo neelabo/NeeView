@@ -1,15 +1,6 @@
-﻿using Microsoft.Expression.Media.Effects;
-using NeeLaboratory.ComponentModel;
-using NeeView.Data;
+﻿using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
 using System.Windows.Media.Effects;
 
 namespace NeeView.Effects

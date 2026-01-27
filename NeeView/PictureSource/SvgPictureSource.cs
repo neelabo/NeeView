@@ -1,5 +1,4 @@
 ﻿using NeeView.Media.Imaging;
-using NeeView.Threading;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -56,7 +55,7 @@ namespace NeeView
 
             Debug.Assert(PictureInfo != null);
             var size = PictureInfo.Size;
-            
+
             size = ThumbnailProfile.GetThumbnailSize(size);
             var setting = profile.CreateBitmapCreateSetting(true);
             return await CreateImageAsync(drawing, size, setting, Config.Current.Thumbnail.Format, Config.Current.Thumbnail.Quality, token);

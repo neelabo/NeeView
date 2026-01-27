@@ -1,9 +1,8 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using NeeView.Interop;
+using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
-using NeeView.Interop;
 
 namespace NeeView.Windows
 {

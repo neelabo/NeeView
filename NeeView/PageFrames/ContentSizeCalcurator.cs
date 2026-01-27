@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿using NeeView.Maths;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
-using NeeView.Maths;
 
 namespace NeeView.PageFrames
 {

@@ -1,6 +1,4 @@
-﻿using NeeView.Interop;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace NeeView

@@ -1,6 +1,4 @@
-﻿using NeeView.IO;
-using System.IO;
-using System.Threading;
+﻿using System.Threading;
 
 namespace NeeView
 {

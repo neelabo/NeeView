@@ -1,15 +1,11 @@
-﻿using System;
+﻿using NeeLaboratory.Generators;
+using NeeView.ComponentModel;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Xml.Linq;
-using NeeLaboratory.Generators;
-using NeeView.ComponentModel;
 
 
 namespace NeeView.PageFrames
@@ -333,7 +329,7 @@ namespace NeeView.PageFrames
             var frame = _frameFactory.CreatePageFrame(pos, direction.ToSign());
 
             // NOTE: ページ検索で現在表示されているページそのものが無くなった場合に null になることがある。この場合は処理を行わない
-            if (frame is null) 
+            if (frame is null)
             {
                 return;
             }

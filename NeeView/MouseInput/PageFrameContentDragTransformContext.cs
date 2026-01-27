@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows;
-using NeeView.ComponentModel;
+﻿using NeeView.ComponentModel;
 using NeeView.PageFrames;
+using System;
+using System.Windows;
 
 namespace NeeView
 {

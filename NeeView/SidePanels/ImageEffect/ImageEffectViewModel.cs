@@ -2,7 +2,6 @@
 using NeeView.Effects;
 using NeeView.Windows.Property;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace NeeView
 {

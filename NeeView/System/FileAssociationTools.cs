@@ -16,7 +16,7 @@ namespace NeeView
         public static void UnassociateAll()
         {
             var collection = FileAssociationCollectionFactory.Create(FileAssociationCollectionCreateOptions.OnlyRegistered);
-            foreach(var item in collection)
+            foreach (var item in collection)
             {
                 item.IsEnabled = false;
             }

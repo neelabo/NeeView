@@ -82,7 +82,7 @@ namespace NeeView
 
         private void RemoveItems()
         {
-            foreach(var item in _items)
+            foreach (var item in _items)
             {
                 item.Dispose();
             }

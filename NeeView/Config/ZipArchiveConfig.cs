@@ -34,7 +34,7 @@ namespace NeeView
             get { return _isWriteAccessEnabled; }
             set { SetProperty(ref _isWriteAccessEnabled, value); }
         }
-        
+
         [PropertyMember]
         public ZipEncoding Encoding
         {

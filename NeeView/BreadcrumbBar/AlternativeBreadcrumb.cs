@@ -18,7 +18,7 @@ namespace NeeView
         {
         }
 
-        public AlternativeBreadcrumb(Breadcrumb? breadcrumb) 
+        public AlternativeBreadcrumb(Breadcrumb? breadcrumb)
         {
             Breadcrumb = breadcrumb;
         }
@@ -79,7 +79,7 @@ namespace NeeView
         public override bool HasChildren => true;
 
         public override void LoadChildren() => Breadcrumb?.LoadChildren();
-        
+
         public override void CancelLoadChildren() => Breadcrumb?.CancelLoadChildren();
     }
 

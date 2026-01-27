@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
-using System.Windows.Data;
 using System.Windows;
+using System.Windows.Data;
 
 namespace NeeView
 {
@@ -14,7 +14,7 @@ namespace NeeView
 
         public static bool CanBookmark(string path)
         {
-            return !string.IsNullOrWhiteSpace(path) &&  !path.StartsWith(Temporary.Current.TempDirectory, StringComparison.Ordinal);
+            return !string.IsNullOrWhiteSpace(path) && !path.StartsWith(Temporary.Current.TempDirectory, StringComparison.Ordinal);
         }
     }
 

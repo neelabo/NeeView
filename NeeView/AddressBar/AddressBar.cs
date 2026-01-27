@@ -2,7 +2,6 @@
 using NeeLaboratory.ComponentModel;
 using NeeView.IO;
 using NeeView.Properties;
-using System.Windows.Controls;
 
 namespace NeeView
 {

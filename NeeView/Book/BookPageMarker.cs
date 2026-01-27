@@ -9,12 +9,12 @@ namespace NeeView
     {
         private readonly BookSource _book;
 
-        
+
         public BookPageMarker(BookSource book)
         {
             _book = book;
 
-            _book.Pages.PageRemoved += 
+            _book.Pages.PageRemoved +=
                 (s, e) => AppDispatcher.Invoke(() => Pages_PageRemoved(s, e));
         }
 

@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Data;
 using System.Windows.Media;
 
 namespace NeeView
@@ -128,7 +126,7 @@ namespace NeeView
 
         public IEnumerable<FolderTreeNodeBase> HierarchyReverse => this.GteHierarchyReverse().Cast<FolderTreeNodeBase>();
 
-        
+
         ITreeNode? ITreeNode.Parent => Parent;
 
         IEnumerable<ITreeNode>? ITreeNode.Children => Children;

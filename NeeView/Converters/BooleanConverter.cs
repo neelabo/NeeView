@@ -7,7 +7,7 @@ using System.Windows.Data;
 namespace NeeView
 {
     [ValueConversion(typeof(bool), typeof(Visibility))]
-    public class BooleanConverter<T> :  IValueConverter
+    public class BooleanConverter<T> : IValueConverter
     {
         public BooleanConverter(T trueValue, T falseValue)
         {

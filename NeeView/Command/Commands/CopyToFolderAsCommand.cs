@@ -1,6 +1,5 @@
 ﻿using NeeView.Properties;
 using System;
-using System.Reflection.Metadata;
 using System.Windows.Controls;
 
 namespace NeeView

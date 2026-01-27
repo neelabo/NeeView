@@ -2,7 +2,6 @@
 using NeeView.Properties;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;

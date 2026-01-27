@@ -1,15 +1,9 @@
 ﻿using NeeView.Collections.Generic;
 using NeeView.Properties;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 
 namespace NeeView
 {

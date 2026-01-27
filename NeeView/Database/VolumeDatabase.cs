@@ -44,7 +44,7 @@ namespace NeeView
             }
         }
 
-        internal Dictionary<int ,string> ReadTable()
+        internal Dictionary<int, string> ReadTable()
         {
             var volumeTable = new Dictionary<int, string>();
 

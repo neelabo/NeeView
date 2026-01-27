@@ -10,8 +10,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Data;
 

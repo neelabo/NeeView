@@ -1,11 +1,8 @@
 ﻿// http://sourcechord.hatenablog.com/entry/20130710/1373476676
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
 

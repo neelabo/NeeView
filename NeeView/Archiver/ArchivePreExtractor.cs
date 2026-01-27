@@ -4,7 +4,6 @@ using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -256,7 +255,7 @@ namespace NeeView
 
             if (entry.Data is null)
             {
-                
+
                 throw new PreExtractException($"Could not pre extract: {entry}");
             }
 

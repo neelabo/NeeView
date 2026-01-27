@@ -2,7 +2,7 @@
 {
     public class DefaultLayoutPanelWindowBuilder : ILayoutPanelWindowBuilder
     {
-        public LayoutPanelWindow CreateWindow(LayoutPanelWindowManager manager, LayoutPanel layoutPanel )
+        public LayoutPanelWindow CreateWindow(LayoutPanelWindowManager manager, LayoutPanel layoutPanel)
         {
             var window = new LayoutPanelWindow();
             window.LayoutPanelWindowManager = manager;

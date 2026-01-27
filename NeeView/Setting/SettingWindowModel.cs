@@ -1,18 +1,11 @@
 ﻿using NeeLaboratory.ComponentModel;
-using NeeLaboratory.Windows.Input;
-using NeeView.Setting;
-using NeeView.Effects;
-using NeeView.Windows.Property;
+using NeeLaboratory.IO.Search;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Diagnostics;
-using NeeLaboratory.IO.Search;
+using System.Linq;
 using System.Threading;
-using NeeView.Properties;
 
 namespace NeeView.Setting
 {

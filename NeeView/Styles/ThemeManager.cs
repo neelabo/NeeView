@@ -1,20 +1,13 @@
-﻿using NeeLaboratory.ComponentModel;
-using NeeView.Windows.Property;
-using System;
-using System.ComponentModel;
-using System.Globalization;
-using System.Runtime.Serialization;
-using System.Windows.Media;
-using System.Text.Json;
-using System.Collections;
-using System.Text.Json.Serialization;
-using System.IO;
-using System.Windows;
-using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics;
-using NeeLaboratory.Collection;
+﻿using NeeLaboratory.Collection;
+using NeeLaboratory.ComponentModel;
 using NeeView.Properties;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Windows;
+using System.Windows.Media;
 
 namespace NeeView
 {

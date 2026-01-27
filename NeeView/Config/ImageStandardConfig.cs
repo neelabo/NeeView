@@ -3,7 +3,7 @@ using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    public class ImageStandardConfig: BindableBase
+    public class ImageStandardConfig : BindableBase
     {
         private bool _useWicInformation = true;
         private bool _isAspectRatioEnabled;

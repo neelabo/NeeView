@@ -120,9 +120,9 @@ namespace NeeView
         private static string JavaScriptStringEncode(string src)
         {
             var builder = new StringBuilder();
-            foreach(var c in src)
+            foreach (var c in src)
             {
-                switch(c)
+                switch (c)
                 {
                     case '\\':
                         builder.Append("\\\\");

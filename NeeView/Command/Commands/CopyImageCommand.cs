@@ -1,7 +1,4 @@
 ﻿using NeeView.Properties;
-using NeeView.Windows.Property;
-using System.ComponentModel;
-using System.Runtime.Serialization;
 
 namespace NeeView
 {

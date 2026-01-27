@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Threading;
-using System.Windows;
-using System.Windows.Media.Imaging;
+using System.Threading.Tasks;
 
 namespace NeeView
 {

@@ -4,8 +4,6 @@ using NeeView.Text;
 using NeeView.Windows.Property;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Windows;
 
 namespace NeeView.Setting
 {

@@ -1,6 +1,6 @@
 ﻿using NeeView.Susie;
-using System.Collections.Generic;
 using NeeView.Susie.Client;
+using System.Collections.Generic;
 
 namespace NeeView
 {

@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace NeeView
 {
@@ -36,7 +32,7 @@ namespace NeeView
 
         public override string DisplayName { get => Name; set { } }
 
-        public override IImageSourceCollection Icon => FileIconCollection.Current.CreateFileIcon(Path, IO.FileIconType.Directory,  false, false);
+        public override IImageSourceCollection Icon => FileIconCollection.Current.CreateFileIcon(Path, IO.FileIconType.Directory, false, false);
 
         public virtual string Path => Parent is DirectoryNode parent ? LoosePath.Combine(parent.Path, Name) : Name;
 

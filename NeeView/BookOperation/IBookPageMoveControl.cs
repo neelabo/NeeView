@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace NeeView
+﻿namespace NeeView
 {
     /// <summary>
     /// ブックのページ移動操作

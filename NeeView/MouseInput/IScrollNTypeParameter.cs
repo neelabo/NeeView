@@ -1,7 +1,5 @@
 ﻿// TODO: 関数が大きすぎる？細分化を検討
 
-using System;
-
 namespace NeeView
 {
     /// <summary>

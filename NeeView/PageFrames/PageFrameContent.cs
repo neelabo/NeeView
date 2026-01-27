@@ -1,22 +1,17 @@
 ﻿//#define LOCAL_DEBUG
 
+using NeeLaboratory.ComponentModel;
+using NeeLaboratory.Generators;
+using NeeLaboratory.Linq;
+using NeeView;
+using NeeView.Maths;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows.Shapes;
-using NeeLaboratory.ComponentModel;
-using NeeLaboratory.Linq;
-using NeeView.ComponentModel;
-using NeeView;
-using NeeView.Windows;
-using NeeView.Maths;
-using System.Globalization;
-using NeeLaboratory.Generators;
 
 namespace NeeView.PageFrames
 {
@@ -73,7 +68,7 @@ namespace NeeView.PageFrames
 
         private readonly ContentSizeCalculator _calculator;
         private PageFrameDirtyLevel _dirtyLevel;
-        
+
         private bool _disposedValue = false;
         private readonly DisposableCollection _disposables = new();
 

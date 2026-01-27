@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -18,7 +17,7 @@ namespace NeeView.Collections.ObjectModel
     /// SortDescription で並び替えるより軽い。
     /// </remarks>
     /// <typeparam name="T"></typeparam>
-    public class ReverseObservableCollection<T> :  IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged
+    public class ReverseObservableCollection<T> : IList<T>, IList, IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
         private readonly ObservableCollectionEx<T> _collection;
 
@@ -167,7 +166,7 @@ namespace NeeView.Collections.ObjectModel
             ((IList)_collection).Insert(0, value);
             return ReverseIndex(0);
         }
-        
+
         public void Clear()
         {
             _collection.Clear();
@@ -222,7 +221,7 @@ namespace NeeView.Collections.ObjectModel
         {
             if (array.Length <= 0) return;
             var max = Math.Min(_collection.Count, arrayIndex + array.Length);
-            for(int i = arrayIndex; i < max; i++)
+            for (int i = arrayIndex; i < max; i++)
             {
                 array[i] = _collection[ReverseIndex(i)];
             }

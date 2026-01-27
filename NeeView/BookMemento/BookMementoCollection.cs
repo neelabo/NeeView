@@ -117,7 +117,7 @@ namespace NeeView
                     && (src.Length == target.Length || src[target.Length] == LoosePath.DefaultSeparator);
             }
         }
-        
+
         public BookMementoUnit? GetValid(string place)
         {
             return BookHistoryCollection.Current.FindUnit(place) ?? BookmarkCollection.Current.FindUnit(place);

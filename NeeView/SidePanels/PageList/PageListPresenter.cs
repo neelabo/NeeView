@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace NeeView
+﻿namespace NeeView
 {
     public class PageListPresenter
     {

@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace NeeView
 {
     [JsonConverter(typeof(JsonTouchGestureConverter))]
-    public record TouchGesture :  IEquatable<TouchGesture>
+    public record TouchGesture : IEquatable<TouchGesture>
     {
         public static TouchGesture Empty { get; } = new TouchGesture();
 

@@ -1,12 +1,7 @@
-﻿using NeeLaboratory.ComponentModel;
-using NeeLaboratory.Generators;
+﻿using NeeLaboratory.Generators;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 

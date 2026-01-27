@@ -1,6 +1,4 @@
-﻿using NeeLaboratory.ComponentModel;
-using NeeView.ComponentModel;
-using System;
+﻿using System;
 using System.Diagnostics;
 
 namespace NeeView.PageFrames

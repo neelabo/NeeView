@@ -1,10 +1,7 @@
 ﻿using NeeView.Collections.Generic;
-using NeeView.Windows;
 using NeeView.Windows.Media;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;

@@ -1,8 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
-using NeeView.Data;
 using NeeView.Windows.Property;
 using System;
-using System.Collections.Generic;
 
 namespace NeeView.Setting
 {

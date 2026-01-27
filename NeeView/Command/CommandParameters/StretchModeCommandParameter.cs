@@ -15,7 +15,7 @@ namespace NeeView
         public bool IsToggle
         {
             get => _isToggle;
-            set => SetProperty(ref _isToggle , value);
+            set => SetProperty(ref _isToggle, value);
         }
     }
 }

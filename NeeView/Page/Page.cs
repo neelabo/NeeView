@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NeeLaboratory.Generators;
+using NeeLaboratory.IO.Search;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -7,8 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
-using NeeLaboratory.Generators;
-using NeeLaboratory.IO.Search;
 
 namespace NeeView
 {

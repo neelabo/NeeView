@@ -1,13 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using NeeView.Properties;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Reflection;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using NeeView.Properties;
+using System.IO;
 
 namespace NeeView
 {

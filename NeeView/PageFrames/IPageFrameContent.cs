@@ -1,12 +1,10 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Windows;
-using PageRange = NeeView.PageRange;
 
 
 namespace NeeView.PageFrames
 {
-    public interface IPageFrameContent : IDisposable, INotifyTransformChanged  
+    public interface IPageFrameContent : IDisposable, INotifyTransformChanged
     {
         public event EventHandler<FrameViewContentChangedEventArgs>? ViewContentChanged;
         public event EventHandler? ContentSizeChanged;
@@ -50,7 +48,7 @@ namespace NeeView.PageFrames
         public PageFrameActivity Activity { get; }
 
         public virtual bool IsLocked => false;
-       
+
         public bool IsFirstFrame => false;
 
         public bool IsLastFrame => false;

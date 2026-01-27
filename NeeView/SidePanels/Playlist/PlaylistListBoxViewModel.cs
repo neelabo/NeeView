@@ -13,7 +13,7 @@ using System.Windows.Input;
 
 namespace NeeView
 {
-    public class PlaylistListBoxViewModel : BindableBase 
+    public class PlaylistListBoxViewModel : BindableBase
     {
         private Playlist? _model;
         private ObservableCollection<PlaylistItem>? _items;

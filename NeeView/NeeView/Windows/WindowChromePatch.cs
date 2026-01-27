@@ -1,14 +1,13 @@
 ﻿//#define LOCAL_DEBUG
 
+using NeeLaboratory.Generators;
+using NeeView.Interop;
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Shell;
-using NeeLaboratory.Generators;
-using NeeView.Interop;
 
 
 namespace NeeView.Windows
@@ -172,7 +171,7 @@ namespace NeeView.Windows
             if (AppBar.IsAutoHideAppBar())
             {
                 LocalDebug.WriteLine("IsAutoHideAppBar=true, update row level client size.");
-            
+
                 ResetWindowBorder();
 
                 nonClientCalcSize.rgrc[0] = workArea;

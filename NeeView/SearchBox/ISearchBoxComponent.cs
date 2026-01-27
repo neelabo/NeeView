@@ -38,7 +38,7 @@ namespace NeeView
         public SearchKeywordAnalyzeResult(IEnumerable<SearchKey> keys) : this(new List<SearchKey>(keys), null)
         {
         }
-        
+
         public SearchKeywordAnalyzeResult(Exception exception) : this(new List<SearchKey>(), exception)
         {
         }

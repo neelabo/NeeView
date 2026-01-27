@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Data.SQLite;
 using System.Diagnostics;
-using System.Windows;
 using System.Windows.Input;
 
 namespace NeeView

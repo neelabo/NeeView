@@ -1,6 +1,5 @@
 ﻿using NeeView.Media.Imaging.Metadata;
 using System;
-using System.Diagnostics;
 
 namespace NeeView
 {

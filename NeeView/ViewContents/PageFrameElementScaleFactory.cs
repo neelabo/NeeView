@@ -1,6 +1,5 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using NeeView.PageFrames;
+﻿using NeeView.PageFrames;
+using System.Windows;
 
 namespace NeeView
 {
@@ -41,7 +40,7 @@ namespace NeeView
                 dpiScale: _bookContext.DpiScale);
         }
 
-        public static PageFrameElementScale Create(PageFrame pageFrame, IPageFrameTransform transform, LoupeTransformContext loupeTransform,  BaseScaleTransform baseScaleTransform, DpiScale dpiScale)
+        public static PageFrameElementScale Create(PageFrame pageFrame, IPageFrameTransform transform, LoupeTransformContext loupeTransform, BaseScaleTransform baseScaleTransform, DpiScale dpiScale)
         {
             return new PageFrameElementScale(
                 layoutScale: pageFrame.Scale,

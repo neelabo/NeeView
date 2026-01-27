@@ -1,22 +1,12 @@
 ﻿using NeeView.Collections.Generic;
-using NeeView.ComponentModel;
 using NeeView.Properties;
 using NeeView.Windows;
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Runtime.Serialization;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace NeeView.Setting
 {
@@ -169,13 +159,13 @@ namespace NeeView.Setting
         }
 
         private async ValueTask NewFoderCore(TreeListNode<MenuElement> node)
-        { 
+        {
             if (node.Value.MenuElementType == MenuElementType.None && node.Parent is not null)
             {
                 node = node.Parent;
             }
 
-            var newItem = _vm.Add(new TreeListNode<MenuElement>(new GroupMenuElement() { Name = TextResources.GetString("Word.NewFolder") }) , node);
+            var newItem = _vm.Add(new TreeListNode<MenuElement>(new GroupMenuElement() { Name = TextResources.GetString("Word.NewFolder") }), node);
             if (newItem != null)
             {
                 this.ContextMenuTreeView.UpdateLayout();

@@ -1,7 +1,6 @@
 ﻿using NeeLaboratory;
 using NeeView.ComponentModel;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 
@@ -27,7 +26,7 @@ namespace NeeView
         // TODO: どうやって取得？どこから取得？
         public double ViewHorizontalDirection => Config.Current.BookSetting.BookReadOrder == PageReadOrder.LeftToRight ? 1.0 : -1.0;
 
-        
+
         public void ScaleDown(ViewScaleCommandParameter parameter)
         {
             ScaleDown(ScaleType.TransformScale, parameter);

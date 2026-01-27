@@ -1,7 +1,7 @@
-﻿using System;
+﻿using NeeLaboratory.Generators;
+using System;
 using System.Diagnostics;
 using System.IO;
-using NeeLaboratory.Generators;
 
 namespace NeeView
 {

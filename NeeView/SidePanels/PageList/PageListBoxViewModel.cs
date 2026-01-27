@@ -1,13 +1,8 @@
 ﻿using NeeLaboratory.ComponentModel;
-using NeeLaboratory.Windows.Input;
 using NeeView.Properties;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 

@@ -2,10 +2,7 @@
 using NeeLaboratory.Generators;
 using NeeLaboratory.IO.Nodes;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -29,7 +26,7 @@ namespace NeeView
             public FileTreeContentChangedEventArgs(FileItem fileItem) : this(fileItem, null)
             {
             }
-            
+
             public FileTreeContentChangedEventArgs(FileItem fileItem, FileItem? oldFileItem)
             {
                 FileItem = fileItem;

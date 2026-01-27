@@ -1,5 +1,5 @@
-﻿using System;
-using NeeView.Runtime.LayoutPanel;
+﻿using NeeView.Runtime.LayoutPanel;
+using System;
 
 namespace NeeView
 {

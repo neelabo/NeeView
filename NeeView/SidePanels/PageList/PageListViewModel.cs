@@ -3,9 +3,7 @@ using NeeLaboratory.Windows.Input;
 using NeeView.Properties;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Serialization;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -142,8 +140,8 @@ namespace NeeView
             {
                 var menuItem = new MenuItem()
                 {
-                    Header=header,
-                    IsCheckable=true,
+                    Header = header,
+                    IsCheckable = true,
                 };
                 menuItem.SetBinding(MenuItem.IsCheckedProperty, binding);
                 return menuItem;

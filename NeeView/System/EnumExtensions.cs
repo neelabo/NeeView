@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace NeeView
 {
@@ -44,7 +42,7 @@ namespace NeeView
                 return result ?? throw new InvalidOperationException();
             }
             else
-            { 
+            {
                 return Enum.GetValues(type).GetValue(0) ?? throw new InvalidOperationException();
             }
         }

@@ -1,7 +1,4 @@
-﻿using NeeLaboratory;
-using NeeView.Properties;
-using NeeView.Windows.Property;
-using System.Runtime.Serialization;
+﻿using NeeView.Properties;
 
 namespace NeeView
 {

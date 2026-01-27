@@ -1,14 +1,9 @@
 ﻿using NeeView.IO;
-using NeeView.Threading;
 using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace NeeView
 {

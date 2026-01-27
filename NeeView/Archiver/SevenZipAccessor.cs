@@ -158,7 +158,7 @@ namespace NeeView
                     try
                     {
                         extractor = GetExtractor();
-                        return new (new SevenZipArchiveInfo(extractor.Format.ToString(), extractor.IsSolid, extractor.PasswordRequired), extractor.ArchiveFileData);
+                        return new(new SevenZipArchiveInfo(extractor.Format.ToString(), extractor.IsSolid, extractor.PasswordRequired), extractor.ArchiveFileData);
                     }
                     catch (SevenZipArchiveException) when (decrypt)
                     {
@@ -300,7 +300,7 @@ namespace NeeView
     }
 
 
-    public readonly record struct  SevenZipArchiveInfo(string? Format, bool IsSolid, bool Encrypted);
+    public readonly record struct SevenZipArchiveInfo(string? Format, bool IsSolid, bool Encrypted);
 
     public readonly record struct SevenZipFileInfo(int Index, bool Encrypted);
 

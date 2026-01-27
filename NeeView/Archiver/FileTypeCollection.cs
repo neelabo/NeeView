@@ -1,11 +1,9 @@
-﻿using System;
+﻿using NeeView.Text;
+using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using NeeView.Text;
 
 namespace NeeView
 {

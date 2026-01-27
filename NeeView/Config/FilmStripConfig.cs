@@ -1,5 +1,4 @@
-﻿using NeeLaboratory;
-using NeeLaboratory.ComponentModel;
+﻿using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System;
 using System.Text.Json.Serialization;

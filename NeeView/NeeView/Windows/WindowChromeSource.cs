@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Shell;
 
 namespace NeeView.Windows

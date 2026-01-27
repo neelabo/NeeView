@@ -1,10 +1,6 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace NeeView
@@ -49,7 +45,7 @@ namespace NeeView
         public int Index => (_value >= 0) ? _value / 2 : (_value - 1) / 2;
 
         // パーツ番号
-        public int Part => (_value >= 0) ? _value % 2 : (-_value %2);
+        public int Part => (_value >= 0) ? _value % 2 : (-_value % 2);
 
 
         //

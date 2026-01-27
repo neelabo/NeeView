@@ -1,5 +1,4 @@
 ﻿using NeeView.Windows;
-using System;
 using System.Windows;
 using System.Windows.Controls;
 

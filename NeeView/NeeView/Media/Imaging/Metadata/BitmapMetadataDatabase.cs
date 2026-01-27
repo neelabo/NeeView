@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace NeeView.Media.Imaging.Metadata
@@ -63,7 +62,7 @@ namespace NeeView.Media.Imaging.Metadata
             {
                 case "avif":
                 case "heif":
-                   return false;
+                    return false;
                 default:
                     return true;
             }

@@ -3,7 +3,7 @@
 namespace NeeView.Text
 {
     public static class CharExtensions
-    { 
+    {
         private static readonly Dictionary<char, char> _upperCaseMap = new()
         {
             ['\u0061'] = '\u0041', // a -> A

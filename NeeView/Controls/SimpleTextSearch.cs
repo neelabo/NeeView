@@ -1,10 +1,7 @@
 ﻿using NeeView.Interop;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Threading;
-using System.Windows.Interop;
 using System.Windows.Threading;
 
 namespace NeeView

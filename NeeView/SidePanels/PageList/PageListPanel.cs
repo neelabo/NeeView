@@ -1,13 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.Properties;
-using NeeView.Windows.Controls;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
@@ -24,7 +17,7 @@ namespace NeeView
 
         public PageListPanel(PageList model)
         {
-            _view = new (() =>new PageListView(model));
+            _view = new(() => new PageListView(model));
             _presenter = new PageListPresenter(_view, model);
 
             Icon = App.Current.MainWindow.Resources["pic_photo_library_24px"] as ImageSource
@@ -42,7 +35,7 @@ namespace NeeView
 
         public string IconTips => TextResources.GetString("PageList.Title");
 
-        public Lazy<FrameworkElement> View => new (() =>_view.Value);
+        public Lazy<FrameworkElement> View => new(() => _view.Value);
 
         public bool IsVisibleLock => false;
 

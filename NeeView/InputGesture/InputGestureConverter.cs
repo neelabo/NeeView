@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace NeeView
@@ -96,7 +92,7 @@ namespace NeeView
             try
             {
                 var converter = new KeyExGestureConverter();
-                var gesture =  converter.ConvertFromString(source) as InputGesture;
+                var gesture = converter.ConvertFromString(source) as InputGesture;
                 if (gesture is not null) return gesture;
             }
             catch (Exception e)

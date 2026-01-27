@@ -2,7 +2,6 @@
 using NeeLaboratory.Windows.Input;
 using NeeView.Windows.Data;
 using System.Collections.Generic;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace NeeView

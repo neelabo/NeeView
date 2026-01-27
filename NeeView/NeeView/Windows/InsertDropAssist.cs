@@ -45,7 +45,7 @@ namespace NeeView.Windows
                 _adorner = new RectangleAdorner(adornerElement) { IsClipEnabled = true };
                 if (adornerElement != _itemsControl)
                 {
-                    _adornerElementOffset = (Vector)adornerElement.TranslatePoint(new Point(0, 0), _itemsControl); 
+                    _adornerElementOffset = (Vector)adornerElement.TranslatePoint(new Point(0, 0), _itemsControl);
                 }
             }
             return _adorner;
@@ -305,7 +305,7 @@ namespace NeeView.Windows
         }
 
         public FrameworkElement? Item { get; init; }
-        
+
         public FrameworkElement? View
         {
             get => _view ?? Item;

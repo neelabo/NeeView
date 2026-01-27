@@ -1,5 +1,4 @@
 ﻿using NeeView.Properties;
-using System;
 
 namespace NeeView
 {
@@ -12,7 +11,7 @@ namespace NeeView
 
             this.ParameterSource = new CommandParameterSource(new ImportBackupCommandParameter());
         }
-        
+
         public override bool CanExecute(object? sender, CommandContext e)
         {
             return !NowLoading.Current.IsDisplayNowLoading;

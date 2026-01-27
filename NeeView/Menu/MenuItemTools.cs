@@ -4,7 +4,7 @@ using System.Globalization;
 namespace NeeView
 {
     public static class MenuItemTools
-    { 
+    {
         public static string IntegerToAccessKey(int value)
         {
             var s = value.ToString(CultureInfo.InvariantCulture);

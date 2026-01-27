@@ -1,10 +1,10 @@
-﻿using System;
+﻿using NeeView.IO;
+using NeeView.Properties;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
-using NeeView.IO;
-using NeeView.Properties;
 
 namespace NeeView
 {

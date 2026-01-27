@@ -1,7 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
-using System.Windows.Media;
 
 namespace NeeView
 {
@@ -18,7 +16,7 @@ namespace NeeView
         {
         }
 
-        
+
         /// <summary>Expandのタイミングまで子供の生成を遅らせる</summary>
         public bool IsDelayCreation { get; set; }
 
@@ -40,7 +38,7 @@ namespace NeeView
         {
             get
             {
-                if (_children == null &&  !IsDelayCreation)
+                if (_children == null && !IsDelayCreation)
                 {
                     CreateChildren(false);
                 }

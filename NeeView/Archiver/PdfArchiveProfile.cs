@@ -1,9 +1,5 @@
-﻿using NeeLaboratory;
-using NeeLaboratory.ComponentModel;
-using NeeView.Windows.Property;
+﻿using NeeLaboratory.ComponentModel;
 using System;
-using System.ComponentModel;
-using System.Runtime.Serialization;
 using System.Windows;
 
 namespace NeeView

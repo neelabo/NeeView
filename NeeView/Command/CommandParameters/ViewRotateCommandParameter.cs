@@ -6,7 +6,7 @@ namespace NeeView
     /// <summary>
     /// ビュー回転コマンド用パラメータ
     /// </summary>
-    public class ViewRotateCommandParameter : CommandParameter 
+    public class ViewRotateCommandParameter : CommandParameter
     {
         private int _angle = 45;
         private bool _isStretch;

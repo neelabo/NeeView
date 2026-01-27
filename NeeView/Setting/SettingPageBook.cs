@@ -24,7 +24,7 @@ namespace NeeView.Setting
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.BookPageCollectMode))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.IsOpenBookAtCurrentPlace))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Book, nameof(BookConfig.ExcludeRegexes)),
-                new SettingItemCollectionControl() { Collection = Config.Current.Book.ExcludeRegexes, AddDialogHeader = TextResources.GetString("AddParameterDialog.ExclusionPattern"), DefaultCollection = BookConfig.DefaultExcludeRegexes, IsEditable = true,  IsRegexRuleEnabled = true }));
+                new SettingItemCollectionControl() { Collection = Config.Current.Book.ExcludeRegexes, AddDialogHeader = TextResources.GetString("AddParameterDialog.ExclusionPattern"), DefaultCollection = BookConfig.DefaultExcludeRegexes, IsEditable = true, IsRegexRuleEnabled = true }));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Book, nameof(BookConfig.BookThumbnailFileName))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Book, nameof(BookConfig.BookThumbnailDepth))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Book, nameof(BookConfig.FrameSpace))));

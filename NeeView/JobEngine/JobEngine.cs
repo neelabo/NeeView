@@ -1,17 +1,9 @@
-﻿using NeeLaboratory;
-using NeeLaboratory.ComponentModel;
-using NeeView.Windows.Property;
+﻿using NeeLaboratory.ComponentModel;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading;
-using System.Windows;
-using System.Windows.Threading;
 
 // TODO: Jobの状態パラメータ(Status?)
 

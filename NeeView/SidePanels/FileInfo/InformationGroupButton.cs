@@ -68,7 +68,7 @@ namespace NeeView
             }
         }
 
-        private  bool OpenFolderCommand_CanExecute()
+        private bool OpenFolderCommand_CanExecute()
         {
             return Source?.CanOpenPlace() == true;
         }

@@ -1,11 +1,8 @@
-﻿using System;
+﻿using NeeLaboratory.Linq;
+using NeeView.Maths;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows;
-using NeeLaboratory.Linq;
-using NeeView.ComponentModel;
-using NeeView.Maths;
 
 namespace NeeView.PageFrames
 {

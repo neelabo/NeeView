@@ -1,5 +1,4 @@
-﻿using NeeLaboratory.Resources;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace NeeLaboratory.Resources
 {

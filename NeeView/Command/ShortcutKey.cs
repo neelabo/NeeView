@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
 using System.Text.Json;
-using System.Windows.Input;
-using System.Diagnostics;
+using System.Text.Json.Serialization;
 
 namespace NeeView
 {
@@ -40,7 +38,7 @@ namespace NeeView
             if (other is null) return false;
             if (EqualityContract != other.EqualityContract) return false;
             if (ReferenceEquals(this, other)) return true;
-            
+
             return this.Gestures.SequenceEqual(other.Gestures);
         }
 

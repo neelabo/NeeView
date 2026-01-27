@@ -4,7 +4,6 @@ using NeeLaboratory.Generators;
 using NeeView.PageFrames;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace NeeView
@@ -50,7 +49,7 @@ namespace NeeView
         public PageMode PageMode => BookOperation.Current.Book?.Setting.PageMode ?? PageMode.SinglePage;
 
         public bool IsSupportedSingleFirstPage => BookOperation.Current.Book?.Setting.IsSupportedSingleFirstPage ?? false;
-        
+
         public bool IsSupportedSingleLastPage => BookOperation.Current.Book?.Setting.IsSupportedSingleLastPage ?? false;
 
         public int ViewPageCount => BookOperation.Current.Book?.CurrentPages.Count ?? 0;

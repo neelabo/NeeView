@@ -1,9 +1,6 @@
 ﻿using NeeLaboratory.Generators;
-using NeeLaboratory.IO.Search;
 using NeeLaboratory.Windows.Input;
-using System;
 using System.ComponentModel;
-using System.Linq;
 
 namespace NeeView
 {
