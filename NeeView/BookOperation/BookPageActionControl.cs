@@ -119,10 +119,12 @@ namespace NeeView
         // 指定ページのファイルを削除する
         public async ValueTask DeleteFileAsync(List<Page> pages)
         {
-            var isCompletely = pages.Any(e => !e.ArchiveEntry.IsFileSystem);
-            if (Config.Current.System.IsRemoveConfirmed || isCompletely)
+            var entryType = ArchiveEntryUtility.GetDeleteEntryType(pages.Select(e => e.ArchiveEntry));
+            if (entryType.IsVarious()) return;
+
+            if (Config.Current.System.IsRemoveConfirmed || entryType.IsIrreversible())
             {
-                var dialog = await PageFileIO.CreateDeleteConfirmDialog(pages, isCompletely);
+                var dialog = await PageFileIO.CreateDeleteConfirmDialog(pages, entryType);
                 if (!dialog.ShowDialog().IsPossible)
                 {
                     return;

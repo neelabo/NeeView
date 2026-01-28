@@ -2593,6 +2593,7 @@ Word.Path=경로
 Word.Period=.
 Word.Play=재생
 Word.Playlist=재생 목록
+Word.PlaylistItem=
 Word.Print=인쇄
 Word.Processing=처리 중...
 Word.Properties=속성

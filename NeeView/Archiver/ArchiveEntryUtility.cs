@@ -265,7 +265,6 @@ namespace NeeView
             return null;
         }
 
-
         /// <summary>
         /// エントリ群の実体化
         /// </summary>
@@ -287,6 +286,31 @@ namespace NeeView
             return paths.Distinct().ToList();
         }
 
-    }
+        /// <summary>
+        /// ページ削除用エントリの種類を取得
+        /// </summary>
+        public static DeleteEntryType GetDeleteEntryType(IEnumerable<ArchiveEntry> entries)
+        {
+            return entries.Select(e => GetDeleteEntryType(e)).Aggregate((flags, next) => flags | next);
+        }
 
+        /// <summary>
+        /// ページ削除用エントリの種類を取得
+        /// </summary>
+        public static DeleteEntryType GetDeleteEntryType(ArchiveEntry entry)
+        {
+            if (entry is PlaylistArchiveEntry)
+            {
+                return DeleteEntryType.PlaylistEntry;
+            }
+            else if (entry.IsFileSystem)
+            {
+                return DeleteEntryType.File;
+            }
+            else
+            {
+                return DeleteEntryType.ArchiveEntry;
+            }
+        }
+    }
 }

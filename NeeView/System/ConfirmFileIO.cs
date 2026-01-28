@@ -36,10 +36,11 @@ namespace NeeView
         {
             if (entries.Count == 0) return false;
 
-            var isCompletely = entries.Any(e => !e.IsFileSystem);
-            if (Config.Current.System.IsRemoveConfirmed || isCompletely)
+            var entryType = ArchiveEntryUtility.GetDeleteEntryType(entries);
+            if (entryType.IsVarious()) return false;
+            if (Config.Current.System.IsRemoveConfirmed || entryType.IsIrreversible())
             {
-                var dialog = CreateDeleteConfirmDialog(entries, title, thumbnail, isCompletely);
+                var dialog = CreateDeleteConfirmDialog(entries, title, thumbnail, entryType);
                 var answer = dialog.ShowDialog();
                 if (!answer.IsPossible)
                 {
@@ -66,12 +67,11 @@ namespace NeeView
         /// <summary>
         /// 削除確認ダイアログを作成
         /// </summary>
-        public static MessageDialog CreateDeleteConfirmDialog(List<ArchiveEntry> entries, string title, FrameworkElement? thumbnail, bool isCompletely)
+        public static MessageDialog CreateDeleteConfirmDialog(List<ArchiveEntry> entries, string title, FrameworkElement? thumbnail, DeleteEntryType entryType)
         {
             Debug.Assert(entries.Any());
 
-            isCompletely = isCompletely || entries.Any(e => !e.IsFileSystem);
-            var content = CreateDeleteDialogContent(entries, thumbnail, isCompletely);
+            var content = CreateDeleteDialogContent(entries, thumbnail, entryType);
             title = title ?? GetDeleteDialogTitle(entries);
             var dialog = new MessageDialog(content, title);
             dialog.Commands.Add(UICommands.Delete);
@@ -82,28 +82,28 @@ namespace NeeView
         /// <summary>
         /// 確認ダイアログ用コンテンツ作成
         /// </summary>
-        private static FrameworkElement CreateDeleteDialogContent(List<ArchiveEntry> entries, FrameworkElement? thumbnail, bool isCompletely)
+        private static FrameworkElement CreateDeleteDialogContent(List<ArchiveEntry> entries, FrameworkElement? thumbnail, DeleteEntryType entryType)
         {
             if (entries.Count == 1)
             {
-                return CreateDeleteDialogContentSingle(entries[0], thumbnail, isCompletely);
+                return CreateDeleteDialogContentSingle(entries[0], thumbnail, entryType);
             }
             else
             {
-                return CreateDeleteDialogContentMulti(entries, isCompletely);
+                return CreateDeleteDialogContentMulti(entries, entryType);
             }
         }
 
         /// <summary>
         /// 1ファイル用確認ダイアログコンテンツ
         /// </summary>
-        private static FrameworkElement CreateDeleteDialogContentSingle(ArchiveEntry entry, FrameworkElement? thumbnail, bool isCompletely)
+        private static FrameworkElement CreateDeleteDialogContentSingle(ArchiveEntry entry, FrameworkElement? thumbnail, DeleteEntryType entryType)
         {
             var dockPanel = new DockPanel();
 
             var message = new TextBlock();
-            message.Inlines.Add(new Run(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("FileDeleteDialog.Message"), GetFilesTypeName(entry))));
-            if (isCompletely)
+            message.Inlines.Add(new Run(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("FileDeleteDialog.Message"), GetEntryTypeName(entry, entryType))));
+            if (entryType.IsIrreversible())
             {
                 message.Inlines.Add(new LineBreak());
                 message.Inlines.Add(new Run(TextResources.GetString("FileDeleteMultiDialog.Message.Completely")) { FontWeight = FontWeights.Bold });
@@ -121,7 +121,7 @@ namespace NeeView
             dockPanel.Children.Add(thumbnail);
 
             var textBlock = new TextBlock();
-            textBlock.Text = entry.SystemPath;
+            textBlock.Text = GetEntryPath(entry, entryType);
             textBlock.VerticalAlignment = VerticalAlignment.Bottom;
             textBlock.TextWrapping = TextWrapping.Wrap;
             textBlock.Margin = new Thickness(0, 0, 0, 2);
@@ -133,11 +133,11 @@ namespace NeeView
         /// <summary>
         /// 複数ファイル用確認ダイアログコンテンツ
         /// </summary>
-        private static FrameworkElement CreateDeleteDialogContentMulti(List<ArchiveEntry> entries, bool isCompletely)
+        private static FrameworkElement CreateDeleteDialogContentMulti(List<ArchiveEntry> entries, DeleteEntryType entryType)
         {
             var message = new TextBlock();
             message.Inlines.Add(new Run(TextResources.GetFormatString("FileDeleteMultiDialog.Message", entries.Count)));
-            if (isCompletely)
+            if (entryType.IsIrreversible())
             {
                 message.Inlines.Add(new LineBreak());
                 message.Inlines.Add(new Run(TextResources.GetString("FileDeleteMultiDialog.Message.Completely")) { FontWeight = FontWeights.Bold });
@@ -170,9 +170,35 @@ namespace NeeView
             return TextResources.GetString("FileDeleteDialog.Title");
         }
 
-        private static string GetFilesTypeName(ArchiveEntry entry)
+        /// <summary>
+        /// 項目の種類名
+        /// </summary>
+        private static string GetEntryTypeName(ArchiveEntry entry, DeleteEntryType entryType)
         {
-            return entry.IsDirectory ? TextResources.GetString("Word.Folder") : TextResources.GetString("Word.File");
+            if (entryType == DeleteEntryType.PlaylistEntry)
+            { 
+                return TextResources.GetString("Word.PlaylistItem");
+            }
+            else
+            {
+                return entry.IsDirectory ? TextResources.GetString("Word.Folder") : TextResources.GetString("Word.File");
+            }
         }
+
+        /// <summary>
+        /// 項目のパス
+        /// </summary>
+        private static string GetEntryPath(ArchiveEntry entry, DeleteEntryType entryType)
+        {
+            if (entryType == DeleteEntryType.PlaylistEntry)
+            {
+                return LoosePath.Combine(entry.Archive.EntryName, entry.EntryName);
+            }
+            else
+            {
+                return entry.SystemPath;
+            }
+        }
+
     }
 }

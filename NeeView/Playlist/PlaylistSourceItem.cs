@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    public class PlaylistSourceItem
+    public record class PlaylistSourceItem
     {
         [JsonInclude, JsonPropertyName(nameof(Name))]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

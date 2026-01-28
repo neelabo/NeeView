@@ -162,6 +162,11 @@ namespace NeeView
         /// </summary>
         public ArchiverIdentifier ArchiverIdentifier => new ArchiverIdentifier(ArchiveManager.GetArchiveType(this), GetPluginName());
 
+        /// <summary>
+        /// アーカイブはファイルシステムに存在？
+        /// </summary>
+        public bool IsFileSystem => Source is null || Source.IsFileSystem;
+
 
         public virtual string? GetPluginName()
         {

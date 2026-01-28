@@ -208,5 +208,10 @@ namespace NeeView
             await Task.CompletedTask;
             throw new NotImplementedException();
         }
+
+        public bool EqualsTo(PlaylistSourceItem source)
+        {
+            return this.Path == source.Path && this.Name == source.Name;
+        }
     }
 }

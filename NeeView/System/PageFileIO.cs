@@ -13,17 +13,17 @@ namespace NeeView
         /// </summary>
         public static bool CanDeletePage(List<Page> pages, bool strict)
         {
-            return pages.All(e => e.CanDelete(strict));
+            return pages.All(e => e.CanDelete(strict)) && !ArchiveEntryUtility.GetDeleteEntryType(pages.Select(e => e.ArchiveEntry)).IsVarious();
         }
 
         /// <summary>
         /// 確認ダイアログ作成
         /// </summary>
-        public static async ValueTask<MessageDialog> CreateDeleteConfirmDialog(List<Page> pages, bool isCompletely)
+        public static async ValueTask<MessageDialog> CreateDeleteConfirmDialog(List<Page> pages, DeleteEntryType entryType)
         {
             var thumbnail = (pages.Count == 1) ? await pages.First().CreatePageVisualAsync() : null;
             var entries = pages.Select(e => e.ArchiveEntry).ToList();
-            return ConfirmFileIO.CreateDeleteConfirmDialog(entries, TextResources.GetString("FileDeletePageDialog.Title"), thumbnail, isCompletely);
+            return ConfirmFileIO.CreateDeleteConfirmDialog(entries, TextResources.GetString("FileDeletePageDialog.Title"), thumbnail, entryType);
         }
 
         /// <summary>

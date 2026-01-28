@@ -13,6 +13,9 @@ using System.Threading;
 
 namespace NeeView
 {
+    /// <summary>
+    /// PlaylistSource のファイル操作
+    /// </summary>
     [LocalDebug]
     public static partial class PlaylistSourceTools
     {
@@ -109,6 +112,11 @@ namespace NeeView
             }
         }
 
+        private class PlaylistFileHeader
+        {
+            public FormatVersion? Format { get; set; }
+        }
+
         /// <summary>
         /// プレイリストを FileResolver に登録
         /// </summary>
@@ -129,17 +137,6 @@ namespace NeeView
         }
 
         /// <summary>
-        /// プレイリストを FileResolver に登録
-        /// </summary>
-        /// <param name="playlist">プレイリスト</param>
-        public static void AddToFileResolver(this PlaylistSource playlist)
-        {
-            var files = playlist.Items.Select(e => e.Path).ToList();
-            var count = FileResolver.Current.AddRangeArchivePath(files);
-            LocalDebug.WriteLine($"Count = {count}");
-        }
-
-        /// <summary>
         /// プレイリスト項目のパスの復元と読み込み
         /// </summary>
         /// <param name="path"></param>
@@ -154,34 +151,6 @@ namespace NeeView
                 }
                 return playlist;
             }
-        }
-
-        /// <summary>
-        /// プレイリスト項目のパスの復元
-        /// </summary>
-        /// <param name="playlist"></param>
-        /// <returns></returns>
-        public static bool ResolveFilePath(this PlaylistSource playlist)
-        {
-            int count = 0;
-            foreach (var item in playlist.Items)
-            {
-                // パスの復元
-                var sourcePath = item.Path;
-                var archivePath = FileResolver.Current.ResolveArchivePath(sourcePath);
-                if (archivePath != null && archivePath.Path != sourcePath)
-                {
-                    item.Path = archivePath.Path;
-                    FileResolver.Current.Add(archivePath.SystemPath);
-                    count++;
-                }
-            }
-            return count > 0;
-        }
-
-        private class PlaylistFileHeader
-        {
-            public FormatVersion? Format { get; set; }
         }
     }
 

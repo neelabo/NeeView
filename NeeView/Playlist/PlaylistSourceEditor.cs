@@ -12,7 +12,7 @@ namespace NeeView
     /// Playlistファイルの編集
     /// </summary>
     [LocalDebug]
-    public partial class PlaylistSourceEditor
+    public partial class PlaylistSourceEditor : IPlaylistEditor
     {
         private readonly string _path;
         private readonly PlaylistSource _playlist;
@@ -38,29 +38,17 @@ namespace NeeView
             }
         }
 
+        public void Dispose()
+        {
+            Save();
+        }
+
         public void Save()
         {
             if (!_isDirty) return;
-
             _isDirty = false;
+
             PlaylistSourceTools.Save(_playlist, _path, true, false);
-        }
-
-        public bool RenamePath(string src, string dst)
-        {
-            if (_playlist is null) return false;
-            if (src == dst) return false;
-
-            var items = _playlist.Items.Where(e => string.Compare(e.Path, src, StringComparison.OrdinalIgnoreCase) == 0).ToList();
-            if (items.Count == 0) return false;
-
-            foreach (var item in items)
-            {
-                LocalDebug.WriteLine($"Rename: {item.Path} => {dst}");
-                item.Path = dst;
-            }
-            _isDirty = true;
-            return true;
         }
 
         public bool RenamePathRecursive(string src, string dst)
@@ -98,5 +86,35 @@ namespace NeeView
                     && (src.Length == target.Length || src[target.Length] == LoosePath.DefaultSeparator);
             }
         }
+
+        /// <summary>
+        /// 項目を削除する
+        /// </summary>
+        /// <param name="items"></param>
+        public void Delete(IEnumerable<PlaylistSourceItem> items)
+        {
+            var targets = new HashSet<PlaylistSourceItem>(items);
+            _playlist.Items.RemoveAll(e => targets.Contains(e));
+            _isDirty = true;
+        }
+
+        /// <summary>
+        /// 名前を変更
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="newName"></param>
+        /// <returns></returns>
+        public string? Rename(PlaylistSourceItem item, string newName)
+        {
+            if (item.Name == newName) return null; 
+
+            var target = _playlist.Items.FirstOrDefault(e => e == item);
+            if (target == null) return null;
+            
+            target.Name = newName;
+            _isDirty = true;
+            return target.Name;
+        }
+
     }
 }

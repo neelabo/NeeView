@@ -29,21 +29,25 @@ namespace NeeView
 
     public class PageListItemRenameControl : ListBoxItemRenameControl<Page>
     {
-        private readonly bool _isFileSystem;
+        private readonly bool _raiseArchiveChanged;
 
         public PageListItemRenameControl(ListBox listBox, Page item, bool findTextBlock) : base(listBox, item, findTextBlock)
         {
-            if (item.ArchiveEntry.IsFileSystem)
+            if (item.ArchiveEntry is PlaylistArchiveEntry)
+            {
+                this.IsInvalidSeparatorChars = true;
+                _raiseArchiveChanged = false;
+            }
+            else if (item.ArchiveEntry.IsFileSystem)
             {
                 this.IsSelectFileNameBody = !item.ArchiveEntry.IsDirectory;
                 this.IsInvalidFileNameChars = true;
-                _isFileSystem = true;
+                _raiseArchiveChanged = false;
             }
             else
             {
                 this.IsInvalidSeparatorChars = true;
-                _isFileSystem = false;
-
+                _raiseArchiveChanged = true;
             }
         }
 
@@ -53,7 +57,7 @@ namespace NeeView
         {
             Debug.Assert(oldValue != newValue);
             var isSuccess = await _item.RenameAsync(newValue);
-            if (isSuccess && !_isFileSystem)
+            if (isSuccess && _raiseArchiveChanged)
             {
                 ArchiveChanged?.Invoke(this, EventArgs.Empty);
             }
