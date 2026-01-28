@@ -49,6 +49,9 @@ namespace NeeView
             set => Config.Current.Bookmark.IsSearchIncludeSubdirectories = value;
         }
 
+        public override bool SyncBookOnRename => false;
+
+
         public void UpdateItems()
         {
             if (_disposedValue) return;

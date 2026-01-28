@@ -455,13 +455,18 @@ namespace NeeView
             if (listBox.SelectedItem is not FolderItem item) return;
 
             var renamer = new FolderItemRenamer(listBox, _vm.DetailToolTip);
-            renamer.SelectedItemChanged += (s, e) =>
+
+            if (_vm.SyncBookOnRename)
             {
-                if (listBox.SelectedItem is FolderItem item)
+                renamer.SelectedItemChanged += (s, e) =>
                 {
-                    _vm.Model.LoadBook(item);
-                }
-            };
+                    if (listBox.SelectedItem is FolderItem item)
+                    {
+                        _vm.Model.LoadBook(item);
+                    }
+                };
+            }
+
             await renamer.RenameAsync(item);
         }
 

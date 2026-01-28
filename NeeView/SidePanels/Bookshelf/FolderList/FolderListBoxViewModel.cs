@@ -61,6 +61,8 @@ namespace NeeView
 
         public PanelListItemDetailToolTip DetailToolTip { get; }
 
+        public bool SyncBookOnRename => _model.SyncBookOnRename;
+
 
         #region RelayCommands
 

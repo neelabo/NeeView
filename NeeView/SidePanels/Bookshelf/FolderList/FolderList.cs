@@ -433,6 +433,11 @@ namespace NeeView
             set { }
         }
 
+        /// <summary>
+        /// 名前変更時にブックを開く
+        /// </summary>
+        public virtual bool SyncBookOnRename => true;
+
 
         private void BookHistoryCollection_HistoryChanged(object? sender, BookMementoCollectionChangedArgs e)
         {
