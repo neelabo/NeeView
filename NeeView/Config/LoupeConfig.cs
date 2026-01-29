@@ -8,7 +8,7 @@ namespace NeeView
     {
         private double _defaultScale = 2.0;
         private bool _isLoupeCenter;
-        private double _minimumScale = 2.0;
+        private double _minimumScale = 1.0;
         private double _maximumScale = 10.0;
         private double _scaleStep = 1.0;
         private bool _isResetByRestart = false;
@@ -17,6 +17,7 @@ namespace NeeView
         private bool _isWheelScalingEnabled = true;
         private double _speed = 1.0;
         private bool _isEscapeKeyEnabled = true;
+        private bool _isBaseOnOriginal;
 
 
         [PropertyMember]
@@ -96,6 +97,12 @@ namespace NeeView
             set { SetProperty(ref _isVisibleLoupeInfo, value); }
         }
 
+        [PropertyMember]
+        public bool IsBaseOnOriginal
+        {
+            get { return _isBaseOnOriginal; }
+            set { SetProperty(ref _isBaseOnOriginal, value); }
+        }
     }
 
 }

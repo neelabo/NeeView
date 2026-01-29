@@ -1064,6 +1064,7 @@ LongButtonMask.All=Все кнопки
 LongButtonMask.Left=Левая кнопка
 LongButtonMask.Right=Правая кнопка
 LoupeConfig.DefaultScale=Стандартное увеличение лупы
+LoupeConfig.IsBaseOnOriginal=
 LoupeConfig.IsEscapeKeyEnabled=Использовать клавишу Esc для отключения лупы
 LoupeConfig.IsLoupeCenter=Установить позицию курсора при старте лупы в центр экрана
 LoupeConfig.IsResetByPageChanged=Отключать лупу после перемещения страницы

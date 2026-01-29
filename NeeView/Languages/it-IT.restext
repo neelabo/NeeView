@@ -1069,6 +1069,7 @@ LongButtonMask.All=Tutti i tasti
 LongButtonMask.Left=Tasto sinistra
 LongButtonMask.Right=Tasto destra
 LoupeConfig.DefaultScale=Loupe ingrandimento standard
+LoupeConfig.IsBaseOnOriginal=
 LoupeConfig.IsEscapeKeyEnabled=Use the Esc key to release the loupe
 LoupeConfig.IsLoupeCenter=Set the cursor position at the start of the loupe to the center of the screen
 LoupeConfig.IsResetByPageChanged=Release the loupe after moving the page

@@ -1064,6 +1064,7 @@ LongButtonMask.All=Todos os botões
 LongButtonMask.Left=Botão esquerdo
 LongButtonMask.Right=Botão direito
 LoupeConfig.DefaultScale=Ampliação padrão da lupa
+LoupeConfig.IsBaseOnOriginal=
 LoupeConfig.IsEscapeKeyEnabled=Use a tecla Esc para liberar a lupa
 LoupeConfig.IsLoupeCenter=Defina a posição do cursor no início da lupa para o centro da tela
 LoupeConfig.IsResetByPageChanged=Solte a lupa depois de mover a página

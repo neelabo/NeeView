@@ -1058,6 +1058,7 @@ LongButtonMask.All=所有按钮
 LongButtonMask.Left=左键
 LongButtonMask.Right=右键
 LoupeConfig.DefaultScale=放大镜标准倍率
+LoupeConfig.IsBaseOnOriginal=
 LoupeConfig.IsEscapeKeyEnabled=使用 Esc 键退出放大镜
 LoupeConfig.IsLoupeCenter=将放大镜起始光标位置设为屏幕中心
 LoupeConfig.IsResetByPageChanged=页面移动时退出放大镜

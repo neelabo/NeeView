@@ -1058,6 +1058,7 @@ LongButtonMask.All=所有按鍵
 LongButtonMask.Left=左鍵
 LongButtonMask.Right=右鍵
 LoupeConfig.DefaultScale=放大鏡標準倍率
+LoupeConfig.IsBaseOnOriginal=
 LoupeConfig.IsEscapeKeyEnabled=以 Esc 鍵取消放大鏡
 LoupeConfig.IsLoupeCenter=將放大鏡開始時滑鼠指標位置設為畫面中心
 LoupeConfig.IsResetByPageChanged=頁面移動時取消放大鏡

@@ -7,12 +7,14 @@ namespace NeeView
     [NotifyPropertyChanged]
     public partial class LoupeContext : INotifyPropertyChanged
     {
+        private readonly MainViewComponent _mainViewComponent;
         private LoupeConfig _loupeConfig;
         private bool _isEnabled;
         private double _scale = 1.0;
 
-        public LoupeContext(LoupeConfig loupeConfig)
+        public LoupeContext(MainViewComponent mainViewComponent, LoupeConfig loupeConfig)
         {
+            _mainViewComponent = mainViewComponent;
             _loupeConfig = loupeConfig;
             _scale = _loupeConfig.DefaultScale;
         }
@@ -33,6 +35,12 @@ namespace NeeView
             get { return _scale; }
             set { SetProperty(ref _scale, value); }
         }
+
+        public double FixedScale
+        {
+            get { return _loupeConfig.IsBaseOnOriginal ? _scale / _mainViewComponent.GetScaleBaseOnOriginal() : _scale; }
+        }
+
 
         public void ZoomIn()
         {

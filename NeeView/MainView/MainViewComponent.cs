@@ -2,10 +2,13 @@
 
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
+using NeeLaboratory.Linq;
 using NeeView.PageFrames;
 using NeeView.Threading;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 
 namespace NeeView
@@ -46,7 +49,7 @@ namespace NeeView
             PageFrameBoxPresenter = PageFrameBoxPresenter.Current;
 
             DragTransformControl = new DragTransformControlProxy(PageFrameBoxPresenter, new DummyDragTransformContextFactory(_mainView, Config.Current.View, Config.Current.Mouse));
-            LoupeContext = new LoupeContext(Config.Current.Loupe);
+            LoupeContext = new LoupeContext(this, Config.Current.Loupe);
 
             TouchInput = new TouchInput(new TouchInputContext(_mainView.View, _mainView, mouseGestureCommandCollection, PageFrameBoxPresenter, PageFrameBoxPresenter, DragTransformControl, LoupeContext, ViewScrollContext));
             MouseInput = new MouseInput(new MouseInputContext(_mainView.View, _mainView, mouseGestureCommandCollection, PageFrameBoxPresenter, PageFrameBoxPresenter, DragTransformControl, LoupeContext, ViewScrollContext));
@@ -224,5 +227,33 @@ namespace NeeView
             _touchEmulateController.Execute(sender);
         }
 
+        /// <summary>
+        /// メインコンテンツの元サイズからの表示スケール値を求める
+        /// </summary>
+        /// <returns></returns>
+        public double GetScaleBaseOnOriginal()
+        {
+            var presenter = PageFrameBoxPresenter;
+            var dpiScaleProvider = MainView.DpiProvider;
+
+            var frameContent = presenter.GetSelectedPageFrameContent();
+            var viewContentDirection = frameContent?.ViewContentsDirection ?? +1;
+            var contents = (frameContent?.ViewContents ?? new List<ViewContent>()).Where(e => !e.Element.IsDummy).Direction(viewContentDirection).ToList();
+            var viewScale = frameContent?.Transform.Scale ?? 1.0;
+
+            var dpiScaleX = dpiScaleProvider.GetDpiScale().ToFixedScale().DpiScaleX;
+            var scale0 = viewScale * GetOriginalScale(contents.ElementAtOrDefault(0)) * dpiScaleX;
+            var scale1 = viewScale * GetOriginalScale(contents.ElementAtOrDefault(1)) * dpiScaleX;
+
+            bool isMainContent0 = contents.Count <= 1 || viewContentDirection == 1;  //mainContent == contents[0];
+            return isMainContent0 ? scale0 : scale1;
+
+            double GetOriginalScale(ViewContent? content)
+            {
+                if (content is null) return 1.0;
+                var pageElement = content.Element;
+                return (frameContent?.PageFrame.Scale ?? 1.0) * pageElement.Scale;
+            }
+        }
     }
 }

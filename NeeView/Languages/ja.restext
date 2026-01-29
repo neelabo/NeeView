@@ -1058,6 +1058,7 @@ LongButtonMask.All=全てのボタン
 LongButtonMask.Left=左ボタン
 LongButtonMask.Right=右ボタン
 LoupeConfig.DefaultScale=ルーペ標準倍率
+LoupeConfig.IsBaseOnOriginal=ルーペ倍率をオリジナル サイズ基準にする
 LoupeConfig.IsEscapeKeyEnabled=Esc キーでルーペを解除する
 LoupeConfig.IsLoupeCenter=ルーペ開始時にマウス ポインターがあった位置を画面の中心にする
 LoupeConfig.IsResetByPageChanged=ページの移動でルーペを解除する

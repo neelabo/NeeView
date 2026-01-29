@@ -1058,6 +1058,7 @@ LongButtonMask.All=모든 버튼
 LongButtonMask.Left=왼쪽 버튼
 LongButtonMask.Right=오른쪽 버튼
 LoupeConfig.DefaultScale=돋보기 기본 배율
+LoupeConfig.IsBaseOnOriginal=
 LoupeConfig.IsEscapeKeyEnabled=Esc 키로 돋보기 끄기
 LoupeConfig.IsLoupeCenter=돋보기 실행 시 마우스 포인터가 있던 위치를 화면 중심으로 설정
 LoupeConfig.IsResetByPageChanged=페이지 이동 시 돋보기 끄기

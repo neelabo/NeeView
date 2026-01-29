@@ -34,7 +34,7 @@ namespace NeeView
 
             var center = new Point(0, 0); // ViewRect.Center();
             Vector v = First - center;
-            LoupeBasePoint = (Point)(_loupeConfig.IsLoupeCenter ? -v : -v + v / _loupeContext.Scale);
+            LoupeBasePoint = (Point)(_loupeConfig.IsLoupeCenter ? -v : -v + v / _loupeContext.FixedScale);
 
             Update();
         }
@@ -69,7 +69,7 @@ namespace NeeView
             {
                 var point = LoupeBasePoint - (Last - First) * _loupeConfig.Speed;
                 Transform.SetPoint(point, span);
-                Transform.SetScale(_loupeContext.Scale, span);
+                Transform.SetScale(_loupeContext.FixedScale, span);
             }
             else
             {

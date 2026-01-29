@@ -1064,6 +1064,7 @@ LongButtonMask.All=All buttons
 LongButtonMask.Left=Left button
 LongButtonMask.Right=Right button
 LoupeConfig.DefaultScale=Loupe standard magnification
+LoupeConfig.IsBaseOnOriginal=Magnification is based on the original size
 LoupeConfig.IsEscapeKeyEnabled=Use the Esc key to release the loupe
 LoupeConfig.IsLoupeCenter=Set the cursor position at the start of the loupe to the center of the screen
 LoupeConfig.IsResetByPageChanged=Release the loupe after moving the page
