@@ -336,7 +336,7 @@ namespace NeeView
         /// <param name="path">FileIdのもととなるパス</param>
         /// <param name="predicate">パスの受け入れ条件</param>
         /// <param name="excludeUnc">UNCパスを除外し、nullを返す</param>
-        /// <returns></returns>
+        /// <returns>復元されたパス。取得失敗は null を返す</returns>
         public string? GetOldPath(string path, Func<string, bool> predicate, bool excludeUnc = true)
         {
             Debug.Assert(System.IO.Path.IsPathFullyQualified(path));
@@ -347,9 +347,17 @@ namespace NeeView
                 return null;
             }
 
-            var fileId = FileIdResolver.GetFileIdFromPath(path);
-            var resolved = FileIdTable.GetPath(fileId.ToFileIdEx(VolumeTable), predicate);
-            return resolved;
+            try
+            {
+                var fileId = FileIdResolver.GetFileIdFromPath(path);
+                var resolved = FileIdTable.GetPath(fileId.ToFileIdEx(VolumeTable), predicate);
+                return resolved;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return null;
+            }
         }
 
         /// <summary>
