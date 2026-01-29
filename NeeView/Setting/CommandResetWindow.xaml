@@ -7,8 +7,9 @@
         xmlns:properties="clr-namespace:NeeView.Properties"
         mc:Ignorable="d"
         Style="{StaticResource ChromeDialogStyle}"
+        SizeToContent="Height"
         x:Name="MyWindow"
-        Title="{properties:TextBinding CommandResetWindow.Title}" Height="300" Width="512">
+        Title="{properties:TextBinding CommandResetWindow.Title}" MinHeight="300" Width="900">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -27,7 +28,7 @@
     
     <Grid>
         <DockPanel Margin="5">
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0">
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
                 <Button x:Name="OkButton" Style="{StaticResource ButtonStyle}" Content="{properties:TextBinding Word.OK}" Command="{Binding OkCommand}" CommandParameter="{Binding ElementName=MyWindow}"/>
                 <Button x:Name="CancelButton" Style="{StaticResource ButtonStyle}" Content="{properties:TextBinding Word.Cancel}" Command="{Binding CancelCommand}" CommandParameter="{Binding ElementName=MyWindow}"/>
             </StackPanel>
@@ -36,9 +37,10 @@
                     <Image Source="{StaticResource ic_warning_48px}" Width="20" Height="20" Margin="5"/>
                     <TextBlock Text="{properties:TextBinding CommandResetWindow.Message}" VerticalAlignment="Center"/>
                 </StackPanel>
-                <GroupBox Header="{properties:TextBinding CommandResetWindow.ResetType.Title}" Margin="5">
+                <StackPanel HorizontalAlignment="Center">
+                    <TextBlock Text="{properties:TextBinding CommandResetWindow.ResetType.Title}" Margin="5"/>
                     <local:CommandResetControl InputScheme="{Binding InputScheme}" Margin="5" />
-                </GroupBox>
+                </StackPanel>
             </DockPanel>
         </DockPanel>
     </Grid>

@@ -15,7 +15,7 @@
         ResizeMode="NoResize"
         ShowInTaskbar="False"
         Title="{properties:TextBinding WelcomeDialog.Caption}"
-        SizeToContent="Height" Width="600">
+        SizeToContent="Height" Width="928">
 
     <Window.Resources>
         <ResourceDictionary>
