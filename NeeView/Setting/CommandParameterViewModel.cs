@@ -2,6 +2,7 @@
 using NeeView.Properties;
 using NeeView.Windows.Property;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 
 namespace NeeView.Setting
@@ -36,8 +37,12 @@ namespace NeeView.Setting
             if (parameter is not null)
             {
                 _propertyDocument = new PropertyDocument(parameter);
+                parameter.SubscribePropertyChanged(Parameter_PropertyChanged);
             }
         }
+
+
+        public event PropertyChangedEventHandler? ParameterChanged;
 
 
         public PropertyDocument? PropertyDocument
@@ -48,6 +53,13 @@ namespace NeeView.Setting
 
         public string? Note { get; private set; }
 
+        public CommandParameter? Parameter => (CommandParameter?)_propertyDocument?.Source;
+
+
+        private void Parameter_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            ParameterChanged?.Invoke(sender, e);
+        }
 
         public void Flush()
         {

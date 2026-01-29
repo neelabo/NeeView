@@ -236,6 +236,12 @@
         </DrawingImage.Drawing>
     </DrawingImage>
 
+    <DrawingImage x:Key="ic_info_24px">
+        <DrawingImage.Drawing>
+            <GeometryDrawing Brush="#FF4488FF" Pen="{x:Null}" Geometry="{StaticResource g_info_24px}" />
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
     <DrawingImage x:Key="ic_warning_48px">
         <DrawingImage.Drawing>
             <GeometryDrawing Brush="Orange" Pen="{x:Null}" Geometry="{StaticResource g_warning_48px}" />

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -29,6 +31,24 @@ namespace NeeView.Setting
             InitializeComponent();
         }
 
+
+        public event PropertyChangedEventHandler? ParameterChanged
+        {
+            add
+            {
+                if (_vm is null) throw new InvalidOperationException("You must call Initialized()");
+                _vm?.ParameterChanged += value;
+            }
+            remove
+            {
+                _vm?.ParameterChanged -= value;
+            }
+        }
+
+
+        public CommandParameter? Parameter => _vm?.Parameter;
+
+
         public void Initialize(IReadOnlyDictionary<string, CommandElement> commandMap, string key)
         {
             InitializeComponent();
@@ -46,7 +66,6 @@ namespace NeeView.Setting
             {
                 this.MainPanel.Visibility = Visibility.Collapsed;
             }
-
         }
 
         public void Flush()

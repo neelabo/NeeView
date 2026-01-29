@@ -539,6 +539,7 @@ DragControlCenter.Target=Центр изображения
 DragControlCenter.View=Центр вида
 EditCommandWindow.CommandName=Имя команды (для скрипта)
 EditCommandWindow.Remarks=Описание команды
+EditCommandWindow.ReverseNote=
 EditCommandWindow.Title=Настройки команды
 EditCommandWindow.Visible=Показывать сообщение при выполнении команды
 Effect.CustomSize=Пользовательский размер

@@ -539,6 +539,7 @@ DragControlCenter.Target=Image center
 DragControlCenter.View=View center
 EditCommandWindow.CommandName=Command name (for script)
 EditCommandWindow.Remarks=Command description
+EditCommandWindow.ReverseNote=When the slider direction is from left to right, execute "{0}".
 EditCommandWindow.Title=Command settings
 EditCommandWindow.Visible=Display a message when executing a command
 Effect.CustomSize=Custom Size

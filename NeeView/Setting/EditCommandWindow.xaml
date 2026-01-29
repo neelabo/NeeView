@@ -16,7 +16,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/SettingTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            
+
             <Style x:Key="ButtonStyle" TargetType="Button" BasedOn="{StaticResource NVButton}">
                 <Setter Property="Padding" Value="10,5" />
                 <Setter Property="Margin" Value="5" />
@@ -31,6 +31,10 @@
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button x:Name="ButtonOk" Style="{StaticResource ButtonStyle}" Content="{properties:TextBinding Word.OK}" Click="ButtonOk_Click"/>
             <Button x:Name="ButtonCancel" Style="{StaticResource ButtonStyle}" Content="{properties:TextBinding Word.Cancel}" Click="ButtonCancel_Click"/>
+        </StackPanel>
+        <StackPanel x:Name="ReverseNote" DockPanel.Dock="Bottom" Orientation="Horizontal" Visibility="Collapsed" d:Visibility="Visible">
+            <Image Source="{StaticResource ic_info_24px}" Width="16" Height="16" Margin="5" VerticalAlignment="Center"/>
+            <TextBlock x:Name="ReverseNoteTextBlock" DockPanel.Dock="Bottom" Text="When the slider direction is from left to right, execute [PairCommand]." TextWrapping="Wrap" VerticalAlignment="Center"/>
         </StackPanel>
         <TabControl x:Name="TabControl" Margin="5" TabIndex="1" KeyboardNavigation.TabNavigation="Local">
             <TabItem x:Name="GeneralTab">

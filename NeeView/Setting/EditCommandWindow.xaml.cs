@@ -97,6 +97,9 @@ namespace NeeView.Setting
             this.InputTouch.Initialize(commandMap, key);
             this.Parameter.Initialize(commandMap, key);
 
+            this.Parameter.ParameterChanged += Parameter_ParameterChanged;
+            UpdateReverseNoteVisibility();
+
             switch (start)
             {
                 case EditCommandWindowTab.General:
@@ -118,6 +121,32 @@ namespace NeeView.Setting
 
             // ESCでウィンドウを閉じる
             this.InputBindings.Add(new KeyBinding(new RelayCommand(Close), new KeyGesture(Key.Escape)));
+        }
+
+        private void Parameter_ParameterChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ReversibleCommandParameter.IsReverse))
+            {
+                UpdateReverseNoteVisibility();
+            }
+        }
+
+        private void UpdateReverseNoteVisibility()
+        {
+            var command = CommandTable.Current.GetElement(_key);
+
+            if (command != null && command.PairPartner != null && Config.Current.Command.IsReversePageMove)
+            {
+                if (this.Parameter.Parameter is ReversibleCommandParameter parameter && parameter.IsReverse)
+                {
+                    this.ReverseNoteTextBlock.Text = TextResources.GetFormatString("EditCommandWindow.ReverseNote", CommandTable.Current.GetElement(command.PairPartner).Text);
+                    this.ReverseNote.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    this.ReverseNote.Visibility = Visibility.Collapsed;
+                }
+            }
         }
 
         private void ButtonOk_Click(object sender, RoutedEventArgs e)

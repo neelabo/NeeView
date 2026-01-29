@@ -537,6 +537,7 @@ DragControlCenter.Target=图像中心
 DragControlCenter.View=视图中心
 EditCommandWindow.CommandName=命令名（用于脚本）
 EditCommandWindow.Remarks=命令说明
+EditCommandWindow.ReverseNote=
 EditCommandWindow.Title=命令设置
 EditCommandWindow.Visible=执行命令时显示消息
 Effect.CustomSize=自定义大小

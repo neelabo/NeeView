@@ -24,7 +24,7 @@
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Item.MouseOver.Background}" />
+                                <Setter TargetName="Bd" Property="Background" Value="Transparent" />
                                 <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Item.MouseOver.Border}" />
                             </Trigger>
                             <Trigger Property="IsSelected" Value="true">

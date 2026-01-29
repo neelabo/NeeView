@@ -1,6 +1,8 @@
 ﻿using NeeView.Properties;
 using NeeView.Windows.Property;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace NeeView.Setting
 {
@@ -17,10 +19,18 @@ namespace NeeView.Setting
                 new SettingPagePageTitle(),
             };
 
+            var sliderDirection = new Dictionary<Enum, string>
+            {
+                [SliderDirection.LeftToRight] = "▶ " + SliderDirection.LeftToRight.ToAliasName(),
+                [SliderDirection.RightToLeft] = "◀ " + SliderDirection.RightToLeft.ToAliasName(),
+                [SliderDirection.SyncBookReadDirection] = SliderDirection.SyncBookReadDirection.ToAliasName()
+            };
+            Debug.Assert(Enum.GetNames(typeof(SliderDirection)).Length == sliderDirection.Count);
+
             var section = new SettingItemSection(TextResources.GetString("SettingPage.Slider"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Slider, nameof(SliderConfig.Thickness))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Slider, nameof(SliderConfig.Opacity))));
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Slider, nameof(SliderConfig.SliderDirection))));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Slider, nameof(SliderConfig.SliderDirection), new PropertyMemberElementOptions() { EnumMap = sliderDirection }) ));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Slider, nameof(SliderConfig.SliderIndexLayout))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Slider, nameof(SliderConfig.IsVisiblePlaylistMark))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Slider, nameof(SliderConfig.IsSyncPageMode))));

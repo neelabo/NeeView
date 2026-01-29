@@ -539,6 +539,7 @@ DragControlCenter.Target=Centro da imagem
 DragControlCenter.View=Exibir centro
 EditCommandWindow.CommandName=Nome do comando (para script)
 EditCommandWindow.Remarks=Descrição do comando
+EditCommandWindow.ReverseNote=
 EditCommandWindow.Title=Configuração de comando
 EditCommandWindow.Visible=Exibir uma mensagem ao executar um comando
 Effect.CustomSize=Tamanho Personalizado
