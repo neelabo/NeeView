@@ -40,7 +40,7 @@ namespace NeeView
             byte[] buff;
             using (var stream = await streamSource.OpenStreamAsync(token))
             {
-                buff = stream.ToArray(0, (int)entry.Length);
+                buff = stream.ToArray();
             }
 
             var accessor = SusiePluginManager.Current.GetImagePluginAccessor();

@@ -64,9 +64,8 @@ namespace NeeView
             }
 
             // バッファが直接取得できなかったときはストリームから生成する
-            var array = stream.ToArray(0, (int)ArchiveEntry.Length);
+            var array = stream.ToArray();
             _cache = new ArraySegment<byte>(array);
-            Debug.Assert((int)ArchiveEntry.Length == _cache.Count);
         }
 
         public void ClearCache()

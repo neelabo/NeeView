@@ -9,48 +9,40 @@ namespace NeeLaboratory.IO
     public static class StreamExtensions
     {
         /// <summary>
-        /// stream to byte array (common)
+        /// entire stream to byte array (common)
         /// </summary>
-        /// <param name="stream">source stream</param>
-        /// <param name="start">copy start stream position</param>
-        /// <param name="length">copy length</param>
-        /// <returns></returns>
-        public static byte[] ToArray(this Stream stream, int start, int length)
+        /// <param name="stream">input stream</param>
+        /// <returns>byte array</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="IOException"></exception>
+        public static byte[] ToArray(this Stream stream)
         {
-            var array = new byte[length];
-            stream.Seek(start, SeekOrigin.Begin);
-            var readSize = stream.Read(array.AsSpan());
-            Debug.Assert(readSize == length);
-            return array;
-        }
+            if (stream == null) throw new ArgumentNullException(nameof(stream));
 
-        /// <summary>
-        /// stream to byte array (common)
-        /// </summary>
-        /// <param name="stream">source stream</param>
-        /// <param name="start">copy start stream position</param>
-        /// <param name="length">copy length</param>
-        /// <param name="token">cancellation token</param>
-        /// <returns></returns>
-        public static async ValueTask<byte[]> ToArrayAsync(this Stream stream, int start, int length, CancellationToken token)
-        {
-            var array = new byte[length];
-            stream.Seek(start, SeekOrigin.Begin);
-            var readSize = await stream.ReadAsync(array.AsMemory(), token);
-            Debug.Assert(readSize == length);
-            return array;
-        }
+            if (!stream.CanSeek)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    stream.CopyTo(ms);
+                    return ms.ToArray();
+                }
+            }
 
-        /// <summary>
-        /// stream to byte span (common)
-        /// </summary>
-        /// <param name="stream">source stream</param>
-        /// <param name="start">copy start stream position</param>
-        /// <param name="length">copy length</param>
-        /// <returns></returns>
-        public static ReadOnlySpan<byte> ToSpan(this Stream stream, int start, int length)
-        {
-            return new ReadOnlySpan<byte>(stream.ToArray(start, length));
+            var length = stream.Length;
+
+            stream.Seek(0, SeekOrigin.Begin);
+
+            if (length > int.MaxValue)
+            {
+                throw new IOException("The data is too large to be stored in a byte array.");
+            }
+
+            var buffer = new byte[(int)length];
+
+            var totalRead = SafeRead(stream, buffer, 0, (int)length);
+            Debug.Assert(totalRead == (int)length);
+
+            return buffer;
         }
 
         /// <summary>
