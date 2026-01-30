@@ -20,7 +20,6 @@ namespace NeeView
     public partial class FolderTreeView : UserControl, INavigateControl
     {
         private readonly FolderTreeViewModel _vm;
-        private CancellationTokenSource _removeUnlinkedCommandCancellationTokenSource = new();
         private readonly SimpleTextSearch _textSearch = new();
         private readonly FolderTreeViewDropAssist _dropAssist;
 
@@ -31,7 +30,6 @@ namespace NeeView
         private RelayCommand? _openExplorerCommand;
         private RelayCommand? _newFolderCommand;
         private RelayCommand? _renameCommand;
-        private RelayCommand? _removeUnlinkedCommand;
         private RelayCommand? _addBookmarkCommand;
 
 
@@ -240,22 +238,6 @@ namespace NeeView
             }
         }
 
-        public RelayCommand RemoveUnlinkedCommand
-        {
-            get { return _removeUnlinkedCommand = _removeUnlinkedCommand ?? new RelayCommand(RemoveUnlinkedCommand_Executed); }
-        }
-
-        private async void RemoveUnlinkedCommand_Executed()
-        {
-            // 直前の命令はキャンセル
-            _removeUnlinkedCommandCancellationTokenSource?.Cancel();
-            _removeUnlinkedCommandCancellationTokenSource = new CancellationTokenSource();
-            if (this.TreeView.SelectedItem is RootBookmarkFolderNode)
-            {
-                await BookmarkCollection.Current.RemoveUnlinkedAsync(_removeUnlinkedCommandCancellationTokenSource.Token);
-            }
-        }
-
         public RelayCommand AddBookmarkCommand
         {
             get
@@ -272,7 +254,7 @@ namespace NeeView
             }
         }
 
-        #endregion
+#endregion
 
 
         protected override void OnDpiChanged(DpiScale oldDpi, DpiScale newDpi)
@@ -498,8 +480,6 @@ namespace NeeView
                 case RootBookmarkFolderNode:
                     contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.AddBookmark"), AddBookmarkCommand));
                     contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.NewFolder"), NewFolderCommand));
-                    contextMenu.Items.Add(new Separator());
-                    contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.DeleteInvalidBookmark"), RemoveUnlinkedCommand));
                     break;
 
                 case BookmarkFolderNode:

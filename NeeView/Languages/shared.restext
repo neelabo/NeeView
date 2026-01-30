@@ -542,3 +542,4 @@ WindowChromeFrame.None=@Word.None
 WindowConfig.State=@WindowStateEx
 WindowSettingTitle=@Word.Settings
 WindowStateEx.FullScreen=@Word.FullScreen
+DeleteInvalidBookmarkDialog.Title=@FolderTree.Menu.DeleteInvalidBookmark

@@ -15,7 +15,6 @@ namespace NeeView
         public static BookmarkFolderList Current { get; }
 
 
-        private CancellationTokenSource? _removeUnlinkedCancellationTokenSource;
         private readonly DisposableCollection _disposables = new();
 
 
@@ -88,10 +87,7 @@ namespace NeeView
 
         public async ValueTask DeleteInvalidBookmark()
         {
-            // 直前の命令はキャンセル
-            _removeUnlinkedCancellationTokenSource?.Cancel();
-            _removeUnlinkedCancellationTokenSource = new CancellationTokenSource();
-            await BookmarkCollection.Current.RemoveUnlinkedAsync(_removeUnlinkedCancellationTokenSource.Token);
+            await BookmarkCollectionService.DeleteInvalidBookmark(CancellationToken.None);
         }
 
         public TreeListNode<IBookmarkEntry>? GetBookmarkPlace()
@@ -109,7 +105,6 @@ namespace NeeView
             {
                 if (disposing)
                 {
-                    _removeUnlinkedCancellationTokenSource?.Cancel();
                     _disposables.Dispose();
                 }
 

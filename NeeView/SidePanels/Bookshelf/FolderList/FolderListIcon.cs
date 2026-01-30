@@ -34,6 +34,16 @@ namespace NeeView
             DependencyProperty.Register("IsKeepArea", typeof(bool), typeof(FolderListIcon), new PropertyMetadata(false));
 
 
+        public ImageSource? UnlinkedIcon
+        {
+            get { return (ImageSource)GetValue(UnlinkedIconProperty); }
+            set { SetValue(UnlinkedIconProperty, value); }
+        }
+
+        public static readonly DependencyProperty UnlinkedIconProperty =
+            DependencyProperty.Register("UnlinkedIcon", typeof(ImageSource), typeof(FolderListIcon), new PropertyMetadata(null));
+
+
         public ImageSource? FolderIcon
         {
             get { return (ImageSource)GetValue(FolderIconProperty); }

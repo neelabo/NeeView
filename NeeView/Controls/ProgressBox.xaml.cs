@@ -66,23 +66,43 @@ namespace NeeView
 
     public class ProgressBoxModel : BindableBase
     {
-        private readonly Progress<string> _progress;
+        private readonly Progress<ProgressContext> _progress;
+        private string _message = "";
+        private double _progressValue;
+        private bool _isProgressVisible;
+
 
         public ProgressBoxModel()
         {
-            _progress = new Progress<string>(Progress_Report);
+            _progress = new Progress<ProgressContext>(Progress_Report);
             ProcessJobEngine.Current.Progress = _progress;
             ProcessJobEngine.Current.SubscribePropertyChanged(nameof(ProcessJobEngine.IsBusy), (s, e) => RaisePropertyChanged(nameof(IsEnabled)));
         }
 
         public bool IsEnabled => ProcessJobEngine.Current.IsBusy;
 
-        public string Message { get; private set; } = "";
-
-        private void Progress_Report(string obj)
+        public string Message
         {
-            Message = obj;
-            RaisePropertyChanged(nameof(Message));
+            get { return _message; }
+            set { SetProperty(ref _message, value); }
+        }
+        public double ProgressValue
+        {
+            get { return _progressValue; }
+            set { SetProperty(ref _progressValue, value); }
+        }
+
+        public bool IsProgressVisible
+        {
+            get { return _isProgressVisible; }
+            set { SetProperty(ref _isProgressVisible, value); }
+        }
+
+        private void Progress_Report(ProgressContext context)
+        {
+            Message = context.Message;
+            ProgressValue = context.ProgressValue;
+            IsProgressVisible = context.IsProgressVisible;
         }
     }
 }

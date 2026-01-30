@@ -26,23 +26,8 @@ namespace NeeView
         Playlist = (1 << 9),
         PlaylistMember = (1 << 10),
         ReparsePoint = (1 << 11),
+        Unlinked = (1 << 12),
     }
-
-    /// <summary>
-    /// FolderItemAttribute メソッド拡張
-    /// </summary>
-    public static class FolderItemAttributeExtensions
-    {
-        /// <summary>
-        /// いずれかのフラグのONをチェック
-        /// </summary>
-        public static bool AnyFlag(this FolderItemAttribute self, FolderItemAttribute value)
-        {
-            return (self & value) != 0;
-        }
-    }
-
-
 
     /// <summary>
     /// アイコンオーバーレイ
@@ -104,10 +89,11 @@ namespace NeeView
         // 属性
         public FolderItemAttribute Attributes { get; set; }
 
-        public bool IsDirectory => (Attributes & FolderItemAttribute.Directory) == FolderItemAttribute.Directory;
-        public bool IsShortcut => (Attributes & FolderItemAttribute.Shortcut) == FolderItemAttribute.Shortcut;
-        public bool IsPlaylist => (Attributes & FolderItemAttribute.Playlist) == FolderItemAttribute.Playlist;
-        public bool IsLink => (Attributes & (FolderItemAttribute.ReparsePoint | FolderItemAttribute.Shortcut)) != FolderItemAttribute.None;
+        public bool IsDirectory => Attributes.HasFlagFast(FolderItemAttribute.Directory);
+        public bool IsShortcut => Attributes.HasFlagFast(FolderItemAttribute.Shortcut);
+        public bool IsPlaylist => Attributes.HasFlagFast(FolderItemAttribute.Playlist);
+        public bool IsLink => Attributes.AnyFlagFast(FolderItemAttribute.ReparsePoint | FolderItemAttribute.Shortcut);
+        public bool IsUnlinked => Attributes.HasFlagFast(FolderItemAttribute.Unlinked);
 
         // 種類。ソート用
         public FolderItemType Type { get; set; }

@@ -211,7 +211,7 @@ namespace NeeView
         private void LoadWithRecursive_CanExecute(object? sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = sender is ListBox { SelectedItem: FolderItem item }
-                && !item.Attributes.AnyFlag(FolderItemAttribute.Drive | FolderItemAttribute.Empty)
+                && !item.Attributes.AnyFlagFast(FolderItemAttribute.Drive | FolderItemAttribute.Empty)
                 && (Config.Current.System.ArchiveRecursiveMode == ArchiveEntryCollectionMode.IncludeSubArchives
                     ? (item.Attributes & (FolderItemAttribute.Directory | FolderItemAttribute.Playlist)) != 0
                     : ArchiveManager.Current.GetSupportedType(item.TargetPath.SimplePath).IsRecursiveSupported());
@@ -484,7 +484,7 @@ namespace NeeView
             if (sender is ListBox { SelectedItem: FolderItem item })
             {
                 var path = item.TargetPath.SimplePath;
-                path = item.Attributes.AnyFlag(FolderItemAttribute.Bookmark | FolderItemAttribute.ArchiveEntry | FolderItemAttribute.Empty) ? ArchiveManager.Current.GetExistPathName(path) : path;
+                path = item.Attributes.AnyFlagFast(FolderItemAttribute.Bookmark | FolderItemAttribute.ArchiveEntry | FolderItemAttribute.Empty) ? ArchiveManager.Current.GetExistPathName(path) : path;
                 if (!string.IsNullOrWhiteSpace(path))
                 {
                     ExternalProcess.OpenWithFileManager(path);
@@ -517,12 +517,6 @@ namespace NeeView
                 externalApp.Execute(paths);
             }
         }
-
-        //private string GetExistPathName(FolderItem item)
-        //{
-        //    var path = item.TargetPath.SimplePath;
-        //    return item.Attributes.AnyFlag(FolderItemAttribute.Bookmark | FolderItemAttribute.ArchiveEntry | FolderItemAttribute.Empty) ? ArchiveManager.Current.GetExistPathName(path) : path;
-        //}
 
         public void Open_Executed(object? sender, ExecutedRoutedEventArgs e)
         {
@@ -651,7 +645,7 @@ namespace NeeView
             e.Data.SetQueryPathCollection(items.Select(x => x.TargetPath));
 
             // bookmark?
-            if (items.Any(x => x.Attributes.AnyFlag(FolderItemAttribute.Bookmark)))
+            if (items.Any(x => x.Attributes.AnyFlagFast(FolderItemAttribute.Bookmark)))
             {
                 var collection = items.Select(x => x.Source).OfType<TreeListNode<IBookmarkEntry>>().ToBookmarkNodeCollection();
                 e.Data.SetData(collection);

@@ -58,6 +58,7 @@ namespace NeeView
             private set { _unit = value; }
         }
 
+        public bool IsUnlinked { get; set; }
 
         private string? CreateRawName(string? s)
         {

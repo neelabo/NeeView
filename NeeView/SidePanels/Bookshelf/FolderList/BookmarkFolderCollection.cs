@@ -174,7 +174,19 @@ namespace NeeView
 
                 case EntryCollectionChangedAction.Replace:
                 case EntryCollectionChangedAction.Reset:
-                    // nop. (work at FolderList.)
+
+                    // update attributes
+                    foreach (var item in Items.ToList())
+                    {
+                        if (item is BookmarkFolderItem folderItem && folderItem.Bookmark.IsUnlinked)
+                        {
+                            item.Attributes.SetFlag(FolderItemAttribute.Unlinked);
+                        }
+                        else
+                        {
+                            item.Attributes.ClearFlag(FolderItemAttribute.Unlinked);
+                        }
+                    }
                     break;
             }
         }
@@ -249,7 +261,7 @@ namespace NeeView
                 Place = Place,
                 Name = bookmark.Name,
                 TargetPath = new QueryPath(bookmark.Path),
-                Attributes = FolderItemAttribute.Bookmark,
+                Attributes = FolderItemAttribute.Bookmark | (bookmark.IsUnlinked ? FolderItemAttribute.Unlinked : FolderItemAttribute.None),
                 EntryTime = bookmark.EntryTime,
                 IsReady = true
             };

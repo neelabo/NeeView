@@ -22,10 +22,17 @@
         </DrawingImage.Drawing>
     </DrawingImage>
 
+    <DrawingImage x:Key="fic_link_off_24px">
+        <DrawingImage.Drawing>
+            <GeometryDrawing Brush="{DynamicResource Panel.Foreground}" Geometry="{StaticResource g_link_off_24px}" />
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
     <Style TargetType="{x:Type local:FolderListIcon}" BasedOn="{StaticResource {x:Type local:FolderListIcon}}">
         <Setter Property="FolderIcon" Value="{StaticResource fic_folder}"/>
         <Setter Property="LinkIcon" Value="{StaticResource fic_arrow_forward_24px}"/>
         <Setter Property="PlaylistIcon" Value="{StaticResource fic_playlist}"/>
+        <Setter Property="UnlinkedIcon" Value="{StaticResource fic_link_off_24px}"/>
     </Style>
 
 </ResourceDictionary>

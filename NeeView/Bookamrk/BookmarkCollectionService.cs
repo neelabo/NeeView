@@ -1,8 +1,11 @@
 ﻿using NeeView.Collections.Generic;
 using NeeView.Properties;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NeeView
 {
@@ -11,6 +14,8 @@ namespace NeeView
     /// </summary>
     public static class BookmarkCollectionService
     {
+        private static CancellationTokenSource? _removeUnlinkedCancellationTokenSource;
+
         /// <summary>
         /// ブックマークを追加する
         /// </summary>
@@ -277,5 +282,89 @@ namespace NeeView
             }
         }
 
+        /// <summary>
+        /// 無効なブックマークを削除
+        /// </summary>
+        /// <returns></returns>
+        public static async ValueTask DeleteInvalidBookmark(CancellationToken token)
+        {
+            // Job としてブックマーク修復を実行
+            var jobOperation = ProcessJobEngine.Current.AddJob(Resolve);
+            int unlinkedCount = await jobOperation.WaitAsync(token);
+
+            // 削除確認ダイアログと削除
+            if (unlinkedCount > 0)
+            {
+                var dialog = new MessageDialog(TextResources.GetFormatString("DeleteItemsDialog.Message", unlinkedCount), TextResources.GetString("DeleteInvalidBookmarkDialog.Title"));
+                dialog.Commands.AddRange(UICommands.OKCancel);
+                var result = dialog.ShowDialog();
+                if (result.IsPossible)
+                {
+                    RemoveBookmark(BookmarkCollection.Current.CollectUnlinked(), 1);
+                }
+            }
+            else
+            {
+                var dialog = new MessageDialog(TextResources.GetString("NoDeleteItemsDialog.Message"), TextResources.GetString("NoDeleteInvalidBookmarkDialog.Title"));
+                dialog.ShowDialog();
+            }
+
+            static async ValueTask<int> Resolve(IProgress<ProgressContext>? progress, CancellationToken token)
+            {
+                // 直前の命令はキャンセル
+                _removeUnlinkedCancellationTokenSource?.Cancel();
+                _removeUnlinkedCancellationTokenSource = new CancellationTokenSource();
+
+                using var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(token, _removeUnlinkedCancellationTokenSource.Token);
+                return await BookmarkCollection.Current.ResolveUnlinkedAsync(progress, tokenSource.Token);
+            }
+        }
+
+        /// <summary>
+        /// ブックマーク削除。復元トースト通知あり
+        /// </summary>
+        /// <param name="nodes"></param>
+        /// <param name="recoveryCount"></param>
+        /// <returns></returns>
+        public static bool RemoveBookmark(IEnumerable<TreeListNode<IBookmarkEntry>> nodes, int recoveryCount = 2)
+        {
+            if (!nodes.Any())
+            {
+                return false;
+            }
+
+            var mementos = new List<TreeListNodeMemento<IBookmarkEntry>>();
+            int count = 0;
+
+            foreach (var node in nodes)
+            {
+                var memento = new TreeListNodeMemento<IBookmarkEntry>(node);
+
+                bool isRemoved = BookmarkCollection.Current.Remove(node);
+                if (isRemoved)
+                {
+                    mementos.Add(memento);
+
+                    if (node.Value is BookmarkFolder)
+                    {
+                        count += node.WalkChildren().Count(e => e.Value is Bookmark);
+                    }
+                    else
+                    {
+                        count++;
+                    }
+                }
+            }
+
+            if (count >= recoveryCount)
+            {
+                mementos.Reverse();
+                var toast = new Toast(TextResources.GetFormatString("BookmarkFolderDelete.Message", count), null, ToastIcon.Information, TextResources.GetString("Word.Restore"),
+                    () => { foreach (var memento in mementos) BookmarkCollection.Current.Restore(memento); });
+                ToastService.Current.Show("BookmarkList", toast);
+            }
+
+            return (count > 0);
+        }
     }
 }

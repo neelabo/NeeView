@@ -218,42 +218,72 @@ namespace NeeView
             }
         }
 
-        // 無効な履歴削除
-        public async ValueTask RemoveUnlinkedAsync(CancellationToken token)
+        /// <summary>
+        /// ブックマークの修復
+        /// </summary>
+        /// <remarks>
+        /// リンク切れのブックマークの修復を試み、それでも失敗する場合はリンク切れフラグをつける
+        /// </remarks>
+        /// <param name="progress"></param>
+        /// <param name="token"></param>
+        /// <returns>リンク切れ項目数</returns>
+        public async ValueTask<int> ResolveUnlinkedAsync(IProgress<ProgressContext>? progress, CancellationToken token)
         {
-            // 削除項目収集
             List<TreeListNode<IBookmarkEntry>> nodes;
             lock (_lock)
             {
                 nodes = Items.WalkChildren().Where(e => e.Value is Bookmark).ToList();
             }
-            var unlinked = new List<TreeListNode<IBookmarkEntry>>();
+
+            var progressContext = new ProgressContext("", 0.0, true);
+
+            int count = 0;
+            int unlinkedCount = 0;
             foreach (var node in nodes)
             {
+                count++;
+
                 var bookmark = (Bookmark)node.Value;
+
+                progressContext.Message = node.Name;
+                progressContext.ProgressValue = (double)count / nodes.Count;
+                progress?.Report(progressContext);
+
                 if (!await ArchiveEntryUtility.ExistsAsync(bookmark.Path, false, token))
                 {
-                    unlinked.Add(node);
+                    var resolved = FileResolver.Current.ResolveArchivePath(bookmark.Path);
+                    if (resolved != null)
+                    {
+                        bookmark.Path = resolved.Path;
+                    }
+                    else
+                    {
+                        bookmark.IsUnlinked = true;
+                        unlinkedCount++;
+                    }
                 }
             }
 
-            // 削除実行
-            if (unlinked.Count > 0)
-            {
-                lock (_lock)
-                {
-                    foreach (var node in unlinked)
-                    {
-                        var bookmark = (Bookmark)node.Value;
-                        Debug.WriteLine($"BookmarkRemove: {bookmark.Path}");
-                        node.RemoveSelf();
-                    }
+            BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Replace));
 
-                    BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Replace));
-                }
+            return unlinkedCount;
+        }
+
+        /// <summary>
+        /// Unlinked フラグのたったブックマークを収集
+        /// </summary>
+        /// <returns></returns>
+        public List<TreeListNode<IBookmarkEntry>> CollectUnlinked()
+        {
+            lock (_lock)
+            {
+                return  Items.WalkChildren().Where(e => e.Value is Bookmark bookmark && bookmark.IsUnlinked).ToList();
             }
         }
 
+        /// <summary>
+        /// 新しいフォルダーを追加
+        /// </summary>
         public TreeListNode<IBookmarkEntry>? AddNewFolder(TreeListNode<IBookmarkEntry> target, string? name)
         {
             if (target == Items || target.Value is BookmarkFolder)

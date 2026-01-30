@@ -511,7 +511,7 @@ namespace NeeView
                 else
                 {
                     // ファイル読み込み失敗通知
-                    var message = string.Format(CultureInfo.InvariantCulture, TextResources.GetString("LoadFailedException.Message"), place, ex.Message);
+                    var message = ex.Message;
                     bookChangedEventArgs.EmptyMessage = message;
                 }
 

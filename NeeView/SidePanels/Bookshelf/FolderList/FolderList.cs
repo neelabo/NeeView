@@ -571,7 +571,7 @@ namespace NeeView
                 return;
             }
 
-            _ = SetPlaceAsync(path, select, options);
+            AppDispatcher.BeginInvoke(async () => await SetPlaceAsync(path, select, options));
         }
 
         /// <summary>
@@ -1659,6 +1659,7 @@ namespace NeeView
             return true;
         }
 
+        [Obsolete]
         public bool RemoveBookmark(IEnumerable<FolderItem> items)
         {
             if (_disposedValue) return false;
@@ -1734,7 +1735,9 @@ namespace NeeView
 
             if (bookmarks.Any())
             {
-                RemoveBookmark(bookmarks);
+                var nodes = bookmarks.Select(e => e.Source as TreeListNode<IBookmarkEntry>).WhereNotNull().ToList();
+                BookmarkCollectionService.RemoveBookmark(nodes);
+                //RemoveBookmark(bookmarks);
             }
             else if (files.Any())
             {

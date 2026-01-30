@@ -22,11 +22,9 @@ namespace NeeView
         public static Lazy<ProcessJobEngine> _current = new();
         public static ProcessJobEngine Current => _current.Value;
 
-        public record class JobUnit(string Name, Func<ValueTask> Job)
-        {
-        }
 
-        private readonly Channel<JobUnit> _jobQueue;
+
+        private readonly Channel<IJobOperation> _jobQueue;
         private readonly CancellationTokenSource _cts = new();
         private bool _isProcessing;
         private bool _disposedValue;
@@ -34,13 +32,13 @@ namespace NeeView
 
         public ProcessJobEngine()
         {
-            _jobQueue = Channel.CreateUnbounded<JobUnit>();
+            _jobQueue = Channel.CreateUnbounded<IJobOperation>();
 
             Task.Run(() => ProcessJobsAsync(_cts.Token));
         }
 
 
-        public IProgress<string>? Progress { get; set; }
+        public IProgress<ProgressContext>? Progress { get; set; }
 
         public bool IsProcessing
         {
@@ -58,52 +56,57 @@ namespace NeeView
         public bool IsBusy => IsProcessing || PendingJobsCount > 0;
 
 
-        public void AddJob(string name, Func<ValueTask> job)
+        public JobOperation AddJob(string name, Action job)
         {
             if (_disposedValue) throw new ObjectDisposedException(nameof(ProcessJobEngine));
 
-            _jobQueue.Writer.TryWrite(new JobUnit(name, job));
-            NotifyChange();
+            var innerJob = async ValueTask (IProgress<ProgressContext>? progress, CancellationToken token) =>
+            {
+                progress?.Report(new ProgressContext(name));
+                job.Invoke();
+            };
+
+            return AddJob(innerJob);
         }
 
-        public void AddJob(string name, Func<Task> job)
+        public JobOperation AddJob(string name, Func<CancellationToken, ValueTask> job)
         {
             if (_disposedValue) throw new ObjectDisposedException(nameof(ProcessJobEngine));
 
-            _jobQueue.Writer.TryWrite(new JobUnit(name, async () => await job()));
-            NotifyChange();
+            var innerJob = async ValueTask (IProgress<ProgressContext>? progress, CancellationToken token) =>
+            {
+                progress?.Report(new ProgressContext(name));
+                await job.Invoke(token);
+            };
+
+            return AddJob(innerJob);
         }
 
-        public void AddJob(string name, Action job)
+        public JobOperation AddJob(Func<IProgress<ProgressContext>?, CancellationToken, ValueTask> job)
         {
             if (_disposedValue) throw new ObjectDisposedException(nameof(ProcessJobEngine));
 
-            _jobQueue.Writer.TryWrite(new JobUnit(name, () => { job(); return default; }));
+            var jobUnit = new JobOperation(job);
+            _jobQueue.Writer.TryWrite(jobUnit);
             NotifyChange();
+
+            return jobUnit;
         }
 
-        public async ValueTask AddJobAsync(string name, Func<ValueTask> job, CancellationToken token)
+        public JobOperation<T> AddJob<T>(Func<IProgress<ProgressContext>?, CancellationToken, ValueTask<T>> job)
         {
             if (_disposedValue) throw new ObjectDisposedException(nameof(ProcessJobEngine));
 
-            await _jobQueue.Writer.WriteAsync(new JobUnit(name, job), token);
+            var jobUnit = new JobOperation<T>(job);
+            _jobQueue.Writer.TryWrite(jobUnit);
             NotifyChange();
+
+            return jobUnit;
         }
 
-        public async ValueTask AddJobAsync(string name, Func<Task> job, CancellationToken token)
+        public async ValueTask WaitAsync(CancellationToken token)
         {
-            if (_disposedValue) throw new ObjectDisposedException(nameof(ProcessJobEngine));
-
-            await _jobQueue.Writer.WriteAsync(new JobUnit(name, async () => await job()), token);
-            NotifyChange();
-        }
-
-        public async ValueTask AddJobAsync(string name, Action job, CancellationToken token)
-        {
-            if (_disposedValue) throw new ObjectDisposedException(nameof(ProcessJobEngine));
-
-            await _jobQueue.Writer.WriteAsync(new JobUnit(name, () => { job(); return default; }), token);
-            NotifyChange();
+            await this.WaitPropertyAsync(nameof(IsBusy), e => !e.IsBusy, token);
         }
 
         private async Task ProcessJobsAsync(CancellationToken token)
@@ -120,8 +123,7 @@ namespace NeeView
                         NotifyChange();
 
                         LocalDebug.WriteLine("Job start...");
-                        Progress?.Report(job.Name);
-                        await job.Job();
+                        await job.InvokeAsync(Progress, token);
 
 #if DEBUG
                         // [開発用]
@@ -176,4 +178,124 @@ namespace NeeView
         }
     }
 
+
+    public class ProgressContext
+    {
+        public ProgressContext(string message)
+            : this(message, 0.0, false)
+        {
+        }
+
+        public ProgressContext(string message, double progress)
+            : this(message, progress, true)
+        {
+        }
+
+        public ProgressContext(string message, double progress, bool isProgressVisible)
+        {
+            Message = message;
+            ProgressValue = progress;
+            IsProgressVisible = isProgressVisible;
+        }
+
+
+        public string Message { get; set; } = "";
+        public double ProgressValue { get; set; }
+        public bool IsProgressVisible { get; set; }
+    }
+
+
+    public interface IJobOperation
+    {
+        JobState State { get; }
+        ValueTask InvokeAsync(IProgress<ProgressContext>? progress, CancellationToken token);
+    }
+
+
+    public class JobOperation : BindableBase, IJobOperation
+    {
+        private JobState _state;
+        private Func<IProgress<ProgressContext>?, CancellationToken, ValueTask> _job;
+
+
+        public JobOperation(Func<IProgress<ProgressContext>?, CancellationToken, ValueTask> job)
+        {
+            _job = job;
+        }
+
+
+        public JobState State
+        {
+            get { return _state; }
+            set { SetProperty(ref _state, value); }
+        }
+
+        public async ValueTask InvokeAsync(IProgress<ProgressContext>? progress, CancellationToken token)
+        {
+            try
+            {
+                State = JobState.Run;
+                await _job(progress, token);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            finally
+            {
+                State = JobState.Closed;
+            }
+        }
+
+        public async ValueTask WaitAsync(CancellationToken token)
+        {
+            await this.WaitPropertyAsync(nameof(State), e => e.State == JobState.Closed, token);
+        }
+    }
+
+
+    public class JobOperation<T> : BindableBase, IJobOperation
+    {
+        private JobState _state;
+        private Func<IProgress<ProgressContext>?, CancellationToken, ValueTask<T>> _job;
+
+
+        public JobOperation(Func<IProgress<ProgressContext>?, CancellationToken, ValueTask<T>> job)
+        {
+            _job = job;
+        }
+
+
+        public JobState State
+        {
+            get { return _state; }
+            set { SetProperty(ref _state, value); }
+        }
+
+        public T? Result { get; private set; }
+
+
+        public async ValueTask InvokeAsync(IProgress<ProgressContext>? progress, CancellationToken token)
+        {
+            try
+            {
+                State = JobState.Run;
+                Result = await _job(progress, token);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+            finally
+            {
+                State = JobState.Closed;
+            }
+        }
+
+        public async ValueTask<T?> WaitAsync(CancellationToken token)
+        {
+            await this.WaitPropertyAsync(nameof(State), e => e.State == JobState.Closed, token);
+            return Result;
+        }
+    }
 }
