@@ -28,4 +28,11 @@
         Faulted,
     }
 
+    public static class JobStateExtensions
+    {
+        public static bool IsFinished(this JobState state)
+        {
+            return state == JobState.Completed || state == JobState.Canceled || state == JobState.Faulted;
+        }
+    }
 }
