@@ -197,6 +197,7 @@ BookConfig.BookPageSize=書本圖像大小
 BookConfig.BookPageSize.Remarks=被視為書本頁面顯示的圖像大小。由於顯示縮圖，過大的值可能會有以低解析度顯示的情況。
 BookConfig.BookThumbnailDepth=
 BookConfig.BookThumbnailDepth.Remarks=
+BookConfig.BookThumbnailFileName=
 BookConfig.ContentsSpace=
 BookConfig.ContentsSpace.Remarks=設定頁面與頁面之間的間隙。負值代表著重疊的意思。由於每個頁面是按比例縮放，所以當為 0 時很少會沒有間隙。
 BookConfig.DividePageRate=

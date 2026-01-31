@@ -197,6 +197,7 @@ BookConfig.BookPageSize=书页图像大小
 BookConfig.BookPageSize.Remarks=作为书页显示的图像大小。由于显示的是缩略图，值越大显示的分辨率越低。
 BookConfig.BookThumbnailDepth=生成书籍缩略图时的搜索深度
 BookConfig.BookThumbnailDepth.Remarks=在该深度范围内从文件夹里查找图片作为缩略图
+BookConfig.BookThumbnailFileName=
 BookConfig.ContentsSpace="@PageMode.WidePage" 时的页间距 (像素)
 BookConfig.ContentsSpace.Remarks=设置页间距。负值表示重叠。由于每个页面都会缩放，所以很少会出现间隙正好为 0 的情况。
 BookConfig.DividePageRate=页面分割比例

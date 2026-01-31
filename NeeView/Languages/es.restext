@@ -198,6 +198,7 @@ BookConfig.BookPageSize=Tamaño de imagen de página de libro
 BookConfig.BookPageSize.Remarks=El tamaño de la imagen para mostrar como página del libro. Dado que se muestran miniaturas, valores grandes pueden mostrarse con menor resolución.
 BookConfig.BookThumbnailDepth=Profundidad de búsqueda para generar miniatura de libro
 BookConfig.BookThumbnailDepth.Remarks=Buscar imagen para usar como miniatura desde carpetas dentro de este rango de profundidad.
+BookConfig.BookThumbnailFileName=
 BookConfig.ContentsSpace=Distancia entre páginas en "@PageMode.WidePage" (píxeles)
 BookConfig.ContentsSpace.Remarks=Establece el espacio entre página y página. Los valores negativos significan superposición. Debido a que cada página se escala, es raro que no haya espacio justo en 0.
 BookConfig.DividePageRate=Tasa de división de página
