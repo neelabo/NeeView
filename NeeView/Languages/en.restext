@@ -1299,6 +1299,7 @@ NodeAccessor.Remove.Returns=Returns "true" if deletion succeeds
 NodeAccessor.Value=Node Value
 NodeAccessor.ValueType=Node value type
 NoDeleteInvalidBookmarkDialog.Title=There are no invalid bookmarks
+NoDeleteInvalidPlaylistItemDialog.Title=There are no invalid items
 NoDeleteItemsDialog.Message=There are no items to delete.
 Notice.BookNextFailed=No next book
 Notice.BookOperationPageLoop=Looped.

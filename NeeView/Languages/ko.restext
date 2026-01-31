@@ -1292,6 +1292,7 @@ NodeAccessor.Remove.Returns=삭제에 성공하면 "true"
 NodeAccessor.Value=노드 값
 NodeAccessor.ValueType=노드 값 형태
 NoDeleteInvalidBookmarkDialog.Title=
+NoDeleteInvalidPlaylistItemDialog.Title=
 NoDeleteItemsDialog.Message=
 Notice.BookNextFailed=다음 책 없음
 Notice.BookOperationPageLoop=루프됨

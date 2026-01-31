@@ -34,6 +34,8 @@ namespace NeeView
             set { _name = (string.IsNullOrEmpty(value) || value.Trim() == LoosePath.GetFileName(Path)) ? null : value.Trim(); }
         }
 
+        public string? RawName => _name;
+
         public bool IsNameChanged => _name != null;
     }
 

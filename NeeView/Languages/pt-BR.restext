@@ -1299,6 +1299,7 @@ NodeAccessor.Remove.Returns=Retorna "true" se a exclusão for bem-sucedida
 NodeAccessor.Value=Valor do nó
 NodeAccessor.ValueType=Tipo de valor do nó
 NoDeleteInvalidBookmarkDialog.Title=
+NoDeleteInvalidPlaylistItemDialog.Title=
 NoDeleteItemsDialog.Message=
 Notice.BookNextFailed=Nenhum livro seguinte
 Notice.BookOperationPageLoop=Em loop.

@@ -1292,6 +1292,7 @@ NodeAccessor.Remove.Returns=削除に成功したら "true"
 NodeAccessor.Value=ノードの値
 NodeAccessor.ValueType=ノードの値の型
 NoDeleteInvalidBookmarkDialog.Title=無効なブックマークはありません
+NoDeleteInvalidPlaylistItemDialog.Title=無効な項目はありません
 NoDeleteItemsDialog.Message=削除する項目はありません。
 Notice.BookNextFailed=次のブックはありません
 Notice.BookOperationPageLoop=ループしました

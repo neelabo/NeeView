@@ -1292,6 +1292,7 @@ NodeAccessor.Remove.Returns=
 NodeAccessor.Value=
 NodeAccessor.ValueType=
 NoDeleteInvalidBookmarkDialog.Title=
+NoDeleteInvalidPlaylistItemDialog.Title=
 NoDeleteItemsDialog.Message=
 Notice.BookNextFailed=沒有下一個書本
 Notice.BookOperationPageLoop=已循環

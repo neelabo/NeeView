@@ -403,35 +403,130 @@ namespace NeeView
             }
         }
 
-        public void Remove(PlaylistItem item)
+        public bool Remove(PlaylistItem item)
         {
-            if (!IsEditable) return;
-            if (item is null) return;
+            if (!IsEditable) return false;
+            if (item is null) return false;
 
             lock (_lock)
             {
-                _items.Remove(item);
                 _isDirty = true;
+                return _items.Remove(item);
             }
         }
 
-        public async ValueTask DeleteInvalidItemsAsync(CancellationToken token)
+        private List<PlaylistItem> CloneItems()
         {
-            if (!IsEditable) return;
-
-            // 削除項目収集
-            var unlinked = new List<PlaylistItem>();
-            foreach (var node in _items)
+            lock (_lock)
             {
-                if (!await ArchiveEntryUtility.ExistsAsync(node.Path, false, token))
+                return _items.ToList();
+            }
+        }
+
+        /// <summary>
+        /// 復元と無効項目判定を行う
+        /// </summary>
+        /// <remarks>
+        /// パスの復元。それでも見つからない項目には IsUnlinked フラグを立てる。
+        /// </remarks>
+        /// <param name="progress"></param>
+        /// <param name="token"></param>
+        /// <returns>無効項目数</returns>
+        public async ValueTask<int> ResolveUnlinkedAsync(IProgress<ProgressContext>? progress, CancellationToken token)
+        {
+            if (!IsEditable) return 0;
+
+            var progressContext = new ProgressContext("", 0.0, true);
+
+            var items = CloneItems();
+
+            int count = 0;
+            int unlinkedCount = 0;
+            var unlinked = new List<PlaylistItem>();
+            foreach (var item in items)
+            {
+                count++;
+
+                progressContext.Message = item.Name;
+                progressContext.ProgressValue = (double)count / items.Count;
+                progress?.Report(progressContext);
+
+                if (!await ArchiveEntryUtility.ExistsAsync(item.Path, false, token))
                 {
-                    unlinked.Add(node);
+                    var resolved = FileResolver.Current.ResolveArchivePath(item.Path);
+                    if (resolved != null)
+                    {
+                        item.Path = resolved.Path;
+                        _isDirty = true;
+                    }
+                    else
+                    {
+                        item.IsUnlinked = true;
+                        unlinkedCount++;
+                    }
                 }
             }
 
-            // 削除実行
-            Remove(unlinked);
-            ToastService.Current.Show(new Toast(TextResources.GetFormatString("Playlist.DeleteItemsMessage", unlinked.Count)));
+            return unlinkedCount;
+        }
+
+        /// <summary>
+        /// 無効項目を収集
+        /// </summary>
+        /// <returns></returns>
+        public List<PlaylistItem> CollectUnlinked()
+        {
+            lock (_lock)
+            {
+                return _items.Where(e => e.IsUnlinked).ToList();
+            }
+        }
+
+        /// <summary>
+        /// 復元情報付き削除
+        /// </summary>
+        /// <param name="items"></param>
+        /// <returns>復元情報</returns>
+        public List<PlaylistItemMemento> RemoveWithRecoverable(IEnumerable<PlaylistItem> items)
+        {
+            var mementos = new List<PlaylistItemMemento>();
+
+            if (!items.Any())
+            {
+                return mementos;
+            }
+
+            foreach (var item in items)
+            {
+                var index = _items.IndexOf(item);
+                bool isRemoved = Remove(item);
+                if (isRemoved)
+                {
+                    mementos.Add(new PlaylistItemMemento(item, index));
+                }
+            }
+
+            mementos.Reverse();
+            return mementos;
+        }
+
+        /// <summary>
+        /// 削除した項目を復元
+        /// </summary>
+        /// <param name="mementos">復元情報</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public void Restore(IEnumerable<PlaylistItemMemento> mementos)
+        {
+            if (mementos == null) throw new ArgumentNullException(nameof(mementos));
+            if (!mementos.Any()) return;
+
+            lock (_lock)
+            {
+                foreach (var memento in mementos)
+                {
+                    Insert(memento.Index, memento.Item);
+                }
+            }
         }
 
         public bool Drop(int index, PlaylistItem item)
@@ -903,20 +998,20 @@ namespace NeeView
             if (!IsEditable) return false;
             if (src == dst) return false;
 
-            var items = CollectPathMembers(Items, src);
+            var items = CollectPathMembers(src);
             LocalDebug.WriteLine($"RenamePathItems.Count = {items.Count}");
             if (items.Count == 0) return false;
 
             foreach (var item in items)
             {
-                var index = _items.IndexOf(item);
-                if (index < 0) continue;
                 var srcPath = item.Path;
                 var dstPath = dst + srcPath[src.Length..];
                 LocalDebug.WriteLine($"Path: {srcPath} => {dstPath}");
+                item.Path = dstPath;
                 _isDirty = true;
-                _items[index] = new PlaylistItem(dstPath, item.Name);
             }
+
+            DelaySave();
 
             return true;
         }
@@ -926,9 +1021,12 @@ namespace NeeView
         /// </summary>
         /// <param name="src"></param>
         /// <returns></returns>
-        private static List<PlaylistItem> CollectPathMembers(IEnumerable<PlaylistItem> items, string src)
+        private List<PlaylistItem> CollectPathMembers(string src)
         {
-            return items.Where(e => Contains(e.Path, src)).ToList();
+            lock (_lock)
+            {
+                return _items.Where(e => Contains(e.Path, src)).ToList();
+            }
 
             static bool Contains(string src, string target)
             {
@@ -936,6 +1034,12 @@ namespace NeeView
                     && (src.Length == target.Length || src[target.Length] == LoosePath.DefaultSeparator);
             }
         }
-
     }
+
+    /// <summary>
+    /// プレイリスト項目復元用データ
+    /// </summary>
+    /// <param name="Item"></param>
+    /// <param name="Index"></param>
+    public record PlaylistItemMemento(PlaylistItem Item, int Index);
 }

@@ -1305,6 +1305,7 @@ NodeAccessor.Remove.Returns=
 NodeAccessor.Value=
 NodeAccessor.ValueType=
 NoDeleteInvalidBookmarkDialog.Title=
+NoDeleteInvalidPlaylistItemDialog.Title=
 NoDeleteItemsDialog.Message=
 Notice.BookNextFailed=Nessun libro successivo
 Notice.BookOperationPageLoop=Ripetizione.

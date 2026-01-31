@@ -1292,6 +1292,7 @@ NodeAccessor.Remove.Returns=如果删除成功，则为 "true"
 NodeAccessor.Value=节点值
 NodeAccessor.ValueType=节点值类型
 NoDeleteInvalidBookmarkDialog.Title=
+NoDeleteInvalidPlaylistItemDialog.Title=
 NoDeleteItemsDialog.Message=
 Notice.BookNextFailed=下一本书籍不存在
 Notice.BookOperationPageLoop=已循环。

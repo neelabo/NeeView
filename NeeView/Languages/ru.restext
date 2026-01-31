@@ -1299,6 +1299,7 @@ NodeAccessor.Remove.Returns=Возвращает "true", если удалени
 NodeAccessor.Value=Значение узла
 NodeAccessor.ValueType=Тип значения узла
 NoDeleteInvalidBookmarkDialog.Title=
+NoDeleteInvalidPlaylistItemDialog.Title=
 NoDeleteItemsDialog.Message=
 Notice.BookNextFailed=Нет следующей книги
 Notice.BookOperationPageLoop=Зациклено.

@@ -12,8 +12,9 @@ namespace NeeView
         private readonly PlaylistSourceItem _item;
         private string? _place;
         private Page? _archivePage;
-        private bool? _isArchive;
         private ArchiveType? _archiveType;
+        private bool _isUnlinked;
+
 
         public PlaylistItem(string path) : this(path, null)
         {
@@ -32,13 +33,16 @@ namespace NeeView
         public string Path
         {
             get { return _item.Path; }
-            private set
+            set
             {
                 if (_item.Path != value)
                 {
                     _item.Path = ValidPath(value);
+                    _place = null;
                     RaisePropertyChanged();
                     RaisePropertyChanged(nameof(Name));
+                    RaisePropertyChanged(nameof(Place));
+                    RaisePropertyChanged(nameof(DisplayPlace));
                     RaisePropertyChanged(nameof(Detail));
                 }
             }
@@ -57,6 +61,8 @@ namespace NeeView
                 }
             }
         }
+
+        public string? RawName => _item.RawName;
 
         public bool IsNameChanged => _item.IsNameChanged;
 
@@ -84,23 +90,6 @@ namespace NeeView
             get { return SidePanelProfile.GetDecoratePlaceName(Place); }
         }
 
-        public bool IsArchive
-        {
-            get
-            {
-                if (_isArchive is null)
-                {
-                    var targetPath = Path;
-                    if (FileShortcut.IsShortcut(Path))
-                    {
-                        targetPath = new FileShortcut(Path).TargetPath ?? Path;
-                    }
-                    _isArchive = ArchiveManager.Current.IsSupported(targetPath) || System.IO.Directory.Exists(targetPath);
-                }
-                return _isArchive.Value;
-            }
-        }
-
         public ArchiveType ArchiveType
         {
             get
@@ -119,6 +108,14 @@ namespace NeeView
                     }
                 }
                 return _archiveType.Value;
+            }
+        }
+
+        public bool IsArchiveIconVisible
+        {
+            get
+            {
+                return ArchiveType != ArchiveType.None && !IsUnlinked;
             }
         }
 
@@ -145,6 +142,18 @@ namespace NeeView
                 s.AppendLine(DisplayPlace);
                 s.Append(Name);
                 return s.ToString();
+            }
+        }
+
+        public bool IsUnlinked
+        {
+            get { return _isUnlinked; }
+            set
+            {
+                if (SetProperty(ref _isUnlinked, value))
+                {
+                    RaisePropertyChanged(nameof(IsArchiveIconVisible));
+                }
             }
         }
 

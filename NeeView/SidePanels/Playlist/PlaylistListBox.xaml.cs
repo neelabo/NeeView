@@ -836,9 +836,9 @@ namespace NeeView
 
         public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is PlaylistItem item)
+            if (value is ArchiveType archiveType)
             {
-                return item.ArchiveType switch
+                return archiveType switch
                 {
                     ArchiveType.None => null,
                     ArchiveType.FolderArchive => FolderImageSource,

@@ -49,6 +49,15 @@
                 </DrawingImage.Drawing>
             </DrawingImage>
 
+            <DrawingImage x:Key="ic_link_off_24px">
+                <DrawingImage.Drawing>
+                    <DrawingGroup>
+                        <GeometryDrawing Brush="Transparent" Geometry="{StaticResource g_rect24x24}" />
+                        <GeometryDrawing Brush="{DynamicResource Panel.Foreground}" Pen="{x:Null}" Geometry="{StaticResource g_link_off_24px}" />
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
+
             <local:BooleanToTextWrappingConverter x:Key="BooleanToTextWrappingConverter" />
             <local:ArchiveEntryToDecoratePlaceNameConverter x:Key="ArchiveEntryToDecoratePlaceNameConverter" />
             <local:BrushAlphaToVisibilityConverter x:Key="BrushAlphaToVisibilityConverter" />
@@ -113,8 +122,15 @@
             <Style x:Key="FolderIconStyle" TargetType="Image">
                 <Setter Property="Width" Value="18" />
                 <Setter Property="Height" Value="18" />
-                <Setter Property="Source" Value="{Binding Converter={StaticResource PlaylistItemToFolderImageSourceConverter}}" />
-                <Setter Property="Visibility" Value="{Binding IsArchive, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <Setter Property="Source" Value="{Binding ArchiveType, Converter={StaticResource PlaylistItemToFolderImageSourceConverter}}" />
+                <Setter Property="Visibility" Value="{Binding IsArchiveIconVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            </Style>
+
+            <Style x:Key="UnlinkedIconStyle" TargetType="Image">
+                <Setter Property="Width" Value="18" />
+                <Setter Property="Height" Value="18" />
+                <Setter Property="Source" Value="{StaticResource ic_link_off_24px}" />
+                <Setter Property="Visibility" Value="{Binding IsUnlinked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
             </Style>
 
             <Style x:Key="DetailToolTipDockPanel" TargetType="{x:Type DockPanel}">
@@ -140,6 +156,7 @@
 
             <DataTemplate x:Key="NormalTemplate">
                 <DockPanel Style="{StaticResource DetailToolTipDockPanel}" MinHeight="20">
+                    <Image DockPanel.Dock="Right" Style="{StaticResource UnlinkedIconStyle}" />
                     <Image DockPanel.Dock="Right" Style="{StaticResource FolderIconStyle}" Margin="1" />
                     <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource NormalNameStyle}" Margin="5,1" />
                 </DockPanel>
@@ -150,6 +167,7 @@
                     <DockPanel>
                         <local:PanelListContentImage Thumbnail="{Binding ArchivePage.Thumbnail}" />
                         <DockPanel Style="{StaticResource DetailToolTipDockPanel}">
+                            <Image DockPanel.Dock="Right" Style="{StaticResource UnlinkedIconStyle}" />
                             <Image DockPanel.Dock="Right" Style="{StaticResource FolderIconStyle}" />
                             <StackPanel VerticalAlignment="Center">
                                 <TextBlock x:Name="Place" Style="{StaticResource NoteTextStyle}" Text="{Binding DisplayPlace}"
@@ -164,6 +182,7 @@
             <DataTemplate x:Key="BannerTemplate">
                 <DockPanel Margin="0" HorizontalAlignment="Stretch" LastChildFill="False">
                     <DockPanel DockPanel.Dock="Bottom" Style="{StaticResource DetailToolTipDockPanel}" Margin="2">
+                        <Image DockPanel.Dock="Right" Style="{StaticResource UnlinkedIconStyle}" />
                         <Image DockPanel.Dock="Right" Style="{StaticResource FolderIconStyle}" />
                         <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource BannerrNameStyle}" />
                     </DockPanel>
@@ -177,6 +196,7 @@
                         <local:PanelListThumbnailImage Thumbnail="{Binding ArchivePage.Thumbnail}" />
                         <StackPanel Style="{StaticResource OverrideIconStackPanelStyle}">
                             <Image DockPanel.Dock="Right" Style="{StaticResource FolderIconStyle}" VerticalAlignment="Top"/>
+                            <Image DockPanel.Dock="Right" Style="{StaticResource UnlinkedIconStyle}" />
                         </StackPanel>
                     </Grid>
                     <Rectangle DockPanel.Dock="Bottom" Margin="-5,0,-5,1" Height="4" Visibility="Hidden"/>

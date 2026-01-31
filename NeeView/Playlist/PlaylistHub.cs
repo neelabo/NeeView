@@ -29,7 +29,6 @@ namespace NeeView
         private List<object> _playlistCollection = new();
         private Playlist _playlist = Playlist.Dummy;
         private int _playlistLockCount;
-        private CancellationTokenSource? _deleteInvalidItemsCancellationToken;
         private bool _isPlaylistDirty;
 
         private PlaylistHub()
@@ -502,9 +501,7 @@ namespace NeeView
 
         public async ValueTask DeleteInvalidItemsAsync()
         {
-            _deleteInvalidItemsCancellationToken?.Cancel();
-            _deleteInvalidItemsCancellationToken = new CancellationTokenSource();
-            await _playlist.DeleteInvalidItemsAsync(_deleteInvalidItemsCancellationToken.Token);
+            await PlaylistService.DeleteInvalidItemsAsync(_playlist, CancellationToken.None);
         }
 
         public void SortItems()
