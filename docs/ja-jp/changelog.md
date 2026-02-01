@@ -2789,4 +2789,10 @@ NeeView, NeeViewS のインストールを選択できるようにしました�
 
 * 初公開
 
-<script src="/assets/js/issue-linker.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const body = document.body;
+    body.innerHTML = body.innerHTML.replace(/#(\d+)/g, `<a href="${repoUrl}/issues/$1">#$1</a>`);
+});
+</script>

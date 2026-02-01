@@ -1191,4 +1191,10 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 > [!NOTE]
 > There is no English version of Changelog prior to 37.0.
 
-<script src="/assets/js/issue-linker.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const body = document.body;
+    body.innerHTML = body.innerHTML.replace(/#(\d+)/g, `<a href="${repoUrl}/issues/$1">#$1</a>`);
+});
+</script>
