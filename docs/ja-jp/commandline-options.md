@@ -1,6 +1,6 @@
 # NeeView 起動オプション
 
-Version 44.0
+Version 45.0
 
 ### Usage
 

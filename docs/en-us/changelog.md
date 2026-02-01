@@ -1,5 +1,70 @@
 # Changelog
 
+## 45.0 (Beta.1)
+(2026-02-01)
+
+#### Important changes
+
+> [!IMPORTANT]
+> Installer version: The installation type has been changed to Per-User.
+
+The installation type has been changed to per-user, and administrator privileges are no longer required for installation.   
+The previous per-machine installation cannot coexist and must be uninstalled first. If an older version is already installed, a dialog box prompting you to uninstall will be displayed and the installation process will be aborted. User data will remain even after uninstallation, so it will be carried over, but we recommend backing it up by exporting it just in case.  
+Context menu registration to Explorer is done in the settings window, just like the ZIP version.
+
+#### Added
+
+- Language: Added Spanish (#1820)
+- System: Automatically update broken links such as bookmarks to the same NTFS local drive. This also applies to changes made when the app is not running. (#1784)
+- Views: Added WebP animation support (#1798)
+- View: Added hover scroll sensitivity setting (Settings > Mouse Settings > Hover Scroll Sensitivity) (#1804)
+- View: Added a setting to keep the main view window on top (Preferences > Main view > MainView window stays on top when possible) (#1706)
+- View: Add time priority setting to slideshow (Settings > Slideshow > Prioritize time) (#1843)
+- View: Added a setting to set the magnification of the loupe to the original size (Settings > Loupe > Magnification is based on the original size) (#1347)
+- Address bar: Add a settings button to the address bar (#1788)
+- Address bar: Added setting to show bookmark dialog in address bar (Settings > Menu bar) (#1824)
+- Settings: Added file association settings. Icons can also be changed. Only available in the ZIP and installer versions. (Settings > Explorer) (#1697, #1717)
+- Bookshelf: Added "Automatically synchronize the folder tree" to Bookshelf settings (Settings > Bookshelf) (#1295)
+- Bookshelf: Added a preferred image filename setting for book thumbnails. By default, it is set to "folder.jpg" (Settings > Book > Preferred image filename for book thumbnail) (#1853)
+- Bookshelf: Allows individual book thumbnails to be specified (Bookshelf item context menu) (#389)
+- Bookshelf: Bookshelf sorting and thumbnail settings are now saved in Folders.json.
+
+#### Changed
+
+- System: Changed to .NET 10 based. (#1839)
+- System: Prevent duplicate entries in history etc. due to differences in case of UNC paths (#1778)
+- System: Changed the path of the thumbnail cache for symbolic links to the path of the symbolic link itself (#1803)
+- Books: Change page exclusion patterns to regular expressions (#1844)
+- Books: Fix to not reopen a book when opening a page of the same book in a playlist (#1775)
+- Book: Support for deleting and renaming pages in playlist books (#1805)
+- View: Optimized resize filter application timing (#1799)
+- View: Reduced playback delay when moving video position (#1774)
+- View: Apply EXIF ​​Orientation to RAW images (#1813)
+- Filmstrip: Changed the centering of the filmstrip to always center the view (#1845)
+- Panel: Number of items and search box display for each panel can now be configured from the respective detail menus (#1835)
+- Bookmarks: Added confirmation dialog when deleting invalid bookmarks (#1854, #1857)
+- Playlist: Added confirmation dialog when deleting disabled playlist items (#1854, #1857)
+- History: For books with only one page, the history is now registered when you try to move beyond the page (#1776)
+- Settings: Preset options are now card-like (#1789)
+- Settings: Added "Page read order" to welcome dialog
+
+#### Fixed
+
+- System: Fixed a bug where the menu shortcut display did not change when switching commands with the slider direction (#1828)
+- Book: Fixed a bug where deleted pages could reappear (#1807)
+- Book: Fixed a bug that prevented symbolic link images from being displayed in the playlist book.
+- Views: WebP with alpha now displays correctly (#1822)
+- View: Prevent the main view window from momentarily appearing in front when restored (#1815)
+- View: Fixed bug where Unsharp Mask slider operation was not reflected immediately (#1830)
+- View: Fixed a bug in detecting semi-transparent images (#1825)
+- View: Fixed a bug where resize filters were not working for some image formats (#1809)
+- View: Fixed a bug (#1821) where a white line would sometimes appear on the edge when changing from full screen to maximized window.
+- Panel: Fixed HOME/END key behavior when panel thumbnails are displayed (#1817)
+- Bookmarks: Fixed a bug where renaming in the bookmark panel was sometimes not possible. Renaming in the bookmark panel no longer opens a book (#1811)
+- Page List: Fixed a bug where page list thumbnails sometimes did not load (#1816)
+- History: Fixed a bug where history information was not updated when opening a book from history (#1818)
+
+
 ## 44.1
 (2025-08-30)
 
@@ -1125,3 +1190,5 @@ The MainView window now functions as a new viewing mode, not just a windowed dis
 
 > [!NOTE]
 > There is no English version of Changelog prior to 37.0.
+
+<script src="/assets/js/issue-linker.js"></script>

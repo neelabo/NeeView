@@ -6,7 +6,7 @@ title: Script Manual
 
 <h1>Script Manual</h1>
 
-<p>Version 44.0</p>
+<p>Version 45.0</p>
 
 <ul>
     <li><a href="#s1">Overview</a></li>
@@ -616,11 +616,11 @@ nv.Command.ViewRotateLeft.Patch({"Angle": 5}).Execute()</code></pre></p>
 <p>Environment accessor</p>
 <h4>Properties</h4>
 <p><table>
-<tr><td>DateVersion</td><td>string</td><td>r</td><td class="td-middle">Date version<br /></td></tr>
 <tr><td>NeeViewPath</td><td>string</td><td>r</td><td class="td-middle">NeeView executable file path<br /></td></tr>
 <tr><td>OSVersion</td><td>string</td><td>r</td><td class="td-middle">OS Version<br /></td></tr>
 <tr><td>PackageType</td><td>string</td><td>r</td><td class="td-middle">Package type<br /></td></tr>
 <tr><td>ProductVersion</td><td>string</td><td>r</td><td class="td-middle">Product version<br /></td></tr>
+<tr><td>ReleaseType</td><td>string</td><td>r</td><td class="td-middle">Release type<br /></td></tr>
 <tr><td>Revision</td><td>string</td><td>r</td><td class="td-middle">Git revision<br /></td></tr>
 <tr><td>SelfContained</td><td>bool</td><td>r</td><td class="td-middle">Self-contained package; framework-dependent if false<br /></td></tr>
 <tr><td>UserAgent</td><td>string</td><td>r</td><td class="td-middle">User agent<br /></td></tr>
@@ -1329,7 +1329,8 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <tr><td>nv.Config.Fonts.IsClearTypeEnabled</td><td>bool</td><td><b>Enable ClearType</b></td></tr>
 <tr><td>nv.Config.Fonts.MenuFontScale</td><td>double</td><td><b>Menu font scale</b></td></tr>
 <tr><td>nv.Config.Fonts.PanelFontScale</td><td>double</td><td><b>List item font scale</b></td></tr>
-<tr><td>nv.Config.History.HistoryEntryPageCount</td><td>int</td><td><b>Number of page operations to start history registration</b><p class="remarks">The history is recorded when the page is moved more than the set number of times or the last page is displayed.</p></td></tr>
+<tr><td>nv.Config.History.HistoryEntryPageCount</td><td>int</td><td><b>Number of page operations to start history registration</b><p class="remarks">The history is recorded when the page is moved more than the set number of times.</p></td></tr>
+<tr><td>nv.Config.History.HistoryEntryPlayTime</td><td>double</td><td><b>Video playback time for which history is recorded (sec)</b><p class="remarks">Playing the video for the set duration will record the history.</p></td></tr>
 <tr><td>nv.Config.History.HistoryFilePath</td><td>string</td><td><b>History file location</b></td></tr>
 <tr><td>nv.Config.History.IsAutoCleanupEnabled</td><td>bool</td><td><b>Automatically delete invalid history at startup</b></td></tr>
 <tr><td>nv.Config.History.IsCurrentFolder</td><td>bool</td><td><b>Current folder only</b><p class="remarks">Shows the history of only the folders of the currently open book.</p></td></tr>
@@ -1348,6 +1349,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <tr><td>nv.Config.Image.Standard.IsAllFileSupported</td><td>bool</td><td><b>A file whose extension is unknown is regarded as an image file</b><p class="remarks">This function works when "File type to be used as page" is "All files".</p></td></tr>
 <tr><td>nv.Config.Image.Standard.IsAnimatedGifEnabled</td><td>bool</td><td><b>Play animated GIF</b><p class="remarks">Perform animated GIF playback. Memory consumption problems may occur with long GIFs.</p></td></tr>
 <tr><td>nv.Config.Image.Standard.IsAnimatedPngEnabled</td><td>bool</td><td><b>Play animated PNG</b><p class="remarks">Perform animated PNG playback. Memory consumption problems may occur with long PNGs.</p></td></tr>
+<tr><td>nv.Config.Image.Standard.IsAnimatedWebpEnabled</td><td>bool</td><td><b>Play animated WEBP</b><p class="remarks">Perform animated PNG playback. Memory consumption problems may occur with long WEBPs.</p></td></tr>
 <tr><td>nv.Config.Image.Standard.IsAspectRatioEnabled</td><td>bool</td><td><b>Apply image resolution information</b><p class="remarks">Display according to the dpi and aspect ratio set in the image file.</p></td></tr>
 <tr><td>nv.Config.Image.Standard.SupportFileTypes</td><td>".ex1;.ex2;.ex3"</td><td><b>Image file extensions</b></td></tr>
 <tr><td>nv.Config.Image.Standard.UseWicInformation</td><td>bool</td><td><b>Use WIC information</b><p class="remarks">Obtains the image file extension from WIC. If off, only the default extension is available.</p></td></tr>
@@ -1710,12 +1712,6 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <td><b>External app</b><p class="remarks">Select an external application to open the displayed images.</p></td>
 </tr>
 <tr>
-<td class="nowrap">OpenExternalAppAs:2</td>
-</td><td></td>
-<td><dl><dt><b>MultiPagePolicy</b>: enum</dt><dd>"Once": Run only one page / "All": Run all pages / "AllLeftToRight": Run all pages (Left to right)<br/>For 2 pages.<dd/><dt><b>Index</b>: int</dt><dd>Selected index. Directly executes the selection number.<dd/></dl></td>
-<td><b>External app 2</b><p class="remarks">Select an external application to open the displayed images.</p></td>
-</tr>
-<tr>
 <td class="nowrap">OpenExplorer</td>
 </td><td></td>
 <td></td>
@@ -1782,22 +1778,10 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <td><b>Copy to folder</b><p class="remarks">Select the folder where you want to copy the displayed images.</p></td>
 </tr>
 <tr>
-<td class="nowrap">CopyToFolderAs:2</td>
-</td><td></td>
-<td><dl><dt><b>MultiPagePolicy</b>: enum</dt><dd>"Once": Run only one page / "All": Run all pages / "AllLeftToRight": Run all pages (Left to right)<br/>For 2 pages.<dd/><dt><b>Index</b>: int</dt><dd>Selected index. Directly executes the selection number.<dd/></dl></td>
-<td><b>Copy to folder 2</b><p class="remarks">Select the folder where you want to copy the displayed images.</p></td>
-</tr>
-<tr>
 <td class="nowrap">MoveToFolderAs</td>
 </td><td></td>
 <td><dl><dt><b>MultiPagePolicy</b>: enum</dt><dd>"Once": Run only one page / "All": Run all pages / "AllLeftToRight": Run all pages (Left to right)<br/>For 2 pages.<dd/><dt><b>Index</b>: int</dt><dd>Selected index. Directly executes the selection number.<dd/></dl></td>
 <td><b>Move to folder</b><p class="remarks">Select the folder where you want to move the displayed images.</p></td>
-</tr>
-<tr>
-<td class="nowrap">MoveToFolderAs:2</td>
-</td><td></td>
-<td><dl><dt><b>MultiPagePolicy</b>: enum</dt><dd>"Once": Run only one page / "All": Run all pages / "AllLeftToRight": Run all pages (Left to right)<br/>For 2 pages.<dd/><dt><b>Index</b>: int</dt><dd>Selected index. Directly executes the selection number.<dd/></dl></td>
-<td><b>Move to folder 2</b><p class="remarks">Select the folder where you want to move the displayed images.</p></td>
 </tr>
 <tr>
 <td class="nowrap">SelectArchiver</td>
@@ -3087,6 +3071,27 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <h2 id="ObsoleteList">Breaking changes by version</h2>
 <h4>Severity</h4>
 <p><table><tr><td>Error</td><td>This change is fatal and causes errors.</td></tr><tr><td>Warning</td><td>This effect is disabled and does not work.</td></tr><tr><td>Info</td><td>Compatible and works the same. Spelling errors corrected, etc.</td></tr></table></p>
+
+<h3>Version 45.0</h3><table>
+  <tr>
+    <th>Severity</th>
+    <th>Name</th>
+    <th class="nowrap">Category</th>
+    <th class="td-middle">Alternative</th>
+  </tr>
+  <tr>
+    <td>Warning</td>
+    <td>EnvironmentAccessor.DateVersion</td>
+    <td class="nowrap">Obsolete</td>
+    <td>x</td>
+  </tr>
+  <tr>
+    <td>Warning</td>
+    <td>nv.Environment.DateVersion</td>
+    <td class="nowrap">Obsolete</td>
+    <td>x</td>
+  </tr>
+</table>
 
 <h3>Version 44.0</h3><table>
   <tr>

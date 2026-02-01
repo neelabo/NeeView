@@ -4,11 +4,14 @@ param (
     [string]$Culture
 )
 
+$repoUrl = "https://github.com/neelabo/NeeView"
+
 # increment section depth
 function Get-IndentLine($line) {
     if ($line.StartsWith("#")) {
         $line = "#" + $line
     }
+	$line = $line -replace "#(\d+)", "[#`$1]($repoUrl/issues/`$1)"
     return $line
 }
 
