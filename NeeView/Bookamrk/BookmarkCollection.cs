@@ -5,7 +5,6 @@ using NeeView.Collections.Generic;
 using NeeView.Properties;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -32,6 +31,9 @@ namespace NeeView
 
         [Subscribable]
         public event EventHandler<BookmarkCollectionChangedEventArgs>? BookmarkChanged;
+
+        [Subscribable]
+        public event EventHandler? Validated;
 
 
         public TreeListNode<IBookmarkEntry> Items
@@ -651,6 +653,7 @@ namespace NeeView
                     () =>
                     {
                         FileResolver.Current.AddRangeArchivePath(files);
+                        Validated?.Invoke(this, EventArgs.Empty);
                     });
             }
         }

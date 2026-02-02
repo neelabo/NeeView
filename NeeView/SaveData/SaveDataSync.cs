@@ -44,6 +44,7 @@ namespace NeeView
         public void Initialize()
         {
             _disposables.Add(BookmarkCollection.Current.SubscribeBookmarkChanged(BookmarkCollection_BookmarkChanged));
+            _disposables.Add(BookmarkCollection.Current.SubscribeValidated(BookmarkCollection_Validated));
             _disposables.Add(QuickAccessCollection.Current.SubscribeRoutedValuePropertyChanged(QuickAccessCollection_RoutedValuePropertyChanged));
             _disposables.Add(QuickAccessCollection.Current.SubscribeRoutedCollectionChanged(QuickAccessCollection_RoutedCollectionChanged));
             _disposables.Add(BookHistoryCollection.Current.SubscribeHistoryChanged(BookHistoryCollection_HistoryChanged));
@@ -102,6 +103,12 @@ namespace NeeView
         {
             LocalDebug.WriteLine($"Action={e.Action}");
             if (e.Action == EntryCollectionChangedAction.Reset) return;
+            _delaySaveBookmark.Request();
+        }
+
+        private void BookmarkCollection_Validated(object? sender, EventArgs e)
+        {
+            LocalDebug.WriteLine($"Validated");
             _delaySaveBookmark.Request();
         }
 
