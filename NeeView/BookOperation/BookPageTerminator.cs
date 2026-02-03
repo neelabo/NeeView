@@ -173,6 +173,8 @@ namespace NeeView
             dialog.Commands.Add(nextCommand);
             dialog.Commands.Add(loopCommand);
             dialog.Commands.Add(noneCommand);
+            dialog.CloseWhenDeactivated = true;
+
             var result = dialog.ShowDialog(App.Current.MainWindow);
 
             if (result.Command == nextCommand)
