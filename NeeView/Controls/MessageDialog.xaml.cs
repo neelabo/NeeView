@@ -91,6 +91,7 @@ namespace NeeView
         public static Window? OwnerWindow { get; set; }
 
         private UICommand? _resultCommand;
+        private bool _isClosing;
 
 
         public MessageDialog()
@@ -137,6 +138,8 @@ namespace NeeView
 
         public int CancelCommandIndex { get; set; } = -1;
 
+        public bool CloseWhenDeactivated { get; set; }
+
         public static bool IsShowInTaskBar { get; set; } = true;
 
 
@@ -159,6 +162,21 @@ namespace NeeView
             var caption = VisualTreeUtility.CollectElementText(this.Caption);
             var message = VisualTreeUtility.CollectElementText(this.Message);
             Clipboard.SetText(caption + message);
+        }
+
+        protected override void OnDeactivated(EventArgs e)
+        {
+            base.OnDeactivated(e);
+            if (CloseWhenDeactivated && !_isClosing)
+            {
+                this.Close();
+            }
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            _isClosing = true;
+            base.OnClosing(e);
         }
 
         public MessageDialogResult ShowDialog(Window? owner)
