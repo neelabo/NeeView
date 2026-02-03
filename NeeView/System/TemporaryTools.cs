@@ -9,31 +9,68 @@ namespace NeeView
         private static int _count = 0;
         private static readonly System.Threading.Lock _lock = new();
 
+        /// <summary>
+        /// カウントされたテンポラリファイルパスを作成する
+        /// </summary>
+        /// <param name="directoryPath"></param>
+        /// <param name="prefix"></param>
+        /// <param name="ext"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public static string CreateCountedTempFileName(string directoryPath, string prefix, string ext)
         {
+            if (!directoryPath.StartsWith(Temporary.Current.TempDirectory, StringComparison.Ordinal)) throw new InvalidOperationException();
+
             lock (_lock)
             {
-                _count = (_count + 1) % 10000;
-                return CreateTempFileName(directoryPath, string.Format(CultureInfo.InvariantCulture, "{0}{1:0000}{2}", prefix, _count, ext));
+                Directory.CreateDirectory(directoryPath);
+
+                string tempFileName;
+                do
+                {
+                    tempFileName = Path.Combine(directoryPath, string.Create(CultureInfo.InvariantCulture, $"{prefix}{_count:D4}{ext}"));
+                    _count++;
+                }
+                while (File.Exists(tempFileName) || Directory.Exists(tempFileName));
+
+                return tempFileName;
             }
         }
 
+        /// <summary>
+        /// ファイル名を指定してテンポラリファイルパスを作成する
+        /// </summary>
+        /// <remarks>
+        /// 重複する場合はサブディレクトリのパスを作る。
+        /// </remarks>
+        /// <param name="directoryPath"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public static string CreateTempFileName(string directoryPath, string name)
         {
             if (!directoryPath.StartsWith(Temporary.Current.TempDirectory, StringComparison.Ordinal)) throw new InvalidOperationException();
 
-            // 専用フォルダー作成
             Directory.CreateDirectory(directoryPath);
 
-            // 名前の修正
+            // 不正なファイル名を修正。アーカイブエントリなどでは使用できない文字が使われている可能性があるため。
             var validName = LoosePath.ValidFileName(name);
 
-            // ファイル名作成
             string tempFileName = Path.Combine(directoryPath, validName);
-            int count = 1;
+            int count = 0;
+
             while (File.Exists(tempFileName) || Directory.Exists(tempFileName))
             {
-                tempFileName = Path.Combine(directoryPath, Path.GetFileNameWithoutExtension(validName) + $"-{count++}" + Path.GetExtension(validName));
+                var subDirectory = Path.Combine(directoryPath, $"tmp{count:D4}");
+                count++;
+
+                if (File.Exists(subDirectory))
+                {
+                    continue;
+                }
+                Directory.CreateDirectory(subDirectory);
+
+                tempFileName = Path.Combine(subDirectory, validName);
             }
 
             return tempFileName;
