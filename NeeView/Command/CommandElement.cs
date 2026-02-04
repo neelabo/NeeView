@@ -121,7 +121,7 @@ namespace NeeView
         private string GetResourceTextRequired(string? property, string? postfix = null)
         {
             var resourceKey = GetResourceKey(property, postfix);
-            var resourceValue = TextResources.GetString(resourceKey, false);
+            var resourceValue = TextResources.GetString(resourceKey, true);
             return resourceValue;
         }
 

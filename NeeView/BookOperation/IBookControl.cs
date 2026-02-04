@@ -13,6 +13,8 @@ namespace NeeView
         bool IsBookmark { get; }
         string? Path { get; }
 
+        bool CanRenameBook();
+        void RenameBook();
         bool CanDeleteBook();
         void DeleteBook();
         void ReLoad();

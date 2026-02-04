@@ -65,6 +65,43 @@ namespace NeeView
             BookHub.Current.RequestReLoad(this, page?.EntryName);
         }
 
+        /// <summary>
+        /// 現在表示しているブックの名前変更可能？
+        /// </summary>
+        public bool CanRenameBook()
+        {
+            return Config.Current.System.IsFileWriteAccessEnabled && _book != null && (_book.LoadOption & BookLoadOption.Undeletable) == 0 && (File.Exists(_book.SourcePath) || Directory.Exists(_book.SourcePath));
+        }
+
+        /// <summary>
+        /// 名前変更を実行
+        /// </summary>
+        public void RenameBook()
+        {
+            if (!CanRenameBook()) return;
+
+            var bookAddress = _book?.SourcePath;
+            if (bookAddress is null) return;
+
+            var result = RenameFileDialog.ShowDialog(bookAddress, TextResources.GetString("RenameBookCommand"));
+            if (result.IsPossible)
+            {
+                var src = result.OldPath;
+                var dst = result.NewPath;
+
+                dst = FileIO.CheckInvalidFilename(src, dst, true);
+                if (dst is null) return;
+
+                dst = FileIO.CheckChangeExtension(src, dst, true);
+                if (dst is null) return;
+
+                dst = FileIO.CheckDuplicateFilename(src, dst, true);
+                if (dst is null) return;
+
+                _ = FileIO.RenameAsync(src, dst, restoreBook: true);
+            }
+        }
+
         // 現在表示しているブックの削除可能？
         public bool CanDeleteBook()
         {
@@ -74,21 +111,20 @@ namespace NeeView
         // 現在表示しているブックを削除する
         public async void DeleteBook()
         {
-            if (CanDeleteBook())
-            {
-                var bookAddress = _book?.SourcePath;
-                if (bookAddress is null) return;
+            if (!CanDeleteBook()) return;
 
-                var item = BookshelfFolderList.Current.FindFolderItem(bookAddress);
-                if (item != null)
-                {
-                    await BookshelfFolderList.Current.RemoveAsync(item);
-                }
-                else if (FileIO.ExistsPath(bookAddress))
-                {
-                    var entry = StaticFolderArchive.Default.CreateArchiveEntry(bookAddress, ArchiveHint.None);
-                    await ConfirmFileIO.DeleteAsync(entry, TextResources.GetString("FileDeleteBookDialog.Title"), null);
-                }
+            var bookAddress = _book?.SourcePath;
+            if (bookAddress is null) return;
+
+            var item = BookshelfFolderList.Current.FindFolderItem(bookAddress);
+            if (item != null)
+            {
+                await BookshelfFolderList.Current.RemoveAsync(item);
+            }
+            else if (FileIO.ExistsPath(bookAddress))
+            {
+                var entry = StaticFolderArchive.Default.CreateArchiveEntry(bookAddress, ArchiveHint.None);
+                await ConfirmFileIO.DeleteAsync(entry, TextResources.GetString("FileDeleteBookDialog.Title"), null);
             }
         }
 
@@ -164,9 +200,7 @@ namespace NeeView
         }
 
         #endregion
+
+
     }
-
-
-
-
 }

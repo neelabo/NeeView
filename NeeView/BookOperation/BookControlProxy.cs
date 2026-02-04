@@ -74,6 +74,16 @@ namespace NeeView
             RaisePropertyChanged(e.PropertyName);
         }
 
+        public bool CanRenameBook()
+        {
+            return _source?.CanRenameBook() ?? false;
+        }
+
+        public void RenameBook()
+        {
+            _source?.RenameBook();
+        }
+
         public bool CanDeleteBook()
         {
             return _source?.CanDeleteBook() ?? false;

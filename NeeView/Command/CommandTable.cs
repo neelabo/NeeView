@@ -111,7 +111,10 @@ namespace NeeView
                 new ExportImageCommand(),
                 new PrintCommand(),
                 new DeleteFileCommand(),
+
                 new DeleteBookCommand(),
+                new RenameBookCommand(),
+
                 new CutFileCommand(),
                 new CopyFileCommand(),
                 new CopyImageCommand(),

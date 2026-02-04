@@ -47,7 +47,7 @@
                    SizeChanged="MeasureText_SizeChanged"/>
 
         <TextBox x:Name="RenameTextBox" Style="{StaticResource RenameTextBoxStyle}"
-             Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
+             Text="{Binding Context.Text, UpdateSourceTrigger=PropertyChanged}"
              Loaded="RenameTextBox_Loaded"
              Unloaded="RenameTextBox_Unloaded"
              PreviewKeyDown="RenameTextBox_PreviewKeyDown"
