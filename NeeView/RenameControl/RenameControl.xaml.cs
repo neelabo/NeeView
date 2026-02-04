@@ -1,9 +1,7 @@
 ﻿using NeeLaboratory.Generators;
-using NeeView.Properties;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,17 +15,9 @@ namespace NeeView
     [NotifyPropertyChanged]
     public partial class RenameControl : UserControl, INotifyPropertyChanged
     {
-        private static readonly char[] _invalidChars = System.IO.Path.GetInvalidFileNameChars();
         private readonly RenameManager _manager;
+        private readonly RenameContext _context;
         private bool _closed;
-        private bool _isInvalidFileNameChars;
-        private bool _isInvalidSeparatorChars;
-        private bool _isSelectFileNameBody;
-        private bool _isHideExtension;
-        private readonly string _oldValue;
-        private string _extension = "";
-        private string _text;
-        private string _oldText;
 
 
         public RenameControl(RenameControlSource source)
@@ -44,9 +34,8 @@ namespace NeeView
                 this.RenameTextBox.FontFamily = this.Target.FontFamily;
                 this.RenameTextBox.FontSize = this.Target.FontSize;
             }
-            _text = source.Text;
-            _oldText = _text;
-            _oldValue = _text;
+
+            _context = new RenameContext(source.Text);
 
             this.RenameTextBox.DataContext = this;
         }
@@ -63,97 +52,35 @@ namespace NeeView
         // リネームを行うTextBlock
         public TextBlock? Target { get; private set; }
 
-        // ファイル名禁則文字制御
+        public RenameContext Context => _context;
+
         public bool IsInvalidFileNameChars
         {
-            get { return _isInvalidFileNameChars; }
-            set { SetProperty(ref _isInvalidFileNameChars, value); }
+            get => _context.IsInvalidFileNameChars;
+            set => _context.IsInvalidFileNameChars = value;
         }
 
-        // パス区切り文字制御
         public bool IsInvalidSeparatorChars
         {
-            get { return _isInvalidSeparatorChars; }
-            set { SetProperty(ref _isInvalidSeparatorChars, value); }
+            get => _context.IsInvalidSeparatorChars;
+            set => _context.IsInvalidSeparatorChars = value;
         }
 
-        // 拡張子を除いた部分を選択
         public bool IsSelectFileNameBody
         {
-            get { return _isSelectFileNameBody && !_isHideExtension; }
-            set { SetProperty(ref _isSelectFileNameBody, value); }
+            get => _context.IsSelectFileNameBody;
+            set => _context.IsSelectFileNameBody = value;
         }
 
-        // 拡張子を非表示
         public bool IsHideExtension
         {
-            get { return _isHideExtension; }
-            set
-            {
-                if (SetProperty(ref _isHideExtension, value))
-                {
-                    if (_isHideExtension)
-                    {
-                        _extension = System.IO.Path.GetExtension(_oldValue);
-                        Text = System.IO.Path.GetFileNameWithoutExtension(_oldValue);
-                        _oldText = Text;
-                    }
-                    else
-                    {
-                        _extension = "";
-                        Text = _oldValue;
-                        _oldText = Text;
-                    }
-                }
-            }
-        }
-
-        // 編集文字列
-        public string Text
-        {
-            get { return _text; }
-            set { SetProperty(ref _text, GetFixedText(value, true)); }
+            get => _context.IsHideExtension;
+            set => _context.IsHideExtension = value;
         }
 
         // フォーカスを戻すコントロール
         public UIElement StoredFocusTarget { get; set; }
 
-
-        private string GetFixedText(string source, bool withToast)
-        {
-            if (_isInvalidFileNameChars)
-            {
-                return GetFixedInvalidFileNameCharsText(source, withToast);
-            }
-            else if (_isInvalidSeparatorChars)
-            {
-                return GetFixedInvalidSeparatorCharsText(source, withToast);
-            }
-            else
-            {
-                return source;
-            }
-        }
-
-        private static string GetFixedInvalidFileNameCharsText(string source, bool withToast)
-        {
-            var text = new string(source.Where(e => !_invalidChars.Contains(e)).ToArray());
-            if (withToast && text != source)
-            {
-                ToastService.Current.Show(new Toast(TextResources.GetString("Notice.InvalidFileNameChars"), "", ToastIcon.Information));
-            }
-            return text;
-        }
-
-        private static string GetFixedInvalidSeparatorCharsText(string source, bool withToast)
-        {
-            var text = new string(source.Where(e => !LoosePath.Separators.Contains(e)).ToArray());
-            if (withToast && text != source)
-            {
-                ToastService.Current.Show(new Toast(TextResources.GetString("Notice.InvalidSeparatorChars"), "", ToastIcon.Information));
-            }
-            return text;
-        }
 
         public async ValueTask<RenameControlResult> ShowAsync()
         {
@@ -198,14 +125,13 @@ namespace NeeView
             _closed = true;
             this.IsHitTestVisible = false;
 
-            var newText = Text.Trim();
-            var newValue = isSuccess ? newText + _extension : _oldValue;
+            var oldValue = _context.OldText;
+            var newValue = isSuccess ? _context.NewText : _context.OldText;
             var restoreFocus = isRestoreFocus && this.RenameTextBox.IsFocused;
 
-            if (_oldValue != newValue)
+            if (oldValue != newValue)
             {
-                this.Text = isSuccess ? newText : _oldText;
-                await OnRenameAsync(_oldValue, newValue);
+                await OnRenameAsync(oldValue, newValue);
 
                 // NOTE: テキスト切り替えを隠すために閉じるのを遅らせる
                 await Task.Delay(100);
@@ -218,7 +144,7 @@ namespace NeeView
                 FocusTools.FocusIfWindowActive(StoredFocusTarget);
             }
 
-            var args = new RenameClosedEventArgs(_oldValue, newValue, moveRename, restoreFocus);
+            var args = new RenameClosedEventArgs(oldValue, newValue, moveRename, restoreFocus);
             Closed?.Invoke(this, args);
         }
 
@@ -235,7 +161,7 @@ namespace NeeView
         private void RenameTextBox_Loaded(object? sender, RoutedEventArgs e)
         {
             // 拡張子以外を選択状態にする
-            string name = this.IsSelectFileNameBody ? LoosePath.GetFileNameWithoutExtension(Text) : Text;
+            string name = _context.IsSelectFileNameBody ? LoosePath.GetFileNameWithoutExtension(_context.Text) : _context.Text;
             this.RenameTextBox.Select(0, name.Length);
 
             // 表示とともにフォーカスする

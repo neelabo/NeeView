@@ -559,10 +559,51 @@ namespace NeeView
             if (sourcePath is null) throw new ArgumentNullException(nameof(sourcePath));
             if (newName is null) throw new ArgumentNullException(nameof(newName));
 
-            newName = newName.Trim().TrimEnd(' ', '.');
+            var name = CheckInvalidFilename(newName, showConfirmDialog);
+            if (name is null) return null;
+
+            string src = sourcePath;
+            string folder = System.IO.Path.GetDirectoryName(src) ?? throw new InvalidOperationException("Cannot get parent directory");
+            string? dst = System.IO.Path.Combine(folder, name);
+
+            // 全く同じ名前なら処理不要
+            if (src == dst) return null;
+
+            // 拡張子変更確認
+            dst = CheckChangeExtension(src, dst, showConfirmDialog);
+            if (dst is null) return null;
+
+            // 重複ファイル名回避
+            dst = CheckDuplicateFilename(src, dst, showConfirmDialog);
+            if (dst is null) return null;
+
+            return dst;
+        }
+
+        /// <summary>
+        /// 無効なファイル名チェック
+        /// </summary>
+        public static string? CheckInvalidFilename(string src, string dst, bool showConfirmDialog)
+        {
+            var directory = LoosePath.GetDirectoryName(dst);
+            var filename = LoosePath.GetFileName(dst);
+
+            filename = CheckInvalidFilename(filename, showConfirmDialog);
+            if (filename is null) return null;
+
+            return LoosePath.Combine(directory, filename);
+        }
+
+        /// <summary>
+        /// 無効なファイル名チェック
+        /// </summary>
+        public static string? CheckInvalidFilename(string filename, bool showConfirmDialog)
+        {
+            // 末尾のピリオド等は無効
+            filename = filename.Trim().TrimEnd(' ', '.');
 
             // ファイル名に使用できない
-            if (string.IsNullOrWhiteSpace(newName))
+            if (string.IsNullOrWhiteSpace(filename))
             {
                 if (showConfirmDialog)
                 {
@@ -574,12 +615,12 @@ namespace NeeView
 
             //ファイル名に使用できない文字
             char[] invalidChars = System.IO.Path.GetInvalidFileNameChars();
-            int invalidCharsIndex = newName.IndexOfAny(invalidChars);
+            int invalidCharsIndex = filename.IndexOfAny(invalidChars);
             if (invalidCharsIndex >= 0)
             {
                 if (showConfirmDialog)
                 {
-                    var invalids = string.Join(" ", newName.Where(e => invalidChars.Contains(e)).Distinct());
+                    var invalids = string.Join(" ", filename.Where(e => invalidChars.Contains(e)).Distinct());
                     var dialog = new MessageDialog($"{TextResources.GetString("FileRenameInvalidDialog.Message")}\n\n{invalids}", TextResources.GetString("FileRenameErrorDialog.Title"));
                     dialog.ShowDialog();
                 }
@@ -587,7 +628,7 @@ namespace NeeView
             }
 
             // ファイル名に使用できない
-            var match = _unavailableFileNameRegex.Match(newName);
+            var match = _unavailableFileNameRegex.Match(filename);
             if (match.Success)
             {
                 if (showConfirmDialog)
@@ -598,66 +639,70 @@ namespace NeeView
                 return null;
             }
 
-            string src = sourcePath;
-            string folder = System.IO.Path.GetDirectoryName(src) ?? throw new InvalidOperationException("Cannot get parent directory");
-            string dst = System.IO.Path.Combine(folder, newName);
+            return filename;
+        }
 
-            // 全く同じ名前なら処理不要
-            if (src == dst) return null;
+        /// <summary>
+        /// 拡張子変更確認
+        /// </summary>
+        public static string? CheckChangeExtension(string src, string dst, bool showConfirmDialog)
+        {
+            // ディレクトリはチェク不要
+            if (Directory.Exists(src)) return dst;
 
-            // 拡張子変更確認
-            if (!Directory.Exists(sourcePath))
+            var srcExt = System.IO.Path.GetExtension(src);
+            var dstExt = System.IO.Path.GetExtension(dst);
+            if (string.Compare(srcExt, dstExt, StringComparison.OrdinalIgnoreCase) != 0)
             {
-                var srcExt = System.IO.Path.GetExtension(src);
-                var dstExt = System.IO.Path.GetExtension(dst);
-                if (string.Compare(srcExt, dstExt, StringComparison.OrdinalIgnoreCase) != 0)
-                {
-                    if (showConfirmDialog)
-                    {
-                        var dialog = new MessageDialog(TextResources.GetString("FileRenameExtensionDialog.Message"), TextResources.GetString("FileRenameExtensionDialog.Title"));
-                        dialog.Commands.Add(UICommands.Yes);
-                        dialog.Commands.Add(UICommands.No);
-                        var answer = dialog.ShowDialog();
-                        if (answer.Command != UICommands.Yes)
-                        {
-                            return null;
-                        }
-                    }
-                }
-            }
-
-            // 大文字小文字の変換は正常
-            if (string.Compare(src, dst, StringComparison.OrdinalIgnoreCase) == 0)
-            {
-                // nop.
-            }
-
-            // 重複ファイル名回避
-            else if (System.IO.File.Exists(dst) || System.IO.Directory.Exists(dst))
-            {
-                string dstBase = dst;
-                string dir = System.IO.Path.GetDirectoryName(dst) ?? throw new InvalidOperationException("Cannot get parent directory");
-                string name = System.IO.Path.GetFileNameWithoutExtension(dst);
-                string ext = System.IO.Path.GetExtension(dst);
-                int count = 1;
-
-                do
-                {
-                    dst = $"{dir}\\{name} ({++count}){ext}";
-                }
-                while (System.IO.File.Exists(dst) || System.IO.Directory.Exists(dst));
-
-                // 確認
                 if (showConfirmDialog)
                 {
-                    var dialog = new MessageDialog(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("FileRenameConflictDialog.Message"), Path.GetFileName(dstBase), Path.GetFileName(dst)), TextResources.GetString("FileRenameConflictDialog.Title"));
-                    dialog.Commands.Add(new UICommand("Word.Rename"));
-                    dialog.Commands.Add(UICommands.Cancel);
+                    var dialog = new MessageDialog(TextResources.GetString("FileRenameExtensionDialog.Message"), TextResources.GetString("FileRenameExtensionDialog.Title"));
+                    dialog.Commands.Add(UICommands.Yes);
+                    dialog.Commands.Add(UICommands.No);
                     var answer = dialog.ShowDialog();
-                    if (answer.Command != dialog.Commands[0])
+                    if (answer.Command != UICommands.Yes)
                     {
                         return null;
                     }
+                }
+            }
+
+            return dst;
+        }
+
+        /// <summary>
+        /// 重複ファイル名回避
+        /// </summary>
+        public static string? CheckDuplicateFilename(string src, string dst, bool showConfirmDialog)
+        {
+            // 対象が存在していなければ許可
+            if (!File.Exists(dst) && !Directory.Exists(dst)) return dst;
+
+            // 大文字小文字の違いを許可
+            if (string.Compare(src, dst, StringComparison.OrdinalIgnoreCase) == 0) return dst;
+
+            string dstBase = dst;
+            string dir = System.IO.Path.GetDirectoryName(dst) ?? throw new InvalidOperationException("Cannot get parent directory");
+            string name = System.IO.Path.GetFileNameWithoutExtension(dst);
+            string ext = System.IO.Path.GetExtension(dst);
+            int count = 1;
+
+            do
+            {
+                dst = $"{dir}\\{name} ({++count}){ext}";
+            }
+            while (System.IO.File.Exists(dst) || System.IO.Directory.Exists(dst));
+
+            // 確認
+            if (showConfirmDialog)
+            {
+                var dialog = new MessageDialog(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("FileRenameConflictDialog.Message"), Path.GetFileName(dstBase), Path.GetFileName(dst)), TextResources.GetString("FileRenameConflictDialog.Title"));
+                dialog.Commands.Add(new UICommand("Word.Rename"));
+                dialog.Commands.Add(UICommands.Cancel);
+                var answer = dialog.ShowDialog();
+                if (answer.Command != dialog.Commands[0])
+                {
+                    return null;
                 }
             }
 
@@ -747,7 +792,7 @@ namespace NeeView
             }
         }
 
-        #endregion Rename
+#endregion Rename
     }
 
 
