@@ -282,6 +282,7 @@ namespace NeeView
                 {
                     var paths = await PageUtility.CreateRealizedFilePathListAsync(items, Config.Current.System.ArchiveCopyPolicy.LimitedRealization(), CancellationToken.None);
                     await folder.CopyAsync(paths, CancellationToken.None);
+                    GC.KeepAlive(items);
                 }
             }
             catch (OperationCanceledException)
@@ -323,8 +324,8 @@ namespace NeeView
                 {
                     var movePages = items.Where(e => e.ArchiveEntry.IsFileSystem).ToList();
                     var paths = movePages.Select(e => e.GetFilePlace()).WhereNotNull().ToList();
-
                     await folder.MoveAsync(paths, CancellationToken.None);
+                    GC.KeepAlive(items);
                 }
             }
             catch (OperationCanceledException)

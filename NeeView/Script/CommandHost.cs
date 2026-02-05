@@ -229,6 +229,7 @@ namespace NeeView
                     if (path is not null)
                     {
                         await FileIO.SHCopyAsync(path, destination, _cancellationToken);
+                        GC.KeepAlive(entry);
                     }
                 }
                 catch (OperationCanceledException)

@@ -367,6 +367,7 @@ namespace NeeView
                 {
                     ////Debug.WriteLine($"CopyToFolder: to {folder.Path}");
                     await FileIO.SHCopyToFolderAsync(items.Select(x => x.TargetPath.SimplePath), folder.Path, CancellationToken.None);
+                    GC.KeepAlive(items);
                 }
             }
             catch (OperationCanceledException)
@@ -408,6 +409,7 @@ namespace NeeView
                 {
                     ////Debug.WriteLine($"MoveToFolder: to {folder.Path}");
                     await FileIO.SHMoveToFolderAsync(items.Select(x => x.TargetPath.SimplePath), folder.Path, CancellationToken.None);
+                    GC.KeepAlive(items);
                 }
             }
             catch (OperationCanceledException)

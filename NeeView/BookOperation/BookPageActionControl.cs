@@ -230,6 +230,7 @@ namespace NeeView
                 var pages = CollectPages(_book, multiPagePolicy);
                 var paths = await PageUtility.CreateRealizedFilePathListAsync(pages, Config.Current.System.ArchiveCopyPolicy.LimitedRealization(), token);
                 await parameter.CopyAsync(paths, token);
+                GC.KeepAlive(pages);
             }
             catch (OperationCanceledException)
             {
@@ -262,6 +263,7 @@ namespace NeeView
                 var pages = CollectPages(_book, multiPagePolicy).Where(e => e.ArchiveEntry.IsFileSystem);
                 var paths = pages.Select(e => e.GetFilePlace()).WhereNotNull().ToList();
                 await parameter.MoveAsync(paths, token);
+                GC.KeepAlive(pages);
             }
             catch (OperationCanceledException)
             {

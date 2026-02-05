@@ -73,21 +73,21 @@ namespace NeeView.IO
         }
 
 
-        public static void Copy(Window owner, IEnumerable<string> paths, string dest)
+        public static void Copy(Window owner, IEnumerable<string> paths, string dst)
         {
-            Copy(GetHWnd(owner), paths, dest);
+            Copy(GetHWnd(owner), paths, dst);
         }
 
-        public static void Copy(IntPtr hwnd, IEnumerable<string> paths, string dest)
+        public static void Copy(IntPtr hwnd, IEnumerable<string> paths, string dst)
         {
             if (paths == null || !paths.Any()) throw new ArgumentException("Empty paths");
-            if (dest == null) throw new ArgumentNullException(nameof(dest));
+            if (dst == null) throw new ArgumentNullException(nameof(dst));
 
             SHFILEOPSTRUCT shfos;
             shfos.hwnd = hwnd;
             shfos.wFunc = FileFuncFlags.FO_COPY;
             shfos.pFrom = string.Join("\0", paths) + "\0\0";
-            shfos.pTo = dest + "\0\0";
+            shfos.pTo = dst + "\0\0";
             shfos.fFlags = FileOperationFlags.FOF_ALLOWUNDO;
             shfos.fAnyOperationsAborted = true;
             shfos.hNameMappings = IntPtr.Zero;
@@ -96,21 +96,21 @@ namespace NeeView.IO
             SHFileOperation(ref shfos);
         }
 
-        public static void Move(Window owner, IEnumerable<string> paths, string dest)
+        public static void Move(Window owner, IEnumerable<string> paths, string dst)
         {
-            Move(GetHWnd(owner), paths, dest);
+            Move(GetHWnd(owner), paths, dst);
         }
 
-        public static void Move(IntPtr hwnd, IEnumerable<string> paths, string dest)
+        public static void Move(IntPtr hwnd, IEnumerable<string> paths, string dst)
         {
             if (paths == null || !paths.Any()) throw new ArgumentException("Empty paths");
-            if (dest == null) throw new ArgumentNullException(nameof(dest));
+            if (dst == null) throw new ArgumentNullException(nameof(dst));
 
             SHFILEOPSTRUCT shfos;
             shfos.hwnd = hwnd;
             shfos.wFunc = FileFuncFlags.FO_MOVE;
             shfos.pFrom = string.Join("\0", paths) + "\0\0";
-            shfos.pTo = dest + "\0\0";
+            shfos.pTo = dst + "\0\0";
             shfos.fFlags = FileOperationFlags.FOF_ALLOWUNDO;
             shfos.fAnyOperationsAborted = true;
             shfos.hNameMappings = IntPtr.Zero;
