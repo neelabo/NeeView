@@ -99,9 +99,10 @@ namespace NeeView
         {
             try
             {
-                var entries = pages.Select(e => e.Source.ArchiveEntry);
+                var entries = pages.Select(e => e.Source.ArchiveEntry).ToList();
                 var items = await RealizeArchiveEntry(entries, token);
                 await _folder.CopyAsyncNoExceptions(items, token);
+                GC.KeepAlive(entries);
             }
             catch (OperationCanceledException)
             {
@@ -120,6 +121,7 @@ namespace NeeView
                 var entries = await PathToArchiveEntry(paths, token);
                 var items = await RealizeArchiveEntry(entries, token);
                 await _folder.CopyAsyncNoExceptions(items, token);
+                GC.KeepAlive(entries);
             }
             catch (OperationCanceledException)
             {
