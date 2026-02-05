@@ -466,15 +466,15 @@ namespace NeeView
 
         public static async ValueTask SHCopyAsync(IntPtr hwnd, string source, string destination, CancellationToken token)
         {
-            var dest = LoosePath.TrimEnd(destination);
+            var dst = LoosePath.TrimEnd(destination);
 
             // destination の終端がセパレート記号があるときはディレクトリ確定
             if (LoosePath.IsDirectoryEnd(destination))
             {
-                EnsureDirectory(dest);
+                EnsureDirectory(dst);
             }
 
-            await Task.Run(() => ShellFileOperation.Copy(hwnd, [source], dest), token);
+            await Task.Run(() => ShellFileOperation.Copy(hwnd, [source], dst), token);
         }
 
         #endregion Copy

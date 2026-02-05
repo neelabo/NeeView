@@ -29,18 +29,18 @@ namespace NeeView.Drawing
             var scale = scaleX > scaleY ? scaleY : scaleX;
             if (scale > 1.0) scale = 1.0;
 
-            int destWidth = (int)(srcWidth * scale + 0.5) / 2 * 2;
-            int destHeight = (int)(srcHeight * scale + 0.5) / 2 * 2;
-            if (destWidth < 2) destWidth = 2;
-            if (destHeight < 2) destHeight = 2;
+            int dstWidth = (int)(srcWidth * scale + 0.5) / 2 * 2;
+            int dstHeight = (int)(srcHeight * scale + 0.5) / 2 * 2;
+            if (dstWidth < 2) dstWidth = 2;
+            if (dstHeight < 2) dstHeight = 2;
 
-            var dest = new Bitmap(destWidth, destHeight);
+            var dst = new Bitmap(dstWidth, dstHeight);
 
-            Graphics g = Graphics.FromImage(dest);
+            Graphics g = Graphics.FromImage(dst);
             g.InterpolationMode = InterpolationMode.High;
-            g.DrawImage(src, 0, 0, destWidth, destHeight);
+            g.DrawImage(src, 0, 0, dstWidth, dstHeight);
 
-            return dest.ToBitmapSource();
+            return dst.ToBitmapSource();
         }
 
         /// <summary>
