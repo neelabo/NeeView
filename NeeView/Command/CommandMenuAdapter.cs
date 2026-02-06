@@ -17,15 +17,9 @@ namespace NeeView
             _contextMenu.IsOpen = true;
         }
 
-        public void OpenCopyToFolderMenu(ICommandParameterFactory<DestinationFolder> parameterFactory)
+        public void OpenDestinationFolderMenu(DestinationFolderMenuFactory menuFactory)
         {
-            MainViewCopyToFolderTools.UpdateCopyToFolderMenu(_contextMenu.Items, parameterFactory);
-            _contextMenu.IsOpen = true;
-        }
-
-        public void OpenMoveToFolderMenu(ICommandParameterFactory<DestinationFolder> parameterFactory)
-        {
-            MainViewMoveToFolderTools.UpdateMoveToFolderMenu(_contextMenu.Items, parameterFactory);
+            menuFactory.UpdateFolderMenu(_contextMenu.Items);
             _contextMenu.IsOpen = true;
         }
 

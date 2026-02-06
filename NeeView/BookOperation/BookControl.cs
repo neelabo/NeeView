@@ -4,6 +4,8 @@ using NeeView.PageFrames;
 using NeeView.Properties;
 using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NeeView
 {
@@ -65,6 +67,74 @@ namespace NeeView
             BookHub.Current.RequestReLoad(this, page?.EntryName);
         }
 
+
+        public bool CanCopyBookToFolder(DestinationFolder parameter)
+        {
+            return true;
+        }
+
+        public void CopyBookToFolder(DestinationFolder parameter)
+        {
+            _ = CopyBookToFolderAsync(parameter, CancellationToken.None);
+        }
+
+        public async ValueTask CopyBookToFolderAsync(DestinationFolder parameter, CancellationToken token)
+        {
+            if (!CanCopyBookToFolder(parameter)) return;
+
+            var bookAddress = _book.SourcePath;
+            if (bookAddress is null) return;
+
+            try
+            {
+                // NOTE: ブックアドレスからエントリを再生成し、アーカイブパスにも対応させる。アーカイブキャッシュがあるのでコストは低い
+                var entry = await ArchiveEntryUtility.CreateAsync(bookAddress, ArchiveHint.None, true, token);
+                var path = await entry.RealizeAsync(token);
+                if (path is null) throw new IOException($"Cannot be materialized: {bookAddress}");
+                await parameter.CopyAsync([path], token);
+                GC.KeepAlive(entry);
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (Exception ex)
+            {
+                new MessageDialog(ex.Message, TextResources.GetString("Message.CopyFailed")).ShowDialog();
+            }
+        }
+
+        public bool CanMoveBookToFolder(DestinationFolder parameter)
+        {
+            return Config.Current.System.IsFileWriteAccessEnabled && _book != null && (_book.LoadOption & BookLoadOption.Undeletable) == 0 && (File.Exists(_book.SourcePath) || Directory.Exists(_book.SourcePath));
+        }
+
+        public void MoveBookToFolder(DestinationFolder parameter)
+        {
+            _ = MoveBookToFolderAsync(parameter, CancellationToken.None);
+        }
+
+        public async ValueTask MoveBookToFolderAsync(DestinationFolder parameter, CancellationToken token)
+        {
+            if (!CanMoveBookToFolder(parameter)) return;
+
+            var bookAddress = _book.SourcePath;
+            if (bookAddress is null) return;
+
+            try
+            {
+                var loader = new NextFolderListBookLoader(BookshelfFolderList.Current).Ready(bookAddress);
+                await parameter.MoveAsync([bookAddress], token);
+                loader.OpenNextBook();
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (Exception ex)
+            {
+                new MessageDialog(ex.Message, TextResources.GetString("Message.MoveFailed")).ShowDialog();
+            }
+        }
+
         /// <summary>
         /// 現在表示しているブックの名前変更可能？
         /// </summary>
@@ -116,15 +186,19 @@ namespace NeeView
             var bookAddress = _book?.SourcePath;
             if (bookAddress is null) return;
 
-            var item = BookshelfFolderList.Current.FindFolderItem(bookAddress);
-            if (item != null)
+            try
             {
-                await BookshelfFolderList.Current.RemoveAsync(item);
-            }
-            else if (FileIO.ExistsPath(bookAddress))
-            {
+                var loader = new NextFolderListBookLoader(BookshelfFolderList.Current).Ready(bookAddress);
                 var entry = StaticFolderArchive.Default.CreateArchiveEntry(bookAddress, ArchiveHint.None);
                 await ConfirmFileIO.DeleteAsync(entry, TextResources.GetString("FileDeleteBookDialog.Title"), null);
+                loader.OpenNextBook();
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (Exception ex)
+            {
+                new MessageDialog(ex.Message, TextResources.GetString("Message.DeleteFailed")).ShowDialog();
             }
         }
 

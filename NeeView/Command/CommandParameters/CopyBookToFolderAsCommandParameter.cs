@@ -3,21 +3,9 @@ using System;
 
 namespace NeeView
 {
-    public class CopyToFolderAsCommandParameter : CommandParameter
+    public class CopyBookToFolderAsCommandParameter : CommandParameter
     {
-        private MultiPagePolicy _multiPagePolicy = MultiPagePolicy.Once;
         private int _index;
-
-
-        /// <summary>
-        /// 複数ページのときの動作
-        /// </summary>
-        [PropertyMember]
-        public MultiPagePolicy MultiPagePolicy
-        {
-            get { return _multiPagePolicy; }
-            set { _multiPagePolicy = value; }
-        }
 
         /// <summary>
         /// 選択されたフォルダーの番号。0 は未選択
