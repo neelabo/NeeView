@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -226,11 +227,9 @@ namespace NeeView
                 {
                     var entry = await ArchiveEntryUtility.CreateAsync(source, ArchiveHint.None, true, _cancellationToken);
                     var path = await entry.RealizeAsync(_cancellationToken);
-                    if (path is not null)
-                    {
-                        await FileIO.SHCopyAsync(path, destination, _cancellationToken);
-                        GC.KeepAlive(entry);
-                    }
+                    if (path is null) throw new IOException($"Cannot be materialized: {source}");
+                    await FileIO.SHCopyAsync(path, destination, _cancellationToken);
+                    GC.KeepAlive(entry);
                 }
                 catch (OperationCanceledException)
                 {

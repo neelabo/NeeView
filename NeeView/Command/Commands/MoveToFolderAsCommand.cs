@@ -6,17 +6,18 @@ namespace NeeView
 {
     public class MoveToFolderAsCommand : CommandElement
     {
-        private readonly DestinationFolderParameterCommandParameterFactory _parameterFactory;
-        private MoveableViewPageBindingSource? _bindingSource;
+        private readonly Lazy<MovePageToFolderMenuFactory> _menuFactory;
 
         public MoveToFolderAsCommand()
         {
             this.Group = TextResources.GetString("CommandGroup.File");
-            this.IsShowMessage = false;
+            this.IsShowMessage = true;
 
             this.ParameterSource = new CommandParameterSource(new MoveToFolderAsCommandParameter());
 
-            _parameterFactory = new DestinationFolderParameterCommandParameterFactory(new MoveToDestinationFolderOption(this));
+            _menuFactory = new Lazy<MovePageToFolderMenuFactory>(() => new MovePageToFolderMenuFactory(
+                parameterFactory: new DestinationFolderParameterCommandParameterFactory(new MoveToDestinationFolderOption(this)),
+                option: new MoveToDestinationFolderOption(this)));
         }
 
         public override bool CanExecute(object? sender, CommandContext e)
@@ -49,7 +50,7 @@ namespace NeeView
             }
             else
             {
-                MainViewComponent.Current.MainView.CommandMenu.OpenMoveToFolderMenu(_parameterFactory);
+                MainViewComponent.Current.MainView.CommandMenu.OpenDestinationFolderMenu(_menuFactory.Value);
             }
         }
 
@@ -59,8 +60,7 @@ namespace NeeView
             var index = parameter.Index - 1;
             if (isDefault || index < 0)
             {
-                _bindingSource ??= new MoveableViewPageBindingSource(PageFrameBoxPresenter.Current, new MoveToDestinationFolderOption(this));
-                return MainViewMoveToFolderTools.CreateMoveToFolderItem(_parameterFactory, _bindingSource);
+                return _menuFactory.Value.CreateFolderMenu();
             }
             else
             {
@@ -73,7 +73,6 @@ namespace NeeView
             return (Parameter as MoveToFolderAsCommandParameter) ?? throw new InvalidOperationException();
         }
     }
-
 
 
     public class MoveToDestinationFolderOption : IDestinationFolderOption

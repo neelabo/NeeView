@@ -4,29 +4,29 @@ using System.Windows.Controls;
 
 namespace NeeView
 {
-    public class CopyToFolderAsCommand : CommandElement
+    public class CopyBookToFolderAsCommand : CommandElement
     {
-        private readonly Lazy<CopyPageToFolderMenuFactory> _menuFactory;
+        private readonly Lazy<CopyBookToFolderMenuFactory> _menuFactory;
 
-        public CopyToFolderAsCommand()
+        public CopyBookToFolderAsCommand()
         {
             this.Group = TextResources.GetString("CommandGroup.File");
             this.IsShowMessage = true;
 
-            this.ParameterSource = new CommandParameterSource(new CopyToFolderAsCommandParameter());
+            this.ParameterSource = new CommandParameterSource(new CopyBookToFolderAsCommandParameter());
 
-            _menuFactory = new Lazy<CopyPageToFolderMenuFactory>(() => new CopyPageToFolderMenuFactory(new DestinationFolderParameterCommandParameterFactory(new CopyToDestinationFolderOption(this))));
+            _menuFactory = new Lazy<CopyBookToFolderMenuFactory>(() => new CopyBookToFolderMenuFactory(new DestinationFolderParameterCommandParameterFactory(new StaticDestinationFolderOption(MultiPagePolicy.Once))));
         }
 
         public override bool CanExecute(object? sender, CommandContext e)
         {
-            var parameter = e.Parameter.Cast<CopyToFolderAsCommandParameter>();
+            var parameter = e.Parameter.Cast<CopyBookToFolderAsCommandParameter>();
             var index = parameter.Index - 1;
             if (index >= 0)
             {
                 var folders = Config.Current.System.DestinationFolderCollection;
                 if (!folders.IsValidIndex(index)) return false;
-                return BookOperation.Current.Control.CanCopyToFolder(folders[index], parameter.MultiPagePolicy);
+                return BookOperation.Current.BookControl.CanCopyBookToFolder(folders[index]);
             }
             else
             {
@@ -36,13 +36,13 @@ namespace NeeView
 
         public override void Execute(object? sender, CommandContext e)
         {
-            var parameter = e.Parameter.Cast<CopyToFolderAsCommandParameter>();
+            var parameter = e.Parameter.Cast<CopyBookToFolderAsCommandParameter>();
             var index = parameter.Index - 1;
             if (index >= 0)
             {
                 var folders = Config.Current.System.DestinationFolderCollection;
                 if (!folders.IsValidIndex(index)) return;
-                BookOperation.Current.Control.CopyToFolder(folders[index], parameter.MultiPagePolicy);
+                BookOperation.Current.BookControl.CopyBookToFolder(folders[index]);
             }
             else
             {
@@ -64,23 +64,9 @@ namespace NeeView
             }
         }
 
-        private CopyToFolderAsCommandParameter GetCommandParameter()
+        private CopyBookToFolderAsCommandParameter GetCommandParameter()
         {
-            return (Parameter as CopyToFolderAsCommandParameter) ?? throw new InvalidOperationException();
+            return (Parameter as CopyBookToFolderAsCommandParameter) ?? throw new InvalidOperationException();
         }
-    }
-
-
-
-    public class CopyToDestinationFolderOption : IDestinationFolderOption
-    {
-        private readonly CopyToFolderAsCommand _command;
-
-        public CopyToDestinationFolderOption(CopyToFolderAsCommand command)
-        {
-            _command = command;
-        }
-
-        public MultiPagePolicy MultiPagePolicy => _command.Parameter.Cast<CopyToFolderAsCommandParameter>().MultiPagePolicy;
     }
 }

@@ -114,6 +114,8 @@ namespace NeeView
 
                 new DeleteBookCommand(),
                 new RenameBookCommand(),
+                new CopyBookToFolderAsCommand(),
+                new MoveBookToFolderAsCommand(),
 
                 new CutFileCommand(),
                 new CopyFileCommand(),
