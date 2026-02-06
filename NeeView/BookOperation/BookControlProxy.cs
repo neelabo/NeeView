@@ -74,6 +74,26 @@ namespace NeeView
             RaisePropertyChanged(e.PropertyName);
         }
 
+        public bool CanCopyBookToFolder(DestinationFolder parameter)
+        {
+            return _source?.CanCopyBookToFolder(parameter) ?? false;
+        }
+
+        public void CopyBookToFolder(DestinationFolder parameter)
+        {
+            _source?.CopyBookToFolder(parameter);
+        }
+
+        public bool CanMoveBookToFolder(DestinationFolder parameter)
+        {
+            return _source?.CanMoveBookToFolder(parameter) ?? false;
+        }
+
+        public void MoveBookToFolder(DestinationFolder parameter)
+        {
+            _source?.MoveBookToFolder(parameter);
+        }
+
         public bool CanRenameBook()
         {
             return _source?.CanRenameBook() ?? false;
