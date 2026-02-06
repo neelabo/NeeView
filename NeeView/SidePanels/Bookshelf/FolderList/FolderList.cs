@@ -1784,6 +1784,41 @@ namespace NeeView
             }
         }
 
+        /// <summary>
+        /// 次の項目を取得
+        /// </summary>
+        /// <param name="path">項目のパス</param>
+        /// <param name="selectedItemFallback">項目が見つからないときは SelectedItem を選択する</param>
+        /// <returns>次の項目。取得できなかった場合は null</returns>
+        public FolderItem? GetNextItem(string path, bool selectedItemFallback)
+        {
+            if (_disposedValue) return null;
+            if (_folderCollection is null) return null;
+
+            var select = _folderCollection.Items.FirstOrDefault(e => e.TargetPath.SimplePath == path);
+            if (select is null) return selectedItemFallback ? SelectedItem : null;
+
+            var next = GetNeighbor(select);
+            if (next is null || next == select) return null;
+
+            return next;
+        }
+
+        /// <summary>
+        /// 項目を選択してブックを開く
+        /// </summary>
+        /// <param name="item"></param>
+        public void LoadItem(FolderItem? item)
+        {
+            if (_disposedValue) return;
+            if (item is null) return;
+            if (_folderCollection is null) return;
+            if (!_folderCollection.Items.Contains(item)) return;
+
+            SelectedItem = item;
+            LoadBook(item);
+        }
+
         #region IDisposable Support
         private bool _disposedValue = false;
 
@@ -1823,6 +1858,44 @@ namespace NeeView
         }
         #endregion
 
+    }
+
+
+    /// <summary>
+    /// FolderList の次のブックを開く
+    /// </summary>
+    public class NextFolderListBookLoader
+    {
+        private readonly FolderList _folderList;
+        private FolderItem? _next;
+
+        public NextFolderListBookLoader(FolderList bookshelf)
+        {
+            _folderList = bookshelf;
+        }
+
+        public bool IsEnabled => Config.Current.Bookshelf.IsOpenNextBookWhenRemove;
+
+        /// <summary>
+        /// 次の項目を確定する
+        /// </summary>
+        /// <param name="path">基準となる項目のパス</param>
+        /// <returns></returns>
+        public NextFolderListBookLoader Ready(string path)
+        {
+            if (!IsEnabled) return this;
+            _next = _folderList.GetNextItem(path, true);
+            return this;
+        }
+
+        /// <summary>
+        /// 次の項目を開く
+        /// </summary>
+        public void OpenNextBook()
+        {
+            if (!IsEnabled) return;
+            _folderList.LoadItem(_next);
+        }
     }
 
 }

@@ -99,7 +99,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                new MessageDialog(ex.Message, TextResources.GetString("Bookshelf.CopyToFolderFailed")).ShowDialog();
+                new MessageDialog(ex.Message, TextResources.GetString("Message.CopyFailed")).ShowDialog();
             }
         }
 
@@ -122,14 +122,16 @@ namespace NeeView
 
             try
             {
+                var loader = new NextFolderListBookLoader(BookshelfFolderList.Current).Ready(bookAddress);
                 await parameter.MoveAsync([bookAddress], token);
+                loader.OpenNextBook();
             }
             catch (OperationCanceledException)
             {
             }
             catch (Exception ex)
             {
-                new MessageDialog(ex.Message, TextResources.GetString("PageList.Message.MoveToFolderFailed")).ShowDialog();
+                new MessageDialog(ex.Message, TextResources.GetString("Message.MoveFailed")).ShowDialog();
             }
         }
 
@@ -184,15 +186,19 @@ namespace NeeView
             var bookAddress = _book?.SourcePath;
             if (bookAddress is null) return;
 
-            var item = BookshelfFolderList.Current.FindFolderItem(bookAddress);
-            if (item != null)
+            try
             {
-                await BookshelfFolderList.Current.RemoveAsync(item);
-            }
-            else if (FileIO.ExistsPath(bookAddress))
-            {
+                var loader = new NextFolderListBookLoader(BookshelfFolderList.Current).Ready(bookAddress);
                 var entry = StaticFolderArchive.Default.CreateArchiveEntry(bookAddress, ArchiveHint.None);
                 await ConfirmFileIO.DeleteAsync(entry, TextResources.GetString("FileDeleteBookDialog.Title"), null);
+                loader.OpenNextBook();
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (Exception ex)
+            {
+                new MessageDialog(ex.Message, TextResources.GetString("Message.DeleteFailed")).ShowDialog();
             }
         }
 
