@@ -1,15 +1,18 @@
 ﻿//#define LOCAL_DEBUG
 
+using NeeLaboratory.Generators;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
 
 namespace NeeView
 {
-    public class PendingItem : IDisposable
+    [LocalDebug]
+    public partial class PendingItem : IDisposable
     {
         private readonly ClipboardWatcher _clipboardListener;
         private readonly Guid _guid;
@@ -21,7 +24,7 @@ namespace NeeView
         {
             _clipboardListener = clipboardListener;
             _guid = guid;
-            _pages = new List<IPendingItem>(pages);
+            _pages = [.. pages];
         }
 
 
@@ -45,6 +48,8 @@ namespace NeeView
 
         private void CheckClipboard()
         {
+            LocalDebug.WriteLine($"Check.");
+
             // どうにも例外(CLIPBRD_E_CANT_OPEN)が発生してしまうのでリトライさせることにした
             for (int retryCount = 0; retryCount < 10; retryCount++)
             {
@@ -57,6 +62,8 @@ namespace NeeView
                     {
                         return;
                     }
+
+                    LocalDebug.WriteLine($"Removed from clipboard");
 
                     Stop();
                     Completed?.Invoke(this, new EventArgs());

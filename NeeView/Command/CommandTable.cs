@@ -111,18 +111,19 @@ namespace NeeView
                 new ExportImageCommand(),
                 new PrintCommand(),
                 new DeleteFileCommand(),
-
-                new DeleteBookCommand(),
-                new RenameBookCommand(),
-                new CopyBookToFolderAsCommand(),
-                new MoveBookToFolderAsCommand(),
-
                 new CutFileCommand(),
                 new CopyFileCommand(),
                 new CopyImageCommand(),
                 new PasteCommand(),
                 new CopyToFolderAsCommand(),
                 new MoveToFolderAsCommand(),
+
+                new DeleteBookCommand(),
+                new RenameBookCommand(),
+                new CutBookCommand(),
+                new CopyBookCommand(),
+                new CopyBookToFolderAsCommand(),
+                new MoveBookToFolderAsCommand(),
 
                 new SelectArchiverCommand(),
 

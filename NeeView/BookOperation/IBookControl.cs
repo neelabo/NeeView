@@ -12,12 +12,19 @@ namespace NeeView
         PageSortModeClass PageSortModeClass { get; }
         bool IsBookmark { get; }
         string? Path { get; }
+        int PendingCount { get; }
 
         bool CanCopyBookToFolder(DestinationFolder parameter);
         void CopyBookToFolder(DestinationFolder parameter);
 
         bool CanMoveBookToFolder(DestinationFolder parameter);
         void MoveBookToFolder(DestinationFolder parameter);
+
+        bool CanCopyBookToClipboard();
+        void CopyBookToClipboard();
+
+        bool CanCutBookToClipboard();
+        void CutBookToClipboard();
 
         bool CanRenameBook();
         void RenameBook();

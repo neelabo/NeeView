@@ -58,6 +58,8 @@ namespace NeeView
         public MainView MainView => _mainView;
         public MainViewBay MainViewBay => _mainViewBay;
 
+        public Window? GetWindowContainingMainView() => System.Windows.Window.GetWindow(_mainView);
+
 
         private void BookOperation_BookChanging(object? sender, BookChangingEventArgs e)
         {

@@ -18,6 +18,8 @@ namespace NeeView
 
         public string? Path => _source?.Path;
 
+        public int PendingCount => _source?.PendingCount ?? 0;
+
 
         protected virtual void Dispose(bool disposing)
         {
@@ -72,6 +74,26 @@ namespace NeeView
         {
             //Debug.WriteLine($"{e.PropertyName}: IsBusy={_source?.IsBusy}");
             RaisePropertyChanged(e.PropertyName);
+        }
+
+        public bool CanCopyBookToClipboard()
+        {
+            return _source?.CanCopyBookToClipboard() ?? false;
+        }
+
+        public void CopyBookToClipboard()
+        {
+            _source?.CopyBookToClipboard();
+        }
+
+        public bool CanCutBookToClipboard()
+        {
+            return _source?.CanCutBookToClipboard() ?? false;
+        }
+
+        public void CutBookToClipboard()
+        {
+            _source?.CutBookToClipboard();
         }
 
         public bool CanCopyBookToFolder(DestinationFolder parameter)

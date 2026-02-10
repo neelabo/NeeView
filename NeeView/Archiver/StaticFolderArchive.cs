@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -64,6 +65,16 @@ namespace NeeView
             var entry = CreateArchiveEntry(directoryInfo, id);
             entry.ArchiveHint = archiveHint;
             return entry;
+        }
+
+        protected override void OnStartWatch()
+        {
+            Debug.Assert(false, "Not supported");
+        }
+
+        protected override void OnStopWatch()
+        {
+            Debug.Assert(false, "Not supported");
         }
     }
 }
