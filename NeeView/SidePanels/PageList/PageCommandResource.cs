@@ -1,5 +1,4 @@
 ﻿using NeeLaboratory.Linq;
-using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -184,32 +183,13 @@ namespace NeeView
 
         public async void Cut_Exec(object sender, ExecutedRoutedEventArgs e)
         {
-            var items = GetSelectedPages(sender);
+            e.Handled = true;
 
+            var items = GetSelectedPages(sender);
             if (items != null && items.Count > 0)
             {
-                try
-                {
-                    App.Current.MainWindow.Cursor = Cursors.Wait;
-                    await CutAsync(items, CancellationToken.None);
-                }
-                catch (Exception ex)
-                {
-                    App.Current.MainWindow.Cursor = null;
-                    new MessageDialog(ex.Message, TextResources.GetString("CopyErrorDialog.Title")).ShowDialog();
-                }
-                finally
-                {
-                    App.Current.MainWindow.Cursor = null;
-                }
+                await ClipboardUtility.TryCutAsync(items, CancellationToken.None);
             }
-
-            e.Handled = true;
-        }
-
-        private static async ValueTask CutAsync(List<Page> pages, CancellationToken token)
-        {
-            await ClipboardUtility.CutAsync(pages, token);
         }
 
         /// <summary>
@@ -223,39 +203,20 @@ namespace NeeView
 
         public async void Copy_Exec(object sender, ExecutedRoutedEventArgs e)
         {
-            var items = GetSelectedPages(sender);
+            e.Handled = true;
 
+            var items = GetSelectedPages(sender);
             if (items != null && items.Count > 0)
             {
-                try
-                {
-                    App.Current.MainWindow.Cursor = Cursors.Wait;
-                    await CopyAsync(items, CancellationToken.None);
-                }
-                catch (Exception ex)
-                {
-                    App.Current.MainWindow.Cursor = null;
-                    new MessageDialog(ex.Message, TextResources.GetString("CopyErrorDialog.Title")).ShowDialog();
-                }
-                finally
-                {
-                    App.Current.MainWindow.Cursor = null;
-                }
+                var window = sender is FrameworkElement element ? Window.GetWindow(element) : App.Current.MainWindow;
+                await ClipboardUtility.TryCopyAsync(items, window, CancellationToken.None);
             }
-
-            e.Handled = true;
-        }
-
-        private static async ValueTask CopyAsync(List<Page> pages, CancellationToken token)
-        {
-            await ClipboardUtility.CopyAsync(pages, token);
         }
 
         private static bool CanCopyToFolder(IEnumerable<Page> pages)
         {
             return PageUtility.CanCreateRealizedFilePathList(pages);
         }
-
 
         /// <summary>
         /// フォルダーにコピーコマンド用
@@ -275,29 +236,15 @@ namespace NeeView
         {
             if (e.Parameter is not DestinationFolder folder) return;
 
-            try
+            e.Handled = true;
+
+            var pages = GetSelectedPages(sender);
+            if (pages is not null)
             {
-                var items = GetSelectedPages(sender);
-                if (items is not null)
-                {
-                    var paths = await PageUtility.CreateRealizedFilePathListAsync(items, Config.Current.System.ArchiveCopyPolicy.LimitedRealization(), CancellationToken.None);
-                    await folder.CopyAsync(paths, CancellationToken.None);
-                    GC.KeepAlive(items);
-                }
-            }
-            catch (OperationCanceledException)
-            {
-            }
-            catch (Exception ex)
-            {
-                new MessageDialog(ex.Message, TextResources.GetString("Bookshelf.CopyToFolderFailed")).ShowDialog();
-            }
-            finally
-            {
-                e.Handled = true;
+                var entries = pages.Select(e => e.ArchiveEntry);
+                await folder.TryCopyAsync(entries, CancellationToken.None);
             }
         }
-
 
         /// <summary>
         /// フォルダーに移動コマンド用
@@ -317,27 +264,13 @@ namespace NeeView
         {
             if (e.Parameter is not DestinationFolder folder) return;
 
-            try
+            e.Handled = true;
+
+            var pages = GetSelectedPages(sender);
+            if (pages is not null)
             {
-                var items = GetSelectedPages(sender);
-                if (items is not null)
-                {
-                    var movePages = items.Where(e => e.ArchiveEntry.IsFileSystem).ToList();
-                    var paths = movePages.Select(e => e.GetFilePlace()).WhereNotNull().ToList();
-                    await folder.MoveAsync(paths, CancellationToken.None);
-                    GC.KeepAlive(items);
-                }
-            }
-            catch (OperationCanceledException)
-            {
-            }
-            catch (Exception ex)
-            {
-                ToastService.Current.Show(new Toast(ex.Message, TextResources.GetString("PageList.Message.MoveToFolderFailed"), ToastIcon.Error));
-            }
-            finally
-            {
-                e.Handled = true;
+                var paths = pages.Where(e => e.ArchiveEntry.IsFileSystem).Select(e => e.GetFilePlace()).WhereNotNull().Distinct().ToList();
+                await folder.TryMoveAsync(paths, CancellationToken.None);
             }
         }
 

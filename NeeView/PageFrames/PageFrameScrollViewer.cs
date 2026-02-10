@@ -29,6 +29,8 @@ namespace NeeView.PageFrames
             _context = context;
             _canvas = canvas;
 
+            _canvas.SetBinding(OpacityProperty, new Binding(nameof(IPendingBook.PendingCount)) { Source = BookOperation.Current.BookControl, Converter = new PendingCountToOpacityConverter() });
+
             _transform = transform;
             _canvas.RenderTransform = transform.TransformView;
 

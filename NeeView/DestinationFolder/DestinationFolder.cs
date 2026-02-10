@@ -1,7 +1,6 @@
 ﻿using NeeView.Properties;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -69,23 +68,7 @@ namespace NeeView
             return Name.GetHashCode(StringComparison.Ordinal) ^ Path.GetHashCode(StringComparison.Ordinal);
         }
 
-        public async ValueTask CopyAsyncNoExceptions(IEnumerable<string> paths, CancellationToken token)
-        {
-            try
-            {
-                await CopyAsync(paths, CancellationToken.None);
-            }
-            catch (OperationCanceledException)
-            {
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                ToastService.Current.Show(new Toast(ex.Message, TextResources.GetString("Bookshelf.CopyToFolderFailed"), ToastIcon.Error));
-            }
-        }
-
-        public async ValueTask CopyAsync(IEnumerable<string> paths, CancellationToken token)
+        public async ValueTask CopyRawAsync(IEnumerable<string> paths, CancellationToken token)
         {
             if (!paths.Any()) return;
 
@@ -97,23 +80,7 @@ namespace NeeView
             await FileIO.SHCopyToFolderAsync(paths, this.Path, token);
         }
 
-        public async ValueTask MoveAsyncNoExceptions(IEnumerable<string> paths, CancellationToken token)
-        {
-            try
-            {
-                await MoveAsync(paths, CancellationToken.None);
-            }
-            catch (OperationCanceledException)
-            {
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                ToastService.Current.Show(new Toast(ex.Message, TextResources.GetString("PageList.Message.MoveToFolderFailed"), ToastIcon.Error));
-            }
-        }
-
-        public async ValueTask MoveAsync(IEnumerable<string> paths, CancellationToken token)
+        public async ValueTask MoveRawAsync(IEnumerable<string> paths, CancellationToken token)
         {
             if (!paths.Any()) return;
 
@@ -124,6 +91,43 @@ namespace NeeView
 
             await FileIO.SHMoveToFolderAsync(paths, this.Path, token);
         }
-    }
 
+        public async ValueTask CopyAsync(IEnumerable<string> paths, CancellationToken token)
+        {
+            var entries = await PathToArchiveEntry(paths, token);
+            await CopyAsync(entries, token);
+        }
+
+        public async ValueTask CopyAsync(IEnumerable<ArchiveEntry> entries, CancellationToken token)
+        {
+            var items = await ArchiveEntryUtility.RealizeArchiveEntry(entries, token);
+            await CopyRawAsync(items, token);
+            GC.KeepAlive(entries);
+        }
+
+        public async ValueTask<bool> TryCopyAsync(IEnumerable<string> paths, CancellationToken token)
+        {
+            return await ExceptionHandling.WithToastAsync((token) => CopyAsync(paths.ToList(), token), TextResources.GetString("Message.CopyFailed"), token);
+        }
+
+        public async ValueTask<bool> TryCopyAsync(IEnumerable<ArchiveEntry> entries, CancellationToken token)
+        {
+            return await ExceptionHandling.WithToastAsync((token) => CopyAsync(entries.ToList(), token), TextResources.GetString("Message.CopyFailed"), token);
+        }
+
+        public async ValueTask<bool> TryMoveAsync(IEnumerable<string> paths, CancellationToken token)
+        {
+            return await ExceptionHandling.WithToastAsync((token) => MoveRawAsync(paths.ToList(), token), TextResources.GetString("Message.MoveFailed"), token);
+        }
+
+        private static async ValueTask<List<ArchiveEntry>> PathToArchiveEntry(IEnumerable<string> paths, CancellationToken token)
+        {
+            var entries = new List<ArchiveEntry>();
+            foreach (var path in paths)
+            {
+                entries.Add(await ArchiveEntryUtility.CreateAsync(path, ArchiveHint.None, true, token));
+            }
+            return entries;
+        }
+    }
 }

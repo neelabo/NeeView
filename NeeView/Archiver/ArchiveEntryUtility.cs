@@ -269,6 +269,18 @@ namespace NeeView
         /// エントリ群の実体化
         /// </summary>
         /// <param name="entries">エントリ群</param>
+        /// <param name="token"></param>
+        /// <returns>実体化されたファイルパス</returns>
+        public static async ValueTask<List<string>> RealizeArchiveEntry(IEnumerable<ArchiveEntry> entries, CancellationToken token)
+        {
+            var archivePolicy = Config.Current.System.ArchiveCopyPolicy.LimitedRealization();
+            return await RealizeArchiveEntry(entries, archivePolicy, token);
+        }
+
+        /// <summary>
+        /// エントリ群の実体化
+        /// </summary>
+        /// <param name="entries">エントリ群</param>
         /// <param name="archivePolicy">実ファイルでなくアーカイブエントリである場合の方針</param>
         /// <param name="token"></param>
         /// <returns>実体化されたファイルパス</returns>

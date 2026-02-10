@@ -226,7 +226,7 @@ namespace NeeView
                 try
                 {
                     var entry = await ArchiveEntryUtility.CreateAsync(source, ArchiveHint.None, true, _cancellationToken);
-                    var path = await entry.RealizeAsync(_cancellationToken);
+                    var path = await entry.RealizeAsync(ArchivePolicy.SendExtractFile, _cancellationToken);
                     if (path is null) throw new IOException($"Cannot be materialized: {source}");
                     await FileIO.SHCopyAsync(path, destination, _cancellationToken);
                     GC.KeepAlive(entry);
