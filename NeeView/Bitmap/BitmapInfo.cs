@@ -1,5 +1,6 @@
 ﻿using NeeView.Media.Imaging.Metadata;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
@@ -13,6 +14,13 @@ namespace NeeView
     /// </summary>
     public class BitmapInfo
     {
+        private readonly static List<BitmapInfoFactory> _bitmapInfoFactories = new List<BitmapInfoFactory>()
+        {
+            new WebPBitmapInfoFactory(),
+            new DefaultBitmapInfoFactory(),
+        };
+
+
         public BitmapInfo()
         {
             this.Metadata = BitmapMetadataDatabase.Default;
@@ -34,7 +42,48 @@ namespace NeeView
 
             ////Debug.WriteLine($"Meta.Format: {this.Metadata.Format}");
 
-            if (this.Metadata.IsValid && this.Metadata.IsOrientationEnabled && this.Metadata[BitmapMetadataKey.Orientation] is ExifOrientation orientation)
+            SetOrientation(this.Metadata);
+        }
+
+        public BitmapInfo(WebPImageInfo info, Stream stream)
+        {
+            this.PixelWidth = info.PixelWidth;
+            this.PixelHeight = info.PixelHeight;
+            this.PixelFormat = info.Format;
+            this.BitsPerPixel = info.BitsPerPixel;
+            this.FrameCount = info.FrameCount;
+            this.DpiX = info.DpiX;
+            this.DpiY = info.DpiY;
+            this.AspectWidth = info.Width;
+            this.AspectHeight = info.Height;
+            this.Metadata = CreateMetadataDatabase(stream);
+            this.HasAlpha = info.HasAlpha;
+
+            SetOrientation(this.Metadata);
+            SetResolution(this.Metadata);
+        }
+
+
+        public int PixelWidth { get; private set; }
+        public int PixelHeight { get; private set; }
+        public PixelFormat PixelFormat { get; private set; }
+        public int BitsPerPixel { get; private set; }
+        public bool IsMirrorHorizontal { get; private set; }
+        public bool IsMirrorVertical { get; private set; }
+        public Rotation Rotation { get; private set; }
+        public double DpiX { get; private set; }
+        public double DpiY { get; private set; }
+        public double AspectWidth { get; private set; }
+        public double AspectHeight { get; private set; }
+        public int FrameCount { get; private set; }
+        public BitmapMetadataDatabase Metadata { get; private set; }
+        public bool IsTranspose => (this.Rotation == Rotation.Rotate90 || this.Rotation == Rotation.Rotate270);
+        public bool? HasAlpha { get; private set; }
+
+
+        private void SetOrientation(BitmapMetadataDatabase metadata)
+        {
+            if (metadata.IsValid && metadata.IsOrientationEnabled && metadata[BitmapMetadataKey.Orientation] is ExifOrientation orientation)
             {
                 switch (orientation)
                 {
@@ -68,37 +117,28 @@ namespace NeeView
             }
         }
 
-
-        public int PixelWidth { get; private set; }
-        public int PixelHeight { get; private set; }
-        public PixelFormat PixelFormat { get; private set; }
-        public int BitsPerPixel { get; private set; }
-        public bool IsMirrorHorizontal { get; private set; }
-        public bool IsMirrorVertical { get; private set; }
-        public Rotation Rotation { get; private set; }
-        public double DpiX { get; private set; }
-        public double DpiY { get; private set; }
-        public double AspectWidth { get; private set; }
-        public double AspectHeight { get; private set; }
-        public int FrameCount { get; private set; }
-        public BitmapMetadataDatabase Metadata { get; private set; }
-
-        // 転置？
-        public bool IsTranspose => (this.Rotation == Rotation.Rotate90 || this.Rotation == Rotation.Rotate270);
-
-        /// <summary>
-        /// アルファ所持
-        /// </summary>
-        public bool? HasAlpha { get; private set; }
-
+        private void SetResolution(BitmapMetadataDatabase metadata)
+        {
+            if (metadata.IsValid)
+            {
+                if (metadata[BitmapMetadataKey.XResolution] is double dpiX && dpiX > 0.0)
+                {
+                    this.DpiX = dpiX;
+                    this.AspectWidth = this.PixelWidth * (96.0 / this.DpiX);
+                }
+                if (metadata[BitmapMetadataKey.YResolution] is double dpiY && dpiY > 0.0)
+                {
+                    this.DpiY = dpiY;
+                    this.AspectHeight = this.PixelHeight * (96.0 / this.DpiY);
+                }
+            }
+        }
 
         private static BitmapMetadataDatabase CreateMetadataDatabase(BitmapFrame bitmapFrame, Stream stream)
         {
-            BitmapMetadataDatabase database;
-
             try
             {
-                database = new BitmapMetadataDatabase(GetBitmapMetadata(bitmapFrame));
+                var database = new BitmapMetadataDatabase(GetBitmapMetadata(bitmapFrame));
                 if (database.IsValid)
                 {
                     return database;
@@ -107,6 +147,13 @@ namespace NeeView
             catch
             {
             }
+
+            return CreateMetadataDatabase(stream);
+        }
+
+        private static BitmapMetadataDatabase CreateMetadataDatabase(Stream stream)
+        {
+            BitmapMetadataDatabase database;
 
             var pos = stream.Position;
             stream.Seek(0, SeekOrigin.Begin);
@@ -126,7 +173,6 @@ namespace NeeView
             return database;
         }
 
-
         private static BitmapMetadata? GetBitmapMetadata(BitmapFrame bitmapFrame)
         {
             if (bitmapFrame.Decoder is GifBitmapDecoder decoder)
@@ -144,7 +190,6 @@ namespace NeeView
             return bitmapFrame.Metadata as BitmapMetadata;
         }
 
-
         public Size GetPixelSize()
         {
             return (this.PixelWidth == 0.0 || this.PixelHeight == 0.0) ? Size.Empty : new Size(this.PixelWidth, this.PixelHeight);
@@ -154,7 +199,6 @@ namespace NeeView
         {
             return (this.AspectWidth == 0.0 || this.AspectHeight == 0.0) ? Size.Empty : new Size(this.AspectWidth, this.AspectHeight);
         }
-
 
         public static BitmapInfo Create(Stream stream)
         {
@@ -167,8 +211,15 @@ namespace NeeView
 
             try
             {
-                var bitmapFrame = BitmapFrame.Create(stream, BitmapCreateOptions.DelayCreation | BitmapCreateOptions.IgnoreColorProfile, BitmapCacheOption.None);
-                return new BitmapInfo(bitmapFrame, stream);
+                foreach (var factory in _bitmapInfoFactories)
+                {
+                    if (factory.CheckFormat(stream))
+                    {
+                        stream.Seek(0, SeekOrigin.Begin);
+                        return factory.Create(stream);
+                    }
+                }
+                throw new InvalidOperationException("Don't come here");
             }
             catch (Exception ex)
             {

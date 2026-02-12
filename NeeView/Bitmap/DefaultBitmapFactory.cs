@@ -13,17 +13,14 @@ namespace NeeView
     /// <remarks>
     /// WebPの半透明問題を回避するため、デコーダを順番に試す方式にしている。
     /// </remarks>
-    public class DefaultBitmapFactory : IBitmapFactory
+    public static class DefaultBitmapFactory
     {
-        private readonly List<IBitmapDecoder> _decoders = [];
+        private static readonly List<IBitmapDecoder> _decoders = [
+            new WebPBitmapDecoder(),
+            new DefaultBitmapDecoder()
+        ];
 
-        public DefaultBitmapFactory()
-        {
-            _decoders.Add(new WebPBitmapDecoder());
-            _decoders.Add(new DefaultBitmapDecoder());
-        }
-
-        public BitmapSource Create(Stream stream, BitmapInfo? info, Size size, CancellationToken token)
+        public static BitmapSource Create(Stream stream, BitmapInfo? info, Size size, CancellationToken token)
         {
             foreach (var decoder in _decoders)
             {
@@ -38,7 +35,7 @@ namespace NeeView
             throw new NotSupportedException("Unsupported image format.");
         }
 
-        public void CreateImage(Stream stream, BitmapInfo? info, Stream outStream, Size size, BitmapImageFormat format, int quality, CancellationToken token)
+        public static void CreateImage(Stream stream, BitmapInfo? info, Stream outStream, Size size, BitmapImageFormat format, int quality, CancellationToken token)
         {
             foreach (var decoder in _decoders)
             {

@@ -130,6 +130,9 @@ namespace NeeView.Media.Imaging.Metadata
                 BitmapMetadataKey.GPSLatitude => GetGPSLatitude(),
                 BitmapMetadataKey.GPSLongitude => GetGPSLongitude(),
                 BitmapMetadataKey.GPSAltitude => new FormatValue(GetGPSAltitude(), "{0:0.#} m"),
+                // -- Other
+                BitmapMetadataKey.XResolution => GetXResolution(),
+                BitmapMetadataKey.YResolution => GetYResolution(),
                 _ => null,
             };
         }
@@ -427,6 +430,45 @@ namespace NeeView.Media.Imaging.Metadata
         {
             return GetGPSAltitude(_gps)
                 ?? GetGPSAltitude(_xmp);
+        }
+
+        private double? GetXResolution()
+        {
+            var dpi = GetDouble(_ifd0, ExifDirectoryBase.TagXResolution)
+                ?? GetInteger(_xmp, Schema.ExifTiffProperties, "XResolution");
+
+            if (dpi is null) return null;
+
+            return AllowResolutionUnit(dpi.Value);
+        }
+
+        private double? GetYResolution()
+        {
+            var dpi = GetDouble(_ifd0, ExifDirectoryBase.TagYResolution)
+                ?? GetInteger(_xmp, Schema.ExifTiffProperties, "YResolution");
+
+            if (dpi is null) return null;
+
+            return AllowResolutionUnit(dpi.Value);
+        }
+
+        private double AllowResolutionUnit(double dpi)
+        {
+            var unit = GetXResolutionUnit() ?? 2;
+            if (unit == 3)
+            {
+                return dpi * 2.54; // cm to inch
+            }
+            else
+            {
+                return dpi;
+            }
+        }
+
+        private int? GetXResolutionUnit()
+        {
+            return GetInteger(_ifd0, ExifDirectoryBase.TagResolutionUnit)
+                ?? GetInteger(_xmp, Schema.ExifTiffProperties, "ResolutionUnit");
         }
 
         #endregion

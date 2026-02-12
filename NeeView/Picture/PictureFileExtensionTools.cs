@@ -32,11 +32,21 @@ namespace NeeView
         // 標準対応拡張子取得
         private static Dictionary<string, string> CreateSystemExtensions(bool useWic)
         {
+            var map = CreateDefaultExtensions();
+
             if (useWic)
             {
                 try
                 {
-                    return WicDecoders.ListUp();
+                    var wicMap =  WicDecoders.ListUp();
+                    foreach(var pair in map)
+                    {
+                        if (!wicMap.ContainsKey(pair.Key))
+                        {
+                            wicMap.Add(pair.Key, pair.Value);
+                        }
+                    }
+                    return wicMap;
                 }
                 catch (Exception ex)
                 {
@@ -44,7 +54,7 @@ namespace NeeView
                 }
             }
 
-            return CreateDefaultExtensions();
+            return map;
         }
 
         private static Dictionary<string, string> CreateDefaultExtensions()
@@ -58,7 +68,9 @@ namespace NeeView
                 { "PNG Decoder", ".png" },
                 { "TIFF Decoder", ".tiff,.tif" },
                 { "WMPhoto Decoder", ".wdp,.jxr" },
-                { "DDS Decoder", ".dds" }
+                { "DDS Decoder", ".dds" },
+                
+                { "libwebp", ".webp" }
             };
             return dictionary;
         }

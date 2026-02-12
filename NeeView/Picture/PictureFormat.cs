@@ -18,9 +18,39 @@ namespace NeeView
         /// </summary>
         public static string[]? GetSupportImageExtensions(byte[] buff)
         {
-            var extensions = GetDefaultSupportImageExtensions(buff);
-            if (extensions == null) extensions = GetSusieSupportImageExtensions(buff);
+            var extensions = GetWebPSupportImageExtensions(buff)
+                ?? GetDefaultSupportImageExtensions(buff)
+                ?? GetSusieSupportImageExtensions(buff);
+
             return extensions;
+        }
+
+        /// <summary>
+        /// 画像フォーマット判定(WebP)
+        /// </summary>
+        /// <param name="buff">判定するデータ</param>
+        /// <returns>対応拡張子群。対応できない場合は null</returns>
+        public static string[]? GetWebPSupportImageExtensions(byte[] buff)
+        {
+            try
+            {
+                using (var stream = new MemoryStream(buff))
+                {
+                    if (WebPDecoder.IsWebP(stream))
+                    {
+                        return [".webp"];
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                return null;
+            }
         }
 
         /// <summary>

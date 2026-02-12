@@ -1,6 +1,11 @@
-﻿using System;
+﻿using NeeLaboratory.IO;
+using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace NeeView
 {
@@ -100,67 +105,71 @@ namespace NeeView
             }
         }
 
-        public static bool IsWebP(byte[] bytes)
+        public static bool IsWebP(Stream stream)
         {
-            return AnimatedImageChecker.IsWebp(new MemoryStream(bytes, false));
+            return AnimatedImageChecker.IsWebp(stream);
         }
 
-        public static RawImage Decode(byte[] bytes)
+        public static bool IsWebP(Memory<byte> memory)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static WriteableBitmap Decode(Stream stream)
+        {
+            var memory = stream.ToMemory();
+            return Decode(memory);
+        }
+
+        public static WriteableBitmap Decode(Memory<byte> memory)
         {
             Initialize();
 
-            var webpDataHandle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
-            var webpData = new NativeMethods.WebPData();
-            webpData.data = webpDataHandle.AddrOfPinnedObject();
-            webpData.size = (UIntPtr)bytes.Length;
+            using var webpData = new WebPDataHandle(memory);
 
-            try
+            var features = new NativeMethods.WebPBitstreamFeatures();
+            if (NativeMethods.WebPGetFeaturesInternal(webpData.data, webpData.size, ref features, NativeMethods.WEBP_DECODER_ABI_VERSION) != 0)
             {
-                var features = new NativeMethods.WebPBitstreamFeatures();
-                if (NativeMethods.WebPGetFeaturesInternal(webpData.data, webpData.size, ref features, NativeMethods.WEBP_DECODER_ABI_VERSION) != 0)
-                {
-                    throw new WebPDecoderException("WebPGetFeatures failed");
-                }
-
-                if (features.has_animation == 0)
-                {
-                    return DecodeImage(webpData, features.width, features.height);
-                }
-                else
-                {
-                    return DecodeFirstFrame(webpData);
-                }
+                throw new WebPDecoderException("WebPGetFeatures failed");
             }
-            finally
+
+            if (features.has_animation == 0)
             {
-                webpDataHandle.Free();
+                return DecodeImage(webpData.WebPData, features.width, features.height);
+            }
+            else
+            {
+                return DecodeFirstFrame(webpData.WebPData);
             }
         }
 
-        private static RawImage DecodeImage(NativeMethods.WebPData webpData, int width, int height)
+        private static unsafe WriteableBitmap DecodeImage(NativeMethods.WebPData webpData, int width, int height)
         {
-            int stride = width * 4;
-            int bufferSize = stride * height;
-            byte[] buffer = new byte[bufferSize];
-            var bufferHandle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
-            var bufferPtr = bufferHandle.AddrOfPinnedObject();
+            var wb = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgra32, null);
 
+            int stride = wb.BackBufferStride;
+            int bufferSize = stride * height;
+            Debug.Assert(wb.BackBufferStride == width * 4);
+
+            wb.Lock();
             try
             {
-                var ptr = NativeMethods.WebPDecodeBGRAInto(webpData.data, webpData.size, bufferPtr, (UIntPtr)buffer.Length, stride);
-                if (ptr == IntPtr.Zero)
+                IntPtr result = NativeMethods.WebPDecodeBGRAInto(webpData.data, webpData.size, (IntPtr)wb.BackBuffer, (UIntPtr)bufferSize, stride);
+                if (result == IntPtr.Zero)
                 {
-                    throw new WebPDecoderException("WebPDecode failed");
+                    throw new Exception("WebPDecodeBGRAInto failed.");
                 }
-                return new RawImage(buffer, width, height);
+                wb.AddDirtyRect(new Int32Rect(0, 0, width, height));
             }
             finally
             {
-                bufferHandle.Free();
+                wb.Unlock();
             }
+
+            return wb;
         }
 
-        private static RawImage DecodeFirstFrame(NativeMethods.WebPData webpData)
+        private static unsafe WriteableBitmap DecodeFirstFrame(NativeMethods.WebPData webpData)
         {
             var options = new NativeMethods.WebPAnimDecoderOptions();
             options.color_mode = NativeMethods.WEBP_CSP_MODE_BGRA;
@@ -179,16 +188,33 @@ namespace NeeView
                     throw new WebPDecoderException("WebPAnimDecoderGetInfo failed");
                 }
 
+                var width = (int)info.canvas_width;
+                var height = (int)info.canvas_height;
+
                 if (NativeMethods.WebPAnimDecoderGetNext(decoder, out IntPtr rgbaPtr, out int timestamp) == 0)
                 {
                     throw new WebPDecoderException("WebPAnimDecoderGetNext failed");
                 }
 
-                int stride = (int)info.canvas_width * 4;
-                int bufferSize = stride * (int)info.canvas_height;
-                byte[] buffer = new byte[bufferSize];
-                Marshal.Copy(rgbaPtr, buffer, 0, buffer.Length);
-                return new RawImage(buffer, (int)info.canvas_width, (int)info.canvas_height);
+                byte* src = (byte*)rgbaPtr;
+                
+                var wb = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgra32, null);
+                int stride = wb.BackBufferStride;
+                int size = stride * height;
+                Debug.Assert(wb.BackBufferStride == width * 4);
+
+                wb.Lock();
+                try
+                {
+                    Buffer.MemoryCopy(src, (void*)wb.BackBuffer, size, size);
+                    wb.AddDirtyRect(new Int32Rect(0, 0, width, height));
+                }
+                finally
+                {
+                    wb.Unlock();
+                }
+
+                return wb;
             }
             finally
             {
@@ -198,5 +224,81 @@ namespace NeeView
                 }
             }
         }
+
+        public static WebPImageInfo GetInfo(Stream stream)
+        {
+            try
+            {
+                // 1. 先頭1024byteで情報取得を試みる
+                stream.Position = 0;
+                var memory = stream.ReadToMemory(1024);
+                return GetInfo(memory);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine("Retry...");
+                // 2. 全データから情報取得を試みる
+                var memory = stream.ToMemory();
+                return GetInfo(memory);
+            }
+        }
+
+        public static WebPImageInfo GetInfo(Memory<byte> memory)
+        {
+            if (memory.Length == 0)
+            {
+                throw new ArgumentException($"Memory size is zero");
+            }
+
+            Initialize();
+
+            using var webpData = new WebPDataHandle(memory);
+
+            var features = new NativeMethods.WebPBitstreamFeatures();
+            if (NativeMethods.WebPGetFeaturesInternal(webpData.data, webpData.size, ref features, NativeMethods.WEBP_DECODER_ABI_VERSION) != 0)
+            {
+                throw new WebPDecoderException("WebPGetFeatures failed");
+            }
+
+            return new WebPImageInfo()
+            {
+                PixelWidth = features.width,
+                PixelHeight = features.height,
+                FrameCount = 1, // FrameCount は取得できるけど使用されないので設定していない
+                HasAlpha = features.has_alpha != 0,
+            };
+        }
+
+
+        private class WebPDataHandle : IDisposable
+        {
+            private GCHandle _handle;
+            private NativeMethods.WebPData _webpData;
+
+            public NativeMethods.WebPData WebPData => _webpData;
+
+            public IntPtr data => _webpData.data;
+            public UIntPtr size => _webpData.size;
+
+            public WebPDataHandle(Memory<byte> memory)
+            {
+                if (!MemoryMarshal.TryGetArray(memory, out ArraySegment<byte> seg))
+                {
+                    throw new WebPDecoderException("TryGetArray failed");
+                }
+
+                _handle = GCHandle.Alloc(seg.Array!, GCHandleType.Pinned);
+                _webpData = new NativeMethods.WebPData();
+                _webpData.data = _handle.AddrOfPinnedObject();
+                _webpData.size = (UIntPtr)memory.Length;
+            }
+
+            public void Dispose()
+            {
+                _handle.Free();
+            }
+        }
+
     }
 }

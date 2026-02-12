@@ -200,9 +200,10 @@ namespace NeeView
 
             var bitmapSource = new BitmapImage();
             bitmapSource.BeginInit();
+            bitmapSource.CreateOptions = BitmapCreateOptions.DelayCreation;
+            bitmapSource.CacheOption = BitmapCacheOption.None;
             bitmapSource.StreamSource = stream;
             bitmapSource.EndInit();
-
             ImageBehavior.SetAnimatedSource(_image, bitmapSource);
 
             IsPlaying = true;

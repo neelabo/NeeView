@@ -70,6 +70,10 @@ namespace NeeView.Media.Imaging.Metadata
         GPSLatitude,
         GPSLongitude,
         GPSAltitude,
+
+        // -- Other
+        XResolution,
+        YResolution,
     }
 
     public static class BitmapMetadataKeyExtensions
@@ -86,6 +90,17 @@ namespace NeeView.Media.Imaging.Metadata
         public static bool TryParse(string key, out BitmapMetadataKey value)
         {
             return _nameMap.TryGetValue(key, out value);
+        }
+
+        public static bool IsPublic(this BitmapMetadataKey key)
+        {
+            return key switch
+            {
+                BitmapMetadataKey.XResolution => false,
+                BitmapMetadataKey.YResolution => false,
+                _ => true
+            };
+
         }
 
     }

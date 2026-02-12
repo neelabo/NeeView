@@ -18,20 +18,16 @@ namespace NeeView
 
         public BitmapSource Create(Stream stream, BitmapInfo? info, Size size, CancellationToken token)
         {
-            if (size != Size.Empty)
-            {
-                // サイズ変更する場合は MagicScaler にまかせる。 MagicScaler の WebP 処理は半透明問題は発生しない。
-                var decoder = new MagicScalerBitmapDecoder();
-                return decoder.Create(stream, info, size, token);
-            }
-
-            // TODO: これだけlibwebpでなく.NETライブラリに依存しているのでよろしくない。
             info = info ?? BitmapInfo.Create(stream);
 
             // Decode
-            var bytes = stream.ReadAllBytes();
-            var webp = WebPDecoder.Decode(bytes);
-            var bitmap = webp.ToBitmapSource();
+            stream.Seek(0, SeekOrigin.Begin);
+            BitmapSource bitmap = WebPDecoder.Decode(stream);
+            if (!size.IsEmptyOrZero() || info.IsTranspose)
+            {
+                bitmap = ScaleTransformBitmapSource(bitmap, size, info.IsTranspose);
+            }
+            bitmap.Freeze();
 
             // Transform
             if (info.IsMirrorHorizontal || info.IsMirrorVertical || info.Rotation != Rotation.Rotate0)
@@ -77,5 +73,28 @@ namespace NeeView
             BitmapSource bitmap = Create(stream, info, size, token);
             BitmapFactoryTools.OutputImage(bitmap, outStream, format, quality);
         }
+
+
+        private static BitmapSource ScaleTransformBitmapSource(BitmapSource source, Size size, bool isTranspose)
+        {
+            if (size.IsEmptyOrZero())
+            {
+                return source;
+            }
+
+            int pixelWidth = isTranspose ? (int)size.Height : (int)size.Width;
+            int pixelHeight = isTranspose ? (int)size.Width : (int)size.Height;
+            var scaleX = (double)pixelWidth / source.PixelWidth;
+            var scaleY = (double)pixelHeight / source.PixelHeight;
+            if (pixelWidth == 0) scaleX = scaleY;
+            if (pixelHeight == 0) scaleY = scaleX;
+
+            var scale = new ScaleTransform(scaleX, scaleY, 0, 0);
+            var resized = new TransformedBitmap(source, scale);
+            var finalWb = new WriteableBitmap(resized);
+
+            return finalWb;
+        }
+
     }
 }

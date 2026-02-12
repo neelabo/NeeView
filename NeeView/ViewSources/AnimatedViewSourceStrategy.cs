@@ -36,20 +36,13 @@ namespace NeeView
 
 
         // TODO: Async
-        private async ValueTask<BitmapImage?> LoadImageAsync(MediaSource mediaSource, CancellationToken token)
+        private async ValueTask<BitmapSource?> LoadImageAsync(MediaSource mediaSource, CancellationToken token)
         {
             try
             {
                 using (var stream = await mediaSource.OpenStreamAsync(token))
                 {
-                    var bitmap = new BitmapImage();
-                    bitmap.BeginInit();
-                    bitmap.CreateOptions = BitmapCreateOptions.None;
-                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmap.StreamSource = stream;
-                    bitmap.EndInit();
-                    bitmap.Freeze();
-                    return bitmap;
+                    return DefaultBitmapFactory.Create(stream, null, Size.Empty, token);
                 }
             }
             catch (Exception ex)

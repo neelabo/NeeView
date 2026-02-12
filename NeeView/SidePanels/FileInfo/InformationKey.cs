@@ -117,7 +117,7 @@ namespace NeeView
 
             {
                 var a = _defaultKeys.Where(e => e.ToInformationCategory() == InformationCategory.Metadata).Select(e => e.ToString());
-                var b = Enum.GetValues(typeof(BitmapMetadataKey)).Cast<BitmapMetadataKey>().Select(e => e.ToString());
+                var b = Enum.GetValues(typeof(BitmapMetadataKey)).Cast<BitmapMetadataKey>().Where(e => e.IsPublic()).Select(e => e.ToString());
                 Debug.Assert(!a.Except(b).Any());
                 Debug.Assert(!b.Except(a).Any());
             }
