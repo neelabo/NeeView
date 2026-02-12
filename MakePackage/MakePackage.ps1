@@ -939,6 +939,8 @@ function Get-LatestPreReleaseVersion($version, $preRelease) {
 	$regexVersion = [Regex]::Escape($version)
 	$tagPreRelease = $preRelease.ToLower()
 	
+	git fetch
+	
 	$tag = git tag | Where-Object { $_ -match "^$regexVersion-$tagPreRelease\." } | Select-Object -Last 1
 
 	#Write-Host "Get latest $preRelease version tag: $tag" 
