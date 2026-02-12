@@ -62,14 +62,6 @@ namespace NeeView
 
         public void CreateImage(Stream stream, BitmapInfo? info, Stream outStream, Size size, BitmapImageFormat format, int quality, CancellationToken token)
         {
-            if (size != Size.Empty)
-            {
-                // サイズ変更する場合は MagicScaler にまかせる。 MagicScaler の WebP 処理は半透明問題は発生しない。
-                var decoder = new MagicScalerBitmapDecoder();
-                decoder.CreateImage(stream, info, outStream, size, format, quality, token);
-                return;
-            }
-
             BitmapSource bitmap = Create(stream, info, size, token);
             BitmapFactoryTools.OutputImage(bitmap, outStream, format, quality);
         }
