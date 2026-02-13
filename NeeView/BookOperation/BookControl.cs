@@ -76,6 +76,56 @@ namespace NeeView
         }
 
         /// <summary>
+        /// エクスプローラーで開く 実行可能判定
+        /// </summary>
+        /// <returns></returns>
+        public bool CanOpenBookPlace()
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// エクスプローラーで開く
+        /// </summary>
+        public void OpenBookPlace()
+        {
+            var archivePath = ArchivePath.Create(_book.Path);
+            var place = archivePath.SystemPath;
+
+            if (!string.IsNullOrWhiteSpace(place))
+            {
+                ExternalProcess.OpenWithFileManager(place);
+            }
+        }
+
+        /// <summary>
+        /// 外部アプリで開く 実行判定
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        public bool CanOpenExternalApp(IExternalApp parameter)
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// 外部アプリで開く
+        /// </summary>
+        /// <param name="parameter"></param>
+        public async void OpenExternalApp(IExternalApp parameter)
+        {
+            _realizeTokenSource?.Cancel();
+            _realizeTokenSource = new();
+            await OpenExternalAppAsync(parameter, _realizeTokenSource.Token);
+        }
+
+        public async ValueTask OpenExternalAppAsync(IExternalApp parameter, CancellationToken token)
+        {
+            var entry = await ArchiveEntryUtility.CreateAsync(_book.Path, ArchiveHint.None, true, token);
+            await ExternalAppUtility.TryOpenExternalAppAsync([entry], parameter, token);
+        }
+
+        /// <summary>
         /// コピーコマンド実行可能判定
         /// </summary>
         /// <param name="sender"></param>

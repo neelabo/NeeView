@@ -14,6 +14,12 @@ namespace NeeView
         string? Path { get; }
         int PendingCount { get; }
 
+        bool CanOpenBookPlace();
+        void OpenBookPlace();
+
+        bool CanOpenExternalApp(IExternalApp parameter);
+        void OpenExternalApp(IExternalApp parameter);
+
         bool CanCopyBookToFolder(DestinationFolder parameter);
         void CopyBookToFolder(DestinationFolder parameter);
 

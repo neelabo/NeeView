@@ -104,13 +104,10 @@ namespace NeeView
                 new LoadRecentBookCommand(),
                 new ReLoadCommand(),
                 new UnloadCommand(),
+
+                new OpenExplorerCommand(),
                 new OpenExternalAppCommand(),
                 new OpenExternalAppAsCommand(),
-                new OpenExplorerCommand(),
-                new ExportImageAsCommand(),
-                new ExportImageCommand(),
-                new PrintCommand(),
-                new DeleteFileCommand(),
                 new CutFileCommand(),
                 new CopyFileCommand(),
                 new CopyImageCommand(),
@@ -118,12 +115,19 @@ namespace NeeView
                 new CopyToFolderAsCommand(),
                 new MoveToFolderAsCommand(),
 
-                new DeleteBookCommand(),
-                new RenameBookCommand(),
+                new ExportImageAsCommand(),
+                new ExportImageCommand(),
+                new PrintCommand(),
+                new DeleteFileCommand(),
+
+                new OpenBookExplorerCommand(),
+                new OpenBookExternalAppAsCommand(),
                 new CutBookCommand(),
                 new CopyBookCommand(),
                 new CopyBookToFolderAsCommand(),
                 new MoveBookToFolderAsCommand(),
+                new DeleteBookCommand(),
+                new RenameBookCommand(),
 
                 new SelectArchiverCommand(),
 

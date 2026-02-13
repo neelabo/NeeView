@@ -76,6 +76,27 @@ namespace NeeView
             RaisePropertyChanged(e.PropertyName);
         }
 
+
+        public bool CanOpenBookPlace()
+        {
+            return _source?.CanOpenBookPlace() ?? false;
+        }
+
+        public void OpenBookPlace()
+        {
+            _source?.OpenBookPlace();
+        }
+
+        public bool CanOpenExternalApp(IExternalApp parameter)
+        {
+            return _source?.CanOpenExternalApp(parameter) ?? false;
+        }
+
+        public void OpenExternalApp(IExternalApp parameter)
+        {
+            _source?.OpenExternalApp(parameter);
+        }
+
         public bool CanCopyBookToClipboard()
         {
             return _source?.CanCopyBookToClipboard() ?? false;

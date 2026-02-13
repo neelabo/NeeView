@@ -11,9 +11,10 @@ namespace NeeView
             _contextMenu = contextMenu;
         }
 
-        public void OpenExternalAppMenu(ICommandParameterFactory<ExternalApp> parameterFactory)
+
+        public void OpenExternalAppMenu(ExternalAppMenuFactory menuFactory)
         {
-            MainViewExternalAppTools.UpdateExternalAppMenu(_contextMenu.Items, parameterFactory);
+            menuFactory.UpdateFolderMenu(_contextMenu.Items);
             _contextMenu.IsOpen = true;
         }
 

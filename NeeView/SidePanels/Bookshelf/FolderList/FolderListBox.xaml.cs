@@ -1259,7 +1259,7 @@ namespace NeeView
                     contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.OpenBook"), Command = OpenBookCommand });
                     contextMenu.Items.Add(new Separator());
                     contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Explorer"), Command = OpenExplorerCommand });
-                    contextMenu.Items.Add(ExternalAppCollectionUtility.CreateExternalAppItem(OpenExternalApp_CanExecute(), OpenExternalAppCommand, OpenExternalAppDialogCommand));
+                    contextMenu.Items.Add(ExternalAppCollectionUtility.CreateExternalAppItem(TextResources.GetString("BookshelfItem.Menu.OpenExternalApp"), OpenExternalApp_CanExecute(), OpenExternalAppCommand, OpenExternalAppDialogCommand));
                     contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Cut"), Command = CutCommand });
                     contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Copy"), Command = CopyCommand });
                     contextMenu.Items.Add(DestinationFolderCollectionUtility.CreateDestinationFolderItem(TextResources.GetString("BookshelfItem.Menu.CopyToFolder"), CopyToFolder_CanExecute(), CopyToFolderCommand, OpenDestinationFolderCommand));
@@ -1289,7 +1289,7 @@ namespace NeeView
                 contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.DeleteHistory"), Command = RemoveHistoryCommand });
                 contextMenu.Items.Add(new Separator());
                 contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Explorer"), Command = OpenExplorerCommand });
-                contextMenu.Items.Add(ExternalAppCollectionUtility.CreateExternalAppItem(OpenExternalApp_CanExecute(), OpenExternalAppCommand, OpenExternalAppDialogCommand));
+                contextMenu.Items.Add(ExternalAppCollectionUtility.CreateExternalAppItem(TextResources.GetString("OpenExternalAppAsCommand.Menu"), OpenExternalApp_CanExecute(), OpenExternalAppCommand, OpenExternalAppDialogCommand));
                 contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Cut"), Command = CutCommand });
                 contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Copy"), Command = CopyCommand });
                 contextMenu.Items.Add(DestinationFolderCollectionUtility.CreateDestinationFolderItem(TextResources.GetString("BookshelfItem.Menu.CopyToFolder"), CopyToFolder_CanExecute(), CopyToFolderCommand, OpenDestinationFolderCommand));
