@@ -87,6 +87,7 @@ namespace NeeView
             typeof(ExportImageCommandParameter),
             typeof(OpenExternalAppCommandParameter),
             typeof(OpenExternalAppAsCommandParameter),
+            typeof(OpenBookExternalAppAsCommandParameter),
             typeof(CopyFileCommandParameter),
             typeof(ViewScrollNTypeCommandParameter),
             typeof(ScriptCommandParameter),

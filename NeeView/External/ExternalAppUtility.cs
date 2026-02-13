@@ -104,5 +104,18 @@ namespace NeeView
             s = s.Replace(OpenExternalAppCommandParameter.KeyFile, filenName, StringComparison.Ordinal);
             return s;
         }
+
+        public static async ValueTask OpenExternalAppAsync(IEnumerable<ArchiveEntry> entries, IExternalApp parameter, CancellationToken token)
+        {
+            var items = await ArchiveEntryUtility.RealizeArchiveEntry(entries, token);
+            var external = new ExternalAppUtility();
+            external.Call(items, parameter);
+            GC.KeepAlive(entries);
+        }
+
+        public static async ValueTask<bool> TryOpenExternalAppAsync(IEnumerable<ArchiveEntry> entries, IExternalApp parameter, CancellationToken token)
+        {
+            return await ExceptionHandling.WithToastAsync((token) => OpenExternalAppAsync(entries.ToList(), parameter, token), TextResources.GetString("OpenApplicationErrorDialog.Title"), token);
+        }
     }
 }

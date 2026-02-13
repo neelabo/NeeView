@@ -1,12 +1,13 @@
 ﻿using NeeView.Properties;
 using System;
+using System.Diagnostics;
 using System.Windows.Controls;
 
 namespace NeeView
 {
     public class OpenExternalAppAsCommand : CommandElement
     {
-        private readonly ExternalAppParameterCommandParameterFactory _parameterFactory;
+        private readonly Lazy<OpenPageExternalAppMenuFactory> _menuFactory;
 
         public OpenExternalAppAsCommand()
         {
@@ -15,15 +16,20 @@ namespace NeeView
 
             this.ParameterSource = new CommandParameterSource(new OpenExternalAppAsCommandParameter());
 
-            _parameterFactory = new ExternalAppParameterCommandParameterFactory(new ExternalAppOption(this));
+            var parameterFactory = new ExternalAppParameterCommandParameterFactory(new ExternalAppOption(this));
+            _menuFactory = new Lazy<OpenPageExternalAppMenuFactory>(() => new OpenPageExternalAppMenuFactory(parameterFactory));
         }
 
         public override bool CanExecute(object? sender, CommandContext e)
         {
-            var index = e.Parameter.Cast<OpenExternalAppAsCommandParameter>().Index - 1;
+            var parameter = e.Parameter.Cast<OpenExternalAppAsCommandParameter>();
+            var index = parameter.Index - 1;
+
             if (index >= 0)
             {
-                return MainViewExternalAppTools.CanOpenExternalApp(_parameterFactory, index);
+                var externalApps = Config.Current.System.ExternalAppCollection;
+                if (!externalApps.IsValidIndex(index)) return false;
+                return BookOperation.Current.Control.CanOpenApplication(externalApps[index], parameter.MultiPagePolicy);
             }
             else
             {
@@ -31,16 +37,20 @@ namespace NeeView
             }
         }
 
+
         public override void Execute(object? sender, CommandContext e)
         {
-            var index = e.Parameter.Cast<OpenExternalAppAsCommandParameter>().Index - 1;
+            var parameter = e.Parameter.Cast<OpenExternalAppAsCommandParameter>();
+            var index = parameter.Index - 1;
             if (index >= 0)
             {
-                MainViewExternalAppTools.OpenExternalApp(_parameterFactory, index);
+                var externalApps = Config.Current.System.ExternalAppCollection;
+                if (!externalApps.IsValidIndex(index)) throw new ArgumentOutOfRangeException(nameof(index));
+                BookOperation.Current.Control.OpenApplication(externalApps[index], parameter.MultiPagePolicy);
             }
             else
             {
-                MainViewComponent.Current.MainView.CommandMenu.OpenExternalAppMenu(_parameterFactory);
+                MainViewComponent.Current.MainView.CommandMenu.OpenExternalAppMenu(_menuFactory.Value);
             }
         }
 
@@ -50,7 +60,7 @@ namespace NeeView
             var index = parameter.Index - 1;
             if (isDefault || index < 0)
             {
-                return MainViewExternalAppTools.CreateExternalAppItem(_parameterFactory);
+                return _menuFactory.Value.CreateFolderMenu();
             }
             else
             {
@@ -67,10 +77,11 @@ namespace NeeView
 
     public class ExternalAppOption : IExternalAppOption
     {
-        private readonly OpenExternalAppAsCommand _command;
+        private readonly CommandElement _command;
 
-        public ExternalAppOption(OpenExternalAppAsCommand command)
+        public ExternalAppOption(CommandElement command)
         {
+            Debug.Assert(command is OpenExternalAppAsCommand || command is OpenBookExternalAppAsCommand);
             _command = command;
         }
 

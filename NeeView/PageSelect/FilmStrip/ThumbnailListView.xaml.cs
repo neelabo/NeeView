@@ -567,7 +567,7 @@ namespace NeeView
             contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("PageListItem.Menu.AddToPlaylist"), Command = PlaylistMarkCommand, IsChecked = _commandResource.PlaylistMark_IsChecked(listBox) });
             contextMenu.Items.Add(new Separator());
             contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("PageListItem.Menu.Explorer"), Command = OpenExplorerCommand });
-            contextMenu.Items.Add(ExternalAppCollectionUtility.CreateExternalAppItem(_commandResource.OpenExternalApp_CanExecute(listBox), OpenExternalAppCommand, OpenExternalAppDialogCommand));
+            contextMenu.Items.Add(ExternalAppCollectionUtility.CreateExternalAppItem(TextResources.GetString("PageListItem.Menu.OpenExternalApp"), _commandResource.OpenExternalApp_CanExecute(listBox), OpenExternalAppCommand, OpenExternalAppDialogCommand));
             contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("PageListItem.Menu.Cut"), Command = CutCommand });
             contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("PageListItem.Menu.Copy"), Command = CopyCommand });
             contextMenu.Items.Add(DestinationFolderCollectionUtility.CreateDestinationFolderItem(TextResources.GetString("PageListItem.Menu.CopyToFolder"), _commandResource.CopyToFolder_CanExecute(listBox), CopyToFolderCommand, OpenDestinationFolderCommand));

@@ -15,14 +15,14 @@ namespace NeeView
         /// <param name="isEnabled">メニューの有効/無効</param>
         /// <param name="command">実行コマンド</param>
         /// <param name="dialogCommand">設定コマンド</param>
-        public static MenuItem CreateExternalAppItem(bool isEnabled, ICommand command, ICommand dialogCommand)
+        public static MenuItem CreateExternalAppItem(string title, bool isEnabled, ICommand command, ICommand dialogCommand)
         {
-            return CreateExternalAppItem(isEnabled, command, dialogCommand, _defaultCommandParameterFactory);
+            return CreateExternalAppItem(title, isEnabled, command, dialogCommand, _defaultCommandParameterFactory);
         }
 
-        public static MenuItem CreateExternalAppItem(bool isEnabled, ICommand command, ICommand dialogCommand, ICommandParameterFactory<ExternalApp> parameterFactory)
+        public static MenuItem CreateExternalAppItem(string title, bool isEnabled, ICommand command, ICommand dialogCommand, ICommandParameterFactory<ExternalApp> parameterFactory)
         {
-            var subItem = new MenuItem() { Header = TextResources.GetString("OpenExternalAppAsCommand.Menu"), IsEnabled = isEnabled };
+            var subItem = new MenuItem() { Header = title, IsEnabled = isEnabled };
             UpdateExternalAppItems(subItem.Items, command, dialogCommand, parameterFactory);
             return subItem;
         }
