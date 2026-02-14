@@ -51,6 +51,16 @@
                 <Image Style="{StaticResource SubImageDown}" />
             </Grid>
 
+            <Grid x:Key="IconFileType">
+                <Image Style="{StaticResource MainImage}" Source="{StaticResource ic_sort_type2_24px}" Width="22" Height="22" Margin="-6,0,-2,-2" />
+                <Image Style="{StaticResource SubImageUp}" />
+            </Grid>
+
+            <Grid x:Key="IconFileTypeDescending">
+                <Image Style="{StaticResource MainImage}" Source="{StaticResource ic_sort_type2_24px}" Width="22" Height="22" Margin="-6,0,-2,-2" />
+                <Image Style="{StaticResource SubImageDown}" />
+            </Grid>
+
             <Grid x:Key="IconTimeStamp">
                 <Image Style="{StaticResource MainImage}" Source="{StaticResource ic_sort_time_24px}" Width="15" Height="15" Margin="-2,0,0,-2" />
                 <Image Style="{StaticResource SubImageUp}" />

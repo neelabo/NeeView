@@ -33,7 +33,7 @@ namespace NeeLaboratory.IO
             shfi.szTypeName = "";
 
             IntPtr hSuccess = NativeMethods.SHGetFileInfo(path, 0, ref shfi, (uint)Marshal.SizeOf(shfi), (uint)SHGetFileInfoFlags.SHGFI_TYPENAME);
-            if (hSuccess != IntPtr.Zero)
+            if (hSuccess == IntPtr.Zero)
             {
                 return null;
             }
@@ -60,7 +60,7 @@ namespace NeeLaboratory.IO
             shfi.szTypeName = "";
 
             IntPtr hSuccess = NativeMethods.SHGetFileInfo(path, attribute, ref shfi, (uint)Marshal.SizeOf(shfi), (uint)(SHGetFileInfoFlags.SHGFI_TYPENAME | SHGetFileInfoFlags.SHGFI_USEFILEATTRIBUTES));
-            if (hSuccess != IntPtr.Zero)
+            if (hSuccess == IntPtr.Zero)
             {
                 return null;
             }
@@ -73,6 +73,24 @@ namespace NeeLaboratory.IO
             {
                 return null;
             }
+        }
+
+        /// <summary>
+        /// ファイル拡張子から種類名を取得(Win32版)
+        /// </summary>
+        public static string? GetExtensionTypeName(string extension)
+        {
+            var ext = string.IsNullOrEmpty(extension) ? "dummy" : extension;
+            return GetTypeNameWithAttribute(ext, 0);
+        }
+
+        /// <summary>
+        /// ディレクトリの種類名を取得(Win32)
+        /// </summary>
+        /// <returns></returns>
+        public static string? GetDirectoryTypeName()
+        {
+            return GetTypeNameWithAttribute("dummy", (uint)FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
         }
 
         /// <summary>

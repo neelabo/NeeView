@@ -134,6 +134,11 @@ namespace NeeView
         public virtual string EntryFullName => LoosePath.Combine(Archive.SystemPath, EntryName);
 
         /// <summary>
+        /// エントリの拡張子
+        /// </summary>
+        public string Extension => LoosePath.GetExtension(EntryName);
+
+        /// <summary>
         /// ルートアーカイバー
         /// </summary>
         /// a.zip

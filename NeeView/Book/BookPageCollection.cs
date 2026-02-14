@@ -390,7 +390,18 @@ namespace NeeView
             if (_disposedValue) return pages;
             if (!pages.Any()) return pages;
 
-            IOrderedEnumerable<Page> orderSource = Config.Current.Book.FolderSortOrder switch
+            var folderSortOrder = Config.Current.Book.FolderSortOrder;
+            if (folderSortOrder == FolderSortOrder.None)
+            {
+                folderSortOrder = sortMode switch
+                {
+                    PageSortMode.FileType => FolderSortOrder.Last,
+                    PageSortMode.FileTypeDescending => FolderSortOrder.First,
+                    _ => FolderSortOrder.None,
+                };
+            }
+
+            IOrderedEnumerable<Page> orderSource = folderSortOrder switch
             {
                 FolderSortOrder.First
                     => pages.OrderBy(e => e.PageType),
@@ -403,22 +414,28 @@ namespace NeeView
             switch (sortMode)
             {
                 case PageSortMode.FileName:
-                    pages = orderSource.ThenBy(e => e, new ComparerFileName(token));
+                    pages = orderSource.ThenBy(e => e, PageComparer.FileName(token));
                     break;
                 case PageSortMode.FileNameDescending:
-                    pages = orderSource.ThenByDescending(e => e, new ComparerFileName(token));
+                    pages = orderSource.ThenByDescending(e => e, PageComparer.FileName(token));
+                    break;
+                case PageSortMode.FileType:
+                    pages = orderSource.ThenBy(e => e, PageComparer.FileType).ThenBy(e => e, PageComparer.FileName(token));
+                    break;
+                case PageSortMode.FileTypeDescending:
+                    pages = orderSource.ThenByDescending(e => e, PageComparer.FileType).ThenBy(e => e, PageComparer.FileName(token));
                     break;
                 case PageSortMode.TimeStamp:
-                    pages = orderSource.ThenBy(e => e.ArchiveEntry.LastWriteTime).ThenBy(e => e, new ComparerFileName(token));
+                    pages = orderSource.ThenBy(e => e.ArchiveEntry.LastWriteTime).ThenBy(e => e, PageComparer.FileName(token));
                     break;
                 case PageSortMode.TimeStampDescending:
-                    pages = orderSource.ThenByDescending(e => e.ArchiveEntry.LastWriteTime).ThenBy(e => e, new ComparerFileName(token));
+                    pages = orderSource.ThenByDescending(e => e.ArchiveEntry.LastWriteTime).ThenBy(e => e, PageComparer.FileName(token));
                     break;
                 case PageSortMode.Size:
-                    pages = orderSource.ThenBy(e => e.ArchiveEntry.Length).ThenBy(e => e, new ComparerFileName(token));
+                    pages = orderSource.ThenBy(e => e.ArchiveEntry.Length).ThenBy(e => e, PageComparer.FileName(token));
                     break;
                 case PageSortMode.SizeDescending:
-                    pages = orderSource.ThenByDescending(e => e.ArchiveEntry.Length).ThenBy(e => e, new ComparerFileName(token));
+                    pages = orderSource.ThenByDescending(e => e.ArchiveEntry.Length).ThenBy(e => e, PageComparer.FileName(token));
                     break;
                 case PageSortMode.Random:
                     _sortSeed = sortSeed != 0 ? sortSeed : Random.Shared.Next(1, int.MaxValue);
@@ -446,41 +463,6 @@ namespace NeeView
             for (int i = 0; i < Pages.Count; ++i)
             {
                 Pages[i].Index = i;
-            }
-        }
-
-        /// <summary>
-        /// ファイル名ソート用比較クラス
-        /// </summary>
-        private class ComparerFileName : IComparer<Page>
-        {
-            private readonly CancellationToken _token;
-
-            public ComparerFileName(CancellationToken token)
-            {
-                _token = token;
-            }
-
-            public int Compare(Page? x, Page? y)
-            {
-                _token.ThrowIfCancellationRequested();
-
-                if (x is null) return (y is null) ? 0 : -1;
-                if (y is null) return 1;
-
-                var xName = x.GetEntryNameTokens();
-                var yName = y.GetEntryNameTokens();
-
-                var limit = Math.Min(xName.Length, yName.Length);
-                for (int i = 0; i < limit; ++i)
-                {
-                    if (xName[i] != yName[i])
-                    {
-                        return NaturalSort.Compare(xName[i], yName[i]);
-                    }
-                }
-
-                return xName.Length - yName.Length;
             }
         }
 

@@ -13,6 +13,12 @@ namespace NeeView
         [AliasName("SortOrder.FileNameDescending")]
         FileNameDescending,
 
+        [AliasName("SortOrder.FileType")]
+        FileType,
+
+        [AliasName("SortOrder.FileTypeDescending")]
+        FileTypeDescending,
+
         [AliasName("SortOrder.TimeStamp")]
         TimeStamp,
 
@@ -46,7 +52,7 @@ namespace NeeView
         {
             return mode switch
             {
-                PageSortMode.FileNameDescending or PageSortMode.TimeStampDescending or PageSortMode.SizeDescending or PageSortMode.EntryDescending => true,
+                PageSortMode.FileNameDescending or PageSortMode.FileTypeDescending or PageSortMode.TimeStampDescending or PageSortMode.SizeDescending or PageSortMode.EntryDescending => true,
                 _ => false,
             };
         }
