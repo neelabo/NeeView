@@ -30,6 +30,12 @@ namespace NeeView
                 case PageSortMode.FileNameDescending:
                     entries.Sort((a, b) => CompareFileNameOrder(b, a, NaturalSort.Comparer));
                     break;
+                case PageSortMode.FileType:
+                    entries.Sort((a, b) => CompareFileTypeOrder(a, b, NaturalSort.Comparer));
+                    break;
+                case PageSortMode.FileTypeDescending:
+                    entries.Sort((a, b) => CompareFileTypeOrder(b, a, NaturalSort.Comparer));
+                    break;
                 case PageSortMode.TimeStamp:
                     entries.Sort((a, b) => CompareDateTimeOrder(a, b, NaturalSort.Comparer));
                     break;
@@ -58,6 +64,17 @@ namespace NeeView
                 return e1.Id - e2.Id;
         }
 
+        // 種類, ファイル名, ID の順で比較
+        private static int CompareFileTypeOrder(ArchiveEntry e1, ArchiveEntry e2, IComparer<string> comparer)
+        {
+            if (e1.Extension != e2.Extension)
+                return CompareFileType(e1.Extension, e2.Extension);
+            else if (e1.EntryName != e2.EntryName)
+                return CompareFileName(e1.EntryName, e2.EntryName, comparer);
+            else
+                return e1.Id - e2.Id;
+        }
+
         // 日付, ファイル名, ID の順で比較
         private static int CompareDateTimeOrder(ArchiveEntry e1, ArchiveEntry e2, IComparer<string> comparer)
         {
@@ -79,6 +96,12 @@ namespace NeeView
                 return comparer.Compare(s1, s2);
             else
                 return comparer.Compare(d1, d2);
+        }
+
+        // 拡張子比較
+        private static int CompareFileType(string s1, string s2)
+        {
+            return string.Compare(s1, s2, StringComparison.Ordinal);
         }
 
         // 日付比較

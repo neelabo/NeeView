@@ -42,5 +42,11 @@
             <GeometryDrawing Brush="{DynamicResource MenuBar.Foreground}" Pen="{x:Null}" Geometry="{StaticResource g_sortex_down_24px}" />
         </DrawingImage.Drawing>
     </DrawingImage>
-    
+
+    <DrawingImage x:Key="ic_sort_type2_24px">
+        <DrawingImage.Drawing>
+            <GeometryDrawing Brush="{DynamicResource MenuBar.Foreground}" Pen="{x:Null}" Geometry="{StaticResource g_ext_24px}" />
+        </DrawingImage.Drawing>
+    </DrawingImage>
+
 </ResourceDictionary>

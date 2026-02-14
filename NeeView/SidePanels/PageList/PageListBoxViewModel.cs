@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeLaboratory.IO;
 using NeeView.Properties;
 using System;
 using System.ComponentModel;
@@ -84,6 +85,8 @@ namespace NeeView
                 {
                     PageSortMode.FileName or PageSortMode.FileNameDescending
                         => new PageDirectoryGroupDescription(),
+                    PageSortMode.FileType or PageSortMode.FileTypeDescending
+                        => new PageFileTypeGroupDescription(),
                     PageSortMode.Size or PageSortMode.SizeDescending
                         => new PageSizeGroupDescription(),
                     PageSortMode.TimeStamp or PageSortMode.TimeStampDescending
@@ -143,6 +146,30 @@ namespace NeeView
             else
             {
                 return path.Replace("\\", " > ", StringComparison.Ordinal);
+            }
+        }
+    }
+
+    public class PageFileTypeGroupDescription : GroupDescription
+    {
+        public override object GroupNameFromItem(object item, int level, CultureInfo culture)
+        {
+            if (item is not Page page) return TextResources.GetString("Word.ItemNone");
+
+            return GetFileTypeName(page);
+        }
+
+        private static string GetFileTypeName(Page page)
+        {
+            var entry = page.ArchiveEntry;
+
+            if (entry.IsDirectory)
+            {
+                return FileTypeNameCache.Current.GetDirectoryTypeName();
+            }
+            else
+            {
+                return FileTypeNameCache.Current.GetExtensionTypeName(entry.Extension);
             }
         }
     }
