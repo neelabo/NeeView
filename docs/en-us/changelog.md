@@ -61,7 +61,8 @@ Context menu registration to Explorer is done in the settings window, just like 
 - View: Fixed a bug (#1821) where a white line would sometimes appear on the edge when changing from full screen to maximized window.
 - Panel: Fixed HOME/END key behavior when panel thumbnails are displayed (#1817)
 - Bookmarks: Fixed a bug where renaming in the bookmark panel was sometimes not possible. Renaming in the bookmark panel no longer opens a book (#1811)
-- Page List: Fixed a bug where page list thumbnails sometimes did not load (#1816)
+- PageList: Fixed a bug where page list thumbnails sometimes did not load (#1816)
+- PageList: Fixed an issue where folders and compressed files were not distinguished (#1868)
 - History: Fixed a bug where history information was not updated when opening a book from history (#1818)
 
 

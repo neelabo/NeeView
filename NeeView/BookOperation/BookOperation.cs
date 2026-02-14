@@ -238,13 +238,13 @@ namespace NeeView
         public bool CanMoveToChildBook()
         {
             var page = Book?.CurrentPage;
-            return page != null && page.PageType == PageType.Folder;
+            return page != null && page.PageType.IsFolder();
         }
 
         public void MoveToChildBook(object sender)
         {
             var page = Book?.CurrentPage;
-            if (page != null && page.PageType == PageType.Folder)
+            if (page != null && page.PageType.IsFolder())
             {
                 _bookHub.RequestLoad(sender, page.ArchiveEntry.SystemPath, null, BookLoadOption.IsBook | BookLoadOption.SkipSamePlace, true);
             }

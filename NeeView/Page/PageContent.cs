@@ -64,7 +64,7 @@ namespace NeeView
 
         public virtual PageType PageType => PageType.File;
 
-        public virtual bool IsBook => PageType == PageType.Folder;
+        public virtual bool IsBook => PageType.IsFolder();
 
         public virtual bool IsFileContent => false;
 

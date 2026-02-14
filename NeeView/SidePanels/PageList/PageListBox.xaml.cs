@@ -300,7 +300,7 @@ namespace NeeView
                 else if (key == Key.Down)
                 {
                     // 選択ブックに移動
-                    if (page != null && page.PageType == PageType.Folder)
+                    if (page != null && page.PageType.IsFolder())
                     {
                         BookHub.Current.RequestLoad(this, page.ArchiveEntry.SystemPath, null, BookLoadOption.IsBook | BookLoadOption.SkipSamePlace, true);
                     }
@@ -394,7 +394,7 @@ namespace NeeView
         // 項目ダブルクリック
         private void PageListItem_MouseDoubleClick(object? sender, MouseButtonEventArgs e)
         {
-            if ((sender as ListBoxItem)?.Content is Page page && page.PageType == PageType.Folder)
+            if ((sender as ListBoxItem)?.Content is Page page && page.PageType.IsFolder())
             {
                 BookHub.Current.RequestLoad(this, page.ArchiveEntry.SystemPath, null, BookLoadOption.IsBook | BookLoadOption.SkipSamePlace, true);
                 e.Handled = true;
@@ -577,7 +577,7 @@ namespace NeeView
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (value is Page page && page.PageType == PageType.Folder) ? Visibility.Visible : Visibility.Collapsed;
+            return (value is Page page && page.PageType.IsFolder()) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -595,7 +595,7 @@ namespace NeeView
 
         public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is Page page && page.PageType == PageType.Folder)
+            if (value is Page page && page.PageType.IsFolder())
             {
                 if (page.ArchiveEntry.IsDirectory)
                 {

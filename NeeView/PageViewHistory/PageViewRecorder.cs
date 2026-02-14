@@ -68,6 +68,9 @@ namespace NeeView
                         case PageType.Folder:
                             _writeBuffer.Append("Folder");
                             break;
+                        case PageType.Archive:
+                            _writeBuffer.Append("Archive");
+                            break;
                         case PageType.File:
                             _writeBuffer.Append("File");
                             break;

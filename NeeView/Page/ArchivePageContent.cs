@@ -13,7 +13,7 @@ namespace NeeView
         {
         }
 
-        public override PageType PageType => PageType.Folder;
+        public override PageType PageType => ArchiveEntry.IsDirectory ? PageType.Folder : PageType.Archive;
 
         public override bool IsFileContent => true;
 
