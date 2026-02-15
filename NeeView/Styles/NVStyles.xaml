@@ -955,6 +955,26 @@
         </Setter>
     </Style>
 
+    <Style x:Key="NVScrollableContextMenu" TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource NVContextMenu}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContextMenu}">
+                    <Border x:Name="Border" Background="{TemplateBinding Background}" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}" SnapsToDevicePixels="True">
+                        <ScrollViewer Margin="{TemplateBinding Padding}" Style="{StaticResource NVScrollViewer}" VerticalScrollBarVisibility="Auto">
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="HasDropShadow" Value="true">
+                            <Setter TargetName="Border" Property="Margin" Value="5" />
+                            <Setter TargetName="Border" Property="Effect" Value="{StaticResource NVDropShadowEffect}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="NVMenuItemSeparatorStyle" TargetType="{x:Type Separator}">
         <Setter Property="MinHeight" Value="1" />
         <Setter Property="Height" Value="1" />

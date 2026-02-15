@@ -153,7 +153,7 @@
                                 ToolTip="{Binding MoveToHomeToolTip}">
                             <Image Source="{StaticResource ic_home_24px_a}" />
                             <Button.ContextMenu>
-                                <ContextMenu/>
+                                <ContextMenu Style="{StaticResource NVScrollableContextMenu}" />
                             </Button.ContextMenu>
                         </Button>
                         <Button x:Name="FolderPrevButton" Style="{StaticResource FolderListButtonStyle}" Command="{Binding MoveToPrevious}" TabIndex="1" ContextMenuService.Placement="Bottom"

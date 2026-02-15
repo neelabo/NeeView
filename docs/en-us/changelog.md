@@ -60,6 +60,7 @@ Context menu registration to Explorer is done in the settings window, just like 
 - View: Fixed a bug where resize filters were not working for some image formats (#1809)
 - View: Fixed a bug (#1821) where a white line would sometimes appear on the edge when changing from full screen to maximized window.
 - Panel: Fixed HOME/END key behavior when panel thumbnails are displayed (#1817)
+- Bookshelf: Fixed an issue where the quick list in the Home button menu might not display fully (#1869)
 - Bookmarks: Fixed a bug where renaming in the bookmark panel was sometimes not possible. Renaming in the bookmark panel no longer opens a book (#1811)
 - PageList: Fixed a bug where page list thumbnails sometimes did not load (#1816)
 - PageList: Fixed an issue where folders and compressed files were not distinguished (#1868)
