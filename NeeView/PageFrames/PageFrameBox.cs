@@ -1163,6 +1163,27 @@ namespace NeeView.PageFrames
             }
         }
 
+        /// <summary>
+        /// Preset Scroll
+        /// </summary>
+        public void ScrollToPreset(HorizontalAlignment horizontal, VerticalAlignment vertical, bool snap)
+        {
+            if (_disposedValue) return;
+            if (!_bookContext.IsEnabled) return;
+
+            var node = _selected.Node;
+            AssertSelectedExists();
+            if (node?.Value.Content is not PageFrameContent) return;
+
+            var contentRect = _transformControlFactory.CreateContentRect(node.Value);
+            var viewRect = _transformControlFactory.CreateViewRect(_viewBox.Rect);
+            var area = new DragArea(viewRect, contentRect);
+            var delta = area.SnapAlignment(horizontal, vertical, snap);
+
+            AddPosition(delta.X, delta.Y, _context.ScrollDuration);
+        }
+
+
         private Rect CreatePanoramaContentRect()
         {
             var contentRect = _containers.Collect<PageFrameContent>().Select(e => e.Rect).Union();

@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory;
 using NeeView.ComponentModel;
+using NeeView.Windows;
 using System;
 using System.Diagnostics;
 using System.Windows;
@@ -225,6 +226,15 @@ namespace NeeView
             {
                 control.DoMove(new Vector(control.Context.ViewRect.Width * rate * ViewHorizontalDirection, 0), span);
             }
+        }
+
+        public void ScrollToPreset(ViewPresetScrollCommandParameter parameter)
+        {
+            if (Config.Current.Mouse.IsHoverScroll) return;
+
+            var horizontal = parameter.Horizontal.ToHorizontalAlignment();
+            var vertical = parameter.Vertical.ToVerticalAlignment();
+            _presenter.ScrollToPreset(horizontal, vertical, parameter.IsSnap);
         }
 
         public void ScrollNTypeDown(ViewScrollNTypeCommandParameter parameter)

@@ -78,6 +78,7 @@ namespace NeeView
             typeof(ToggleStretchModeCommandParameter),
             typeof(StretchModeCommandParameter),
             typeof(ViewScrollCommandParameter),
+            typeof(ViewPresetScrollCommandParameter),
             typeof(ViewScaleCommandParameter),
             typeof(ViewRotateCommandParameter),
             typeof(MovePlaylistItemInBookCommandParameter),
