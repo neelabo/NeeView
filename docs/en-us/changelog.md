@@ -1,7 +1,7 @@
 # Changelog
 
-## 45.0 (Beta)
-(2026-02-??)
+## 45.0
+(2026-02-16)
 
 #### Important changes
 
