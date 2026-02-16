@@ -620,6 +620,11 @@ namespace NeeView
             return ValidBox()?.ScrollToNext(direction, parameter) ?? false;
         }
 
+        public void ScrollToPreset(HorizontalAlignment horizontal, VerticalAlignment vertical, bool snap)
+        {
+            ValidBox()?.ScrollToPreset(horizontal, vertical, snap);
+        }
+
         public void ResetTransform()
         {
             ValidBox()?.ResetTransform();

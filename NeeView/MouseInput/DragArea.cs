@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using NeeView.ComponentModel;
+using System.Linq;
 using System.Windows;
 
 namespace NeeView
@@ -147,6 +148,57 @@ namespace NeeView
             return pos;
         }
 
-    }
+        /// <summary>
+        /// コンテンツをアライメント位置に配置する移動量を求める
+        /// </summary>
+        /// <param name="horizontal">水平位置</param>
+        /// <param name="vertical">垂直位置</param>
+        /// <param name="snap">既に表示範囲内であってもアライメントを強制する</param>
+        /// <returns></returns>
+        public Vector SnapAlignment(HorizontalAlignment horizontal, VerticalAlignment vertical, bool snap)
+        {
+            var p0 = ContentRect.Center();
+            var p1 = GetAlignmentCenter(horizontal, vertical, snap);
 
+            var delta = p1 - p0;
+            return delta;
+        }
+
+        public Point GetAlignmentCenter(HorizontalAlignment horizontal, VerticalAlignment vertical, bool snap)
+        {
+            Point p0 = ContentRect.Center();
+            Point p1 = default;
+            Point p2 = SnapView(p0);
+
+            if (snap || ContentRect.Width > ViewRect.Width)
+            {
+                p1.X = horizontal switch
+                {
+                    HorizontalAlignment.Left => (ContentRect.Width - ViewRect.Width) * 0.5,
+                    HorizontalAlignment.Right => (ContentRect.Width - ViewRect.Width) * -0.5,
+                    _ => 0.0,
+                };
+            }
+            else
+            {
+                p1.X = p2.X;
+            }
+
+            if (snap || ContentRect.Height > ViewRect.Height)
+            {
+                p1.Y = vertical switch
+                {
+                    VerticalAlignment.Top => (ContentRect.Height - ViewRect.Height) * 0.5,
+                    VerticalAlignment.Bottom => (ContentRect.Height - ViewRect.Height) * -0.5,
+                    _ => 0,
+                };
+            }
+            else
+            {
+                p1.Y = p2.Y;
+            }
+
+            return p1;
+        }
+    }
 }

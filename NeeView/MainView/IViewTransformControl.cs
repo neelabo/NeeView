@@ -22,6 +22,7 @@
         void ScrollDown(ViewScrollCommandParameter parameter);
         void ScrollLeft(ViewScrollCommandParameter parameter);
         void ScrollRight(ViewScrollCommandParameter parameter);
+        void ScrollToPreset(ViewPresetScrollCommandParameter parameter);
 
         void ScrollNTypeDown(ViewScrollNTypeCommandParameter parameter);
         void ScrollNTypeUp(ViewScrollNTypeCommandParameter parameter);
