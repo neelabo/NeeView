@@ -719,7 +719,7 @@ namespace NeeView.Setting
 
         protected override UIElement CreateContentInner()
         {
-            return _control ??= new SettingItemFileAssociationControl();
+            return _control = new SettingItemFileAssociationControl();
         }
 
         public override void InitializeValue()
