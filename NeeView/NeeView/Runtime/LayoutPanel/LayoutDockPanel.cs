@@ -150,6 +150,7 @@ namespace NeeView.Runtime.LayoutPanel
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Center,
                 Height = _splitterWidth - 2.0,
+                FocusVisualStyle= App.Current.Resources["NVFocusVisual"] as Style,
             };
             splitter.SetBinding(GridSplitter.BackgroundProperty, new Binding(nameof(BorderBrush)) { Source = this });
             Grid.SetRow(splitter, this.RowDefinitions.Count - 1);
@@ -166,6 +167,7 @@ namespace NeeView.Runtime.LayoutPanel
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Stretch,
                 Width = _splitterWidth - 2.0,
+                FocusVisualStyle = App.Current.Resources["NVFocusVisual"] as Style,
             };
             splitter.SetBinding(GridSplitter.BackgroundProperty, new Binding(nameof(BorderBrush)) { Source = this });
             Grid.SetColumn(splitter, this.ColumnDefinitions.Count - 1);

@@ -144,7 +144,7 @@
                                                     <nvc:EnterTriggerTextBox Text="{Binding Model.Rows}" Margin="2" TabIndex="2" />
                                                 </DockPanel>
                                             </UniformGrid>
-                                            <Button x:Name="ResetButton" Style="{StaticResource IconButton}" HorizontalAlignment="Right" Margin="0,20,0,0" Command="{Binding ResetCommand}">
+                                            <Button x:Name="ResetButton" Style="{StaticResource IconButton}" HorizontalAlignment="Right" Margin="0,20,0,0" Command="{Binding ResetCommand}" TabIndex="2">
                                                 <TextBlock Margin="5" Text="{properties:TextBinding Word.Reset}" Foreground="{DynamicResource Control.Accent}" />
                                             </Button>
                                         </StackPanel>

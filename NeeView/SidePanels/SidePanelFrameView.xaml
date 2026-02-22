@@ -164,11 +164,11 @@
                 <Grid x:Name="CenterPanel" Grid.Column="1"/>
 
                 <GridSplitter x:Name="LeftSplitter" Grid.Column="1" Style="{StaticResource PanelGridSplitterStyle}" HorizontalAlignment="Left"
-                              KeyboardNavigation.TabNavigation="Local" KeyboardNavigation.TabIndex="3" FocusVisualStyle="{StaticResource NVBorderFocusVisual}"
+                              KeyboardNavigation.TabNavigation="Local" KeyboardNavigation.TabIndex="3" FocusVisualStyle="{StaticResource NVFocusVisual}"
                               Visibility="{Binding ElementName=LeftPanel, Path=Visibility}"/>
 
                 <GridSplitter x:Name="RightSplitter" Grid.Column="1" Style="{StaticResource PanelGridSplitterStyle}"  HorizontalAlignment="Right"
-                              KeyboardNavigation.TabNavigation="Local" KeyboardNavigation.TabIndex="4" FocusVisualStyle="{StaticResource NVBorderFocusVisual}"
+                              KeyboardNavigation.TabNavigation="Local" KeyboardNavigation.TabIndex="4" FocusVisualStyle="{StaticResource NVFocusVisual}"
                               Visibility="{Binding ElementName=RightPanel, Path=Visibility}"/>
             </Grid>
         </Grid>

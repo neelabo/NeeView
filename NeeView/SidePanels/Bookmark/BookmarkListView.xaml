@@ -155,8 +155,8 @@
                 </local:FolderTreeView.Style>
             </local:FolderTreeView>
 
-            <GridSplitter x:Name="FolderTreeAreaSplitter" IsTabStop="False" UseLayoutRounding="True" SnapsToDevicePixels="True" Background="{DynamicResource  Panel.Splitter}"
-                          MinWidth="6" MinHeight="6"
+            <GridSplitter x:Name="FolderTreeAreaSplitter" UseLayoutRounding="True" SnapsToDevicePixels="True" Background="{DynamicResource  Panel.Splitter}"
+                          MinWidth="6" MinHeight="6" FocusVisualStyle="{StaticResource NVFocusVisual}"
                           Visibility="{Binding IsFolderTreeVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <GridSplitter.Style>
                     <Style TargetType="GridSplitter">

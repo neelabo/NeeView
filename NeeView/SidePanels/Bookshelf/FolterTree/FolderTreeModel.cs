@@ -90,6 +90,11 @@ namespace NeeView
             }
         }
 
+        public void SelectFirstItem()
+        {
+            SelectedItem = _rootQuickAccess ?? _rootBookmarkFolder;
+        }
+
         public void SelectRootQuickAccess()
         {
             SelectedItem = _rootQuickAccess;

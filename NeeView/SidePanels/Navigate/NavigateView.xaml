@@ -306,10 +306,10 @@
                                     <nvc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding IsBaseScaleEnabled}" Margin="10,0,0,0" VerticalAlignment="Center" />
                                     <TextBlock Text="{properties:TextBinding Navigator.StretchScale}" VerticalAlignment="Center" />
                                 </DockPanel>
-                                <DockPanel Margin="0,2" Visibility="{Binding IsBaseScaleEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <DockPanel Margin="0,2" Visibility="{Binding IsBaseScaleEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" KeyboardNavigation.TabNavigation="Local">
                                     <nvc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding BaseScale, StringFormat={}{0:F0}}" Width="70" VerticalAlignment="Center" Margin="5,0,0,0"
-                                            ValueDeltaChanged="BaseScale_ValueDelta" />
-                                    <Slider Value="{Binding SliderBaseScale}" Minimum="10.0" Maximum="190.0" VerticalAlignment="Center" />
+                                            ValueDeltaChanged="BaseScale_ValueDelta" TabIndex="2" />
+                                    <Slider Value="{Binding SliderBaseScale}" Minimum="10.0" Maximum="190.0" VerticalAlignment="Center" TabIndex="1" />
                                 </DockPanel>
                             </StackPanel>
                         </StackPanel>

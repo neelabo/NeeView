@@ -301,7 +301,7 @@ namespace NeeView
 
             if (this.TreeView.SelectedItem == null)
             {
-                _vm.SelectRootQuickAccess();
+                _vm.SelectFirstItem();
             }
 
             if (_vm.Model.IsFocusAtOnce)

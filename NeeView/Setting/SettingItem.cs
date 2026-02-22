@@ -801,6 +801,7 @@ namespace NeeView.Setting
             var link = new Hyperlink();
             link.Inlines.Add(text);
             link.Command = command;
+            link.FocusVisualStyle = App.Current.Resources["NVBorderFocusVisual"] as Style;
             textBlock.Inlines.Add(link);
             return textBlock;
         }

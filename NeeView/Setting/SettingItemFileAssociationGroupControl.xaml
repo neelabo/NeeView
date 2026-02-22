@@ -35,9 +35,9 @@
     </UserControl.Resources>
 
     <Grid>
-        <GroupBox>
+        <GroupBox KeyboardNavigation.TabNavigation="Local">
             <GroupBox.Header>
-                <CheckBox x:Name="HeaderCheckBox" Content="{Binding Title}" IsChecked="{Binding IsChecked}">
+                <CheckBox x:Name="HeaderCheckBox" Content="{Binding Title}" IsChecked="{Binding IsChecked}" TabIndex="1">
                     <CheckBox.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="{properties:TextBinding FileAssociation.Menu.ChangeCategoryIcon}" Command="{Binding ChangeCategoryIconCommand}"/>
@@ -45,7 +45,7 @@
                     </CheckBox.ContextMenu>
                 </CheckBox>
             </GroupBox.Header>
-            <ItemsControl x:Name="AssociationListBox" ItemsSource="{Binding Items}" Margin="20,5,5,5"/>
+            <ItemsControl x:Name="AssociationListBox" ItemsSource="{Binding Items}" Margin="20,5,5,5" TabIndex="2" IsTabStop="False"/>
         </GroupBox>
     </Grid>
 </UserControl>

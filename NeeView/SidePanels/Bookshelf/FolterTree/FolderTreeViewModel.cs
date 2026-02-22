@@ -60,9 +60,9 @@ namespace NeeView
             SelectedItemChanged?.Invoke(sender, e);
         }
 
-        public void SelectRootQuickAccess()
+        public void SelectFirstItem()
         {
-            Model?.SelectRootQuickAccess();
+            Model?.SelectFirstItem();
         }
 
         public void Decide(object item)

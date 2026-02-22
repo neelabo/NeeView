@@ -11,6 +11,7 @@
     <local:NullableToInverseVisibilityConverter x:Key="NullableToInverseVisibilityConverter"/>
 
     <Style TargetType="{x:Type local:ThumbnailListImage}">
+        <Setter Property="Focusable" Value="False"/>
         <Setter Property="Background" Value="{DynamicResource Thumbnail.Foreground}"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -44,6 +45,7 @@
     <local:ContentProfileToolTopEnableConverter x:Key="ContentProfileToolTopEnableConverter" />
 
     <Style TargetType="{x:Type local:PanelListContentImage}">
+        <Setter Property="Focusable" Value="False"/>
         <Setter Property="Width" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ContentItemProfile.ShapeWidth, Mode=OneTime}"/>
         <Setter Property="Height" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ContentItemProfile.ShapeHeight, Mode=OneTime}"/>
         <Setter Property="Template">
@@ -80,6 +82,7 @@
     <local:BannerProfileToolTopEnableConverter x:Key="BannerProfileToolTopEnableConverter" />
 
     <Style TargetType="{x:Type local:PanelListBannerImage}">
+        <Setter Property="Focusable" Value="False"/>
         <Setter Property="Width" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.BannerItemProfile.ShapeWidth, Mode=OneTime}"/>
         <Setter Property="Height" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.BannerItemProfile.ShapeHeight, Mode=OneTime}"/>
         <Setter Property="Template">
@@ -114,6 +117,7 @@
     <local:ThumbnailProfileToolTopEnableConverter x:Key="ThumbnailProfileToolTopEnableConverter" />
 
     <Style TargetType="{x:Type local:PanelListThumbnailImage}">
+        <Setter Property="Focusable" Value="False"/>
         <Setter Property="Width" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.ShapeWidth, Mode=OneTime}"/>
         <Setter Property="Height" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.ShapeHeight, Mode=OneTime}"/>
         <Setter Property="Template">
@@ -150,6 +154,7 @@
     <local:FolderItemIconOverlayToImageSourceConverter x:Key="FolderItemIconOverlayToImageSourceConverter"/>
 
     <Style TargetType="{x:Type local:FolderListIcon}">
+        <Setter Property="Focusable" Value="False"/>
         <Setter Property="Height" Value="20"/>
         <Setter Property="FolderIcon" Value="{StaticResource ic_dummy}"/>
         <Setter Property="LinkIcon" Value="{StaticResource ic_dummy}"/>
@@ -188,6 +193,7 @@
     <!--#region MoreButton-->
 
     <Style TargetType="{x:Type local:MoreMenuButton}">
+        <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="Width" Value="28"/>
         <Setter Property="ImageSource" Value="{StaticResource ic_dummy}"/>
         <Setter Property="Template">
@@ -406,6 +412,7 @@
     <!--#region ActiveMarker-->
 
     <Style TargetType="{x:Type local:ActiveMarker}">
+        <Setter Property="Focusable" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:ActiveMarker}">
@@ -424,6 +431,7 @@
     <!--#region ProgressRing-->
 
     <Style TargetType="{x:Type local:ProgressRing}">
+        <Setter Property="Focusable" Value="False"/>
         <Setter Property="Foreground" Value="{DynamicResource Control.Accent}"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -445,6 +453,7 @@
     <!--#region SizeInspector-->
 
     <Style TargetType="{x:Type nwc:SizeInspector}">
+        <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type nwc:SizeInspector}">
@@ -470,20 +479,21 @@
     <!--#region PointInspector-->
 
     <Style TargetType="{x:Type nwc:PointInspector}">
+        <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type nwc:PointInspector}">
                     <Grid x:Name="PART_Root">
                         <StackPanel>
-                            <DockPanel Margin="0,0,0,5">
+                            <DockPanel Margin="0,0,0,5" KeyboardNavigation.TabNavigation ="Local">
                                 <TextBlock Text="X" Width="16"/>
-                                <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Width="70" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=X}" Slider="{Binding ElementName=PART_SliderX}"/>
-                                <Slider x:Name="PART_SliderX" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=X}" Minimum="0" Maximum="1" TickFrequency="0.01" Margin="5,0"/>
+                                <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Width="70" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=X}" Slider="{Binding ElementName=PART_SliderX}" TabIndex="1"/>
+                                <Slider x:Name="PART_SliderX" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=X}" Minimum="0" Maximum="1" TickFrequency="0.01" Margin="5,0" TabIndex="0"/>
                             </DockPanel>
-                            <DockPanel Margin="0,0,0,5">
+                            <DockPanel Margin="0,0,0,5" KeyboardNavigation.TabNavigation ="Local">
                                 <TextBlock Text="Y" Width="16"/>
-                                <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Width="70" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Y}" Slider="{Binding ElementName=PART_SliderY}"/>
-                                <Slider x:Name="PART_SliderY" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Y}" Minimum="0" Maximum="1" TickFrequency="0.01" Margin="5,0"/>
+                                <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Width="70" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Y}" Slider="{Binding ElementName=PART_SliderY}" TabIndex="1"/>
+                                <Slider x:Name="PART_SliderY" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Y}" Minimum="0" Maximum="1" TickFrequency="0.01" Margin="5,0" TabIndex="0"/>
                             </DockPanel >
                         </StackPanel>
                     </Grid>
@@ -499,6 +509,7 @@
     <nwd:NotBoolToVisiblityConverter x:Key="NotBoolToVisiblityConverter"/>
 
     <Style TargetType="{x:Type nwc:FileNameBox}">
+        <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type nwc:FileNameBox}">
@@ -541,6 +552,7 @@
     <!--#region TextBoxWithMessage-->
 
     <Style TargetType="{x:Type nwc:TextBoxWithMessage}">
+        <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type nwc:TextBoxWithMessage}">
@@ -586,6 +598,7 @@
     <!--#region CropControl-->
 
     <Style TargetType="{x:Type local:CropControl}">
+        <Setter Property="Focusable" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:CropControl}">
@@ -608,6 +621,7 @@
     <local:IsNearZeroConverter x:Key="IsNearZeroConverter"/>
 
     <Style TargetType="{x:Type local:NowLoadingView}">
+        <Setter Property="Focusable" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:NowLoadingView}">
@@ -645,6 +659,7 @@
     <!--#region PageLoadingControl-->
 
     <Style TargetType="{x:Type local:PageLoadingControl}">
+        <Setter Property="Focusable" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:PageLoadingControl}">
@@ -693,7 +708,7 @@
     </Style>
 
     <Style TargetType="{x:Type local:VisiblePasswordBox}">
-        <Setter Property="FocusManager.IsFocusScope" Value="True"/>
+        <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="VisibleOnIcon" Value="{StaticResource ic_dummy}"/>
         <Setter Property="VisibleOffIcon" Value="{StaticResource ic_dummy}"/>
         <Setter Property="Template">
