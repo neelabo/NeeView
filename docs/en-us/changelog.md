@@ -1,5 +1,15 @@
 # Changelog
 
+## 45.1
+(2026-02-23)
+
+### Fixed
+
+- System: Fixed TAB key navigation (#1880)
+- Panel: Fixed an issue where wheel scrolling in thumbnail view did not function properly (#1878)
+- Setting: Fixed an issue where the “Explorer” page might not display (#1875)
+
+
 ## 45.0
 (2026-02-16)
 
