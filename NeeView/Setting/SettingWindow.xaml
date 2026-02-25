@@ -235,7 +235,7 @@
                 </DockPanel>
             </Border>
 
-            <ContentControl x:Name="PageContent" Content="{Binding CurrentPage.Content}" IsTabStop="False" FocusVisualStyle="{x:Null}" Margin="0,0,2,0" />
+            <ContentControl x:Name="PageContent" Content="{Binding CurrentPage.Content}" IsTabStop="False" FocusVisualStyle="{x:Null}" Margin="0,0,0,0" />
 
         </DockPanel>
 

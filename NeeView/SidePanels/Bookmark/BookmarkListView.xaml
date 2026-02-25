@@ -63,9 +63,9 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <DockPanel x:Name="Root" Margin="2" IsVisibleChanged="BookmarkListView_IsVisibleChanged" Background="Transparent" KeyDown="Root_KeyDown">
+    <DockPanel x:Name="Root" Margin="0,2" IsVisibleChanged="BookmarkListView_IsVisibleChanged" Background="Transparent" KeyDown="Root_KeyDown">
 
-        <StackPanel DockPanel.Dock="Top">
+        <StackPanel DockPanel.Dock="Top" Margin="2,0">
 
             <DockPanel HorizontalAlignment="Stretch" MinHeight="24" Margin="0,0,0,8">
                 <TextBlock DockPanel.Dock="Right" Text="{Binding FolderCollection.ValidCount, StringFormat={}{0}}" Foreground="{DynamicResource Panel.Foreground}" Margin="5,0" VerticalAlignment="Center"
@@ -143,7 +143,7 @@
                             <DataTrigger Binding="{Binding FolderTreeLayout}" Value="Top">
                                 <Setter Property="Grid.Column" Value="1"/>
                                 <Setter Property="Grid.Row" Value="0"/>
-                                <Setter Property="Margin" Value="2,2,2,8"/>
+                                <Setter Property="Margin" Value="2,2,0,8"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding FolderTreeLayout}" Value="Left">
                                 <Setter Property="Grid.Column" Value="0"/>
@@ -178,7 +178,7 @@
                 </GridSplitter.Style>
             </GridSplitter>
 
-            <ContentControl x:Name="ListBoxContent" Grid.Column="1" Grid.Row="1" Focusable="False" Margin="2" />
+            <ContentControl x:Name="ListBoxContent" Grid.Column="1" Grid.Row="1" Focusable="False" Margin="2,2,0,2" />
         </Grid>
 
     </DockPanel>

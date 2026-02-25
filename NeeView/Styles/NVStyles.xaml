@@ -109,27 +109,28 @@
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="Focusable" Value="false" />
         <Setter Property="Foreground" Value="{DynamicResource ScrollBar.Foreground}" />
-        <Setter Property="Background" Value="{DynamicResource ScrollBar.Background}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Visibility" Value="Hidden"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type RepeatButton}">
                     <Border x:Name="Border" Background="Transparent">
-                        <Path x:Name="Arrow" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="{TemplateBinding Foreground}" StrokeThickness="1"
-                                Data="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}">
+                        <Path x:Name="Arrow" HorizontalAlignment="Center" VerticalAlignment="Center" Stroke="{TemplateBinding Foreground}" StrokeThickness="1" StrokeLineJoin="Round" Fill="{TemplateBinding Foreground}" 
+                          Data="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}">
                         </Path>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource ScrollBar.MouseOver}" />
-                            <Setter TargetName="Arrow" Property="Stroke" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Background}" />
+                            <Setter TargetName="Arrow" Property="Fill" Value="{DynamicResource ScrollBar.MouseOver}" />
+                            <Setter TargetName="Arrow" Property="Stroke" Value="{DynamicResource ScrollBar.MouseOver}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource ScrollBar.Pressed}" />
-                            <Setter TargetName="Arrow" Property="Stroke" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Background}" />
+                            <Setter TargetName="Arrow" Property="Fill" Value="{DynamicResource ScrollBar.Pressed}" />
+                            <Setter TargetName="Arrow" Property="Stroke" Value="{DynamicResource ScrollBar.Pressed}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="Border" Property="Background" Value="{x:Static Brushes.Transparent}" />
-                            <Setter TargetName="Arrow" Property="Stroke" Value="{x:Static Brushes.Transparent}" />
+                            <Setter TargetName="Arrow" Property="Fill" Value="{DynamicResource Control.GrayText}" />
+                            <Setter TargetName="Arrow" Property="Stroke" Value="{DynamicResource Control.GrayText}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -159,16 +160,18 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
-                    <Border x:Name="Thumb" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" />
+                    <Border x:Name="Thumb" Background="Transparent">
+                        <Border x:Name="PART_ThumbVisual" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" CornerRadius="3" Margin="{TemplateBinding Padding}"/>
+                    </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Thumb" Property="Background" Value="{DynamicResource ScrollBar.MouseOver}" />
+                            <Setter TargetName="PART_ThumbVisual" Property="Background" Value="{DynamicResource ScrollBar.MouseOver}" />
                         </Trigger>
                         <Trigger Property="IsMouseCaptured" Value="True">
-                            <Setter TargetName="Thumb" Property="Background" Value="{DynamicResource ScrollBar.Pressed}" />
+                            <Setter TargetName="PART_ThumbVisual" Property="Background" Value="{DynamicResource ScrollBar.Pressed}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="Thumb" Property="Background" Value="{DynamicResource Control.GrayText}" />
+                            <Setter TargetName="PART_ThumbVisual" Property="Background" Value="{DynamicResource Control.GrayText}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -177,123 +180,82 @@
     </Style>
 
     <ControlTemplate x:Key="NVVerticalScrollBar" TargetType="{x:Type ScrollBar}">
-        <Grid Margin="-10,0,0,0">
-            <Border x:Name="HitArea" Width="14" HorizontalAlignment="Right" Background="Transparent" />
-            <Grid x:Name="root" Width="16" HorizontalAlignment="Right">
-                <Grid.LayoutTransform>
-                    <ScaleTransform x:Name="Scaler" ScaleX="0.125" ScaleY="1.0" />
-                </Grid.LayoutTransform>
-                <Grid.RowDefinitions>
-                    <RowDefinition MaxHeight="14" />
-                    <RowDefinition Height="0.00001*" />
-                    <RowDefinition MaxHeight="14" />
-                </Grid.RowDefinitions>
-                <Border x:Name="Bd" Grid.RowSpan="3" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" Opacity="0" />
-                <RepeatButton x:Name="UpButton" Grid.Row="0" Style="{StaticResource NVScrollBarLineButton}" Opacity="0" Height="14" Foreground="{TemplateBinding Foreground}"
-                        Background="{TemplateBinding Background}" Command="ScrollBar.LineUpCommand" Content="M 0 4 L 4 0 L 8 4" />
-                <Track x:Name="PART_Track" Grid.Row="1" IsDirectionReversed="true">
-                    <Track.DecreaseRepeatButton>
-                        <RepeatButton Style="{StaticResource NVScrollBarPageButton}" Command="ScrollBar.PageUpCommand" />
-                    </Track.DecreaseRepeatButton>
-                    <Track.Thumb>
-                        <Thumb Style="{StaticResource NVScrollBarThumb}" Margin="0" Background="{TemplateBinding Foreground}" BorderBrush="{TemplateBinding BorderBrush}" />
-                    </Track.Thumb>
-                    <Track.IncreaseRepeatButton>
-                        <RepeatButton Style="{StaticResource NVScrollBarPageButton}" Command="ScrollBar.PageDownCommand" />
-                    </Track.IncreaseRepeatButton>
-                </Track>
-                <RepeatButton x:Name="DownButton" Grid.Row="3" Style="{StaticResource NVScrollBarLineButton}" Opacity="0" Height="14" Foreground="{TemplateBinding Foreground}"
-                        Background="{TemplateBinding Background}" Command="ScrollBar.LineDownCommand" Content="M 0 0 L 4 4 L 8 0" />
-            </Grid>
-            <VisualStateManager.VisualStateGroups>
-                <VisualStateGroup x:Name="CommonStates">
-                    <VisualState x:Name="Normal">
-                        <Storyboard BeginTime="0:0:1.0">
-                            <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="ScaleX" Storyboard.TargetName="Scaler" To="0.125" />
-                            <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Bd" To="0" />
-                            <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="UpButton" To="0" />
-                            <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="DownButton" To="0" />
-                        </Storyboard>
-                    </VisualState>
-                    <VisualState x:Name="MouseOver">
-                        <Storyboard BeginTime="0:0:0.0">
-                            <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="ScaleX" Storyboard.TargetName="Scaler" To="1.0" />
-                            <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Bd" To="1" />
-                            <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="UpButton" To="1" />
-                            <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="DownButton" To="1" />
-                        </Storyboard>
-                    </VisualState>
-                </VisualStateGroup>
-            </VisualStateManager.VisualStateGroups>
+        <Grid x:Name="root" Width="12" HorizontalAlignment="Right" Background="Transparent">
+            <Grid.RowDefinitions>
+                <RowDefinition MaxHeight="16" />
+                <RowDefinition Height="0.00001*" />
+                <RowDefinition MaxHeight="16" />
+            </Grid.RowDefinitions>
+            <Border x:Name="Bd" Grid.RowSpan="3" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" />
+            <RepeatButton x:Name="PART_UpButton" Grid.Row="0" Style="{StaticResource NVScrollBarLineButton}" Height="16" Foreground="{TemplateBinding Foreground}"
+                  Background="{TemplateBinding Background}" Command="ScrollBar.LineUpCommand" Content="M 0 4 L 4 -2 L 8 4 Z" />
+            <Track x:Name="PART_Track" Grid.Row="1" IsDirectionReversed="true">
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource NVScrollBarPageButton}" Command="ScrollBar.PageUpCommand" />
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb Style="{StaticResource NVScrollBarThumb}" Padding="2,0" Background="{TemplateBinding Foreground}" BorderBrush="{TemplateBinding BorderBrush}" />
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource NVScrollBarPageButton}" Command="ScrollBar.PageDownCommand" />
+                </Track.IncreaseRepeatButton>
+            </Track>
+            <RepeatButton x:Name="PART_DownButton" Grid.Row="3" Style="{StaticResource NVScrollBarLineButton}" Height="16" Foreground="{TemplateBinding Foreground}"
+                  Background="{TemplateBinding Background}" Command="ScrollBar.LineDownCommand" Content="M 0 0 L 4 6 L 8 0 Z" />
         </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Visibility" TargetName="PART_UpButton" Value="Visible"/>
+                <Setter Property="Visibility" TargetName="PART_DownButton" Value="Visible"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
     </ControlTemplate>
 
     <ControlTemplate x:Key="NVHorizontalScrollBar" TargetType="{x:Type ScrollBar}">
-        <Grid Margin="0,-10,0,0">
-            <Border x:Name="HitArea" Height="14" VerticalAlignment="Bottom" Background="Transparent" />
-            <Grid x:Name="root" Height="16" VerticalAlignment="Bottom">
-                <Grid.LayoutTransform>
-                    <ScaleTransform x:Name="Scaler" ScaleX="1.0" ScaleY="0.125" />
-                </Grid.LayoutTransform>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition MaxWidth="14" />
-                    <ColumnDefinition Width="0.00001*" />
-                    <ColumnDefinition MaxWidth="14" />
-                </Grid.ColumnDefinitions>
-                <Border x:Name="Bd" Grid.ColumnSpan="3" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" Opacity="0" />
-                <RepeatButton x:Name="LeftButton" Grid.Column="0" Style="{StaticResource NVScrollBarLineButton}" Opacity="0" Width="14" Foreground="{TemplateBinding Foreground}"
-                        Background="{TemplateBinding Background}" Command="ScrollBar.LineLeftCommand" Content="M 4 0 L 0 4 L 4 8" />
-                <Track x:Name="PART_Track" Grid.Column="1" IsDirectionReversed="False">
-                    <Track.DecreaseRepeatButton>
-                        <RepeatButton Style="{StaticResource NVScrollBarPageButton}" Command="ScrollBar.PageLeftCommand" />
-                    </Track.DecreaseRepeatButton>
-                    <Track.Thumb>
-                        <Thumb Style="{StaticResource NVScrollBarThumb}" Background="{TemplateBinding Foreground}" BorderBrush="{TemplateBinding BorderBrush}" />
-                    </Track.Thumb>
-                    <Track.IncreaseRepeatButton>
-                        <RepeatButton Style="{StaticResource NVScrollBarPageButton}" Command="ScrollBar.PageRightCommand" />
-                    </Track.IncreaseRepeatButton>
-                </Track>
-                <RepeatButton x:Name="RightButton" Grid.Column="3" Style="{StaticResource NVScrollBarLineButton}" Opacity="0" Width="14" Foreground="{TemplateBinding Foreground}"
-                        Background="{TemplateBinding Background}" Command="ScrollBar.LineRightCommand" Content="M 0 0 L 4 4 L 0 8" />
-            </Grid>
-            <VisualStateManager.VisualStateGroups>
-                <VisualStateGroup x:Name="CommonStates">
-                    <VisualState x:Name="Normal">
-                        <Storyboard BeginTime="0:0:1.0">
-                            <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="ScaleY" Storyboard.TargetName="Scaler" To="0.125" />
-                            <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Bd" To="0" />
-                            <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="LeftButton" To="0" />
-                            <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="RightButton" To="0" />
-                        </Storyboard>
-                    </VisualState>
-                    <VisualState x:Name="MouseOver">
-                        <Storyboard BeginTime="0:0:0.0">
-                            <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="ScaleY" Storyboard.TargetName="Scaler" To="1.0" />
-                            <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Bd" To="1" />
-                            <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="LeftButton" To="1" />
-                            <DoubleAnimation Duration="0:0:0.1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="RightButton" To="1" />
-                        </Storyboard>
-                    </VisualState>
-                </VisualStateGroup>
-            </VisualStateManager.VisualStateGroups>
+        <Grid x:Name="root" Height="12" VerticalAlignment="Bottom" Background="Transparent">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MaxWidth="16" />
+                <ColumnDefinition Width="0.00001*" />
+                <ColumnDefinition MaxWidth="16" />
+            </Grid.ColumnDefinitions>
+            <Border x:Name="Bd" Grid.ColumnSpan="3" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" />
+            <RepeatButton x:Name="PART_LeftButton" Grid.Column="0" Style="{StaticResource NVScrollBarLineButton}" Width="16" Foreground="{TemplateBinding Foreground}"
+                  Background="{TemplateBinding Background}" Command="ScrollBar.LineLeftCommand" Content="M 4 0 L -2 4 L 4 8 Z" />
+            <Track x:Name="PART_Track" Grid.Column="1" IsDirectionReversed="False">
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource NVScrollBarPageButton}" Command="ScrollBar.PageLeftCommand" />
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb Style="{StaticResource NVScrollBarThumb}" Padding="0,2" Background="{TemplateBinding Foreground}" BorderBrush="{TemplateBinding BorderBrush}" />
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton Style="{StaticResource NVScrollBarPageButton}" Command="ScrollBar.PageRightCommand" />
+                </Track.IncreaseRepeatButton>
+            </Track>
+            <RepeatButton x:Name="PART_RightButton" Grid.Column="3" Style="{StaticResource NVScrollBarLineButton}" Width="16" Foreground="{TemplateBinding Foreground}"
+                  Background="{TemplateBinding Background}" Command="ScrollBar.LineRightCommand" Content="M 0 0 L 6 4 L 0 8 Z" />
         </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Visibility" TargetName="PART_LeftButton" Value="Visible"/>
+                <Setter Property="Visibility" TargetName="PART_RightButton" Value="Visible"/>
+            </Trigger>
+        </ControlTemplate.Triggers>
     </ControlTemplate>
 
     <Style x:Key="NVScrollBar" TargetType="{x:Type ScrollBar}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
-        <Setter Property="Background" Value="{DynamicResource ScrollBar.Background}" />
+        <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Foreground" Value="{DynamicResource ScrollBar.Foreground}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource ScrollBar.Border}" />
         <Style.Triggers>
             <Trigger Property="Orientation" Value="Horizontal">
                 <Setter Property="Width" Value="Auto" />
-                <Setter Property="Height" Value="6" />
+                <Setter Property="Height" Value="12" />
                 <Setter Property="Template" Value="{StaticResource NVHorizontalScrollBar}" />
             </Trigger>
             <Trigger Property="Orientation" Value="Vertical">
-                <Setter Property="Width" Value="6" />
+                <Setter Property="Width" Value="12" />
                 <Setter Property="Height" Value="Auto" />
                 <Setter Property="Template" Value="{StaticResource NVVerticalScrollBar}" />
             </Trigger>
@@ -305,7 +267,6 @@
         <Setter Property="CanContentScroll" Value="True" />
         <Setter Property="PanningMode" Value="VerticalOnly" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="Padding" Value="0,0,4,4" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ScrollViewer}">
@@ -319,13 +280,13 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" Grid.Column="0" Grid.Row="0" CanContentScroll="{TemplateBinding CanContentScroll}" CanHorizontallyScroll="False"
-                                CanVerticallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
+                              CanVerticallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Margin="{TemplateBinding Padding}" />
                         <Rectangle Grid.Column="1" Grid.Row="1" Fill="{TemplateBinding Background}" />
                         <ScrollBar x:Name="PART_VerticalScrollBar" Style="{StaticResource NVScrollBar}" Grid.Row="0" Grid.Column="1" Value="{TemplateBinding VerticalOffset}"
-                                Maximum="{TemplateBinding ScrollableHeight}" ViewportSize="{TemplateBinding ViewportHeight}" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" />
+                              Maximum="{TemplateBinding ScrollableHeight}" ViewportSize="{TemplateBinding ViewportHeight}" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" />
                         <ScrollBar x:Name="PART_HorizontalScrollBar" Style="{StaticResource NVScrollBar}" Orientation="Horizontal" Grid.Row="1" Grid.Column="0"
-                                Value="{TemplateBinding HorizontalOffset}" Maximum="{TemplateBinding ScrollableWidth}" ViewportSize="{TemplateBinding ViewportWidth}"
-                                Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" />
+                              Value="{TemplateBinding HorizontalOffset}" Maximum="{TemplateBinding ScrollableWidth}" ViewportSize="{TemplateBinding ViewportWidth}"
+                              Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

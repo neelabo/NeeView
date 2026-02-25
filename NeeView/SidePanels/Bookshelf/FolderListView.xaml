@@ -215,7 +215,7 @@
                             <DataTrigger Binding="{Binding FolderTreeLayout}" Value="Top">
                                 <Setter Property="Grid.Column" Value="1"/>
                                 <Setter Property="Grid.Row" Value="0"/>
-                                <Setter Property="Margin" Value="2,2,2,8"/>
+                                <Setter Property="Margin" Value="2,2,0,8"/>
                             </DataTrigger>
                             <DataTrigger Binding="{Binding FolderTreeLayout}" Value="Left">
                                 <Setter Property="Grid.Column" Value="0"/>
@@ -250,7 +250,7 @@
                 </GridSplitter.Style>
             </GridSplitter>
 
-            <ContentControl x:Name="ListBoxContent" Grid.Column="1" Grid.Row="1" Content="{Binding FolderListBox}" Focusable="False" Margin="2" />
+            <ContentControl x:Name="ListBoxContent" Grid.Column="1" Grid.Row="1" Content="{Binding FolderListBox}" Focusable="False" Margin="2,2,0,2" />
         </Grid>
 
     </DockPanel>

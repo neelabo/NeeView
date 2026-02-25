@@ -8,7 +8,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid x:Name="Root">
         <DockPanel>
-            <local:ContextMenuSettingControl x:Name="ContextMenuSettingControl" ContextMenuSetting="{Binding Setting.Memento.MainWindowModel.ContextMenuSetting}" Margin="0,0,5,5" />
+            <local:ContextMenuSettingControl x:Name="ContextMenuSettingControl" ContextMenuSetting="{Binding Setting.Memento.MainWindowModel.ContextMenuSetting}" Margin="0,0,0,5" />
         </DockPanel>
     </Grid>
 </UserControl>
