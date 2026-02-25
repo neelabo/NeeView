@@ -43,7 +43,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Background="Transparent" Margin="2" KeyDown="FolderInformationView_KeyDown">
+    <Grid Background="Transparent" Margin="0,2" KeyDown="FolderInformationView_KeyDown">
         <DockPanel>
             <DockPanel.Resources>
                 <ControlTemplate x:Key="NoScroll">
@@ -51,7 +51,7 @@
                 </ControlTemplate>
             </DockPanel.Resources>
 
-            <DockPanel DockPanel.Dock="Top" LastChildFill="False" KeyboardNavigation.TabNavigation="Local">
+            <DockPanel DockPanel.Dock="Top" LastChildFill="False" KeyboardNavigation.TabNavigation="Local" Margin="2,0">
                 <local:MoreMenuButton Description="{Binding MoreMenuDescription}" DockPanel.Dock="Right" />
             </DockPanel>
 
@@ -96,7 +96,7 @@
                 </ListBox.ItemTemplate>
             </nw:ListBoxExtended>
 
-            <local:FileInformationContent Source="{Binding SelectedItem}" Margin="0,10,0,0" />
+            <local:FileInformationContent Source="{Binding SelectedItem}" Margin="2,10,0,0" />
 
         </DockPanel>
     </Grid>

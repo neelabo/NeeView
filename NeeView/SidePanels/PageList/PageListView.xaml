@@ -58,9 +58,9 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <DockPanel x:Name="DockPanel" Margin="2" Background="Transparent">
+    <DockPanel x:Name="DockPanel" Margin="0,2" Background="Transparent">
 
-        <StackPanel DockPanel.Dock="Top">
+        <StackPanel DockPanel.Dock="Top" Margin="2,0">
 
             <Border MinHeight="24" Margin="0,0,0,8">
                 <Border.Style>
@@ -125,7 +125,7 @@
             </Grid>
         </StackPanel>
 
-        <ContentControl x:Name="ListBoxContent" Focusable="False" />
+        <ContentControl x:Name="ListBoxContent" Focusable="False" Margin="2,0,0,0"/>
 
     </DockPanel>
 

@@ -32,9 +32,9 @@
     </UserControl.Resources>
 
 
-    <DockPanel x:Name="DockPanel" Margin="2" Background="Transparent">
+    <DockPanel x:Name="DockPanel" Margin="0,2" Background="Transparent">
 
-        <StackPanel DockPanel.Dock="Top">
+        <StackPanel DockPanel.Dock="Top" Margin="2,0">
             <DockPanel LastChildFill="False" MinHeight="24" Margin="0,0,0,8">
                 <TextBlock DockPanel.Dock="Right" Text="{Binding Model.ViewItemsCount}" Foreground="{DynamicResource Panel.Foreground}" Margin="5,0"
                         Visibility="{Binding HistoryConfig.IsVisibleItemsCount, Converter={StaticResource BooleanToVisibilityConverter}}" />
@@ -56,7 +56,7 @@
 
         </StackPanel>
 
-        <ContentControl x:Name="ListBoxContent" Focusable="False" Margin="0,0,0,5"/>
+        <ContentControl x:Name="ListBoxContent" Focusable="False" Margin="2,0,0,5"/>
 
     </DockPanel>
 </UserControl>

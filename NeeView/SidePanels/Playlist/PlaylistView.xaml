@@ -48,9 +48,9 @@
     </UserControl.Resources>
 
 
-    <DockPanel x:Name="DockPanel" Margin="2" Background="Transparent">
+    <DockPanel x:Name="DockPanel" Margin="0,2" Background="Transparent">
 
-        <StackPanel DockPanel.Dock="Top">
+        <StackPanel DockPanel.Dock="Top" Margin="2,0">
 
             <DockPanel Margin="0" KeyboardNavigation.TabNavigation="Local">
 
@@ -72,7 +72,7 @@
 
         </StackPanel>
 
-        <ContentControl x:Name="ListBoxContent" Focusable="False" Margin="0,2,0,5" />
+        <ContentControl x:Name="ListBoxContent" Focusable="False" Margin="2,2,0,5" />
 
     </DockPanel>
 </UserControl>

@@ -225,15 +225,15 @@
 
     </UserControl.Resources>
 
-    <Grid Margin="2" Background="Transparent">
+    <Grid Margin="0,2" Background="Transparent">
         <DockPanel Margin="0">
 
-            <DockPanel DockPanel.Dock="Top" LastChildFill="False" KeyboardNavigation.TabNavigation="Local">
+            <DockPanel DockPanel.Dock="Top" LastChildFill="False" KeyboardNavigation.TabNavigation="Local" Margin="2,0">
                 <local:MoreMenuButton Description="{Binding MoreMenuDescription}" DockPanel.Dock="Right" />
             </DockPanel>
 
             <ScrollViewer x:Name="ScrollView" Style="{StaticResource NVScrollViewer}" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" Focusable="False"
-                    CanContentScroll="False">
+                    CanContentScroll="False" Margin="2,0,0,0">
 
                 <Grid Margin="2,0" RenderOptions.ClearTypeHint="{DynamicResource Window.ClearTypeHint}">
 
