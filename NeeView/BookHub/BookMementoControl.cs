@@ -137,11 +137,6 @@ namespace NeeView
             {
                 return true;
             }
-            // 無操作なので順番を維持する
-            if (IsPageChangeCountEnabled && _pageChangeCount <= 0)
-            {
-                return true;
-            }
 
             return false;
         }
@@ -211,11 +206,18 @@ namespace NeeView
         {
             if (book is null) return false;
 
-            // ページのないブックは登録できない。
-            // 既に履歴登録されている場合もカウントを無視する。
+            // 履歴登録開始ページ操作回数
+            var historyEntryPageCount = Config.Current.History.HistoryEntryPageCount;
+
+            // 既に履歴登録されている場合は１操作で更新可能とする
+            if (!book.IsNew)
+            {
+                historyEntryPageCount = 1;
+            }
+
             return !_historyRemoved
                 && book.Pages.Count > 0
-                && (!IsPageChangeCountEnabled || _historyEntry || !book.IsNew || _pageChangeCount >= Config.Current.History.HistoryEntryPageCount)
+                && (!IsPageChangeCountEnabled || _historyEntry || _pageChangeCount >= historyEntryPageCount)
                 && (Config.Current.History.IsInnerArchiveHistoryEnabled || book.Source.ArchiveEntryCollection.Archive?.Parent == null)
                 && (Config.Current.History.IsUncHistoryEnabled || !LoosePath.IsUnc(book.Path));
         }
