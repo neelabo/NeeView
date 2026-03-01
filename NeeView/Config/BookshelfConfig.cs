@@ -1,16 +1,20 @@
-﻿using NeeView.Windows.Controls;
+﻿using NeeView.Text;
+using NeeView.Windows.Controls;
 using NeeView.Windows.Property;
 using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using System.Windows;
 
 namespace NeeView
 {
     public class BookshelfConfig : FolderListConfig
     {
+        private readonly RegexCollectionCache _excludeRegexCache = new();
         private bool _isVisibleHistoryMark = true;
         private bool _isVisibleBookmarkMark = true;
-        private string? _excludePattern;
+        private StringCollection _excludeRegexes = new();
         private bool _isSyncFolderTree;
         private bool _isSyncFolderTreeAuto;
         private bool _isCloseBookWhenMove;
@@ -135,13 +139,13 @@ namespace NeeView
         }
 
         /// <summary>
-        /// 項目除外パターン
+        /// ページ除外パターン (正規表現)
         /// </summary>
-        [PropertyMember(IsRegex = true)]
-        public string? ExcludePattern
+        [PropertyMember]
+        public StringCollection ExcludeRegexes
         {
-            get { return _excludePattern; }
-            set { SetProperty(ref _excludePattern, value); }
+            get { return _excludeRegexes; }
+            set { SetProperty(ref _excludeRegexes, value); }
         }
 
         /// <summary>
@@ -239,7 +243,37 @@ namespace NeeView
             set { FolderSortOrder = value ? FolderSortOrder.None : FolderSortOrder.First; }
         }
 
+        /// <summary>
+        /// 項目除外パターン
+        /// </summary>
+        [Obsolete("no used"), Alternative(nameof(ExcludeRegexes), 46, ScriptErrorLevel.Warning)] // ver.46
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public string? ExcludePattern
+        {
+            get { return null; }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    ExcludeRegexes = new StringCollection();
+                }
+                else
+                {
+                    ExcludeRegexes = new StringCollection([value]);
+                }
+            }
+        }
+
         #endregion Obsolete
+
+        /// <summary>
+        /// 除外パターンを正規表現で取得する
+        /// </summary>
+        /// <returns></returns>
+        public List<Regex> GetExcludeRegexes()
+        {
+            return _excludeRegexCache.GetRegexs(ExcludeRegexes);
+        }
     }
 
 }

@@ -5,6 +5,7 @@ using NeeView.Windows.Property;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
@@ -343,23 +344,4 @@ namespace NeeView
         }
     }
 
-
-    /// <summary>
-    /// StringCollectionで定義された正規表現の正規表現インスタンス キャッシュ
-    /// </summary>
-    public class RegexCollectionCache
-    {
-        private List<Regex> _regexs = new();
-        private StringCollection _sourceCache = new();
-
-        public List<Regex> GetRegexs(StringCollection source)
-        {
-            if (!source.Equals(_sourceCache))
-            {
-                _sourceCache = (StringCollection)source.Clone();
-                _regexs = _sourceCache.Items.Select(e => new Regex(e, RegexOptions.IgnoreCase | RegexOptions.Compiled)).ToList();
-            }
-            return _regexs;
-        }
-    }
 }

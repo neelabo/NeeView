@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace NeeView
@@ -19,7 +18,6 @@ namespace NeeView
 
 
         private FolderItem? _visibleItem;
-        private Regex? _excludeRegex;
         private readonly DisposableCollection _disposables = new();
 
 
@@ -49,11 +47,6 @@ namespace NeeView
                 FolderCollection?.RefreshIcon(null);
             }));
 
-            _disposables.Add(Config.Current.Bookshelf.SubscribePropertyChanged(nameof(BookshelfConfig.ExcludePattern), (s, e) =>
-            {
-                UpdateExcludeRegex();
-            }));
-
             _disposables.Add(Config.Current.Bookshelf.SubscribePropertyChanged(nameof(BookshelfConfig.IsSearchIncludeSubdirectories), (s, e) =>
             {
                 RequestSearchPlace(true);
@@ -76,20 +69,11 @@ namespace NeeView
             }));
 
             this.SearchBoxModel = new SearchBoxModel(new BookshelfSearchBoxComponent(this));
-
-            UpdateExcludeRegex();
         }
 
 
         // フォルダー履歴
         public BookshelfFolderHistory History { get; }
-
-        // 除外パターンの正規表現
-        public Regex? ExcludeRegex
-        {
-            get { return _excludeRegex; }
-            set { SetProperty(ref _excludeRegex, value); }
-        }
 
         public override bool IsSearchIncludeSubdirectories
         {
@@ -249,22 +233,6 @@ namespace NeeView
         protected override bool IsCruise()
         {
             return Config.Current.Bookshelf.IsCruise;
-        }
-
-        // 除外パターンの正規表現を更新
-        private void UpdateExcludeRegex()
-        {
-            if (_disposedValue) return;
-
-            try
-            {
-                ExcludeRegex = string.IsNullOrWhiteSpace(Config.Current.Bookshelf.ExcludePattern) ? null : new Regex(Config.Current.Bookshelf.ExcludePattern, RegexOptions.IgnoreCase | RegexOptions.Compiled);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"FolderList exclude: {ex.Message}");
-                ExcludeRegex = null;
-            }
         }
 
         protected override void OnPlaceChanged(object? sender, FolderSetPlaceOption options)

@@ -96,12 +96,7 @@ namespace NeeView
                         }
 
                         // 除外フィルター
-                        if (BookshelfFolderList.Current.ExcludeRegex != null)
-                        {
-                            items = items
-                                .Where(e => e.Name != null && !BookshelfFolderList.Current.ExcludeRegex.IsMatch(e.Name))
-                                .ToList();
-                        }
+                        items = BookshelfExcludeFilter.Filter(items);
 
                         var folderOrder = folderOrderHint.HasValue ? folderOrderHint.Value : FolderOrder;
                         var list = Sort(items, folderOrder, token);
@@ -259,12 +254,11 @@ namespace NeeView
             if (e.Name is null) return;
 
             // 除外フィルター
-            var excludeRegex = BookshelfFolderList.Current.ExcludeRegex;
-            if (excludeRegex != null && excludeRegex.IsMatch(e.Name))
+            if (BookshelfExcludeFilter.IsMatch(e.Name))
             {
                 return;
             }
-
+            
             RequestCreate(new QueryPath(e.FullPath));
         }
 
