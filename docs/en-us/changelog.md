@@ -1,5 +1,13 @@
 # Changelog
 
+## 45.2
+(2026-03-02)
+
+### 不具合修正
+
+- History: Fixed an issue with the update timing of the registration order for items registered in the history (#1881)
+
+
 ## 45.1
 (2026-02-23)
 
