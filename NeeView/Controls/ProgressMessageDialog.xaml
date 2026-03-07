@@ -10,15 +10,19 @@
         UseLayoutRounding="True"
         WindowStyle="None"
         ShowInTaskbar="False"
-        Title="ProgressMessageDialog" SizeToContent="Height" Width="600" ResizeMode="NoResize">
+        Title="ProgressMessageDialog" SizeToContent="Height" Width="480" ResizeMode="NoResize">
+    <Window.Resources>
+        <local:BooleanToVisibilityConverter x:Key="BooleanToVisibilityHiddenConverter" False="Hidden" />
+    </Window.Resources>
     <Grid>
-        <DockPanel Margin="30,20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-            <Button x:Name="CancelButton" DockPanel.Dock="Bottom" Style="{StaticResource NVDialogButton}" HorizontalAlignment="Right" Margin="0,20,0,0" Content="{properties:TextBinding Word.Cancel}" Click="CancelButton_Click" />
-            <DockPanel Margin="0,20,0,0" >
-                <local:ProgressRing DockPanel.Dock="Left" Margin="0,0,10,0" VerticalAlignment="Center"/>
+        <DockPanel Margin="10" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <Button x:Name="CancelButton" DockPanel.Dock="Bottom" Style="{StaticResource NVDialogButton}" HorizontalAlignment="Right" Margin="0,0,0,0" Content="{properties:TextBinding Word.Cancel}" Click="CancelButton_Click"
+                    Visibility="{Binding CanCancel, Converter={StaticResource BooleanToVisibilityHiddenConverter}}"/>
+            <DockPanel Margin="0,10" MinHeight="40">
+                <local:ProgressRing DockPanel.Dock="Left" Margin="10,0" Radius="8" VerticalAlignment="Center"/>
                 <StackPanel VerticalAlignment="Center">
-                    <TextBlock x:Name="CaptionTextBlock" TextWrapping="Wrap" Text="{Binding Caption}" FontSize="{DynamicResource SystemFontSizeHuge}" Margin="0,5" VerticalAlignment="Center" />
-                    <TextBlock x:Name="MessageTextBlock" TextWrapping="Wrap" Text="{Binding Message}" Margin="0,5" />
+                    <TextBlock x:Name="MessageTextBlock" TextWrapping="Wrap" Text="{Binding Message}" />
+                    <TextBlock x:Name="CancelTextBlock" TextWrapping="Wrap" Text="{properties:TextBinding Word.Canceling}" Visibility="{Binding IsCanceled, Converter={StaticResource BooleanToVisibilityConverter}}"  />
                 </StackPanel>
             </DockPanel>
         </DockPanel>

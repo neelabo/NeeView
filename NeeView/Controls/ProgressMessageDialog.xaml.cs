@@ -1,21 +1,14 @@
 ﻿using NeeLaboratory.Generators;
-using NeeView.Properties;
-using System;
 using System.ComponentModel;
 using System.Windows;
 
 namespace NeeView
 {
-    /// <summary>
-    /// ProgressMessageDialog.xaml の相互作用ロジック
-    /// </summary>
     [NotifyPropertyChanged]
     public partial class ProgressMessageDialog : Window, INotifyPropertyChanged
     {
         private bool _closeable = true;
-        private bool _canceled = false;
-        private string _caption = "";
-        private string _message = "";
+        private ICancelableObject? _cancellableObject;
 
         public ProgressMessageDialog()
         {
@@ -23,41 +16,24 @@ namespace NeeView
             this.DataContext = this;
         }
 
-        public ProgressMessageDialog(string caption) : this()
-        {
-            this.CaptionTextBlock.Text = caption;
-        }
-
-        public ProgressMessageDialog(string caption, string message) : this()
-        {
-            this.CaptionTextBlock.Text = caption;
-            this.MessageTextBlock.Text = message;
-        }
-
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public event EventHandler? Canceled;
+
+        public string Message => _cancellableObject?.Name ?? "";
+
+        public bool CanCancel => _cancellableObject?.CanCancell ?? false;
+
+        public bool IsCanceled => _cancellableObject?.IsCanceled ?? false;
 
 
-        public bool Closeable
+        public void SetCancellableObject(ICancelableObject? item)
         {
-            get { return _closeable; }
-            set { SetProperty(ref _closeable, value); }
+            _cancellableObject = item;
+            RaisePropertyChanged(nameof(Message));
+            RaisePropertyChanged(nameof(CanCancel));
+            RaisePropertyChanged(nameof(IsCanceled));
         }
-
-        public string Caption
-        {
-            get { return _caption; }
-            set { SetProperty(ref _caption, value); }
-        }
-
-        public string Message
-        {
-            get { return _message; }
-            set { if (!_canceled) { SetProperty(ref _message, value); } }
-        }
-
 
         protected override void OnClosing(CancelEventArgs e)
         {
@@ -78,13 +54,12 @@ namespace NeeView
 
         private void Cancel()
         {
-            if (!_canceled)
-            {
-                _canceled = true;
-                this.CancelButton.IsEnabled = false;
-                this.MessageTextBlock.Text = TextResources.GetString("Word.Canceling");
-                Canceled?.Invoke(this, EventArgs.Empty);
-            }
+            if (_cancellableObject is null) return;
+            if (_cancellableObject.IsCanceled) return;
+
+            _cancellableObject.IsCanceled = true;
+            RaisePropertyChanged(nameof(IsCanceled));
+            _cancellableObject.Cancel();
         }
 
         public new void Close()

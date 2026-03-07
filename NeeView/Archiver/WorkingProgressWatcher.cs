@@ -1,7 +1,7 @@
-﻿using NeeView.Properties;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 
 
@@ -16,7 +16,7 @@ namespace NeeView
         public static WorkingProgressWatcher Current { get; }
 
         private readonly List<ICancelableObject> _items = new();
-        private readonly System.Threading.Lock _lock = new();
+        private readonly Lock _lock = new();
 
 
         private WorkingProgressWatcher()
@@ -65,40 +65,35 @@ namespace NeeView
             CountChanged?.Invoke(this, new WorkingProcessCountChangedEventArgs(count, current));
         }
 
+        public ICancelableObject? GetCurrent()
+        {
+            lock (_lock)
+            {
+                return _items.FirstOrDefault();
+            }
+        }
+
         public void WaitWithDialog(Window owner)
         {
             if (Count <= 0) return;
 
-            var dialog = new ProgressMessageDialog(TextResources.GetString("Word.Processing"));
+            var dialog = new ProgressMessageDialog();
             dialog.Owner = owner;
             dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            dialog.Canceled += Dialog_Canceled;
 
             try
             {
                 this.CountChanged += FileProgressWatcher_CountChanged;
-                if (Count > 0)
+                var item = GetCurrent();
+                if (item is not null)
                 {
-                    dialog.Message = _items.FirstOrDefault()?.Name ?? "";
+                    dialog.SetCancellableObject(item);
                     dialog.ShowDialog();
                 }
             }
             finally
             {
                 this.CountChanged -= FileProgressWatcher_CountChanged;
-            }
-
-            void Dialog_Canceled(object? sender, EventArgs e)
-            {
-                List<ICancelableObject> clone;
-                lock (_lock)
-                {
-                    clone = new List<ICancelableObject>(_items);
-                }
-                foreach (var item in clone)
-                {
-                    item.Cancel();
-                }
             }
 
             void FileProgressWatcher_CountChanged(object? sender, WorkingProcessCountChangedEventArgs e)
@@ -109,12 +104,17 @@ namespace NeeView
                 }
                 else
                 {
-                    dialog.Message = e.Current?.Name ?? "";
+                    dialog.SetCancellableObject(e.Current);
                 }
             }
         }
 
+        public CancellableObjectToken Lock(string name, Action? cancelAction = null)
+        {
+            return new CancellableObjectToken(this, new CancelableObject(name, cancelAction));
+        }
     }
+
 
     public class WorkingProcessCountChangedEventArgs : EventArgs
     {
@@ -127,11 +127,15 @@ namespace NeeView
         public ICancelableObject? Current { get; }
     }
 
+
     public interface ICancelableObject
     {
         string Name { get; }
+        bool CanCancell { get; }
+        bool IsCanceled { get; set; }
         void Cancel();
     }
+
 
     public class CancelableObject : ICancelableObject
     {
@@ -142,12 +146,32 @@ namespace NeeView
         }
 
         public string Name { get; }
-
+        public bool CanCancell => CancelAction != null;
+        public bool IsCanceled { get; set; }
         public Action? CancelAction { get; set; }
 
         public void Cancel()
         {
             CancelAction?.Invoke();
+        }
+    }
+
+
+    public class CancellableObjectToken : IDisposable
+    {
+        private readonly ICancelableObject _item;
+        private readonly WorkingProgressWatcher _watcher;
+
+        public CancellableObjectToken(WorkingProgressWatcher watcher, ICancelableObject item)
+        {
+            _watcher = watcher;
+            _item = item;
+            _watcher.Add(_item);
+        }
+
+        public void Dispose()
+        {
+            _watcher.Remove(_item);
         }
     }
 }

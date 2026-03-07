@@ -73,8 +73,7 @@ namespace NeeView
 
             var tempFilename = FileIO.CreateUniquePath(_path + ".temp");
 
-            var cancelableObject = new CancelableObject(_path, () => _tokenSource.Cancel());
-            WorkingProgressWatcher.Current.Add(cancelableObject);
+            using var scope = WorkingProgressWatcher.Current.Lock($"{LoosePath.GetFileName(_path)}...", () => _tokenSource.Cancel());
 
             try
             {
@@ -171,10 +170,6 @@ namespace NeeView
                 _manager.DetachArchive(_path);
 
                 throw;
-            }
-            finally
-            {
-                WorkingProgressWatcher.Current.Remove(cancelableObject);
             }
         }
 

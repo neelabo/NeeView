@@ -93,6 +93,7 @@ namespace NeeView.IO
             shfos.hNameMappings = IntPtr.Zero;
             shfos.lpszProgressTitle = null;
 
+            using var scope = WorkingProgressWatcher.Current.Lock("Copying files...");
             SHFileOperation(ref shfos);
         }
 
@@ -116,6 +117,7 @@ namespace NeeView.IO
             shfos.hNameMappings = IntPtr.Zero;
             shfos.lpszProgressTitle = null;
 
+            using var scope = WorkingProgressWatcher.Current.Lock("Moving files...");
             SHFileOperation(ref shfos);
         }
 
@@ -144,6 +146,7 @@ namespace NeeView.IO
             shfos.hNameMappings = IntPtr.Zero;
             shfos.lpszProgressTitle = null;
 
+            using var scope = WorkingProgressWatcher.Current.Lock("Deleting files...");
             SHFileOperation(ref shfos);
         }
     }
