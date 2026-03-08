@@ -2,6 +2,6 @@
   <Import Condition="Exists('_Version.props')" Project="_Version.props" />
   <PropertyGroup>
     <Authors>NeeLaboratory</Authors>
-    <Copyright>Copyright © 2016-2025 Ito Mitsuhiro (nee)</Copyright>
+    <Copyright>Copyright © 2016-2026 Ito Mitsuhiro (nee)</Copyright>
   </PropertyGroup>
 </Project>

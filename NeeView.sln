@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.2.32630.192
+# Visual Studio Version 18
+VisualStudioVersion = 18.2.11415.280 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NeeView", "NeeView\NeeView.csproj", "{4F680598-E096-4474-99A7-1747AFD771B2}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -11,9 +11,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C3F0B406-5A4A-4550-81BC-CD72DE300125}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		LICENSE.ja-jp.md = LICENSE.ja-jp.md
 		LICENSE.md = LICENSE.md
 		NeeView.props = NeeView.props
+		NeeViewVersion.xml = NeeViewVersion.xml
 		README.md = README.md
 		THIRDPARTY_LICENSES _CODEIN.md = THIRDPARTY_LICENSES _CODEIN.md
 		THIRDPARTY_LICENSES.md = THIRDPARTY_LICENSES.md

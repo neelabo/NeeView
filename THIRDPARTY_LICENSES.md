@@ -75,11 +75,6 @@ ICON: pushpin, etc...
 * URL: [Icon Fonts](https://www.onlinewebfonts.com/icon)
 * License: [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)
 
-### VirtualizingWrapPanel
-
-* URL: [uhimaniavwp](https://archive.codeplex.com/?p=uhimaniavwp)
-* License: [MS-PL](https://opensource.org/licenses/MS-PL)
-
 ### SharpVectors
 
 DLL: SharpVectors.*.dll

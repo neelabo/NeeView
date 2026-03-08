@@ -18,7 +18,7 @@ Per-Machine installations from ver 44.1 or earlier cannot coexist and must be un
 An image viewer that allows you to browse images in folders and compressed files like a book.
 Powerful customization is available.
 
-- Supported image format (bmp, jpg, gif, tiff, png, ico, WIC images)
+- Supported image format (bmp, jpg, gif, tiff, png, webp, ico, WIC images)
 - Compressed file support (zip, rar, 7z, lzh, cbr, cbz, cb7, ...)
 - Recursive compressed file support
 - PDF support
