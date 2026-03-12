@@ -331,7 +331,6 @@ if (($package_type -eq "Alpha") -or ($package_type -eq "Beta")) {
     New-Item -Path $dir -ItemType Directory -Force | Out-Null
     Copy-Item $package $dir
     Copy-Item $package_fd $dir
-    Copy-Item $package_msi $dir
 }
 
 Write-Host 
