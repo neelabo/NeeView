@@ -148,8 +148,7 @@ $name_fd = $package.Name -replace "\.zip$", "-fd.zip"
 $package_fd = Get-ChildItem -File -Path $name_fd
 
 #get MSI package
-#if ($package_type -eq "Product") {
-if ($true) {
+if ($package_type -eq "Product") {
     $name_msi = $package.Name -replace "\.zip$", ".msi"
     $package_msi = Get-CHildItem -File -Path $name_msi
 }
@@ -319,8 +318,7 @@ else {
     $release_id = $release_response.id
     Upload-Asset $release_id $package "application/zip"
     Upload-Asset $release_id $package_fd "application/zip"
-    #if ($package_type -eq "Product") {
-    if ($true) {
+    if ($package_type -eq "Product") {
         Upload-Asset $release_id $package_msi "application/x-msi"
     }
 }
@@ -333,7 +331,6 @@ if (($package_type -eq "Alpha") -or ($package_type -eq "Beta")) {
     New-Item -Path $dir -ItemType Directory -Force | Out-Null
     Copy-Item $package $dir
     Copy-Item $package_fd $dir
-    Copy-Item $package_msi $dir
 }
 
 Write-Host 

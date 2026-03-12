@@ -1032,7 +1032,6 @@ if ($Target -eq "Alpha") {
 	Build-Zip-fd "Alpha"
 	Build-PackageSource
 	Build-Zip "Alpha"
-	Build-Installer "Alpha"
 }
 
 if ($Target -eq "Beta") {
@@ -1040,7 +1039,6 @@ if ($Target -eq "Beta") {
 	Build-Zip-fd "Beta"
 	Build-PackageSource
 	Build-Zip "Beta"
-	Build-Installer "Beta"
 }
 
 if (-not $continue) {
