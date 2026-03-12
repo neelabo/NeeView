@@ -856,6 +856,24 @@ namespace NeeView
                         var isEditable = !file.Attributes.HasFlag(FileAttributes.ReadOnly);
                         var playlist = new Playlist(path, file.LastWriteTime, playlistFile, false);
                         playlist.IsEditable = isEditable;
+
+                        // Ver 2.0.1 より古いプレイリストの場合はResolve登録して更新する
+                        // NOTE: 通常はバージョン更新時やインポート時に自動で処理されるが、手動で古いバージョンのプレイリストが配置された場合に処理する
+                        if (playlistFile.Format.CompareTo(new FormatVersion(PlaylistSource.FormatName, VersionNumber.Playlist2_0_1)) < 0)
+                        {
+                            try
+                            {
+                                playlistFile.AddToFileResolver();
+                            }
+                            catch (Exception ex)
+                            {
+                                // できるだけ登録できればよいので例外はスルー
+                                Debug.WriteLine(ex);
+                            }
+                            playlist.IsDirty = true;
+                            playlist.DelaySave();
+                        }
+
                         return playlist;
                     }
                     catch (Exception ex)
