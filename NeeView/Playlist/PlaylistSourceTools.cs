@@ -40,7 +40,6 @@ namespace NeeView
             return path;
         }
 
-
         public static void Save(this PlaylistSource playlist, string path, bool overwrite, bool createDirectory)
         {
             if (!overwrite && File.Exists(path))
@@ -68,7 +67,18 @@ namespace NeeView
                         throw new IOException($"Directory does not exist: {directory}");
                     }
                 }
-                File.WriteAllBytes(path, json);
+
+                var temp = Temporary.CreateWorkFileName(path);
+                try
+                {
+                    FileIO.WriteAllBytes(temp, json);
+                    FileIO.Replace(temp, path, null);
+                }
+                catch
+                {
+                    File.Delete(temp);
+                    throw;
+                }
             }
             finally
             {
@@ -82,7 +92,7 @@ namespace NeeView
             try
             {
                 Debug.WriteLine($"Load: {path}");
-                var json = FileTools.ReadAllBytes(path, FileShare.Read);
+                var json = FileTools.ReadAllBytes(path, FileShare.ReadWrite | FileShare.Delete);
                 return Deserialize(json);
             }
             finally

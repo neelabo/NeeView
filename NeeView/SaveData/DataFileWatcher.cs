@@ -1,4 +1,6 @@
-﻿using NeeLaboratory.Generators;
+﻿//#define LOCAL_DEBUG
+
+using NeeLaboratory.Generators;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -12,6 +14,7 @@ namespace NeeView
     /// パスの指し示すデータファイルの更新が必要かのみをチェックするので、Changed もしくは Deleted イベントのみを発行する。
     /// 直接の Changed イベントだけを監視しないのは、File.Replace() による置き換えにも対応させるため。
     /// </remarks>
+    [LocalDebug]
     public partial class DataFileWatcher : IDisposable
     {
         private FileSystemWatcher? _watcher;
@@ -93,6 +96,7 @@ namespace NeeView
             if (_disposedValue) return;
             if (e.Name != _name) return;
 
+            LocalDebug.WriteLine($"File created '{e.FullPath}'");
             Changed?.Invoke(sender, e);
         }
 
@@ -101,6 +105,7 @@ namespace NeeView
             if (_disposedValue) return;
             if (e.Name != _name) return;
 
+            LocalDebug.WriteLine($"File changed '{e.FullPath}'");
             Changed?.Invoke(sender, e);
         }
 
@@ -109,6 +114,7 @@ namespace NeeView
             if (_disposedValue) return;
             if (e.Name != _name) return;
 
+            LocalDebug.WriteLine($"File deleted '{e.FullPath}'");
             Deleted?.Invoke(sender, e);
         }
 
@@ -117,6 +123,7 @@ namespace NeeView
             if (_disposedValue) return;
             if (e.Name != _name && e.OldName != _name) return;
 
+            LocalDebug.WriteLine($"File renamed '{e.OldFullPath}' -> '{e.Name}'");
             if (e.Name == _name)
             {
                 Changed?.Invoke(sender, e);

@@ -48,7 +48,10 @@ namespace NeeView
             if (!_isDirty) return;
             _isDirty = false;
 
-            PlaylistSourceTools.Save(_playlist, _path, true, false);
+            using (ProcessLock.Lock())
+            {
+                PlaylistSourceTools.Save(_playlist, _path, true, false);
+            }
         }
 
         public bool RenamePathRecursive(string src, string dst)
