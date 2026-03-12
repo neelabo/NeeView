@@ -812,49 +812,18 @@ namespace NeeView
                     this.FileStamp = new FileStamp(path, default);
                 }
 
-                var newFileName = this.Path + ".new.tmp";
-
                 try
                 {
-                    if (File.Exists(this.Path))
-                    {
-                        try
-                        {
-                            File.Delete(newFileName);
-                            SaveCore(newFileName);
-                            File.Replace(newFileName, this.Path, null);
-                            this.FileStamp = FileStamp.Create(this.Path);
-                        }
-                        catch
-                        {
-                            File.Delete(newFileName);
-                            throw;
-                        }
-                    }
-                    else
-                    {
-                        SaveCore(this.Path);
-                        this.FileStamp = FileStamp.Create(this.Path);
-                    }
-
+                    source.Save(this.Path, true, IsDefaultPlaylistsFolder(this.Path));
+                    this.FileStamp = FileStamp.Create(this.Path);
                     Saved?.Invoke(this, new PlaylistSavedEventArgs(this.Path));
-
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    if (this.IsEditable)
-                    {
-                        this.IsEditable = false; // 以後編集不可
-                        ToastService.Current.Show(new Toast(ex.Message, TextResources.GetString("Playlist.FailedToSave"), ToastIcon.Error));
-                    }
+                    ToastService.Current.Show(new Toast(ex.Message, TextResources.GetString("Playlist.FailedToSave"), ToastIcon.Error));
                     return false;
                 }
-            }
-
-            void SaveCore(string path)
-            {
-                source.Save(path, true, IsDefaultPlaylistsFolder(path));
             }
         }
 
@@ -876,10 +845,10 @@ namespace NeeView
         {
             LocalDebug.WriteLine($"Path={path}, CreateNewFile={createNewFile}");
 
-            var file = new FileInfo(path);
-            if (file.Exists)
+            using (ProcessLock.Lock())
             {
-                using (ProcessLock.Lock())
+                var file = new FileInfo(path);
+                if (file.Exists)
                 {
                     try
                     {
@@ -895,19 +864,19 @@ namespace NeeView
                         return new Playlist(path) { ErrorMessage = ex.Message };
                     }
                 }
-            }
-            else if (file.Directory?.Exists == true || IsDefaultPlaylistsFolder(file))
-            {
-                var playlist = new Playlist(path, default, new PlaylistSource(), true);
-                if (createNewFile)
+                else if (file.Directory?.Exists == true || IsDefaultPlaylistsFolder(file))
                 {
-                    playlist.Save(true);
+                    var playlist = new Playlist(path, default, new PlaylistSource(), true);
+                    if (createNewFile)
+                    {
+                        playlist.Save(true);
+                    }
+                    return playlist;
                 }
-                return playlist;
-            }
-            else
-            {
-                return new Playlist(path) { ErrorMessage = $"Playlist folder does not exists: '{file.Directory?.FullName}'" };
+                else
+                {
+                    return new Playlist(path) { ErrorMessage = $"Playlist folder does not exists: '{file.Directory?.FullName}'" };
+                }
             }
         }
 

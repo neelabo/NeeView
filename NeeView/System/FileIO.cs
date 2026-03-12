@@ -374,6 +374,69 @@ namespace NeeView
         }
 
         /// <summary>
+        /// WriteAllBytes (FlushToDisk)
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="data"></param>
+        public static void WriteAllBytes(string path, byte[] data)
+        {
+            // FileShare.ReadWrite | FileShare.Delete ... なるべくファイルロックロックを回避
+            using var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.ReadWrite | FileShare.Delete);
+            fs.Write(data, 0, data.Length);
+            
+            // FlushToDisk
+            fs.Flush(true);
+        }
+
+        /// <summary>
+        /// ファイルを置き換える
+        /// </summary>
+        /// <remarks>
+        /// 標準の Replace だとファイルロックの影響を受けやすいので、atomic write で置き換えている。
+        /// リトライ処理を追加することでさらに堅牢にしている。
+        /// </remarks>
+        /// <param name="sourceFileName">元ファイル名</param>
+        /// <param name="destinationFileName">置き換えファイル名</param>
+        /// <param name="destinationBackupFileName">バックアップファイル名</param>
+        public static void Replace(string sourceFileName, string destinationFileName, string? destinationBackupFileName)
+        {
+            Replace(sourceFileName, destinationFileName, destinationBackupFileName, retryCount: 10, retryIntervalMillisecond: 100);
+        }
+
+        /// <summary>
+        /// ファイルを置き換える
+        /// </summary>
+        /// <param name="sourceFileName"></param>
+        /// <param name="destinationFileName"></param>
+        /// <param name="destinationBackupFileName"></param>
+        /// <param name="retryCount">リトライ回数</param>
+        /// <param name="retryIntervalMillisecond">リトライ間隔</param>
+        /// <exception cref="IOException"></exception>
+        public static void Replace(string sourceFileName, string destinationFileName, string? destinationBackupFileName, int retryCount, int retryIntervalMillisecond)
+        {
+            if (destinationBackupFileName != null && File.Exists(destinationFileName))
+            {
+                File.Copy(destinationFileName, destinationBackupFileName, overwrite: true);
+            }
+
+            Exception? lastException = null;
+            for (int i = 0; i < retryCount; i++)
+            {
+                try
+                {
+                    File.Move(sourceFileName, destinationFileName, overwrite: true);
+                    return;
+                }
+                catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
+                {
+                    lastException = ex;
+                    Thread.Sleep(retryIntervalMillisecond);
+                }
+            }
+            throw lastException ?? new IOException("Replace failed after retries.");
+        }
+
+        /// <summary>
         /// ファイルを置き換える。
         /// </summary>
         /// <remarks>
@@ -382,13 +445,13 @@ namespace NeeView
         /// <param name="sourceFileName"></param>
         /// <param name="destinationFileName"></param>
         /// <param name="destinationBackupFileName"></param>
-        public static void Replace(string sourceFileName, string destinationFileName, string? destinationBackupFileName)
+        public static void ReplaceWithEvent(string sourceFileName, string destinationFileName, string? destinationBackupFileName)
         {
             var args = new FileReplaceEventHander(sourceFileName, destinationFileName, destinationBackupFileName);
             Replacing?.Invoke(null, args);
             try
             {
-                File.Replace(sourceFileName, destinationFileName, destinationBackupFileName);
+                Replace(sourceFileName, destinationFileName, destinationBackupFileName);
             }
             finally
             {

@@ -109,6 +109,19 @@ namespace NeeView
             return TemporaryTools.CreateTempFileName(TempCacheDirectory, name);
         }
 
+        /// <summary>
+        /// ファイルの作業用ファイル名を生成
+        /// </summary>
+        /// <remarks>
+        /// プロセスIDを埋め込むことで異なるプロセスの編集と衝突しないようにしている
+        /// </remarks>
+        /// <param name="name">元のファイル名</param>
+        /// <returns>テンポラリファイル名</returns>
+        public static string CreateWorkFileName(string name)
+        {
+            var processId = Process.GetCurrentProcess().Id;
+            return name + $".{processId}.tmp";
+        }
 
         /// <summary>
         /// アプリのテンポラリフォルダーを削除
