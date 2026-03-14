@@ -263,6 +263,16 @@ namespace NeeView
             }
         }
 
+        public void SetItemPath(PlaylistItem item, string path)
+        {
+            if (_items is null) return;
+            if (!_items.Contains(item)) return;
+
+            _itemsMap.Remove(item.Path, item);
+            item.Path = path;
+            _itemsMap.Add(item.Path, item);
+        }
+
         public List<PlaylistItem>? Add(IEnumerable<string> paths)
         {
             var items = paths.Select(e => new PlaylistItem(e)).ToList();
@@ -456,7 +466,7 @@ namespace NeeView
                     var resolved = FileResolver.Current.ResolveArchivePath(item.Path);
                     if (resolved != null)
                     {
-                        item.Path = resolved.Path;
+                        SetItemPath(item, resolved.Path);
                         _isDirty = true;
                     }
                     else
@@ -994,7 +1004,7 @@ namespace NeeView
                 var srcPath = item.Path;
                 var dstPath = dst + srcPath[src.Length..];
                 LocalDebug.WriteLine($"Path: {srcPath} => {dstPath}");
-                item.Path = dstPath;
+                SetItemPath(item, dstPath);
                 _isDirty = true;
             }
 
