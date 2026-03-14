@@ -515,11 +515,7 @@ namespace NeeView
 
             var result = FileOperation.MoveToFolder(WindowTools.GetWindowHandle(), sourcePaths, destDirectoryPath);
 
-            // TODO: follow bookmark
-            foreach (var item in result.Items)
-            {
-                Debug.WriteLine($"[Move] {item.Source} -> {item.Destination}");
-            }
+            BookMementoRenameRecursive(result.Items);
         }
 
         private static void SHMove(string sourcePath, string destPath)
@@ -528,10 +524,14 @@ namespace NeeView
 
             var result = FileOperation.Move(WindowTools.GetWindowHandle(), sourcePath, destPath);
 
-            // TODO: follow bookmark
-            foreach (var item in result.Items)
+            BookMementoRenameRecursive(result.Items);
+        }
+
+        private static void BookMementoRenameRecursive(IEnumerable<FolderOperatonItemResult> items)
+        {
+            foreach (var item in items)
             {
-                Debug.WriteLine($"[Move] {item.Source} -> {item.Destination}");
+                BookMementoTools.RenameRecursive(item.Source, item.Destination);
             }
         }
 
