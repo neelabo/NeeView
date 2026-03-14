@@ -1,8 +1,10 @@
-﻿using NeeView.Interop;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace NeeView.Windows
 {
@@ -14,12 +16,12 @@ namespace NeeView.Windows
             None = 0,
 
             // タイトルバー上にウィンドウメニューボックスを持つウィンドウを作成します。
-            SystemMenu = WindowStyles.WS_SYSMENU,
+            SystemMenu = WINDOW_STYLE.WS_SYSMENU,
 
             // 最小化ボタンを持つウィンドウを作成します。 WS_SYSMENU スタイルも指定する必要があります。拡張スタイルに WS_EX_CONTEXTHELP を指定することはできません。
-            MinimizeBox = WindowStyles.WS_MINIMIZEBOX,
+            MinimizeBox = WINDOW_STYLE.WS_MINIMIZEBOX,
 
-            MaximizeBox = WindowStyles.WS_MAXIMIZEBOX,
+            MaximizeBox = WINDOW_STYLE.WS_MAXIMIZEBOX,
         }
 
         /// <summary>
@@ -42,9 +44,9 @@ namespace NeeView.Windows
             void UpdateSystemMenu()
             {
                 var handle = new System.Windows.Interop.WindowInteropHelper(window).Handle;
-                var style = NativeMethods.GetWindowLong(handle, (int)WindowLongFlags.GWL_STYLE);
+                var style = PInvoke.GetWindowLong((HWND)handle, WINDOW_LONG_PTR_INDEX.GWL_STYLE);
                 style = style & (~(int)disableStyleFlags);
-                var result = NativeMethods.SetWindowLong(handle, (int)WindowLongFlags.GWL_STYLE, style);
+                var result = PInvoke.SetWindowLong((HWND)handle, WINDOW_LONG_PTR_INDEX.GWL_STYLE, style);
                 if (result == 0)
                 {
                     // SetWindowLong failed.
@@ -56,21 +58,21 @@ namespace NeeView.Windows
         /// システムメニューを表示
         /// </summary>
         /// <param name="window"></param>
-        public static void ShowSystemMenu(Window window)
+        public static unsafe void ShowSystemMenu(Window window)
         {
             if (window is null) return;
 
             var hWnd = (new WindowInteropHelper(window)).Handle;
             if (hWnd == IntPtr.Zero) return;
 
-            var hMenu = NativeMethods.GetSystemMenu(hWnd, false);
+            var hMenu = PInvoke.GetSystemMenu((HWND)hWnd, false);
             if (hMenu == IntPtr.Zero) return;
 
             var screenPos = window.PointToScreen(Mouse.GetPosition(window));
-            uint command = NativeMethods.TrackPopupMenuEx(hMenu, (uint)(TrackPopupMenuFlags.TPM_LEFTBUTTON | TrackPopupMenuFlags.TPM_RETURNCMD), (int)screenPos.X, (int)screenPos.Y, hWnd, IntPtr.Zero);
+            int command = PInvoke.TrackPopupMenuEx(hMenu, (uint)(TRACK_POPUP_MENU_FLAGS.TPM_LEFTBUTTON | TRACK_POPUP_MENU_FLAGS.TPM_RETURNCMD), (int)screenPos.X, (int)screenPos.Y, (HWND)hWnd, null);
             if (command == 0) return;
 
-            NativeMethods.PostMessage(hWnd, (uint)WindowMessages.WM_SYSCOMMAND, new IntPtr(command), IntPtr.Zero);
+            PInvoke.PostMessage((HWND)hWnd, PInvoke.WM_SYSCOMMAND, (nuint)command, 0);
         }
 
         /// <summary>
@@ -93,7 +95,7 @@ namespace NeeView.Windows
         /// もし window に null が渡されても例外を発生させない
         /// </remarks>
         /// <returns></returns>
-        public static IntPtr GetWindowHandle(Window window)
+        public static IntPtr GetWindowHandle(Window? window)
         {
             return window is not null ? new WindowInteropHelper(window).Handle : IntPtr.Zero;
         }
@@ -118,10 +120,10 @@ namespace NeeView.Windows
             if (hWnd == IntPtr.Zero) return;
 
             // 非アクティブのまま復元
-            NativeMethods.ShowWindow(hWnd, NativeMethods.SW_SHOWNOACTIVATE);
+            PInvoke.ShowWindow((HWND)hWnd, SHOW_WINDOW_CMD.SW_SHOWNOACTIVATE);
 
             // WindowChrome のアクティブ化を抑制
-            NativeMethods.SetWindowPos(hWnd, IntPtr.Zero, 0, 0, 0, 0, NativeMethods.SWP_NOACTIVATE | NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOSIZE);
+            PInvoke.SetWindowPos((HWND)hWnd, default, 0, 0, 0, 0, SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE | SET_WINDOW_POS_FLAGS.SWP_NOMOVE | SET_WINDOW_POS_FLAGS.SWP_NOSIZE);
 
             // referenceWindow の前後に配置 (Z-order 修正)
             IntPtr hWndReference = GetWindowHandle(referenceWindow);
@@ -149,10 +151,18 @@ namespace NeeView.Windows
             if (hWnd == IntPtr.Zero) return;
 
             // 手前表示は通常ウィンドウの最前面にする
-            hWndReference = isFront ? NativeMethods.HWND_TOP : hWndReference;
+            HWND hWndInsertAfter = isFront ? HWND.HWND_TOP : (HWND)hWndReference;
 
-            NativeMethods.SetWindowPos(hWnd, hWndReference, 0, 0, 0, 0, NativeMethods.SWP_NOACTIVATE | NativeMethods.SWP_NOMOVE | NativeMethods.SWP_NOSIZE);
+            PInvoke.SetWindowPos((HWND)hWnd, hWndInsertAfter, 0, 0, 0, 0, SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE | SET_WINDOW_POS_FLAGS.SWP_NOMOVE | SET_WINDOW_POS_FLAGS.SWP_NOSIZE);
         }
 
+    }
+
+    /// <summary>
+    /// WindowHandle を提供する DI
+    /// </summary>
+    public interface IHasWindowHandle
+    {
+        IntPtr GetWindowHandle();
     }
 }

@@ -1,8 +1,12 @@
 ﻿using NeeView;
-using NeeView.Interop;
 using System;
-using System.Runtime.InteropServices;
 using System.Windows.Media.Imaging;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.Storage.FileSystem;
+using Windows.Win32.UI.Shell;
+
+using SHFILEINFO = Windows.Win32.UI.Shell.SHFILEINFOW;
 
 namespace NeeLaboratory.IO
 {
@@ -29,18 +33,17 @@ namespace NeeLaboratory.IO
         public static string? GetTypeName(string path)
         {
             var shfi = new SHFILEINFO();
-            shfi.szDisplayName = "";
-            shfi.szTypeName = "";
 
-            IntPtr hSuccess = NativeMethods.SHGetFileInfo(path, 0, ref shfi, (uint)Marshal.SizeOf(shfi), (uint)SHGetFileInfoFlags.SHGFI_TYPENAME);
-            if (hSuccess == IntPtr.Zero)
+            var result = PInvoke.SHGetFileInfo(path, 0, ref shfi, SHGFI_FLAGS.SHGFI_TYPENAME);
+            if (result == 0)
             {
                 return null;
             }
 
-            if (!string.IsNullOrEmpty(shfi.szTypeName))
+            var typeName = shfi.szTypeName.ToString();
+            if (!string.IsNullOrEmpty(typeName))
             {
-                return shfi.szTypeName;
+                return typeName;
             }
             else
             {
@@ -53,21 +56,20 @@ namespace NeeLaboratory.IO
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static string? GetTypeNameWithAttribute(string path, uint attribute)
+        internal static string? GetTypeNameWithAttribute(string path, FILE_FLAGS_AND_ATTRIBUTES attribute)
         {
             var shfi = new SHFILEINFO();
-            shfi.szDisplayName = "";
-            shfi.szTypeName = "";
 
-            IntPtr hSuccess = NativeMethods.SHGetFileInfo(path, attribute, ref shfi, (uint)Marshal.SizeOf(shfi), (uint)(SHGetFileInfoFlags.SHGFI_TYPENAME | SHGetFileInfoFlags.SHGFI_USEFILEATTRIBUTES));
-            if (hSuccess == IntPtr.Zero)
+            var result = PInvoke.SHGetFileInfo(path, attribute, ref shfi, (SHGFI_FLAGS.SHGFI_TYPENAME | SHGFI_FLAGS.SHGFI_USEFILEATTRIBUTES));
+            if (result == 0)
             {
                 return null;
             }
 
-            if (!string.IsNullOrEmpty(shfi.szTypeName))
+            var typeName = shfi.szTypeName.ToString();
+            if (!string.IsNullOrEmpty(typeName))
             {
-                return shfi.szTypeName;
+                return typeName;
             }
             else
             {
@@ -90,7 +92,7 @@ namespace NeeLaboratory.IO
         /// <returns></returns>
         public static string? GetDirectoryTypeName()
         {
-            return GetTypeNameWithAttribute("dummy", (uint)FileAttributes.FILE_ATTRIBUTE_DIRECTORY);
+            return GetTypeNameWithAttribute("dummy", FILE_FLAGS_AND_ATTRIBUTES.FILE_ATTRIBUTE_DIRECTORY);
         }
 
         /// <summary>
@@ -102,11 +104,11 @@ namespace NeeLaboratory.IO
         public static BitmapSource? GetTypeIconSource(string path, IconSize iconSize)
         {
             var shinfo = new SHFILEINFO();
-            IntPtr hSuccess = NativeMethods.SHGetFileInfo(path, 0, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGetFileInfoFlags.SHGFI_ICON | (iconSize == IconSize.Small ? SHGetFileInfoFlags.SHGFI_SMALLICON : SHGetFileInfoFlags.SHGFI_LARGEICON)));
-            if (hSuccess != IntPtr.Zero)
+            var result= PInvoke.SHGetFileInfo(path, 0, ref shinfo, (SHGFI_FLAGS.SHGFI_ICON | (iconSize == IconSize.Small ? SHGFI_FLAGS.SHGFI_SMALLICON : SHGFI_FLAGS.SHGFI_LARGEICON)));
+            if (result != 0)
             {
                 BitmapSource bitmapSource = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(shinfo.hIcon, System.Windows.Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                NativeMethods.DestroyIcon(shinfo.hIcon);
+                PInvoke.DestroyIcon(shinfo.hIcon);
                 return bitmapSource;
             }
             else
@@ -121,14 +123,14 @@ namespace NeeLaboratory.IO
         /// <param name="path"></param>
         /// <param name="iconSize"></param>
         /// <returns></returns>
-        public static BitmapSource? GetTypeIconSourceWithAttribute(string path, IconSize iconSize, uint attribute)
+        internal static BitmapSource? GetTypeIconSourceWithAttribute(string path, IconSize iconSize, FILE_FLAGS_AND_ATTRIBUTES attribute)
         {
             var shinfo = new SHFILEINFO();
-            IntPtr hSuccess = NativeMethods.SHGetFileInfo(path, attribute, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(SHGetFileInfoFlags.SHGFI_ICON | (iconSize == IconSize.Small ? SHGetFileInfoFlags.SHGFI_SMALLICON : SHGetFileInfoFlags.SHGFI_LARGEICON) | SHGetFileInfoFlags.SHGFI_USEFILEATTRIBUTES));
-            if (hSuccess != IntPtr.Zero)
+            var result = PInvoke.SHGetFileInfo(path, attribute, ref shinfo, (SHGFI_FLAGS.SHGFI_ICON | (iconSize == IconSize.Small ? SHGFI_FLAGS.SHGFI_SMALLICON : SHGFI_FLAGS.SHGFI_LARGEICON) | SHGFI_FLAGS.SHGFI_USEFILEATTRIBUTES));
+            if (result != 0)
             {
                 BitmapSource bitmapSource = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(shinfo.hIcon, System.Windows.Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                NativeMethods.DestroyIcon(shinfo.hIcon);
+                PInvoke.DestroyIcon(shinfo.hIcon);
                 return bitmapSource;
             }
             else
@@ -174,7 +176,7 @@ namespace NeeLaboratory.IO
         {
             var handle = new System.Windows.Interop.WindowInteropHelper(window).Handle;
 
-            if (!NativeMethods.SHObjectProperties(handle, (uint)ShopObjectTypes.SHOP_FILEPATH, path, ""))
+            if (!PInvoke.SHObjectProperties((HWND)handle, SHOP_TYPE.SHOP_FILEPATH, path, ""))
             {
                 throw new ApplicationException($"Cannot open file property window. {path}");
             }

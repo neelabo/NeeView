@@ -1,5 +1,4 @@
 ﻿using Microsoft.Win32;
-using NeeView.Interop;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -7,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Interop;
+using Windows.Win32;
 
 namespace NeeView.Windows
 {
@@ -71,9 +71,9 @@ namespace NeeView.Windows
 
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            switch ((WindowMessages)msg)
+            switch ((uint)msg)
             {
-                case WindowMessages.WM_SETTINGCHANGE:
+                case PInvoke.WM_SETTINGCHANGE:
                     OnSettingChange(wParam, lParam);
                     break;
             }

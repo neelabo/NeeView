@@ -1,7 +1,8 @@
-﻿using NeeView.Interop;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Interop;
+using Windows.Win32;
+using Windows.Win32.Foundation;
 
 namespace NeeView
 {
@@ -52,7 +53,7 @@ namespace NeeView
             _handle = new WindowInteropHelper(_window).Handle;
             if (_handle == nint.Zero) throw new InvalidOperationException("Cannot get window handle.");
 
-            NativeMethods.AddClipboardFormatListener(_handle);
+            PInvoke.AddClipboardFormatListener((HWND)_handle);
 
             HwndSource source = HwndSource.FromHwnd(_handle);
             source.AddHook(new HwndSourceHook(WndProc));
@@ -62,14 +63,14 @@ namespace NeeView
         {
             if (_handle != nint.Zero)
             {
-                NativeMethods.RemoveClipboardFormatListener(_handle);
+                PInvoke.RemoveClipboardFormatListener((HWND)_handle);
                 _handle = nint.Zero;
             }
         }
 
         private nint WndProc(nint hwnd, int msg, nint wParam, nint lParam, ref bool handled)
         {
-            if (msg == (int)WindowMessages.WM_CLIPBOARDUPDATE)
+            if (msg == PInvoke.WM_CLIPBOARDUPDATE)
             {
                 ClipboardChanged?.Invoke(this, EventArgs.Empty);
             }

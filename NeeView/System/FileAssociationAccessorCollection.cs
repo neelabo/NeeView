@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Windows;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,9 +9,9 @@ namespace NeeView
     {
         private readonly FileAssociationIconBitmapCache _cache = new();
 
-        public FileAssociationAccessorCollection(FileAssociationCollection source)
+        public FileAssociationAccessorCollection(FileAssociationCollection source, IHasWindowHandle window)
         {
-            this.AddRange(source.Select(e => new FileAssociationAccessor(e, _cache)));
+            this.AddRange(source.Select(e => new FileAssociationAccessor(e, _cache, window)));
         }
 
 

@@ -1,10 +1,12 @@
-﻿using NeeView.Interop;
-using System;
+﻿using System;
+using System.Buffers;
 using System.Diagnostics;
-using System.Text;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.UI.Shell;
 
 namespace NeeView
 {
@@ -25,10 +27,10 @@ namespace NeeView
         /// <summary>
         /// ファイル関連付け変更をシェルに通知してアイコン表示を更新する
         /// </summary>
-        public static void RefreshShellIcons()
+        public static unsafe void RefreshShellIcons()
         {
             Debug.WriteLine($"FileAssociate: Refresh shell icons.");
-            NativeMethods.SHChangeNotify(SHChangeNotifyEvents.SHCNE_ASSOCCHANGED, SHChangeNotifyFlags.SHCNF_IDLIST, 0, 0);
+            PInvoke.SHChangeNotify(SHCNE_ID.SHCNE_ASSOCCHANGED, SHCNF_FLAGS.SHCNF_IDLIST, null, null);
         }
 
         /// <summary>
@@ -36,16 +38,24 @@ namespace NeeView
         /// </summary>
         /// <param name="icon">開始時のアイコン情報</param>
         /// <returns></returns>
-        public static FileAssociationIcon? ShowIconDialog(FileAssociationIcon icon)
+        public static FileAssociationIcon? ShowIconDialog(IntPtr hwnd, FileAssociationIcon icon)
         {
-            var iconPath = new StringBuilder(icon.FilePath, 1024);
-            int iconIndex = icon.Index;
-
-            if (NativeMethods.PickIconDlg(IntPtr.Zero, iconPath, iconPath.Capacity, ref iconIndex) != 0)
+            var buffer = ArrayPool<char>.Shared.Rent(1024);
+            try
             {
-                return new FileAssociationIcon(iconPath.ToString(), iconIndex);
+                Span<char> iconPath = buffer;
+                int iconIndex = icon.Index;
+
+                if (PInvoke.PickIconDlg((HWND)hwnd, ref iconPath, (uint)iconPath.Length, ref iconIndex) != 0)
+                {
+                    return new FileAssociationIcon(iconPath.ToString(), iconIndex);
+                }
+                return null;
             }
-            return null;
+            finally
+            {
+                ArrayPool<char>.Shared.Return(buffer);
+            }
         }
 
         /// <summary>
@@ -55,18 +65,11 @@ namespace NeeView
         /// <returns></returns>
         public static BitmapSource? GetBitmapSource(FileAssociationIcon icon)
         {
-            IntPtr hIcon = NativeMethods.ExtractIcon(IntPtr.Zero, icon.FilePath, icon.Index);
-            if (hIcon == IntPtr.Zero) return null;
+            using var hIcon = PInvoke.ExtractIcon(icon.FilePath, (uint)icon.Index);
+            if (hIcon.IsInvalid) return null;
 
-            try
-            {
-                var bitmapSource = Imaging.CreateBitmapSourceFromHIcon(hIcon, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-                return bitmapSource;
-            }
-            finally
-            {
-                NativeMethods.DestroyIcon(hIcon);
-            }
+            var bitmapSource = Imaging.CreateBitmapSourceFromHIcon(hIcon.DangerousGetHandle(), Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+            return bitmapSource;
         }
     }
 }

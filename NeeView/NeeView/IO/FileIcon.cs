@@ -1,12 +1,19 @@
-﻿using NeeView.Interop;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Media.Imaging;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.Storage.FileSystem;
+using Windows.Win32.UI.Controls;
+using Windows.Win32.UI.Shell;
+using Windows.Win32.UI.WindowsAndMessaging;
+using IImageList = NeeView.Interop.IImageList;
+using SHFILEINFO = Windows.Win32.UI.Shell.SHFILEINFOW;
+
 
 namespace NeeView.IO
 {
@@ -23,16 +30,19 @@ namespace NeeView.IO
     // from https://www.ipentec.com/document/csharp-shell-namespace-get-big-icon-from-file-path
     public class FileIcon
     {
-        public enum IconSize
+        public enum IconSize : uint
         {
-            Large = SHImageLists.SHIL_LARGE,
-            Small = SHImageLists.SHIL_SMALL,
-            ExtraLarge = SHImageLists.SHIL_EXTRALARGE,
-            Jumbo = SHImageLists.SHIL_JUMBO,
+            Large = PInvoke.SHIL_LARGE,
+            Small = PInvoke.SHIL_SMALL,
+            ExtraLarge = PInvoke.SHIL_EXTRALARGE,
+            Jumbo = PInvoke.SHIL_JUMBO,
         };
 
+        //IMAGE LIST
+        public static readonly Guid IID_IImageList = new("46EB5926-582E-4017-9FDF-E8998DAA0950");
+        public static readonly Guid IID_IImageList2 = new("192B9D83-50FC-457B-90A0-2B82A8B5DAE1");
 
-        private static readonly System.Threading.Lock _lock = new();
+        private static readonly Lock _lock = new();
 
 
         public static List<BitmapSource> CreateIconCollection(string filename, FileIconType iconType, bool allowJumbo)
@@ -50,24 +60,24 @@ namespace NeeView.IO
 
         public static List<BitmapSource> CreateDirectoryTypeIconCollection(string filename, bool allowJumbo)
         {
-            return CreateFileIconCollection(filename, Interop.FileAttributes.FILE_ATTRIBUTE_DIRECTORY, SHGetFileInfoFlags.SHGFI_USEFILEATTRIBUTES, allowJumbo);
+            return CreateFileIconCollection(filename, FILE_FLAGS_AND_ATTRIBUTES.FILE_ATTRIBUTE_DIRECTORY, SHGFI_FLAGS.SHGFI_USEFILEATTRIBUTES, allowJumbo);
         }
 
         public static List<BitmapSource> CreateFileTypeIconCollection(string filename, bool allowJumbo)
         {
-            return CreateFileIconCollection(System.IO.Path.GetExtension(filename), 0, SHGetFileInfoFlags.SHGFI_USEFILEATTRIBUTES, allowJumbo);
+            return CreateFileIconCollection(System.IO.Path.GetExtension(filename), 0, SHGFI_FLAGS.SHGFI_USEFILEATTRIBUTES, allowJumbo);
         }
 
         public static List<BitmapSource> CreateDriveIconCollection(string filename, bool allowJumbo)
         {
-            var flags = SHGetFileInfoFlags.SHGFI_ICONLOCATION;
-            return CreateFileIconCollection(filename, Interop.FileAttributes.FILE_ATTRIBUTE_DIRECTORY, flags, allowJumbo);
+            var flags = SHGFI_FLAGS.SHGFI_ICONLOCATION;
+            return CreateFileIconCollection(filename, FILE_FLAGS_AND_ATTRIBUTES.FILE_ATTRIBUTE_DIRECTORY, flags, allowJumbo);
         }
 
         public static List<BitmapSource> CreateDirectoryIconCollection(string filename, bool allowJumbo)
         {
-            var flags = System.IO.Directory.Exists(filename) ? 0 : SHGetFileInfoFlags.SHGFI_USEFILEATTRIBUTES;
-            return CreateFileIconCollection(filename, Interop.FileAttributes.FILE_ATTRIBUTE_DIRECTORY, flags, allowJumbo);
+            var flags = System.IO.Directory.Exists(filename) ? 0 : SHGFI_FLAGS.SHGFI_USEFILEATTRIBUTES;
+            return CreateFileIconCollection(filename, FILE_FLAGS_AND_ATTRIBUTES.FILE_ATTRIBUTE_DIRECTORY, flags, allowJumbo);
         }
 
         public static List<BitmapSource> CreateFileIconCollection(string filename, bool allowJumbo)
@@ -75,7 +85,7 @@ namespace NeeView.IO
             return CreateFileIconCollection(filename, 0, 0, allowJumbo);
         }
 
-        private static List<BitmapSource> CreateFileIconCollection(string filename, Interop.FileAttributes attribute, SHGetFileInfoFlags flags, bool allowJumbo)
+        private static List<BitmapSource> CreateFileIconCollection(string filename, FILE_FLAGS_AND_ATTRIBUTES attribute, SHGFI_FLAGS flags, bool allowJumbo)
         {
             if (allowJumbo)
             {
@@ -87,7 +97,7 @@ namespace NeeView.IO
             }
         }
 
-        private static List<BitmapSource> CreateFileIconCollection(string filename, Interop.FileAttributes attribute, SHGetFileInfoFlags flags)
+        private static List<BitmapSource> CreateFileIconCollection(string filename, FILE_FLAGS_AND_ATTRIBUTES attribute, SHGFI_FLAGS flags)
         {
             var bitmaps = new List<BitmapSource>
             {
@@ -108,7 +118,7 @@ namespace NeeView.IO
             }
         }
 
-        private static List<BitmapSource> CreateFileIconCollectionExtra(string filename, Interop.FileAttributes attribute, SHGetFileInfoFlags flags)
+        private static unsafe List<BitmapSource> CreateFileIconCollectionExtra(string filename, FILE_FLAGS_AND_ATTRIBUTES attribute, SHGFI_FLAGS flags)
         {
             Debug.Assert(Thread.CurrentThread.GetApartmentState() == ApartmentState.STA);
 
@@ -116,15 +126,13 @@ namespace NeeView.IO
             lock (_lock)
             {
                 var shinfo = new SHFILEINFO();
-                shinfo.szDisplayName = "";
-                shinfo.szTypeName = "";
-                IntPtr hImg = NativeMethods.SHGetFileInfo(filename, (uint)attribute, ref shinfo, (uint)Marshal.SizeOf(typeof(SHFILEINFO)), (uint)(SHGetFileInfoFlags.SHGFI_SYSICONINDEX | flags));
-
+                var result = PInvoke.SHGetFileInfo(filename, attribute, ref shinfo, (SHGFI_FLAGS.SHGFI_SYSICONINDEX | flags));
                 try
                 {
-                    if ((flags & SHGetFileInfoFlags.SHGFI_ICONLOCATION) != 0 && Path.GetExtension(shinfo.szDisplayName).ToLowerInvariant() == ".ico")
+                    var displayName = shinfo.szDisplayName.ToString();
+                    if ((flags & SHGFI_FLAGS.SHGFI_ICONLOCATION) != 0 && Path.GetExtension(displayName).ToLowerInvariant() == ".ico")
                     {
-                        return CreateFileIconCollectionFromIconFile(shinfo.szDisplayName);
+                        return CreateFileIconCollectionFromIconFile(displayName);
                     }
                 }
                 catch (Exception ex)
@@ -134,22 +142,23 @@ namespace NeeView.IO
 
                 var bitmaps = new List<BitmapSource>();
 
-                var shils = Enum.GetValues(typeof(SHImageLists)).Cast<SHImageLists>();
+                var shils = Enum.GetValues(typeof(IconSize)).Cast<IconSize>();
                 foreach (var shil in shils)
                 {
                     try
                     {
-                        int hResult = NativeMethods.SHGetImageList(shil, ref ImageListIDs.IID_IImageList, out IImageList imglist);
-                        if (hResult == HResult.S_OK)
+                        int hResult = PInvoke.SHGetImageList((int)shil, IID_IImageList, out var obj);
+                        if (hResult == HRESULT.S_OK)
                         {
+                            IImageList imglist = (IImageList)obj;
                             IntPtr hicon = IntPtr.Zero;
-                            imglist.GetIcon(shinfo.iIcon, (int)ImageListDrawItemConstants.ILD_TRANSPARENT, ref hicon);
+                            imglist.GetIcon(shinfo.iIcon, (int)IMAGE_LIST_DRAW_STYLE.ILD_TRANSPARENT, ref hicon);
                             BitmapSource bitmapSource = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(hicon, System.Windows.Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
                             bitmapSource?.Freeze();
-                            NativeMethods.DestroyIcon(hicon);
-                            ////Debug.WriteLine($"Icon: {filename} - {shil}: {sw.ElapsedMilliseconds}ms");
+                            PInvoke.DestroyIcon((HICON)hicon);
                             if (bitmapSource is not null)
                             {
+                                ////Debug.WriteLine($"Icon: {filename} - {shil}: {bitmapSource.PixelWidth}x{bitmapSource.PixelHeight}");
                                 bitmaps.Add(bitmapSource);
                             }
                         }
@@ -164,7 +173,7 @@ namespace NeeView.IO
             }
         }
 
-        private static BitmapSource CreateFileIcon(string filename, Interop.FileAttributes attribute, SHGetFileInfoFlags flags, IconSize iconSize)
+        private static BitmapSource CreateFileIcon(string filename, FILE_FLAGS_AND_ATTRIBUTES attribute, SHGFI_FLAGS flags, IconSize iconSize)
         {
             Debug.Assert(Thread.CurrentThread.GetApartmentState() == ApartmentState.STA);
 
@@ -172,12 +181,12 @@ namespace NeeView.IO
             lock (_lock)
             {
                 var shinfo = new SHFILEINFO();
-                IntPtr hSuccess = NativeMethods.SHGetFileInfo(filename, (uint)attribute, ref shinfo, (uint)Marshal.SizeOf(shinfo), (uint)(flags | SHGetFileInfoFlags.SHGFI_ICON | (iconSize == IconSize.Small ? SHGetFileInfoFlags.SHGFI_SMALLICON : SHGetFileInfoFlags.SHGFI_LARGEICON)));
-                if (hSuccess != IntPtr.Zero && shinfo.hIcon != IntPtr.Zero)
+                var result = PInvoke.SHGetFileInfo(filename, attribute, ref shinfo, (flags | SHGFI_FLAGS.SHGFI_ICON | (iconSize == IconSize.Small ? SHGFI_FLAGS.SHGFI_SMALLICON : SHGFI_FLAGS.SHGFI_LARGEICON)));
+                if (result != 0 && shinfo.hIcon != IntPtr.Zero)
                 {
                     BitmapSource bitmapSource = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(shinfo.hIcon, System.Windows.Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
                     bitmapSource.Freeze();
-                    NativeMethods.DestroyIcon(shinfo.hIcon);
+                    PInvoke.DestroyIcon(shinfo.hIcon);
                     ////Debug.WriteLine($"Icon: {filename} - {iconSize}: {sw.ElapsedMilliseconds}ms");
                     return bitmapSource;
                 }

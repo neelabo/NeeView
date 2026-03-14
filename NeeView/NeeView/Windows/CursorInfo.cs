@@ -3,10 +3,11 @@
 // WIN32APIの高DPI対応
 // from http://grabacr.net/archives/1105
 
-using NeeView.Interop;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
+using Windows.Win32;
+using Windows.Win32.Foundation;
 
 namespace NeeView.Windows
 {
@@ -15,20 +16,20 @@ namespace NeeView.Windows
     /// </summary>
     public static class CursorInfo
     {
-        public static POINT GetNativeCursorPos()
+        public static Int32Point GetNativeCursorPos()
         {
-            NativeMethods.GetCursorPos(out var pos);
+            PInvoke.GetCursorPos(out var pos);
             return pos;
         }
 
-        public static void SetNativeCursorPos(POINT pos)
+        public static void SetNativeCursorPos(Int32Point pos)
         {
-            NativeMethods.SetCursorPos(pos.x, pos.y);
+            PInvoke.SetCursorPos(pos.X, pos.Y);
         }
 
         public static void SetNativeCursorPos(int x, int y)
         {
-            NativeMethods.SetCursorPos(x, y);
+            PInvoke.SetCursorPos(x, y);
         }
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace NeeView.Windows
         /// <returns></returns>
         public static Point GetNowPosition(Visual visual)
         {
-            NativeMethods.GetCursorPos(out POINT point);
+            PInvoke.GetCursorPos(out var point);
             return GetClientPosition(point, visual);
         }
 
@@ -48,7 +49,7 @@ namespace NeeView.Windows
         /// <param name="point">ネイティブ座標</param>
         /// <param name="visual">ハンドルを取得するためのビジュアル要素</param>
         /// <returns></returns>
-        public static Point GetClientPosition(POINT point, Visual visual)
+        public static Point GetClientPosition(Int32Point point, Visual visual)
         {
             if (HwndSource.FromVisual(visual) is not HwndSource source)
             {
@@ -56,15 +57,14 @@ namespace NeeView.Windows
             }
 
             var hwnd = source.Handle;
-
-            var isSuccess = NativeMethods.ScreenToClient(hwnd, ref point);
+            var isSuccess = PInvoke.ScreenToClient((HWND)hwnd, ref point);
             if (!isSuccess)
             {
                 return new Point(double.NaN, double.NaN);
             }
 
             var dpiScaleFactor = GetDpiScaleFactor(visual);
-            return new Point(point.x / dpiScaleFactor.X, point.y / dpiScaleFactor.Y);
+            return new Point(point.X / dpiScaleFactor.X, point.Y / dpiScaleFactor.Y);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace NeeView.Windows
         /// <param name="point">ネイティブ座標</param>
         /// <param name="relativeTo">求める座標系</param>
         /// <returns></returns>
-        public static Point GetPosition(POINT point, UIElement relativeTo)
+        public static Point GetPosition(Int32Point point, UIElement relativeTo)
         {
             var window = Window.GetWindow(relativeTo);
             if (window is null)
@@ -91,10 +91,10 @@ namespace NeeView.Windows
         /// <returns></returns>
         public static Point GetNowScreenPosition(Window window)
         {
-            NativeMethods.GetCursorPos(out POINT point);
+            PInvoke.GetCursorPos(out var point);
 
             var dpiScaleFactor = GetDpiScaleFactor(window);
-            return new Point(point.x / dpiScaleFactor.X, point.y / dpiScaleFactor.Y);
+            return new Point(point.X / dpiScaleFactor.X, point.Y / dpiScaleFactor.Y);
         }
 
         /// <summary>

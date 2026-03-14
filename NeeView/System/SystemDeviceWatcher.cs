@@ -1,16 +1,22 @@
-﻿using NeeLaboratory.Generators;
-using NeeView.Interop;
+﻿//#define LOCAL_DEBUG
+
+using NeeLaboratory.Generators;
+using NeeView.Win32.Extensions;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows;
 using System.Windows.Interop;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.UI.Shell;
+using Windows.Win32.UI.WindowsAndMessaging;
+using ITEMIDLIST = Windows.Win32.UI.Shell.Common.ITEMIDLIST;
+using SHChangeNotifyEntry = Windows.Win32.UI.Shell.SHChangeNotifyEntry;
 
 namespace NeeView
 {
-
     public class DriveChangedEventArgs : EventArgs
     {
         public DriveChangedEventArgs(string driveName, bool isAlive)
@@ -21,6 +27,11 @@ namespace NeeView
 
         public string Name { get; set; }
         public bool IsAlive { get; set; }
+
+        public override string ToString()
+        {
+            return $"Name={Name}, IsAlive={IsAlive}";
+        }
     }
 
     public class MediaChangedEventArgs : EventArgs
@@ -33,6 +44,11 @@ namespace NeeView
 
         public string Name { get; set; }
         public bool IsAlive { get; set; }
+
+        public override string ToString()
+        {
+            return $"Name={Name}, IsAlive={IsAlive}";
+        }
     }
 
     public enum DirectoryChangeType
@@ -73,6 +89,11 @@ namespace NeeView
         public DirectoryChangeType ChangeType { get; set; }
         public string FullPath { get; set; }
         public string? OldFullPath { get; set; }
+
+        public override string ToString()
+        {
+            return $"ChangeType={ChangeType}, FullPath={FullPath}, OldFullPath={OldFullPath}";
+        }
     }
 
     public class SettingChangedEventArgs : EventArgs
@@ -85,8 +106,15 @@ namespace NeeView
 
         public uint Action { get; private set; }
         public string? Message { get; private set; }
+
+        public override string ToString()
+        {
+            return $"Action={Action}, Message={Message}";
+        }
     }
 
+
+    [LocalDebug]
     public partial class SystemDeviceWatcher
     {
         static SystemDeviceWatcher() => Current = new SystemDeviceWatcher();
@@ -128,14 +156,13 @@ namespace NeeView
 
             _window = window;
 
-            var notifyEntry = new SHChangeNotifyEntry() { pIdl = IntPtr.Zero, Recursively = true };
-            var notifyId = NativeMethods.SHChangeNotifyRegister(hWndSrc.Handle,
-                                                  SHChangeNotifyRegisterFlags.SHCNRF_ShellLevel,
-                                                  SHChangeNotifyEvents.SHCNE_MEDIAINSERTED | SHChangeNotifyEvents.SHCNE_MEDIAREMOVED
-                                                  | SHChangeNotifyEvents.SHCNE_MKDIR | SHChangeNotifyEvents.SHCNE_RMDIR | SHChangeNotifyEvents.SHCNE_RENAMEFOLDER,
-                                                  (uint)WindowMessages.WM_SHNOTIFY,
+            var notifyEntry = new SHChangeNotifyEntry() { pidl = null, fRecursive = true };
+            var notifyId = PInvoke.SHChangeNotifyRegister((HWND)hWndSrc.Handle,
+                                                  SHCNRF_SOURCE.SHCNRF_ShellLevel,
+                                                  (int)(SHCNE_ID.SHCNE_MEDIAINSERTED | SHCNE_ID.SHCNE_MEDIAREMOVED | SHCNE_ID.SHCNE_MKDIR | SHCNE_ID.SHCNE_RMDIR | SHCNE_ID.SHCNE_RENAMEFOLDER),
+                                                  WindowMessages.WM_SHNOTIFY,
                                                   1,
-                                                  ref notifyEntry);
+                                                  notifyEntry);
 
             hWndSrc.AddHook(WndProc);
         }
@@ -146,22 +173,22 @@ namespace NeeView
         {
             try
             {
-                switch ((WindowMessages)msg)
+                switch ((uint)msg)
                 {
-                    case WindowMessages.WM_ENTERSIZEMOVE:
+                    case PInvoke.WM_ENTERSIZEMOVE:
                         EnterSizeMove?.Invoke(this, EventArgs.Empty);
                         break;
-                    case WindowMessages.WM_EXITSIZEMOVE:
+                    case PInvoke.WM_EXITSIZEMOVE:
                         ExitSizeMove?.Invoke(this, EventArgs.Empty);
                         break;
-                    case WindowMessages.WM_DEVICECHANGE:
+                    case PInvoke.WM_DEVICECHANGE:
                         OnDeviceChange(wParam, lParam);
+                        break;
+                    case PInvoke.WM_SETTINGCHANGE:
+                        OnSettingChange(wParam, lParam);
                         break;
                     case WindowMessages.WM_SHNOTIFY:
                         OnSHNotify(wParam, lParam);
-                        break;
-                    case WindowMessages.WM_SETTINGCHANGE:
-                        OnSettingChange(wParam, lParam);
                         break;
                 }
             }
@@ -201,13 +228,13 @@ namespace NeeView
                 return;
             }
 
-            switch ((DeviceBroadcastTtiggers)wParam.ToInt32())
+            switch ((uint)wParam)
             {
-                case DeviceBroadcastTtiggers.DBT_DEVICEARRIVAL:
+                case PInvoke.DBT_DEVICEARRIVAL:
                     ////Debug.WriteLine("DBT_DEVICEARRIVAL");
                     DriveChanged?.Invoke(this, new DriveChangedEventArgs(driveName, true));
                     break;
-                case DeviceBroadcastTtiggers.DBT_DEVICEREMOVECOMPLETE:
+                case PInvoke.DBT_DEVICEREMOVECOMPLETE:
                     ////Debug.WriteLine("DBT_DEVICEREMOVECOMPLETE");
                     DriveChanged?.Invoke(this, new DriveChangedEventArgs(driveName, false));
                     break;
@@ -233,59 +260,69 @@ namespace NeeView
         {
             var shNotify = (SHNOTIFYSTRUCT)Marshal.PtrToStructure(wParam, typeof(SHNOTIFYSTRUCT))!;
 
-            var shChangeNotifyEvent = (SHChangeNotifyEvents)lParam;
+            var shChangeNotifyEvent = (SHCNE_ID)lParam;
 
-            ////Debug.WriteLine(shChangeNotifyEvent + ": " + shNotify);
+            LocalDebug.WriteLine(shChangeNotifyEvent + ": " + shNotify);
 
             switch (shChangeNotifyEvent)
             {
-                case SHChangeNotifyEvents.SHCNE_MEDIAINSERTED:
+                case SHCNE_ID.SHCNE_MEDIAINSERTED:
                     {
                         var path = PIDLToString(shNotify.dwItem1);
                         if (path is not null)
                         {
-                            MediaChanged?.Invoke(this, new MediaChangedEventArgs(path, true));
+                            var args = new MediaChangedEventArgs(path, true);
+                            LocalDebug.WriteLine($"MediaChanged: {args}");
+                            MediaChanged?.Invoke(this, args);
                         }
                     }
                     break;
-                case SHChangeNotifyEvents.SHCNE_MEDIAREMOVED:
+                case SHCNE_ID.SHCNE_MEDIAREMOVED:
                     {
                         var path = PIDLToString(shNotify.dwItem1);
                         if (path is not null)
                         {
-                            MediaChanged?.Invoke(this, new MediaChangedEventArgs(path, false));
+                            var args = new MediaChangedEventArgs(path, false);
+                            LocalDebug.WriteLine($"MediaChanged: {args}");
+                            MediaChanged?.Invoke(this, args);
                         }
                     }
                     break;
 
-                case SHChangeNotifyEvents.SHCNE_MKDIR:
+                case SHCNE_ID.SHCNE_MKDIR:
                     {
                         var path = PIDLToString(shNotify.dwItem1);
                         if (!string.IsNullOrEmpty(path))
                         {
-                            DirectoryChanged?.Invoke(this, new DirectoryChangedEventArgs(DirectoryChangeType.Created, path));
+                            var args = new DirectoryChangedEventArgs(DirectoryChangeType.Created, path);
+                            LocalDebug.WriteLine($"DirectoryChanged: {args}");
+                            DirectoryChanged?.Invoke(this, args);
                         }
                     }
                     break;
 
-                case SHChangeNotifyEvents.SHCNE_RMDIR:
+                case SHCNE_ID.SHCNE_RMDIR:
                     {
                         var path = PIDLToString(shNotify.dwItem1);
                         if (!string.IsNullOrEmpty(path))
                         {
-                            DirectoryChanged?.Invoke(this, new DirectoryChangedEventArgs(DirectoryChangeType.Deleted, path));
+                            var args = new DirectoryChangedEventArgs(DirectoryChangeType.Deleted, path);
+                            LocalDebug.WriteLine($"DirectoryChanged: {args}");
+                            DirectoryChanged?.Invoke(this, args);
                         }
                     }
                     break;
 
-                case SHChangeNotifyEvents.SHCNE_RENAMEFOLDER:
+                case SHCNE_ID.SHCNE_RENAMEFOLDER:
                     {
                         var path1 = PIDLToString(shNotify.dwItem1);
                         var path2 = PIDLToString(shNotify.dwItem2);
                         if (!string.IsNullOrEmpty(path1) && !string.IsNullOrEmpty(path2) && path1 != path2)
                         {
                             // path1 is new, path2 is old, maybe.
-                            DirectoryChanged?.Invoke(this, new DirectoryChangedEventArgs(DirectoryChangeType.Renamed, path2, path1));
+                            var args = new DirectoryChangedEventArgs(DirectoryChangeType.Renamed, path2, path1);
+                            LocalDebug.WriteLine($"DirectoryChanged: {args}");
+                            DirectoryChanged?.Invoke(this, args);
                         }
                     }
                     break;
@@ -295,16 +332,15 @@ namespace NeeView
             }
         }
 
-        private static string? PIDLToString(IntPtr dwItem)
+        private static unsafe string? PIDLToString(IntPtr dwItem)
         {
             if (dwItem == IntPtr.Zero) return null;
 
-            var buff = new StringBuilder(1024);
-            var isSuccess = NativeMethods.SHGetPathFromIDList(dwItem, buff);
-            if (!isSuccess) return null;
-
-            return buff.ToString(); ;
+            PWSTR psz;
+            PInvoke.SHGetNameFromIDList((ITEMIDLIST*)dwItem, SIGDN.SIGDN_FILESYSPATH, &psz);
+            string path = psz.ToString();
+            PInvoke.CoTaskMemFree(psz);
+            return path;
         }
-
     }
 }

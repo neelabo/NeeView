@@ -2,12 +2,17 @@
 
 // from http://grabacr.net/archives/1585
 using NeeLaboratory.Generators;
-using NeeView.Interop;
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.Graphics.Gdi;
+using Windows.Win32.UI.WindowsAndMessaging;
+using WINDOWPLACEMENT = Windows.Win32.UI.WindowsAndMessaging.WINDOWPLACEMENT;
+using APPBARDATA = Windows.Win32.UI.Shell.APPBARDATA;
 
 namespace NeeView.Windows
 {
@@ -20,18 +25,19 @@ namespace NeeView.Windows
             var hwnd = new WindowInteropHelper(window).Handle;
             if (hwnd == IntPtr.Zero) throw new InvalidOperationException();
 
-            NativeMethods.GetWindowPlacement(hwnd, out WINDOWPLACEMENT raw);
+            WINDOWPLACEMENT raw = new();
+            PInvoke.GetWindowPlacement((HWND)hwnd, ref raw);
             LocalDebug.WriteLine($"Store: Native.WindowPlacement: {raw}");
 
             if (withAeroSnap)
             {
-                if (raw.ShowCmd == ShowWindowCommands.SW_SHOWNORMAL)
+                if (raw.showCmd == SHOW_WINDOW_CMD.SW_SHOWNORMAL)
                 {
                     try
                     {
                         // AeroSnapの座標保存
                         // NOTE: スナップ状態の復元方法が不明なため、現在のウィンドウサイズを通常ウィンドウサイズとして上書きする。
-                        raw.NormalPosition = GetAeroPlacement(hwnd);
+                        raw.rcNormalPosition = GetAeroPlacement(hwnd);
                     }
                     catch (Exception ex)
                     {
@@ -46,12 +52,12 @@ namespace NeeView.Windows
         }
 
         // from http://oldworldgarage.web.fc2.com/programing/tip0006_RestoreWindow.html
-        private static RECT GetAeroPlacement(IntPtr hwnd)
+        private static Win32Rect GetAeroPlacement(IntPtr hwnd)
         {
-            NativeMethods.GetWindowRect(hwnd, out RECT rect);
+            PInvoke.GetWindowRect((HWND)hwnd, out Win32Rect rect);
 
             // ウィンドウのあるモニターハンドルを取得
-            IntPtr hMonitor = NativeMethods.MonitorFromRect(ref rect, (uint)MonitorDefaultTo.MONITOR_DEFAULTTONEAREST);
+            IntPtr hMonitor = PInvoke.MonitorFromRect(rect, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
 
             // モニター情報取得
             //var monitorInfo = new NativeMethods.MONITORINFOEX();
@@ -61,26 +67,26 @@ namespace NeeView.Windows
 
             // タスクバーのあるモニターハンドルを取得
             var appBarData = new APPBARDATA();
-            appBarData.cbSize = Marshal.SizeOf(typeof(APPBARDATA));
-            appBarData.hWnd = IntPtr.Zero;
-            NativeMethods.SHAppBarMessage(AppBarMessages.ABM_GETTASKBARPOS, ref appBarData);
-            IntPtr hMonitorWithTaskBar = NativeMethods.MonitorFromRect(ref appBarData.rc, (uint)MonitorDefaultTo.MONITOR_DEFAULTTONEAREST);
+            appBarData.cbSize = (uint)Marshal.SizeOf(typeof(APPBARDATA));
+            appBarData.hWnd = default;
+            PInvoke.SHAppBarMessage(PInvoke.ABM_GETTASKBARPOS, ref appBarData);
+            IntPtr hMonitorWithTaskBar = PInvoke.MonitorFromRect(appBarData.rc, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
 
             // ウィンドウとタスクバーが同じモニターにある？
             if (hMonitor == hMonitorWithTaskBar)
             {
                 // 常に表示？
-                if (NativeMethods.SHAppBarMessage(AppBarMessages.ABM_GETAUTOHIDEBAR, ref appBarData) == IntPtr.Zero)
+                if (PInvoke.SHAppBarMessage(PInvoke.ABM_GETAUTOHIDEBAR, ref appBarData) == 0)
                 {
                     // 座標補正
-                    NativeMethods.SHAppBarMessage(AppBarMessages.ABM_GETTASKBARPOS, ref appBarData);
+                    PInvoke.SHAppBarMessage(PInvoke.ABM_GETTASKBARPOS, ref appBarData);
                     switch (appBarData.uEdge)
                     {
-                        case AppBarEdges.ABE_TOP:
+                        case PInvoke.ABE_TOP:
                             rect.top = rect.top - (appBarData.rc.bottom - appBarData.rc.top);
                             rect.bottom = rect.bottom - (appBarData.rc.bottom - appBarData.rc.top);
                             break;
-                        case AppBarEdges.ABE_LEFT:
+                        case PInvoke.ABE_LEFT:
                             rect.left = rect.left - (appBarData.rc.right - appBarData.rc.left);
                             rect.right = rect.right - (appBarData.rc.right - appBarData.rc.left);
                             break;
@@ -99,11 +105,11 @@ namespace NeeView.Windows
 
             var hwnd = new WindowInteropHelper(window).Handle;
             var raw = ConvertToNativeWindowPlacement(placement);
-            raw.ShowCmd = ShowWindowCommands.SW_HIDE; // 設定のみ
+            raw.showCmd = SHOW_WINDOW_CMD.SW_HIDE; // 設定のみ
             // １度目でウィンドウ位置が反映され表示するディスプレイが決定される
-            NativeMethods.SetWindowPlacement(hwnd, ref raw);
+            PInvoke.SetWindowPlacement((HWND)hwnd, raw);
             // ２度目でそのディスプレイDPIがウィンドウサイズに反映される
-            NativeMethods.SetWindowPlacement(hwnd, ref raw);
+            PInvoke.SetWindowPlacement((HWND)hwnd, raw);
 
             // WindowState を設定
             window.WindowState = placement.WindowState;
@@ -112,43 +118,43 @@ namespace NeeView.Windows
         private static WindowPlacement ConvertToWindowPlacement(WINDOWPLACEMENT raw)
         {
             var memento = new WindowPlacement(
-                ConvertToWindowState(raw.ShowCmd),
-                raw.NormalPosition.left,
-                raw.NormalPosition.top,
-                raw.NormalPosition.Width,
-                raw.NormalPosition.Height);
+                ConvertToWindowState(raw.showCmd),
+                raw.rcNormalPosition.left,
+                raw.rcNormalPosition.top,
+                raw.rcNormalPosition.Width,
+                raw.rcNormalPosition.Height);
             return memento;
         }
 
         private static WINDOWPLACEMENT ConvertToNativeWindowPlacement(WindowPlacement placement)
         {
             var raw = new WINDOWPLACEMENT();
-            raw.Length = Marshal.SizeOf(typeof(WINDOWPLACEMENT));
-            raw.Flags = 0;
-            raw.ShowCmd = ConvertToNativeShowCmd(placement.WindowState);
-            raw.MinPosition = new POINT(-1, -1);
-            raw.MaxPosition = new POINT(-1, -1);
-            raw.NormalPosition = new RECT(placement.Left, placement.Top, placement.Right, placement.Bottom);
+            raw.length = (uint)Marshal.SizeOf(typeof(WINDOWPLACEMENT));
+            raw.flags = 0;
+            raw.showCmd = ConvertToNativeShowCmd(placement.WindowState);
+            raw.ptMinPosition = new Int32Point(-1, -1);
+            raw.ptMaxPosition = new Int32Point(-1, -1);
+            raw.rcNormalPosition = new Win32Rect(placement.Left, placement.Top, placement.Right, placement.Bottom);
             return raw;
         }
 
-        private static WindowState ConvertToWindowState(ShowWindowCommands showCmd)
+        private static WindowState ConvertToWindowState(SHOW_WINDOW_CMD showCmd)
         {
             return showCmd switch
             {
-                ShowWindowCommands.SW_SHOWMINIMIZED => WindowState.Minimized,
-                ShowWindowCommands.SW_SHOWMAXIMIZED => WindowState.Maximized,
+                SHOW_WINDOW_CMD.SW_SHOWMINIMIZED => WindowState.Minimized,
+                SHOW_WINDOW_CMD.SW_SHOWMAXIMIZED => WindowState.Maximized,
                 _ => WindowState.Normal,
             };
         }
 
-        private static ShowWindowCommands ConvertToNativeShowCmd(WindowState windowState)
+        private static SHOW_WINDOW_CMD ConvertToNativeShowCmd(WindowState windowState)
         {
             return windowState switch
             {
-                WindowState.Minimized => ShowWindowCommands.SW_SHOWMINIMIZED,
-                WindowState.Maximized => ShowWindowCommands.SW_SHOWMAXIMIZED,
-                _ => ShowWindowCommands.SW_SHOWNORMAL,
+                WindowState.Minimized => SHOW_WINDOW_CMD.SW_SHOWMINIMIZED,
+                WindowState.Maximized => SHOW_WINDOW_CMD.SW_SHOWMAXIMIZED,
+                _ => SHOW_WINDOW_CMD.SW_SHOWNORMAL,
             };
         }
 

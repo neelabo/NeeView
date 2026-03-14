@@ -1,8 +1,13 @@
-﻿using NeeView.Interop;
+﻿using NeeLaboratory.Text;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.Storage.FileSystem;
+
 
 namespace NeeView
 {
@@ -35,19 +40,21 @@ namespace NeeView
         {
             var table = new Dictionary<ulong, string>();
 
-            const int bufferSize = 1024;
-            var volumeName = new StringBuilder(bufferSize);
-
-            IntPtr findHandle = NativeMethods.FindFirstVolume(volumeName, bufferSize);
-            if (findHandle == IntPtr.Zero)
-                return table;
-
+            var buffer = ArrayPool<char>.Shared.Rent(1024);
             try
             {
+                Span<char> volumeName = buffer;
+
+                using var findHandle = PInvoke.FindFirstVolume(volumeName);
+                if (findHandle.IsInvalid)
+                {
+                    return table;
+                }
+
                 do
                 {
                     // "\\?\Volume{GUID}\"
-                    string guidPath = volumeName.ToString();
+                    string guidPath = volumeName.ToNullTerminatedString();
 
                     if (TryGetVolumeSerial(guidPath, out ulong serial))
                     {
@@ -55,11 +62,13 @@ namespace NeeView
                         table[serial] = guidPath.TrimEnd('\\');
                     }
 
-                } while (NativeMethods.FindNextVolume(findHandle, volumeName, bufferSize));
+                    var len = volumeName.Length;
+
+                } while (PInvoke.FindNextVolume((HANDLE)findHandle.DangerousGetHandle(), volumeName));
             }
             finally
             {
-                NativeMethods.FindVolumeClose(findHandle);
+                ArrayPool<char>.Shared.Return(buffer);
             }
 
             return table;
@@ -71,26 +80,36 @@ namespace NeeView
 
             try
             {
-                using var h = NativeMethods.CreateFile(
+                using var h = PInvoke.CreateFile(
                     volumeGuid,
                     0,
-                    NativeMethods.FILE_SHARE_READ | NativeMethods.FILE_SHARE_WRITE | NativeMethods.FILE_SHARE_DELETE,
-                    IntPtr.Zero,
-                    NativeMethods.OPEN_EXISTING,
-                    NativeMethods.FILE_FLAG_BACKUP_SEMANTICS,
-                    IntPtr.Zero);
+                    FILE_SHARE_MODE.FILE_SHARE_READ | FILE_SHARE_MODE.FILE_SHARE_WRITE | FILE_SHARE_MODE.FILE_SHARE_DELETE,
+                    null,
+                    FILE_CREATION_DISPOSITION.OPEN_EXISTING,
+                    FILE_FLAGS_AND_ATTRIBUTES.FILE_FLAG_BACKUP_SEMANTICS,
+                    null);
 
                 if (h.IsInvalid)
-                    return false;
-
-                if (!NativeMethods.GetFileInformationByHandleEx(
-                    h,
-                    NativeMethods.FILE_INFO_BY_HANDLE_CLASS.FileIdInfo,
-                    out NativeMethods.FILE_ID_INFO info,
-                    (uint)Marshal.SizeOf<NativeMethods.FILE_ID_INFO>()))
                 {
                     return false;
                 }
+
+                Span<byte> buffer = stackalloc byte[Unsafe.SizeOf<FILE_ID_INFO>()];
+
+                if (!PInvoke.GetFileInformationByHandleEx(
+                    h,
+                    FILE_INFO_BY_HANDLE_CLASS.FileIdInfo,
+                    buffer))
+                {
+                    return false;
+                }
+
+                if (buffer.Length < Unsafe.SizeOf<FILE_ID_INFO>())
+                {
+                    throw new InvalidOperationException("Buffer too small for FILE_ID_INFO");
+                }
+
+                var info = MemoryMarshal.Cast<byte, FILE_ID_INFO>(buffer)[0];
 
                 volumeSerial = info.VolumeSerialNumber;
                 return true;

@@ -1,6 +1,6 @@
-﻿using NeeView.Interop;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using Windows.Win32;
 
 namespace NeeView.Text
 {
@@ -14,7 +14,7 @@ namespace NeeView.Text
             if (x is null) return (y is null) ? 0 : -1;
             if (y is null) return 1;
 
-            return NativeMethods.StrCmpLogicalW(x, y);
+            return PInvoke.StrCmpLogical(x, y);
         }
 
         public int Compare(object? x, object? y)

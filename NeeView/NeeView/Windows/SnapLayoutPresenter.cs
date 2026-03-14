@@ -1,10 +1,10 @@
-﻿using NeeView.Interop;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
 using System.Windows.Interop;
 using System.Windows.Media;
+using Windows.Win32;
 
 namespace NeeView.Windows
 {
@@ -69,15 +69,15 @@ namespace NeeView.Windows
 
             if (!IsEnabled) return IntPtr.Zero;
 
-            return (WindowMessages)msg switch
+            return (uint)msg switch
             {
-                WindowMessages.WM_NCHITTEST
+                PInvoke.WM_NCHITTEST
                     => OnNCHitTest(wParam, lParam, ref handled),
-                WindowMessages.WM_NCLBUTTONDOWN
+                PInvoke.WM_NCLBUTTONDOWN
                     => OnNCLButtonDown(wParam, lParam, ref handled),
-                WindowMessages.WM_NCLBUTTONUP
+                PInvoke.WM_NCLBUTTONUP
                     => OnNCLButtonUp(wParam, lParam, ref handled),
-                WindowMessages.WM_NCMOUSELEAVE
+                PInvoke.WM_NCMOUSELEAVE
                     => OnNCMouseLeave(wParam, lParam, ref handled),
                 _
                     => IntPtr.Zero,
@@ -116,7 +116,7 @@ namespace NeeView.Windows
                 _maximizeButton.SetMaximizeButtonBackground(_activeButtonState);
                 UpdateMouseOver(true);
                 handled = true;
-                return new IntPtr((int)HitTestValues.HTMAXBUTTON);
+                return new IntPtr((int)PInvoke.HTMAXBUTTON);
             }
             else
             {
@@ -136,7 +136,7 @@ namespace NeeView.Windows
             var button = _maximizeButton.GetMaximizeButton();
             if (button is null) return IntPtr.Zero;
 
-            if ((HitTestValues)wParam == HitTestValues.HTMAXBUTTON)
+            if (wParam == PInvoke.HTMAXBUTTON)
             {
                 //Debug.WriteLine("# DOWN");
                 _activeButtonState = CaptionButtonState.Pressed;
@@ -156,7 +156,7 @@ namespace NeeView.Windows
             var button = _maximizeButton.GetMaximizeButton();
             if (button is null) return IntPtr.Zero;
 
-            if ((HitTestValues)wParam == HitTestValues.HTMAXBUTTON)
+            if (wParam == PInvoke.HTMAXBUTTON)
             {
                 //Debug.WriteLine("# UP");
                 _activeButtonState = CaptionButtonState.MouseOver;

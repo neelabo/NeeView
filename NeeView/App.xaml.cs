@@ -1,5 +1,4 @@
-﻿using NeeView.Interop;
-using NeeView.Native;
+﻿using NeeView.Native;
 using NeeView.Properties;
 using NeeView.Text.SimpleHtmlBuilder;
 using NeeView.Windows;
@@ -11,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Windows.Win32;
 
 namespace NeeView
 {
@@ -62,7 +62,7 @@ namespace NeeView
             Stopwatch.Start();
 
             // DLL 検索パスから現在の作業ディレクトリ (CWD) を削除
-            NativeMethods.SetDllDirectory("");
+            PInvoke.SetDllDirectory("");
 
 #if TRACE_LOG
             var nowTime = DateTime.Now;

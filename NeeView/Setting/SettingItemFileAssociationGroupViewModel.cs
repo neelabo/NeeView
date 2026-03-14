@@ -1,6 +1,7 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
 using NeeLaboratory.Windows.Input;
+using NeeView.Windows;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,12 +17,14 @@ namespace NeeView.Setting
         private bool? _isChecked;
         private DisposableCollection _disposables = new();
         private bool _lockCheckFlag;
+        private IHasWindowHandle _window;
 
 
-        public SettingItemFileAssociationGroupViewModel(FileAssociationAccessorCollection collection, FileAssociationCategory category)
+        public SettingItemFileAssociationGroupViewModel(FileAssociationAccessorCollection collection, FileAssociationCategory category, IHasWindowHandle window)
         {
             _category = category;
             _items = collection.Where(e => e.Category == category).ToList();
+            _window = window;
             ChangeCategoryIconCommand = new RelayCommand(ChangeCategoryIconCommand_Execute);
             UpdateCheckedFlag();
         }
@@ -49,7 +52,7 @@ namespace NeeView.Setting
 
         void ChangeCategoryIconCommand_Execute()
         {
-            var icon = FileAssociationTools.ShowIconDialog(new FileAssociationIcon(_category));
+            var icon = FileAssociationTools.ShowIconDialog(_window.GetWindowHandle(), new FileAssociationIcon(_category));
             if (icon is not null)
             {
                 foreach (var item in _items)

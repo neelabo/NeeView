@@ -1,5 +1,4 @@
-﻿using NeeView.Interop;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -7,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using Windows.Win32;
+using Windows.Win32.Graphics.Gdi;
 
 namespace NeeView.Drawing
 {
@@ -106,7 +107,7 @@ namespace NeeView.Drawing
             }
             finally
             {
-                NativeMethods.DeleteObject(hBitmap);
+                PInvoke.DeleteObject((HGDIOBJ)hBitmap);
             }
         }
 
@@ -131,5 +132,14 @@ namespace NeeView.Drawing
             }
         }
 
+
+        /// <summary>
+        /// System.Drawing.Point Extensions
+        /// </summary>
+        extension(System.Drawing.Point point)
+        {
+            public static System.Drawing.Size operator -(System.Drawing.Point a, System.Drawing.Point b)
+                => new(a.X - b.X, a.Y - b.Y);
+        }
     }
 }

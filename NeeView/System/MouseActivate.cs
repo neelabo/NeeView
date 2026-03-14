@@ -1,10 +1,10 @@
 ﻿//#define LOCAL_DEBUG
 
-using NeeView.Interop;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using Windows.Win32;
 
 namespace NeeView
 {
@@ -25,7 +25,7 @@ namespace NeeView
             _window.MouseDown += Window_MouseDown;
 
             _proc = proc.WindowProcedure;
-            _proc.Add(WindowMessages.WM_MOUSEACTIVATE, WindowMessage_MouseActivate);
+            _proc.Add(PInvoke.WM_MOUSEACTIVATE, WindowMessage_MouseActivate);
 
             MouseActivateService.Current.Add(this);
         }
@@ -40,7 +40,7 @@ namespace NeeView
             {
                 if (disposing)
                 {
-                    _proc.Remove(WindowMessages.WM_MOUSEACTIVATE);
+                    _proc.Remove(PInvoke.WM_MOUSEACTIVATE);
                     MouseActivateService.Current.Remove(this);
                 }
                 _disposedValue = true;

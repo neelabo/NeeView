@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.Generators;
 using NeeLaboratory.Windows.Input;
+using NeeView.Windows;
 using System.ComponentModel;
 using System.Windows.Media.Imaging;
 
@@ -12,14 +13,16 @@ namespace NeeView
         private readonly FileAssociationIconBitmapCache _cache;
         private bool _isEnabled;
         private FileAssociationIcon _icon;
+        private IHasWindowHandle _window;
 
 
-        public FileAssociationAccessor(FileAssociation source, FileAssociationIconBitmapCache cache)
+        public FileAssociationAccessor(FileAssociation source, FileAssociationIconBitmapCache cache, IHasWindowHandle window)
         {
             _source = source;
             _cache = cache;
             _isEnabled = _source.IsEnabled;
             _icon = _source.Icon;
+            _window = window;
 
             ChangeIconCommand = new RelayCommand(ChangeIconCommand_Execute);
         }
@@ -68,7 +71,7 @@ namespace NeeView
 
         private void ChangeIconCommand_Execute()
         {
-            var icon = FileAssociationTools.ShowIconDialog(Icon);
+            var icon = FileAssociationTools.ShowIconDialog(_window.GetWindowHandle(), Icon);
             if (icon is not null)
             {
                 Icon = icon;

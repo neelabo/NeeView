@@ -1,9 +1,10 @@
-﻿using NeeView.Interop;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using Windows.Win32;
+using Windows.Win32.Foundation;
 
 namespace NeeView
 {
@@ -43,9 +44,9 @@ namespace NeeView
 
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            switch ((WindowMessages)msg)
+            switch ((uint)msg)
             {
-                case WindowMessages.WM_MOUSEHWHEEL:
+                case PInvoke.WM_MOUSEHWHEEL:
                     MouseWheelEventArgs? args = null;
                     try
                     {
@@ -53,7 +54,7 @@ namespace NeeView
                         // NOTE: ReferenceSource を見る限り Mouse.PrimaryDevice が null になることはないようだが、念の為に確認している
                         if (Mouse.PrimaryDevice != null)
                         {
-                            var delta = IntPtrMethods.GET_WHEEL_DELTA_WPARAM(wParam);
+                            var delta = PInvoke.GET_WHEEL_DELTA_WPARAM(new WPARAM((nuint)wParam));
                             args = new MouseWheelEventArgs(Mouse.PrimaryDevice, System.Environment.TickCount, delta) { RoutedEvent = MouseHorizontalWheelEvent };
                         }
                     }

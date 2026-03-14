@@ -1,6 +1,8 @@
-﻿using NeeView.Interop;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace NeeView
 {
@@ -28,12 +30,12 @@ namespace NeeView
             var hWnd = process.MainWindowHandle;
 
             // アクティブにする
-            NativeMethods.SetForegroundWindow(hWnd);
+            PInvoke.SetForegroundWindow((HWND)hWnd);
 
             // ウィンドウが最小化されている場合は元に戻す
-            if (NativeMethods.IsIconic(hWnd))
+            if (PInvoke.IsIconic((HWND)hWnd))
             {
-                NativeMethods.ShowWindowAsync(hWnd, (int)ShowWindowCommands.SW_RESTORE);
+                PInvoke.ShowWindowAsync((HWND)hWnd, SHOW_WINDOW_CMD.SW_RESTORE);
             }
         }
     }

@@ -1,7 +1,7 @@
 ﻿using NeeLaboratory.ComponentModel;
-using NeeView.Interop;
 using System.Windows;
 using System.Windows.Media;
+using Windows.Win32;
 
 namespace NeeView
 {
@@ -119,7 +119,7 @@ namespace NeeView
         {
             try
             {
-                NativeMethods.DwmGetColorizationColor(out uint colorizationColor, out bool colorizationOpaqueBlend);
+                PInvoke.DwmGetColorizationColor(out uint colorizationColor, out var colorizationOpaqueBlend);
                 return Color.FromRgb((byte)(colorizationColor >> 16), (byte)(colorizationColor >> 8), (byte)colorizationColor);
             }
             catch

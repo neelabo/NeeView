@@ -1,18 +1,18 @@
 ﻿using NeeLaboratory.Linq;
-using NeeView.Interop;
 using NeeView.IO;
 using NeeView.Properties;
 using NeeView.Windows;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Win32;
 
 // TODO: UI要素の除外
 
@@ -159,12 +159,21 @@ namespace NeeView
         {
             if (string.IsNullOrEmpty(source)) return "";
 
-            var longPath = new StringBuilder(1024); // 上限は1024文字
-            if (0 == NativeMethods.GetLongPathName(source, longPath, longPath.Capacity))
+            var buffer = ArrayPool<char>.Shared.Rent(1024); // 上限は1024文字
+            try
             {
-                return source;
+                Span<char> longPath = buffer;
+                var length = PInvoke.GetLongPathName(source, longPath);
+                if (length == 0 || length > longPath.Length)
+                {
+                    return source;
+                }
+                return longPath[..(int)length].ToString();
             }
-            return longPath.ToString();
+            finally
+            {
+                ArrayPool<char>.Shared.Return(buffer);
+            }
         }
 
         /// <summary>
@@ -884,7 +893,7 @@ namespace NeeView
             {
                 // 大文字小文字の違いだけである場合はWIN32APIで処理する
                 // .NET6 では不要？
-                NativeMethods.MoveFile(src, dst);
+                PInvoke.MoveFile(src, dst);
             }
         }
 

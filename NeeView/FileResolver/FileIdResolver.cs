@@ -1,9 +1,12 @@
 ﻿using Microsoft.Win32.SafeHandles;
-using NeeView.Interop;
 using System;
+using System.Buffers;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using Windows.Win32;
+using Windows.Win32.Storage.FileSystem;
 
 namespace NeeView
 {
@@ -17,26 +20,34 @@ namespace NeeView
         /// </summary>
         public static FileId GetFileIdFromPath(string path)
         {
-            using var handle = NativeMethods.CreateFile(
+            using var handle = PInvoke.CreateFile(
                 path,
-                NativeMethods.FILE_READ_ATTRIBUTES,
-                NativeMethods.FILE_SHARE_READ | NativeMethods.FILE_SHARE_WRITE | NativeMethods.FILE_SHARE_DELETE,
-                IntPtr.Zero,
-                NativeMethods.OPEN_EXISTING,
-                NativeMethods.FILE_FLAG_BACKUP_SEMANTICS,
-                IntPtr.Zero);
+                (uint)FILE_ACCESS_RIGHTS.FILE_READ_ATTRIBUTES,
+                FILE_SHARE_MODE.FILE_SHARE_READ | FILE_SHARE_MODE.FILE_SHARE_WRITE | FILE_SHARE_MODE.FILE_SHARE_DELETE,
+                null,
+                FILE_CREATION_DISPOSITION.OPEN_EXISTING,
+                FILE_FLAGS_AND_ATTRIBUTES.FILE_FLAG_BACKUP_SEMANTICS,
+                null);
 
             if (handle.IsInvalid)
                 ThrowLastError("CreateFile failed");
 
-            if (!NativeMethods.GetFileInformationByHandleEx(
+            Span<byte> buffer = stackalloc byte[Unsafe.SizeOf<FILE_ID_INFO>()];
+
+            if (!PInvoke.GetFileInformationByHandleEx(
                 handle,
-                NativeMethods.FILE_INFO_BY_HANDLE_CLASS.FileIdInfo,
-                out NativeMethods.FILE_ID_INFO info,
-                (uint)Marshal.SizeOf<NativeMethods.FILE_ID_INFO>()))
+                FILE_INFO_BY_HANDLE_CLASS.FileIdInfo,
+                buffer))
             {
                 ThrowLastError("GetFileInformationByHandleEx failed");
             }
+
+            if (buffer.Length < Unsafe.SizeOf<FILE_ID_INFO>())
+            {
+                throw new InvalidOperationException("Buffer too small for FILE_ID_INFO");
+            }
+
+            var info = MemoryMarshal.Cast<byte, FILE_ID_INFO>(buffer)[0];
 
             var volumeGuid = VolumeSerialToPathResolver.GetVolumePathFromSerial(info.VolumeSerialNumber);
             if (volumeGuid == null)
@@ -44,7 +55,8 @@ namespace NeeView
                 throw new IOException("Volume GUID not found for serial: " + info.VolumeSerialNumber);
             }
 
-            return new(volumeGuid, info.FileId);
+            byte[] bytes = info.FileId.Identifier.AsReadOnlySpan().ToArray();
+            return new(volumeGuid, bytes);
         }
 
         /// <summary>
@@ -77,32 +89,32 @@ namespace NeeView
             Debug.Assert(!volumePath.StartsWith(@"'\\"));
             Debug.Assert(!volumePath.EndsWith(@"\"));
 
-            var volumeHandle = NativeMethods.CreateFile(
+            using var volumeHandle = PInvoke.CreateFile(
                 volumePath,
-                NativeMethods.FILE_READ_ATTRIBUTES,
-                NativeMethods.FILE_SHARE_READ | NativeMethods.FILE_SHARE_WRITE | NativeMethods.FILE_SHARE_DELETE,
-                IntPtr.Zero,
-                NativeMethods.OPEN_EXISTING,
+                (uint)FILE_ACCESS_RIGHTS.FILE_READ_ATTRIBUTES,
+                FILE_SHARE_MODE.FILE_SHARE_READ | FILE_SHARE_MODE.FILE_SHARE_WRITE | FILE_SHARE_MODE.FILE_SHARE_DELETE,
+                null,
+                FILE_CREATION_DISPOSITION.OPEN_EXISTING,
                 0,
-                IntPtr.Zero);
+                null);
 
             if (volumeHandle.IsInvalid)
                 ThrowLastError("Failed to open volume: " + volumePath);
 
-            var desc = new NativeMethods.FILE_ID_DESCRIPTOR
+            var desc = new FILE_ID_DESCRIPTOR
             {
-                dwSize = (uint)Marshal.SizeOf<NativeMethods.FILE_ID_DESCRIPTOR>(),
-                Type = NativeMethods.FILE_ID_TYPE.ExtendedFileIdType,
-                Id = new NativeMethods.FILE_ID_DESCRIPTOR_UNION { FileId128 = new NativeMethods.FILE_ID_128(fileId128) }
+                dwSize = (uint)Marshal.SizeOf<FILE_ID_DESCRIPTOR>(),
+                Type = FILE_ID_TYPE.ExtendedFileIdType,
             };
+            desc.Anonymous.ExtendedFileId = new() { Identifier = fileId128 };
 
-            var handle = NativeMethods.OpenFileById(
+            var handle = PInvoke.OpenFileById(
                 volumeHandle,
-                ref desc,
-                NativeMethods.FILE_READ_ATTRIBUTES,
-                NativeMethods.FILE_SHARE_READ | NativeMethods.FILE_SHARE_WRITE | NativeMethods.FILE_SHARE_DELETE,
-                IntPtr.Zero,
-                NativeMethods.FILE_FLAG_BACKUP_SEMANTICS);
+                desc,
+                (uint)FILE_ACCESS_RIGHTS.FILE_READ_ATTRIBUTES,
+                FILE_SHARE_MODE.FILE_SHARE_READ | FILE_SHARE_MODE.FILE_SHARE_WRITE | FILE_SHARE_MODE.FILE_SHARE_DELETE,
+                null,
+                FILE_FLAGS_AND_ATTRIBUTES.FILE_FLAG_BACKUP_SEMANTICS);
 
             if (handle.IsInvalid)
                 ThrowLastError("OpenFileById failed");
@@ -115,18 +127,26 @@ namespace NeeView
         /// </summary>
         private static string? GetPathFromHandle(SafeFileHandle handle)
         {
-            var buffer = new char[1024];
-            var result = NativeMethods.GetFinalPathNameByHandle(handle, buffer, (uint)buffer.Length, NativeMethods.FILE_NAME_NORMALIZED);
+            var bufferSource = ArrayPool<char>.Shared.Rent(1024);
+            try
+            {
+                Span<char> buffer = bufferSource;
+                var length = PInvoke.GetFinalPathNameByHandle(handle, buffer, GETFINALPATHNAMEBYHANDLE_FLAGS.FILE_NAME_NORMALIZED);
 
-            if (result == 0 || result >= buffer.Length)
-                return null;
+                if (length == 0 || length >= buffer.Length)
+                    return null;
 
-            var path = new string(buffer, 0, (int)result);
+                var path = buffer[..(int)length].ToString();
 
-            if (path.StartsWith(@"\\?\"))
-                path = path.Substring(4);
+                if (path.StartsWith(@"\\?\"))
+                    path = path.Substring(4);
 
-            return path;
+                return path;
+            }
+            finally
+            {
+                ArrayPool<char>.Shared.Return(bufferSource);
+            }
         }
 
         /// <summary>

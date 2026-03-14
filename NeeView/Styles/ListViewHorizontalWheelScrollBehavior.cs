@@ -1,11 +1,12 @@
 ﻿using Microsoft.Xaml.Behaviors;
-using NeeView.Interop;
 using NeeView.Windows.Media;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using Windows.Win32;
+using Windows.Win32.Foundation;
 
 namespace NeeView
 {
@@ -38,12 +39,12 @@ namespace NeeView
 
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            switch ((WindowMessages)msg)
+            switch ((uint)msg)
             {
-                case WindowMessages.WM_MOUSEHWHEEL:
+                case PInvoke.WM_MOUSEHWHEEL:
                     try
                     {
-                        int delta = IntPtrMethods.GET_WHEEL_DELTA_WPARAM(wParam);
+                        int delta = PInvoke.GET_WHEEL_DELTA_WPARAM(new WPARAM((nuint)wParam));
                         AppDispatcher.BeginInvoke(() => Scroll(delta));
                         handled = true;
                     }

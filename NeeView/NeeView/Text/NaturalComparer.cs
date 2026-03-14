@@ -1,9 +1,9 @@
-﻿using NeeView.Interop;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Windows.Win32;
 
 namespace NeeView.Text
 {
@@ -73,7 +73,7 @@ namespace NeeView.Text
                         }
 
                         // 文字比較
-                        return NativeMethods.StrCmpLogicalW(cx.ToString(), cy.ToString());
+                        return PInvoke.StrCmpLogical(cx.ToString(), cy.ToString());
                     }
 
                     // 数字文字で等しいというのはありえない

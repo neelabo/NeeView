@@ -1,5 +1,4 @@
-﻿using NeeView.Interop;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -8,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using Windows.Win32;
 
 namespace NeeView
 {
@@ -122,7 +122,7 @@ namespace NeeView
 
             var elapsedMilliseconds = _doubleTapStopwatch.ElapsedMilliseconds;
             _doubleTapStopwatch.Restart();
-            bool isTapsAreCloseInTime = (elapsedMilliseconds != 0 && elapsedMilliseconds < NativeMethods.GetDoubleClickTime());
+            bool isTapsAreCloseInTime = (elapsedMilliseconds != 0 && elapsedMilliseconds < PInvoke.GetDoubleClickTime());
 
             return isTapsAreCloseInDistance && isTapsAreCloseInTime;
         }

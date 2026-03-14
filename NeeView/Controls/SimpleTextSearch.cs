@@ -1,8 +1,8 @@
-﻿using NeeView.Interop;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Threading;
+using Windows.Win32;
 
 namespace NeeView
 {
@@ -120,7 +120,7 @@ namespace NeeView
         {
             if (_timeoutSpan == TimeSpan.Zero)
             {
-                _timeoutSpan = TimeSpan.FromMilliseconds(Math.Max(NativeMethods.GetDoubleClickTime() * 2, 100));
+                _timeoutSpan = TimeSpan.FromMilliseconds(Math.Max(PInvoke.GetDoubleClickTime() * 2, 100));
             }
             return _timeoutSpan;
         }

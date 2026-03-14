@@ -1,4 +1,4 @@
-﻿using NeeView.Interop;
+﻿using NeeView.Drawing;
 using NeeView.Windows;
 using System;
 using System.Windows;
@@ -16,8 +16,8 @@ namespace NeeView
         private bool _isButtonDown;
         private DragActionProxy _action = new DragActionProxy();
         private LoupeDragTransformContext? _transformContext;
-        private POINT _nativePoint;
-        private POINT _nativeDelta;
+        private Int32Point _nativePoint;
+        private Int32Size _nativeDelta;
 
         // TODO: LoupeDragAction 操作でなくてもここで LoupeDragTransformControl 直接操作でいけそう？
 

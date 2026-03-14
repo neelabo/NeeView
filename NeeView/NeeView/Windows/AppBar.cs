@@ -1,6 +1,10 @@
-﻿using NeeView.Interop;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.Graphics.Gdi;
+using APPBARDATA = Windows.Win32.UI.Shell.APPBARDATA;
+
 
 namespace NeeView.Windows
 {
@@ -12,17 +16,19 @@ namespace NeeView.Windows
     /// </remarks>
     public static class AppBar
     {
-        private const string _appBarClass = "Shell_TrayWnd";
-
         // Note: This is constant in every DPI.
         private const int _hideAppBarSpace = 2;
 
 
         public static bool IsAutoHideAppBar()
         {
-            var appBarData = APPBARDATA.Create();
-            var result = NativeMethods.SHAppBarMessage(AppBarMessages.ABM_GETSTATE, ref appBarData);
-            if (result.ToInt32() == (int)AppBarState.ABS_AUTOHIDE)
+            var appBarData = new APPBARDATA()
+            {
+                cbSize = (uint)Marshal.SizeOf(typeof(APPBARDATA)),
+            };
+
+            var result = PInvoke.SHAppBarMessage(PInvoke.ABM_GETSTATE, ref appBarData);
+            if (result == PInvoke.ABS_AUTOHIDE)
             {
                 return true;
             }
@@ -30,18 +36,19 @@ namespace NeeView.Windows
             return false;
         }
 
-        private static IntPtr GetAutoHideAppBar(AppBarEdges uEdge, RECT rc)
+        private static nuint GetAutoHideAppBar(uint uEdge, Win32Rect rc)
         {
             var data = new APPBARDATA()
             {
-                cbSize = Marshal.SizeOf(typeof(APPBARDATA)),
+                cbSize = (uint)Marshal.SizeOf(typeof(APPBARDATA)),
                 uEdge = uEdge,
                 rc = rc,
             };
-            return NativeMethods.SHAppBarMessage(AppBarMessages.ABM_GETAUTOHIDEBAREX, ref data);
+
+            return PInvoke.SHAppBarMessage(PInvoke.ABM_GETAUTOHIDEBAREX, ref data);
         }
 
-        private static bool HasAutoHideAppBar(IntPtr monitor, RECT area, AppBarEdges targetEdge)
+        private static bool HasAutoHideAppBar(IntPtr monitor, Win32Rect area, uint targetEdge)
         {
             if (!IsAutoHideAppBar())
             {
@@ -49,12 +56,12 @@ namespace NeeView.Windows
             }
 
             var appBar = GetAutoHideAppBar(targetEdge, area);
-            if (appBar == IntPtr.Zero)
+            if (appBar == 0)
             {
                 return false;
             }
 
-            var appBarMonitor = NativeMethods.MonitorFromWindow(appBar, (int)MonitorDefaultTo.MONITOR_DEFAULTTONEAREST);
+            var appBarMonitor = PInvoke.MonitorFromWindow((HWND)appBar, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
             if (!monitor.Equals(appBarMonitor))
             {
                 return false;
@@ -63,12 +70,12 @@ namespace NeeView.Windows
             return true;
         }
 
-        public static void ApplyAppBarSpace(IntPtr monitor, RECT monitorArea, ref RECT workArea)
+        internal static void ApplyAppBarSpace(IntPtr monitor, Win32Rect monitorArea, ref Win32Rect workArea)
         {
-            if (HasAutoHideAppBar(monitor, monitorArea, AppBarEdges.ABE_TOP)) workArea.top += _hideAppBarSpace;
-            if (HasAutoHideAppBar(monitor, monitorArea, AppBarEdges.ABE_LEFT)) workArea.left += _hideAppBarSpace;
-            if (HasAutoHideAppBar(monitor, monitorArea, AppBarEdges.ABE_RIGHT)) workArea.right -= _hideAppBarSpace;
-            if (HasAutoHideAppBar(monitor, monitorArea, AppBarEdges.ABE_BOTTOM)) workArea.bottom -= _hideAppBarSpace;
+            if (HasAutoHideAppBar(monitor, monitorArea, PInvoke.ABE_TOP)) workArea.top += _hideAppBarSpace;
+            if (HasAutoHideAppBar(monitor, monitorArea, PInvoke.ABE_LEFT)) workArea.left += _hideAppBarSpace;
+            if (HasAutoHideAppBar(monitor, monitorArea, PInvoke.ABE_RIGHT)) workArea.right -= _hideAppBarSpace;
+            if (HasAutoHideAppBar(monitor, monitorArea, PInvoke.ABE_BOTTOM)) workArea.bottom -= _hideAppBarSpace;
         }
     }
 }

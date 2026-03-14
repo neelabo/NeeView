@@ -2,7 +2,6 @@
 
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
-using NeeView.Interop;
 using NeeView.Native;
 using NeeView.Setting;
 using NeeView.Threading;
@@ -15,6 +14,10 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+
+using GET_CLASS_LONG_INDEX = Windows.Win32.UI.WindowsAndMessaging.GET_CLASS_LONG_INDEX;
 
 namespace NeeView
 {
@@ -402,18 +405,17 @@ namespace NeeView
             {
                 // Win32 の背景ブラシを設定して起動時のちらつきを軽減するテスト
                 var hwnd = new WindowInteropHelper(this).Handle;
-                int color = brush.Color.B << 16 | brush.Color.G << 8 | brush.Color.R;
-                IntPtr blackBrush = NativeMethods.CreateSolidBrush(color);
-                const int GCLP_HBRBACKGROUND = -10;
-                NativeMethods.SetClassLongPtr(hwnd, GCLP_HBRBACKGROUND, blackBrush);
-                NativeMethods.InvalidateRect(hwnd, IntPtr.Zero, true);
+                uint color = (uint)(brush.Color.B << 16 | brush.Color.G << 8 | brush.Color.R);
+                IntPtr blackBrush = PInvoke.CreateSolidBrush((COLORREF)color);
+                PInvoke.SetClassLongPtr((HWND)hwnd, GET_CLASS_LONG_INDEX.GCLP_HBRBACKGROUND, blackBrush);
+                PInvoke.InvalidateRect((HWND)hwnd, null, true);
             }
 
             // Chrome の情報を最新にする
             _windowController.Refresh();
 
             // ウィンドウ座標の復元
-            // NOTE: NativeMethods.SetWindowPlacement() を呼ぶとLoadedイベントが発生する。WindowPlacementの処理順番に注意
+            // NOTE: PInvoke.SetWindowPlacement() を呼ぶとLoadedイベントが発生する。WindowPlacementの処理順番に注意
             RestoreWindowPlacement();
 
             Debug.WriteLine($"App.MainWindow.SourceInitialized.Done: {App.Current.Stopwatch.ElapsedMilliseconds}ms");

@@ -1,14 +1,19 @@
 ﻿//#define LOCAL_DEBUG
 
 using NeeLaboratory.Generators;
-using NeeView.Interop;
+using NeeView.Win32.Extensions;
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Shell;
-
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.Graphics.Gdi;
+using Windows.Win32.UI.WindowsAndMessaging;
+using MONITORINFO = Windows.Win32.Graphics.Gdi.MONITORINFO;
+using NCCALCSIZE_PARAMS = Windows.Win32.UI.WindowsAndMessaging.NCCALCSIZE_PARAMS;
 
 namespace NeeView.Windows
 {
@@ -94,9 +99,9 @@ namespace NeeView.Windows
 
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            switch ((WindowMessages)msg)
+            switch ((uint)msg)
             {
-                case WindowMessages.WM_NCCALCSIZE:
+                case PInvoke.WM_NCCALCSIZE:
                     // Adjust client area
                     // https://mntone.hateblo.jp/entry/2020/08/02/111309
                     if (wParam != IntPtr.Zero)
@@ -106,7 +111,7 @@ namespace NeeView.Windows
                     }
                     break;
 
-                case WindowMessages.WM_NCHITTEST:
+                case PInvoke.WM_NCHITTEST:
                     // This prevents a crash in WindowChromeWorker._HandleNCHitTest
                     // https://developercommunity.visualstudio.com/content/problem/167357/overflow-exception-in-windowchrome.html?childToView=1209945#comment-1209945 
                     try
@@ -134,29 +139,29 @@ namespace NeeView.Windows
         /// https://mntone.hateblo.jp/entry/2020/08/02/111309
         /// </remarks>
         /// <returns></returns>
-        private IntPtr CalcNonClientSize(IntPtr hWnd, IntPtr lParam, ref bool handled)
+        private unsafe IntPtr CalcNonClientSize(IntPtr hWnd, IntPtr lParam, ref bool handled)
         {
-            if (!NativeMethods.IsZoomed(hWnd)) return IntPtr.Zero;
+            if (!PInvoke.IsZoomed((HWND)hWnd)) return IntPtr.Zero;
 
             // タブレットモードでは処理しない
             if (WindowParameters.IsTabletMode) return IntPtr.Zero;
 
             var nonClientCalcSize = Marshal.PtrToStructure<NCCALCSIZE_PARAMS>(lParam);
-            LocalDebug.WriteLine($"RCSize.LPPos.Flags {nonClientCalcSize.lppos.flags}");
+            LocalDebug.WriteLine($"RCSize.LPPos.Flags {nonClientCalcSize.lppos->flags}");
 
             // NOTE: タスクバーが横に配置されているときに幅によっては SWP_NOSIZE が立って補正できないため、SWP_NOSIZE のときも補正するようにした 
             //if (nonClientCalcSize.lppos.flags.HasFlag(SetWindowPosFlags.SWP_NOSIZE)) return IntPtr.Zero;
 
             // NOTE: 最小化から復元するタイミングではウィンドウがタスクバーのモニター側に存在することがあるため、座標から対象モニターを取得する
-            LocalDebug.WriteLine($"RCSize.rgrc[0] {nonClientCalcSize.rgrc[0]}");
-            var sourceArea = nonClientCalcSize.rgrc[0];
-            var windowCenter = new POINT((sourceArea.right + sourceArea.left) / 2, (sourceArea.top + sourceArea.bottom) / 2);
+            LocalDebug.WriteLine($"RCSize.rgrc[0] {nonClientCalcSize.rgrc._0.ToDispString()}");
+            var sourceArea = nonClientCalcSize.rgrc._0;
+            var windowCenter = new Int32Point((sourceArea.right + sourceArea.left) / 2, (sourceArea.top + sourceArea.bottom) / 2);
             LocalDebug.WriteLine($"RCSize.rgrc[0].Center: {windowCenter}");
 
-            var hMonitor = NativeMethods.MonitorFromPoint(windowCenter, (int)MonitorDefaultTo.MONITOR_DEFAULTTONEAREST);
+            var hMonitor = PInvoke.MonitorFromPoint(windowCenter, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
             if (hMonitor == IntPtr.Zero) return IntPtr.Zero;
 
-            (bool isSuccess, RECT workArea) = GetMonitorWorkArea(hMonitor, (_window.WindowStyle == WindowStyle.None));
+            (bool isSuccess, Win32Rect workArea) = GetMonitorWorkArea(hMonitor, (_window.WindowStyle == WindowStyle.None));
             if (!isSuccess) return IntPtr.Zero;
 
             // 安全のため、補正サイズが元のサイズを超える場合は補正しない
@@ -174,20 +179,20 @@ namespace NeeView.Windows
 
                 ResetWindowBorder();
 
-                nonClientCalcSize.rgrc[0] = workArea;
-                nonClientCalcSize.rgrc[1] = workArea;
-                nonClientCalcSize.rgrc[2] = workArea;
+                nonClientCalcSize.rgrc._0 = workArea;
+                nonClientCalcSize.rgrc._1 = workArea;
+                nonClientCalcSize.rgrc._2 = workArea;
                 Marshal.StructureToPtr(nonClientCalcSize, lParam, true);
 
                 handled = true;
-                return (IntPtr)(WindowValidRects.WVR_ALIGNTOP | WindowValidRects.WVR_ALIGNLEFT | WindowValidRects.WVR_VALIDRECTS);
+                return (IntPtr)(PInvoke.WVR_ALIGNTOP | PInvoke.WVR_ALIGNLEFT | PInvoke.WVR_VALIDRECTS);
             }
             // タスクバーが常に表示されている場合は、Window.BorderThickness を使った最大化ウィンドウサイズ調整を行う。
             else
             {
                 LocalDebug.WriteLine("IsAutoHideAppBar=false, keep row level client size. adjust window border.");
 
-                SetWindowBorder(nonClientCalcSize.rgrc[0], workArea);
+                SetWindowBorder(nonClientCalcSize.rgrc._0, workArea);
                 return IntPtr.Zero;
             }
         }
@@ -197,7 +202,7 @@ namespace NeeView.Windows
         /// </summary>
         /// <param name="clientSize"></param>
         /// <param name="screenSize"></param>
-        private void SetWindowBorder(RECT clientSize, RECT screenSize)
+        private void SetWindowBorder(Win32Rect clientSize, Win32Rect screenSize)
         {
             var left = Math.Max(screenSize.left - clientSize.left, 0.0);
             var top = Math.Max(screenSize.top - clientSize.top, 0.0);
@@ -222,13 +227,13 @@ namespace NeeView.Windows
         /// <param name="hMonitor">モニターハンドル</param>
         /// <param name="isFullScreen">フルスクリーンフラグ。 false のときはタスクバーを考慮しない</param>
         /// <returns></returns>
-        private static (bool, RECT) GetMonitorWorkArea(IntPtr hMonitor, bool isFullScreen)
+        private static (bool, Win32Rect) GetMonitorWorkArea(IntPtr hMonitor, bool isFullScreen)
         {
             var monitorInfo = new MONITORINFO() { cbSize = (uint)Marshal.SizeOf(typeof(MONITORINFO)) };
-            if (!NativeMethods.GetMonitorInfo(hMonitor, ref monitorInfo)) return (false, new RECT());
-            LocalDebug.WriteLine($"MonitorInfo: Monitor={monitorInfo.rcMonitor}, Work={monitorInfo.rcWork}, Flags={monitorInfo.dwFlags}");
+            if (!PInvoke.GetMonitorInfo((HMONITOR)hMonitor, ref monitorInfo)) return (false, new Win32Rect());
+            LocalDebug.WriteLine($"MonitorInfo: Monitor={monitorInfo.rcMonitor.ToDispString()}, Work={monitorInfo.rcWork.ToDispString()}, Flags={monitorInfo.dwFlags}");
 
-            RECT workArea;
+            Win32Rect workArea;
             if (isFullScreen)
             {
                 // フルスクリーン時はモニターサイズにする。
@@ -248,7 +253,7 @@ namespace NeeView.Windows
                     workArea.bottom--;
                 }
             }
-            LocalDebug.WriteLine($"Calc.RCSize {workArea}");
+            LocalDebug.WriteLine($"Calc.RCSize {workArea.ToDispString()}");
 
             return (true, workArea);
         }
@@ -266,19 +271,14 @@ namespace NeeView.Windows
             var hWnd = new WindowInteropHelper(window).Handle;
             if (hWnd == IntPtr.Zero) return;
 
-            //var windowInfo = new WINDOWINFO() { cbSize = (int)Marshal.SizeOf(typeof(WINDOWINFO)) };
-            //if (!NativeMethods.GetWindowInfo(hWnd, ref windowInfo)) return;
-            //var windowRect = windowInfo.rcWindow;
-            //LocalDebug.WriteLine($"Window.Source: {windowInfo.rcWindow}");
-
-            var hMonitor = NativeMethods.MonitorFromWindow(hWnd, (int)MonitorDefaultTo.MONITOR_DEFAULTTONEAREST);
+            var hMonitor = PInvoke.MonitorFromWindow((HWND)hWnd, MONITOR_FROM_FLAGS.MONITOR_DEFAULTTONEAREST);
             if (hMonitor == IntPtr.Zero) return;
 
-            (bool isSuccess, RECT rect) = GetMonitorWorkArea(hMonitor, isFullScreen);
+            (bool isSuccess, Win32Rect rect) = GetMonitorWorkArea(hMonitor, isFullScreen);
             if (isSuccess)
             {
-                LocalDebug.WriteLine($"Window.Reset: {rect}");
-                NativeMethods.SetWindowPos(hWnd, IntPtr.Zero, rect.left, rect.top, rect.Width, rect.Height, NativeMethods.SWP_NOZORDER);
+                LocalDebug.WriteLine($"Window.Reset: {rect.ToDispString()}");
+                PInvoke.SetWindowPos((HWND)hWnd, default, rect.left, rect.top, rect.Width, rect.Height, SET_WINDOW_POS_FLAGS.SWP_NOZORDER);
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeView.Windows;
 using System;
 using System.Diagnostics;
 using System.Windows;
@@ -9,7 +10,7 @@ namespace NeeView.Setting
     /// <summary>
     /// SettingItemFileAssociationControl.xaml の相互作用ロジック
     /// </summary>
-    public partial class SettingItemFileAssociationControl : UserControl
+    public partial class SettingItemFileAssociationControl : UserControl, IHasWindowHandle
     {
         private FileAssociationAccessorCollection? _collection;
         private DisposableCollection _disposables = new();
@@ -30,7 +31,7 @@ namespace NeeView.Setting
             _disposables.Add(() => DetachWindowEvents(window));
 
             var collection = FileAssociationCollectionFactory.Create();
-            _collection = new FileAssociationAccessorCollection(collection);
+            _collection = new FileAssociationAccessorCollection(collection, this);
 
             this.AssociationsPanel.Children.Clear();
             foreach (FileAssociationCategory category in Enum.GetValues<FileAssociationCategory>())
@@ -73,6 +74,11 @@ namespace NeeView.Setting
         public void InitializeValue()
         {
             _collection?.InitializeValue();
+        }
+
+        public IntPtr GetWindowHandle()
+        {
+            return WindowTools.GetWindowHandle(Window.GetWindow(this));
         }
     }
 }
