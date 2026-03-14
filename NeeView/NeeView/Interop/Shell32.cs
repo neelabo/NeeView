@@ -25,9 +25,6 @@ namespace NeeView.Interop
         [DllImport("shell32", EntryPoint = "#727")]
         internal static extern int SHGetImageList(SHImageLists iImageList, ref Guid riid, out IImageList ppv);
 
-        [DllImport("shell32", CharSet = CharSet.Unicode)]
-        internal static extern int SHFileOperation([In] ref SHFILEOPSTRUCT lpFileOp);
-
         [DllImport("shell32", CharSet = CharSet.Auto)]
         internal static extern void SHChangeNotify(SHChangeNotifyEvents wEventId, SHChangeNotifyFlags uFlags, IntPtr dwItem1, IntPtr dwItem2);
 

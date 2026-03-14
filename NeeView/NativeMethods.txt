@@ -1,0 +1,7 @@
+IFileOperation
+IFileOperationProgressSink
+IShellItem
+FileOperation
+CoCreateInstance
+CoTaskMemFree
+SHCreateItemFromParsingName

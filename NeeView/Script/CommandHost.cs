@@ -267,7 +267,7 @@ namespace NeeView
             {
                 try
                 {
-                    await FileIO.DeleteAsync(path);
+                    await FileIO.DeleteAsync(path, CancellationToken.None);
                 }
                 catch (OperationCanceledException)
                 {

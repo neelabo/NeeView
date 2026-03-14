@@ -209,7 +209,7 @@ namespace NeeView
             if (!paths.Any()) return DeleteResult.Success;
 
             RemoveCachedEntry(entries);
-            await FileIO.DeleteAsync(paths);
+            await FileIO.DeleteAsync(paths, CancellationToken.None);
             return DeleteResult.Success;
         }
 

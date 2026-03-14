@@ -450,31 +450,31 @@ namespace NeeView
         /// </summary>
         public static async ValueTask SHCopyToFolderAsync(IEnumerable<string> paths, string toDirectory, CancellationToken token)
         {
-            await SHCopyToFolderAsync(WindowTools.GetWindowHandle(), paths, toDirectory, token);
-        }
-
-        public static async ValueTask SHCopyToFolderAsync(IntPtr hwnd, IEnumerable<string> paths, string toDirectory, CancellationToken token)
-        {
-            var directoryPath = EnsureDirectory(toDirectory);
-            await Task.Run(() => ShellFileOperation.Copy(hwnd, paths, directoryPath), token);
+            await Task.Run(() => SHCopyToFolder(paths, toDirectory), token);
         }
 
         public static async ValueTask SHCopyAsync(string source, string destination, CancellationToken token)
         {
-            await SHCopyAsync(WindowTools.GetWindowHandle(), source, destination, token);
+            if (LoosePath.IsDirectoryEnd(destination) || Directory.Exists(destination))
+            {
+                await Task.Run(() => SHCopyToFolder([source], destination), token);
+            }
+            else
+            {
+                await Task.Run(() => SHCopy(source, destination), token);
+            }
         }
 
-        public static async ValueTask SHCopyAsync(IntPtr hwnd, string source, string destination, CancellationToken token)
+        private static void SHCopyToFolder(IEnumerable<string> sourcePaths, string destDirectoryPath)
         {
-            var dst = LoosePath.TrimEnd(destination);
+            using var scope = WorkingProgressWatcher.Current.Lock("Copying files...");
+            FileOperation.CopyToFolder(WindowTools.GetWindowHandle(), sourcePaths, destDirectoryPath);
+        }
 
-            // destination の終端がセパレート記号があるときはディレクトリ確定
-            if (LoosePath.IsDirectoryEnd(destination))
-            {
-                EnsureDirectory(dst);
-            }
-
-            await Task.Run(() => ShellFileOperation.Copy(hwnd, [source], dst), token);
+        private static void SHCopy(string sourcePath, string destPath)
+        {
+            using var scope = WorkingProgressWatcher.Current.Lock("Copying files...");
+            FileOperation.Copy(WindowTools.GetWindowHandle(), sourcePath, destPath);
         }
 
         #endregion Copy
@@ -486,28 +486,53 @@ namespace NeeView
         /// </summary>
         public static async ValueTask SHMoveToFolderAsync(IEnumerable<string> paths, string toDirectory, CancellationToken token)
         {
-            await SHMoveToFolderAsync(WindowTools.GetWindowHandle(), paths, toDirectory, token);
-        }
-
-        public static async ValueTask SHMoveToFolderAsync(IntPtr hwnd, IEnumerable<string> paths, string toDirectory, CancellationToken token)
-        {
             await CloseBookAsync(paths);
-            var directoryPath = EnsureDirectory(toDirectory);
-            await Task.Run(() => ShellFileOperation.Move(hwnd, paths, directoryPath), token);
+
+            await Task.Run(() => SHMoveToFolder(paths, toDirectory), token);
+
             ValidateBookPages(paths);
         }
 
         public static async ValueTask SHMoveAsync(string source, string destination, CancellationToken token)
         {
-            await SHMoveAsync(WindowTools.GetWindowHandle(), source, destination, token);
+            await CloseBookAsync([source]);
+
+            if (LoosePath.IsDirectoryEnd(destination) || Directory.Exists(destination))
+            {
+                await Task.Run(() => SHMoveToFolder([source], destination), token);
+            }
+            else
+            {
+                await Task.Run(() => SHMove(source, destination), token);
+            }
+
+            ValidateBookPages([source]);
         }
 
-        public static async ValueTask SHMoveAsync(IntPtr hwnd, string source, string destination, CancellationToken token)
+        private static void SHMoveToFolder(IEnumerable<string> sourcePaths, string destDirectoryPath)
         {
-            var paths = new string[] { source };
-            await CloseBookAsync(paths);
-            await Task.Run(() => ShellFileOperation.Move(hwnd, paths, destination), token);
-            ValidateBookPages(paths);
+            using var scope = WorkingProgressWatcher.Current.Lock("Moving files...");
+
+            var result = FileOperation.MoveToFolder(WindowTools.GetWindowHandle(), sourcePaths, destDirectoryPath);
+
+            // TODO: follow bookmark
+            foreach (var item in result.Items)
+            {
+                Debug.WriteLine($"[Move] {item.Source} -> {item.Destination}");
+            }
+        }
+
+        private static void SHMove(string sourcePath, string destPath)
+        {
+            using var scope = WorkingProgressWatcher.Current.Lock("Moving files...");
+
+            var result = FileOperation.Move(WindowTools.GetWindowHandle(), sourcePath, destPath);
+
+            // TODO: follow bookmark
+            foreach (var item in result.Items)
+            {
+                Debug.WriteLine($"[Move] {item.Source} -> {item.Destination}");
+            }
         }
 
         #endregion Move
@@ -523,18 +548,26 @@ namespace NeeView
         /// <summary>
         /// ファイル削除
         /// </summary>
-        public static async ValueTask DeleteAsync(string path)
+        public static async ValueTask DeleteAsync(string path, CancellationToken token)
         {
-            await DeleteAsync(new List<string>() { path });
+            await DeleteAsync([path], token);
         }
 
         /// <summary>
         /// ファイル削除
         /// </summary>
-        public static async ValueTask DeleteAsync(IEnumerable<string> paths)
+        public static async ValueTask DeleteAsync(IEnumerable<string> paths, CancellationToken token)
         {
             await CloseBookAsync(paths);
-            ShellFileOperation.Delete(WindowTools.GetWindowHandle(), paths, Config.Current.System.IsRemoveWantNukeWarning);
+
+            await Task.Run(() => SHDelete(paths), token);
+        }
+
+        private static void SHDelete(IEnumerable<string> paths)
+        {
+            using var scope = WorkingProgressWatcher.Current.Lock("Deleting files...");
+
+            var result = FileOperation.Delete(WindowTools.GetWindowHandle(), paths, Config.Current.System.IsRemoveWantNukeWarning);
         }
 
         #endregion Delete
@@ -792,7 +825,7 @@ namespace NeeView
             }
         }
 
-#endregion Rename
+        #endregion Rename
     }
 
 
