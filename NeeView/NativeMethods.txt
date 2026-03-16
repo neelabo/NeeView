@@ -17,6 +17,9 @@ FindNextVolume
 FindVolumeClose
 OpenFileById
 GetFinalPathNameByHandle
+GlobalLock
+GlobalUnlock
+GlobalSize
 
 FILE_ACCESS_RIGHTS
 FILE_ID_INFO
@@ -33,7 +36,7 @@ ExtractIcon
 SHAppBarMessage
 
 ABM_*
-ABS_AUTOHIDE
+ABS_*
 ABE_*
 
 // user32
@@ -64,11 +67,12 @@ MonitorFromWindow
 GetWindowPlacement
 SetWindowPlacement
 GetWindowRect
+RegisterClipboardFormat
 
- TRACK_POPUP_MENU_FLAGS
- HWND_*
- WINDOW_STYLE
- NCCALCSIZE_PARAMS
+TRACK_POPUP_MENU_FLAGS
+HWND_*
+WINDOW_STYLE
+NCCALCSIZE_PARAMS
 
 // gdi32
 DeleteObject
@@ -112,3 +116,5 @@ DBT_DEVICEARRIVAL
 DBT_DEVICEREMOVECOMPLETE
 
 HTMAXBUTTON
+
+FILEGROUPDESCRIPTORW

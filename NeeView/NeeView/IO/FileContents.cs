@@ -7,17 +7,20 @@
 // - System.Window.IDataObjectに対応
 // - GetFileDescriptor() の format.lindex を -1 に変更
 
-using NeeView.Interop;
+using NeeView.Win32.Extensions;
 using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
+using Windows.Win32;
+using Windows.Win32.Foundation;
+using Windows.Win32.UI.Shell;
 
 
 namespace NeeView.IO
 {
-    public class FileContents
+    internal class FileContents
     {
         private FileContents(string name, byte[] bytes)
         {
@@ -27,8 +30,8 @@ namespace NeeView.IO
         public string Name { get; private set; }
         public byte[] Bytes { get; private set; }
 
-        private static readonly uint CF_FILEDESCRIPTORW = NativeMethods.RegisterClipboardFormat("FileGroupDescriptorW");
-        private static readonly uint CF_FILECONTENTS = NativeMethods.RegisterClipboardFormat("FileContents");
+        private static readonly uint CF_FILEDESCRIPTORW = PInvoke.RegisterClipboardFormat("FileGroupDescriptorW");
+        private static readonly uint CF_FILECONTENTS = PInvoke.RegisterClipboardFormat("FileContents");
 
         public static FileContents[] Get(System.Windows.IDataObject dataObject)
         {
@@ -38,10 +41,10 @@ namespace NeeView.IO
         public static FileContents[] Get(IDataObject dataObject)
         {
             var fileDescriptor = GetFileDescriptor(dataObject);
-            return fileDescriptor.fgd.Select((fgd, i) => new FileContents(fgd.cFileName, GetFileContent(dataObject, i))).ToArray();
+            return fileDescriptor.Select((fgd, i) => new FileContents(fgd.cFileName.ToString(), GetFileContent(dataObject, i))).ToArray();
         }
 
-        private static FILEGROUPDESCRIPTORW GetFileDescriptor(IDataObject dataObject)
+        private unsafe static FILEDESCRIPTORW[] GetFileDescriptor(IDataObject dataObject)
         {
             var format = new FORMATETC
             {
@@ -51,33 +54,39 @@ namespace NeeView.IO
                 lindex = -1,
                 tymed = TYMED.TYMED_HGLOBAL
             };
+
             dataObject.GetData(ref format, out STGMEDIUM medium);
             Debug.Assert(medium.tymed == TYMED.TYMED_HGLOBAL && medium.unionmember != IntPtr.Zero && medium.pUnkForRelease == null);
             if (medium.unionmember == IntPtr.Zero) throw new FormatException("Wrong DataObject.FileDescriptorW format.");
+
+            HGLOBAL hglobal = new HGLOBAL(medium.unionmember);
+            IntPtr ptr = (IntPtr)PInvoke.GlobalLock(hglobal);
             try
             {
-                var fileGroupDescriptor = new FILEGROUPDESCRIPTORW();
+                // unmanaged メモリ上の FILEGROUPDESCRIPTORW*
+                FILEGROUPDESCRIPTORW* fgd = (FILEGROUPDESCRIPTORW*)ptr;
 
-                IntPtr ptr = NativeMethods.GlobalLock(medium.unionmember);
-                fileGroupDescriptor.cItems = Marshal.PtrToStructure<int>(ptr);
-                ptr += Marshal.SizeOf(fileGroupDescriptor.cItems);
+                uint count = fgd->cItems;
+                var result = new FILEDESCRIPTORW[count];
 
-                fileGroupDescriptor.fgd = new FILEDESCRIPTORW[fileGroupDescriptor.cItems];
-                for (int index = 0; index < fileGroupDescriptor.cItems; index++)
+                // 可変長配列部分を Span として扱う
+                Span<FILEDESCRIPTORW> items = fgd->fgd.AsSpan((int)count);
+
+                for (int i = 0; i < count; i++)
                 {
-                    fileGroupDescriptor.fgd[index] = Marshal.PtrToStructure<FILEDESCRIPTORW>(ptr);
-                    ptr += Marshal.SizeOf<FILEDESCRIPTORW>();
+                    result[i] = items[i];
                 }
 
-                return fileGroupDescriptor;
+                return result;
             }
             finally
             {
-                NativeMethods.GlobalFree(medium.unionmember);
+                PInvoke.GlobalUnlock(hglobal);
+                NativeMethods.ReleaseStgMedium(ref medium);
             }
         }
 
-        private static byte[] GetFileContent(IDataObject dataObject, int i)
+        private unsafe static byte[] GetFileContent(IDataObject dataObject, int i)
         {
             var format = new FORMATETC
             {
@@ -87,21 +96,30 @@ namespace NeeView.IO
                 lindex = i,
                 tymed = TYMED.TYMED_HGLOBAL | TYMED.TYMED_ISTREAM
             };
+
             dataObject.GetData(ref format, out STGMEDIUM medium);
             if (medium.unionmember == IntPtr.Zero) throw new FormatException("Wrong DataObject.FileContent format.");
+
             try
             {
                 switch (medium.tymed)
                 {
                     case TYMED.TYMED_HGLOBAL:
                         {
-                            var size = (long)NativeMethods.GlobalSize(medium.unionmember);
-                            Debug.Assert(size <= Int32.MaxValue);
-                            var buffer = new byte[size];
-                            Marshal.Copy(NativeMethods.GlobalLock(medium.unionmember), buffer, 0, buffer.Length);
-                            NativeMethods.GlobalUnlock(medium.unionmember);
-                            NativeMethods.GlobalFree(medium.unionmember);
-                            return buffer;
+                            HGLOBAL hglobal = new HGLOBAL(medium.unionmember);
+                            IntPtr ptr = (IntPtr)PInvoke.GlobalLock(hglobal);
+                            try
+                            {
+                                var size = (long)PInvoke.GlobalSize(hglobal);
+                                Debug.Assert(size <= Int32.MaxValue);
+                                var buffer = new byte[size];
+                                Marshal.Copy(ptr, buffer, 0, buffer.Length);
+                                return buffer;
+                            }
+                            finally
+                            {
+                                PInvoke.GlobalUnlock(hglobal);
+                            }
                         }
                     case TYMED.TYMED_ISTREAM:
                         {

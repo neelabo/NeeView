@@ -12,6 +12,13 @@ namespace NeeView.Win32.Extensions
         internal const uint WM_SHNOTIFY = global::Windows.Win32.PInvoke.WM_USER + 1;
     }
 
+    internal static partial class NativeMethods
+    {
+        [DllImport("ole32.dll", CharSet = CharSet.Unicode)]
+        public static extern void ReleaseStgMedium(ref System.Runtime.InteropServices.ComTypes.STGMEDIUM pmedium);
+    }
+
+
     [StructLayout(LayoutKind.Sequential)]
     internal struct SHNOTIFYSTRUCT
     {
