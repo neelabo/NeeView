@@ -4,7 +4,7 @@ global using Win32Rect = Windows.Win32.Foundation.RECT;
 using System;
 using System.Runtime.InteropServices;
 
-
+// Additional P/Invoke definitions for CsWin32
 namespace NeeView.Win32.Extensions
 {
     internal static partial class WindowMessages

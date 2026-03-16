@@ -12,8 +12,6 @@ using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Gdi;
 using Windows.Win32.UI.WindowsAndMessaging;
-using MONITORINFO = Windows.Win32.Graphics.Gdi.MONITORINFO;
-using NCCALCSIZE_PARAMS = Windows.Win32.UI.WindowsAndMessaging.NCCALCSIZE_PARAMS;
 
 namespace NeeView.Windows
 {

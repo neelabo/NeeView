@@ -16,8 +16,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using Windows.Win32;
 using Windows.Win32.Foundation;
-
-using GET_CLASS_LONG_INDEX = Windows.Win32.UI.WindowsAndMessaging.GET_CLASS_LONG_INDEX;
+using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace NeeView
 {

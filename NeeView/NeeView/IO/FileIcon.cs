@@ -11,8 +11,6 @@ using Windows.Win32.Storage.FileSystem;
 using Windows.Win32.UI.Controls;
 using Windows.Win32.UI.Shell;
 using Windows.Win32.UI.WindowsAndMessaging;
-using IImageList = NeeView.Interop.IImageList;
-using SHFILEINFO = Windows.Win32.UI.Shell.SHFILEINFOW;
 
 
 namespace NeeView.IO
@@ -125,7 +123,7 @@ namespace NeeView.IO
             ////var sw = Stopwatch.StartNew();
             lock (_lock)
             {
-                var shinfo = new SHFILEINFO();
+                var shinfo = new SHFILEINFOW();
                 var result = PInvoke.SHGetFileInfo(filename, attribute, ref shinfo, (SHGFI_FLAGS.SHGFI_SYSICONINDEX | flags));
                 try
                 {
@@ -147,15 +145,15 @@ namespace NeeView.IO
                 {
                     try
                     {
-                        int hResult = PInvoke.SHGetImageList((int)shil, IID_IImageList, out var obj);
-                        if (hResult == HRESULT.S_OK)
+                        HRESULT hResult = PInvoke.SHGetImageList((int)shil, IID_IImageList, out var obj);
+                        if (hResult.Succeeded)
                         {
                             IImageList imglist = (IImageList)obj;
-                            IntPtr hicon = IntPtr.Zero;
-                            imglist.GetIcon(shinfo.iIcon, (int)IMAGE_LIST_DRAW_STYLE.ILD_TRANSPARENT, ref hicon);
+                            HICON hicon = default;
+                            imglist.GetIcon(shinfo.iIcon, (int)IMAGE_LIST_DRAW_STYLE.ILD_TRANSPARENT, &hicon);
                             BitmapSource bitmapSource = System.Windows.Interop.Imaging.CreateBitmapSourceFromHIcon(hicon, System.Windows.Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
                             bitmapSource?.Freeze();
-                            PInvoke.DestroyIcon((HICON)hicon);
+                            PInvoke.DestroyIcon(hicon);
                             if (bitmapSource is not null)
                             {
                                 ////Debug.WriteLine($"Icon: {filename} - {shil}: {bitmapSource.PixelWidth}x{bitmapSource.PixelHeight}");
@@ -180,7 +178,7 @@ namespace NeeView.IO
             ////var sw = Stopwatch.StartNew();
             lock (_lock)
             {
-                var shinfo = new SHFILEINFO();
+                var shinfo = new SHFILEINFOW();
                 var result = PInvoke.SHGetFileInfo(filename, attribute, ref shinfo, (flags | SHGFI_FLAGS.SHGFI_ICON | (iconSize == IconSize.Small ? SHGFI_FLAGS.SHGFI_SMALLICON : SHGFI_FLAGS.SHGFI_LARGEICON)));
                 if (result != 0 && shinfo.hIcon != IntPtr.Zero)
                 {

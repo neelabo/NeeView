@@ -6,8 +6,6 @@ using Windows.Win32.Foundation;
 using Windows.Win32.Storage.FileSystem;
 using Windows.Win32.UI.Shell;
 
-using SHFILEINFO = Windows.Win32.UI.Shell.SHFILEINFOW;
-
 namespace NeeLaboratory.IO
 {
     /// <summary>
@@ -32,7 +30,7 @@ namespace NeeLaboratory.IO
         /// <returns></returns>
         public static string? GetTypeName(string path)
         {
-            var shfi = new SHFILEINFO();
+            var shfi = new SHFILEINFOW();
 
             var result = PInvoke.SHGetFileInfo(path, 0, ref shfi, SHGFI_FLAGS.SHGFI_TYPENAME);
             if (result == 0)
@@ -58,7 +56,7 @@ namespace NeeLaboratory.IO
         /// <returns></returns>
         internal static string? GetTypeNameWithAttribute(string path, FILE_FLAGS_AND_ATTRIBUTES attribute)
         {
-            var shfi = new SHFILEINFO();
+            var shfi = new SHFILEINFOW();
 
             var result = PInvoke.SHGetFileInfo(path, attribute, ref shfi, (SHGFI_FLAGS.SHGFI_TYPENAME | SHGFI_FLAGS.SHGFI_USEFILEATTRIBUTES));
             if (result == 0)
@@ -103,7 +101,7 @@ namespace NeeLaboratory.IO
         /// <returns></returns>
         public static BitmapSource? GetTypeIconSource(string path, IconSize iconSize)
         {
-            var shinfo = new SHFILEINFO();
+            var shinfo = new SHFILEINFOW();
             var result= PInvoke.SHGetFileInfo(path, 0, ref shinfo, (SHGFI_FLAGS.SHGFI_ICON | (iconSize == IconSize.Small ? SHGFI_FLAGS.SHGFI_SMALLICON : SHGFI_FLAGS.SHGFI_LARGEICON)));
             if (result != 0)
             {
@@ -125,7 +123,7 @@ namespace NeeLaboratory.IO
         /// <returns></returns>
         internal static BitmapSource? GetTypeIconSourceWithAttribute(string path, IconSize iconSize, FILE_FLAGS_AND_ATTRIBUTES attribute)
         {
-            var shinfo = new SHFILEINFO();
+            var shinfo = new SHFILEINFOW();
             var result = PInvoke.SHGetFileInfo(path, attribute, ref shinfo, (SHGFI_FLAGS.SHGFI_ICON | (iconSize == IconSize.Small ? SHGFI_FLAGS.SHGFI_SMALLICON : SHGFI_FLAGS.SHGFI_LARGEICON) | SHGFI_FLAGS.SHGFI_USEFILEATTRIBUTES));
             if (result != 0)
             {
