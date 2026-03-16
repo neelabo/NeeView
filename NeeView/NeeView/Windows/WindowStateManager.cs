@@ -175,11 +175,6 @@ namespace NeeView.Windows
             _window.WindowStyle = WindowStyle.SingleBorderWindow;
             _window.WindowState = WindowState.Normal;
 
-            if (_currentState == WindowStateEx.FullScreen || _currentState == WindowStateEx.Maximized)
-            {
-                Windows7Tools.RecoveryTaskBar(_window);
-            }
-
             EndEdit(editArgs);
         }
 
@@ -224,8 +219,8 @@ namespace NeeView.Windows
             var editArgs = new WindowStateExChangedEventArgs(_currentState, WindowStateEx.FullScreen);
             BeginEdit(editArgs);
 
-            // NOTE: Windowsショートカットによる移動ができなくなるので、Windows7とタブレットに限定する
-            if (Windows7Tools.IsWindows7 || WindowParameters.IsTabletMode)
+            // NOTE: Windowsショートカットによる移動ができなくなるので、タブレットに限定する
+            if (WindowParameters.IsTabletMode)
             {
                 _window.ResizeMode = ResizeMode.CanMinimize;
             }
