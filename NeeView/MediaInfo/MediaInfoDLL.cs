@@ -75,11 +75,7 @@ namespace MediaInfoLib
 
     public class MediaInfo
     {
-#if X64
         private const string DllName = @"Libraries\x64\MediaInfo.dll";
-#else
-        private const string DllName = @"Libraries\x86\MediaInfo.dll";
-#endif
 
         //Import of DLL functions. DO NOT USE until you know what you do (MediaInfo DLL do NOT use CoTaskMemAlloc to allocate memory)
         [DllImport(DllName)]

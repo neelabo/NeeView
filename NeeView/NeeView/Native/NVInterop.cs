@@ -10,11 +10,7 @@ namespace NeeView.Native
     {
         private static class NativeMethods
         {
-#if X64
             private const string DllName = @"Libraries\x64\NeeView.Interop.dll";
-#else
-            private const string DllName = @"Libraries\x86\NeeView.Interop.dll";
-#endif
 
             [DllImport(DllName, CharSet = CharSet.Unicode)]
             [return: MarshalAs(UnmanagedType.I1)]

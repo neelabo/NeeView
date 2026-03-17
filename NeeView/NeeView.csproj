@@ -10,71 +10,19 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ApplicationManifest>App.manifest</ApplicationManifest>
     <ApplicationIcon>Resources\App.ico</ApplicationIcon>
-    <Platforms>AnyCPU;x64;x86</Platforms>
+    <Platforms>x64</Platforms>
+    <Platform>x64</Platform>
+    <PlatformTarget>x64</PlatformTarget>
     <Configurations>Debug;Release;Remote</Configurations>
     <CETCompat>false</CETCompat>
   </PropertyGroup>
 
   <PropertyGroup>
-    <NoWarn>$(NoWarn);WFAC010</NoWarn>
-  </PropertyGroup>
-
-  <Target Name="FixAL1703Warning" BeforeTargets="GenerateSatelliteAssemblies" Condition="'$(PlatformTarget)' == 'x64'">
-    <Message Text="Adjusting SDK tools directory to use x64 version of AL.EXE" />
-    <PropertyGroup>
-      <SdkToolsPathMaybeWithx64Architecture>$(TargetFrameworkSDKToolsDirectory)$(PlatformTarget)\</SdkToolsPathMaybeWithx64Architecture>
-    </PropertyGroup>
-  </Target>
-
-  <PropertyGroup>
     <Description>Image viewer</Description>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DefineConstants>TRACE;DEBUG;X64</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Remote|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DefineConstants>TRACE;DEBUG;X64</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
-    <PlatformTarget>x86</PlatformTarget>
-    <DefineConstants>TRACE;DEBUG;X86</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Remote|x86'">
-    <PlatformTarget>x86</PlatformTarget>
-    <DefineConstants>TRACE;DEBUG;X86</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <PlatformTarget>x64</PlatformTarget>
-    <DefineConstants>TRACE;DEBUG;X64</DefineConstants>
-    <OutputPath></OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Remote|x64'">
-    <PlatformTarget>x64</PlatformTarget>
-    <DefineConstants>TRACE;DEBUG;X64</DefineConstants>
+  <PropertyGroup Condition="'$(Configuration)'=='Remote'">
     <OutputPath>C:\NeeLaboratory\NeeView\Debug\</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DefineConstants>TRACE;X64</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
-    <PlatformTarget>x86</PlatformTarget>
-    <DefineConstants>TRACE;X86</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <PlatformTarget>x64</PlatformTarget>
-    <DefineConstants>TRACE;X64</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -176,24 +124,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Libraries\x64\NeeView.Interop.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Libraries\x86\vcruntime140.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Libraries\x86\libsharpyuv.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Libraries\x86\libwebp.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Libraries\x86\libwebpdemux.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Libraries\x86\MediaInfo.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Libraries\x86\NeeView.Interop.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
