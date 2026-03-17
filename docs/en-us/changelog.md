@@ -1,5 +1,14 @@
 # Changelog
 
+## 45.3
+(2026-03-17)
+
+### Fixed
+
+Playlist: Fixed a file locking issue related to playlist updates (#1887)
+Playlist: Ensured that old playlists are registered in file tracking when loaded (#1888)
+Playlist: Fixed an issue when adding items after path resolution (#1893)
+
 ## 45.2
 (2026-03-02)
 
