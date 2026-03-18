@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
+using System.Windows.Media;
 using Windows.Win32;
 
 namespace NeeView
@@ -91,6 +93,13 @@ namespace NeeView
                 }
 
                 Trace.WriteLine($"App.Startup: PID={System.Environment.ProcessId}: {DateTime.Now}");
+
+                // ソフトウェアレンダリング
+                if (AppSettings.Current.SoftwareRendering)
+                {
+                    Trace.WriteLine("Software Rendering: ON");
+                    RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
+                }
 
                 // 未処理例外ハンドル
                 InitializeUnhandledException();

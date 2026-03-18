@@ -37,6 +37,11 @@ If false, the system's temporary folder is used.
 The app path is used to determine multiple launch restrictions.  
 When false, only the process name is used for identification.
 
+### SoftwareRendering (v46.0+)
+
+The WPF rendering is in software only.
+Performance will be reduced.
+
 ### Watermark
 
 Displays the watermark for the package type.    

@@ -96,7 +96,16 @@ namespace NeeView
         /// 多重起動制限での同一アプリ判定に使用する。
         /// false のときはプロセス名のみで判別する
         /// </remarks>
-        public bool PathProcessGroup { get; set; }
+        public bool PathProcessGroup { get; set; } = true;
+
+        /// <summary>
+        /// ソフトウェアレンダリング
+        /// </summary>
+        /// <remarks>
+        /// ハードウェアレンダリングを禁止する。
+        /// 当然ながらパフォーマンスは低下します。
+        /// </remarks>
+        public bool SoftwareRendering { get; set; }
 
         /// <summary>
         /// 既定のテンポラリフォルダーをプロファイル内に作る

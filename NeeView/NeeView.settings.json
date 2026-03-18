@@ -5,6 +5,7 @@
   "UseLocalApplicationData": false,
   "TemporaryFilesInProfileFolder": false,
   "PathProcessGroup": true,
+  "SoftwareRendering": false,
   "Watermark": true,
   "LogFile": null
 }
