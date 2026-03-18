@@ -210,15 +210,15 @@ namespace NeeView
             public List<FolderConfigUnit> Folders { get; set; } = new();
 
 
-            public void Save(string path)
+            public void Save(string path, string? backupFileName)
             {
                 var json = JsonSerializer.SerializeToUtf8Bytes(this, UserSettingTools.GetSerializerOptions());
-                File.WriteAllBytes(path, json);
+                FileIO.WriteAllBytesDurable(path, json, backupFileName);
             }
 
             public static Memento Load(string path)
             {
-                using var stream = File.OpenRead(path);
+                using var stream = FileIO.OpenReadShared(path);
                 return Load(stream);
             }
 

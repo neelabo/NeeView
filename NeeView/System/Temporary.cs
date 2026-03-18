@@ -1,4 +1,5 @@
 ﻿using NeeView.Properties;
+using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -113,14 +114,29 @@ namespace NeeView
         /// ファイルの作業用ファイル名を生成
         /// </summary>
         /// <remarks>
-        /// プロセスIDを埋め込むことで異なるプロセスの編集と衝突しないようにしている
+        /// プロセスIDとランダム文字列を追加することで衝突を回避している
         /// </remarks>
         /// <param name="name">元のファイル名</param>
         /// <returns>テンポラリファイル名</returns>
-        public static string CreateWorkFileName(string name)
+        public static string CreateWorkFileName(string path)
         {
-            var processId = Process.GetCurrentProcess().Id;
-            return name + $".{processId}.tmp";
+            var pid = Environment.ProcessId;
+            var token = RandomString(4);
+            return $"{path}.{pid}-{token}";
+        }
+
+        private static string RandomString(int length)
+        {
+            var random = Random.Shared;
+            Span<char> s = stackalloc char[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                int v = random.Next(36);
+                s[i] = (char)(v < 26 ? 'a' + v : '0' + (v - 26));
+            }
+
+            return new string(s);
         }
 
         /// <summary>

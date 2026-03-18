@@ -32,25 +32,25 @@ namespace NeeView
             };
         }
 
-        public static void Save(string path)
+        public static void Save(string path, string? backupFileName)
         {
-            Save(path, CreateUserSetting(AppSettings.Current.TrimSaveData));
+            Save(path, CreateUserSetting(AppSettings.Current.TrimSaveData), backupFileName);
         }
 
-        public static void Save(string path, UserSetting setting)
+        public static void Save(string path, UserSetting setting, string? backupFileName)
         {
             var json = JsonSerializer.SerializeToUtf8Bytes(setting, GetSerializerOptions());
-            File.WriteAllBytes(path, json);
+            FileIO.WriteAllBytesDurable(path, json, backupFileName);
         }
 
         public static byte[] LoadBytes(string path)
         {
-            return File.ReadAllBytes(path);
+            return FileIO.ReadAllBytesShared(path);
         }
 
         public static UserSetting? Load(string path)
         {
-            using var stream = File.OpenRead(path);
+            using var stream = FileIO.OpenReadShared(path);
             return Load(stream);
         }
 

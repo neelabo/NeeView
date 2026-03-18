@@ -1,7 +1,6 @@
 ﻿//#define LOCAL_DEBUG
 
 using NeeLaboratory.Generators;
-using NeeLaboratory.IO;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -68,17 +67,7 @@ namespace NeeView
                     }
                 }
 
-                var temp = Temporary.CreateWorkFileName(path);
-                try
-                {
-                    FileIO.WriteAllBytes(temp, json);
-                    FileIO.Replace(temp, path, null);
-                }
-                catch
-                {
-                    File.Delete(temp);
-                    throw;
-                }
+                FileIO.WriteAllBytesDurable(path, json, null);
             }
             finally
             {
@@ -92,7 +81,7 @@ namespace NeeView
             try
             {
                 Debug.WriteLine($"Load: {path}");
-                var json = FileTools.ReadAllBytes(path, FileShare.ReadWrite | FileShare.Delete);
+                var json = FileIO.ReadAllBytesShared(path);
                 return Deserialize(json);
             }
             finally

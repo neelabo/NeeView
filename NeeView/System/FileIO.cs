@@ -383,18 +383,72 @@ namespace NeeView
         }
 
         /// <summary>
+        /// OpenRead Shared
+        /// </summary>
+        /// <remarks>
+        /// 既定で FileShare.Delete 属性を付加している。これにより他プロセスでの削除がロックされないことを期待できる
+        /// </remarks>
+        /// <param name="path"></param>
+        /// <param name="share"></param>
+        /// <returns></returns>
+        public static FileStream OpenReadShared(string path, FileShare share = FileShare.Read | FileShare.Delete)
+        {
+            return new FileStream(path, FileMode.Open, FileAccess.Read, share);
+        }
+
+        /// <summary>
+        /// ReadOllBytes Shared
+        /// </summary>
+        /// <remarks>
+        /// 既定で FileShare.Delete 属性を付加している。これにより他プロセスでの削除がロックされないことを期待できる
+        /// </remarks>
+        /// <param name="path"></param>
+        /// <param name="share"></param>
+        /// <returns></returns>
+        public static byte[] ReadAllBytesShared(string path, FileShare share = FileShare.Read | FileShare.Delete)
+        {
+            using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, share);
+            var bytes = new byte[stream.Length];
+            stream.ReadExactly(bytes);
+            return bytes;
+        }
+
+        /// <summary>
         /// WriteAllBytes (FlushToDisk)
         /// </summary>
         /// <param name="path"></param>
-        /// <param name="data"></param>
-        public static void WriteAllBytes(string path, byte[] data)
+        /// <param name="bytes"></param>
+        /// <param name="share"></param>
+        public static void WriteAllBytesFlushed(string path, byte[] bytes, FileShare share = FileShare.Read)
         {
-            // FileShare.ReadWrite | FileShare.Delete ... なるべくファイルロックロックを回避
-            using var fs = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.ReadWrite | FileShare.Delete);
-            fs.Write(data, 0, data.Length);
-            
-            // FlushToDisk
+            using var fs = new FileStream(path, FileMode.Create, FileAccess.Write, share, bufferSize: 4096, FileOptions.WriteThrough);
+            fs.Write(bytes);
             fs.Flush(true);
+        }
+
+        /// <summary>
+        /// WriteAllBytes + Replace
+        /// </summary>
+        /// <remarls>
+        /// 設定ファイル用。
+        /// データ保存の確実性を高めるのとファイルロック例外回避が目的。
+        /// </remarls>
+        /// <param name="path"></param>
+        /// <param name="bytes"></param>
+        /// <param name="backupFileName"></param>
+        public static void WriteAllBytesDurable(string path, byte[] bytes, string? backupFileName)
+        {
+            var temp = Temporary.CreateWorkFileName(path);
+            try
+            {
+                WriteAllBytesFlushed(temp, bytes, FileShare.None);
+                Replace(temp, path, backupFileName, retryCount: 10, retryIntervalMillisecond: 100);
+            }
+            catch
+            {
+                File.Delete(temp);
+                throw;
+            }
         }
 
         /// <summary>
@@ -415,6 +469,10 @@ namespace NeeView
         /// <summary>
         /// ファイルを置き換える
         /// </summary>
+        /// <remarks>
+        /// 標準の Replace だとファイルロックの影響を受けやすいので、atomic write で置き換えている。
+        /// リトライ処理を追加することでさらに堅牢にしている。
+        /// </remarks>
         /// <param name="sourceFileName"></param>
         /// <param name="destinationFileName"></param>
         /// <param name="destinationBackupFileName"></param>

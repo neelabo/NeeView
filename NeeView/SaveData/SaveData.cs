@@ -387,34 +387,16 @@ namespace NeeView
         /// <param name="save">SAVE関数</param>
         /// <param name="path">保存ファイル名</param>
         /// <param name="createBackup">バックアップを作る</param>
-        private static void SafetySave(Action<string> save, string path, bool createBackup)
+        private static void SafetySave(Action<string, string?> save, string path, bool createBackup)
         {
             if (save is null) throw new ArgumentNullException(nameof(save));
             if (string.IsNullOrWhiteSpace(path)) throw new ArgumentNullException(nameof(path));
 
-            var newFileName = path + ".new.tmp";
             var backupFileName = createBackup ? path + BackupExtension : null;
 
             lock (App.Current.Lock)
             {
-                if (File.Exists(path))
-                {
-                    try
-                    {
-                        File.Delete(newFileName);
-                        save(newFileName);
-                        File.Replace(newFileName, path, backupFileName);
-                    }
-                    catch
-                    {
-                        File.Delete(newFileName);
-                        throw;
-                    }
-                }
-                else
-                {
-                    save(path);
-                }
+                save(path, backupFileName);
             }
         }
 
