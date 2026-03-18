@@ -14,7 +14,7 @@ User data is saved in each user area. The location can be found in the menu "Opt
 Simply run the installer as is. If it is a newer version, an update installation will be performed.
 
 > [!IMPORTANT]
-> Starting with version 45, installation is performed on a per-user basis. Therefore, uninstallation is required when updating from version 44 or earlier.
+> Starting with v45.0, installation is performed on a per-user basis. Therefore, uninstallation is required when updating from v44.1 or earlier.
 > User data will be retained.
 
 ### About uninstallation

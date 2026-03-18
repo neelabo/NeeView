@@ -10,8 +10,8 @@
 > [!IMPORTANT]
 > Installer version: The installation type has been changed to Per-User.
 
-Starting with ver 45.0, the installation type changes to Per-User, eliminating the need for administrator privileges.
-Per-Machine installations from ver 44.1 or earlier cannot coexist and must be uninstalled first. If the new installer detects a ver 44.1 or earlier installation, it will display a dialog prompting uninstallation and halt the installation process. User data will be carried over.
+Starting with v45.0, the installation type changes to Per-User, eliminating the need for administrator privileges.
+Per-Machine installations from v44.1 or earlier cannot coexist and must be uninstalled first. If the new installer detects a v44.1 or earlier installation, it will display a dialog prompting uninstallation and halt the installation process. User data will be carried over.
 
 ## Description
 
