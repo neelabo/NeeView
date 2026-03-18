@@ -777,7 +777,7 @@ function Optimize-Package {
 
 	Write-Host "NetBeauty2" -fore Cyan
 
-	& nbeauty2 --usepatch --loglevel Detail $packageDir Libraries
+	& nbeauty2 --usepatch --loglevel Detail $packageDir Libraries | Out-Host
 	if ($? -ne $true) {
 		throw "nbeauty2 error"
 	}
