@@ -1,11 +1,13 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System;
 using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    public class StartUpConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class StartUpConfig : BindableBase
     {
         private string? _lastBookPath;
         private string? _lastFolderPath;

@@ -1,10 +1,12 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System;
 
 namespace NeeView
 {
-    public class LoupeConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class LoupeConfig : BindableBase
     {
         private double _defaultScale = 2.0;
         private bool _isLoupeCenter;

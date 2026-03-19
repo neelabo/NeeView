@@ -1,4 +1,5 @@
-﻿using Microsoft.Expression.Media.Effects;
+﻿using Generator.Equals;
+using Microsoft.Expression.Media.Effects;
 using NeeView.Windows.Property;
 using System.ComponentModel;
 using System.Windows.Media;
@@ -6,42 +7,73 @@ using System.Windows.Media.Effects;
 
 namespace NeeView.Effects
 {
-    public class ColorToneEffectUnit : EffectUnit
+    [Equatable(Explicit = true)]
+    public partial class ColorToneEffectUnit : EffectUnit
     {
-        private static readonly ColorToneEffect _effect = new();
-        public override Effect GetEffect() => _effect;
-
+        [DefaultEquality] private Color _darkColor = Color.FromArgb(0xFF, 0x33, 0x80, 0x00);
+        [DefaultEquality] private Color _lightColor = Color.FromArgb(0xFF, 0xFF, 0xE5, 0x80);
+        [DefaultEquality] private double _toneAmount = 0.5;
+        [DefaultEquality] private double _desaturation = 0.5;
 
         [PropertyMember]
         [DefaultValue(typeof(Color), "#FF338000")]
         public Color DarkColor
         {
-            get { return _effect.DarkColor; }
-            set { if (_effect.DarkColor != value) { _effect.DarkColor = value; RaiseEffectPropertyChanged(); } }
+            get => _darkColor;
+            set => SetProperty(ref _darkColor, value);
         }
 
         [PropertyMember]
         [DefaultValue(typeof(Color), "#FFFFE580")]
         public Color LightColor
         {
-            get { return _effect.LightColor; }
-            set { if (_effect.LightColor != value) { _effect.LightColor = value; RaiseEffectPropertyChanged(); } }
+            get => _lightColor;
+            set => SetProperty(ref _lightColor, value);
         }
 
         [PropertyRange(0, 1)]
         [DefaultValue(0.5)]
         public double ToneAmount
         {
-            get { return _effect.ToneAmount; }
-            set { if (_effect.ToneAmount != value) { _effect.ToneAmount = value; RaiseEffectPropertyChanged(); } }
+            get => _toneAmount;
+            set => SetProperty(ref _toneAmount, value);
         }
 
         [PropertyRange(0, 1)]
         [DefaultValue(0.5)]
         public double Desaturation
         {
-            get { return _effect.Desaturation; }
-            set { if (_effect.Desaturation != value) { _effect.Desaturation = value; RaiseEffectPropertyChanged(); } }
+            get => _desaturation;
+            set => SetProperty(ref _desaturation, value);
+        }
+    }
+
+
+    public class ColorToneEffectAdapter : EffectAdapter
+    {
+        private readonly ColorToneEffect _effect = new();
+        private readonly ColorToneEffectUnit _source;
+
+        public override Effect Effect => _effect;
+        public override EffectUnit Source => _source;
+
+        public ColorToneEffectAdapter(ColorToneEffectUnit source)
+        {
+            _source = source;
+
+            _source.SubscribePropertyChanged(nameof(ColorToneEffectUnit.DarkColor),
+                (s, e) => _effect.DarkColor = _source.DarkColor);
+
+            _source.SubscribePropertyChanged(nameof(ColorToneEffectUnit.LightColor),
+                (s, e) => _effect.LightColor = _source.LightColor);
+
+            _source.SubscribePropertyChanged(nameof(ColorToneEffectUnit.ToneAmount),
+                (s, e) => _effect.ToneAmount = _source.ToneAmount);
+
+            _source.SubscribePropertyChanged(nameof(ColorToneEffectUnit.Desaturation),
+                (s, e) => _effect.Desaturation = _source.Desaturation);
+
+            _source.RaisePropertyChangedAll();
         }
     }
 }

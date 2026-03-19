@@ -425,8 +425,8 @@ namespace NeeView
         [JsonIgnore]
         public string Name { get; set; } = "";
 
-        public bool IsEnabled { get; set; }
-        public bool IsCacheEnabled { get; set; }
+        public bool IsEnabled { get; set; } = true;
+        public bool IsCacheEnabled { get; set; } = true;
         public bool IsPreExtract { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

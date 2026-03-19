@@ -1,11 +1,13 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Controls;
 using NeeView.Windows.Property;
 using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    public class PlaylistConfig : BindableBase, IHasPanelListItemStyle
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class PlaylistConfig : BindableBase, IHasPanelListItemStyle
     {
         private PanelListItemStyle _panelListItemStyle;
         private bool _isGroupBy;

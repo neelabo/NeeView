@@ -576,54 +576,10 @@ namespace NeeView
 
         #region Memento
 
-        [Memento]
-        public class Memento
-        {
-            public static string FormatName => Environment.SolutionName + ".Bookmark";
-
-            public FormatVersion? Format { get; set; }
-
-            public BookmarkNode? Nodes { get; set; }
-
-            public List<BookMemento>? Books { get; set; }
-
-            public QuickAccessCollection.Memento? QuickAccess { get; set; }
-
-
-            public Memento()
-            {
-                Nodes = new BookmarkNode();
-                Books = new List<BookMemento>();
-            }
-
-
-            public void Save(string path, string? backupFileName)
-            {
-                Format = new FormatVersion(FormatName);
-
-                var json = JsonSerializer.SerializeToUtf8Bytes(this, UserSettingTools.GetSerializerOptions());
-                FileIO.WriteAllBytesDurable(path, json, backupFileName);
-            }
-
-            public static Memento Load(string path)
-            {
-                using var stream = FileIO.OpenReadShared(path);
-                return Load(stream);
-            }
-
-            public static Memento Load(Stream stream)
-            {
-                var memento = JsonSerializer.Deserialize<Memento>(stream, UserSettingTools.GetSerializerOptions());
-                if (memento is null) throw new FormatException();
-                return memento.Validate();
-            }
-        }
-
-
         // memento作成
-        public Memento CreateMemento()
+        public BookmarkCollectionMemento CreateMemento()
         {
-            var memento = new Memento();
+            var memento = new BookmarkCollectionMemento();
             memento.Nodes = BookmarkNodeConverter.ConvertFrom(Items);
             memento.Books = Items.WalkChildren().Select(e => e.Value).OfType<Bookmark>().Select(e => e.Unit.Memento).Distinct().ToList();
 
@@ -634,7 +590,7 @@ namespace NeeView
         }
 
         // memento適用
-        public void Restore(Memento? memento)
+        public void Restore(BookmarkCollectionMemento? memento)
         {
             if (memento is null) return;
 
@@ -646,7 +602,7 @@ namespace NeeView
             }
 
             // 互換用 : FileResolver 登録
-            if (memento.Books is not null && memento.Format?.CompareTo(new FormatVersion(BookmarkCollection.Memento.FormatName, VersionNumber.Ver45_Alpha4)) <= 0)
+            if (memento.Books is not null && memento.Format?.CompareTo(new FormatVersion(BookmarkCollectionMemento.FormatName, VersionNumber.Ver45_Alpha4)) <= 0)
             {
                 var files = memento.Books.Select(e => e.Path).ToList();
                 ProcessJobEngine.Current.AddJob("Processing bookmarks",
@@ -659,6 +615,50 @@ namespace NeeView
         }
 
         #endregion
+    }
+
+
+    [Memento]
+    public class BookmarkCollectionMemento
+    {
+        public static string FormatName => Environment.SolutionName + ".Bookmark";
+
+        public FormatVersion? Format { get; set; }
+
+        public BookmarkNode? Nodes { get; set; }
+
+        public List<BookMemento>? Books { get; set; }
+
+        public QuickAccessCollectionMemento? QuickAccess { get; set; }
+
+
+        public BookmarkCollectionMemento()
+        {
+            Nodes = new BookmarkNode();
+            Books = new List<BookMemento>();
+        }
+
+
+        public void Save(string path, string? backupFileName)
+        {
+            Format = new FormatVersion(FormatName);
+
+            var json = JsonSerializer.SerializeToUtf8Bytes(this, UserSettingTools.GetSerializerOptions());
+            FileIO.WriteAllBytesDurable(path, json, backupFileName);
+        }
+
+        public static BookmarkCollectionMemento Load(string path)
+        {
+            using var stream = FileIO.OpenReadShared(path);
+            return Load(stream);
+        }
+
+        public static BookmarkCollectionMemento Load(Stream stream)
+        {
+            var memento = JsonSerializer.Deserialize<BookmarkCollectionMemento>(stream, UserSettingTools.GetSerializerOptions());
+            if (memento is null) throw new FormatException();
+            return memento.Validate();
+        }
     }
 
 

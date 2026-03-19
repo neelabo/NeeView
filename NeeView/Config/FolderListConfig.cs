@@ -1,9 +1,11 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    public class FolderListConfig : BindableBase, IHasPanelListItemStyle
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class FolderListConfig : BindableBase, IHasPanelListItemStyle
     {
         private FolderTreeLayout _folderTreeLayout = FolderTreeLayout.Left;
         private bool _isFolderTreeVisible = false;

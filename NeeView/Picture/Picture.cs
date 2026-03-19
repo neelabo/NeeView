@@ -74,7 +74,7 @@ namespace NeeView
         // 画像生成に影響する設定のハッシュ値取得
         private static int GetEnvironmentHashCode()
         {
-            return HashCode.Combine(Config.Current.ImageResizeFilter, Config.Current.ImageCustomSize);
+            return HashCode.Combine(Config.Current.ImageResizeFilter.GetEnvironmentHashCode(), Config.Current.ImageCustomSize.GetEnvironmentHashCode());
         }
 
         /// <summary>

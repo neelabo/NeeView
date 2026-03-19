@@ -1,4 +1,5 @@
-﻿using NeeLaboratory;
+﻿using Generator.Equals;
+using NeeLaboratory;
 using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System;
@@ -6,7 +7,8 @@ using System.Windows;
 
 namespace NeeView
 {
-    public class MouseConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class MouseConfig : BindableBase
     {
         private bool _isGestureEnabled = true;
         private bool _isDragEnabled = true;

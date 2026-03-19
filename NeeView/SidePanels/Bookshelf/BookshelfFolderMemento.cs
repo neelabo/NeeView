@@ -1,6 +1,6 @@
 ﻿namespace NeeView
 {
-    public record class BookshelfFolderMemento : FolderParameter.Memento
+    public record class BookshelfFolderMemento : FolderParameterMemento
     {
         public BookshelfFolderMemento()
         {
@@ -23,7 +23,7 @@
         public void Register()
         {
             var path = new QueryPath(Path).SimplePath;
-            FolderConfigCollection.Current.SetFolderParameter(path, new FolderParameter.Memento(this.FolderOrder, this.IsFolderRecursive, this.Seed));
+            FolderConfigCollection.Current.SetFolderParameter(path, new FolderParameterMemento(this.FolderOrder, this.IsFolderRecursive, this.Seed));
         }
     }
 

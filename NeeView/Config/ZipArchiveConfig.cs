@@ -1,9 +1,11 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    public class ZipArchiveConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class ZipArchiveConfig : BindableBase
     {
         public static FileTypeCollection DefaultSupportFileTypes { get; } = new FileTypeCollection(".zip");
 

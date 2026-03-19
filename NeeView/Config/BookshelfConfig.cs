@@ -1,4 +1,5 @@
-﻿using NeeView.Text;
+﻿using Generator.Equals;
+using NeeView.Text;
 using NeeView.Windows.Controls;
 using NeeView.Windows.Property;
 using System;
@@ -9,9 +10,12 @@ using System.Windows;
 
 namespace NeeView
 {
-    public class BookshelfConfig : FolderListConfig
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class BookshelfConfig : FolderListConfig
     {
+        [IgnoreEquality]
         private readonly RegexCollectionCache _excludeRegexCache = new();
+
         private bool _isVisibleHistoryMark = true;
         private bool _isVisibleBookmarkMark = true;
         private StringCollection _excludeRegexes = new();

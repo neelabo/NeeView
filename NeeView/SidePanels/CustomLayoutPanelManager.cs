@@ -4,6 +4,7 @@ using NeeView.Runtime.LayoutPanel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 
 namespace NeeView
 {
@@ -205,7 +206,22 @@ namespace NeeView
         {
             if (_initialized && _isStoreEnabled)
             {
+                ValidateGridLength();
                 Config.Current.Panels.Layout = CreateMemento();
+            }
+        }
+
+        /// <summary>
+        /// 連結していないパネルの GridLength を初期化する
+        /// </summary>
+        private void ValidateGridLength()
+        {
+            foreach(var panels in Docks.Values.SelectMany(e => e.Items))
+            {
+                if (panels.Count == 1)
+                {
+                    panels[0].GridLength = new GridLength(1, GridUnitType.Star);
+                }
             }
         }
 

@@ -1,6 +1,8 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeLaboratory.Generators;
 using NeeView.Windows.Property;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Text.Json.Serialization;
 using System.Windows;
@@ -27,13 +29,9 @@ namespace NeeView
     /// <summary>
     /// リスト項目の表示形式
     /// </summary>
-    public class PanelListItemProfile : BindableBase
+    [NotifyPropertyChanged]
+    public partial record class PanelListItemProfile : INotifyPropertyChanged
     {
-        public static readonly PanelListItemProfile DefaultNormalItemProfile = new(PanelListItemImageShape.Square, 0, true, false, true, false);
-        public static readonly PanelListItemProfile DefaultContentItemProfile = new(PanelListItemImageShape.Square, 64, true, true, true, false);
-        public static readonly PanelListItemProfile DefaultBannerItemProfile = new(PanelListItemImageShape.Banner, 200, true, false, true, false);
-        public static readonly PanelListItemProfile DefaultThumbnailItemProfile = new(PanelListItemImageShape.Original, 128, true, false, true, true);
-
         private static Rect _rectDefault = new(0, 0, 1, 1);
         private static Rect _rectBanner = new(0, 0, 1, 0.6);
         private static readonly SolidColorBrush _brushBanner = new(Color.FromArgb(0x20, 0x99, 0x99, 0x99));
@@ -51,6 +49,11 @@ namespace NeeView
         public PanelListItemProfile()
         {
         }
+
+
+        [Subscribable]
+        public event PropertyChangedEventHandler? PropertyChanged;
+
 
         public PanelListItemProfile(PanelListItemImageShape imageShape, int imageWidth, bool isDetailPopupEnalbed, bool isImagePopupEnabled, bool isTextVisible, bool isTextWrapped)
         {
@@ -130,6 +133,39 @@ namespace NeeView
         }
 
         #endregion
+
+        #region Equals
+
+        // NOTE: TextHeight の値は遅延生成されるため、標準の比較では一致しない
+        // TODO: TextHeight は別の場所で管理すべきかも？
+
+        public virtual bool Equals(PanelListItemProfile? other)
+        {
+            if (other is null) return false;
+
+            return (this.ImageShape.Equals(other.ImageShape)
+                && this.ImageWidth.Equals(other.ImageWidth)
+                && this.IsDetailPopupEnabled.Equals(other.IsDetailPopupEnabled)
+                && this.IsImagePopupEnabled.Equals(other.IsImagePopupEnabled)
+                && this.IsTextVisible.Equals(other.IsTextVisible)
+                && this.IsTextWrapped.Equals(other.IsTextWrapped));
+        }
+
+        public override int GetHashCode()
+        {
+            HashCode hashcode = new();
+            hashcode.Add(this.ImageShape.GetHashCode());
+            hashcode.Add(this.ImageWidth.GetHashCode());
+            hashcode.Add(this.IsDetailPopupEnabled.GetHashCode());
+            hashcode.Add(this.IsImagePopupEnabled.GetHashCode());
+            hashcode.Add(this.IsTextVisible.GetHashCode());
+            hashcode.Add(this.IsTextWrapped.GetHashCode());
+
+            return hashcode.ToHashCode();
+        }
+
+        #endregion Equals
+
 
         #region Obsolete
 
@@ -250,7 +286,7 @@ namespace NeeView
 
         #endregion
 
-        public PanelListItemProfile Clone()
+        public PanelListItemProfile CloneInstance()
         {
             var profile = ObjectExtensions.DeepCopy(this);
             profile.UpdateTextHeight();
@@ -286,6 +322,34 @@ namespace NeeView
             double height = (int)textBlock.ActualHeight + 1.0;
 
             return height;
+        }
+    }
+
+    public record class NormalItemProfile : PanelListItemProfile
+    {
+        public NormalItemProfile() : base(PanelListItemImageShape.Square, 0, true, false, true, false)
+        {
+        }
+    }
+
+    public record class ContentItemProfile : PanelListItemProfile
+    {
+        public ContentItemProfile() : base(PanelListItemImageShape.Square, 64, true, true, true, false)
+        {
+        }
+    }
+
+    public record class BannerItemProfile : PanelListItemProfile
+    {
+        public BannerItemProfile() : base(PanelListItemImageShape.Banner, 200, true, false, true, false)
+        {
+        }
+    }
+
+    public record class ThumbnailItemProfile : PanelListItemProfile
+    {
+        public ThumbnailItemProfile() : base(PanelListItemImageShape.Original, 128, true, false, true, true)
+        {
         }
     }
 }

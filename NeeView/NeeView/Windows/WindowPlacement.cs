@@ -10,7 +10,7 @@ namespace NeeView.Windows
 {
     [ImmutableObject(true)]
     [JsonConverter(typeof(JsonWindowPlaceConverter))]
-    public class WindowPlacement
+    public record WindowPlacement
     {
         public static WindowPlacement None { get; } = new WindowPlacement();
 

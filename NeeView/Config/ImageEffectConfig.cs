@@ -1,10 +1,12 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Effects;
 using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    public class ImageEffectConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class ImageEffectConfig : BindableBase
     {
         private bool _isEnabled;
         private EffectType _effectType = EffectType.Level;

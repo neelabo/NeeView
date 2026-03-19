@@ -24,7 +24,7 @@
 * URL: [Windows Presentation Foundation (WPF)](https://github.com/dotnet/wpf)
 * License: [MIT License](https://github.com/dotnet/wpf/blob/main/LICENSE.TXT)
  
-### その他
+### Others
 
-ブログ等を参考にして作成されたコードには、そのURLを記載しています。  
+For code created with reference to blogs or other sources, we have included the relevant URLs.  
                 

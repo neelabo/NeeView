@@ -108,22 +108,16 @@ namespace NeeView
         }
 
         #region Memento
-        [Memento]
-        public class Memento
-        {
-            public string? Path { get; set; }
-            public string? Name { get; set; }
-        }
 
-        public Memento CreateMemento()
+        public QuickAccessMemento CreateMemento()
         {
-            var memento = new Memento();
+            var memento = new QuickAccessMemento();
             memento.Path = _path;
             memento.Name = _name;
             return memento;
         }
 
-        public void Restore(Memento memento)
+        public void Restore(QuickAccessMemento memento)
         {
             if (memento == null) return;
             Path = memento.Path;
@@ -150,4 +144,11 @@ namespace NeeView
         #endregion
     }
 
+
+    [Memento]
+    public class QuickAccessMemento
+    {
+        public string? Path { get; set; }
+        public string? Name { get; set; }
+    }
 }

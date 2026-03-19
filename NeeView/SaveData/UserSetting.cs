@@ -9,12 +9,16 @@ namespace NeeView
 
         public Config? Config { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public MenuNode? ContextMenu { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public SusiePluginCollection? SusiePlugins { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public DragActionCollection? DragActions { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public CommandCollection? Commands { get; set; }
 
         /// <summary>

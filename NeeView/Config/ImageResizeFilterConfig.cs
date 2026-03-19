@@ -1,4 +1,5 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using PhotoSauce.MagicScaler;
 using System;
@@ -8,17 +9,22 @@ namespace NeeView
     /// <summary>
     /// Resize filter (PhotoSauce.MagicScaler)
     /// </summary>
-    public class ImageResizeFilterConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class ImageResizeFilterConfig : BindableBase
     {
         private bool _isResizeFilterEnabled = false;
         private ResizeInterpolation _resizeInterpolation = ResizeInterpolation.Lanczos;
         private bool _isUnsharpMaskEnabled;
-        private UnsharpMaskConfig _unsharpMask = new();
+        private UnsharpMaskConfig _unsharpMask;
 
         public ImageResizeFilterConfig()
         {
             var setting = new ProcessImageSettings(); // default values.
             _isUnsharpMaskEnabled = setting.Sharpen;
+
+            _unsharpMask = new();
+            _unsharpMask.PropertyChanged += UnsharpMask_PropertyChanged;
+
             this.UnsharpMask.Amount = setting.UnsharpMask.Amount;
             this.UnsharpMask.Radius = setting.UnsharpMask.Radius;
             this.UnsharpMask.Threshold = setting.UnsharpMask.Threshold;
@@ -58,17 +64,17 @@ namespace NeeView
                     _unsharpMask.PropertyChanged += UnsharpMask_PropertyChanged;
                     RaisePropertyChanged(nameof(UnsharpMask));
                 }
-
-                void UnsharpMask_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-                {
-                    RaisePropertyChanged(nameof(UnsharpMask));
-                }
             }
         }
-
-        public override int GetHashCode()
+        
+        private void UnsharpMask_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            return HashCode.Combine(_isResizeFilterEnabled, _resizeInterpolation, _isUnsharpMaskEnabled, UnsharpMask);
+            RaisePropertyChanged(nameof(UnsharpMask));
+        }
+
+        public int GetEnvironmentHashCode()
+        {
+            return HashCode.Combine(_isResizeFilterEnabled, _resizeInterpolation, _isUnsharpMaskEnabled, UnsharpMask.GetEnvironmentHashCode());
         }
 
         public ProcessImageSettings CreateProcessImageSetting()

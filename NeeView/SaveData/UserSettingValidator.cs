@@ -19,7 +19,6 @@ namespace NeeView
             if (self is null) throw new ArgumentNullException(nameof(self));
             if (self.Format is null) throw new FormatException("UserSetting.Format must not be null.");
             if (self.Config is null) throw new FormatException("UserSetting.Config must not be null.");
-            if (self.Commands is null) throw new FormatException("UserSetting.Commands must not be null.");
 
             // 読み込まれた設定フラグを立てる
             self.Config.System.IsLoadedSettings = true;
@@ -361,7 +360,7 @@ namespace NeeView
     /// </summary>
     public static class LayoutPanelValidator
     {
-        public static void ValidateRename(this LayoutPanelManager.Memento self, string oldName, string newName)
+        public static void ValidateRename(this LayoutPanelManagerMemento self, string oldName, string newName)
         {
             if (self is null) return;
 
@@ -378,11 +377,21 @@ namespace NeeView
                     dock.SelectedItem = dock.SelectedItem == oldName ? newName : dock.SelectedItem;
 
 #pragma warning disable CS0612 // 型またはメンバーが旧型式です
-                    if (dock.Panels is not null)
+                    if (dock.PanenLayoutV0 is not null)
                     {
-                        dock.Panels = dock.Panels
+                        dock.PanenLayoutV0 = dock.PanenLayoutV0
                             .Select(e => e.Select(x => x == oldName ? newName : x).ToList())
                             .ToList();
+                    }
+
+                    if (dock.PanelLayoutV1 is not null)
+                    {
+                        foreach (var panelLayout in dock.PanelLayoutV1)
+                        {
+                            panelLayout.Panels = panelLayout.Panels
+                                .Select(x => x == oldName ? newName : x).ToList()
+                                .ToList();
+                        }
                     }
 #pragma warning restore CS0612 // 型またはメンバーが旧型式です
 

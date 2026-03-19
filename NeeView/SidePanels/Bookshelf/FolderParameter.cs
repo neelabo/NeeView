@@ -121,53 +121,17 @@ namespace NeeView
         }
 
         #region Memento
-        [Memento]
-        public record class Memento
+
+        public FolderParameterMemento CreateMemento()
         {
-            public Memento()
-            {
-            }
-
-            public Memento(FolderOrder folderOrder, bool isFolderRecursive, int seed)
-            {
-                FolderOrder = folderOrder;
-                IsFolderRecursive = isFolderRecursive;
-                Seed = seed;
-            }
-
-            public FolderOrder FolderOrder { get; set; }
-
-            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-            public bool IsFolderRecursive { get; set; }
-
-            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-            public int Seed { get; set; }
-
-
-            public bool IsDefault(string path)
-            {
-                return this.Equals(GetDefault(path));
-            }
-
-            public static Memento GetDefault(string path)
-            {
-                return new Memento()
-                {
-                    FolderOrder = GetDefaultFolderOrder(path)
-                };
-            }
-        }
-
-        public Memento CreateMemento()
-        {
-            var memento = new Memento();
+            var memento = new FolderParameterMemento();
             memento.FolderOrder = this.FolderOrder;
             memento.IsFolderRecursive = this.IsFolderRecursive;
             memento.Seed = this.Seed;
             return memento;
         }
 
-        public void Restore(Memento memento)
+        public void Restore(FolderParameterMemento memento)
         {
             if (memento == null) return;
 
@@ -179,5 +143,43 @@ namespace NeeView
         }
 
         #endregion
+    }
+
+
+    [Memento]
+    public record class FolderParameterMemento
+    {
+        public FolderParameterMemento()
+        {
+        }
+
+        public FolderParameterMemento(FolderOrder folderOrder, bool isFolderRecursive, int seed)
+        {
+            FolderOrder = folderOrder;
+            IsFolderRecursive = isFolderRecursive;
+            Seed = seed;
+        }
+
+        public FolderOrder FolderOrder { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public bool IsFolderRecursive { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public int Seed { get; set; }
+
+
+        public bool IsDefault(string path)
+        {
+            return this.Equals(GetDefault(path));
+        }
+
+        public static FolderParameterMemento GetDefault(string path)
+        {
+            return new FolderParameterMemento()
+            {
+                FolderOrder = FolderParameter.GetDefaultFolderOrder(path)
+            };
+        }
     }
 }

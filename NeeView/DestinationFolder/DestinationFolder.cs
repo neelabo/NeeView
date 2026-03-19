@@ -1,4 +1,5 @@
-﻿using NeeView.Properties;
+﻿using Generator.Equals;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,10 +9,11 @@ using System.Threading.Tasks;
 
 namespace NeeView
 {
-    public class DestinationFolder : ICloneable, IEquatable<DestinationFolder>
+    [Equatable(Explicit = true)]
+    public partial class DestinationFolder : ICloneable
     {
-        private string _name = "";
-        private string _path = "";
+        [DefaultEquality] private string _name = "";
+        [DefaultEquality] private string _path = "";
 
         public DestinationFolder()
         {
@@ -27,13 +29,13 @@ namespace NeeView
         public string Name
         {
             get { return string.IsNullOrWhiteSpace(_name) ? LoosePath.GetFileName(_path) : _name; }
-            set { _name = value; }
+            set { _name = string.IsNullOrWhiteSpace(value) ? "" : value.Trim(); }
         }
 
         public string Path
         {
             get => _path;
-            set => _path = value;
+            set => _path = string.IsNullOrWhiteSpace(value) ? "" : value.Trim();
         }
 
 
@@ -45,27 +47,6 @@ namespace NeeView
         public object Clone()
         {
             return MemberwiseClone();
-        }
-
-        public bool Equals(DestinationFolder? other)
-        {
-            if (other == null)
-                return false;
-
-            if (this.Name == other.Name && this.Path == other.Path)
-                return true;
-            else
-                return false;
-        }
-
-        public override bool Equals(object? obj)
-        {
-            return Equals(obj as DestinationFolder);
-        }
-
-        public override int GetHashCode()
-        {
-            return Name.GetHashCode(StringComparison.Ordinal) ^ Path.GetHashCode(StringComparison.Ordinal);
         }
 
         public async ValueTask CopyRawAsync(IEnumerable<string> paths, CancellationToken token)

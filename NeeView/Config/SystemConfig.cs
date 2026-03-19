@@ -1,4 +1,5 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Controls;
 using NeeView.Windows.Property;
 using System;
@@ -9,7 +10,8 @@ using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    public class SystemConfig : BindableBase, ICopyPolicy
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class SystemConfig : BindableBase, ICopyPolicy
     {
         private static readonly string _defaultFileManagerFileArgs = "/select,\"$File\"";
         private static readonly string _defaultFileManagerFolderArgs = "\"$File\"";

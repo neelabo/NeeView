@@ -1,9 +1,11 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    public class CommandConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class CommandConfig : BindableBase
     {
         private bool _isAccessKeyEnabled = true;
         private bool _isReversePageMove = true;

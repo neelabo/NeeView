@@ -1,10 +1,12 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    public class MenuBarConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class MenuBarConfig : BindableBase
     {
         private bool _isVisible;
         private bool _isHideMenu;

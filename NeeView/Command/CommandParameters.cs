@@ -186,7 +186,7 @@ namespace NeeView
 
             var def = Activator.CreateInstance(type) as CommandParameter ?? throw new InvalidOperationException();
 
-            if (value.MemberwiseEquals(def))
+            if (AppSettings.Current.TrimSaveData && value.MemberwiseEquals(def))
             {
                 //Debug.WriteLine($"{type} is default.");
                 writer.WriteNullValue();

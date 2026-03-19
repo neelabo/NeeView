@@ -559,32 +559,9 @@ namespace NeeView
 
         #region Memento
 
-        [Memento]
-        public class Memento
+        public PrintModelMemento CreateMemento()
         {
-            public Memento()
-            {
-                PageOrientation = PageOrientation.Portrait;
-                PrintMode = PrintMode.RawImage;
-                HorizontalAlignment = HorizontalAlignment.Center;
-                VerticalAlignment = VerticalAlignment.Center;
-                Margin = new Margin();
-            }
-
-            public PageOrientation PageOrientation { get; set; }
-            public PrintMode PrintMode { get; set; }
-            public bool IsBackground { get; set; }
-            public bool IsDotScale { get; set; }
-            public int Columns { get; set; }
-            public int Rows { get; set; }
-            public HorizontalAlignment HorizontalAlignment { get; set; }
-            public VerticalAlignment VerticalAlignment { get; set; }
-            public Margin Margin { get; set; }
-        }
-
-        public Memento CreateMemento()
-        {
-            var memento = new Memento();
+            var memento = new PrintModelMemento();
 
             memento.PageOrientation = PageOrientation;
             memento.PrintMode = PrintMode;
@@ -599,7 +576,7 @@ namespace NeeView
             return memento;
         }
 
-        public void Restore(Memento? memento)
+        public void Restore(PrintModelMemento? memento)
         {
             if (memento == null) return;
 
@@ -618,10 +595,24 @@ namespace NeeView
     }
 
 
+    [Memento]
+    public record PrintModelMemento
+    {
+        public PageOrientation PageOrientation { get; set; } = PageOrientation.Portrait;
+        public PrintMode PrintMode { get; set; } = PrintMode.RawImage;
+        public bool IsBackground { get; set; }
+        public bool IsDotScale { get; set; }
+        public int Columns { get; set; } = 1;
+        public int Rows { get; set; } = 1;
+        public HorizontalAlignment HorizontalAlignment { get; set; } = HorizontalAlignment.Center;
+        public VerticalAlignment VerticalAlignment { get; set; } = VerticalAlignment.Center;
+        public Margin Margin { get; set; } = new Margin();
+    }
+
     /// <summary>
     /// 余白
     /// </summary>
-    public record class Margin(double Left, double Right, double Top, double Bottom)
+    public record Margin(double Left, double Right, double Top, double Bottom)
     {
         public Margin() : this(0, 0, 0, 0) { }
     }

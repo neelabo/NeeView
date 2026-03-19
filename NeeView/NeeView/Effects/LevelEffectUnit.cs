@@ -1,55 +1,126 @@
-﻿using NeeView.Windows.Property;
+﻿using Generator.Equals;
+using NeeView.Windows.Property;
+using System;
 using System.ComponentModel;
 using System.Windows.Media.Effects;
 
 namespace NeeView.Effects
 {
-    public class LevelEffectUnit : EffectUnit
+    [Equatable(Explicit = true)]
+    public partial class LevelEffectUnit : EffectUnit, IEquatable<LevelEffectUnit>
     {
-        private static readonly LevelEffect _effect = new();
-
-        public override Effect GetEffect() => _effect;
+        [DefaultEquality] private double _black = 0.0;
+        [DefaultEquality] private double _white = 1.0;
+        [DefaultEquality] private double _center = 0.5;
+        [DefaultEquality] private double _minimum = 0.0;
+        [DefaultEquality] private double _maximum = 1.0;
 
 
         [PropertyRange(0, 1, Title = "Input")]
         [DefaultValue(0.0)]
         public double Black
         {
-            get { return _effect.Black; }
-            set { if (_effect.Black != value) { _effect.Black = value; RaiseEffectPropertyChanged(); } }
+            get => _black;
+            set => SetProperty(ref _black, value);
         }
 
         [PropertyRange(0, 1)]
         [DefaultValue(1.0)]
         public double White
         {
-            get { return _effect.White; }
-            set { if (_effect.White != value) { _effect.White = value; RaiseEffectPropertyChanged(); } }
+            get => _white;
+            set => SetProperty(ref _white, value);
         }
 
         [PropertyRange(0.1, 0.9)]
         [DefaultValue(0.5)]
         public double Center
         {
-            get { return _effect.Center; }
-            set { if (_effect.Center != value) { _effect.Center = value; RaiseEffectPropertyChanged(); } }
+            get => _center;
+            set => SetProperty(ref _center, value);
         }
 
         [PropertyRange(0, 1, Title = "Output")]
         [DefaultValue(0.0)]
         public double Minimum
         {
-            get { return _effect.Minimum; }
-            set { if (_effect.Minimum != value) { _effect.Minimum = value; RaiseEffectPropertyChanged(); } }
+            get => _minimum;
+            set => SetProperty(ref _minimum, value);
         }
 
         [PropertyRange(0, 1)]
         [DefaultValue(1.0)]
         public double Maximum
         {
-            get { return _effect.Maximum; }
-            set { if (_effect.Maximum != value) { _effect.Maximum = value; RaiseEffectPropertyChanged(); } }
+            get => _maximum;
+            set => SetProperty(ref _maximum, value);
         }
 
+#if false
+        #region Equals
+
+        public override bool Equals(object? obj)
+        {
+            return obj is LevelEffectUnit other && Equals(other);
+        }
+
+        public virtual bool Equals(LevelEffectUnit? other)
+        {
+            if (other is null) return false;
+
+            return this.Black.Equals(other.Black)
+                && this.White.Equals(other.White)
+                && this.Center.Equals(other.Center)
+                && this.Minimum.Equals(other.Minimum)
+                && this.Maximum.Equals(other.Maximum);
+        }
+
+        public override int GetHashCode()
+        {
+            HashCode hashcode = new();
+            hashcode.Add(this.Black.GetHashCode());
+            hashcode.Add(this.White.GetHashCode());
+            hashcode.Add(this.Center.GetHashCode());
+            hashcode.Add(this.Minimum.GetHashCode());
+            hashcode.Add(this.Maximum.GetHashCode());
+
+            return hashcode.ToHashCode();
+        }
+
+        #endregion Equals
+#endif
+
+    }
+
+
+    public class LevelEffectAdapter : EffectAdapter
+    {
+        private readonly LevelEffect _effect = new();
+        private readonly LevelEffectUnit _source;
+
+        public override Effect Effect => _effect;
+        public override EffectUnit Source => _source;
+
+        public LevelEffectAdapter(LevelEffectUnit source)
+        {
+            _source = source;
+
+            _source.SubscribePropertyChanged(nameof(LevelEffectUnit.Black),
+                (s, e) => _effect.Black = _source.Black);
+
+            _source.SubscribePropertyChanged(nameof(LevelEffectUnit.White),
+                (s, e) => _effect.White = _source.White);
+
+            _source.SubscribePropertyChanged(nameof(LevelEffectUnit.Center),
+                (s, e) => _effect.Center = _source.Center);
+
+            _source.SubscribePropertyChanged(nameof(LevelEffectUnit.Minimum),
+                (s, e) => _effect.Minimum = _source.Minimum);
+
+            _source.SubscribePropertyChanged(nameof(LevelEffectUnit.Maximum),
+                (s, e) => _effect.Maximum = _source.Maximum);
+
+            _source.RaisePropertyChangedAll();
+        }
     }
 }

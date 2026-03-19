@@ -397,40 +397,9 @@ namespace NeeView
 
         #region Memento
 
-        [Memento]
-        public class Memento : ICloneable
+        public CommandElementMemento CreateMemento()
         {
-            public ShortcutKey ShortCutKey { get; set; } = ShortcutKey.Empty;
-            public TouchGesture TouchGesture { get; set; } = TouchGesture.Empty;
-            public MouseSequence MouseGesture { get; set; } = MouseSequence.Empty;
-            public bool IsShowMessage { get; set; }
-
-            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            public CommandParameter? Parameter { get; set; }
-
-
-            public object Clone()
-            {
-                var clone = (Memento)MemberwiseClone();
-                clone.Parameter = this.Parameter?.Clone() as CommandParameter;
-                return clone;
-            }
-
-            public bool MemberwiseEquals(Memento other)
-            {
-                if (other is null) return false;
-                if (other.ShortCutKey != ShortCutKey) return false;
-                if (other.TouchGesture != TouchGesture) return false;
-                if (other.MouseGesture != MouseGesture) return false;
-                if (other.IsShowMessage != IsShowMessage) return false;
-                if (Parameter != null && !Parameter.MemberwiseEquals(other.Parameter)) return false;
-                return true;
-            }
-        }
-
-        public Memento CreateMemento()
-        {
-            var memento = new Memento();
+            var memento = new CommandElementMemento();
 
             memento.ShortCutKey = ShortCutKey;
             memento.TouchGesture = TouchGesture;
@@ -444,7 +413,7 @@ namespace NeeView
             return memento;
         }
 
-        public void Restore(Memento memento)
+        public void Restore(CommandElementMemento memento)
         {
             if (memento == null) return;
 
@@ -499,6 +468,48 @@ namespace NeeView
         }
 
         #endregion GesturesMemento
+    }
+
+
+    [Memento]
+    public class CommandElementMemento : ICloneable
+    {
+        public ShortcutKey ShortCutKey { get; set; } = ShortcutKey.Empty;
+        public TouchGesture TouchGesture { get; set; } = TouchGesture.Empty;
+        public MouseSequence MouseGesture { get; set; } = MouseSequence.Empty;
+        public bool IsShowMessage { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public CommandParameter? Parameter { get; set; }
+
+
+        public object Clone()
+        {
+            var clone = (CommandElementMemento)MemberwiseClone();
+            clone.Parameter = this.Parameter?.Clone() as CommandParameter;
+            return clone;
+        }
+
+        public bool MemberwiseEquals(CommandElementMemento other)
+        {
+            if (other is null) return false;
+            if (other.ShortCutKey != ShortCutKey) return false;
+            if (other.TouchGesture != TouchGesture) return false;
+            if (other.MouseGesture != MouseGesture) return false;
+            if (other.IsShowMessage != IsShowMessage) return false;
+            if (Parameter != null && !Parameter.MemberwiseEquals(other.Parameter)) return false;
+            return true;
+        }
+
+        public void ValidateCommandParameter(CommandElementMemento def)
+        {
+            if (Parameter is null) return;
+
+            if (Parameter.MemberwiseEquals(def.Parameter))
+            {
+                Parameter = null;
+            }
+        }
     }
 }
 

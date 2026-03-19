@@ -4,6 +4,7 @@
   "SelfContained": false,
   "UseLocalApplicationData": false,
   "TemporaryFilesInProfileFolder": false,
+  "TrimSaveData": true,
   "PathProcessGroup": true,
   "SoftwareRendering": false,
   "Watermark": true,

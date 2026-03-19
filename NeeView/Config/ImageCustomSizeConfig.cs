@@ -1,4 +1,5 @@
-﻿using NeeLaboratory;
+﻿using Generator.Equals;
+using NeeLaboratory;
 using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System;
@@ -7,7 +8,8 @@ using System.Windows;
 
 namespace NeeView
 {
-    public class ImageCustomSizeConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class ImageCustomSizeConfig : BindableBase
     {
         private bool _isEnabled;
         private Size _size = new(256, 256);
@@ -115,7 +117,7 @@ namespace NeeView
         /// ハッシュ値の計算
         /// </summary>
         /// <returns></returns>
-        public override int GetHashCode()
+        public int GetEnvironmentHashCode()
         {
             return HashCode.Combine(_isEnabled, _size, _aspectRatio, _applicabilityRate, _isAlignLongSide);
         }

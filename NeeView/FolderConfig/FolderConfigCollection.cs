@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using static NeeView.FolderConfigCollection;
 
 namespace NeeView
 {
@@ -77,16 +78,16 @@ namespace NeeView
         /// </summary>
         /// <param name="place"></param>
         /// <param name="parameter"></param>
-        public void SetFolderParameter(string place, FolderParameter.Memento parameter)
+        public void SetFolderParameter(string place, FolderParameterMemento parameter)
         {
-            Debug.Assert(parameter.GetType() == typeof(FolderParameter.Memento));
+            Debug.Assert(parameter.GetType() == typeof(FolderParameterMemento));
 
             place = place ?? "<<root>>";
             var normalizedParameter = parameter.IsDefault(place) ? null : parameter;
 
             if (Folders.TryGetValue(place, out var folder))
             {
-                Debug.Assert(folder.Parameter is null || folder.Parameter.GetType() == typeof(FolderParameter.Memento));
+                Debug.Assert(folder.Parameter is null || folder.Parameter.GetType() == typeof(FolderParameterMemento));
                 if (folder.Parameter == normalizedParameter) return;
                 folder.Parameter = normalizedParameter;
                 FolderChanged?.Invoke(this, new FolderConfigChangedEventArgs(FolderConfigChangedAction.Replace, folder));
@@ -104,7 +105,7 @@ namespace NeeView
         /// </summary>
         /// <param name="place"></param>
         /// <returns></returns>
-        public FolderParameter.Memento GetFolderParameter(QueryPath query)
+        public FolderParameterMemento GetFolderParameter(QueryPath query)
         {
             var place = query.SimplePath ?? "<<root>>";
 
@@ -121,7 +122,7 @@ namespace NeeView
                 }
             }
 
-            return config?.Parameter ?? FolderParameter.Memento.GetDefault(place);
+            return config?.Parameter ?? FolderParameterMemento.GetDefault(place);
         }
 
         /// <summary>
@@ -164,7 +165,7 @@ namespace NeeView
             public string Place { get; set; } = "";
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            public FolderParameter.Memento? Parameter { get; set; }
+            public FolderParameterMemento? Parameter { get; set; }
 
             [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             public Dictionary<string, string>? Thumbs { get; set; }
@@ -194,57 +195,22 @@ namespace NeeView
             }
         }
 
-        public class Memento
+
+        public FolderConfigCollectionMemento CreateMemento()
         {
-            public static string FormatName { get; } = Environment.SolutionName + ".Folders";
-            public static FormatVersion FormatVersion { get; } = new FormatVersion(FormatName);
-
-            /// <summary>
-            /// フォーマットID
-            /// </summary>
-            public FormatVersion Format { get; set; } = FormatVersion;
-
-            /// <summary>
-            /// フォルダー設定
-            /// </summary>
-            public List<FolderConfigUnit> Folders { get; set; } = new();
-
-
-            public void Save(string path, string? backupFileName)
-            {
-                var json = JsonSerializer.SerializeToUtf8Bytes(this, UserSettingTools.GetSerializerOptions());
-                FileIO.WriteAllBytesDurable(path, json, backupFileName);
-            }
-
-            public static Memento Load(string path)
-            {
-                using var stream = FileIO.OpenReadShared(path);
-                return Load(stream);
-            }
-
-            public static Memento Load(Stream stream)
-            {
-                var memento = JsonSerializer.Deserialize<Memento>(stream, UserSettingTools.GetSerializerOptions());
-                if (memento is null) throw new FormatException();
-                return memento.Validate();
-            }
-        }
-
-        public Memento CreateMemento()
-        {
-            var memento = new Memento();
+            var memento = new FolderConfigCollectionMemento();
             memento.Folders = Folders.Values.Select(e => FolderConfigUnit.Create(e)).Where(e => !e.IsDefault()).OrderBy(e => e.Place).ToList();
             return memento;
         }
 
-        public void Restore(Memento? memento)
+        public void Restore(FolderConfigCollectionMemento? memento)
         {
             if (memento == null) return;
 
             Folders = memento.Folders.ToDictionary(e => e.Place, e => e.ToFolderConfig());
 
             // 互換用 : FileResolver 登録
-            if (memento.Folders is not null && memento.Format?.CompareTo(new FormatVersion(FolderConfigCollection.Memento.FormatName, VersionNumber.Ver45_Alpha4)) <= 0)
+            if (memento.Folders is not null && memento.Format?.CompareTo(new FormatVersion(FolderConfigCollectionMemento.FormatName, VersionNumber.Ver45_Alpha4)) <= 0)
             {
                 var files = memento.Folders.Select(e => e.Place).Where(e => QuerySchemeExtensions.GetScheme(e) == QueryScheme.File).ToList();
                 ProcessJobEngine.Current.AddJob("Processing folders",
@@ -260,6 +226,41 @@ namespace NeeView
     }
 
 
+    public class FolderConfigCollectionMemento
+    {
+        public static string FormatName { get; } = Environment.SolutionName + ".Folders";
+        public static FormatVersion FormatVersion { get; } = new FormatVersion(FormatName);
+
+        /// <summary>
+        /// フォーマットID
+        /// </summary>
+        public FormatVersion Format { get; set; } = FormatVersion;
+
+        /// <summary>
+        /// フォルダー設定
+        /// </summary>
+        public List<FolderConfigUnit> Folders { get; set; } = new();
+
+
+        public void Save(string path, string? backupFileName)
+        {
+            var json = JsonSerializer.SerializeToUtf8Bytes(this, UserSettingTools.GetSerializerOptions());
+            FileIO.WriteAllBytesDurable(path, json, backupFileName);
+        }
+
+        public static FolderConfigCollectionMemento Load(string path)
+        {
+            using var stream = FileIO.OpenReadShared(path);
+            return Load(stream);
+        }
+
+        public static FolderConfigCollectionMemento Load(Stream stream)
+        {
+            var memento = JsonSerializer.Deserialize<FolderConfigCollectionMemento>(stream, UserSettingTools.GetSerializerOptions());
+            if (memento is null) throw new FormatException();
+            return memento.Validate();
+        }
+    }
 
 
     public class FolderConfigChangedEventArgs : EventArgs

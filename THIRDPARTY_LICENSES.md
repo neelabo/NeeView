@@ -179,3 +179,9 @@ DLL: libwebp.dll, libsharpyuv.dll, libwebpdemux.dll
 * URL: [libwebp](https://github.com/webmproject/libwebp)
 * License: [BSD 3-Clause License](https://github.com/webmproject/libwebp/blob/main/COPYING)
  
+### Generator.Equals
+
+Code-in:
+
+* URL: [Generator.Equals](https://github.com/diegofrata/Generator.Equals)
+* License: [MIT license](https://github.com/diegofrata/Generator.Equals/blob/main/LICENCE.md)

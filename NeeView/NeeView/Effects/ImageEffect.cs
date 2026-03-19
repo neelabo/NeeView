@@ -13,34 +13,36 @@ namespace NeeView.Effects
         static ImageEffect() => Current = new ImageEffect();
         public static ImageEffect Current { get; }
 
-        #region Constructors
+
+        private PropertyDocument? _effectParameters;
+
 
         private ImageEffect()
         {
-            Effects = new Dictionary<EffectType, EffectUnit?>
+            Effects = new Dictionary<EffectType, EffectAdapter?>
             {
                 [EffectType.None] = null,
-                [EffectType.Level] = Config.Current.ImageEffect.LevelEffect,
-                [EffectType.Hsv] = Config.Current.ImageEffect.HsvEffect,
-                [EffectType.ColorSelect] = Config.Current.ImageEffect.ColorSelectEffect,
-                [EffectType.Blur] = Config.Current.ImageEffect.BlurEffect,
-                [EffectType.Bloom] = Config.Current.ImageEffect.BloomEffect,
-                [EffectType.Monochrome] = Config.Current.ImageEffect.MonochromeEffect,
-                [EffectType.ColorTone] = Config.Current.ImageEffect.ColorToneEffect,
-                [EffectType.Sharpen] = Config.Current.ImageEffect.SharpenEffect,
-                [EffectType.Embossed] = Config.Current.ImageEffect.EmbossedEffect,
-                [EffectType.Pixelate] = Config.Current.ImageEffect.PixelateEffect,
-                [EffectType.Magnify] = Config.Current.ImageEffect.MagnifyEffect,
-                [EffectType.Ripple] = Config.Current.ImageEffect.RippleEffect,
-                [EffectType.Swirl] = Config.Current.ImageEffect.SwirlEffect
+                [EffectType.Level] = new LevelEffectAdapter(Config.Current.ImageEffect.LevelEffect),
+                [EffectType.Hsv] = new HsvEffectAdapter(Config.Current.ImageEffect.HsvEffect),
+                [EffectType.ColorSelect] = new ColorSelectEffectAdapter(Config.Current.ImageEffect.ColorSelectEffect),
+                [EffectType.Blur] = new BlurEffectAdapter(Config.Current.ImageEffect.BlurEffect),
+                [EffectType.Bloom] = new BloomEffectAdapter(Config.Current.ImageEffect.BloomEffect),
+                [EffectType.Monochrome] = new MonochromeEffectAdapter(Config.Current.ImageEffect.MonochromeEffect),
+                [EffectType.ColorTone] = new ColorToneEffectAdapter(Config.Current.ImageEffect.ColorToneEffect),
+                [EffectType.Sharpen] = new SharpenEffectAdapter(Config.Current.ImageEffect.SharpenEffect),
+                [EffectType.Embossed] = new EmbossedEffectAdapter(Config.Current.ImageEffect.EmbossedEffect),
+                [EffectType.Pixelate] = new PixelateEffectAdapter(Config.Current.ImageEffect.PixelateEffect),
+                [EffectType.Magnify] = new MagnifyEffectAdapter(Config.Current.ImageEffect.MagnifyEffect),
+                [EffectType.Ripple] = new RippleEffectAdapter(Config.Current.ImageEffect.RippleEffect),
+                [EffectType.Swirl] = new SwirlEffectAdapter(Config.Current.ImageEffect.SwirlEffect)
             };
 
-            Config.Current.ImageEffect.AddPropertyChanged(nameof(ImageEffectConfig.IsEnabled), (s, e) =>
+            Config.Current.ImageEffect.SubscribePropertyChanged(nameof(ImageEffectConfig.IsEnabled), (s, e) =>
             {
                 RaisePropertyChanged(nameof(Effect));
             });
 
-            Config.Current.ImageEffect.AddPropertyChanged(nameof(ImageEffectConfig.EffectType), (s, e) =>
+            Config.Current.ImageEffect.SubscribePropertyChanged(nameof(ImageEffectConfig.EffectType), (s, e) =>
             {
                 RaisePropertyChanged(nameof(Effect));
                 UpdateEffectParameters();
@@ -49,33 +51,19 @@ namespace NeeView.Effects
             UpdateEffectParameters();
         }
 
-        #endregion
 
-        #region Properties
+        public Dictionary<EffectType, EffectAdapter?> Effects { get; private set; }
 
-        //
-        public Dictionary<EffectType, EffectUnit?> Effects { get; private set; }
+        public Effect? Effect => Config.Current.ImageEffect.IsEnabled ? Effects[Config.Current.ImageEffect.EffectType]?.Effect : null;
 
-        /// <summary>
-        /// Property: Effect
-        /// </summary>
-        public Effect? Effect => Config.Current.ImageEffect.IsEnabled ? Effects[Config.Current.ImageEffect.EffectType]?.GetEffect() : null;
 
-        /// <summary>
-        /// Property: EffectParameters
-        /// </summary>
-        private PropertyDocument? _effectParameters;
         public PropertyDocument? EffectParameters
         {
             get { return _effectParameters; }
             set { if (_effectParameters != value) { _effectParameters = value; RaisePropertyChanged(); } }
         }
 
-        #endregion
 
-        #region Methods
-
-        //
         private void UpdateEffectParameters()
         {
             var effect = Effects[Config.Current.ImageEffect.EffectType];
@@ -85,11 +73,8 @@ namespace NeeView.Effects
             }
             else
             {
-                EffectParameters = new PropertyDocument(effect);
+                EffectParameters = new PropertyDocument(effect.Source);
             }
         }
-
-        #endregion
-
     }
 }

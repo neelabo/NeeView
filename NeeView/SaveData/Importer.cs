@@ -181,13 +181,13 @@ namespace NeeView
             // NOTE: フォルダー設定はユーザー設定の一部とみなす
             if (!this.IsUserSettingEnabled) return;
 
-            FolderConfigCollection.Memento? folderConfig = null;
+            FolderConfigCollectionMemento? folderConfig = null;
 
             if (_folderConfigEntry != null)
             {
                 using (var stream = _folderConfigEntry.Open())
                 {
-                    folderConfig = FolderConfigCollection.Memento.Load(stream);
+                    folderConfig = FolderConfigCollectionMemento.Load(stream);
                 }
             }
 
@@ -202,13 +202,13 @@ namespace NeeView
         {
             if (!this.IsHistoryEnabled) return;
 
-            BookHistoryCollection.Memento? history = null;
+            BookHistoryCollectionMemento? history = null;
 
             if (_historyEntry != null)
             {
                 using (var stream = _historyEntry.Open())
                 {
-                    history = BookHistoryCollection.Memento.Load(stream);
+                    history = BookHistoryCollectionMemento.Load(stream);
                 }
             }
 
@@ -223,13 +223,13 @@ namespace NeeView
         {
             if (!this.IsBookmarkEnabled) return;
 
-            BookmarkCollection.Memento? bookmark = null;
+            BookmarkCollectionMemento? bookmark = null;
 
             if (_bookmarkEntry != null)
             {
                 using (var stream = _bookmarkEntry.Open())
                 {
-                    bookmark = BookmarkCollection.Memento.Load(stream);
+                    bookmark = BookmarkCollectionMemento.Load(stream);
                 }
             }
 

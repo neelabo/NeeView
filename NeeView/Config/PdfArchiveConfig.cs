@@ -1,11 +1,13 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System;
 using System.Windows;
 
 namespace NeeView
 {
-    public class PdfArchiveConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class PdfArchiveConfig : BindableBase
     {
         public static bool IsPdfArchiveSupported => GetPdfRenderer() == PdfRenderer.Pdfium || Windows10Tools.IsWindows10_OrGreater(10240);
 

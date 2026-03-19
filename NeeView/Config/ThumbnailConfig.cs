@@ -1,4 +1,5 @@
-﻿using NeeLaboratory;
+﻿using Generator.Equals;
+using NeeLaboratory;
 using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Controls;
 using NeeView.Windows.Property;
@@ -7,7 +8,8 @@ using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    public class ThumbnailConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class ThumbnailConfig : BindableBase
     {
         public static bool IsVideoThumbnailSupported => Windows10Tools.IsWindows10_OrGreater(10240);
 

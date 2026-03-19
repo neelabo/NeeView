@@ -1,23 +1,25 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System;
 using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    public class BookSettingConfig : BindableBase, ICloneable, IEquatable<BookSettingConfig>, IBookSetting, IHasAutoRotate
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
+    public partial class BookSettingConfig : BindableBase, ICloneable, IBookSetting, IHasAutoRotate
     {
-        private string _page = "";
-        private PageMode _pageMode = PageMode.SinglePage;
-        private PageReadOrder _bookReadOrder = PageReadOrder.RightToLeft;
-        private bool _isSupportedDividePage;
-        private bool _isSupportedSingleFirstPage;
-        private bool _isSupportedSingleLastPage;
-        private bool _isSupportedWidePage = true;
-        private bool _isRecursiveFolder;
-        private PageSortMode _sortMode = PageSortMode.Entry;
-        private AutoRotateType _autoRotate;
-        private double _baseScale = 1.0;
+        [DefaultEquality] private string _page = "";
+        [DefaultEquality] private PageMode _pageMode = PageMode.SinglePage;
+        [DefaultEquality] private PageReadOrder _bookReadOrder = PageReadOrder.RightToLeft;
+        [DefaultEquality] private bool _isSupportedDividePage;
+        [DefaultEquality] private bool _isSupportedSingleFirstPage;
+        [DefaultEquality] private bool _isSupportedSingleLastPage;
+        [DefaultEquality] private bool _isSupportedWidePage = true;
+        [DefaultEquality] private bool _isRecursiveFolder;
+        [DefaultEquality] private PageSortMode _sortMode = PageSortMode.Entry;
+        [DefaultEquality] private AutoRotateType _autoRotate;
+        [DefaultEquality] private double _baseScale = 1.0;
 
 
         // ページ
@@ -114,47 +116,7 @@ namespace NeeView
         {
             return MemberwiseClone();
         }
-
-        public bool Equals(BookSettingConfig? other)
-        {
-            return other != null &&
-                this.Page == other.Page &&
-                this.PageMode == other.PageMode &&
-                this.BookReadOrder == other.BookReadOrder &&
-                this.IsSupportedDividePage == other.IsSupportedDividePage &&
-                this.IsSupportedSingleFirstPage == other.IsSupportedSingleFirstPage &&
-                this.IsSupportedSingleLastPage == other.IsSupportedSingleLastPage &&
-                this.IsSupportedWidePage == other.IsSupportedWidePage &&
-                this.IsRecursiveFolder == other.IsRecursiveFolder &&
-                this.SortMode == other.SortMode &&
-                this.AutoRotate == other.AutoRotate &&
-                this.BaseScale == other.BaseScale;
-        }
-
-        public override bool Equals(object? obj)
-        {
-            return Equals(obj as BookSettingConfig);
-        }
-
-        public override int GetHashCode()
-        {
-            HashCode hash = new();
-            hash.Add(_page);
-            hash.Add(_pageMode);
-            hash.Add(_bookReadOrder);
-            hash.Add(_isSupportedDividePage);
-            hash.Add(_isSupportedSingleFirstPage);
-            hash.Add(_isSupportedSingleLastPage);
-            hash.Add(_isSupportedWidePage);
-            hash.Add(_isRecursiveFolder);
-            hash.Add(_sortMode);
-            hash.Add(_autoRotate);
-            hash.Add(_baseScale);
-            return hash.ToHashCode();
-        }
     }
-
-
 
     public interface IHasAutoRotate
     {

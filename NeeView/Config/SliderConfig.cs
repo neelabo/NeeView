@@ -1,4 +1,5 @@
-﻿using NeeLaboratory;
+﻿using Generator.Equals;
+using NeeLaboratory;
 using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System;
@@ -6,7 +7,8 @@ using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    public class SliderConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class SliderConfig : BindableBase
     {
         private bool _isVisible;
         private bool _isIsHidePageSlider;

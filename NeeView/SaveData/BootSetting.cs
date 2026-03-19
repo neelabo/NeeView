@@ -3,7 +3,7 @@
     public class BootSetting
     {
         public string Language { get; set; } = "en";
-        public bool IsSplashScreenEnabled { get; set; }
+        public bool IsSplashScreenEnabled { get; set; } = true;
         public bool IsMultiBootEnabled { get; set; }
 
         internal static BootSetting Create(Config config)

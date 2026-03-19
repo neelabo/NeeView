@@ -1,10 +1,12 @@
-﻿using NeeView.Windows.Controls;
+﻿using Generator.Equals;
+using NeeView.Windows.Controls;
 using NeeView.Windows.Property;
 using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    public class BookmarkConfig : FolderListConfig
+    [Equatable(IgnoreInheritedMembers = false)]
+    public partial class BookmarkConfig : FolderListConfig
     {
         private bool _isSaveBookmark = true;
         private bool _isSyncBookshelfEnabled = true;

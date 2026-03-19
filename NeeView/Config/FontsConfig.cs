@@ -1,10 +1,12 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    public class FontsConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class FontsConfig : BindableBase
     {
         private double _fontScale = 1.25;
         private double _menuFontScale = 1.0;

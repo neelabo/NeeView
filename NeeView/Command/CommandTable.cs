@@ -726,6 +726,9 @@ namespace NeeView
                         {
                             continue;
                         }
+
+                        // 既定値の CommandParameter を省略
+                        memento.ValidateCommandParameter(defaultMemento);
                     }
                 }
 
@@ -797,14 +800,14 @@ namespace NeeView
     /// <summary>
     /// 保存用コマンドコレクション
     /// </summary>
-    public class CommandCollection : Dictionary<string, CommandElement.Memento>
+    public class CommandCollection : Dictionary<string, CommandElementMemento>
     {
         public CommandCollection Clone()
         {
             var clone = new CommandCollection();
             foreach (var item in this)
             {
-                clone.Add(item.Key, (CommandElement.Memento)item.Value.Clone());
+                clone.Add(item.Key, (CommandElementMemento)item.Value.Clone());
             }
             return clone;
         }
