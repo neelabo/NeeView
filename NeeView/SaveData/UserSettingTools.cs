@@ -1,4 +1,5 @@
-﻿using NeeView.Text.Json;
+﻿using NeeView.Effects;
+using NeeView.Text.Json;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -102,6 +103,93 @@ namespace NeeView
             options.Converters.Add(new JsonPointConverter());
             options.Converters.Add(new JsonTimeSpanConverter());
             options.Converters.Add(new JsonGridLengthConverter());
+
+            options.Converters.Add(new DiffJsonConverter<SystemConfig>(ConfigJsonSerializerContext.Default.SystemConfig));
+            options.Converters.Add(new DiffJsonConverter<StartUpConfig>(ConfigJsonSerializerContext.Default.StartUpConfig));
+            options.Converters.Add(new DiffJsonConverter<PerformanceConfig>(ConfigJsonSerializerContext.Default.PerformanceConfig));
+
+            options.Converters.Add(new DiffJsonConverter<ImageConfig>(ConfigJsonSerializerContext.Default.ImageConfig));
+            options.Converters.Add(new DiffJsonConverter<ImageStandardConfig>(ConfigJsonSerializerContext.Default.ImageStandardConfig));
+            options.Converters.Add(new DiffJsonConverter<ImageSvgConfig>(ConfigJsonSerializerContext.Default.ImageSvgConfig));
+
+            options.Converters.Add(new DiffJsonConverter<ArchiveConfig>(ConfigJsonSerializerContext.Default.ArchiveConfig));
+            options.Converters.Add(new DiffJsonConverter<ZipArchiveConfig>(ConfigJsonSerializerContext.Default.ZipArchiveConfig));
+            options.Converters.Add(new DiffJsonConverter<SevenZipArchiveConfig>(ConfigJsonSerializerContext.Default.SevenZipArchiveConfig));
+            options.Converters.Add(new DiffJsonConverter<PdfArchiveConfig>(ConfigJsonSerializerContext.Default.PdfArchiveConfig));
+            options.Converters.Add(new DiffJsonConverter<MediaArchiveConfig>(ConfigJsonSerializerContext.Default.MediaArchiveConfig));
+
+            options.Converters.Add(new DiffJsonConverter<SusieConfig>(ConfigJsonSerializerContext.Default.SusieConfig));
+
+            options.Converters.Add(new DiffJsonConverter<HistoryConfig>(ConfigJsonSerializerContext.Default.HistoryConfig));
+            options.Converters.Add(new DiffJsonConverter<PageViewRecorderConfig>(ConfigJsonSerializerContext.Default.PageViewRecorderConfig));
+            options.Converters.Add(new DiffJsonConverter<BookmarkConfig>(ConfigJsonSerializerContext.Default.BookmarkConfig));
+            options.Converters.Add(new DiffJsonConverter<PlaylistConfig>(ConfigJsonSerializerContext.Default.PlaylistConfig));
+
+            options.Converters.Add(new DiffJsonConverter<WindowConfig>(ConfigJsonSerializerContext.Default.WindowConfig));
+            options.Converters.Add(new DiffJsonConverter<ThemeConfig>(ConfigJsonSerializerContext.Default.ThemeConfig));
+            options.Converters.Add(new DiffJsonConverter<FontsConfig>(ConfigJsonSerializerContext.Default.FontsConfig));
+            options.Converters.Add(new DiffJsonConverter<BackgroundConfig>(ConfigJsonSerializerContext.Default.BackgroundConfig));
+            options.Converters.Add(new DiffJsonConverter<WindowTitleConfig>(ConfigJsonSerializerContext.Default.WindowTitleConfig));
+            options.Converters.Add(new DiffJsonConverter<PageTitleConfig>(ConfigJsonSerializerContext.Default.PageTitleConfig));
+            options.Converters.Add(new DiffJsonConverter<AutoHideConfig>(ConfigJsonSerializerContext.Default.AutoHideConfig));
+            options.Converters.Add(new DiffJsonConverter<NoticeConfig>(ConfigJsonSerializerContext.Default.NoticeConfig));
+
+            options.Converters.Add(new DiffJsonConverter<MenuBarConfig>(ConfigJsonSerializerContext.Default.MenuBarConfig));
+            options.Converters.Add(new DiffJsonConverter<SliderConfig>(ConfigJsonSerializerContext.Default.SliderConfig));
+            options.Converters.Add(new DiffJsonConverter<FilmStripConfig>(ConfigJsonSerializerContext.Default.FilmStripConfig));
+            options.Converters.Add(new DiffJsonConverter<MainViewConfig>(ConfigJsonSerializerContext.Default.MainViewConfig));
+
+            options.Converters.Add(new DiffJsonConverter<PanelsConfig>(ConfigJsonSerializerContext.Default.PanelsConfig));
+            options.Converters.Add(new DiffJsonConverter<PanelListItemProfile>(ConfigJsonSerializerContext.Default.PanelListItemProfile));
+
+            options.Converters.Add(new DiffJsonConverter<BookshelfConfig>(ConfigJsonSerializerContext.Default.BookshelfConfig));
+            options.Converters.Add(new DiffJsonConverter<InformationConfig>(ConfigJsonSerializerContext.Default.InformationConfig));
+            options.Converters.Add(new DiffJsonConverter<NavigatorConfig>(ConfigJsonSerializerContext.Default.NavigatorConfig));
+            options.Converters.Add(new DiffJsonConverter<PageListConfig>(ConfigJsonSerializerContext.Default.PageListConfig));
+
+            options.Converters.Add(new DiffJsonConverter<ThumbnailConfig>(ConfigJsonSerializerContext.Default.ThumbnailConfig));
+            options.Converters.Add(new DiffJsonConverter<SlideShowConfig>(ConfigJsonSerializerContext.Default.SlideShowConfig));
+
+            options.Converters.Add(new DiffJsonConverter<ImageEffectConfig>(ConfigJsonSerializerContext.Default.ImageEffectConfig));
+
+            options.Converters.Add(new DiffJsonConverter<LevelEffectUnit>(ConfigJsonSerializerContext.Default.LevelEffectUnit));
+            options.Converters.Add(new DiffJsonConverter<HsvEffectUnit>(ConfigJsonSerializerContext.Default.HsvEffectUnit));
+            options.Converters.Add(new DiffJsonConverter<ColorSelectEffectUnit>(ConfigJsonSerializerContext.Default.ColorSelectEffectUnit));
+            options.Converters.Add(new DiffJsonConverter<BlurEffectUnit>(ConfigJsonSerializerContext.Default.BlurEffectUnit));
+            options.Converters.Add(new DiffJsonConverter<BloomEffectUnit>(ConfigJsonSerializerContext.Default.BloomEffectUnit));
+            options.Converters.Add(new DiffJsonConverter<MonochromeEffectUnit>(ConfigJsonSerializerContext.Default.MonochromeEffectUnit));
+            options.Converters.Add(new DiffJsonConverter<ColorToneEffectUnit>(ConfigJsonSerializerContext.Default.ColorToneEffectUnit));
+            options.Converters.Add(new DiffJsonConverter<SharpenEffectUnit>(ConfigJsonSerializerContext.Default.SharpenEffectUnit));
+            options.Converters.Add(new DiffJsonConverter<EmbossedEffectUnit>(ConfigJsonSerializerContext.Default.EmbossedEffectUnit));
+            options.Converters.Add(new DiffJsonConverter<PixelateEffectUnit>(ConfigJsonSerializerContext.Default.PixelateEffectUnit));
+            options.Converters.Add(new DiffJsonConverter<MagnifyEffectUnit>(ConfigJsonSerializerContext.Default.MagnifyEffectUnit));
+            options.Converters.Add(new DiffJsonConverter<RippleEffectUnit>(ConfigJsonSerializerContext.Default.RippleEffectUnit));
+            options.Converters.Add(new DiffJsonConverter<SwirlEffectUnit>(ConfigJsonSerializerContext.Default.SwirlEffectUnit));
+
+            options.Converters.Add(new DiffJsonConverter<ImageCustomSizeConfig>(ConfigJsonSerializerContext.Default.ImageCustomSizeConfig));
+            options.Converters.Add(new DiffJsonConverter<ImageTrimConfig>(ConfigJsonSerializerContext.Default.ImageTrimConfig));
+            options.Converters.Add(new DiffJsonConverter<ImageDotKeepConfig>(ConfigJsonSerializerContext.Default.ImageDotKeepConfig));
+            options.Converters.Add(new DiffJsonConverter<ImageGridConfig>(ConfigJsonSerializerContext.Default.ImageGridConfig));
+            options.Converters.Add(new DiffJsonConverter<ImageResizeFilterConfig>(ConfigJsonSerializerContext.Default.ImageResizeFilterConfig));
+            options.Converters.Add(new DiffJsonConverter<UnsharpMaskConfig>(ConfigJsonSerializerContext.Default.UnsharpMaskConfig));
+
+            options.Converters.Add(new DiffJsonConverter<ViewConfig>(ConfigJsonSerializerContext.Default.ViewConfig));
+            options.Converters.Add(new DiffJsonConverter<MouseConfig>(ConfigJsonSerializerContext.Default.MouseConfig));
+            options.Converters.Add(new DiffJsonConverter<TouchConfig>(ConfigJsonSerializerContext.Default.TouchConfig));
+            options.Converters.Add(new DiffJsonConverter<LoupeConfig>(ConfigJsonSerializerContext.Default.LoupeConfig));
+
+            options.Converters.Add(new DiffJsonConverter<BookConfig>(ConfigJsonSerializerContext.Default.BookConfig));
+            options.Converters.Add(new DiffJsonConverter<BookSettingConfig>(ConfigJsonSerializerContext.Default.BookSettingConfig));
+            options.Converters.Add(new DiffJsonConverter<BookSettingPolicyConfig>(ConfigJsonSerializerContext.Default.BookSettingPolicyConfig));
+
+            options.Converters.Add(new DiffJsonConverter<CommandConfig>(ConfigJsonSerializerContext.Default.CommandConfig));
+            options.Converters.Add(new DiffJsonConverter<ScriptConfig>(ConfigJsonSerializerContext.Default.ScriptConfig));
+
+            options.Converters.Add(new DiffJsonConverter<DestinationFolder>(ConfigJsonSerializerContext.Default.DestinationFolder));
+            options.Converters.Add(new DiffJsonConverter<ExternalApp>(ConfigJsonSerializerContext.Default.ExternalApp));
+            options.Converters.Add(new DiffJsonConverter<BrushSource>(ConfigJsonSerializerContext.Default.BrushSource));
+            options.Converters.Add(new DiffJsonConverter<BookMemento>(ConfigJsonSerializerContext.Default.BookMemento));
+
             return options;
         }
 

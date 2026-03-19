@@ -95,8 +95,10 @@ namespace NeeView
         [PropertyMapLabel("SettingPage.Slideshow")]
         public SlideShowConfig SlideShow { get; set; } = new SlideShowConfig();
 
+        [JsonIgnore]
         public EffectConfig Effect { get; set; } = new EffectConfig();
 
+        [JsonIgnore]
         public ControlConfig Control { get; set; } = new ControlConfig();
 
         public ImageEffectConfig ImageEffect { get; set; } = new ImageEffectConfig();
