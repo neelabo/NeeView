@@ -12,8 +12,6 @@ namespace NeeView
     /// <typeparam name="T"></typeparam>
     public class DiffJsonConverter<T> : JsonConverter<T> where T : new()
     {
-        private static readonly T _defaultValue = new();
-
         private readonly JsonTypeInfo<T> _typeInfo;
 
         public DiffJsonConverter(JsonTypeInfo<T> typeInfo)
@@ -30,10 +28,11 @@ namespace NeeView
         public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
         {
             Debug.Assert(value is not null);
-            Debug.Assert(_defaultValue is not null);
 
             if (AppSettings.Current.TrimSaveData)
             {
+                var defaultValue = new T();
+
                 writer.WriteStartObject();
 
                 foreach (var prop in _typeInfo.Properties)
@@ -42,7 +41,7 @@ namespace NeeView
                         continue;
 
                     var current = prop.Get(value);
-                    var def = prop.Get(_defaultValue);
+                    var def = prop.Get(defaultValue);
 
                     if (!Equals(current, def))
                     {
