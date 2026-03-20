@@ -1,4 +1,5 @@
 ﻿using NeeView.Effects;
+using NeeView.Runtime.LayoutPanel;
 using NeeView.Text.Json;
 using System;
 using System.Diagnostics;
@@ -140,7 +141,15 @@ namespace NeeView
             options.Converters.Add(new DiffJsonConverter<MainViewConfig>(ConfigJsonSerializerContext.Default.MainViewConfig));
 
             options.Converters.Add(new DiffJsonConverter<PanelsConfig>(ConfigJsonSerializerContext.Default.PanelsConfig));
+            options.Converters.Add(new DiffJsonConverter<LayoutPanel.Memento>(ConfigJsonSerializerContext.Default.LayoutPanel_Memento));
+            options.Converters.Add(new DiffJsonConverter<LayoutPanelWindowManager.Memento>(ConfigJsonSerializerContext.Default.LayoutPanelWindowManager_Memento));
+            options.Converters.Add(new DiffJsonConverter<LayoutDockPanelContent.PanelLayout>(ConfigJsonSerializerContext.Default.PanelLayout));
+
             options.Converters.Add(new DiffJsonConverter<PanelListItemProfile>(ConfigJsonSerializerContext.Default.PanelListItemProfile));
+            options.Converters.Add(new DiffJsonConverter<NormalItemProfile>(ConfigJsonSerializerContext.Default.NormalItemProfile));
+            options.Converters.Add(new DiffJsonConverter<ContentItemProfile>(ConfigJsonSerializerContext.Default.ContentItemProfile));
+            options.Converters.Add(new DiffJsonConverter<BannerItemProfile>(ConfigJsonSerializerContext.Default.BannerItemProfile));
+            options.Converters.Add(new DiffJsonConverter<ThumbnailItemProfile>(ConfigJsonSerializerContext.Default.ThumbnailItemProfile));
 
             options.Converters.Add(new DiffJsonConverter<BookshelfConfig>(ConfigJsonSerializerContext.Default.BookshelfConfig));
             options.Converters.Add(new DiffJsonConverter<InformationConfig>(ConfigJsonSerializerContext.Default.InformationConfig));

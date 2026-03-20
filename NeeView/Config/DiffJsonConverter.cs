@@ -37,7 +37,9 @@ namespace NeeView
 
                 foreach (var prop in _typeInfo.Properties)
                 {
-                    if (prop.Get is null)
+                    // Setter/Getter がないものは除外
+                    // NOTE: JsonIgnre属性を完全に反映したものでないで不完全です
+                    if (prop.Get is null || prop.Set is null)
                         continue;
 
                     var current = prop.Get(value);

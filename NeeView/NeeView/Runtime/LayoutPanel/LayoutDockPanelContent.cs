@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Windows.Controls;
 
 namespace NeeView.Runtime.LayoutPanel
@@ -326,11 +327,13 @@ namespace NeeView.Runtime.LayoutPanel
         {
             public List<PanelLayout> PanelLayout { get; set; } = new();
 
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
             public string? SelectedItem { get; set; }
 
             // NOTE: 旧バージョンでの読み込みでエラーにさせないためにJSON出力している
             [Obsolete] // ver 40.0
-            public List<List<string>> Panels { get; set; } = new();
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            public List<List<string>>? Panels { get; set; }
         }
 
         public class PanelLayout

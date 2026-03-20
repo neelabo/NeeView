@@ -178,16 +178,16 @@ namespace NeeView
 
 
         [PropertyMapLabel("Word.StyleList")]
-        public PanelListItemProfile NormalItemProfile { get; set; } = PanelListItemProfile.DefaultNormalItemProfile.Clone();
+        public NormalItemProfile NormalItemProfile { get; set; } = new();
 
         [PropertyMapLabel("Word.StyleContent")]
-        public PanelListItemProfile ContentItemProfile { get; set; } = PanelListItemProfile.DefaultContentItemProfile.Clone();
+        public ContentItemProfile ContentItemProfile { get; set; } = new();
 
         [PropertyMapLabel("Word.StyleBanner")]
-        public PanelListItemProfile BannerItemProfile { get; set; } = PanelListItemProfile.DefaultBannerItemProfile.Clone();
+        public BannerItemProfile BannerItemProfile { get; set; } = new();
 
         [PropertyMapLabel("Word.StyleThumbnail")]
-        public PanelListItemProfile ThumbnailItemProfile { get; set; } = PanelListItemProfile.DefaultThumbnailItemProfile.Clone();
+        public ThumbnailItemProfile ThumbnailItemProfile { get; set; } = new();
 
 
         #region HiddenParameters

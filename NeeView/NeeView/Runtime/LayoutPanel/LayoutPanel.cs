@@ -39,7 +39,7 @@ namespace NeeView.Runtime.LayoutPanel
         {
             public static Memento Default { get; } = new Memento() { GridLength = new GridLength(1, GridUnitType.Star), WindowPlacement = WindowPlacement.None };
 
-            public GridLength GridLength { get; set; }
+            public GridLength GridLength { get; set; } = new GridLength(1, GridUnitType.Star);
             public WindowPlacement WindowPlacement { get; set; } = WindowPlacement.None;
         }
 

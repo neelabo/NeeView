@@ -63,8 +63,14 @@ namespace NeeView
     [JsonSerializable(typeof(Dictionary<string, LayoutPanelWindowManager.Memento>), TypeInfoPropertyName = "LayoutPanelWindowManager_DictionaryStringMemento")]
     [JsonSerializable(typeof(LayoutPanel.Memento), TypeInfoPropertyName = "LayoutPanel_Memento")]
     [JsonSerializable(typeof(LayoutPanelWindowManager.Memento), TypeInfoPropertyName = "LayoutPanelWindowManager_Memento")]
+    [JsonSerializable(typeof(LayoutDockPanelContent.PanelLayout))]
 
-    [JsonSerializable(typeof(PanelListItemProfile))] // <- TODO: record化
+    [JsonSerializable(typeof(PanelListItemProfile))]
+    [JsonSerializable(typeof(NormalItemProfile))]
+    [JsonSerializable(typeof(ContentItemProfile))]
+    [JsonSerializable(typeof(BannerItemProfile))]
+    [JsonSerializable(typeof(ThumbnailItemProfile))]
+
 
     [JsonSerializable(typeof(BookshelfConfig))]
     [JsonSerializable(typeof(InformationConfig))]

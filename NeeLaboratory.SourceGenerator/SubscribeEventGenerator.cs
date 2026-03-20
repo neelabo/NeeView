@@ -35,6 +35,7 @@ public sealed class SubscribeEventGenerator : IIncrementalGenerator
     static void Emit(SourceProductionContext context, GeneratorAttributeSyntaxContext source)
     {
         var ts = (IEventSymbol)source.TargetSymbol;
+        var typeSymbol = (INamedTypeSymbol)ts.ContainingSymbol;
 
         string nameSpace = ts.ContainingNamespace?.ToString();
         string className = ts.ContainingSymbol.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
@@ -49,6 +50,12 @@ public sealed class SubscribeEventGenerator : IIncrementalGenerator
             : $"namespace {ts.ContainingNamespace};";
 
         var fullType = source.TargetSymbol.ToString();
+
+        string typeDeclaration = "partial";
+        if (typeSymbol.IsRecord)
+        {
+            typeDeclaration += " record";
+        }
 
         string code;
         if (isInterface)
@@ -74,7 +81,7 @@ public sealed class SubscribeEventGenerator : IIncrementalGenerator
 
                 {{ns}}
 
-                partial class {{className}}
+                {{typeDeclaration}} class {{className}}
                 {
                     {{eventAccessModifiers}} IDisposable Subscribe{{eventName}}({{eventTypeName}} handler)
                     {
