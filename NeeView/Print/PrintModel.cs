@@ -560,9 +560,9 @@ namespace NeeView
         #region Memento
 
         [Memento]
-        public class Memento
+        public class PrintModelMemento
         {
-            public Memento()
+            public PrintModelMemento()
             {
                 PageOrientation = PageOrientation.Portrait;
                 PrintMode = PrintMode.RawImage;
@@ -582,9 +582,9 @@ namespace NeeView
             public Margin Margin { get; set; }
         }
 
-        public Memento CreateMemento()
+        public PrintModelMemento CreateMemento()
         {
-            var memento = new Memento();
+            var memento = new PrintModelMemento();
 
             memento.PageOrientation = PageOrientation;
             memento.PrintMode = PrintMode;
@@ -599,7 +599,7 @@ namespace NeeView
             return memento;
         }
 
-        public void Restore(Memento? memento)
+        public void Restore(PrintModelMemento? memento)
         {
             if (memento == null) return;
 

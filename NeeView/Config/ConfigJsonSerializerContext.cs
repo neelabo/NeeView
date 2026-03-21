@@ -22,6 +22,8 @@ namespace NeeView
             typeof(JsonGridLengthConverter)}
         )]
 
+    [JsonSerializable(typeof(Config))]
+
     [JsonSerializable(typeof(SystemConfig))]
     [JsonSerializable(typeof(StartUpConfig))]
     [JsonSerializable(typeof(PerformanceConfig))]

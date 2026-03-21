@@ -1,16 +1,14 @@
-﻿using NeeLaboratory.ComponentModel;
-using System.Windows.Media.Effects;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 
 namespace NeeView.Effects
 {
-    public class EffectUnit : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class EffectUnit : BindableBase
     {
-        public virtual Effect? GetEffect() => null;
-
-        protected void RaiseEffectPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? name = null)
+        public void RaisePropertyChangedAll()
         {
-            RaisePropertyChanged(name);
-            RaisePropertyChanged(nameof(Effect));
+            RaisePropertyChanged(null);
         }
     }
 }

@@ -105,6 +105,8 @@ namespace NeeView
             options.Converters.Add(new JsonTimeSpanConverter());
             options.Converters.Add(new JsonGridLengthConverter());
 
+            options.Converters.Add(new DiffJsonConverter<Config>(ConfigJsonSerializerContext.Default.Config));
+
             options.Converters.Add(new DiffJsonConverter<SystemConfig>(ConfigJsonSerializerContext.Default.SystemConfig));
             options.Converters.Add(new DiffJsonConverter<StartUpConfig>(ConfigJsonSerializerContext.Default.StartUpConfig));
             options.Converters.Add(new DiffJsonConverter<PerformanceConfig>(ConfigJsonSerializerContext.Default.PerformanceConfig));

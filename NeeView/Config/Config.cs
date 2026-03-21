@@ -139,7 +139,7 @@ namespace NeeView
         [PropertyMapIgnore]
         [ObjectMergeReferenceCopy]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public PrintModel.Memento? Print { get; set; }
+        public PrintModel.PrintModelMemento? Print { get; set; }
 
         #region Obsolete
 
