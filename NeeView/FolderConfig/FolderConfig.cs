@@ -27,7 +27,7 @@ namespace NeeView
         /// <summary>
         /// フォルダーのソート順
         /// </summary>
-        public FolderParameter.Memento? Parameter { get; set; }
+        public FolderParameterMemento? Parameter { get; set; }
 
         /// <summary>
         /// サムネイル設定

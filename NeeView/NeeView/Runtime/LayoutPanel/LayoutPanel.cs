@@ -35,30 +35,31 @@ namespace NeeView.Runtime.LayoutPanel
 
         #region Memento
 
-        public class Memento
+        public LayoutPanelMemento CreateMemento()
         {
-            public static Memento Default { get; } = new Memento() { GridLength = new GridLength(1, GridUnitType.Star), WindowPlacement = WindowPlacement.None };
-
-            public GridLength GridLength { get; set; } = new GridLength(1, GridUnitType.Star);
-            public WindowPlacement WindowPlacement { get; set; } = WindowPlacement.None;
-        }
-
-        public Memento CreateMemento()
-        {
-            var memento = new Memento();
+            var memento = new LayoutPanelMemento();
             memento.GridLength = GridLength;
             memento.WindowPlacement = WindowPlacement;
             return memento;
         }
 
-        public void Restore(Memento memento)
+        public void Restore(LayoutPanelMemento memento)
         {
             if (memento == null) return;
             GridLength = memento.GridLength;
             WindowPlacement = memento.WindowPlacement;
         }
 
-
         #endregion
     }
+
+
+    public class LayoutPanelMemento
+    {
+        public static LayoutPanelMemento Default { get; } = new LayoutPanelMemento() { GridLength = new GridLength(1, GridUnitType.Star), WindowPlacement = WindowPlacement.None };
+
+        public GridLength GridLength { get; set; } = new GridLength(1, GridUnitType.Star);
+        public WindowPlacement WindowPlacement { get; set; } = WindowPlacement.None;
+    }
+
 }

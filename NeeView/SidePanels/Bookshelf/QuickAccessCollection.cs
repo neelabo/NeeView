@@ -147,20 +147,15 @@ namespace NeeView
 
 
         #region Memento
-        [Memento]
-        public class Memento
-        {
-            public List<QuickAccessTreeNode>? Items { get; set; }
-        }
 
-        public Memento CreateMemento()
+        public QuickAccessCollectionMemento CreateMemento()
         {
-            var memento = new Memento();
+            var memento = new QuickAccessCollectionMemento();
             memento.Items = QuickAccessTreeNodeConverter.ConvertFrom(Root).Children;
             return memento;
         }
 
-        public void Restore(Memento? memento)
+        public void Restore(QuickAccessCollectionMemento? memento)
         {
             if (memento == null) return;
             if (memento.Items is null) return;
@@ -173,6 +168,11 @@ namespace NeeView
 
     }
 
+
+    public class QuickAccessCollectionMemento
+    {
+        public List<QuickAccessTreeNode>? Items { get; set; }
+    }
 
 
     public class QuickAccessTreeNode

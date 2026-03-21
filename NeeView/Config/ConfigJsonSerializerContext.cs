@@ -1,7 +1,6 @@
 ﻿using NeeView.Effects;
 using NeeView.Runtime.LayoutPanel;
 using NeeView.Text.Json;
-using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -60,12 +59,10 @@ namespace NeeView
     [JsonSerializable(typeof(MainViewConfig))]
 
     [JsonSerializable(typeof(PanelsConfig))] // TODO
-    [JsonSerializable(typeof(LayoutPanelManager.Memento), TypeInfoPropertyName = "LayoutPanelManager_Memento")]
-    [JsonSerializable(typeof(Dictionary<string, LayoutPanel.Memento>), TypeInfoPropertyName = "LayoutPanel_DictionaryStringMemento")]
-    [JsonSerializable(typeof(Dictionary<string, LayoutPanelWindowManager.Memento>), TypeInfoPropertyName = "LayoutPanelWindowManager_DictionaryStringMemento")]
-    [JsonSerializable(typeof(LayoutPanel.Memento), TypeInfoPropertyName = "LayoutPanel_Memento")]
-    [JsonSerializable(typeof(LayoutPanelWindowManager.Memento), TypeInfoPropertyName = "LayoutPanelWindowManager_Memento")]
-    [JsonSerializable(typeof(LayoutDockPanelContent.PanelLayout))]
+    [JsonSerializable(typeof(LayoutPanelManagerMemento))]
+    [JsonSerializable(typeof(LayoutPanelMemento))]
+    [JsonSerializable(typeof(LayoutPanelWindowManagerMemento))]
+    [JsonSerializable(typeof(LayoutDockPanelLayout))]
 
     [JsonSerializable(typeof(PanelListItemProfile))]
     [JsonSerializable(typeof(NormalItemProfile))]

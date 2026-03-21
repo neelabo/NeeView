@@ -218,7 +218,7 @@ namespace NeeView
         // ver 38
         [PropertyMapIgnore]
         [ObjectMergeReferenceCopy]
-        public LayoutPanelManager.Memento? Layout { get; set; }
+        public LayoutPanelManagerMemento? Layout { get; set; }
 
         #endregion HiddenParameters
 

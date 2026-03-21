@@ -104,19 +104,14 @@ namespace NeeView.Runtime.LayoutPanel
 
         #region Memento
 
-        public class Memento
+        public LayoutPanelWindowManagerMemento CreateMemento()
         {
-            public List<string>? Panels { get; set; }
-        }
-
-        public Memento CreateMemento()
-        {
-            var memento = new Memento();
+            var memento = new LayoutPanelWindowManagerMemento();
             memento.Panels = _windows.Select(e => e.LayoutPanel).OfType<LayoutPanel>().Select(e => e.Key).ToList();
             return memento;
         }
 
-        public void Restore(Memento? memento)
+        public void Restore(LayoutPanelWindowManagerMemento? memento)
         {
             if (memento == null) return;
 
@@ -134,4 +129,11 @@ namespace NeeView.Runtime.LayoutPanel
 
         #endregion
     }
+
+
+    public class LayoutPanelWindowManagerMemento
+    {
+        public List<string>? Panels { get; set; }
+    }
+
 }

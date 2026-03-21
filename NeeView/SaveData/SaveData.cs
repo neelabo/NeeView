@@ -111,7 +111,7 @@ namespace NeeView
                 var fileInfo = new FileInfo(filename);
                 if (fileInfo.Exists)
                 {
-                    BookHistoryCollection.Memento? memento = SafetyLoad(BookHistoryCollection.Memento.Load, HistoryFilePath, failedDialog);
+                    BookHistoryCollectionMemento? memento = SafetyLoad(BookHistoryCollectionMemento.Load, HistoryFilePath, failedDialog);
                     BookHistoryCollection.Current.Restore(memento, true);
                     _historyLastWriteTime = fileInfo.GetSafeLastWriteTime();
                 }
@@ -140,7 +140,7 @@ namespace NeeView
                 }
                 _bookmarkFileStamp = fileStamp;
                 var failedDialog = new LoadFailedDialog("Notice.LoadBookmarkFailed", "Notice.LoadBookmarkFailedTitle");
-                BookmarkCollection.Memento? memento = SafetyLoad(BookmarkCollection.Memento.Load, filename, failedDialog);
+                BookmarkCollectionMemento? memento = SafetyLoad(BookmarkCollectionMemento.Load, filename, failedDialog);
                 BookmarkCollection.Current.Restore(memento);
             }
         }
@@ -167,7 +167,7 @@ namespace NeeView
                 }
                 _folderConfigFileStamp = fileStamp;
                 var failedDialog = new LoadFailedDialog("Notice.LoadFolderConfigFailed", "Notice.LoadFolderConfigFailedTitle");
-                FolderConfigCollection.Memento? memento = SafetyLoad(FolderConfigCollection.Memento.Load, filename, failedDialog);
+                FolderConfigCollectionMemento? memento = SafetyLoad(FolderConfigCollectionMemento.Load, filename, failedDialog);
                 FolderConfigCollection.Current.Restore(memento);
             }
         }
@@ -295,7 +295,7 @@ namespace NeeView
                     {
                         //Debug.WriteLine("SaveData.SaveHistory(): merge.");
                         var failedDialog = new LoadFailedDialog("Notice.LoadHistoryFailed", "Notice.LoadHistoryFailedTitle");
-                        var margeMemento = SafetyLoad(BookHistoryCollection.Memento.Load, HistoryFilePath, failedDialog);
+                        var margeMemento = SafetyLoad(BookHistoryCollectionMemento.Load, HistoryFilePath, failedDialog);
                         bookHistoryMemento.Merge(margeMemento);
                         _historyMergeFlag = true;
                     }

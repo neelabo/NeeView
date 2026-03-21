@@ -355,113 +355,10 @@ namespace NeeView
 
         #region Memento
 
-        /// <summary>
-        /// 履歴Memento
-        /// </summary>
-        [Memento]
-        public class Memento : BindableBase
-        {
-            public static string FormatName => Environment.SolutionName + ".History";
-
-            public FormatVersion? Format { get; set; }
-
-            public List<BookHistory> Items { get; set; }
-
-            public List<BookMemento> Books { get; set; }
-
-            [Obsolete]
-            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            public Dictionary<string, FolderParameter.Memento>? Folders { get; set; }
-
-            public List<string>? BookshelfSearchHistory { get; set; }
-            public List<string>? BookmarkSearchHistory { get; set; }
-            public List<string>? BookHistorySearchHistory { get; set; }
-            public List<string>? PageListSearchHistory { get; set; }
-
-            #region Obsolete
-            [Obsolete(), Alternative(nameof(BookshelfSearchHistory), 40)] // ver.40
-            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            public List<string>? SearchHistory { get; set; }
-            #endregion Obsolete
-
-            public Memento()
-            {
-                Format = new FormatVersion(FormatName);
-                Items = new List<BookHistory>();
-                Books = new List<BookMemento>();
-            }
-
-
-            public void Save(string path, string? backupFileName)
-            {
-                var json = JsonSerializer.SerializeToUtf8Bytes(this, UserSettingTools.GetSerializerOptions());
-                FileIO.WriteAllBytesDurable(path, json, backupFileName);
-            }
-
-            public static Memento Load(string path)
-            {
-                using var stream = FileIO.OpenReadShared(path);
-                return Load(stream);
-            }
-
-            public static Memento Load(Stream stream)
-            {
-                var memento = JsonSerializer.Deserialize<Memento>(stream, UserSettingTools.GetSerializerOptions());
-                if (memento is null) throw new FormatException();
-                return memento.Validate();
-            }
-
-            // 合成
-            public void Merge(Memento? memento)
-            {
-                if (memento == null) return;
-
-                LocalDebug.WriteLine("HistoryMerge...");
-
-                if (Format != memento.Format)
-                {
-                    LocalDebug.WriteLine("HistoryMerge failed: Illegal format");
-                    return;
-                }
-
-                bool isDirty = false;
-                var itemMap = Items.ToDictionary(e => e.Path, e => e);
-                var bookMap = Books.ToDictionary(e => e.Path, e => e);
-                var importBookMap = memento.Books.ToDictionary(e => e.Path, e => e);
-
-                foreach (var item in memento.Items)
-                {
-                    if (itemMap.ContainsKey(item.Path))
-                    {
-                        if (itemMap[item.Path].LastAccessTime < item.LastAccessTime)
-                        {
-                            LocalDebug.WriteLine($"HistoryMerge: Update: {item.Path}");
-                            itemMap[item.Path] = item;
-                            bookMap[item.Path] = importBookMap[item.Path];
-                            isDirty = true;
-                        }
-                    }
-                    else
-                    {
-                        LocalDebug.WriteLine($"HistoryMerge: Add: {item.Path}");
-                        itemMap.Add(item.Path, item);
-                        bookMap.Add(item.Path, importBookMap[item.Path]);
-                        isDirty = true;
-                    }
-                }
-
-                if (isDirty)
-                {
-                    Items = Limit(itemMap.Values.OrderByDescending(e => e.LastAccessTime), Config.Current.History.LimitSize, Config.Current.History.LimitSpan).ToList();
-                    Books = bookMap.Values.ToList();
-                }
-            }
-        }
-
         // memento作成
-        public Memento CreateMemento()
+        public BookHistoryCollectionMemento CreateMemento()
         {
-            var memento = new Memento();
+            var memento = new BookHistoryCollectionMemento();
 
             // NOTE: 保存時は日時降順にする
             memento.Items = Limit(this.Items.Reverse().Where(e => !e.Path.StartsWith(Temporary.Current.TempDirectory, StringComparison.Ordinal)), Config.Current.History.LimitSize, Config.Current.History.LimitSpan).ToList();
@@ -479,7 +376,7 @@ namespace NeeView
         }
 
         // memento適用
-        public void Restore(Memento? memento, bool fromLoad)
+        public void Restore(BookHistoryCollectionMemento? memento, bool fromLoad)
         {
             if (memento == null) return;
 
@@ -520,5 +417,110 @@ namespace NeeView
         }
 
         #endregion
+    }
+
+
+    /// <summary>
+    /// 履歴Memento
+    /// </summary>
+    [Memento]
+    [LocalDebug]
+    public partial class BookHistoryCollectionMemento : BindableBase
+    {
+        public static string FormatName => Environment.SolutionName + ".History";
+
+        public FormatVersion? Format { get; set; }
+
+        public List<BookHistory> Items { get; set; }
+
+        public List<BookMemento> Books { get; set; }
+
+        [Obsolete]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public Dictionary<string, FolderParameterMemento>? Folders { get; set; }
+
+        public List<string>? BookshelfSearchHistory { get; set; }
+        public List<string>? BookmarkSearchHistory { get; set; }
+        public List<string>? BookHistorySearchHistory { get; set; }
+        public List<string>? PageListSearchHistory { get; set; }
+
+        #region Obsolete
+        [Obsolete(), Alternative(nameof(BookshelfSearchHistory), 40)] // ver.40
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public List<string>? SearchHistory { get; set; }
+        #endregion Obsolete
+
+        public BookHistoryCollectionMemento()
+        {
+            Format = new FormatVersion(FormatName);
+            Items = new List<BookHistory>();
+            Books = new List<BookMemento>();
+        }
+
+
+        public void Save(string path, string? backupFileName)
+        {
+            var json = JsonSerializer.SerializeToUtf8Bytes(this, UserSettingTools.GetSerializerOptions());
+            FileIO.WriteAllBytesDurable(path, json, backupFileName);
+        }
+
+        public static BookHistoryCollectionMemento Load(string path)
+        {
+            using var stream = FileIO.OpenReadShared(path);
+            return Load(stream);
+        }
+
+        public static BookHistoryCollectionMemento Load(Stream stream)
+        {
+            var memento = JsonSerializer.Deserialize<BookHistoryCollectionMemento>(stream, UserSettingTools.GetSerializerOptions());
+            if (memento is null) throw new FormatException();
+            return memento.Validate();
+        }
+
+        // 合成
+        public void Merge(BookHistoryCollectionMemento? memento)
+        {
+            if (memento == null) return;
+
+            LocalDebug.WriteLine("HistoryMerge...");
+
+            if (Format != memento.Format)
+            {
+                LocalDebug.WriteLine("HistoryMerge failed: Illegal format");
+                return;
+            }
+
+            bool isDirty = false;
+            var itemMap = Items.ToDictionary(e => e.Path, e => e);
+            var bookMap = Books.ToDictionary(e => e.Path, e => e);
+            var importBookMap = memento.Books.ToDictionary(e => e.Path, e => e);
+
+            foreach (var item in memento.Items)
+            {
+                if (itemMap.ContainsKey(item.Path))
+                {
+                    if (itemMap[item.Path].LastAccessTime < item.LastAccessTime)
+                    {
+                        LocalDebug.WriteLine($"HistoryMerge: Update: {item.Path}");
+                        itemMap[item.Path] = item;
+                        bookMap[item.Path] = importBookMap[item.Path];
+                        isDirty = true;
+                    }
+                }
+                else
+                {
+                    LocalDebug.WriteLine($"HistoryMerge: Add: {item.Path}");
+                    itemMap.Add(item.Path, item);
+                    bookMap.Add(item.Path, importBookMap[item.Path]);
+                    isDirty = true;
+                }
+            }
+
+            if (isDirty)
+            {
+                Items = BookHistoryCollection.Limit(itemMap.Values.OrderByDescending(e => e.LastAccessTime), Config.Current.History.LimitSize, Config.Current.History.LimitSpan).ToList();
+                Books = bookMap.Values.ToList();
+            }
+        }
     }
 }

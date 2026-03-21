@@ -6,6 +6,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Windows.Controls;
+using static NeeView.Runtime.LayoutPanel.LayoutDockPanelContent;
 
 namespace NeeView.Runtime.LayoutPanel
 {
@@ -323,50 +324,15 @@ namespace NeeView.Runtime.LayoutPanel
 
         #region Memento
 
-        public class Memento
+        public LayoutDockPanelContentMemento CreateMemento()
         {
-            public List<PanelLayout> PanelLayout { get; set; } = new();
-
-            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            public string? SelectedItem { get; set; }
-
-            // NOTE: 旧バージョンでの読み込みでエラーにさせないためにJSON出力している
-            [Obsolete] // ver 40.0
-            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            public List<List<string>>? Panels { get; set; }
-        }
-
-        public class PanelLayout
-        {
-            public PanelLayout()
-            {
-            }
-
-            public PanelLayout(LayoutPanelCollection collection)
-            {
-                Orientation = collection.Orientation;
-                Panels = collection.Select(e => e.Key).ToList();
-            }
-
-            public PanelLayout(Orientation orientation, List<string> panels)
-            {
-                Orientation = orientation;
-                Panels = panels;
-            }
-
-            public Orientation Orientation { get; set; } = Orientation.Vertical;
-            public List<string> Panels { get; set; } = new();
-        }
-
-        public Memento CreateMemento()
-        {
-            var memento = new Memento();
-            memento.PanelLayout = Items.Select(e => new PanelLayout(e.Orientation, e.Select(x => x.Key).ToList())).ToList();
+            var memento = new LayoutDockPanelContentMemento();
+            memento.PanelLayout = Items.Select(e => new LayoutDockPanelLayout(e.Orientation, e.Select(x => x.Key).ToList())).ToList();
             memento.SelectedItem = SelectedItem?.First().Key;
             return memento;
         }
 
-        public void Restore(Memento memento)
+        public void Restore(LayoutDockPanelContentMemento memento)
         {
             if (memento == null) return;
 
@@ -375,7 +341,7 @@ namespace NeeView.Runtime.LayoutPanel
 #pragma warning disable CS0612 // 型またはメンバーが旧型式です
             if (memento.Panels is not null && !memento.PanelLayout.Any())
             {
-                memento.PanelLayout = memento.Panels.Select(e => new PanelLayout(Orientation.Vertical, e)).ToList();
+                memento.PanelLayout = memento.Panels.Select(e => new LayoutDockPanelLayout(Orientation.Vertical, e)).ToList();
             }
 #pragma warning restore CS0612 // 型またはメンバーが旧型式です
 
@@ -397,4 +363,40 @@ namespace NeeView.Runtime.LayoutPanel
     }
 
 
+    public class LayoutDockPanelContentMemento
+    {
+        public List<LayoutDockPanelLayout> PanelLayout { get; set; } = new();
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? SelectedItem { get; set; }
+
+        // NOTE: 旧バージョンでの読み込みでエラーにさせないためにJSON出力している
+        // ... もう削除してもよいかな？
+        [Obsolete] // ver 40.0
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public List<List<string>>? Panels { get; set; }
+    }
+
+
+    public class LayoutDockPanelLayout
+    {
+        public LayoutDockPanelLayout()
+        {
+        }
+
+        public LayoutDockPanelLayout(LayoutPanelCollection collection)
+        {
+            Orientation = collection.Orientation;
+            Panels = collection.Select(e => e.Key).ToList();
+        }
+
+        public LayoutDockPanelLayout(Orientation orientation, List<string> panels)
+        {
+            Orientation = orientation;
+            Panels = panels;
+        }
+
+        public Orientation Orientation { get; set; } = Orientation.Vertical;
+        public List<string> Panels { get; set; } = new();
+    }
 }

@@ -216,27 +216,13 @@ namespace NeeView.Runtime.LayoutPanel
             DragEnd?.Invoke(this, EventArgs.Empty);
         }
 
-
         #region Memento
 
-        public class Memento
-        {
-            public Dictionary<string, LayoutPanel.Memento>? Panels { get; set; }
-
-            public Dictionary<string, LayoutDockPanelContent.Memento>? Docks { get; set; }
-
-            public LayoutPanelWindowManager.Memento? Windows { get; set; }
-
-            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-            public AlternativePanelSource? AlternativePanelSource { get; set; }
-        }
-
-
-        public Memento CreateMemento()
+        public LayoutPanelManagerMemento CreateMemento()
         {
             this.Windows.Snap();
 
-            var memento = new Memento();
+            var memento = new LayoutPanelManagerMemento();
             memento.Panels = this.Panels.ToDictionary(e => e.Key, e => e.Value.CreateMemento());
             memento.Docks = Docks.ToDictionary(e => e.Key, e => e.Value.CreateMemento());
             memento.Windows = this.Windows.CreateMemento();
@@ -244,7 +230,7 @@ namespace NeeView.Runtime.LayoutPanel
             return memento;
         }
 
-        public void Restore(Memento? memento)
+        public void Restore(LayoutPanelManagerMemento? memento)
         {
             if (memento == null) return;
 
@@ -281,4 +267,16 @@ namespace NeeView.Runtime.LayoutPanel
         #endregion
     }
 
+
+    public class LayoutPanelManagerMemento
+    {
+        public Dictionary<string, LayoutPanelMemento>? Panels { get; set; }
+
+        public Dictionary<string, LayoutDockPanelContentMemento>? Docks { get; set; }
+
+        public LayoutPanelWindowManagerMemento? Windows { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public AlternativePanelSource? AlternativePanelSource { get; set; }
+    }
 }

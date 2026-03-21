@@ -361,7 +361,7 @@ namespace NeeView
     /// </summary>
     public static class LayoutPanelValidator
     {
-        public static void ValidateRename(this LayoutPanelManager.Memento self, string oldName, string newName)
+        public static void ValidateRename(this LayoutPanelManagerMemento self, string oldName, string newName)
         {
             if (self is null) return;
 

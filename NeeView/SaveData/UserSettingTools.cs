@@ -143,9 +143,9 @@ namespace NeeView
             options.Converters.Add(new DiffJsonConverter<MainViewConfig>(ConfigJsonSerializerContext.Default.MainViewConfig));
 
             options.Converters.Add(new DiffJsonConverter<PanelsConfig>(ConfigJsonSerializerContext.Default.PanelsConfig));
-            options.Converters.Add(new DiffJsonConverter<LayoutPanel.Memento>(ConfigJsonSerializerContext.Default.LayoutPanel_Memento));
-            options.Converters.Add(new DiffJsonConverter<LayoutPanelWindowManager.Memento>(ConfigJsonSerializerContext.Default.LayoutPanelWindowManager_Memento));
-            options.Converters.Add(new DiffJsonConverter<LayoutDockPanelContent.PanelLayout>(ConfigJsonSerializerContext.Default.PanelLayout));
+            options.Converters.Add(new DiffJsonConverter<LayoutPanelMemento>(ConfigJsonSerializerContext.Default.LayoutPanelMemento));
+            options.Converters.Add(new DiffJsonConverter<LayoutPanelWindowManagerMemento>(ConfigJsonSerializerContext.Default.LayoutPanelWindowManagerMemento));
+            options.Converters.Add(new DiffJsonConverter<LayoutDockPanelLayout>(ConfigJsonSerializerContext.Default.LayoutDockPanelLayout));
 
             options.Converters.Add(new DiffJsonConverter<PanelListItemProfile>(ConfigJsonSerializerContext.Default.PanelListItemProfile));
             options.Converters.Add(new DiffJsonConverter<NormalItemProfile>(ConfigJsonSerializerContext.Default.NormalItemProfile));
