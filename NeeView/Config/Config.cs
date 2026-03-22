@@ -95,12 +95,6 @@ namespace NeeView
         [PropertyMapLabel("SettingPage.Slideshow")]
         public SlideShowConfig SlideShow { get; set; } = new SlideShowConfig();
 
-        [JsonIgnore]
-        public EffectConfig Effect { get; set; } = new EffectConfig();
-
-        [JsonIgnore]
-        public ControlConfig Control { get; set; } = new ControlConfig();
-
         public ImageEffectConfig ImageEffect { get; set; } = new ImageEffectConfig();
 
         [PropertyMapLabel("Effect.CustomSize")]
@@ -142,8 +136,16 @@ namespace NeeView
         #region Obsolete
 
         [Obsolete("no used"), Alternative(nameof(Playlist), 39)] // ver.39
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [JsonIgnore]
         public string? Pagemark
+        {
+            get { return null; }
+            set { }
+        }
+
+        [Obsolete("no used"), Alternative(null, 46, ErrorLevel = ScriptErrorLevel.Error)] // ver.46
+        [JsonIgnore]
+        public string? Control
         {
             get { return null; }
             set { }
