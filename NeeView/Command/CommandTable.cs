@@ -726,6 +726,9 @@ namespace NeeView
                         {
                             continue;
                         }
+
+                        // 既定値の CommandParameter を省略
+                        memento.ValidateCommandParameter(defaultMemento);
                     }
                 }
 

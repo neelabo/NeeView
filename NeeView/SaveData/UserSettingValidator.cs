@@ -19,7 +19,6 @@ namespace NeeView
             if (self is null) throw new ArgumentNullException(nameof(self));
             if (self.Format is null) throw new FormatException("UserSetting.Format must not be null.");
             if (self.Config is null) throw new FormatException("UserSetting.Config must not be null.");
-            if (self.Commands is null) throw new FormatException("UserSetting.Commands must not be null.");
 
             // 読み込まれた設定フラグを立てる
             self.Config.System.IsLoadedSettings = true;

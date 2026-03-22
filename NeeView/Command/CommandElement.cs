@@ -500,6 +500,16 @@ namespace NeeView
             if (Parameter != null && !Parameter.MemberwiseEquals(other.Parameter)) return false;
             return true;
         }
+
+        public void ValidateCommandParameter(CommandElementMemento def)
+        {
+            if (Parameter is null) return;
+
+            if (Parameter.MemberwiseEquals(def.Parameter))
+            {
+                Parameter = null;
+            }
+        }
     }
 }
 

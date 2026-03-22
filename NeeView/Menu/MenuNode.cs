@@ -8,6 +8,10 @@ namespace NeeView
     /// </summary>
     public class MenuNode
     {
+        public MenuNode()
+        {
+        }
+
         public MenuNode(string? name, MenuElementType menuElementType, string? commandName)
         {
             Name = name;

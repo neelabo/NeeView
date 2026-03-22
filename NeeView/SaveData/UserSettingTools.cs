@@ -23,7 +23,7 @@ namespace NeeView
             MainViewManager.Current.Store();
             CustomLayoutPanelManager.Current.Store();
 
-            return new UserSetting()
+            var settings = new UserSetting()
             {
                 Format = new FormatVersion(Environment.SolutionName),
                 Config = Config.Current,
@@ -32,6 +32,20 @@ namespace NeeView
                 DragActions = DragActionTable.Current.CreateDragActionCollection(trim),
                 Commands = CommandTable.Current.CreateCommandCollectionMemento(trim),
             };
+
+            if (trim)
+            {
+                if (settings.SusiePlugins.Count == 0)
+                    settings.SusiePlugins = null;
+
+                if (settings.DragActions.Count == 0)
+                    settings.DragActions = null;
+
+                if (settings.Commands.Count == 0)
+                    settings.Commands = null;
+            }
+
+            return settings;
         }
 
         public static void Save(string path, string? backupFileName)
@@ -60,13 +74,36 @@ namespace NeeView
         {
             try
             {
-                var doc = JsonDocument.Parse(bytes);
-                var config = doc.RootElement.GetProperty("Config"u8);
-                var startup = config.GetProperty("StartUp"u8);
                 var boot = new BootSetting();
-                boot.Language = config.GetProperty("System"u8).GetProperty("Language"u8).GetString() ?? "en";
-                boot.IsSplashScreenEnabled = startup.GetProperty("IsSplashScreenEnabled"u8).GetBoolean();
-                boot.IsMultiBootEnabled = startup.GetProperty("IsMultiBootEnabled"u8).GetBoolean();
+
+                var doc = JsonDocument.Parse(bytes);
+
+                if (!doc.RootElement.TryGetProperty("Config"u8, out var config))
+                {
+                    return null;
+                }
+
+                if (config.TryGetProperty("System"u8, out var system))
+                {
+                    if (system.TryGetProperty("Language"u8, out var language))
+                    {
+                        boot.Language = language.GetString() ?? "en";
+                    }
+                }
+
+                if (config.TryGetProperty("StartUp"u8, out var startup))
+                {
+                    if (startup.TryGetProperty("IsSplashScreenEnabled"u8, out var isSplashScreenEnabled))
+                    {
+                        boot.IsSplashScreenEnabled = isSplashScreenEnabled.GetBoolean();
+                    }
+
+                    if (startup.TryGetProperty("IsMultiBootEnabled"u8, out var isMultiBootEnabled))
+                    {
+                        boot.IsMultiBootEnabled = isMultiBootEnabled.GetBoolean();
+                    }
+                }
+
                 return boot;
             }
             catch (Exception ex)
@@ -195,13 +232,17 @@ namespace NeeView
 
             options.Converters.Add(new DiffJsonConverter<CommandConfig>(ConfigJsonSerializerContext.Default.CommandConfig));
             options.Converters.Add(new DiffJsonConverter<ScriptConfig>(ConfigJsonSerializerContext.Default.ScriptConfig));
-            
+
             options.Converters.Add(new DiffJsonConverter<PrintModelMemento>(ConfigJsonSerializerContext.Default.PrintModelMemento));
 
             options.Converters.Add(new DiffJsonConverter<DestinationFolder>(ConfigJsonSerializerContext.Default.DestinationFolder));
             options.Converters.Add(new DiffJsonConverter<ExternalApp>(ConfigJsonSerializerContext.Default.ExternalApp));
             options.Converters.Add(new DiffJsonConverter<BrushSource>(ConfigJsonSerializerContext.Default.BrushSource));
             options.Converters.Add(new DiffJsonConverter<BookMemento>(ConfigJsonSerializerContext.Default.BookMemento));
+
+            options.Converters.Add(new DiffJsonConverter<MenuNode>(ConfigJsonSerializerContext.Default.MenuNode));
+            options.Converters.Add(new DiffJsonConverter<SusiePluginMemento>(ConfigJsonSerializerContext.Default.SusiePluginMemento));
+            options.Converters.Add(new DiffJsonConverter<CommandElementMemento>(ConfigJsonSerializerContext.Default.CommandElementMemento));
 
             return options;
         }
