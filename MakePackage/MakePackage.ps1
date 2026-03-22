@@ -215,8 +215,13 @@ function Replace-Alert {
 
 # build
 function Get-DefaultOptions {
+
+	param (
+		[string]$arch
+	)
+
 	$defaultOptions = @(
-		"-p:PublishProfile=FolderProfile-x64.pubxml"
+		"-p:PublishProfile=FolderProfile-${arch}.pubxml"
 		"-c", "Release"
 	)
 
@@ -235,7 +240,7 @@ function Build-Project {
 		[string]$options
 	)
 
-	$defaultOptions = Get-DefaultOptions
+	$defaultOptions = Get-DefaultOptions "x64"
 
 	Write-Host "> dotnet publish $project $defaultOptions $options -o $outputDir`n" -fore Cyan
 
@@ -250,7 +255,7 @@ function Build-SusieProject {
 		[string]$outputDir
 	)
 
-	$defaultOptions = Get-DefaultOptions
+	$defaultOptions = Get-DefaultOptions "x86"
 
 	& dotnet publish $projectSusie $defaultOptions -o $outputDir\Libraries\Susie
 	if ($? -ne $true) {
