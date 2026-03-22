@@ -1,4 +1,5 @@
-﻿using NeeLaboratory;
+﻿using Generator.Equals;
+using NeeLaboratory;
 using NeeLaboratory.ComponentModel;
 using NeeView.Text;
 using NeeView.Windows.Property;
@@ -13,7 +14,8 @@ using System.Windows.Media;
 
 namespace NeeView
 {
-    public class BookConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class BookConfig : BindableBase
     {
         public static StringCollection DefaultExcludeRegexes { get; } = new StringCollection("^__MACOSX$;^\\.DS_Store$");
 
@@ -45,6 +47,8 @@ namespace NeeView
         private Color _loadingPageColor = Color.FromRgb(0xE0, 0xE0, 0xE0);
         private string _bookThumbnailFileName = "folder.jpg";
         private int _bookThumbnailDepth = 2;
+
+        [IgnoreEquality]
         private readonly RegexCollectionCache _excludeRegexCache = new();
 
         /// <summary>

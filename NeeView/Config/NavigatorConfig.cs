@@ -1,9 +1,11 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    public class NavigatorConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class NavigatorConfig : BindableBase
     {
         private bool _isVisibleThumbnail;
         private double _thumbnailHeight = 256.0;

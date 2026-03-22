@@ -1,4 +1,5 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Properties;
 using System;
 using System.Collections.Generic;
@@ -8,13 +9,14 @@ using System.Threading.Tasks;
 
 namespace NeeView
 {
-    public class ExternalApp : BindableBase, ICloneable, IExternalApp
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
+    public partial class ExternalApp : BindableBase, ICloneable, IExternalApp
     {
-        private string? _name;
-        private string? _command;
-        private string _parameter = OpenExternalAppCommandParameter.DefaultParameter;
-        private ArchivePolicy _archivePolicy = ArchivePolicy.SendExtractFile;
-        private string? _workingDirectory;
+        [DefaultEquality] private string? _name;
+        [DefaultEquality] private string? _command;
+        [DefaultEquality] private string _parameter = OpenExternalAppCommandParameter.DefaultParameter;
+        [DefaultEquality] private ArchivePolicy _archivePolicy = ArchivePolicy.SendExtractFile;
+        [DefaultEquality] private string? _workingDirectory;
 
 
         // 表示名
@@ -25,14 +27,14 @@ namespace NeeView
         public string? Name
         {
             get { return _name; }
-            set { if (SetProperty(ref _name, value)) RaisePropertyChanged(nameof(DisplayName)); }
+            set { if (SetProperty(ref _name, string.IsNullOrWhiteSpace(value) ? null : value.Trim())) RaisePropertyChanged(nameof(DisplayName)); }
         }
 
         // コマンド
         public string? Command
         {
             get { return _command; }
-            set { if (SetProperty(ref _command, value?.Trim())) RaisePropertyChanged(nameof(DisplayName)); }
+            set { if (SetProperty(ref _command, string.IsNullOrWhiteSpace(value) ? null : value.Trim())) RaisePropertyChanged(nameof(DisplayName)); }
         }
 
         // コマンドパラメータ

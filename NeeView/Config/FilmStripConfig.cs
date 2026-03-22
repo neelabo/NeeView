@@ -1,11 +1,13 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System;
 using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    public class FilmStripConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class FilmStripConfig : BindableBase
     {
         private bool _isEnabled;
         private bool _isHideFilmStrip;

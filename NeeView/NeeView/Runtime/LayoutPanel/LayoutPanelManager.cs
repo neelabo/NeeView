@@ -227,6 +227,17 @@ namespace NeeView.Runtime.LayoutPanel
             memento.Docks = Docks.ToDictionary(e => e.Key, e => e.Value.CreateMemento());
             memento.Windows = this.Windows.CreateMemento();
             memento.AlternativePanelSource = AlternativePanelSource;
+
+            if (AppSettings.Current.TrimSaveData)
+            {
+                var defaultLayoutPanelMemento = new LayoutPanelMemento();
+                memento.Panels = memento.Panels.Where(e => !e.Value.Equals(defaultLayoutPanelMemento)).ToDictionary();
+                if (memento.Panels.Count == 0)
+                {
+                    memento.Panels = null;
+                }
+            }
+
             return memento;
         }
 
@@ -274,7 +285,7 @@ namespace NeeView.Runtime.LayoutPanel
 
         public Dictionary<string, LayoutDockPanelContentMemento>? Docks { get; set; }
 
-        public LayoutPanelWindowManagerMemento? Windows { get; set; }
+        public LayoutPanelWindowManagerMemento Windows { get; set; } = new();
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public AlternativePanelSource? AlternativePanelSource { get; set; }

@@ -1,11 +1,13 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System;
 using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    public class ViewConfig : BindableBaseFull
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class ViewConfig : BindableBaseFull
     {
         private PageStretchMode _stretchMode = PageStretchMode.Uniform;
         private PageStretchMode _validStretchMode = PageStretchMode.Uniform;
@@ -33,8 +35,10 @@ namespace NeeView
         private bool _isKeepPageTransform;
         private double _scrollDuration = 0.2;
         private double _pageMoveDuration = 0.0;
-        private BookSettingConfig? _bookSetting;
         private AutoRotatePolicy _autoRotatePolicy = AutoRotatePolicy.FitToViewArea;
+
+        [IgnoreEquality]
+        private BookSettingConfig? _bookSetting;
 
 
         // 回転の中心
@@ -330,6 +334,7 @@ namespace NeeView
         [PropertyMember]
         [Obsolete("no used"), Alternative($"nv.Config.BookSetting.AutoRotate", 40, ScriptErrorLevel.Info, IsFullName = true)] // ver.40
         [JsonIgnore]
+        [IgnoreEquality]
         public AutoRotateType AutoRotate
         {
             get { return _bookSetting?.AutoRotate ?? default; }
@@ -340,6 +345,7 @@ namespace NeeView
         [PropertyPercent(0.1, 2.0, TickFrequency = 0.01)]
         [Obsolete("no used"), Alternative($"nv.Config.BookSetting.BaseScale", 40, ScriptErrorLevel.Info, IsFullName = true)] // ver.40
         [JsonIgnore]
+        [IgnoreEquality]
         public double BaseScale
         {
             get { return _bookSetting?.BaseScale ?? 1.0; }

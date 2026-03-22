@@ -1,10 +1,12 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System;
 
 namespace NeeView
 {
-    public class BookSettingPolicyConfig : BindableBase, ICloneable
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class BookSettingPolicyConfig : BindableBase, ICloneable
     {
         private BookSettingPageSelectMode _page = BookSettingPageSelectMode.RestoreOrDefault;
         private BookSettingSelectMode _pageMode = BookSettingSelectMode.RestoreOrDefault;

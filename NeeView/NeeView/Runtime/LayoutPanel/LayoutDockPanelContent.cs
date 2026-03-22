@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Windows.Controls;
-using static NeeView.Runtime.LayoutPanel.LayoutDockPanelContent;
 
 namespace NeeView.Runtime.LayoutPanel
 {
@@ -339,9 +339,14 @@ namespace NeeView.Runtime.LayoutPanel
             Clear();
 
 #pragma warning disable CS0612 // 型またはメンバーが旧型式です
-            if (memento.Panels is not null && !memento.PanelLayout.Any())
+            if (memento.PanelLayoutV1 is not null && !memento.PanelLayout.Any())
             {
-                memento.PanelLayout = memento.Panels.Select(e => new LayoutDockPanelLayout(Orientation.Vertical, e)).ToList();
+                memento.PanelLayout = memento.PanelLayoutV1.Select(e => new LayoutDockPanelLayout(e.Orientation, e.Panels)).ToList();
+            }
+
+            if (memento.PanenLayoutV0 is not null && !memento.PanelLayout.Any())
+            {
+                memento.PanelLayout = memento.PanenLayoutV0.Select(e => new LayoutDockPanelLayout(Orientation.Vertical, e)).ToList();
             }
 #pragma warning restore CS0612 // 型またはメンバーが旧型式です
 
@@ -365,19 +370,45 @@ namespace NeeView.Runtime.LayoutPanel
 
     public class LayoutDockPanelContentMemento
     {
+        [JsonPropertyName("PanelLayoutV2")]
         public List<LayoutDockPanelLayout> PanelLayout { get; set; } = new();
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? SelectedItem { get; set; }
 
-        // NOTE: 旧バージョンでの読み込みでエラーにさせないためにJSON出力している
-        // ... もう削除してもよいかな？
+        #region Obsolete
+
         [Obsolete] // ver 40.0
+        [JsonPropertyName("Panels")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public List<List<string>>? Panels { get; set; }
+        public List<List<string>>? PanenLayoutV0 { get; set; }
+
+        [Obsolete] // ver 46.0
+        [JsonPropertyName("PanelLayout")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public List<LayoutDockPanelLayoutV1>? PanelLayoutV1 { get; set; }
+
+        #endregion
     }
 
 
+    // V1
+    [Obsolete]
+    public class LayoutDockPanelLayoutV1
+    {
+        public LayoutDockPanelLayoutV1(Orientation orientation, List<string> panels)
+        {
+            Orientation = orientation;
+            Panels = panels;
+        }
+
+        public Orientation Orientation { get; set; } = Orientation.Vertical;
+        public List<string> Panels { get; set; } = new();
+    }
+
+
+    // V2
+    [JsonConverter(typeof(JsonLayoutDockPanelLayoutConverter))]
     public class LayoutDockPanelLayout
     {
         public LayoutDockPanelLayout()
@@ -398,5 +429,47 @@ namespace NeeView.Runtime.LayoutPanel
 
         public Orientation Orientation { get; set; } = Orientation.Vertical;
         public List<string> Panels { get; set; } = new();
+
+        public static LayoutDockPanelLayout Parse(string s)
+        {
+            var tokens = s.Split(':');
+
+            Orientation orientation = Orientation.Vertical;
+            List<string> panels = new();
+
+            if (tokens.Length >= 1)
+            {
+                orientation = Enum.Parse<Orientation>(tokens[0]);
+            }
+
+            if (tokens.Length >= 2)
+            {
+                panels = tokens[1].Split(',').ToList();
+            }
+
+            return new LayoutDockPanelLayout(orientation, panels);
+        }
+
+        public override string ToString()
+        {
+            return Orientation.ToString() + ":" + string.Join(',', Panels);
+        }
+    }
+
+
+    public sealed class JsonLayoutDockPanelLayoutConverter : JsonConverter<LayoutDockPanelLayout>
+    {
+        public override LayoutDockPanelLayout? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            var s = reader.GetString();
+            if (s is null) return new();
+
+            return LayoutDockPanelLayout.Parse(s);
+        }
+
+        public override void Write(Utf8JsonWriter writer, LayoutDockPanelLayout value, JsonSerializerOptions options)
+        {
+            writer.WriteStringValue(value.ToString());
+        }
     }
 }

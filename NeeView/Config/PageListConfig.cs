@@ -1,9 +1,11 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    public class PageListConfig : BindableBase, IHasPanelListItemStyle
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class PageListConfig : BindableBase, IHasPanelListItemStyle
     {
         private PanelListItemStyle _panelListItemStyle = PanelListItemStyle.Content;
         private PageNameFormat _format = PageNameFormat.Smart;

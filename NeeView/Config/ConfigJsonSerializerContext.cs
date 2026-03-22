@@ -58,7 +58,7 @@ namespace NeeView
     [JsonSerializable(typeof(FilmStripConfig))]
     [JsonSerializable(typeof(MainViewConfig))]
 
-    [JsonSerializable(typeof(PanelsConfig))] // TODO
+    [JsonSerializable(typeof(PanelsConfig))]
     [JsonSerializable(typeof(LayoutPanelManagerMemento))]
     [JsonSerializable(typeof(LayoutPanelMemento))]
     [JsonSerializable(typeof(LayoutPanelWindowManagerMemento))]
@@ -78,7 +78,7 @@ namespace NeeView
 
     [JsonSerializable(typeof(ThumbnailConfig))]
     [JsonSerializable(typeof(SlideShowConfig))]
-    
+
     [JsonSerializable(typeof(ImageEffectConfig))]
     [JsonSerializable(typeof(LevelEffectUnit))]
     [JsonSerializable(typeof(HsvEffectUnit))]
@@ -112,6 +112,8 @@ namespace NeeView
 
     [JsonSerializable(typeof(CommandConfig))]
     [JsonSerializable(typeof(ScriptConfig))]
+
+    [JsonSerializable(typeof(PrintModelMemento))]
 
     [JsonSerializable(typeof(DestinationFolder))]
     [JsonSerializable(typeof(ExternalApp))]

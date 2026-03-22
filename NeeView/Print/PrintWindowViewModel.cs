@@ -150,7 +150,7 @@ namespace NeeView
             if (result.IsPossible)
             {
                 _model.ResetDialog();
-                Config.Current.Print = null;
+                Config.Current.Print = new();
             }
         }
 

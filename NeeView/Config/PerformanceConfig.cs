@@ -1,4 +1,5 @@
-﻿using NeeLaboratory;
+﻿using Generator.Equals;
+using NeeLaboratory;
 using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System;
@@ -7,7 +8,8 @@ using System.Windows;
 
 namespace NeeView
 {
-    public class PerformanceConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class PerformanceConfig : BindableBase
     {
         private int _cacheMemorySize = 200;
         private int _jobWorkerSize = 4;

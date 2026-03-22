@@ -1,4 +1,5 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using PhotoSauce.MagicScaler;
 using System;
@@ -9,11 +10,12 @@ namespace NeeView
     /// <summary>
     /// UnsharpMask setting for resize filter (PhotoSauce.MagicScaler)
     /// </summary>
-    public class UnsharpMaskConfig : BindableBase, ICloneable
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
+    public partial class UnsharpMaskConfig : BindableBase, ICloneable
     {
-        private int _amount;
-        private double _radius;
-        private int _threshold;
+        [DefaultEquality] private int _amount = 40;
+        [DefaultEquality] private double _radius = 1.5;
+        [DefaultEquality] private int _threshold = 0;
 
         /// <summary>
         /// UnsharpAmount property.
@@ -57,9 +59,9 @@ namespace NeeView
             return new UnsharpMaskSettings(_amount, _radius, (byte)_threshold);
         }
 
-        public override int GetHashCode()
+        public int GetEnvironmentHashCode()
         {
-            return HashCode.Combine(Amount, Radius, Threshold);
+            return HashCode.Combine(_amount, _radius, _threshold);
         }
 
         public object Clone()

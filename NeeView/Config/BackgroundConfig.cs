@@ -1,10 +1,12 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System.Windows.Media;
 
 namespace NeeView
 {
-    public class BackgroundConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class BackgroundConfig : BindableBase
     {
         private BackgroundType _backgroundType = BackgroundType.Black;
         private BrushSource _customBackground = new();

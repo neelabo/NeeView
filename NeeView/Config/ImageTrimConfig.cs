@@ -1,10 +1,12 @@
-﻿using NeeLaboratory;
+﻿using Generator.Equals;
+using NeeLaboratory;
 using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    public class ImageTrimConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class ImageTrimConfig : BindableBase
     {
         private const double _maxRate = 0.9;
 

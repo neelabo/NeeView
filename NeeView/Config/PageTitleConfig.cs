@@ -1,9 +1,11 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    public class PageTitleConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class PageTitleConfig : BindableBase
     {
         private const string PageTitleFormat1Default = "$Name";
         private const string PageTitleFormat2Default = "$NameL | $NameR";

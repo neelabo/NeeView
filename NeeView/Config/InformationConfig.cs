@@ -1,4 +1,5 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Properties;
 using NeeView.Windows.Property;
 using System.Collections.Generic;
@@ -9,12 +10,14 @@ using System.Windows;
 
 namespace NeeView
 {
-    public class InformationConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class InformationConfig : BindableBase
     {
         private static readonly string _defaultDateTimeFormat = TextResources.GetString("Information.DateFormat");
         private static readonly string _defaultMapProgramFormat = @"https://www.google.com/maps/place/$Lat+$Lon/";
         private GridLength _propertyHeaderWidth = new(128.0);
 
+        [IgnoreEquality]
         private readonly Dictionary<InformationGroup, bool> _groupVisibilityMap = new()
         {
             [InformationGroup.File] = true,
@@ -124,6 +127,7 @@ namespace NeeView
         #region HiddenParameters
 
         [JsonIgnore]
+        [IgnoreEquality]
         [PropertyMapIgnore]
         public ReadOnlyDictionary<InformationGroup, bool> GroupVisibilityMap => new(_groupVisibilityMap);
 

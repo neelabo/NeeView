@@ -1,4 +1,5 @@
-﻿using NeeView.Windows;
+﻿using Generator.Equals;
+using NeeView.Windows;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -131,9 +132,11 @@ namespace NeeView.Runtime.LayoutPanel
     }
 
 
-    public class LayoutPanelWindowManagerMemento
+    [Equatable]
+    public partial class LayoutPanelWindowManagerMemento
     {
-        public List<string>? Panels { get; set; }
+        [OrderedEquality]
+        public List<string> Panels { get; set; } = new();
     }
 
 }

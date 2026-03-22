@@ -1,10 +1,12 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System.Windows;
 
 namespace NeeView
 {
-    public class ImageDotKeepConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class ImageDotKeepConfig : BindableBase
     {
         private bool _isEnabled;
         private double _threshold = 1.0;

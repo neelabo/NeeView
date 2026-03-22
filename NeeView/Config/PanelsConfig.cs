@@ -1,4 +1,5 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Runtime.LayoutPanel;
 using NeeView.Windows.Property;
 using System;
@@ -7,7 +8,8 @@ using System.Windows;
 
 namespace NeeView
 {
-    public class PanelsConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class PanelsConfig : BindableBase
     {
         private bool _isHideLeftPanel;
         private bool _isHideRightPanel;

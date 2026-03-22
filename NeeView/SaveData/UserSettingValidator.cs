@@ -378,11 +378,21 @@ namespace NeeView
                     dock.SelectedItem = dock.SelectedItem == oldName ? newName : dock.SelectedItem;
 
 #pragma warning disable CS0612 // 型またはメンバーが旧型式です
-                    if (dock.Panels is not null)
+                    if (dock.PanenLayoutV0 is not null)
                     {
-                        dock.Panels = dock.Panels
+                        dock.PanenLayoutV0 = dock.PanenLayoutV0
                             .Select(e => e.Select(x => x == oldName ? newName : x).ToList())
                             .ToList();
+                    }
+
+                    if (dock.PanelLayoutV1 is not null)
+                    {
+                        foreach (var panelLayout in dock.PanelLayoutV1)
+                        {
+                            panelLayout.Panels = panelLayout.Panels
+                                .Select(x => x == oldName ? newName : x).ToList()
+                                .ToList();
+                        }
                     }
 #pragma warning restore CS0612 // 型またはメンバーが旧型式です
 

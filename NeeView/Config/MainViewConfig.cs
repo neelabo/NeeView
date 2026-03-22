@@ -1,11 +1,13 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows;
 using NeeView.Windows.Property;
 using System.Windows;
 
 namespace NeeView
 {
-    public class MainViewConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class MainViewConfig : BindableBase
     {
         private bool _isFloating;
         private bool _isTopmost;

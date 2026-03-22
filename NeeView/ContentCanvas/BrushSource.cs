@@ -1,4 +1,5 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,8 @@ namespace NeeView
     /// ブラシ構成要素.
     /// 単色ブラシ、画像タイルブラシ対応
     /// </summary>
-    public class BrushSource : BindableBase, ICloneable
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class BrushSource : BindableBase, ICloneable
     {
         public static Dictionary<BrushType, string> BrushTypeList => AliasNameExtensions.GetAliasNameDictionary<BrushType>();
 

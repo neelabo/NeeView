@@ -1,4 +1,5 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows;
 using NeeView.Windows.Property;
 using System;
@@ -6,7 +7,8 @@ using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    public class WindowConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class WindowConfig : BindableBase
     {
         private bool _isTopmost = false;
         private WindowStateEx _state;

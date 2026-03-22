@@ -1,9 +1,11 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    public class ImageConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class ImageConfig : BindableBase
     {
         private bool _isMediaRepeat = true;
 
@@ -21,8 +23,5 @@ namespace NeeView
             get { return _isMediaRepeat; }
             set { SetProperty(ref _isMediaRepeat, value); }
         }
-
-
     }
-
 }

@@ -1,11 +1,13 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System.ComponentModel;
 using System.Windows.Media;
 
 namespace NeeView
 {
-    public class ImageGridConfig : BindableBase
+    [Equatable(IgnoreInheritedMembers = true)]
+    public partial class ImageGridConfig : BindableBase
     {
         private bool _isEnabled;
         private Color _color = Color.FromArgb(0x80, 0x80, 0x80, 0x80);

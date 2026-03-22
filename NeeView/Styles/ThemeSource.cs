@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Generator.Equals;
+using System;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -6,8 +7,9 @@ using System.Text.Json.Serialization;
 namespace NeeView
 {
     [ObjectMergeReferenceCopy]
+    [Equatable]
     [JsonConverter(typeof(JsonThemeSourceConverter))]
-    public class ThemeSource
+    public partial class ThemeSource
     {
         public ThemeSource(ThemeType themeType)
         {
@@ -33,6 +35,7 @@ namespace NeeView
 
         public string? FileName { get; private set; }
 
+        [IgnoreEquality]
         public string CustomThemeFilePath
         {
             get

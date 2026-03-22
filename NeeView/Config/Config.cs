@@ -137,9 +137,7 @@ namespace NeeView
         public ScriptConfig Script { get; set; } = new ScriptConfig();
 
         [PropertyMapIgnore]
-        [ObjectMergeReferenceCopy]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public PrintModel.PrintModelMemento? Print { get; set; }
+        public PrintModelMemento Print { get; set; } = new PrintModelMemento();
 
         #region Obsolete
 

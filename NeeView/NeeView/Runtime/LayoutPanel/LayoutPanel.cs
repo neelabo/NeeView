@@ -1,4 +1,5 @@
-﻿using NeeView.Windows;
+﻿using Generator.Equals;
+using NeeView.Windows;
 using System;
 using System.Windows;
 
@@ -54,10 +55,9 @@ namespace NeeView.Runtime.LayoutPanel
     }
 
 
-    public class LayoutPanelMemento
+    [Equatable]
+    public partial class LayoutPanelMemento
     {
-        public static LayoutPanelMemento Default { get; } = new LayoutPanelMemento() { GridLength = new GridLength(1, GridUnitType.Star), WindowPlacement = WindowPlacement.None };
-
         public GridLength GridLength { get; set; } = new GridLength(1, GridUnitType.Star);
         public WindowPlacement WindowPlacement { get; set; } = WindowPlacement.None;
     }
