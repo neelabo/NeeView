@@ -101,7 +101,7 @@ namespace NeeView
             HistoryChanged?.Invoke(this, new BookMementoCollectionChangedArgs(BookMementoCollectionChangedType.Reset));
         }
 
-        public void Load(IEnumerable<BookHistory> items, IEnumerable<BookMemento> books)
+        public void Load(IEnumerable<BookHistoryMemento> items, IEnumerable<BookMemento> books)
         {
             lock (_lock)
             {
@@ -361,8 +361,11 @@ namespace NeeView
             var memento = new BookHistoryCollectionMemento();
 
             // NOTE: 保存時は日時降順にする
-            memento.Items = Limit(this.Items.Reverse().Where(e => !e.Path.StartsWith(Temporary.Current.TempDirectory, StringComparison.Ordinal)), Config.Current.History.LimitSize, Config.Current.History.LimitSpan).ToList();
-            memento.Books = memento.Items.Select(e => e.Unit.Memento).ToList();
+            var items = Limit(this.Items.Reverse().Where(e => !e.Path.StartsWith(Temporary.Current.TempDirectory, StringComparison.Ordinal)), Config.Current.History.LimitSize, Config.Current.History.LimitSpan);
+
+            memento.Items = items
+                .Select(e => e.CreateMemento())
+                .ToList();
 
             if (Config.Current.History.IsKeepSearchHistory)
             {
@@ -387,7 +390,13 @@ namespace NeeView
             this.BookHistorySearchHistory.Replace(memento.BookHistorySearchHistory);
             this.PageListSearchHistory.Replace(memento.PageListSearchHistory);
 
-            this.Load(fromLoad ? Limit(memento.Items, Config.Current.History.LimitSize, Config.Current.History.LimitSpan) : memento.Items, memento.Books);
+            var items = fromLoad
+                ? Limit(memento.Items, Config.Current.History.LimitSize, Config.Current.History.LimitSpan).ToList()
+                : memento.Items;
+
+            var books = items.Select(e => BookMemento.ParseWithProperties(e.Path, e.Page, e.Props)).WhereNotNull();
+
+            this.Load(items, books);
 
 #pragma warning disable CS0612 // 型またはメンバーが旧型式です
             if (memento.Folders is not null)
@@ -404,7 +413,8 @@ namespace NeeView
         }
 
         // 履歴数制限
-        public static IEnumerable<BookHistory> Limit(IEnumerable<BookHistory> source, int limitSize, TimeSpan limitSpan)
+        public static IEnumerable<T> Limit<T>(IEnumerable<T> source, int limitSize, TimeSpan limitSpan)
+            where T : IBookHistory
         {
             // limit size
             var collection = limitSize == -1 ? source : source.Take(limitSize);
@@ -431,30 +441,40 @@ namespace NeeView
 
         public FormatVersion? Format { get; set; }
 
-        public List<BookHistory> Items { get; set; }
+        public List<BookHistoryMemento> Items { get; set; }
 
-        public List<BookMemento> Books { get; set; }
-
-        [Obsolete]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public Dictionary<string, FolderParameterMemento>? Folders { get; set; }
-
         public List<string>? BookshelfSearchHistory { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<string>? BookmarkSearchHistory { get; set; }
+        
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<string>? BookHistorySearchHistory { get; set; }
+        
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<string>? PageListSearchHistory { get; set; }
 
         #region Obsolete
-        [Obsolete(), Alternative(nameof(BookshelfSearchHistory), 40)] // ver.40
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+
+        [Obsolete]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public Dictionary<string, FolderParameterMemento>? Folders { get; set; }
+
+        [Obsolete, Alternative(nameof(BookshelfSearchHistory), 40)] // v40.0
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
         public List<string>? SearchHistory { get; set; }
+
+        [Obsolete, Alternative(null, 46)] // v46.0
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public List<BookMemento>? Books { get; set; }
+
         #endregion Obsolete
 
         public BookHistoryCollectionMemento()
         {
             Format = new FormatVersion(FormatName);
-            Items = new List<BookHistory>();
-            Books = new List<BookMemento>();
+            Items = [];
         }
 
 
@@ -484,16 +504,8 @@ namespace NeeView
 
             LocalDebug.WriteLine("HistoryMerge...");
 
-            if (Format != memento.Format)
-            {
-                LocalDebug.WriteLine("HistoryMerge failed: Illegal format");
-                return;
-            }
-
             bool isDirty = false;
             var itemMap = Items.ToDictionary(e => e.Path, e => e);
-            var bookMap = Books.ToDictionary(e => e.Path, e => e);
-            var importBookMap = memento.Books.ToDictionary(e => e.Path, e => e);
 
             foreach (var item in memento.Items)
             {
@@ -503,7 +515,6 @@ namespace NeeView
                     {
                         LocalDebug.WriteLine($"HistoryMerge: Update: {item.Path}");
                         itemMap[item.Path] = item;
-                        bookMap[item.Path] = importBookMap[item.Path];
                         isDirty = true;
                     }
                 }
@@ -511,7 +522,6 @@ namespace NeeView
                 {
                     LocalDebug.WriteLine($"HistoryMerge: Add: {item.Path}");
                     itemMap.Add(item.Path, item);
-                    bookMap.Add(item.Path, importBookMap[item.Path]);
                     isDirty = true;
                 }
             }
@@ -519,7 +529,6 @@ namespace NeeView
             if (isDirty)
             {
                 Items = BookHistoryCollection.Limit(itemMap.Values.OrderByDescending(e => e.LastAccessTime), Config.Current.History.LimitSize, Config.Current.History.LimitSpan).ToList();
-                Books = bookMap.Values.ToList();
             }
         }
     }

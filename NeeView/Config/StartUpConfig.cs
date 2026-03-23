@@ -109,10 +109,19 @@ namespace NeeView
         }
 
         [PropertyMapIgnore]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
         public BookMemento? LastBook
         {
             get { return _lastBook; }
             set { SetProperty(ref _lastBook, value); }
+        }
+
+        [PropertyMapIgnore]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public BookMementoSlim? LastBookV2
+        {
+            get { return BookMementoSlim.Create(LastBook); }
+            set { LastBook = value?.ToBookMemento(); }
         }
 
         [PropertyMapIgnore]

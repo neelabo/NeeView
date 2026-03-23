@@ -238,7 +238,6 @@ namespace NeeView
             options.Converters.Add(new DiffJsonConverter<DestinationFolder>(ConfigJsonSerializerContext.Default.DestinationFolder));
             options.Converters.Add(new DiffJsonConverter<ExternalApp>(ConfigJsonSerializerContext.Default.ExternalApp));
             options.Converters.Add(new DiffJsonConverter<BrushSource>(ConfigJsonSerializerContext.Default.BrushSource));
-            options.Converters.Add(new DiffJsonConverter<BookMemento>(ConfigJsonSerializerContext.Default.BookMemento));
 
             options.Converters.Add(new DiffJsonConverter<MenuNode>(ConfigJsonSerializerContext.Default.MenuNode));
             options.Converters.Add(new DiffJsonConverter<SusiePluginMemento>(ConfigJsonSerializerContext.Default.SusiePluginMemento));
