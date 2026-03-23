@@ -34,6 +34,7 @@ namespace NeeView.Setting
 
             DragDropHelper.AttachDragOverTerminator(this);
 
+            this.Loaded += SettingWindow_Loaded;
             this.Closing += SettingWindow_Closing;
             this.Closed += (s, e) => Current = null;
             this.KeyDown += SettingWindow_KeyDown;
@@ -63,6 +64,10 @@ namespace NeeView.Setting
             Close();
         }
 
+        private void SettingWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            _vm?.OnLoaded();
+        }
 
         private void SettingWindow_KeyDown(object? sender, KeyEventArgs e)
         {
@@ -81,9 +86,11 @@ namespace NeeView.Setting
 
         private void SettingWindow_Closed(object? sender, EventArgs e)
         {
+            if (_vm is null) return;
+
             if (this.AllowSave)
             {
-                SaveDataSync.Current.SaveUserSetting(Config.Current.System.IsSyncUserSetting, true);
+                _vm.Save();
             }
         }
 

@@ -57,6 +57,7 @@ namespace NeeView.Setting
         private SettingPage? _currentPage;
         private SettingPage? _lastPage;
         private readonly Searcher _searcher;
+        private int _aliveStartCount;
 
         public SettingWindowModel()
         {
@@ -253,6 +254,21 @@ namespace NeeView.Setting
             catch (Exception ex)
             {
                 return new SearchKeywordAnalyzeResult(ex);
+            }
+        }
+
+        public void ResetAliveCount()
+        {
+            _aliveStartCount = System.Environment.TickCount;
+        }
+
+        public void Save()
+        {
+            // 1 秒以上設定ウィンドウを表示していたら保存
+            var aliveCount = System.Environment.TickCount - _aliveStartCount;
+            if (aliveCount > 1000)
+            {
+                SaveDataSync.Current.SaveUserSetting(Config.Current.System.IsSyncUserSetting, true);
             }
         }
 

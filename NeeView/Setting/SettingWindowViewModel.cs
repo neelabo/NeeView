@@ -15,6 +15,7 @@ namespace NeeView.Setting
             _model = model;
 
             _model.SubscribePropertyChanged(nameof(_model.CurrentPage), (s, e) => RaisePropertyChanged(nameof(CurrentPage)));
+            _model.ResetAliveCount();
         }
 
 
@@ -34,6 +35,16 @@ namespace NeeView.Setting
         public void SelectedItemChanged(SettingPage settingPage)
         {
             _model.SelectedItemChanged(settingPage);
+        }
+
+        public void OnLoaded()
+        {
+            _model.ResetAliveCount();
+        }
+
+        public void Save()
+        {
+            _model.Save();
         }
     }
 }
