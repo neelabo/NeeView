@@ -3,40 +3,73 @@ using NeeView.Windows.Property;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 
 namespace NeeView
 {
     public class PictureProfile : BindableBase
     {
-        static PictureProfile() => Current = new PictureProfile();
-        public static PictureProfile Current { get; }
+        private static readonly Lazy<PictureProfile> _current = new();
+        public static PictureProfile Current => _current.Value;
 
-        public static string[] _animatedGifExtensions = new string[] { ".gif" };
-        public static string[] _animatedPngExtensions = new string[] { ".png", ".apng" };
-        public static string[] _animatedWebpExtensions = new string[] { ".webp" };
+        public static string[] _animatedGifExtensions = [".gif"];
+        public static string[] _animatedPngExtensions = [".png", ".apng"];
+        public static string[] _animatedWebpExtensions = [".webp"];
 
+        private readonly Lock _lock = new();
+        private readonly ImageStandardConfig _standardConfig;
+        private FileTypeCollection? _defaultFileTypeCollection;
 
-        private PictureProfile()
+        public PictureProfile()
         {
+            _standardConfig = Config.Current.Image.Standard;
+
+            _standardConfig.SubscribePropertyChanged(nameof(ImageStandardConfig.UseWicInformation),
+                (s, e) => _defaultFileTypeCollection = null);
         }
 
+        public FileTypeCollection DefaultFileTypes
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    if (_defaultFileTypeCollection is null)
+                    {
+                        _defaultFileTypeCollection = PictureFileExtensionTools.CreateDefaultSupportedFileTypes(Config.Current.Image.Standard.UseWicInformation);
+                    }
+                    return _defaultFileTypeCollection;
+                }
+            }
+        }
 
         [PropertyMember]
         public FileTypeCollection SupportFileTypes
         {
             get
             {
-                if (Config.Current.Image.Standard.SupportFileTypes is null)
+                lock (_lock)
                 {
-                    // NOTE: fall through. don't come here!
-                    Config.Current.Image.Standard.SupportFileTypes = PictureFileExtensionTools.CreateDefaultSupportedFileTypes(Config.Current.Image.Standard.UseWicInformation);
+                    if (_standardConfig.SupportFileTypes is null)
+                    {
+                        _standardConfig.SupportFileTypes = DefaultFileTypes.Except(_standardConfig.SupportFileTypesExcept).Concat(_standardConfig.SupportFileTypesAdd);
+                    }
+                    return _standardConfig.SupportFileTypes;
                 }
-                return Config.Current.Image.Standard.SupportFileTypes;
             }
-            set { Config.Current.Image.Standard.SupportFileTypes = value; }
+            set { _standardConfig.SupportFileTypes = value; }
         }
 
+        // 画像ファイル対応拡張子の差分生成
+        public void StoreFileTypeToDiff()
+        {
+            // 対応拡張子が確定していないときは現状維持
+            if (_standardConfig.SupportFileTypes is null) return;
+
+            _standardConfig.SupportFileTypesAdd = _standardConfig.SupportFileTypes.Except(DefaultFileTypes);
+            _standardConfig.SupportFileTypesExcept = DefaultFileTypes.Except(_standardConfig.SupportFileTypes);
+        }
 
         // 対応拡張子判定 (ALL)
         public bool IsSupported(string fileName, bool includeMedia)

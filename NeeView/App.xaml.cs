@@ -221,7 +221,6 @@ namespace NeeView
             }
 
             // initialize after UserSetting
-            InitializeSupportFileType(Config.Current);
             InitializeTemporary(Config.Current);
             InitializeImeKey(Config.Current);
             InitializeTheme();
@@ -316,18 +315,6 @@ namespace NeeView
         {
             using var span = DebugSpan();
             _ = CommandTable.Current;
-        }
-
-        /// <summary>
-        /// 画像拡張子初期化
-        /// </summary>
-        private void InitializeSupportFileType(Config config)
-        {
-            using var span = DebugSpan();
-            if (config.Image.Standard.SupportFileTypes is null)
-            {
-                config.Image.Standard.SupportFileTypes = PictureFileExtensionTools.CreateDefaultSupportedFileTypes(config.Image.Standard.UseWicInformation);
-            }
         }
 
         /// <summary>

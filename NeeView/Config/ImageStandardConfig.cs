@@ -1,19 +1,22 @@
 ﻿using Generator.Equals;
 using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
+using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class ImageStandardConfig : BindableBase
     {
-        private bool _useWicInformation = true;
-        private bool _isAspectRatioEnabled;
-        private bool _isAnimatedGifEnabled = true;
-        private bool _isAnimatedPngEnabled = true;
-        private bool _isAnimatedWebpEnabled = true;
-        private bool _isAllFileSupported;
-        private FileTypeCollection? _supportFileTypes = null;
+        [DefaultEquality] private bool _useWicInformation = true;
+        [DefaultEquality] private bool _isAspectRatioEnabled;
+        [DefaultEquality] private bool _isAnimatedGifEnabled = true;
+        [DefaultEquality] private bool _isAnimatedPngEnabled = true;
+        [DefaultEquality] private bool _isAnimatedWebpEnabled = true;
+        [DefaultEquality] private bool _isAllFileSupported;
+        [IgnoreEquality] private FileTypeCollection? _supportFileTypes = null;
+        [DefaultEquality] private FileTypeCollection _supportFileTypesAdd = new();
+        [DefaultEquality] private FileTypeCollection _supportFileTypesExcept = new();
 
         // 既定の画像拡張子をWICから取得する
         [PropertyMember]
@@ -23,12 +26,28 @@ namespace NeeView
             set { SetProperty(ref _useWicInformation, value); }
         }
 
-        // サポートする画像ファイルの拡張子。nullの場合は既定の画像拡張子が適用される
+        // サポートする画像ファイルの拡張子
+        // JSONには保存されない (v46.0)
         [PropertyMember]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
         public FileTypeCollection? SupportFileTypes
         {
             get { return _supportFileTypes; }
             set { SetProperty(ref _supportFileTypes, value); }
+        }
+
+        // 追加された画像ファイル拡張子
+        public FileTypeCollection SupportFileTypesAdd
+        {
+            get { return _supportFileTypesAdd; }
+            set { SetProperty(ref _supportFileTypesAdd, value); }
+        }
+
+        // 除外された画像ファイル拡張子
+        public FileTypeCollection SupportFileTypesExcept
+        {
+            get { return _supportFileTypesExcept; }
+            set { SetProperty(ref _supportFileTypesExcept, value); }
         }
 
         // 画像の解像度情報を表示に反映する

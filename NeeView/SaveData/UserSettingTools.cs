@@ -22,6 +22,7 @@ namespace NeeView
             MainWindow.Current.StoreWindowPlacement();
             MainViewManager.Current.Store();
             CustomLayoutPanelManager.Current.Store();
+            PictureProfile.Current.StoreFileTypeToDiff();
 
             var settings = new UserSetting()
             {
