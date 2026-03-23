@@ -443,9 +443,16 @@ namespace NeeView
 
         public List<BookHistoryMemento> Items { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<string>? BookshelfSearchHistory { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<string>? BookmarkSearchHistory { get; set; }
+        
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<string>? BookHistorySearchHistory { get; set; }
+        
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<string>? PageListSearchHistory { get; set; }
 
         #region Obsolete
