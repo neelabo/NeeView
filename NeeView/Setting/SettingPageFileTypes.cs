@@ -16,7 +16,7 @@ namespace NeeView.Setting
         {
             public StringCollection GetDefaultCollection()
             {
-                return PictureFileExtensionTools.CreateDefaultSupportedFileTypes(Config.Current.Image.Standard.UseWicInformation);
+                return PictureProfile.Current.DefaultFileTypes;
             }
         }
 

@@ -38,7 +38,11 @@ namespace NeeView
             {
                 try
                 {
+                    var sw = Stopwatch.StartNew();
                     var wicMap =  WicDecoders.ListUp();
+                    sw.Stop();
+                    Trace.WriteLine($"CreateSystemExtensions({useWic}): {sw.ElapsedMilliseconds}ms");
+
                     foreach(var pair in map)
                     {
                         if (!wicMap.ContainsKey(pair.Key))

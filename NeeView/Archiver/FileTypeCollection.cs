@@ -39,6 +39,16 @@ namespace NeeView
             return string.Concat(s.Select(c => invalidChars.Contains(c) ? '_' : c));
         }
 
+        public FileTypeCollection Concat(FileTypeCollection other)
+        {
+            return new FileTypeCollection(this.Items.Concat(other.Items));
+        }
+
+        public FileTypeCollection Except(FileTypeCollection other)
+        {
+            return new FileTypeCollection(this.Items.Except(other.Items));
+        }
+
         public new static FileTypeCollection Parse(string s)
         {
             return new FileTypeCollection(s);

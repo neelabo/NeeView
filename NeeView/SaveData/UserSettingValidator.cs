@@ -23,12 +23,6 @@ namespace NeeView
             // 読み込まれた設定フラグを立てる
             self.Config.System.IsLoadedSettings = true;
 
-            // 画像拡張子初期化
-            if (self.Config.Image.Standard.SupportFileTypes is null)
-            {
-                self.Config.Image.Standard.SupportFileTypes = PictureFileExtensionTools.CreateDefaultSupportedFileTypes(self.Config.Image.Standard.UseWicInformation);
-            }
-
 #if !DEBUG
             // 現在のバージョンであればチェック不要
             if (self.Format.Equals(new FormatVersion(Environment.SolutionName)))
