@@ -27,14 +27,14 @@ namespace NeeView
         public double Scroll
         {
             get => _scroll;
-            set => SetProperty(ref _scroll, MathUtility.Clamp(value, 0.1, 1.0));
+            set => SetProperty(ref _scroll, AppMath.Round(MathUtility.Clamp(value, 0.1, 1.0)));
         }
 
         [PropertyRange(0.0, 1.0, TickFrequency = 0.1, IsEditable = true)]
         public double LineBreakStopTime
         {
             get { return _lineBreakStopTime; }
-            set { SetProperty(ref _lineBreakStopTime, value); }
+            set { SetProperty(ref _lineBreakStopTime, AppMath.Round(value)); }
         }
 
         [PropertyMember]

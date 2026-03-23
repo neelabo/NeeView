@@ -16,7 +16,7 @@ namespace NeeView
         public double Scale
         {
             get { return _scale; }
-            set { SetProperty(ref _scale, MathUtility.Clamp(value, 0.0, 1.0)); }
+            set { SetProperty(ref _scale, AppMath.Round(MathUtility.Clamp(value, 0.0, 1.0))); }
         }
 
         [DefaultValue(true)]
