@@ -531,7 +531,7 @@ function New-ConfigForZip {
 	$jsonObject.UseLocalApplicationData = $false
 	$jsonObject.Revision = $revision
 	$jsonObject.PathProcessGroup = $true
-	$jsonObject.LogFile = $trace ? "TraceLog.txt" : $null
+	$jsonObject.LogFile = $trace ? $logFileName : $null
 
 	$outputFile = Join-Path (Convert-Path $outputDir) $config
 	ConvertTo-Json $jsonObject | Out-File $outputFile
@@ -554,7 +554,7 @@ function New-ConfigForMsi {
 	$jsonObject.UseLocalApplicationData = $true
 	$jsonObject.Revision = $revision
 	$jsonObject.PathProcessGroup = $true
-	$jsonObject.LogFile = $trace ? "TraceLog.txt" : $null
+	$jsonObject.LogFile = $trace ? $logFileName : $null
 
 	$outputFile = Join-Path (Convert-Path $outputDir) $config
 	ConvertTo-Json $jsonObject | Out-File $outputFile
@@ -576,7 +576,7 @@ function New-ConfigForAppx {
 	$jsonObject.UseLocalApplicationData = $true
 	$jsonObject.Revision = $revision
 	$jsonObject.PathProcessGroup = $true
-	$jsonObject.LogFile = $trace ? "TraceLog.txt" : $null
+	$jsonObject.LogFile = $trace ? $logFileName : $null
 
 	$outputFile = Join-Path (Convert-Path $outputDir) $config
 	ConvertTo-Json $jsonObject | Out-File $outputFile
@@ -599,7 +599,7 @@ function New-ConfigForDevPackage {
 	$jsonObject.UseLocalApplicationData = $false
 	$jsonObject.Revision = $revision
 	$jsonObject.PathProcessGroup = $true
-	$jsonObject.LogFile = $trace ? "TraceLog.txt" : $null
+	$jsonObject.LogFile = $trace ? $logFileName : $null
 
 	$outputFile = Join-Path (Convert-Path $outputDir) $config
 	ConvertTo-Json $jsonObject | Out-File $outputFile
@@ -997,6 +997,7 @@ $publishDir_fd = "$appName-publish-fd"
 $referenceDir = "$product$appVersion-reference"
 $referenceDir_fd = "$product$appVersion-reference-fd"
 
+$logFileName = "Log-$version.txt"
 
 function New-PackageName {
 	param ([string]$stage = "Stable")
