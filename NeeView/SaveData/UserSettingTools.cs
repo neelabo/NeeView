@@ -76,7 +76,7 @@ namespace NeeView
             {
                 var boot = new BootSetting();
 
-                var doc = JsonDocument.Parse(bytes);
+                using var doc = JsonDocument.Parse(bytes);
 
                 if (!doc.RootElement.TryGetProperty("Config"u8, out var config))
                 {
