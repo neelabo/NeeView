@@ -279,7 +279,7 @@ namespace NeeView
         {
             lock (_lock)
             {
-                return  Items.WalkChildren().Where(e => e.Value is Bookmark bookmark && bookmark.IsUnlinked).ToList();
+                return Items.WalkChildren().Where(e => e.Value is Bookmark bookmark && bookmark.IsUnlinked).ToList();
             }
         }
 
@@ -581,7 +581,6 @@ namespace NeeView
         {
             var memento = new BookmarkCollectionMemento();
             memento.Nodes = BookmarkNodeConverter.ConvertFrom(Items);
-            memento.Books = Items.WalkChildren().Select(e => e.Value).OfType<Bookmark>().Select(e => e.Unit.Memento).Distinct().ToList();
 
             // QuickAccess情報もここに保存する
             memento.QuickAccess = QuickAccessCollection.Current.CreateMemento();
@@ -592,19 +591,26 @@ namespace NeeView
         // memento適用
         public void Restore(BookmarkCollectionMemento? memento)
         {
-            if (memento is null) return;
-
-            QuickAccessCollection.Current.Restore(memento.QuickAccess);
-            if (memento.Nodes is not null && memento.Books is not null)
+            if (memento is null)
             {
-                var nodes = BookmarkNodeConverter.ConvertToTreeListNode(memento.Nodes) ?? CreateEmptyTree();
-                this.Load(nodes, memento.Books);
+                return;
             }
 
-            // 互換用 : FileResolver 登録
-            if (memento.Books is not null && memento.Format?.CompareTo(new FormatVersion(BookmarkCollectionMemento.FormatName, VersionNumber.Ver45_Alpha4)) <= 0)
+            QuickAccessCollection.Current.Restore(memento.QuickAccess);
+
+            if (memento.Nodes is null)
             {
-                var files = memento.Books.Select(e => e.Path).ToList();
+                return;
+            }
+
+            var nodes = BookmarkNodeConverter.ConvertToTreeListNode(memento.Nodes) ?? CreateEmptyTree();
+            var books = memento.Nodes.Walk().Where(e => !e.IsFolder && e.Path is not null).Select(e => BookMemento.ParseWithProperties(e.Path!, e.Page, e.Props)).WhereNotNull().ToList();
+            this.Load(nodes, books);
+
+            // 互換用 : FileResolver 登録
+            if (books.Count != 0 && memento.Format?.CompareTo(new FormatVersion(BookmarkCollectionMemento.FormatName, VersionNumber.Ver45_Alpha4)) <= 0)
+            {
+                var files = books.Select(e => e.Path).ToList();
                 ProcessJobEngine.Current.AddJob("Processing bookmarks",
                     () =>
                     {
@@ -627,15 +633,20 @@ namespace NeeView
 
         public BookmarkNode? Nodes { get; set; }
 
-        public List<BookMemento>? Books { get; set; }
-
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public QuickAccessCollectionMemento? QuickAccess { get; set; }
 
+        #region Obsolete
+
+        [Obsolete] // v46.0
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public List<BookMemento>? Books { get; set; }
+
+        #endregion
 
         public BookmarkCollectionMemento()
         {
             Nodes = new BookmarkNode();
-            Books = new List<BookMemento>();
         }
 
 
@@ -670,7 +681,14 @@ namespace NeeView
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? Path { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public DateTime EntryTime { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? Page { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? Props { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<BookmarkNode>? Children { get; set; }
@@ -716,6 +734,8 @@ namespace NeeView
                 node.Name = bookmark.RawName;
                 node.Path = bookmark.Path;
                 node.EntryTime = bookmark.EntryTime;
+                node.Page = bookmark.Unit.Memento.Page;
+                node.Props = bookmark.Unit.Memento.ToPropertiesString();
             }
             else
             {
