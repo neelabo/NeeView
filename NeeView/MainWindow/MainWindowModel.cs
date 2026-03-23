@@ -351,11 +351,11 @@ namespace NeeView
         }
 
         // 設定ウィンドウを閉じる
-        public bool CloseSettingWindow()
+        public bool CloseSettingWindow(bool allowSave = false)
         {
             if (Setting.SettingWindow.Current != null)
             {
-                Setting.SettingWindow.Current.AllowSave = false;
+                Setting.SettingWindow.Current.AllowSave = allowSave;
                 Setting.SettingWindow.Current.Close();
                 return true;
             }
@@ -374,7 +374,7 @@ namespace NeeView
             }
             else
             {
-                CloseSettingWindow();
+                CloseSettingWindow(true);
             }
         }
 
