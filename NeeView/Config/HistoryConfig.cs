@@ -119,7 +119,7 @@ namespace NeeView
         public double HistoryEntryPlayTime
         {
             get { return _historyEntryPlayTime; }
-            set { SetProperty(ref _historyEntryPlayTime, value); }
+            set { SetProperty(ref _historyEntryPlayTime, AppMath.Round(value)); }
         }
 
         // 履歴制限

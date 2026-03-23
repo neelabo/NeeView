@@ -53,14 +53,14 @@ namespace NeeView
         public double MinimumDragDistance
         {
             get { return _minimumDragDistance; }
-            set { SetProperty(ref _minimumDragDistance, value); }
+            set { SetProperty(ref _minimumDragDistance, AppMath.Round(value)); }
         }
 
         [PropertyRange(5.0, 200.0, TickFrequency = 1.0, IsEditable = true)]
         public double GestureMinimumDistance
         {
             get { return _gestureMinimumDistance; }
-            set { SetProperty(ref _gestureMinimumDistance, Math.Max(value, SystemParameters.MinimumHorizontalDragDistance)); }
+            set { SetProperty(ref _gestureMinimumDistance, AppMath.Round(Math.Max(value, SystemParameters.MinimumHorizontalDragDistance))); }
         }
 
         [PropertyMember]
@@ -81,14 +81,14 @@ namespace NeeView
         public double LongButtonDownTime
         {
             get { return _longButtonDownTime; }
-            set { SetProperty(ref _longButtonDownTime, value); }
+            set { SetProperty(ref _longButtonDownTime, AppMath.Round(value)); }
         }
 
         [PropertyRange(0.01, 1.0, TickFrequency = 0.01, HasDecimalPoint = true)]
         public double LongButtonRepeatTime
         {
             get { return _longButtonRepeatTime; }
-            set { SetProperty(ref _longButtonRepeatTime, value); }
+            set { SetProperty(ref _longButtonRepeatTime, AppMath.Round(value)); }
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace NeeView
         public double CursorHideTime
         {
             get { return _cursorHideTime; }
-            set { SetProperty(ref _cursorHideTime, Math.Max(1.0, value)); }
+            set { SetProperty(ref _cursorHideTime, Math.Max(1.0, AppMath.Round(value))); }
         }
 
         [PropertyMember]
@@ -119,7 +119,7 @@ namespace NeeView
         public double CursorHideReleaseDistance
         {
             get { return _cursorHideReleaseDistance; }
-            set { SetProperty(ref _cursorHideReleaseDistance, value); }
+            set { SetProperty(ref _cursorHideReleaseDistance, AppMath.Round(value)); }
         }
 
         [PropertyMember]
@@ -133,28 +133,28 @@ namespace NeeView
         public double HoverScrollSensitivity
         {
             get { return _hoverScrollSensitivity; }
-            set { SetProperty(ref _hoverScrollSensitivity, value); }
+            set { SetProperty(ref _hoverScrollSensitivity, AppMath.Round(value)); }
         }
 
         [PropertyRange(0.0, 1.0, TickFrequency = 0.1, IsEditable = true, HasDecimalPoint = true)]
         public double HoverScrollDuration
         {
             get { return _hoverScrollDuration; }
-            set { SetProperty(ref _hoverScrollDuration, Math.Max(value, 0.0)); }
+            set { SetProperty(ref _hoverScrollDuration, AppMath.Round(Math.Max(value, 0.0))); }
         }
 
         [PropertyPercent]
         public double InertiaSensitivity
         {
             get { return _inertiaSensitivity; }
-            set { SetProperty(ref _inertiaSensitivity, value); }
+            set { SetProperty(ref _inertiaSensitivity, AppMath.Round(value)); }
         }
 
         [PropertyRange(0.0, 2.0, TickFrequency = 0.1, IsEditable = true, HasDecimalPoint = true)]
         public double AutoScrollSensitivity
         {
             get { return _autoScrollSensitivity; }
-            set { SetProperty(ref _autoScrollSensitivity, value); }
+            set { SetProperty(ref _autoScrollSensitivity, AppMath.Round(value)); }
         }
 
         [PropertyMember]
@@ -168,14 +168,14 @@ namespace NeeView
         public double MouseWheelScrollSensitivity
         {
             get { return _mouseWheelScrollSensitivity; }
-            set { SetProperty(ref _mouseWheelScrollSensitivity, value); }
+            set { SetProperty(ref _mouseWheelScrollSensitivity, AppMath.Round(value)); }
         }
 
         [PropertyRange(0.0, 1.0, TickFrequency = 0.1, IsEditable = true, HasDecimalPoint = true)]
         public double MouseWheelScrollDuration
         {
             get { return _mouseWheelScrollDuration; }
-            set { SetProperty(ref _mouseWheelScrollDuration, value); }
+            set { SetProperty(ref _mouseWheelScrollDuration, AppMath.Round(value)); }
         }
     }
 

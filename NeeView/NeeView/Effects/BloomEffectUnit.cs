@@ -1,6 +1,7 @@
 ﻿using Generator.Equals;
 using Microsoft.Expression.Media.Effects;
 using NeeView.Windows.Property;
+using System;
 using System.ComponentModel;
 using System.Windows.Media.Effects;
 
@@ -20,7 +21,7 @@ namespace NeeView.Effects
         public double BaseIntensity
         {
             get => _baseIntensity;
-            set => SetProperty(ref _baseIntensity, value);
+            set => SetProperty(ref _baseIntensity, AppMath.Round(value));
         }
 
         [PropertyRange(0, 4)]
@@ -28,7 +29,7 @@ namespace NeeView.Effects
         public double BaseSaturation
         {
             get => _baseSaturation;
-            set => SetProperty(ref _baseSaturation, value);
+            set => SetProperty(ref _baseSaturation, AppMath.Round(value));
         }
 
         [PropertyRange(0, 4)]
@@ -36,7 +37,7 @@ namespace NeeView.Effects
         public double BloomIntensity
         {
             get => _bloomIntensity;
-            set => SetProperty(ref _bloomIntensity, value);
+            set => SetProperty(ref _bloomIntensity, AppMath.Round(value));
         }
 
         [PropertyRange(0, 4)]
@@ -44,7 +45,7 @@ namespace NeeView.Effects
         public double BloomSaturation
         {
             get => _bloomSaturation;
-            set => SetProperty(ref _bloomSaturation, value);
+            set => SetProperty(ref _bloomSaturation, AppMath.Round(value));
         }
 
         [PropertyRange(0, 1.0)]
@@ -52,7 +53,7 @@ namespace NeeView.Effects
         public double Threshold
         {
             get => _threshold;
-            set => SetProperty(ref _threshold, value < 0.99 ? value : 0.99);
+            set => SetProperty(ref _threshold, AppMath.Round(Math.Min(value, 1.0)));
         }
     }
 

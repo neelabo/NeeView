@@ -48,13 +48,13 @@ namespace NeeView
         /// フォルダーツリーエリアの幅
         /// </summary>
         [PropertyMapIgnore]
-        public double FolderTreeAreaWidth { get; set; } = 128.0;
+        public double FolderTreeAreaWidth { get; set { field = AppMath.Round(value); } } = 128.0;
 
         /// <summary>
         /// フォルダーツリーエリアの高さ
         /// </summary>
         [PropertyMapIgnore]
-        public double FolderTreeAreaHeight { get; set; } = 72.0;
+        public double FolderTreeAreaHeight { get; set { field = AppMath.Round(value); } } = 72.0;
 
         #endregion
     }

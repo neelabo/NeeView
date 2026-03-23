@@ -58,14 +58,14 @@ namespace NeeView
         public double PageSeconds
         {
             get { return _pageSeconds; }
-            set { SetProperty(ref _pageSeconds, value); }
+            set { SetProperty(ref _pageSeconds, AppMath.Round(value)); }
         }
 
         [PropertyMember]
         public double MediaStartDelaySeconds
         {
             get { return _mediaStartDelaySeconds; }
-            set { SetProperty(ref _mediaStartDelaySeconds, value); }
+            set { SetProperty(ref _mediaStartDelaySeconds, AppMath.Round(value)); }
         }
 
         [PropertyMember]
@@ -79,7 +79,7 @@ namespace NeeView
         public double Volume
         {
             get { return _volume; }
-            set { SetProperty(ref _volume, value); }
+            set { SetProperty(ref _volume, AppMath.Round(value)); }
         }
 
         [PropertyMember]

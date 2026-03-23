@@ -21,7 +21,7 @@ namespace NeeView.Effects
         public double Black
         {
             get => _black;
-            set => SetProperty(ref _black, value);
+            set => SetProperty(ref _black, AppMath.Round(value));
         }
 
         [PropertyRange(0, 1)]
@@ -29,7 +29,7 @@ namespace NeeView.Effects
         public double White
         {
             get => _white;
-            set => SetProperty(ref _white, value);
+            set => SetProperty(ref _white, AppMath.Round(value));
         }
 
         [PropertyRange(0.1, 0.9)]
@@ -37,7 +37,7 @@ namespace NeeView.Effects
         public double Center
         {
             get => _center;
-            set => SetProperty(ref _center, value);
+            set => SetProperty(ref _center, AppMath.Round(value));
         }
 
         [PropertyRange(0, 1, Title = "Output")]
@@ -45,7 +45,7 @@ namespace NeeView.Effects
         public double Minimum
         {
             get => _minimum;
-            set => SetProperty(ref _minimum, value);
+            set => SetProperty(ref _minimum, AppMath.Round(value));
         }
 
         [PropertyRange(0, 1)]
@@ -53,7 +53,7 @@ namespace NeeView.Effects
         public double Maximum
         {
             get => _maximum;
-            set => SetProperty(ref _maximum, value);
+            set => SetProperty(ref _maximum, AppMath.Round(value));
         }
 
 #if false

@@ -17,7 +17,7 @@ namespace NeeView.Effects
         public double Hue
         {
             get => _hue;
-            set => SetProperty(ref _hue, value);
+            set => SetProperty(ref _hue, AppMath.Round(value));
         }
 
         [PropertyRange(0.0, 1.0)]
@@ -25,7 +25,7 @@ namespace NeeView.Effects
         public double Range
         {
             get => _range;
-            set => SetProperty(ref _range, value);
+            set => SetProperty(ref _range, AppMath.Round(value));
         }
 
         [PropertyRange(0.0, 0.2)]
@@ -33,7 +33,7 @@ namespace NeeView.Effects
         public double Curve
         {
             get => _curve;
-            set => SetProperty(ref _curve, value);
+            set => SetProperty(ref _curve, AppMath.Round(value));
         }
     }
 

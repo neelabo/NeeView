@@ -18,7 +18,7 @@ namespace NeeView
         public double Scroll
         {
             get { return _scroll; }
-            set { SetProperty(ref _scroll, MathUtility.Clamp(value, 0.0, 1.0)); }
+            set { SetProperty(ref _scroll, AppMath.Round(MathUtility.Clamp(value, 0.0, 1.0))); }
         }
 
         [PropertyMember]

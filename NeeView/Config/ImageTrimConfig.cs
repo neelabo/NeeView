@@ -31,7 +31,7 @@ namespace NeeView
             get { return _left; }
             set
             {
-                if (SetProperty(ref _left, MathUtility.Clamp(value, 0.0, _maxRate)))
+                if (SetProperty(ref _left, AppMath.Round(MathUtility.Clamp(value, 0.0, _maxRate))))
                 {
                     if (_left + _right > _maxRate)
                     {
@@ -48,7 +48,7 @@ namespace NeeView
             get { return _right; }
             set
             {
-                if (SetProperty(ref _right, MathUtility.Clamp(value, 0.0, _maxRate)))
+                if (SetProperty(ref _right, AppMath.Round(MathUtility.Clamp(value, 0.0, _maxRate))))
                 {
                     if (_left + _right > _maxRate)
                     {
@@ -66,7 +66,7 @@ namespace NeeView
             get { return _top; }
             set
             {
-                if (SetProperty(ref _top, MathUtility.Clamp(value, 0.0, _maxRate)))
+                if (SetProperty(ref _top, AppMath.Round(MathUtility.Clamp(value, 0.0, _maxRate))))
                 {
                     if (_top + _bottom > _maxRate)
                     {
@@ -83,7 +83,7 @@ namespace NeeView
             get { return _bottom; }
             set
             {
-                if (SetProperty(ref _bottom, MathUtility.Clamp(value, 0.0, _maxRate)))
+                if (SetProperty(ref _bottom, AppMath.Round(MathUtility.Clamp(value, 0.0, _maxRate))))
                 {
                     if (_top + _bottom > _maxRate)
                     {

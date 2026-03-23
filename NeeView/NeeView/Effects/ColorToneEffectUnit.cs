@@ -36,7 +36,7 @@ namespace NeeView.Effects
         public double ToneAmount
         {
             get => _toneAmount;
-            set => SetProperty(ref _toneAmount, value);
+            set => SetProperty(ref _toneAmount, AppMath.Round(value));
         }
 
         [PropertyRange(0, 1)]
@@ -44,7 +44,7 @@ namespace NeeView.Effects
         public double Desaturation
         {
             get => _desaturation;
-            set => SetProperty(ref _desaturation, value);
+            set => SetProperty(ref _desaturation, AppMath.Round(value));
         }
     }
 

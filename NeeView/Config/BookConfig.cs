@@ -58,7 +58,7 @@ namespace NeeView
         public double WideRatio
         {
             get { return _wideRatio; }
-            set { SetProperty(ref _wideRatio, value); }
+            set { SetProperty(ref _wideRatio, AppMath.Round(value)); }
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace NeeView
         public double ContentsSpace
         {
             get { return _contentSpace; }
-            set { SetProperty(ref _contentSpace, value); }
+            set { SetProperty(ref _contentSpace, AppMath.Round(value)); }
         }
 
         // フレームの間隔
@@ -106,7 +106,7 @@ namespace NeeView
         public double FrameSpace
         {
             get { return _frameSpace; }
-            set { SetProperty(ref _frameSpace, value); }
+            set { SetProperty(ref _frameSpace, AppMath.Round(value)); }
         }
 
         /// <summary>
@@ -234,7 +234,7 @@ namespace NeeView
         public double DividePageRate
         {
             get { return _dividePageRate; }
-            set { SetProperty(ref _dividePageRate, Math.Clamp(MathUtility.SnapValue(value, 0.5, 0.0001), 0.1, 1.0)); }
+            set { SetProperty(ref _dividePageRate, AppMath.Round(Math.Clamp(MathUtility.SnapValue(value, 0.5, 0.0001), 0.1, 1.0))); }
         }
 
         // ２ページモードでの静的なインデックス

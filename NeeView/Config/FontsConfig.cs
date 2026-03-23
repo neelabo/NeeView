@@ -36,7 +36,7 @@ namespace NeeView
         public double FontScale
         {
             get { return _fontScale <= 0.0 ? 1.25 : _fontScale; }
-            set { SetProperty(ref _fontScale, value); }
+            set { SetProperty(ref _fontScale, AppMath.Round(value)); }
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace NeeView
         public double MenuFontScale
         {
             get { return _menuFontScale <= 0.0 ? 1.0 : _menuFontScale; }
-            set { SetProperty(ref _menuFontScale, value); }
+            set { SetProperty(ref _menuFontScale, AppMath.Round(value)); }
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace NeeView
         public double FolderTreeFontScale
         {
             get { return _folderTreeFontScale <= 0.0 ? 1.0 : _folderTreeFontScale; }
-            set { SetProperty(ref _folderTreeFontScale, value); }
+            set { SetProperty(ref _folderTreeFontScale, AppMath.Round(value)); }
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace NeeView
         public double PanelFontScale
         {
             get { return _panelFontScale <= 0.0 ? 1.25 : _panelFontScale; }
-            set { SetProperty(ref _panelFontScale, value); }
+            set { SetProperty(ref _panelFontScale, AppMath.Round(value)); }
         }
 
         /// <summary>

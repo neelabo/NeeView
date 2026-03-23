@@ -108,7 +108,7 @@ namespace NeeView
         public double BaseScale
         {
             get { return _baseScale; }
-            set { SetProperty(ref _baseScale, value); }
+            set { SetProperty(ref _baseScale, AppMath.Round(value)); }
         }
 
 
