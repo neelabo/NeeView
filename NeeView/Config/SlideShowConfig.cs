@@ -21,7 +21,7 @@ namespace NeeView
         public double SlideShowInterval
         {
             get { return _slideShowInterval; }
-            set { SetProperty(ref _slideShowInterval, Math.Max(value, 0.1)); }
+            set { SetProperty(ref _slideShowInterval, AppMath.Round(Math.Max(value, 0.1))); }
         }
 
         /// <summary>

@@ -24,7 +24,7 @@ namespace NeeView
         public double AutoHideDelayTime
         {
             get { return _autoHideDelayTime; }
-            set { SetProperty(ref _autoHideDelayTime, value); }
+            set { SetProperty(ref _autoHideDelayTime, AppMath.Round(value)); }
         }
 
         // パネルやメニューが自動的に消えるまでの時間(秒)
@@ -32,7 +32,7 @@ namespace NeeView
         public double AutoHideDelayVisibleTime
         {
             get { return _autoHideDelayVisibleTime; }
-            set { SetProperty(ref _autoHideDelayVisibleTime, value); }
+            set { SetProperty(ref _autoHideDelayVisibleTime, AppMath.Round(value)); }
         }
 
         // パネル自動非表示のフォーカス挙動モード
@@ -56,7 +56,7 @@ namespace NeeView
         public double AutoHideHitTestHorizontalMargin
         {
             get { return _autoHideHitTestHorizontalMargin; }
-            set { SetProperty(ref _autoHideHitTestHorizontalMargin, value); }
+            set { SetProperty(ref _autoHideHitTestHorizontalMargin, AppMath.Round(value)); }
         }
 
         // パネル自動非表示の表示判定マージン(垂直方向)
@@ -64,7 +64,7 @@ namespace NeeView
         public double AutoHideHitTestVerticalMargin
         {
             get { return _autoHideHitTestVerticalMargin; }
-            set { SetProperty(ref _autoHideHitTestVerticalMargin, value); }
+            set { SetProperty(ref _autoHideHitTestVerticalMargin, AppMath.Round(value)); }
         }
 
 

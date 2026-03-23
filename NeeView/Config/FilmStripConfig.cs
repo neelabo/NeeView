@@ -47,7 +47,7 @@ namespace NeeView
         public double ImageWidth
         {
             get { return _imageWidth; }
-            set { SetProperty(ref _imageWidth, Math.Max(value, 32)); }
+            set { SetProperty(ref _imageWidth, AppMath.Round(Math.Max(value, 32))); }
         }
 
         /// <summary>

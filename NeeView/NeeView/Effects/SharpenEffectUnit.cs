@@ -18,7 +18,7 @@ namespace NeeView.Effects
         public double Amount
         {
             get => _amount;
-            set => SetProperty(ref _amount, value);
+            set => SetProperty(ref _amount, AppMath.Round(value));
         }
 
         [PropertyRange(0, 2.0)]
@@ -26,7 +26,7 @@ namespace NeeView.Effects
         public double Height
         {
             get => _height;
-            set => SetProperty(ref _height, value);
+            set => SetProperty(ref _height, AppMath.Round(value));
         }
     }
 

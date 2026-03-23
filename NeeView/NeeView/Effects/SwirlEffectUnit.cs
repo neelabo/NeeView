@@ -18,7 +18,7 @@ namespace NeeView.Effects
         public Point Center
         {
             get => _center;
-            set => SetProperty(ref _center, value);
+            set => SetProperty(ref _center, AppMath.Round(value));
         }
 
         [PropertyRange(-50, 50)]
@@ -26,7 +26,7 @@ namespace NeeView.Effects
         public double TwistAmount
         {
             get => _twistAmount;
-            set => SetProperty(ref _twistAmount, value);
+            set => SetProperty(ref _twistAmount, AppMath.Round(value));
         }
     }
 

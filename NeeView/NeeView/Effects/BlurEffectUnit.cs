@@ -15,7 +15,7 @@ namespace NeeView.Effects
         public double Radius
         {
             get => _radius;
-            set => SetProperty(ref _radius, value);
+            set => SetProperty(ref _radius, AppMath.Round(value));
         }
     }
 

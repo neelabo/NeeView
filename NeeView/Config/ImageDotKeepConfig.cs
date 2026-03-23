@@ -22,7 +22,7 @@ namespace NeeView
         public double Threshold
         {
             get { return _threshold; }
-            set { SetProperty(ref _threshold, value); }
+            set { SetProperty(ref _threshold, AppMath.Round(value)); }
         }
 
 

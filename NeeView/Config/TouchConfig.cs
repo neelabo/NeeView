@@ -59,28 +59,28 @@ namespace NeeView
         public double GestureMinimumDistance
         {
             get { return _gestureMinimumDistance; }
-            set { SetProperty(ref _gestureMinimumDistance, value); }
+            set { SetProperty(ref _gestureMinimumDistance, AppMath.Round(value)); }
         }
 
         [PropertyMember]
         public double MinimumManipulationRadius
         {
             get { return _minimumManipulationRadius; }
-            set { SetProperty(ref _minimumManipulationRadius, value); }
+            set { SetProperty(ref _minimumManipulationRadius, AppMath.Round(value)); }
         }
 
         [PropertyMember]
         public double MinimumManipulationDistance
         {
             get { return _minimumManipulationDistance; }
-            set { SetProperty(ref _minimumManipulationDistance, value); }
+            set { SetProperty(ref _minimumManipulationDistance, AppMath.Round(value)); }
         }
 
         [PropertyPercent]
         public double InertiaSensitivity
         {
             get { return _inertiaSensitivity; }
-            set { SetProperty(ref _inertiaSensitivity, value); }
+            set { SetProperty(ref _inertiaSensitivity, AppMath.Round(value)); }
         }
     }
 

@@ -21,7 +21,7 @@ namespace NeeView.Effects
         public Point Center
         {
             get => _center;
-            set => SetProperty(ref _center, value);
+            set => SetProperty(ref _center, AppMath.Round(value));
         }
 
         [PropertyRange(0, 1)]
@@ -29,7 +29,7 @@ namespace NeeView.Effects
         public double Amount
         {
             get => _amount;
-            set => SetProperty(ref _amount, value);
+            set => SetProperty(ref _amount, AppMath.Round(value));
         }
 
         [PropertyRange(0, 1)]
@@ -37,7 +37,7 @@ namespace NeeView.Effects
         public double InnerRadius
         {
             get => _innerRadius;
-            set => SetProperty(ref _innerRadius, value);
+            set => SetProperty(ref _innerRadius, AppMath.Round(value));
         }
 
         [PropertyRange(0, 1)]
@@ -45,7 +45,7 @@ namespace NeeView.Effects
         public double OuterRadius
         {
             get => _outerRadius;
-            set => SetProperty(ref _outerRadius, value);
+            set => SetProperty(ref _outerRadius, AppMath.Round(value));
         }
     }
 

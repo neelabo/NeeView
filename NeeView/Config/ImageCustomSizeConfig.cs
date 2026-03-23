@@ -85,7 +85,7 @@ namespace NeeView
         public double ApplicabilityRate
         {
             get { return _applicabilityRate; }
-            set { SetProperty(ref _applicabilityRate, MathUtility.Clamp(value, 0.0, 1.0)); }
+            set { SetProperty(ref _applicabilityRate, AppMath.Round(MathUtility.Clamp(value, 0.0, 1.0))); }
         }
 
         /// <summary>

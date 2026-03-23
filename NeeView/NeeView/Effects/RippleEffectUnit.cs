@@ -20,7 +20,7 @@ namespace NeeView.Effects
         public Point Center
         {
             get => _center;
-            set => SetProperty(ref _center, value);
+            set => SetProperty(ref _center, AppMath.Round(value));
         }
 
         [PropertyRange(0, 100)]
@@ -28,7 +28,7 @@ namespace NeeView.Effects
         public double Frequency
         {
             get => _frequency;
-            set => SetProperty(ref _frequency, value);
+            set => SetProperty(ref _frequency, AppMath.Round(value));
         }
 
         [PropertyRange(0, 1)]
@@ -36,7 +36,7 @@ namespace NeeView.Effects
         public double Magnitude
         {
             get => _magnitude;
-            set => SetProperty(ref _magnitude, value);
+            set => SetProperty(ref _magnitude, AppMath.Round(value));
         }
 
         [PropertyRange(0, 100)]
@@ -44,7 +44,7 @@ namespace NeeView.Effects
         public double Phase
         {
             get => _phase;
-            set => SetProperty(ref _phase, value);
+            set => SetProperty(ref _phase, AppMath.Round(value));
         }
     }
 

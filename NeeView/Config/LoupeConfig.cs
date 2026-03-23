@@ -33,28 +33,28 @@ namespace NeeView
         public double MinimumScale
         {
             get { return _minimumScale; }
-            set { SetProperty(ref _minimumScale, value); }
+            set { SetProperty(ref _minimumScale, AppMath.Round(value)); }
         }
 
         [PropertyRange(1, 20, TickFrequency = 1.0, IsEditable = true, Format = "× {0:0.0}")]
         public double MaximumScale
         {
             get { return _maximumScale; }
-            set { SetProperty(ref _maximumScale, value); }
+            set { SetProperty(ref _maximumScale, AppMath.Round(value)); }
         }
 
         [PropertyRange(1, 20, TickFrequency = 1.0, IsEditable = true, Format = "× {0:0.0}")]
         public double DefaultScale
         {
             get { return _defaultScale; }
-            set { SetProperty(ref _defaultScale, value); }
+            set { SetProperty(ref _defaultScale, AppMath.Round(value)); }
         }
 
         [PropertyRange(0.1, 5.0, TickFrequency = 0.1, IsEditable = true, Format = "{0:0.0}")]
         public double ScaleStep
         {
             get { return _scaleStep; }
-            set { SetProperty(ref _scaleStep, Math.Max(value, 0.0)); }
+            set { SetProperty(ref _scaleStep, AppMath.Round(Math.Max(value, 0.0))); }
         }
 
         [PropertyMember]
@@ -82,7 +82,7 @@ namespace NeeView
         public double Speed
         {
             get { return _speed; }
-            set { SetProperty(ref _speed, value); }
+            set { SetProperty(ref _speed, AppMath.Round(value)); }
         }
 
         [PropertyMember]

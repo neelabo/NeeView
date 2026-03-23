@@ -16,7 +16,7 @@ namespace NeeView.Effects
         public double Pixelation
         {
             get => _pixelation;
-            set => SetProperty(ref _pixelation, value);
+            set => SetProperty(ref _pixelation, AppMath.Round(value));
         }
     }
 

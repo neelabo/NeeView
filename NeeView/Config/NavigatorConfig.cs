@@ -22,7 +22,7 @@ namespace NeeView
         public double ThumbnailHeight
         {
             get { return _thumbnailHeight; }
-            set { SetProperty(ref _thumbnailHeight, value); }
+            set { SetProperty(ref _thumbnailHeight, AppMath.Round(value)); }
         }
 
         [PropertyMember]

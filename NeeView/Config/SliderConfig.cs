@@ -73,7 +73,7 @@ namespace NeeView
         public double Thickness
         {
             get { return _thickness; }
-            set { SetProperty(ref _thickness, MathUtility.Clamp(value, 15.0, 50.0)); }
+            set { SetProperty(ref _thickness, AppMath.Round(MathUtility.Clamp(value, 15.0, 50.0))); }
         }
 
         // スライダー透明度
@@ -81,7 +81,7 @@ namespace NeeView
         public double Opacity
         {
             get { return _sliderOpacity; }
-            set { SetProperty(ref _sliderOpacity, value); }
+            set { SetProperty(ref _sliderOpacity, AppMath.Round(value)); }
         }
 
         /// <summary>

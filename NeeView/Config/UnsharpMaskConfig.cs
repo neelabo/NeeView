@@ -38,7 +38,7 @@ namespace NeeView
         public double Radius
         {
             get { return _radius; }
-            set { SetProperty(ref _radius, value); }
+            set { SetProperty(ref _radius, AppMath.Round(value)); }
         }
 
         /// <summary>

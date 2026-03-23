@@ -142,7 +142,7 @@ namespace NeeView
         public double AngleFrequency
         {
             get { return _angleFrequency; }
-            set { SetProperty(ref _angleFrequency, value); }
+            set { SetProperty(ref _angleFrequency, AppMath.Round(value)); }
         }
 
         // ウィンドウ枠内の移動に制限する
@@ -218,7 +218,7 @@ namespace NeeView
         public double MainViewMargin
         {
             get { return _mainViewMargin; }
-            set { SetProperty(ref _mainViewMargin, value); }
+            set { SetProperty(ref _mainViewMargin, AppMath.Round(value)); }
         }
 
         // ページトランスフォームの維持
@@ -235,7 +235,7 @@ namespace NeeView
         public double ScrollDuration
         {
             get { return _scrollDuration; }
-            set { SetProperty(ref _scrollDuration, value); }
+            set { SetProperty(ref _scrollDuration, AppMath.Round(value)); }
         }
 
         // ページ変更時間(秒)
@@ -243,7 +243,7 @@ namespace NeeView
         public double PageMoveDuration
         {
             get { return _pageMoveDuration; }
-            set { SetProperty(ref _pageMoveDuration, value); }
+            set { SetProperty(ref _pageMoveDuration, AppMath.Round(value)); }
         }
 
         // 自動回転方針

@@ -88,7 +88,7 @@ namespace NeeView
         public double Opacity
         {
             get { return _opacity; }
-            set { SetProperty(ref _opacity, value); }
+            set { SetProperty(ref _opacity, AppMath.Round(value)); }
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace NeeView
             get { return _mouseWheelSpeedRate; }
             set
             {
-                if (SetProperty(ref _mouseWheelSpeedRate, Math.Max(value, 0.1)))
+                if (SetProperty(ref _mouseWheelSpeedRate, AppMath.Round(Math.Max(value, 0.1))))
                 {
                     RaisePropertyChanged(nameof(MouseWheelDelta));
                 }
@@ -168,14 +168,14 @@ namespace NeeView
         public double ConflictTopMargin
         {
             get { return _conflictTopMargin; }
-            set { SetProperty(ref _conflictTopMargin, Math.Max(value, 0.0)); }
+            set { SetProperty(ref _conflictTopMargin, AppMath.Round(Math.Max(value, 0.0))); }
         }
 
         [PropertyMember]
         public double ConflictBottomMargin
         {
             get { return _conflictBottomMargin; }
-            set { SetProperty(ref _conflictBottomMargin, Math.Max(value, 0.0)); }
+            set { SetProperty(ref _conflictBottomMargin, AppMath.Round(Math.Max(value, 0.0))); }
         }
 
 
@@ -206,7 +206,7 @@ namespace NeeView
         public double LeftPanelWidth
         {
             get { return _leftPanelWidth; }
-            set { SetProperty(ref _leftPanelWidth, value); }
+            set { SetProperty(ref _leftPanelWidth, AppMath.Round(value)); }
         }
 
         [PropertyMapIgnore]
@@ -214,7 +214,7 @@ namespace NeeView
         public double RightPanelWidth
         {
             get { return _rightPanelWidth; }
-            set { SetProperty(ref _rightPanelWidth, value); }
+            set { SetProperty(ref _rightPanelWidth, AppMath.Round(value)); }
         }
 
         // ver 38
