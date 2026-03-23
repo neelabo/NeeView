@@ -11,6 +11,8 @@ namespace NeeView
             if (self is null) throw new ArgumentNullException(nameof(self));
             if (self.Format is null) throw new FormatException("UserSetting.Format must not be null.");
 
+#pragma warning disable CS0612 // 型またはメンバーが旧型式です
+
             // ver.42.0
             if (self.Format.CompareTo(new FormatVersion(BookmarkCollectionMemento.FormatName, 42, 0, 6)) < 0)
             {
@@ -56,6 +58,23 @@ namespace NeeView
                     }
                 }
             }
+
+            // Obsolete Books (v46.0+)
+            if (self.Books is not null && self.Nodes is not null)
+            {
+                var map = self.Books.ToDictionary(e => e.Path);
+                foreach (var item in self.Nodes.Walk())
+                {
+                    if (!item.IsFolder && item.Path is not null && map.TryGetValue(item.Path, out var book))
+                    {
+                        item.Page = book.Page;
+                        item.Props = book.ToPropertiesString();
+                    }
+                }
+                self.Books = null;
+            }
+
+#pragma warning restore CS0612 // 型またはメンバーが旧型式です
 
             return self;
         }
