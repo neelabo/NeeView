@@ -37,10 +37,17 @@ namespace NeeView
 
                 foreach (var prop in _typeInfo.Properties)
                 {
-                    // Setter/Getter がないものは除外
-                    // NOTE: JsonIgnre属性を完全に反映したものでないで不完全です
-                    if (prop.Get is null || prop.Set is null)
+                    if (prop.Set is null || prop.Get is null)
+                    {
                         continue;
+                    }
+
+                    // JsonIgnoreCondition.WhenWriting
+                    var jsonIgnoreAttr = (prop.AttributeProvider?.GetCustomAttributes(typeof(JsonIgnoreAttribute), false) is not object[] attribs || attribs.Length == 0) ? null : (JsonIgnoreAttribute)attribs[0];
+                    if (jsonIgnoreAttr?.Condition == JsonIgnoreCondition.WhenWriting)
+                    {
+                        continue;
+                    }
 
                     var current = prop.Get(value);
                     var def = prop.Get(defaultValue);

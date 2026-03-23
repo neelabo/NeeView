@@ -3,11 +3,18 @@ using NeeLaboratory.IO.Search;
 using NeeView.Collections;
 using System;
 using System.IO;
+using System.Text.Json.Serialization;
 using System.Threading;
 
 namespace NeeView
 {
-    public class BookHistory : BindableBase, IHasPage, IHasName, IHasKey<string>, ISearchItem
+    public interface IBookHistory
+    {
+        string Path { get; set; }
+        DateTime LastAccessTime { get; set; }
+    }
+
+    public class BookHistory : BindableBase, IHasPage, IHasName, IHasKey<string>, ISearchItem, IBookHistory
     {
         private string _path;
         private BookMementoUnit? _unit;
@@ -100,5 +107,30 @@ namespace NeeView
                     throw new NotSupportedException($"Not supported SearchProperty: {profile.Name}");
             }
         }
+
+        public BookHistoryMemento CreateMemento()
+        {
+            var memento = new BookHistoryMemento();
+            memento.Path = Path;
+            memento.LastAccessTime = LastAccessTime;
+            memento.Page = Unit.Memento.Page;
+            memento.Props = Unit.Memento.ToPropertiesString();
+            return memento;
+        }
+    }
+
+
+    public class BookHistoryMemento : IBookHistory
+    {
+        public string Path { get; set; } = "";
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public DateTime LastAccessTime { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? Page { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? Props { get; set; }
     }
 }

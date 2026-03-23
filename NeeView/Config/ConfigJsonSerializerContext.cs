@@ -70,7 +70,6 @@ namespace NeeView
     [JsonSerializable(typeof(BannerItemProfile))]
     [JsonSerializable(typeof(ThumbnailItemProfile))]
 
-
     [JsonSerializable(typeof(BookshelfConfig))]
     [JsonSerializable(typeof(InformationConfig))]
     [JsonSerializable(typeof(NavigatorConfig))]
@@ -99,7 +98,7 @@ namespace NeeView
     [JsonSerializable(typeof(ImageDotKeepConfig))]
     [JsonSerializable(typeof(ImageGridConfig))]
     [JsonSerializable(typeof(ImageResizeFilterConfig))]
-    [JsonSerializable(typeof(UnsharpMaskConfig))] // TODO: デフォルト値
+    [JsonSerializable(typeof(UnsharpMaskConfig))]
 
     [JsonSerializable(typeof(ViewConfig))]
     [JsonSerializable(typeof(MouseConfig))]
@@ -118,7 +117,6 @@ namespace NeeView
     [JsonSerializable(typeof(DestinationFolder))]
     [JsonSerializable(typeof(ExternalApp))]
     [JsonSerializable(typeof(BrushSource))]
-    [JsonSerializable(typeof(BookMemento))]
 
     [JsonSerializable(typeof(MenuNode))]
     [JsonSerializable(typeof(SusiePluginMemento))]
