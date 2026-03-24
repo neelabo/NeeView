@@ -244,6 +244,33 @@ namespace NeeView
             options.Converters.Add(new DiffJsonConverter<SusiePluginMemento>(ConfigJsonSerializerContext.Default.SusiePluginMemento));
             options.Converters.Add(new DiffJsonConverter<CommandElementMemento>(ConfigJsonSerializerContext.Default.CommandElementMemento));
 
+            options.Converters.Add(new DiffJsonConverter<ReversibleCommandParameter>(ConfigJsonSerializerContext.Default.ReversibleCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<MoveSizePageCommandParameter>(ConfigJsonSerializerContext.Default.MoveSizePageCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<TogglePageModeCommandParameter>(ConfigJsonSerializerContext.Default.TogglePageModeCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<ToggleStretchModeCommandParameter>(ConfigJsonSerializerContext.Default.ToggleStretchModeCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<StretchModeCommandParameter>(ConfigJsonSerializerContext.Default.StretchModeCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<ViewScrollCommandParameter>(ConfigJsonSerializerContext.Default.ViewScrollCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<ViewPresetScrollCommandParameter>(ConfigJsonSerializerContext.Default.ViewPresetScrollCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<ViewScaleCommandParameter>(ConfigJsonSerializerContext.Default.ViewScaleCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<ViewRotateCommandParameter>(ConfigJsonSerializerContext.Default.ViewRotateCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<MovePlaylistItemInBookCommandParameter>(ConfigJsonSerializerContext.Default.MovePlaylistItemInBookCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<ScrollPageCommandParameter>(ConfigJsonSerializerContext.Default.ScrollPageCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<FocusMainViewCommandParameter>(ConfigJsonSerializerContext.Default.FocusMainViewCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<ExportImageAsCommandParameter>(ConfigJsonSerializerContext.Default.ExportImageAsCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<ExportImageCommandParameter>(ConfigJsonSerializerContext.Default.ExportImageCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<OpenExternalAppCommandParameter>(ConfigJsonSerializerContext.Default.OpenExternalAppCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<OpenExternalAppAsCommandParameter>(ConfigJsonSerializerContext.Default.OpenExternalAppAsCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<OpenBookExternalAppAsCommandParameter>(ConfigJsonSerializerContext.Default.OpenBookExternalAppAsCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<CopyFileCommandParameter>(ConfigJsonSerializerContext.Default.CopyFileCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<ViewScrollNTypeCommandParameter>(ConfigJsonSerializerContext.Default.ViewScrollNTypeCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<ScriptCommandParameter>(ConfigJsonSerializerContext.Default.ScriptCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<ImportBackupCommandParameter>(ConfigJsonSerializerContext.Default.ImportBackupCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<ExportBackupCommandParameter>(ConfigJsonSerializerContext.Default.ExportBackupCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<CopyToFolderAsCommandParameter>(ConfigJsonSerializerContext.Default.CopyToFolderAsCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<MoveToFolderAsCommandParameter>(ConfigJsonSerializerContext.Default.MoveToFolderAsCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<CopyBookToFolderAsCommandParameter>(ConfigJsonSerializerContext.Default.CopyBookToFolderAsCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<MoveBookToFolderAsCommandParameter>(ConfigJsonSerializerContext.Default.MoveBookToFolderAsCommandParameter));
+            options.Converters.Add(new DiffJsonConverter<ToggleBookmarkCommandParameter>(ConfigJsonSerializerContext.Default.ToggleBookmarkCommandParameter));
             return options;
         }
 
