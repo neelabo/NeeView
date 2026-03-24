@@ -53,7 +53,7 @@ namespace NeeView.Effects
         public double Threshold
         {
             get => _threshold;
-            set => SetProperty(ref _threshold, AppMath.Round(Math.Max(value, 0.999)));
+            set => SetProperty(ref _threshold, AppMath.Round(Math.Min(value, 1.0)));
         }
     }
 
