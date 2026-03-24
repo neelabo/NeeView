@@ -1,4 +1,5 @@
-﻿using NeeView.Windows;
+﻿using Generator.Equals;
+using NeeView.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -218,17 +219,17 @@ namespace NeeView.Runtime.LayoutPanel
 
         #region Memento
 
-        public LayoutPanelManagerMemento CreateMemento()
+        public LayoutPanelManagerMemento CreateMemento(bool trim)
         {
             this.Windows.Snap();
 
             var memento = new LayoutPanelManagerMemento();
             memento.Panels = this.Panels.ToDictionary(e => e.Key, e => e.Value.CreateMemento());
-            memento.Docks = Docks.ToDictionary(e => e.Key, e => e.Value.CreateMemento());
+            memento.Docks = new(Docks.ToDictionary(e => e.Key, e => e.Value.CreateMemento()));
             memento.Windows = this.Windows.CreateMemento();
             memento.AlternativePanelSource = AlternativePanelSource;
 
-            if (AppSettings.Current.TrimSaveData)
+            if (trim)
             {
                 var defaultLayoutPanelMemento = new LayoutPanelMemento();
                 memento.Panels = memento.Panels.Where(e => !e.Value.Equals(defaultLayoutPanelMemento)).ToDictionary();
@@ -236,9 +237,20 @@ namespace NeeView.Runtime.LayoutPanel
                 {
                     memento.Panels = null;
                 }
+
+                var defaultDocks = GetDefaultDocks();
+                if (memento.Docks.Equals(defaultDocks))
+                {
+                    memento.Docks = null;
+                }
             }
 
             return memento;
+        }
+
+        protected virtual LayoutPanelDocksMemento? GetDefaultDocks()
+        {
+            return null;
         }
 
         public void Restore(LayoutPanelManagerMemento? memento)
@@ -267,7 +279,14 @@ namespace NeeView.Runtime.LayoutPanel
             var excepts = Panels.Keys.Except(Docks.Values.SelectMany(e => e.Items).SelectMany(e => e).Select(e => e.Key)).ToList();
             foreach (var except in excepts)
             {
-                Docks.Last().Value.AddPanel(Panels[except]);
+                var defaultDocks = GetDefaultDocks();
+                var dock = Docks.Last().Value;
+                if (defaultDocks is not null)
+                {
+                    var key = defaultDocks.FirstOrDefault(e => e.Value.PanelLayout.Any(e => e.Panels.Contains(except))).Key;
+                    dock = string.IsNullOrEmpty(key) ? Docks.Last().Value : Docks[key];
+                }
+                dock.AddPanel(Panels[except]);
             }
 
             this.Windows.Restore(memento.Windows);
@@ -279,15 +298,51 @@ namespace NeeView.Runtime.LayoutPanel
     }
 
 
-    public class LayoutPanelManagerMemento
+    [Equatable]
+    public partial class LayoutPanelManagerMemento
     {
         public Dictionary<string, LayoutPanelMemento>? Panels { get; set; }
 
-        public Dictionary<string, LayoutDockPanelContentMemento>? Docks { get; set; }
+        public LayoutPanelDocksMemento? Docks { get; set; }
 
         public LayoutPanelWindowManagerMemento Windows { get; set; } = new();
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public AlternativePanelSource? AlternativePanelSource { get; set; }
+    }
+
+
+    public class LayoutPanelDocksMemento : Dictionary<string, LayoutDockPanelContentMemento>, IEquatable<LayoutPanelDocksMemento>
+    {
+        public LayoutPanelDocksMemento()
+        {
+        }
+
+        public LayoutPanelDocksMemento(IDictionary<string, LayoutDockPanelContentMemento> dictionary) : base(dictionary)
+        {
+        }
+
+        #region Equtable
+
+        public override bool Equals(object? obj)
+        {
+            return Equals(obj as LayoutPanelDocksMemento);
+        }
+
+        public bool Equals(LayoutPanelDocksMemento? other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+
+            return other.GetType() == this.GetType()
+                && this.SequenceEqual(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        #endregion
     }
 }

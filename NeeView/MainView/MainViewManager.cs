@@ -249,6 +249,7 @@ namespace NeeView
             {
                 try
                 {
+                    Config.Current.MainView.LastState = _window.StoreWindowResumeState();
                     Config.Current.MainView.WindowPlacement = _window.StoreWindowPlacement();
                 }
                 catch (Exception ex)

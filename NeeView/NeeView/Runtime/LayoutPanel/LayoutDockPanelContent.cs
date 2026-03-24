@@ -1,4 +1,5 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -342,11 +343,13 @@ namespace NeeView.Runtime.LayoutPanel
             if (memento.PanelLayoutV1 is not null && !memento.PanelLayout.Any())
             {
                 memento.PanelLayout = memento.PanelLayoutV1.Select(e => new LayoutDockPanelLayout(e.Orientation, e.Panels)).ToList();
+                memento.PanelLayoutV1 = null;
             }
 
             if (memento.PanenLayoutV0 is not null && !memento.PanelLayout.Any())
             {
                 memento.PanelLayout = memento.PanenLayoutV0.Select(e => new LayoutDockPanelLayout(Orientation.Vertical, e)).ToList();
+                memento.PanenLayoutV0 = null;
             }
 #pragma warning restore CS0612 // 型またはメンバーが旧型式です
 
@@ -368,12 +371,15 @@ namespace NeeView.Runtime.LayoutPanel
     }
 
 
-    public class LayoutDockPanelContentMemento
+    [Equatable(Explicit = true)]
+    public partial class LayoutDockPanelContentMemento
     {
         [JsonPropertyName("PanelLayoutV2")]
+        [OrderedEquality]
         public List<LayoutDockPanelLayout> PanelLayout { get; set; } = new();
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [DefaultEquality]
         public string? SelectedItem { get; set; }
 
         #region Obsolete
@@ -409,7 +415,8 @@ namespace NeeView.Runtime.LayoutPanel
 
     // V2
     [JsonConverter(typeof(JsonLayoutDockPanelLayoutConverter))]
-    public class LayoutDockPanelLayout
+    [Equatable]
+    public partial class LayoutDockPanelLayout
     {
         public LayoutDockPanelLayout()
         {
@@ -428,6 +435,8 @@ namespace NeeView.Runtime.LayoutPanel
         }
 
         public Orientation Orientation { get; set; } = Orientation.Vertical;
+
+        [OrderedEquality]
         public List<string> Panels { get; set; } = new();
 
         public static LayoutDockPanelLayout Parse(string s)

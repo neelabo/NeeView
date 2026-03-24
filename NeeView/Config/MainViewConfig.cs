@@ -112,6 +112,13 @@ namespace NeeView
         }
 
         /// <summary>
+        /// フルスクリーンから復帰するウィンドウ状態
+        /// </summary>
+        [PropertyMapIgnore]
+        [DefaultEquality]
+        public WindowStateEx LastState { get; set; } = WindowStateEx.Normal;
+
+        /// <summary>
         /// 復元ウィンドウ座標
         /// </summary>
         [PropertyMapIgnore]

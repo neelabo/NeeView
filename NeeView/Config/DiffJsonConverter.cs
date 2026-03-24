@@ -44,7 +44,7 @@ namespace NeeView
 
                     // JsonIgnoreCondition.WhenWriting
                     var jsonIgnoreAttr = (prop.AttributeProvider?.GetCustomAttributes(typeof(JsonIgnoreAttribute), false) is not object[] attribs || attribs.Length == 0) ? null : (JsonIgnoreAttribute)attribs[0];
-                    if (jsonIgnoreAttr?.Condition == JsonIgnoreCondition.WhenWriting)
+                    if (jsonIgnoreAttr is not null && (jsonIgnoreAttr.Condition == JsonIgnoreCondition.WhenWriting || jsonIgnoreAttr.Condition == JsonIgnoreCondition.Always))
                     {
                         continue;
                     }

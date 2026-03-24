@@ -18,7 +18,11 @@ namespace NeeView
         {
             if (self is null) throw new ArgumentNullException(nameof(self));
             if (self.Format is null) throw new FormatException("UserSetting.Format must not be null.");
-            if (self.Config is null) throw new FormatException("UserSetting.Config must not be null.");
+
+            if (self.Config is null)
+            {
+                self.Config = new();
+            }
 
             // 読み込まれた設定フラグを立てる
             self.Config.System.IsLoadedSettings = true;
@@ -210,6 +214,11 @@ namespace NeeView
                 }
             }
 
+            // ver 46.0+
+            if (self.Config.Window.WindowPlacement != null)
+            {
+                self.Config.Window.State = self.Config.Window.WindowPlacement.GetWindowStateEx();
+            }
 
             // NOTE: ver.99 (バージョン変更処理テスト)
 #if false
