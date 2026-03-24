@@ -405,8 +405,11 @@ namespace NeeView
             memento.TouchGesture = TouchGesture;
             memento.MouseGesture = MouseGesture;
             memento.IsShowMessage = IsShowMessage;
-            ////memento.Parameter = (CommandParameter)ParameterSource?.GetRaw()?.Clone();
-            memento.Parameter = Parameter?.Clone() as CommandParameter;
+            
+            if (Share is null)
+            {
+                memento.Parameter = Parameter?.Clone() as CommandParameter;
+            }
 
             Debug.Assert(Parameter == null || JsonCommandParameterConverter.KnownTypes.Contains(Parameter.GetType()));
 
@@ -421,7 +424,11 @@ namespace NeeView
             TouchGesture = memento.TouchGesture;
             MouseGesture = memento.MouseGesture;
             IsShowMessage = memento.IsShowMessage;
-            ParameterSource?.Set(memento.Parameter);
+
+            if (Share is null)
+            {
+                ParameterSource?.Set(memento.Parameter ?? ParameterSource.GetDefault());
+            }
         }
 
         #endregion Memento
