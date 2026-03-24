@@ -139,6 +139,7 @@ namespace NeeView
                 placement = placement.WithState(WindowState.Normal);
             }
 
+            RestoreWindowResumeState(Config.Current.MainView.LastState);
             RestoreWindowPlacement(placement);
 
             _referenceSizeLockLey?.Dispose();
@@ -224,6 +225,16 @@ namespace NeeView
             return _dpiProvider.DpiScale;
         }
 
+        public WindowStateEx StoreWindowResumeState()
+        {
+            return _windowStateManager.IsFullScreen? _windowStateManager.ResumeState : WindowStateEx.Normal;
+        }
+
+        public void RestoreWindowResumeState(WindowStateEx state)
+        {
+            _windowStateManager.ResumeState = state;
+        }
+
         public WindowPlacement StoreWindowPlacement()
         {
             return _windowStateManager.StoreWindowPlacement(withAeroSnap: true);
@@ -233,8 +244,6 @@ namespace NeeView
         {
             _windowStateManager.RestoreWindowPlacement(placement);
         }
-
-
 
         private void StretchWindowCommand_Execute(object sender, ExecutedRoutedEventArgs e)
         {

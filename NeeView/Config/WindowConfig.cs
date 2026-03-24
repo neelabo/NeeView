@@ -7,17 +7,17 @@ using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class WindowConfig : BindableBase
     {
-        private bool _isTopmost = false;
-        private WindowStateEx _state;
-        private bool _isCaptionEmulateInFullScreen;
-        private bool _mouseActivateAndEat;
-        private bool _isAeroSnapPlacementEnabled = true;
-        private bool _isAutoHideInNormal = false;
-        private bool _isAutoHideInMaximized = false;
-        private bool _IsAutoHideInFullScreen = true;
+        [DefaultEquality] private bool _isTopmost = false;
+        [IgnoreEquality] private WindowStateEx _state;
+        [DefaultEquality] private bool _isCaptionEmulateInFullScreen;
+        [DefaultEquality] private bool _mouseActivateAndEat;
+        [DefaultEquality] private bool _isAeroSnapPlacementEnabled = true;
+        [DefaultEquality] private bool _isAutoHideInNormal = false;
+        [DefaultEquality] private bool _isAutoHideInMaximized = false;
+        [DefaultEquality] private bool _IsAutoHideInFullScreen = true;
 
 
         [PropertyMember]
@@ -46,6 +46,7 @@ namespace NeeView
         /// ウィンドウ状態
         /// </summary>
         [PropertyMember]
+        [JsonIgnore]
         public WindowStateEx State
         {
             get { return _state; }
@@ -94,13 +95,15 @@ namespace NeeView
         /// フルスクリーンから復帰するウィンドウ状態
         /// </summary>
         [PropertyMapIgnore]
-        public WindowStateEx LastState { get; set; }
+        [DefaultEquality]
+        public WindowStateEx LastState { get; set; } = WindowStateEx.Normal;
 
         /// <summary>
         /// 復元ウィンドウ座標
         /// </summary>
         [PropertyMapIgnore]
         [ObjectMergeReferenceCopy]
+        [DefaultEquality]
         public WindowPlacement? WindowPlacement { get; set; }
 
         /// <summary>

@@ -5,16 +5,16 @@ using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class MenuBarConfig : BindableBase
     {
-        private bool _isVisible;
-        private bool _isHideMenu;
-        private bool _isAddressBarEnabled = true;
-        private bool _isHamburgerMenu;
-        private bool _isHideMenuInAutoHideMode = true;
-        private bool _isBookmarkDialogEnabled = true;
-        private bool _isSettingsButtonEnabled = true;
+        [IgnoreEquality] private bool _isVisible;
+        [DefaultEquality] private bool _isHideMenu;
+        [DefaultEquality] private bool _isAddressBarEnabled = true;
+        [DefaultEquality] private bool _isHamburgerMenu;
+        [DefaultEquality] private bool _isHideMenuInAutoHideMode = true;
+        [DefaultEquality] private bool _isBookmarkDialogEnabled = true;
+        [DefaultEquality] private bool _isSettingsButtonEnabled = true;
 
 
         [JsonIgnore]

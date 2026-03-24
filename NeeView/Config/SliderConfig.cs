@@ -7,20 +7,20 @@ using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class SliderConfig : BindableBase
     {
-        private bool _isVisible;
-        private bool _isIsHidePageSlider;
-        private double _sliderOpacity = 1.0;
-        private SliderIndexLayout _sliderIndexLayout = SliderIndexLayout.Right;
-        private SliderDirection _sliderDirection = SliderDirection.SyncBookReadDirection;
-        private bool _isSliderLinkedFilmStrip = true;
-        private bool _isHidePageSliderInAutoHideMode = true;
-        private bool _isSyncPageMode;
-        private bool _isEnabled = true;
-        private bool _isVisiblePlaylistMark = true;
-        private double _thickness = 25.0;
+        [IgnoreEquality] private bool _isVisible;
+        [DefaultEquality] private bool _isIsHidePageSlider;
+        [DefaultEquality] private double _sliderOpacity = 1.0;
+        [DefaultEquality] private SliderIndexLayout _sliderIndexLayout = SliderIndexLayout.Right;
+        [DefaultEquality] private SliderDirection _sliderDirection = SliderDirection.SyncBookReadDirection;
+        [DefaultEquality] private bool _isSliderLinkedFilmStrip = true;
+        [DefaultEquality] private bool _isHidePageSliderInAutoHideMode = true;
+        [DefaultEquality] private bool _isSyncPageMode;
+        [DefaultEquality] private bool _isEnabled = true;
+        [DefaultEquality] private bool _isVisiblePlaylistMark = true;
+        [DefaultEquality] private double _thickness = 25.0;
 
 
         [JsonIgnore]

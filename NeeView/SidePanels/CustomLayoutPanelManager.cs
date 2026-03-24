@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace NeeView
 {
@@ -24,6 +25,33 @@ namespace NeeView
     {
         private static CustomLayoutPanelManager? _current;
         public static CustomLayoutPanelManager Current => _current ?? throw new InvalidOperationException();
+
+
+        private const string LeftDockLabel = "Left";
+        private const string RightDockLabel = "Right";
+
+        private static readonly LayoutPanelDocksMemento _defaultDocs = new()
+        {
+            [LeftDockLabel] = new()
+            {
+                PanelLayout = [
+                    new LayoutDockPanelLayout(Orientation.Vertical, [nameof(FolderPanel)]),
+                    new LayoutDockPanelLayout(Orientation.Vertical, [nameof(PageListPanel)]),
+                    new LayoutDockPanelLayout(Orientation.Vertical, [nameof(HistoryPanel)]),
+                ]
+            },
+            [RightDockLabel] = new()
+            {
+                PanelLayout = [
+                    new LayoutDockPanelLayout(Orientation.Vertical, [nameof(FileInformationPanel)]),
+                    new LayoutDockPanelLayout(Orientation.Vertical, [nameof(NavigatePanel)]),
+                    new LayoutDockPanelLayout(Orientation.Vertical, [nameof(ImageEffectPanel)]),
+                    new LayoutDockPanelLayout(Orientation.Vertical, [nameof(BookmarkPanel)]),
+                    new LayoutDockPanelLayout(Orientation.Vertical, [nameof(PlaylistPanel)]),
+                ]
+            }
+        };
+
 
         public static void Initialize()
         {
@@ -65,33 +93,21 @@ namespace NeeView
 
             WindowBuilder = new LayoutPanelWindowBuilder();
 
-            var panelKeys = new[] {
-                nameof(FolderPanel),
-                nameof(PageListPanel),
-                nameof(HistoryPanel),
-                nameof(FileInformationPanel),
-                nameof(NavigatePanel),
-                nameof(ImageEffectPanel),
-                nameof(BookmarkPanel),
-                nameof(PlaylistPanel),
-            };
-
-            var panelLeftKeys = new[] { nameof(FolderPanel), nameof(PageListPanel), nameof(HistoryPanel) };
-            var panelRightKeys = panelKeys.Except(panelLeftKeys).ToArray();
+            var panelKeys = _defaultDocs.SelectMany(e => e.Value.PanelLayout).SelectMany(e => e.Panels).ToArray();
 
             PanelsSource = SidePanelFactory.CreatePanels(panelKeys).ToDictionary(e => e.TypeCode, e => e);
             Panels = LayoutPanelFactory.CreatePanels(PanelsSource.Values).ToDictionary(e => e.Key, e => e);
 
             LeftDock = new LayoutDockPanelContent(this);
-            LeftDock.AddPanelRange(panelLeftKeys.Select(e => Panels[e]));
+            LeftDock.Restore(_defaultDocs[LeftDockLabel]);
 
             RightDock = new LayoutDockPanelContent(this);
-            RightDock.AddPanelRange(panelRightKeys.Select(e => Panels[e]));
+            RightDock.Restore(_defaultDocs[RightDockLabel]);
 
             Docks = new Dictionary<string, LayoutDockPanelContent>()
             {
-                ["Left"] = LeftDock,
-                ["Right"] = RightDock,
+                [LeftDockLabel] = LeftDock,
+                [RightDockLabel] = RightDock,
             };
 
             Windows.Owner = App.Current.MainWindow;
@@ -102,18 +118,18 @@ namespace NeeView
         }
 
 
-        //public event EventHandler? CollectionChanged;
-
-
         public Dictionary<string, IPanel> PanelsSource { get; private set; }
         public LayoutDockPanelContent LeftDock { get; private set; }
         public LayoutDockPanelContent RightDock { get; private set; }
 
 
+        protected override LayoutPanelDocksMemento? GetDefaultDocks()
+        {
+            return _defaultDocs;
+        }
 
         private void RaiseCollectionChanged(object? sender, EventArgs e)
         {
-            //CollectionChanged?.Invoke(sender, e);
             CustomLayoutPanelMessenger.RaiseCollectionChanged(sender, e);
         }
 
@@ -206,8 +222,18 @@ namespace NeeView
         {
             if (_initialized && _isStoreEnabled)
             {
+                var trim = AppSettings.Current.TrimSaveData;
+
                 ValidateGridLength();
-                Config.Current.Panels.Layout = CreateMemento();
+                Config.Current.Panels.Layout = CreateMemento(trim);
+
+                if (trim)
+                {
+                    if (Config.Current.Panels.Layout.Equals(new LayoutPanelManagerMemento()))
+                    {
+                        Config.Current.Panels.Layout = null;
+                    }
+                }
             }
         }
 
@@ -216,7 +242,7 @@ namespace NeeView
         /// </summary>
         private void ValidateGridLength()
         {
-            foreach(var panels in Docks.Values.SelectMany(e => e.Items))
+            foreach (var panels in Docks.Values.SelectMany(e => e.Items))
             {
                 if (panels.Count == 1)
                 {

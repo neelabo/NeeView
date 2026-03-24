@@ -347,8 +347,16 @@ namespace NeeView
 
             try
             {
-                Config.Current.Window.LastState = _windowStateManager.ResumeState;
-                Config.Current.Window.WindowPlacement = _windowStateManager.StoreWindowPlacement(Config.Current.Window.IsRestoreAeroSnapPlacement);
+                if (Config.Current.StartUp.IsRestoreWindowPlacement)
+                {
+                    Config.Current.Window.LastState = _windowStateManager.IsFullScreen ? _windowStateManager.ResumeState : WindowStateEx.Normal;
+                    Config.Current.Window.WindowPlacement = _windowStateManager.StoreWindowPlacement(Config.Current.Window.IsRestoreAeroSnapPlacement);
+                }
+                else
+                {
+                    Config.Current.Window.LastState = WindowStateEx.Normal;
+                    Config.Current.Window.WindowPlacement = null;
+                }
             }
             catch (Exception ex)
             {
