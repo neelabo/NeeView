@@ -268,7 +268,7 @@ namespace NeeView.Setting
             var aliveCount = System.Environment.TickCount - _aliveStartCount;
             if (aliveCount > 1000)
             {
-                SaveDataSync.Current.SaveUserSetting(Config.Current.System.IsSyncUserSetting, true);
+                SaveDataSync.Current.SaveUserSetting(true);
             }
         }
 

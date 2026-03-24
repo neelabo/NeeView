@@ -10,7 +10,7 @@ namespace NeeView
     {
         public static void Export(string filename)
         {
-            SaveDataSync.Current.SaveAll(false, false);
+            SaveDataSync.Current.SaveAll(false);
 
             try
             {

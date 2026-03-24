@@ -158,7 +158,6 @@ namespace NeeView.Setting
             {
                 IsStretch = true,
             });
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.IsSyncUserSetting))));
 
             if (!Environment.IsAppxPackage)
             {

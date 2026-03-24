@@ -391,7 +391,7 @@ namespace NeeView
                 if (_editCommandWindow.ShowDialog() == true)
                 {
                     // 設定の同期
-                    SaveDataSync.Current.SaveUserSetting(Config.Current.System.IsSyncUserSetting, true);
+                    SaveDataSync.Current.SaveUserSetting(true);
                 }
             }
             finally

@@ -113,14 +113,6 @@ namespace NeeView
             set { SetProperty(ref _isNetworkEnabled, value); }
         }
 
-        // 設定データの同期
-        [PropertyMember]
-        public bool IsSyncUserSetting
-        {
-            get { return _isSyncUserSetting; }
-            set { SetProperty(ref _isSyncUserSetting, value); }
-        }
-
         // 設定データのバックアップ作成
         [PropertyMember]
         public bool IsSettingBackup
@@ -378,6 +370,15 @@ namespace NeeView
         {
             get { return false; }
             set { StringComparerType = value ? StringComparerType.Natural : StringComparerType.Native; }
+        }
+
+        // 設定データの同期
+        [Obsolete("no used"), Alternative(null, 46, ScriptErrorLevel.Warning)] // v46.0
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public bool IsSyncUserSetting
+        {
+            get { return true; }
+            set { }
         }
 
         #endregion Obsolete

@@ -17,7 +17,7 @@ namespace NeeView
 
         public override void Execute(object? sender, CommandContext e)
         {
-            SaveDataSync.Current.SaveAll(false, false);
+            SaveDataSync.Current.SaveAll(false);
         }
     }
 }
