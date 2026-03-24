@@ -424,7 +424,7 @@ namespace NeeView
                 {
                     // 設定保存
                     SaveDataSync.Current.DisposeWatcher();
-                    SaveDataSync.Current.SaveAll(false, false);
+                    SaveDataSync.Current.SaveAll(false);
                     SaveDataSync.Current.Dispose();
                     SaveData.Current.DisableSave();
 

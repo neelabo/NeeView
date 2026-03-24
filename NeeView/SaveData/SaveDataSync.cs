@@ -159,7 +159,7 @@ namespace NeeView
             PlaylistHub.Current.Flush();
         }
 
-        public void SaveUserSetting(bool sync, bool handleException)
+        public void SaveUserSetting(bool handleException)
         {
             if (_disposedValue) return;
 
@@ -278,12 +278,12 @@ namespace NeeView
         /// <summary>
         /// すべてのセーブ処理を行う
         /// </summary>
-        public void SaveAll(bool sync, bool handleException)
+        public void SaveAll(bool handleException)
         {
             if (_disposedValue) return;
 
             Flush();
-            SaveUserSetting(sync, handleException);
+            SaveUserSetting(handleException);
 
             RemoveHistoryIfNotSave();
             RemoveBookmarkIfNotSave();

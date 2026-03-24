@@ -173,6 +173,7 @@ namespace NeeView
                     setting.Config.Window.State = Config.Current.Window.State; // ウィンドウ状態は維持する
                 }
                 UserSettingTools.Restore(setting);
+                SaveDataSync.Current.SaveUserSetting(true);
             }
         }
 
