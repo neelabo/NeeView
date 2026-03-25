@@ -109,7 +109,7 @@ namespace NeeView
             using (ProcessLock.Lock())
             {
                 var filename = HistoryFilePath;
-                var failedDialog = new LoadFailedDialog("Notice.LoadHistoryFailed", "Notice.LoadHistoryFailedTitle");
+                var failedDialog = new LoadFailedFormatDialog("Notice.FailedToLoad", TextResources.GetString("Word.History"));
 
                 var fileInfo = new FileInfo(filename);
                 if (fileInfo.Exists)
@@ -152,7 +152,7 @@ namespace NeeView
                     return;
                 }
                 _bookmarkFileStamp = fileStamp;
-                var failedDialog = new LoadFailedDialog("Notice.LoadBookmarkFailed", "Notice.LoadBookmarkFailedTitle");
+                var failedDialog = new LoadFailedFormatDialog("Notice.FailedToLoad", TextResources.GetString("Word.Bookmark"));
                 BookmarkCollectionMemento? memento = SafetyLoad(BookmarkCollectionMemento.Load, filename, failedDialog);
                 var result = BookmarkCollection.Current.Restore(memento);
 
@@ -189,7 +189,7 @@ namespace NeeView
                     return;
                 }
                 _folderConfigFileStamp = fileStamp;
-                var failedDialog = new LoadFailedFormatDialog("Notice.FailedToLoad", "Notice.FailedToLoad", TextResources.GetString("Word.FolderConfig"));
+                var failedDialog = new LoadFailedFormatDialog("Notice.FailedToLoad", TextResources.GetString("Word.FolderConfig"));
                 FolderConfigCollectionMemento? memento = SafetyLoad(FolderConfigCollectionMemento.Load, filename, failedDialog);
                 FolderConfigCollection.Current.Restore(memento);
             }
@@ -216,7 +216,7 @@ namespace NeeView
                     return;
                 }
                 _quickAccessFileStamp = fileStamp;
-                var failedDialog = new LoadFailedFormatDialog("Notice.FailedToLoad", "Notice.FailedToLoad", TextResources.GetString("Word.QuickAccess"));
+                var failedDialog = new LoadFailedFormatDialog("Notice.FailedToLoad", TextResources.GetString("Word.QuickAccess"));
                 QuickAccessCollectionMemento? memento = SafetyLoad(QuickAccessCollectionMemento.Load, filename, failedDialog);
                 QuickAccessCollection.Current.Restore(memento);
             }
@@ -235,6 +235,9 @@ namespace NeeView
             }
             catch (Exception ex)
             {
+                Trace.TraceError($"Failed to Load {path}");
+                Trace.TraceError(ex.ToString());
+
                 if (loadFailedDialog != null)
                 {
                     var result = AppDispatcher.Invoke(() => loadFailedDialog.ShowDialog(ex));
@@ -243,6 +246,7 @@ namespace NeeView
                         throw new OperationCanceledException();
                     }
                 }
+
                 return null;
             }
         }
@@ -344,7 +348,7 @@ namespace NeeView
                     if (fileInfo.Exists && (_historyMergeFlag || fileInfo.GetSafeLastWriteTime() > _historyLastWriteTime))
                     {
                         //Debug.WriteLine("SaveData.SaveHistory(): merge.");
-                        var failedDialog = new LoadFailedDialog("Notice.LoadHistoryFailed", "Notice.LoadHistoryFailedTitle");
+                        var failedDialog = new LoadFailedFormatDialog("Notice.FailedToLoad", TextResources.GetString("Word.History"));
                         var margeMemento = SafetyLoad(BookHistoryCollectionMemento.Load, HistoryFilePath, failedDialog);
                         bookHistoryMemento.Merge(margeMemento);
                         _historyMergeFlag = true;
@@ -460,7 +464,16 @@ namespace NeeView
 
             lock (App.Current.Lock)
             {
-                save(path, backupFileName);
+                try
+                {
+                    save(path, backupFileName);
+                }
+                catch (Exception ex)
+                {
+                    Trace.TraceError($"Failed to Save {path}");
+                    Trace.TraceError(ex.ToString());
+                    throw;
+                }
             }
         }
 

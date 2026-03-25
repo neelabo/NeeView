@@ -177,16 +177,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                var message = TextResources.GetString("FailedToSaveDataDialog.Setting.Message") + System.Environment.NewLine + ex.Message;
-                if (handleException)
-                {
-                    ToastService.Current.Show(new Toast(message, TextResources.GetString("FailedToSaveDataDialog.Title"), ToastIcon.Error));
-                    return;
-                }
-                else
-                {
-                    throw new IOException(message, ex);
-                }
+                HandleSaveFailedException(ex, handleException, TextResources.GetString("Word.Settings"));
             }
         }
 
@@ -203,16 +194,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                var message = TextResources.GetString("FailedToSaveDataDialog.History.Message") + System.Environment.NewLine + ex.Message;
-                if (handleException)
-                {
-                    ToastService.Current.Show(new Toast(message, TextResources.GetString("FailedToSaveDataDialog.Title"), ToastIcon.Error));
-                    return;
-                }
-                else
-                {
-                    throw new IOException(message, ex);
-                }
+                HandleSaveFailedException(ex, handleException, TextResources.GetString("Word.History"));
             }
         }
 
@@ -230,16 +212,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                var message = TextResources.GetString("FailedToSaveDataDialog.Bookmark.Message") + System.Environment.NewLine + ex.Message;
-                if (handleException)
-                {
-                    ToastService.Current.Show(new Toast(message, TextResources.GetString("FailedToSaveDataDialog.Title"), ToastIcon.Error));
-                    return;
-                }
-                else
-                {
-                    throw new IOException(message, ex);
-                }
+                HandleSaveFailedException(ex, handleException, TextResources.GetString("Word.Bookmark"));
             }
         }
 
@@ -281,14 +254,15 @@ namespace NeeView
 
         private static void HandleSaveFailedException(Exception ex, bool handleException, string arg)
         {
-            var msg = TextResources.GetFormatString("Notice.FailedToSave", arg) + System.Environment.NewLine + ex.Message;
+            var caption = TextResources.GetFormatString("Notice.FailedToSave", arg);
+            var message = ex.Message;
             if (handleException)
             {
-                ToastService.Current.Show(new Toast(msg, null, ToastIcon.Error));
+                ToastService.Current.Show(new Toast(message, caption, ToastIcon.Error));
             }
             else
             {
-                throw new IOException(msg, ex);
+                throw new IOException(caption + System.Environment.NewLine + message, ex);
             }
         }
 
