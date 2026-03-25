@@ -463,6 +463,14 @@ namespace NeeView
                 if (_logFile == null)
                 {
                     var logFile = AppSettings.Current.LogFile;
+
+#if DEBUG
+                    if (string.IsNullOrEmpty(logFile))
+                    {
+                        logFile = $"Log-{ProductVersion}.txt";
+                    }
+#endif
+
                     if (string.IsNullOrEmpty(logFile))
                     {
                         _logFile = "";

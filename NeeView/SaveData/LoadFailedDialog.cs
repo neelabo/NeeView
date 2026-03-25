@@ -26,7 +26,7 @@ namespace NeeView
             var textBox = new System.Windows.Controls.TextBox()
             {
                 IsReadOnly = true,
-                Text = GetMessageString() + System.Environment.NewLine + ex.Message,
+                Text = GetMessageString(ex),
                 TextWrapping = System.Windows.TextWrapping.Wrap,
                 VerticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Auto,
                 HorizontalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Disabled,
@@ -51,32 +51,9 @@ namespace NeeView
             return TextResources.GetString(Title);
         }
 
-        protected virtual string GetMessageString()
+        protected virtual string GetMessageString(Exception ex)
         {
-            return TextResources.GetString(Message);
-        }
-    }
-
-
-    public class LoadFailedFormatDialog : LoadFailedDialog
-    {
-        public LoadFailedFormatDialog(string title, string message, string arg) : base(title, message)
-        {
-            Title = title;
-            Message = message;
-            Argument = arg;
-        }
-
-        public string Argument { get; set; }
-
-        protected override string GetTitleString()
-        {
-            return TextResources.GetFormatString(Title, Argument);
-        }
-
-        protected override string GetMessageString()
-        {
-            return TextResources.GetFormatString(Message, Argument);
+            return TextResources.GetString(Message) + System.Environment.NewLine + ex.Message;
         }
     }
 }
