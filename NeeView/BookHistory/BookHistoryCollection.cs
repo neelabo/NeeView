@@ -379,9 +379,14 @@ namespace NeeView
         }
 
         // memento適用
-        public void Restore(BookHistoryCollectionMemento? memento, bool fromLoad)
+        public RestoreResult Restore(BookHistoryCollectionMemento? memento, bool fromLoad)
         {
-            if (memento == null) return;
+            if (memento == null)
+            {
+                return RestoreResult.None;
+            }
+
+            RestoreResult result = RestoreResult.None;
 
 #pragma warning disable CS0612 // 型またはメンバーが旧型式です
             this.BookshelfSearchHistory.Replace(memento.BookshelfSearchHistory ?? memento.SearchHistory);
@@ -390,26 +395,35 @@ namespace NeeView
             this.BookHistorySearchHistory.Replace(memento.BookHistorySearchHistory);
             this.PageListSearchHistory.Replace(memento.PageListSearchHistory);
 
-            var items = fromLoad
-                ? Limit(memento.Items, Config.Current.History.LimitSize, Config.Current.History.LimitSpan).ToList()
-                : memento.Items;
-
-            var books = items.Select(e => BookMemento.ParseWithProperties(e.Path, e.Page, e.Props)).WhereNotNull();
-
-            this.Load(items, books);
-
-#pragma warning disable CS0612 // 型またはメンバーが旧型式です
-            if (memento.Folders is not null)
+            if (memento.Items != null)
             {
-                // Folders.json の読み込みが先なのでここで上書きできる
-                FolderConfigCollection.Current.ClearAllFolderParameter();
-                foreach (var folder in memento.Folders)
-                {
-                    FolderConfigCollection.Current.SetFolderParameter(folder.Key, folder.Value);
-                }
-                SaveDataSync.Current.SaveHistory(true);
+                var items = fromLoad
+                    ? Limit(memento.Items, Config.Current.History.LimitSize, Config.Current.History.LimitSpan).ToList()
+                    : memento.Items;
+
+                var books = items.Select(e => BookMemento.ParseWithProperties(e.Path, e.Page, e.Props)).WhereNotNull();
+
+                this.Load(items, books);
+
+                result |= RestoreResult.RestoreHistory;
             }
-#pragma warning restore CS0612 // 型またはメンバーが旧型式です
+
+            if (memento.FoldersLegacy is not null)
+            {
+                FolderConfigCollection.Current.Restore(memento.FoldersLegacy);
+                result |= RestoreResult.RestoreFolderConfig;
+            }
+
+            return result;
+        }
+
+
+        [Flags]
+        public enum RestoreResult
+        {
+            None,
+            RestoreHistory = 1 << 0,
+            RestoreFolderConfig = 1 << 1,
         }
 
         // 履歴数制限
@@ -448,22 +462,22 @@ namespace NeeView
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<string>? BookmarkSearchHistory { get; set; }
-        
+
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<string>? BookHistorySearchHistory { get; set; }
-        
+
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<string>? PageListSearchHistory { get; set; }
 
         #region Obsolete
 
-        [Obsolete]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
-        public Dictionary<string, FolderParameterMemento>? Folders { get; set; }
-
         [Obsolete, Alternative(nameof(BookshelfSearchHistory), 40)] // v40.0
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
         public List<string>? SearchHistory { get; set; }
+
+        [JsonPropertyName("Folders")] // v45.0
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public Dictionary<string, FolderParameterMemento>? FoldersLegacy { get; set; }
 
         [Obsolete, Alternative(null, 46)] // v46.0
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]

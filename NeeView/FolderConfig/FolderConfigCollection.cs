@@ -221,6 +221,25 @@ namespace NeeView
             }
         }
 
+        public void Restore(Dictionary<string, FolderParameterMemento>? folders)
+        {
+            if (folders is null) return;
+
+            var memento = new FolderConfigCollectionMemento();
+
+            foreach (var folder in folders)
+            {
+                var unit = new FolderConfigUnit()
+                {
+                    Place = folder.Key,
+                    Parameter = folder.Value,
+                };
+                memento.Folders.Add(unit);
+            }
+
+            Restore(memento);
+        }
+
         #endregion
 
     }

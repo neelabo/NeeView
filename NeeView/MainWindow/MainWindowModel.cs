@@ -229,14 +229,17 @@ namespace NeeView
             // TODO: 非同期化できないか？
             SusiePluginManager.Current.Initialize();
 
-            // フォルダー設定読み込み
-            SaveData.Current.LoadFolderConfig();
-
             // 履歴読み込み
             SaveData.Current.LoadHistory();
 
+            // フォルダー設定読み込み
+            SaveData.Current.LoadFolderConfig();
+
             // ブックマーク読み込み
             SaveData.Current.LoadBookmark();
+
+            // クイックアクセス読み込み
+            SaveData.Current.LoadQuickAccess();
 
             // プレイリスト読み込み
             PlaylistHub.Current.Initialize();

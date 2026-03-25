@@ -361,7 +361,12 @@ namespace NeeView
                 using var span = DebugSpan();
                 var resourceName = "Resources/SplashScreen.png";
                 var splashScreen = new SplashScreen(resourceName);
-                splashScreen.Show(true, true);
+#if DEBUG
+                var topmost = false;
+#else
+                var topmost = true;
+#endif
+                splashScreen.Show(true, topmost);
             }
         }
 

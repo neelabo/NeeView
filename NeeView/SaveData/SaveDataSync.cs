@@ -26,10 +26,12 @@ namespace NeeView
         private readonly DelayAction _delaySaveBookmark;
         private readonly IntervalAction _delaySaveHistory;
         private readonly DelayAction _delaySaveFolderConfig;
+        private readonly DelayAction _delaySaveQuickAccess;
         private readonly UserSettingWatcher _userSettingWatcher = new UserSettingWatcher();
         private readonly BookmarkWatcher _bookmarkWatcher = new BookmarkWatcher();
         private readonly PlaylistWatcher _playlistWatcher = new PlaylistWatcher();
         private readonly FolderConfigWatcher _folderConfigWatcher = new FolderConfigWatcher();
+        private readonly QuickAccessWatcher _quickAccessWatcher = new QuickAccessWatcher();
         private readonly DisposableCollection _disposables = new();
         private bool _disposedValue = false;
 
@@ -38,6 +40,7 @@ namespace NeeView
             _delaySaveBookmark = new DelayAction(() => SaveBookmark(true), TimeSpan.FromSeconds(0.5));
             _delaySaveHistory = new IntervalAction(() => SaveHistory(true), TimeSpan.FromMinutes(5.0));
             _delaySaveFolderConfig = new DelayAction(() => SaveFolderConfig(true), TimeSpan.FromSeconds(5.0));
+            _delaySaveQuickAccess = new DelayAction(() => SaveQuickAccess(true), TimeSpan.FromSeconds(0.5));
         }
 
 
@@ -59,6 +62,7 @@ namespace NeeView
             {
                 if (disposing)
                 {
+                    _quickAccessWatcher.Dispose();
                     _folderConfigWatcher.Dispose();
                     _playlistWatcher.Dispose();
                     _bookmarkWatcher.Dispose();
@@ -67,6 +71,7 @@ namespace NeeView
                     _delaySaveBookmark.Dispose();
                     _delaySaveHistory.Dispose();
                     _delaySaveFolderConfig.Dispose();
+                    _delaySaveQuickAccess.Dispose();
                 }
                 _disposedValue = true;
             }
@@ -89,14 +94,14 @@ namespace NeeView
         private void QuickAccessCollection_RoutedValuePropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             LocalDebug.WriteLine($"PropertyName={e.PropertyName}");
-            _delaySaveBookmark.Request();
+            _delaySaveQuickAccess.Request();
         }
 
         private void QuickAccessCollection_RoutedCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             LocalDebug.WriteLine($"Action={e.Action}");
             if (e.Action == NotifyCollectionChangedAction.Reset) return;
-            _delaySaveBookmark.Request();
+            _delaySaveQuickAccess.Request();
         }
 
         private void BookmarkCollection_BookmarkChanged(object? sender, BookmarkCollectionChangedEventArgs e)
@@ -156,6 +161,7 @@ namespace NeeView
             _delaySaveBookmark.Flush();
             _delaySaveHistory.Flush();
             _delaySaveFolderConfig.Flush();
+            _delaySaveQuickAccess.Flush();
             PlaylistHub.Current.Flush();
         }
 
@@ -251,19 +257,40 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                var message = TextResources.GetString("FailedToSaveDataDialog.FolderConfig.Message") + System.Environment.NewLine + ex.Message;
-                if (handleException)
-                {
-                    ToastService.Current.Show(new Toast(message, TextResources.GetString("FailedToSaveDataDialog.Title"), ToastIcon.Error));
-                    return;
-                }
-                else
-                {
-                    throw new IOException(message, ex);
-                }
+                HandleSaveFailedException(ex, handleException, TextResources.GetString("Word.FolderConfig"));
             }
         }
 
+        public void SaveQuickAccess(bool handleException)
+        {
+            if (_disposedValue) return;
+
+            LocalDebug.WriteLine($"Save QuickAccess");
+
+            try
+            {
+                _delaySaveQuickAccess?.Cancel();
+                SaveData.Current.SaveQuickAccess();
+                _quickAccessWatcher.Reset();
+            }
+            catch (Exception ex)
+            {
+                HandleSaveFailedException(ex, handleException, TextResources.GetString("Word.QuickAccess"));
+            }
+        }
+
+        private static void HandleSaveFailedException(Exception ex, bool handleException, string arg)
+        {
+            var msg = TextResources.GetFormatString("Notice.FailedToSave", arg) + System.Environment.NewLine + ex.Message;
+            if (handleException)
+            {
+                ToastService.Current.Show(new Toast(msg, null, ToastIcon.Error));
+            }
+            else
+            {
+                throw new IOException(msg, ex);
+            }
+        }
 
         private static void RemoveHistoryIfNotSave()
         {
@@ -296,6 +323,7 @@ namespace NeeView
             _bookmarkWatcher.Reset();
             _playlistWatcher.Reset();
             _folderConfigWatcher.Reset();
+            _quickAccessWatcher.Reset();
         }
     }
 }

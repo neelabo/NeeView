@@ -582,42 +582,58 @@ namespace NeeView
             var memento = new BookmarkCollectionMemento();
             memento.Nodes = BookmarkNodeConverter.ConvertFrom(Items);
 
-            // QuickAccess情報もここに保存する
-            memento.QuickAccess = QuickAccessCollection.Current.CreateMemento();
-
             return memento;
         }
 
         // memento適用
-        public void Restore(BookmarkCollectionMemento? memento)
+        public RestoreResult Restore(BookmarkCollectionMemento? memento)
         {
             if (memento is null)
             {
-                return;
+                return RestoreResult.None;
             }
 
-            QuickAccessCollection.Current.Restore(memento.QuickAccess);
+            RestoreResult result = RestoreResult.None;
 
-            if (memento.Nodes is null)
+            if (memento.QuickAccessLegacy is not null)
             {
-                return;
+                QuickAccessCollection.Current.Restore(memento.QuickAccessLegacy);
+                result |= RestoreResult.RestoreQuickAccess;
             }
 
-            var nodes = BookmarkNodeConverter.ConvertToTreeListNode(memento.Nodes) ?? CreateEmptyTree();
-            var books = memento.Nodes.Walk().Where(e => !e.IsFolder && e.Path is not null).Select(e => BookMemento.ParseWithProperties(e.Path!, e.Page, e.Props)).WhereNotNull().ToList();
-            this.Load(nodes, books);
-
-            // 互換用 : FileResolver 登録
-            if (books.Count != 0 && memento.Format?.CompareTo(new FormatVersion(BookmarkCollectionMemento.FormatName, VersionNumber.Ver45_Alpha4)) <= 0)
+            if (memento.Nodes is not null)
             {
-                var files = books.Select(e => e.Path).ToList();
-                ProcessJobEngine.Current.AddJob("Processing bookmarks",
-                    () =>
-                    {
-                        FileResolver.Current.AddRangeArchivePath(files);
-                        Validated?.Invoke(this, EventArgs.Empty);
-                    });
+                var nodes = BookmarkNodeConverter.ConvertToTreeListNode(memento.Nodes) ?? CreateEmptyTree();
+                var books = memento.Nodes.Walk().Where(e => !e.IsFolder && e.Path is not null).Select(e => BookMemento.ParseWithProperties(e.Path!, e.Page, e.Props)).WhereNotNull().ToList();
+                this.Load(nodes, books);
+
+                result |= RestoreResult.RestoreBookmark;
+
+                // 互換用 : FileResolver 登録
+                if (books.Count != 0 && memento.Format?.CompareTo(new FormatVersion(BookmarkCollectionMemento.FormatName, VersionNumber.Ver45_Alpha4)) <= 0)
+                {
+                    var files = books.Select(e => e.Path).ToList();
+                    ProcessJobEngine.Current.AddJob("Processing bookmarks",
+                        () =>
+                        {
+                            FileResolver.Current.AddRangeArchivePath(files);
+                            Validated?.Invoke(this, EventArgs.Empty);
+                        });
+
+                    result |= RestoreResult.AddToFileResolver;
+                }
             }
+
+            return result;
+        }
+
+        [Flags]
+        public enum RestoreResult
+        {
+            None,
+            RestoreBookmark = 1 << 0,
+            RestoreQuickAccess = 1 << 1,
+            AddToFileResolver = 1 << 2,
         }
 
         #endregion
@@ -633,14 +649,15 @@ namespace NeeView
 
         public BookmarkNode? Nodes { get; set; }
 
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public QuickAccessCollectionMemento? QuickAccess { get; set; }
-
         #region Obsolete
 
         [Obsolete] // v46.0
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
         public List<BookMemento>? Books { get; set; }
+
+        [JsonPropertyName("QuickAccess")] // v46.0
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public QuickAccessCollectionMemento? QuickAccessLegacy { get; set; }
 
         #endregion
 

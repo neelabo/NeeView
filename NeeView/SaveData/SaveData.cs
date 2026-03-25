@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Properties;
+using System;
 using System.Diagnostics;
 using System.IO;
 
@@ -18,6 +19,7 @@ namespace NeeView
         private FileStamp _userSettingFileStamp = new();
         private FileStamp _bookmarkFileStamp = new();
         private FileStamp _folderConfigFileStamp = new();
+        private FileStamp _quickAccessFileStamp = new();
 
         // 設定のバックアップを１起動に付き１回に制限するフラグ
         private bool _backupOnce = true;
@@ -33,6 +35,7 @@ namespace NeeView
         public static string HistoryFilePath => Config.Current.History.HistoryFilePath;
         public static string BookmarkFilePath => Config.Current.Bookmark.BookmarkFilePath;
         public static string FolderConfigFilePath => Config.Current.Bookshelf.FolderConfigFilePath;
+        public static string QuickAccessFilePath => Config.Current.Bookshelf.QuickAccessFilePath;
 
 
         public bool IsEnableSave { get; private set; } = true;
@@ -112,8 +115,18 @@ namespace NeeView
                 if (fileInfo.Exists)
                 {
                     BookHistoryCollectionMemento? memento = SafetyLoad(BookHistoryCollectionMemento.Load, HistoryFilePath, failedDialog);
-                    BookHistoryCollection.Current.Restore(memento, true);
+                    var result = BookHistoryCollection.Current.Restore(memento, true);
                     _historyLastWriteTime = fileInfo.GetSafeLastWriteTime();
+
+                    // History から FolderConfig を復元した場合、フォーマット移行を確定させるために保存
+                    if (result.HasFlag(BookHistoryCollection.RestoreResult.RestoreFolderConfig))
+                    {
+                        SaveDataSync.Current.SaveFolderConfig(true);
+                        if (result.HasFlag(BookHistoryCollection.RestoreResult.RestoreHistory))
+                        {
+                            SaveDataSync.Current.SaveHistory(true);
+                        }
+                    }
                 }
             }
         }
@@ -141,7 +154,17 @@ namespace NeeView
                 _bookmarkFileStamp = fileStamp;
                 var failedDialog = new LoadFailedDialog("Notice.LoadBookmarkFailed", "Notice.LoadBookmarkFailedTitle");
                 BookmarkCollectionMemento? memento = SafetyLoad(BookmarkCollectionMemento.Load, filename, failedDialog);
-                BookmarkCollection.Current.Restore(memento);
+                var result = BookmarkCollection.Current.Restore(memento);
+
+                // Bookmark から QuickAccess を復元した場合、フォーマットを確定させるために保存
+                if (result.HasFlag(BookmarkCollection.RestoreResult.RestoreQuickAccess))
+                {
+                    SaveDataSync.Current.SaveQuickAccess(true);
+                    if (result.HasFlag(BookmarkCollection.RestoreResult.RestoreBookmark))
+                    {
+                        SaveDataSync.Current.SaveBookmark(true);
+                    }
+                }
             }
         }
 
@@ -166,9 +189,36 @@ namespace NeeView
                     return;
                 }
                 _folderConfigFileStamp = fileStamp;
-                var failedDialog = new LoadFailedDialog("Notice.LoadFolderConfigFailed", "Notice.LoadFolderConfigFailedTitle");
+                var failedDialog = new LoadFailedFormatDialog("Notice.FailedToLoad", "Notice.FailedToLoad", TextResources.GetString("Word.FolderConfig"));
                 FolderConfigCollectionMemento? memento = SafetyLoad(FolderConfigCollectionMemento.Load, filename, failedDialog);
                 FolderConfigCollection.Current.Restore(memento);
+            }
+        }
+
+        public void LoadQuickAccess()
+        {
+            LoadQuickAccess(QuickAccessFilePath);
+        }
+
+        // クイックアクセス設定読み込み
+        public void LoadQuickAccess(string filename)
+        {
+            using (ProcessLock.Lock())
+            {
+                if (!File.Exists(filename))
+                {
+                    return;
+                }
+
+                var fileStamp = FileStamp.Create(filename);
+                if (fileStamp == _quickAccessFileStamp)
+                {
+                    return;
+                }
+                _quickAccessFileStamp = fileStamp;
+                var failedDialog = new LoadFailedFormatDialog("Notice.FailedToLoad", "Notice.FailedToLoad", TextResources.GetString("Word.QuickAccess"));
+                QuickAccessCollectionMemento? memento = SafetyLoad(QuickAccessCollectionMemento.Load, filename, failedDialog);
+                QuickAccessCollection.Current.Restore(memento);
             }
         }
 
@@ -371,13 +421,27 @@ namespace NeeView
         public void SaveFolderConfig()
         {
             if (!IsEnableSave) return;
-            //if (!Config.Current.Bookshelf.IsSaveFolderConfig) return;
 
             using (ProcessLock.Lock())
             {
                 var folderConfigMemento = FolderConfigCollection.Current.CreateMemento();
                 SafetySave(folderConfigMemento.Save, FolderConfigFilePath, false);
                 _folderConfigFileStamp = FileStamp.Create(FolderConfigFilePath);
+            }
+        }
+
+        /// <summary>
+        /// クイックアクセスをファイルに保存
+        /// </summary>
+        public void SaveQuickAccess()
+        {
+            if (!IsEnableSave) return;
+
+            using (ProcessLock.Lock())
+            {
+                var quickAccessCollectionMemento = QuickAccessCollection.Current.CreateMemento();
+                SafetySave(quickAccessCollectionMemento.Save, QuickAccessFilePath, false);
+                _folderConfigFileStamp = FileStamp.Create(QuickAccessFilePath);
             }
         }
 
