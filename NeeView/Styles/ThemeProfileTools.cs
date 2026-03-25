@@ -13,7 +13,7 @@ namespace NeeView
     {
         public static void Save(ThemeProfile themeProfile, string path)
         {
-            var json = JsonSerializer.SerializeToUtf8Bytes(themeProfile, UserSettingTools.GetSerializerOptions());
+            var json = JsonSerializer.SerializeToUtf8Bytes(themeProfile, UserSettingTools.GetSerializeOptions());
             System.IO.File.WriteAllBytes(path, json);
         }
 
@@ -30,7 +30,7 @@ namespace NeeView
 
         private static ThemeProfile? Load(Stream stream)
         {
-            return JsonSerializer.Deserialize<ThemeProfile>(stream, UserSettingTools.GetSerializerOptions());
+            return JsonSerializer.Deserialize<ThemeProfile>(stream, UserSettingTools.GetDeserializeOptions());
         }
 
         public static ThemeProfile LoadFromContent(string contentPath)

@@ -671,7 +671,7 @@ namespace NeeView
         {
             Format = new FormatVersion(FormatName);
 
-            var json = JsonSerializer.SerializeToUtf8Bytes(this, UserSettingTools.GetSerializerOptions());
+            var json = JsonSerializer.SerializeToUtf8Bytes(this, UserSettingTools.GetSerializeOptions());
             FileIO.WriteAllBytesDurable(path, json, backupFileName);
         }
 
@@ -683,7 +683,7 @@ namespace NeeView
 
         public static BookmarkCollectionMemento Load(Stream stream)
         {
-            var memento = JsonSerializer.Deserialize<BookmarkCollectionMemento>(stream, UserSettingTools.GetSerializerOptions());
+            var memento = JsonSerializer.Deserialize<BookmarkCollectionMemento>(stream, UserSettingTools.GetDeserializeOptions());
             if (memento is null) throw new FormatException();
             return memento.Validate();
         }

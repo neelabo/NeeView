@@ -16,7 +16,7 @@ namespace NeeView.UnitTest
         [Fact]
         public void AutoHideConfigCompatible()
         {
-            var options = UserSettingTools.GetSerializerOptions();
+            var options = UserSettingTools.GetDeserializeOptions();
 
             string json = """
             {
@@ -41,7 +41,7 @@ namespace NeeView.UnitTest
         [Fact]
         public void SystemConfigCompatible()
         {
-            var options = UserSettingTools.GetSerializerOptions();
+            var options = UserSettingTools.GetDeserializeOptions();
 
             string json = """
             {
