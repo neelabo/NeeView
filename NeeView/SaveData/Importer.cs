@@ -13,6 +13,7 @@ namespace NeeView
         private ZipArchiveEntry? _settingEntry;
         private ZipArchiveEntry? _historyEntry;
         private ZipArchiveEntry? _folderConfigEntry;
+        private ZipArchiveEntry? _quickAccessEntry;
         private ZipArchiveEntry? _bookmarkEntry;
         private ZipArchiveEntry? _pagemarkEntry;
         private bool _disposedValue;
@@ -113,6 +114,7 @@ namespace NeeView
         {
             _settingEntry = _archive.GetEntry(SaveDataProfile.UserSettingFileName);
             _folderConfigEntry = _archive.GetEntry(SaveDataProfile.FolderConfigFileName);
+            _quickAccessEntry = _archive.GetEntry(SaveDataProfile.QuickAccessFileName);
             _historyEntry = _archive.GetEntry(SaveDataProfile.HistoryFileName);
             _bookmarkEntry = _archive.GetEntry(SaveDataProfile.BookmarkFileName);
             _pagemarkEntry = _archive.GetEntry(SaveDataProfile.PagemarkFileName);
@@ -135,13 +137,53 @@ namespace NeeView
             MainWindowModel.Current.CloseCommandParameterDialog();
             bool recoverySettingWindow = MainWindowModel.Current.CloseSettingWindow();
 
-            ImportUserSetting();
-            ImportFolderConfig();
-            ImportHistory();
-            ImportBookmark();
-            ImportPlaylists();
-            ImportThemes();
-            ImportScripts();
+            if (IsUserSettingEnabled)
+            {
+                ImportUserSetting();
+
+                if (_folderConfigEntry != null)
+                {
+                    ImportFolderConfig();
+                }
+                else
+                {
+                    ImportHistoryFolderConfig();
+                }
+
+                if (_quickAccessEntry != null)
+                {
+                    ImportQuickAccess();
+                }
+                else
+                {
+                    ImportBookmarkQuickAccess();
+                }
+            }
+
+            if (IsHistoryEnabled)
+            {
+                ImportHistory();
+            }
+
+            if (IsBookmarkEnabled)
+            {
+                ImportBookmark();
+            }
+
+            if (IsPlaylistsEnabled)
+            {
+                ImportPlaylists();
+            }
+
+            if (IsThemesEnabled)
+            {
+                ImportThemes();
+            }
+
+            if (IsScriptsEnabled)
+            {
+                ImportScripts();
+            }
 
             if (recoverySettingWindow)
             {
@@ -151,8 +193,6 @@ namespace NeeView
 
         public void ImportUserSetting()
         {
-            if (!this.IsUserSettingEnabled) return;
-
             UserSetting? setting = null;
 
             if (_settingEntry != null)
@@ -179,9 +219,6 @@ namespace NeeView
 
         public void ImportFolderConfig()
         {
-            // NOTE: フォルダー設定はユーザー設定の一部とみなす
-            if (!this.IsUserSettingEnabled) return;
-
             FolderConfigCollectionMemento? folderConfig = null;
 
             if (_folderConfigEntry != null)
@@ -199,10 +236,27 @@ namespace NeeView
             }
         }
 
+        public void ImportQuickAccess()
+        {
+            QuickAccessCollectionMemento? quickAccess = null;
+
+            if (_quickAccessEntry != null)
+            {
+                using (var stream = _quickAccessEntry.Open())
+                {
+                    quickAccess = QuickAccessCollectionMemento.Load(stream);
+                }
+            }
+
+            if (quickAccess != null)
+            {
+                QuickAccessCollection.Current.Restore(quickAccess);
+                SaveDataSync.Current.SaveQuickAccess(true);
+            }
+        }
+
         public void ImportHistory()
         {
-            if (!this.IsHistoryEnabled) return;
-
             BookHistoryCollectionMemento? history = null;
 
             if (_historyEntry != null)
@@ -215,15 +269,35 @@ namespace NeeView
 
             if (history != null)
             {
+                // 履歴情報のみ有効
+                history.FoldersLegacy = null;
+
                 BookHistoryCollection.Current.Restore(history, true);
                 SaveDataSync.Current.SaveHistory(true);
             }
         }
 
+        public void ImportHistoryFolderConfig()
+        {
+            BookHistoryCollectionMemento? history = null;
+
+            if (_historyEntry != null)
+            {
+                using (var stream = _historyEntry.Open())
+                {
+                    history = BookHistoryCollectionMemento.Load(stream);
+                }
+            }
+
+            if (history?.FoldersLegacy != null)
+            {
+                FolderConfigCollection.Current.Restore(history.FoldersLegacy);
+                SaveDataSync.Current.SaveFolderConfig(true);
+            }
+        }
+
         public void ImportBookmark()
         {
-            if (!this.IsBookmarkEnabled) return;
-
             BookmarkCollectionMemento? bookmark = null;
 
             if (_bookmarkEntry != null)
@@ -236,15 +310,36 @@ namespace NeeView
 
             if (bookmark != null)
             {
+                // ブックマーク情報のみ有効
+                bookmark.QuickAccessLegacy = null;
+
                 BookmarkCollection.Current.Restore(bookmark);
                 SaveDataSync.Current.SaveBookmark(true);
             }
         }
 
+        public void ImportBookmarkQuickAccess()
+        {
+            BookmarkCollectionMemento? bookmark = null;
+
+            if (_bookmarkEntry != null)
+            {
+                using (var stream = _bookmarkEntry.Open())
+                {
+                    bookmark = BookmarkCollectionMemento.Load(stream);
+                }
+            }
+
+            if (bookmark?.QuickAccessLegacy != null)
+            {
+                // クイックアクセス情報のみ有効
+                QuickAccessCollection.Current.Restore(bookmark.QuickAccessLegacy);
+                SaveDataSync.Current.SaveQuickAccess(true);
+            }
+        }
+
         public void ImportPlaylists()
         {
-            if (!IsPlaylistsEnabled) return;
-
             if (string.IsNullOrEmpty(Config.Current.Playlist.PlaylistFolder))
             {
                 return;
@@ -268,8 +363,6 @@ namespace NeeView
 
         public void ImportThemes()
         {
-            if (!IsThemesEnabled) return;
-
             if (string.IsNullOrEmpty(Config.Current.Theme.CustomThemeFolder))
             {
                 return;
@@ -293,8 +386,6 @@ namespace NeeView
 
         public void ImportScripts()
         {
-            if (!IsScriptsEnabled) return;
-
             if (string.IsNullOrEmpty(Config.Current.Script.ScriptFolder))
             {
                 return;

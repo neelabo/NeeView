@@ -39,6 +39,8 @@ namespace NeeView
         [JsonInclude, JsonPropertyName(nameof(FolderConfigFilePath))]
         public string? _folderConfigFilePath;
 
+        [JsonInclude, JsonPropertyName(nameof(QuickAccessFilePath))]
+        public string? _quickAccessFilePath;
 
         /// <summary>
         /// ホームのパス
@@ -220,6 +222,17 @@ namespace NeeView
         {
             get { return _folderConfigFilePath ?? SaveDataProfile.DefaultFolderConfigFilePath; }
             set { SetProperty(ref _folderConfigFilePath, (string.IsNullOrWhiteSpace(value) || value.Trim() == SaveDataProfile.DefaultFolderConfigFilePath) ? null : value.Trim()); }
+        }
+
+        /// <summary>
+        /// クイックアクセス設定の保存場所
+        /// </summary>
+        [JsonIgnore]
+        [PropertyPath(FileDialogType = FileDialogType.SaveFile, Filter = "JSON|*.json")]
+        public string QuickAccessFilePath
+        {
+            get { return _quickAccessFilePath ?? SaveDataProfile.DefaultQuickAccessFilePath; }
+            set { SetProperty(ref _quickAccessFilePath, (string.IsNullOrWhiteSpace(value) || value.Trim() == SaveDataProfile.DefaultQuickAccessFilePath) ? null : value.Trim()); }
         }
 
 

@@ -6,7 +6,9 @@ using NeeView.Collections.Generic;
 using NeeView.Properties;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace NeeView
@@ -158,10 +160,9 @@ namespace NeeView
         public void Restore(QuickAccessCollectionMemento? memento)
         {
             if (memento == null) return;
-            if (memento.Items is null) return;
 
-            var items = memento.Items.Select(e => QuickAccessTreeNodeConverter.ConvertToTreeListNode(e)).WhereNotNull().ToList();
-            Root.Reset(items);
+            var items = memento.Items?.Select(e => QuickAccessTreeNodeConverter.ConvertToTreeListNode(e)).WhereNotNull().ToList();
+            Root.Reset(items ?? []);
         }
 
         #endregion
@@ -171,7 +172,34 @@ namespace NeeView
 
     public class QuickAccessCollectionMemento
     {
+        public static string FormatName { get; } = Environment.SolutionName + ".QuickAccess";
+        public static FormatVersion FormatVersion { get; } = new FormatVersion(FormatName);
+
+
+        public FormatVersion Format { get; set; } = FormatVersion;
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<QuickAccessTreeNode>? Items { get; set; }
+
+
+        public void Save(string path, string? backupFileName)
+        {
+            var json = JsonSerializer.SerializeToUtf8Bytes(this, UserSettingTools.GetSerializerOptions());
+            FileIO.WriteAllBytesDurable(path, json, backupFileName);
+        }
+
+        public static QuickAccessCollectionMemento Load(string path)
+        {
+            using var stream = FileIO.OpenReadShared(path);
+            return Load(stream);
+        }
+
+        public static QuickAccessCollectionMemento Load(Stream stream)
+        {
+            var memento = JsonSerializer.Deserialize<QuickAccessCollectionMemento>(stream, UserSettingTools.GetSerializerOptions());
+            if (memento is null) throw new FormatException();
+            return memento.Validate();
+        }
     }
 
 
