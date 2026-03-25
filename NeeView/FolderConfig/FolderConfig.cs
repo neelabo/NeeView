@@ -40,7 +40,7 @@ namespace NeeView
         /// <returns></returns>
         public bool IsDefault()
         {
-            return (Parameter is null || Parameter.IsDefault(Place))
+            return (Parameter is null || Parameter == FolderParameterMemento.Default)
                 && (Thumbs is null || Thumbs.Count == 0);
         }
 
