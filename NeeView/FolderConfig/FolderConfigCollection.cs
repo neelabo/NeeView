@@ -83,7 +83,7 @@ namespace NeeView
             Debug.Assert(parameter.GetType() == typeof(FolderParameterMemento));
 
             place = place ?? "<<root>>";
-            var normalizedParameter = parameter.IsDefault(place) ? null : parameter;
+            var normalizedParameter = parameter.Normalize(place).SetNullIfDefault();
 
             if (Folders.TryGetValue(place, out var folder))
             {
@@ -122,7 +122,7 @@ namespace NeeView
                 }
             }
 
-            return config?.Parameter ?? FolderParameterMemento.GetDefault(place);
+            return config?.Parameter ?? new();
         }
 
         /// <summary>
@@ -180,8 +180,27 @@ namespace NeeView
 
             public bool IsDefault()
             {
-                return Parameter is null
-                    && Thumbs is null;
+                return (Parameter is null || Parameter == FolderParameterMemento.Default)
+                    && (Thumbs is null || Thumbs.Count == 0);
+            }
+
+            public void Validate()
+            {
+                if (Parameter is not null)
+                {
+                    if (Parameter.FolderOrder == FolderParameter.GetDefaultFolderOrder(Place))
+                    {
+                        Parameter = Parameter with { FolderOrder = null };
+                    }
+                }
+
+                if (Thumbs is not null)
+                {
+                    if (Thumbs.Count == 0)
+                    {
+                        Thumbs = null;
+                    }
+                }
             }
 
             public static FolderConfigUnit Create(FolderConfig config)
@@ -189,17 +208,37 @@ namespace NeeView
                 return new FolderConfigUnit()
                 {
                     Place = config.Place,
-                    Parameter = config.Parameter is not null && Config.Current.History.IsKeepFolderStatus ? config.Parameter : null,
+                    Parameter = Config.Current.History.IsKeepFolderStatus ? CreateFolderParameterMemento(config) : null,
                     Thumbs = config.Thumbs is not null && config.Thumbs.Count > 0 ? config.Thumbs : null,
                 };
             }
-        }
 
+            private static FolderParameterMemento? CreateFolderParameterMemento(FolderConfig config)
+            {
+                if (config.Parameter is null) return null;
+
+                var parameter = config.Parameter;
+
+                if (FolderParameter.GetDefaultFolderOrder(config.Place) == config.Parameter.FolderOrder)
+                {
+                    parameter = parameter with { FolderOrder = null };
+                }
+
+                return parameter;
+            }
+
+        }
 
         public FolderConfigCollectionMemento CreateMemento()
         {
             var memento = new FolderConfigCollectionMemento();
-            memento.Folders = Folders.Values.Select(e => FolderConfigUnit.Create(e)).Where(e => !e.IsDefault()).OrderBy(e => e.Place).ToList();
+
+            memento.Folders = Folders.Values
+                .Select(e => FolderConfigUnit.Create(e))
+                .Where(e => !e.IsDefault())
+                .OrderBy(e => e.Place)
+                .ToList();
+
             return memento;
         }
 
@@ -212,7 +251,11 @@ namespace NeeView
             // 互換用 : FileResolver 登録
             if (memento.Folders is not null && memento.Format?.CompareTo(new FormatVersion(FolderConfigCollectionMemento.FormatName, VersionNumber.Ver45_Alpha4)) <= 0)
             {
-                var files = memento.Folders.Select(e => e.Place).Where(e => QuerySchemeExtensions.GetScheme(e) == QueryScheme.File).ToList();
+                var files = memento.Folders
+                    .Select(e => e.Place)
+                    .Where(e => QuerySchemeExtensions.GetScheme(e) == QueryScheme.File)
+                    .ToList();
+
                 ProcessJobEngine.Current.AddJob("Processing folders",
                     () =>
                     {
@@ -232,7 +275,7 @@ namespace NeeView
                 var unit = new FolderConfigUnit()
                 {
                     Place = folder.Key,
-                    Parameter = folder.Value,
+                    Parameter = folder.Value.Normalize(folder.Key),
                 };
                 memento.Folders.Add(unit);
             }

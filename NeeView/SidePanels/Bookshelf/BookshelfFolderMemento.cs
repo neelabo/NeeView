@@ -11,19 +11,20 @@
         {
             Path = query.SimpleQuery;
             Select = selectedItem?.SimplePath;
-            FolderOrder = parameter?.FolderOrder ?? FolderParameter.GetDefaultFolderOrder(query.SimplePath);
+            FolderOrder = parameter?.FolderOrder;
             IsFolderRecursive = parameter?.IsFolderRecursive ?? false;
             Seed = parameter?.Seed ?? 0;
         }
 
-        public string Path { get; set; }
+        public string Path { get; }
 
-        public string? Select { get; set; }
+        public string? Select { get; init; }
 
         public void Register()
         {
             var path = new QueryPath(Path).SimplePath;
-            FolderConfigCollection.Current.SetFolderParameter(path, new FolderParameterMemento(this.FolderOrder, this.IsFolderRecursive, this.Seed));
+            var folderOrder = FolderParameter.GetFolderOrder(path, this.FolderOrder);
+            FolderConfigCollection.Current.SetFolderParameter(path, new FolderParameterMemento(folderOrder, this.IsFolderRecursive, this.Seed));
         }
     }
 

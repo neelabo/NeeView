@@ -11,13 +11,14 @@ namespace NeeView
     {
         // TODO: Path to QueryPath
 
+        private string _path;
         private FolderOrder _folderOrder;
         private bool _isFolderRecursive;
         private int _seed;
 
         public FolderParameter(string path)
         {
-            Path = path;
+            _path = path;
             Load();
         }
 
@@ -25,7 +26,7 @@ namespace NeeView
         /// <summary>
         /// 場所
         /// </summary>
-        public string Path { get; set; }
+        public string Path => _path;
 
         /// <summary>
         /// ソート順
@@ -120,14 +121,28 @@ namespace NeeView
             }
         }
 
+        public static FolderOrder GetFolderOrder(string path, FolderOrder? hintFolderOrder)
+        {
+            if (hintFolderOrder.HasValue)
+            {
+                return hintFolderOrder.Value;
+            }
+            else
+            {
+                return GetDefaultFolderOrder(path);
+            }
+        }
+
         #region Memento
 
         public FolderParameterMemento CreateMemento()
         {
-            var memento = new FolderParameterMemento();
-            memento.FolderOrder = this.FolderOrder;
-            memento.IsFolderRecursive = this.IsFolderRecursive;
-            memento.Seed = this.Seed;
+            var memento = new FolderParameterMemento()
+            {
+                FolderOrder = this.FolderOrder,
+                IsFolderRecursive = this.IsFolderRecursive,
+                Seed = this.Seed,
+            };
             return memento;
         }
 
@@ -136,9 +151,9 @@ namespace NeeView
             if (memento == null) return;
 
             // プロパティで設定するとSave()されてしまうのを回避
-            _folderOrder = memento.FolderOrder;
+            _folderOrder = FolderParameter.GetFolderOrder(_path, memento.FolderOrder);
             _isFolderRecursive = memento.IsFolderRecursive;
-            _seed = GenerateRandomSeed(memento.FolderOrder, memento.Seed);
+            _seed = GenerateRandomSeed(_folderOrder, memento.Seed);
             RaisePropertyChanged(null);
         }
 
@@ -147,8 +162,10 @@ namespace NeeView
 
 
     [Memento]
-    public record class FolderParameterMemento
+    public record FolderParameterMemento
     {
+        public static FolderParameterMemento Default { get; } = new();
+
         public FolderParameterMemento()
         {
         }
@@ -157,29 +174,33 @@ namespace NeeView
         {
             FolderOrder = folderOrder;
             IsFolderRecursive = isFolderRecursive;
-            Seed = seed;
+            Seed = folderOrder == NeeView.FolderOrder.Random ? seed : 0;
         }
 
-        public FolderOrder FolderOrder { get; set; }
+        public FolderOrder? FolderOrder { get; init; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public bool IsFolderRecursive { get; set; }
+        public bool IsFolderRecursive { get; init; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public int Seed { get; set; }
+        public int Seed { get; init; }
 
 
-        public bool IsDefault(string path)
+        public FolderParameterMemento Normalize(string path)
         {
-            return this.Equals(GetDefault(path));
-        }
+            var memento = this;
 
-        public static FolderParameterMemento GetDefault(string path)
-        {
-            return new FolderParameterMemento()
+            if (memento.FolderOrder == FolderParameter.GetDefaultFolderOrder(path))
             {
-                FolderOrder = FolderParameter.GetDefaultFolderOrder(path)
-            };
+                memento = memento with { FolderOrder = null };
+            }
+
+            return memento;
+        }
+
+        public FolderParameterMemento? SetNullIfDefault()
+        {
+            return this == Default ? null : this;
         }
     }
 }
