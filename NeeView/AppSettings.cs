@@ -18,7 +18,7 @@ namespace NeeView
                     var resource_uri = new Uri(fileName, UriKind.Relative);
                     var info = Application.GetContentStream(resource_uri) ?? throw new FileNotFoundException($"File not found: {fileName}");
                     using var stream = info.Stream;
-                    _current = JsonSerializer.Deserialize<AppSettings>(stream, UserSettingTools.GetSerializerOptions());
+                    _current = JsonSerializer.Deserialize<AppSettings>(stream, UserSettingTools.GetDeserializeOptions());
                     if (_current is null) throw new FormatException($"Cannot read: {fileName}");
                 }
                 return _current;

@@ -51,7 +51,7 @@ namespace NeeView
             {
                 Debug.WriteLine($"Save: {path}");
                 playlist.Format = PlaylistSource.FormatVersion;
-                var json = JsonSerializer.SerializeToUtf8Bytes(playlist, UserSettingTools.GetSerializerOptions());
+                var json = JsonSerializer.SerializeToUtf8Bytes(playlist, UserSettingTools.GetSerializeOptions());
 
                 var directory = Path.GetDirectoryName(path);
                 if (directory is null) throw new IOException("Directory must not be null.");
@@ -92,12 +92,12 @@ namespace NeeView
 
         private static PlaylistSource Deserialize(byte[] json)
         {
-            var fileHeader = JsonSerializer.Deserialize<PlaylistFileHeader>(json, UserSettingTools.GetSerializerOptions());
+            var fileHeader = JsonSerializer.Deserialize<PlaylistFileHeader>(json, UserSettingTools.GetDeserializeOptions());
 
 #pragma warning disable CS0612, CS0618 // 型またはメンバーが旧型式です
             if (fileHeader?.Format != null && fileHeader.Format.Name == PlaylistSourceV1.FormatVersion)
             {
-                var playlistV1 = JsonSerializer.Deserialize<PlaylistSourceV1>(json, UserSettingTools.GetSerializerOptions());
+                var playlistV1 = JsonSerializer.Deserialize<PlaylistSourceV1>(json, UserSettingTools.GetDeserializeOptions());
                 if (playlistV1 is null) throw new FormatException();
                 return playlistV1.ToPlaylist().Validate();
             }
@@ -105,7 +105,7 @@ namespace NeeView
 
             else
             {
-                var playlistSource = JsonSerializer.Deserialize<PlaylistSource>(json, UserSettingTools.GetSerializerOptions());
+                var playlistSource = JsonSerializer.Deserialize<PlaylistSource>(json, UserSettingTools.GetDeserializeOptions());
                 if (playlistSource is null) throw new FormatException();
                 return playlistSource.Validate();
             }
