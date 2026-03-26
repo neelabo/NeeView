@@ -44,7 +44,18 @@ namespace NeeView
 
             _elements = list.ToDictionary(e => e.Name);
 
-            _defaultMemento = CreateDragActionCollection(false);
+            foreach(var element in _elements.Values)
+            {
+                element.CreateDefaultMemento();
+            }
+
+            var collection = new DragActionCollection();
+            foreach (var pair in _elements)
+            {
+                var memento = pair.Value.DefaultMemento ?? throw new InvalidOperationException();
+                collection.Add(pair.Key.ToString(), memento);
+            }
+            _defaultMemento = collection;
 
             Config.Current.Mouse.AddPropertyChanged(nameof(MouseConfig.IsGestureEnabled),
                 (s, e) => UpdateGestureDragAction());
@@ -125,17 +136,13 @@ namespace NeeView
 
             foreach (var pair in _elements)
             {
-                var memento = pair.Value.CreateMemento();
+                var memento = pair.Value.CreateMemento(trim);
 
-                if (trim && _defaultMemento != null)
+                if (trim)
                 {
-                    // デフォルトと同じものは除外
-                    if (_defaultMemento.TryGetValue(pair.Key, out var defaultMemento))
+                    if (memento.IsDefault())
                     {
-                        if (memento.MemberwiseEquals(defaultMemento))
-                        {
-                            continue;
-                        }
+                        continue;
                     }
                 }
 

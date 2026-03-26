@@ -46,10 +46,5 @@ namespace NeeView
 
             _parameter = value;
         }
-
-        public bool EqualsDefault()
-        {
-            return GetDefault().MemberwiseEquals(_parameter);
-        }
     }
 }

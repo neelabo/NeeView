@@ -1,4 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Diagnostics;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace NeeView
@@ -8,8 +10,8 @@ namespace NeeView
         [GeneratedRegex(@"DragAction$")]
         private static partial Regex _termDragActionRegex { get; }
 
-
         public delegate DragActionControl CreateDragAction(DragTransformContext context, DragAction? source);
+
 
         public DragAction()
         {
@@ -42,25 +44,70 @@ namespace NeeView
 
         public DragActionCategory DragActionCategory { get; protected set; }
 
+        public DragActionMemento? DefaultMemento { get; private set; }
+
 
         public abstract DragActionControl CreateControl(DragTransformContext context);
 
 
+        public void CreateDefaultMemento()
+        {
+            SetDefaultMemento(CreateMemento());
+        }
+
+        [Conditional("DEBUG")]
+        public void CheckDefaultMemento()
+        {
+            Debug.Assert(DefaultMemento is not null);
+        }
+
+        public void SetDefaultMemento(DragActionMemento memento)
+        {
+#if DEBUG
+            Debug.Assert(memento != null);
+            Debug.Assert(memento.MouseButton != null);
+            if (ParameterSource is not null)
+            {
+                Debug.Assert(memento.Parameter != null && memento.Parameter.Equals(ParameterSource.GetDefault()));
+            }
+
+#endif
+            DefaultMemento = memento;
+        }
+
+
         #region Memento
 
-        public DragActionMemento CreateMemento()
+        public DragActionMemento CreateMemento(bool trim = false)
         {
             var memento = new DragActionMemento();
             memento.MouseButton = DragKey;
             memento.Parameter = (DragActionParameter?)Parameter?.Clone();
+
+            if (trim)
+            {
+                Debug.Assert(DefaultMemento is not null);
+                if (memento.MouseButton == DefaultMemento.MouseButton)
+                {
+                    memento.MouseButton = null;
+                }
+                if (memento.Parameter is not null && memento.Parameter.Equals(DefaultMemento.Parameter))
+                {
+                    memento.Parameter = null;
+                }
+            }
+
             return memento;
         }
 
         public void Restore(DragActionMemento memento)
         {
+            Debug.Assert(DefaultMemento is not null);
+
             if (memento == null) return;
-            DragKey = memento.MouseButton;
-            Parameter = (DragActionParameter?)memento.Parameter?.Clone();
+
+            DragKey = memento.MouseButton ?? DefaultMemento.MouseButton ?? throw new InvalidOperationException();
+            Parameter = (DragActionParameter?)memento.Parameter?.Clone() ?? DefaultMemento.Parameter;
         }
 
         #endregion
@@ -69,7 +116,8 @@ namespace NeeView
 
     public class DragActionMemento
     {
-        public DragKey MouseButton { get; set; } = DragKey.Empty;
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public DragKey? MouseButton { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public DragActionParameter? Parameter { get; set; }
@@ -80,13 +128,18 @@ namespace NeeView
             return (DragActionMemento)MemberwiseClone();
         }
 
-        public bool MemberwiseEquals(DragActionMemento other)
+        public bool IsDefault()
         {
-            if (other is null) return false;
-            if (other.MouseButton != MouseButton) return false;
-            if (Parameter != null && !Parameter.MemberwiseEquals(other.Parameter)) return false;
-            return true;
+            return MouseButton == null && Parameter == null;
         }
+
+        //public bool MemberwiseEquals(DragActionMemento other)
+        //{
+        //    if (other is null) return false;
+        //    if (other.MouseButton != MouseButton) return false;
+        //    if (Parameter != null && !Parameter.Equals(other.Parameter)) return false;
+        //    return true;
+        //}
     }
 
 }

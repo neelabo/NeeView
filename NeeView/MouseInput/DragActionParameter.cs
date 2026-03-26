@@ -1,4 +1,5 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System;
 using System.Diagnostics;
@@ -9,25 +10,14 @@ using System.Text.Json.Serialization;
 namespace NeeView
 {
     [JsonConverter(typeof(JsonDragActionParameterConverter))]
-    public class DragActionParameter : BindableBase, ICloneable
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
+    public partial class DragActionParameter : BindableBase, ICloneable
     {
-        private readonly Func<object, object, bool> _equals;
-
-        public DragActionParameter()
-        {
-            _equals = ObjectExtensions.MakeEqualsMethod(this.GetType());
-        }
-
         public virtual object Clone()
         {
-            return MemberwiseClone();
-        }
-
-        public bool MemberwiseEquals(DragActionParameter? other)
-        {
-            if (other is null) return false;
-
-            return _equals(this, other);
+            var clone = (DragActionParameter)MemberwiseClone();
+            clone.ResetPropertyChanged();
+            return clone;
         }
     }
 
@@ -41,10 +31,10 @@ namespace NeeView
     }
 
 
-
-    public class SensitiveDragActionParameter : DragActionParameter
+    [Equatable(Explicit = true)]
+    public partial class SensitiveDragActionParameter : DragActionParameter
     {
-        private double _sensitivity = 1.0;
+        [DefaultEquality] private double _sensitivity = 1.0;
 
         /// <summary>
         /// 感度
@@ -53,13 +43,14 @@ namespace NeeView
         public double Sensitivity
         {
             get { return _sensitivity; }
-            set { SetProperty(ref _sensitivity, value); }
+            set { SetProperty(ref _sensitivity, AppMath.Round(value)); }
         }
     }
 
-    public class MoveDragActionParameter : DragActionParameter
+    [Equatable(Explicit = true)]
+    public partial class MoveDragActionParameter : DragActionParameter
     {
-        private bool _isInertiaEnabled = true;
+        [DefaultEquality] private bool _isInertiaEnabled = true;
 
         /// <summary>
         /// 慣性
@@ -72,9 +63,10 @@ namespace NeeView
         }
     }
 
-    public class MoveScaleDragActionParameter : SensitiveDragActionParameter
+    [Equatable(Explicit = true)]
+    public partial class MoveScaleDragActionParameter : SensitiveDragActionParameter
     {
-        private bool _isInertiaEnabled = true;
+        [DefaultEquality] private bool _isInertiaEnabled = true;
 
         /// <summary>
         /// 慣性
@@ -156,25 +148,14 @@ namespace NeeView
 
         public override void Write(Utf8JsonWriter writer, DragActionParameter value, JsonSerializerOptions options)
         {
-
             var type = value.GetType();
             Debug.Assert(KnownTypes.Contains(type));
 
-            var def = (DragActionParameter?)Activator.CreateInstance(type);
-            if (value.MemberwiseEquals(def))
-            {
-                //Debug.WriteLine($"{type} is default.");
-                writer.WriteNullValue();
-            }
-            else
-            {
-                writer.WriteStartObject();
-                writer.WriteString("Type", type.Name);
-                writer.WritePropertyName("Value");
-                JsonSerializer.Serialize(writer, value, type, options);
-                writer.WriteEndObject();
-            }
-
+            writer.WriteStartObject();
+            writer.WriteString("Type", type.Name);
+            writer.WritePropertyName("Value");
+            JsonSerializer.Serialize(writer, value, type, options);
+            writer.WriteEndObject();
         }
     }
 }

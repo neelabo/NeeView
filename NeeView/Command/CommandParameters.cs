@@ -23,7 +23,9 @@ namespace NeeView
 
         public object Clone()
         {
-            return MemberwiseClone();
+            var clone = (CommandParameter)MemberwiseClone();
+            clone.ResetPropertyChanged();
+            return clone;
         }
 
         public T Clone<T>() where T : CommandParameter
