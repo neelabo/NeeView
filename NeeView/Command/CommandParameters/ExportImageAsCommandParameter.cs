@@ -1,4 +1,5 @@
-﻿using NeeLaboratory;
+﻿using Generator.Equals;
+using NeeLaboratory;
 using NeeView;
 using NeeView.Windows.Controls;
 using NeeView.Windows.Property;
@@ -8,10 +9,11 @@ namespace NeeView
     /// <summary>
     /// ExportImageAs Command Parameter
     /// </summary>
-    public class ExportImageAsCommandParameter : CommandParameter
+    [Equatable(Explicit = true)]
+    public partial class ExportImageAsCommandParameter : CommandParameter
     {
-        private string? _exportFolder;
-        private int _qualityLevel = 80;
+        [DefaultEquality] private string? _exportFolder;
+        [DefaultEquality] private int _qualityLevel = 80;
 
         [PropertyPath(FileDialogType = FileDialogType.Directory)]
         public string ExportFolder

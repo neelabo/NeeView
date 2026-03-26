@@ -79,12 +79,6 @@ namespace NeeView
         {
             ParameterChanged?.Invoke(this, new ParameterChangedEventArgs(e.PropertyName));
         }
-
-        public bool EqualsDefault()
-        {
-            return GetDefault().MemberwiseEquals(_parameter);
-        }
-
     }
 
 

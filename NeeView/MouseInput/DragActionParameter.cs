@@ -95,6 +95,20 @@ namespace NeeView
             typeof(SensitiveDragActionParameter),
         };
 
+        static JsonDragActionParameterConverter()
+        {
+            CheckAllClassHasEquals();
+        }
+
+        // すべてのクラスが Equals を実装しているかチェック（デバッグ用）
+        [Conditional("DEBUG")]
+        private static void CheckAllClassHasEquals()
+        {
+            foreach (var type in KnownTypes)
+            {
+                NVDebug.CheckHasEqualsMethod(type);
+            }
+        }
 
         public override DragActionParameter? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
@@ -152,9 +166,12 @@ namespace NeeView
             Debug.Assert(KnownTypes.Contains(type));
 
             writer.WriteStartObject();
+
             writer.WriteString("Type", type.Name);
+
             writer.WritePropertyName("Value");
             JsonSerializer.Serialize(writer, value, type, options);
+
             writer.WriteEndObject();
         }
     }

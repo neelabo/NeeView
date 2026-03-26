@@ -1,11 +1,13 @@
-﻿using NeeView.Windows.Property;
+﻿using Generator.Equals;
+using NeeView.Windows.Property;
 using System;
 
 namespace NeeView
 {
-    public class OpenBookExternalAppAsCommandParameter : CommandParameter
+    [Equatable(Explicit = true)]
+    public partial class OpenBookExternalAppAsCommandParameter : CommandParameter
     {
-        private int _index;
+        [DefaultEquality] private int _index;
 
         /// <summary>
         /// 選択された外部アプリの番号。0 は未選択

@@ -1,4 +1,5 @@
-﻿using NeeLaboratory;
+﻿using Generator.Equals;
+using NeeLaboratory;
 using NeeView.Windows.Property;
 
 namespace NeeView
@@ -6,10 +7,11 @@ namespace NeeView
     /// <summary>
     /// ビュー回転コマンド用パラメータ
     /// </summary>
-    public class ViewRotateCommandParameter : CommandParameter
+    [Equatable(Explicit = true)]
+    public partial class ViewRotateCommandParameter : CommandParameter
     {
-        private int _angle = 45;
-        private bool _isStretch;
+        [DefaultEquality] private int _angle = 45;
+        [DefaultEquality] private bool _isStretch;
 
 
         // 属性に説明文

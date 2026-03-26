@@ -1,4 +1,5 @@
-﻿using NeeView.Windows.Property;
+﻿using Generator.Equals;
+using NeeView.Windows.Property;
 
 
 namespace NeeView
@@ -6,9 +7,10 @@ namespace NeeView
     /// <summary>
     /// スケールモード用設定
     /// </summary>
-    public class StretchModeCommandParameter : CommandParameter
+    [Equatable(Explicit = true)]
+    public partial class StretchModeCommandParameter : CommandParameter
     {
-        private bool _isToggle;
+        [DefaultEquality] private bool _isToggle;
 
         // 属性に説明文
         [PropertyMember]

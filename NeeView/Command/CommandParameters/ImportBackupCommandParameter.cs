@@ -1,16 +1,18 @@
-﻿using NeeView.Windows.Property;
+﻿using Generator.Equals;
+using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    public class ImportBackupCommandParameter : CommandParameter
+    [Equatable(Explicit = true)]
+    public partial class ImportBackupCommandParameter : CommandParameter
     {
-        private string? _fileName;
-        private ImportAction _userSetting = ImportAction.Import;
-        private ImportAction _history;
-        private ImportAction _bookmark;
-        private ImportAction _playlists;
-        private ImportAction _themes;
-        private ImportAction _scripts;
+        [DefaultEquality] private string? _fileName;
+        [DefaultEquality] private ImportAction _userSetting = ImportAction.Import;
+        [DefaultEquality] private ImportAction _history;
+        [DefaultEquality] private ImportAction _bookmark;
+        [DefaultEquality] private ImportAction _playlists;
+        [DefaultEquality] private ImportAction _themes;
+        [DefaultEquality] private ImportAction _scripts;
 
 
         [PropertyPath(Filter = "NeeView BackupFile|*.nvzip")]

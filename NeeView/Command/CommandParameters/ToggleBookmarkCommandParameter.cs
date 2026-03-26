@@ -1,10 +1,12 @@
-﻿using NeeView.Windows.Property;
+﻿using Generator.Equals;
+using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    public class ToggleBookmarkCommandParameter : CommandParameter
+    [Equatable(Explicit = true)]
+    public partial class ToggleBookmarkCommandParameter : CommandParameter
     {
-        private string? _folder;
+        [DefaultEquality] private string? _folder;
 
         [PropertyMember]
         public string? Folder

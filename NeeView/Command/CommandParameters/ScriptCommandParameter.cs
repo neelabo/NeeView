@@ -1,11 +1,13 @@
-﻿using NeeView.Windows.Property;
+﻿using Generator.Equals;
+using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    public class ScriptCommandParameter : CommandParameter
+    [Equatable(Explicit = true)]
+    public partial class ScriptCommandParameter : CommandParameter
     {
-        private string? _argument;
-        private bool _isChecked;
+        [DefaultEquality] private string? _argument;
+        [DefaultEquality] private bool _isChecked;
 
         [PropertyMember]
         public string? Argument

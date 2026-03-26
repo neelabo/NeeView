@@ -1,4 +1,5 @@
-﻿using NeeLaboratory;
+﻿using Generator.Equals;
+using NeeLaboratory;
 using NeeView.Windows.Property;
 using System;
 using System.Text.Json.Serialization;
@@ -8,14 +9,15 @@ namespace NeeView
     /// <summary>
     /// スクロール＋ページ移動用パラメータ
     /// </summary>
-    public class ScrollPageCommandParameter : ReversibleCommandParameter, IScrollNTypeParameter, IScrollNTypeEndMargin
+    [Equatable(Explicit = true)]
+    public partial class ScrollPageCommandParameter : ReversibleCommandParameter, IScrollNTypeParameter, IScrollNTypeEndMargin
     {
-        private NScrollType _scrollType = NScrollType.NType;
-        private double _scroll = 1.0;
-        private double _endMargin = 10.0;
-        private double _lineBreakStopTime;
-        private LineBreakStopMode _lineBreakStopMode = LineBreakStopMode.Line;
-        private bool _pagesAsOne;
+        [DefaultEquality] private NScrollType _scrollType = NScrollType.NType;
+        [DefaultEquality] private double _scroll = 1.0;
+        [DefaultEquality] private double _endMargin = 10.0;
+        [DefaultEquality] private double _lineBreakStopTime;
+        [DefaultEquality] private LineBreakStopMode _lineBreakStopMode = LineBreakStopMode.Line;
+        [DefaultEquality] private bool _pagesAsOne;
 
 
         [PropertyMember]

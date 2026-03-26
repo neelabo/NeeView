@@ -1,4 +1,5 @@
-﻿using NeeView.Windows.Property;
+﻿using Generator.Equals;
+using NeeView.Windows.Property;
 using System.Collections.Generic;
 
 namespace NeeView
@@ -6,15 +7,16 @@ namespace NeeView
     /// <summary>
     /// スケールモードトグル用設定
     /// </summary>
-    public class ToggleStretchModeCommandParameter : CommandParameter
+    [Equatable(Explicit = true)]
+    public partial class ToggleStretchModeCommandParameter : CommandParameter
     {
-        private bool _isLoop = true;
-        private bool _isEnableNone = true;
-        private bool _isEnableUniform = true;
-        private bool _isEnableUniformToFill = true;
-        private bool _isEnableUniformToSize = true;
-        private bool _isEnableUniformToVertical = true;
-        private bool _isEnableUniformToHorizontal = true;
+        [DefaultEquality] private bool _isLoop = true;
+        [DefaultEquality] private bool _isEnableNone = true;
+        [DefaultEquality] private bool _isEnableUniform = true;
+        [DefaultEquality] private bool _isEnableUniformToFill = true;
+        [DefaultEquality] private bool _isEnableUniformToSize = true;
+        [DefaultEquality] private bool _isEnableUniformToVertical = true;
+        [DefaultEquality] private bool _isEnableUniformToHorizontal = true;
 
         // ループ
         [PropertyMember]

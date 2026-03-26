@@ -1,10 +1,12 @@
-﻿using NeeView.Windows.Property;
+﻿using Generator.Equals;
+using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    public class TogglePageModeCommandParameter : CommandParameter
+    [Equatable(Explicit = true)]
+    public partial class TogglePageModeCommandParameter : CommandParameter
     {
-        private bool _isLoop = true;
+        [DefaultEquality] private bool _isLoop = true;
 
         // ループ
         [PropertyMember]

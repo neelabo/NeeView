@@ -1,4 +1,5 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System;
 using System.Diagnostics;
@@ -12,31 +13,14 @@ namespace NeeView
     /// コマンドパラメータ（基底）
     /// </summary>
     [JsonConverter(typeof(JsonCommandParameterConverter))]
-    public abstract class CommandParameter : BindableBase, ICloneable
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
+    public abstract partial class CommandParameter : BindableBase, ICloneable
     {
-        private readonly Func<object, object, bool> _equals;
-
-        public CommandParameter()
-        {
-            _equals = ObjectExtensions.MakeEqualsMethod(this.GetType());
-        }
-
         public object Clone()
         {
             var clone = (CommandParameter)MemberwiseClone();
             clone.ResetPropertyChanged();
             return clone;
-        }
-
-        public T Clone<T>() where T : CommandParameter
-        {
-            return (T)MemberwiseClone();
-        }
-
-        public bool MemberwiseEquals(CommandParameter? other)
-        {
-            if (other is null) return false;
-            return _equals(this, other);
         }
     }
 
@@ -53,9 +37,10 @@ namespace NeeView
     /// <summary>
     /// 操作反転コマンドパラメータ基底
     /// </summary>
-    public class ReversibleCommandParameter : CommandParameter
+    [Equatable(Explicit = true)]
+    public partial class ReversibleCommandParameter : CommandParameter
     {
-        private bool _isReverse = true;
+        [DefaultEquality] private bool _isReverse = true;
 
         [PropertyMember]
         public bool IsReverse
@@ -103,6 +88,20 @@ namespace NeeView
             typeof(ToggleBookmarkCommandParameter),
         };
 
+        static JsonCommandParameterConverter()
+        {
+            CheckAllClassHasEquals();
+        }
+
+        // すべてのクラスが Equals を実装しているかチェック（デバッグ用）
+        [Conditional("DEBUG")]
+        private static void CheckAllClassHasEquals()
+        {
+            foreach (var type in KnownTypes)
+            {
+                NVDebug.CheckHasEqualsMethod(type);
+            }
+        }
 
         public override CommandParameter? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
@@ -188,7 +187,7 @@ namespace NeeView
 
             var def = Activator.CreateInstance(type) as CommandParameter ?? throw new InvalidOperationException();
 
-            if (AppSettings.Current.TrimSaveData && value.MemberwiseEquals(def))
+            if (AppSettings.Current.TrimSaveData && value.Equals(def))
             {
                 //Debug.WriteLine($"{type} is default.");
                 writer.WriteNullValue();

@@ -1,4 +1,5 @@
-﻿using NeeLaboratory;
+﻿using Generator.Equals;
+using NeeLaboratory;
 using NeeView.Windows.Property;
 using System;
 using System.Text.Json.Serialization;
@@ -8,12 +9,13 @@ namespace NeeView
     /// <summary>
     /// N字スクロール
     /// </summary>
-    public class ViewScrollNTypeCommandParameter : ReversibleCommandParameter, IScrollNTypeParameter
+    [Equatable(Explicit = true)]
+    public partial class ViewScrollNTypeCommandParameter : ReversibleCommandParameter, IScrollNTypeParameter
     {
-        private NScrollType _scrollType = NScrollType.NType;
-        private double _scroll = 1.0;
-        private double _lineBreakStopTime;
-        private bool _pagesAsOne;
+        [DefaultEquality] private NScrollType _scrollType = NScrollType.NType;
+        [DefaultEquality] private double _scroll = 1.0;
+        [DefaultEquality] private double _lineBreakStopTime;
+        [DefaultEquality] private bool _pagesAsOne;
 
 
         [PropertyMember]

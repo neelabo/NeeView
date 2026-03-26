@@ -132,14 +132,5 @@ namespace NeeView
         {
             return MouseButton == null && Parameter == null;
         }
-
-        //public bool MemberwiseEquals(DragActionMemento other)
-        //{
-        //    if (other is null) return false;
-        //    if (other.MouseButton != MouseButton) return false;
-        //    if (Parameter != null && !Parameter.Equals(other.Parameter)) return false;
-        //    return true;
-        //}
     }
-
 }

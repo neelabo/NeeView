@@ -1,11 +1,13 @@
-﻿using NeeView.Windows.Property;
+﻿using Generator.Equals;
+using NeeView.Windows.Property;
 using System;
 
 namespace NeeView
 {
-    public class MoveBookToFolderAsCommandParameter : CommandParameter
+    [Equatable(Explicit = true)]
+    public partial class MoveBookToFolderAsCommandParameter : CommandParameter
     {
-        private int _index;
+        [DefaultEquality] private int _index;
 
         /// <summary>
         /// 選択されたフォルダーの番号。0 は未選択

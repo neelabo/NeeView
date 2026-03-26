@@ -1,13 +1,15 @@
-﻿using NeeView.Windows;
+﻿using Generator.Equals;
+using NeeView.Windows;
 using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    public class ViewPresetScrollCommandParameter : CommandParameter
+    [Equatable(Explicit = true)]
+    public partial class ViewPresetScrollCommandParameter : CommandParameter
     {
-        private LimitedHorizontalAlignment _horizontal = LimitedHorizontalAlignment.Center;
-        private LimitedVerticalAlignment _vertical = LimitedVerticalAlignment.Center;
-        private bool _isSnap;
+        [DefaultEquality] private LimitedHorizontalAlignment _horizontal = LimitedHorizontalAlignment.Center;
+        [DefaultEquality] private LimitedVerticalAlignment _vertical = LimitedVerticalAlignment.Center;
+        [DefaultEquality] private bool _isSnap;
 
         [PropertyMember]
         public LimitedHorizontalAlignment Horizontal

@@ -1,4 +1,5 @@
-﻿using NeeLaboratory;
+﻿using Generator.Equals;
+using NeeLaboratory;
 using NeeView.Windows.Property;
 using System.ComponentModel;
 
@@ -7,10 +8,11 @@ namespace NeeView
     /// <summary>
     /// ビュー拡大コマンド用パラメータ
     /// </summary>
-    public class ViewScaleCommandParameter : CommandParameter
+    [Equatable(Explicit = true)]
+    public partial class ViewScaleCommandParameter : CommandParameter
     {
-        private double _scale = 0.2;
-        private bool _isSnapDefaultScale = true;
+        [DefaultEquality] private double _scale = 0.2;
+        [DefaultEquality] private bool _isSnapDefaultScale = true;
 
         [PropertyPercent]
         public double Scale

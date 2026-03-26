@@ -1,12 +1,14 @@
-﻿using NeeView.Windows.Property;
+﻿using Generator.Equals;
+using NeeView.Windows.Property;
 using System;
 
 namespace NeeView
 {
-    public class MoveToFolderAsCommandParameter : CommandParameter
+    [Equatable(Explicit = true)]
+    public partial class MoveToFolderAsCommandParameter : CommandParameter
     {
-        private MultiPagePolicy _multiPagePolicy = MultiPagePolicy.Once;
-        private int _index;
+        [DefaultEquality] private MultiPagePolicy _multiPagePolicy = MultiPagePolicy.Once;
+        [DefaultEquality] private int _index;
 
 
         /// <summary>

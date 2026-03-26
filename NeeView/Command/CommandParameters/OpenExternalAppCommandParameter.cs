@@ -1,20 +1,22 @@
-﻿using NeeView.Windows.Property;
+﻿using Generator.Equals;
+using NeeView.Windows.Property;
 using System.ComponentModel;
 
 namespace NeeView
 {
-    public class OpenExternalAppCommandParameter : CommandParameter, INotifyPropertyChanged, IExternalApp
+    [Equatable(Explicit = true)]
+    public partial class OpenExternalAppCommandParameter : CommandParameter, INotifyPropertyChanged, IExternalApp
     {
         // コマンドパラメータで使用されるキーワード
         public const string KeyFile = "$File";
         public const string KeyUri = "$Uri";
         public const string DefaultParameter = "\"" + KeyFile + "\"";
 
-        private ArchivePolicy _archivePolicy = ArchivePolicy.SendExtractFile;
-        private string? _command;
-        private string _parameter = DefaultParameter;
-        private MultiPagePolicy _multiPagePolicy = MultiPagePolicy.Once;
-        private string? _workingDirectory;
+        [DefaultEquality] private ArchivePolicy _archivePolicy = ArchivePolicy.SendExtractFile;
+        [DefaultEquality] private string? _command;
+        [DefaultEquality] private string _parameter = DefaultParameter;
+        [DefaultEquality] private MultiPagePolicy _multiPagePolicy = MultiPagePolicy.Once;
+        [DefaultEquality] private string? _workingDirectory;
 
 
         // コマンド

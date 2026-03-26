@@ -1,4 +1,5 @@
-﻿using NeeLaboratory;
+﻿using Generator.Equals;
+using NeeLaboratory;
 using NeeView.Windows.Property;
 
 namespace NeeView
@@ -6,9 +7,10 @@ namespace NeeView
     /// <summary>
     /// 指定ページ数移動コマンド用パラメータ
     /// </summary>
-    public class MoveSizePageCommandParameter : ReversibleCommandParameter
+    [Equatable(Explicit = true)]
+    public partial class MoveSizePageCommandParameter : ReversibleCommandParameter
     {
-        private int _size = 10;
+        [DefaultEquality] private int _size = 10;
 
         [PropertyMember]
         public int Size

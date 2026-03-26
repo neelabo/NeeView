@@ -1,4 +1,5 @@
-﻿using NeeLaboratory;
+﻿using Generator.Equals;
+using NeeLaboratory;
 using NeeView.Windows.Property;
 using System;
 using System.Text.Json.Serialization;
@@ -8,10 +9,11 @@ namespace NeeView
     /// <summary>
     /// ビュースクロールコマンド用パラメータ
     /// </summary>
-    public class ViewScrollCommandParameter : CommandParameter
+    [Equatable(Explicit = true)]
+    public partial class ViewScrollCommandParameter : CommandParameter
     {
-        private double _scroll = 0.25;
-        private bool _allowCrossScroll = true;
+        [DefaultEquality] private double _scroll = 0.25;
+        [DefaultEquality] private bool _allowCrossScroll = true;
 
         // 属性に説明文
         [PropertyPercent]

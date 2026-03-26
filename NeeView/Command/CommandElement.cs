@@ -432,7 +432,7 @@ namespace NeeView
             Debug.Assert(memento.IsShowMessage != null);
             if (Share is not null && ParameterSource is not null)
             {
-                Debug.Assert(memento.Parameter != null && memento.Parameter.MemberwiseEquals(ParameterSource.GetDefault()));
+                Debug.Assert(memento.Parameter != null && memento.Parameter.Equals(ParameterSource.GetDefault()));
             }
 #endif
 
@@ -480,7 +480,7 @@ namespace NeeView
                 {
                     memento.IsShowMessage = null;
                 }
-                if (Share is not null || (memento.Parameter is not null && memento.Parameter.MemberwiseEquals(_default.Parameter)))
+                if (Share is not null || (memento.Parameter is not null && memento.Parameter.Equals(_default.Parameter)))
                 {
                     memento.Parameter = null;
                 }

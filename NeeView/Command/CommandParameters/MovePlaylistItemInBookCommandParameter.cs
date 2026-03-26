@@ -1,14 +1,16 @@
-﻿using NeeView.Windows.Property;
+﻿using Generator.Equals;
+using NeeView.Windows.Property;
 
 namespace NeeView
 {
     /// <summary>
     /// プレイリスト項目移動用パラメータ
     /// </summary>
-    public class MovePlaylistItemInBookCommandParameter : CommandParameter
+    [Equatable(Explicit = true)]
+    public partial class MovePlaylistItemInBookCommandParameter : CommandParameter
     {
-        private bool _isLoop;
-        private bool _isIncludeTerminal;
+        [DefaultEquality] private bool _isLoop;
+        [DefaultEquality] private bool _isIncludeTerminal;
 
         [PropertyMember]
         public bool IsLoop

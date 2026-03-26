@@ -1,4 +1,5 @@
-﻿using NeeView.Windows.Property;
+﻿using Generator.Equals;
+using NeeView.Windows.Property;
 using System;
 using System.Text.Json.Serialization;
 
@@ -7,9 +8,10 @@ namespace NeeView
     /// <summary>
     /// CopyFileCommand Parameter
     /// </summary>
-    public class CopyFileCommandParameter : CommandParameter
+    [Equatable(Explicit = true)]
+    public partial class CopyFileCommandParameter : CommandParameter
     {
-        private MultiPagePolicy _multiPagePolicy = MultiPagePolicy.Once;
+        [DefaultEquality] private MultiPagePolicy _multiPagePolicy = MultiPagePolicy.Once;
 
 
         // 複数ページのときの動作

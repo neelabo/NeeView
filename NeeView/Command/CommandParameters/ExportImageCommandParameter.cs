@@ -1,20 +1,22 @@
-﻿using NeeView.Windows.Controls;
+﻿using Generator.Equals;
+using NeeView.Windows.Controls;
 using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    public class ExportImageCommandParameter : CommandParameter
+    [Equatable(Explicit = true)]
+    public partial class ExportImageCommandParameter : CommandParameter
     {
-        private ExportImageMode _mode;
-        private bool _hasBackground;
-        private bool _isOriginalSize = true;
-        private bool _isDotKeep;
-        private string? _exportFolder;
-        private ExportImageFileNameMode _fileNameMode;
-        private ExportImageFormat _fileFormat;
-        private int _qualityLevel = 80;
-        private bool _isShowToast = true;
-        private ExportImageOverwriteMode _overwriteMode;
+        [DefaultEquality] private ExportImageMode _mode;
+        [DefaultEquality] private bool _hasBackground;
+        [DefaultEquality] private bool _isOriginalSize = true;
+        [DefaultEquality] private bool _isDotKeep;
+        [DefaultEquality] private string? _exportFolder;
+        [DefaultEquality] private ExportImageFileNameMode _fileNameMode;
+        [DefaultEquality] private ExportImageFormat _fileFormat;
+        [DefaultEquality] private int _qualityLevel = 80;
+        [DefaultEquality] private bool _isShowToast = true;
+        [DefaultEquality] private ExportImageOverwriteMode _overwriteMode;
 
 
         [PropertyMember]

@@ -1,11 +1,13 @@
-﻿using NeeView.Windows.Property;
+﻿using Generator.Equals;
+using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    public class FocusMainViewCommandParameter : CommandParameter
+    [Equatable(Explicit = true)]
+    public partial class FocusMainViewCommandParameter : CommandParameter
     {
-        private bool _needClosePanels;
-        private bool _isToggle = true;
+        [DefaultEquality] private bool _needClosePanels;
+        [DefaultEquality] private bool _isToggle = true;
 
         [PropertyMember]
         public bool NeedClosePanels
