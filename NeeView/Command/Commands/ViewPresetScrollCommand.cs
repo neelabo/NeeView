@@ -14,7 +14,7 @@ namespace NeeView
 
         public override void Execute(object? sender, CommandContext e)
         {
-            MainViewComponent.Current.ViewTransformControl.ScrollToPreset(Parameter.Cast<ViewPresetScrollCommandParameter>());
+            MainViewComponent.Current.ViewTransformControl.ScrollToPreset(e.Parameter.Cast<ViewPresetScrollCommandParameter>());
         }
     }
 

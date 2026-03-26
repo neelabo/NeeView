@@ -82,6 +82,7 @@ namespace NeeView
         private MouseSequence _mouseGesture = MouseSequence.Empty;
         private bool _isCloneable = true;
         private CommandParameterSource? _parameterSource;
+        private CommandElementMemento? _default;
 
 
         public CommandElement() : this(null)
@@ -256,6 +257,8 @@ namespace NeeView
 
         public CommandElement? Share { get; private set; }
 
+        public CommandElementMemento DefaultMemento => _default ?? throw new InvalidOperationException("DefaultMemento is not set yet.");
+
 
         public SearchValue GetValue(SearchPropertyProfile profile, string? parameter, CancellationToken token)
         {
@@ -288,6 +291,12 @@ namespace NeeView
             return Text;
         }
 
+        public string ExecuteMessage(object? sender, CommandParameter? parameter, CommandArgs args)
+        {
+            Debug.Assert(parameter?.GetType() == this.Parameter?.GetType());
+            return ExecuteMessage(sender, new CommandContext(parameter, args));
+        }
+
         public string ExecuteMessage(object? sender, CommandArgs args)
         {
             return ExecuteMessage(sender, new CommandContext(this.Parameter, args));
@@ -306,6 +315,12 @@ namespace NeeView
 
         // コマンド実行
         public abstract void Execute(object? sender, CommandContext args);
+
+        public void Execute(object? sender, CommandParameter? parameter, CommandArgs args)
+        {
+            Debug.Assert(parameter?.GetType() == this.Parameter?.GetType());
+            Execute(sender, new CommandContext(parameter, args));
+        }
 
         public void Execute(object? sender, CommandArgs args)
         {
@@ -345,10 +360,10 @@ namespace NeeView
         // コマンドの複製
         public CommandElement CloneCommand(CommandNameSource name)
         {
-            var clone = CloneInstance();
+            Debug.Assert(_default is not null);
 
-            var memento = CreateMemento();
-            clone.Restore(memento);
+            var clone = CloneInstance();
+            clone.RestoreFromCompletedMemento(_default);
             clone.Order = this.Order;
             clone.ClearGestures();
 
@@ -362,6 +377,8 @@ namespace NeeView
                     clone.Menu = clone.Menu + " " + name.Number.ToString(CultureInfo.InvariantCulture);
                 }
             }
+
+            clone.CreateDefaultMemento();
 
             return clone;
         }
@@ -394,40 +411,131 @@ namespace NeeView
             return null;
         }
 
+        public void CreateDefaultMemento()
+        {
+            SetDefaultMemento(CreateMemento());
+        }
+
+        [Conditional("DEBUG")]
+        public void CheckDefaultMemento()
+        {
+            Debug.Assert(_default is not null);
+        }
+
+        public void SetDefaultMemento(CommandElementMemento memento)
+        {
+#if DEBUG
+            Debug.Assert(memento != null);
+            Debug.Assert(memento.ShortCutKey != null);
+            Debug.Assert(memento.TouchGesture != null);
+            Debug.Assert(memento.MouseGesture != null);
+            Debug.Assert(memento.IsShowMessage != null);
+            if (Share is not null && ParameterSource is not null)
+            {
+                Debug.Assert(memento.Parameter != null && memento.Parameter.MemberwiseEquals(ParameterSource.GetDefault()));
+            }
+#endif
+
+            _default = memento;
+        }
+
 
         #region Memento
 
-        public CommandElementMemento CreateMemento()
+        /// <summary>
+        /// 記録を取得
+        /// </summary>
+        /// <param name="trim">既定値のプロパティを省略する</param>
+        /// <returns></returns>
+        public CommandElementMemento CreateMemento(bool trim = false)
         {
+
             var memento = new CommandElementMemento();
 
             memento.ShortCutKey = ShortCutKey;
             memento.TouchGesture = TouchGesture;
             memento.MouseGesture = MouseGesture;
             memento.IsShowMessage = IsShowMessage;
-            
-            if (Share is null)
-            {
-                memento.Parameter = Parameter?.Clone() as CommandParameter;
-            }
+            memento.Parameter = Parameter?.Clone() as CommandParameter;
 
             Debug.Assert(Parameter == null || JsonCommandParameterConverter.KnownTypes.Contains(Parameter.GetType()));
+
+            if (trim)
+            {
+                Debug.Assert(_default is not null);
+
+                if (memento.ShortCutKey == _default.ShortCutKey)
+                {
+                    memento.ShortCutKey = null;
+                }
+                if (memento.TouchGesture == _default.TouchGesture)
+                {
+                    memento.TouchGesture = null;
+                }
+                if (memento.MouseGesture == _default.MouseGesture)
+                {
+                    memento.MouseGesture = null;
+                }
+                if (memento.IsShowMessage == _default.IsShowMessage)
+                {
+                    memento.IsShowMessage = null;
+                }
+                if (Share is not null || (memento.Parameter is not null && memento.Parameter.MemberwiseEquals(_default.Parameter)))
+                {
+                    memento.Parameter = null;
+                }
+            }
 
             return memento;
         }
 
+        /// <summary>
+        /// 復元
+        /// </summary>
+        /// <param name="memento">復元する記録</param>
+        /// <exception cref="InvalidOperationException">既定値が設定されていない</exception>
         public void Restore(CommandElementMemento memento)
         {
-            if (memento == null) return;
+            Debug.Assert(_default is not null);
 
-            ShortCutKey = memento.ShortCutKey;
-            TouchGesture = memento.TouchGesture;
-            MouseGesture = memento.MouseGesture;
-            IsShowMessage = memento.IsShowMessage;
+            if (memento == null)
+            {
+                return;
+            }
 
+            ShortCutKey = memento.ShortCutKey ?? _default.ShortCutKey ?? throw new InvalidOperationException();
+            TouchGesture = memento.TouchGesture ?? _default.TouchGesture ?? throw new InvalidOperationException();
+            MouseGesture = memento.MouseGesture ?? _default.MouseGesture ?? throw new InvalidOperationException();
+            IsShowMessage = memento.IsShowMessage ?? _default.IsShowMessage ?? throw new InvalidOperationException();
+
+            // 共有コマンドでない場合、コマンドパラメーターを復元する
             if (Share is null)
             {
                 ParameterSource?.Set(memento.Parameter ?? ParameterSource.GetDefault());
+            }
+        }
+
+        /// <summary>
+        /// 完全な記録での復元
+        /// </summary>
+        /// <param name="memento">省略されていない完全な記録</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="InvalidOperationException">記録が省略されている</exception>
+        public void RestoreFromCompletedMemento(CommandElementMemento memento)
+        {
+            if (memento == null)
+            {
+                throw new ArgumentNullException(nameof(memento));
+            }
+
+            ShortCutKey = memento.ShortCutKey ?? throw new InvalidOperationException();
+            TouchGesture = memento.TouchGesture ?? throw new InvalidOperationException();
+            MouseGesture = memento.MouseGesture ?? throw new InvalidOperationException();
+            IsShowMessage = memento.IsShowMessage ?? throw new InvalidOperationException();
+
+            if (Share is null)
+            {
+                ParameterSource?.Set(memento.Parameter ?? throw new InvalidOperationException());
             }
         }
 
@@ -481,10 +589,17 @@ namespace NeeView
     [Memento]
     public class CommandElementMemento : ICloneable
     {
-        public ShortcutKey ShortCutKey { get; set; } = ShortcutKey.Empty;
-        public TouchGesture TouchGesture { get; set; } = TouchGesture.Empty;
-        public MouseSequence MouseGesture { get; set; } = MouseSequence.Empty;
-        public bool IsShowMessage { get; set; }
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public ShortcutKey? ShortCutKey { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public TouchGesture? TouchGesture { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public MouseSequence? MouseGesture { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public bool? IsShowMessage { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public CommandParameter? Parameter { get; set; }
@@ -497,26 +612,15 @@ namespace NeeView
             return clone;
         }
 
-        public bool MemberwiseEquals(CommandElementMemento other)
+        public bool IsDefault()
         {
-            if (other is null) return false;
-            if (other.ShortCutKey != ShortCutKey) return false;
-            if (other.TouchGesture != TouchGesture) return false;
-            if (other.MouseGesture != MouseGesture) return false;
-            if (other.IsShowMessage != IsShowMessage) return false;
-            if (Parameter != null && !Parameter.MemberwiseEquals(other.Parameter)) return false;
-            return true;
+            return this.ShortCutKey == null
+                && this.TouchGesture == null
+                && this.MouseGesture == null
+                && this.IsShowMessage == null
+                && this.Parameter == null;
         }
 
-        public void ValidateCommandParameter(CommandElementMemento def)
-        {
-            if (Parameter is null) return;
-
-            if (Parameter.MemberwiseEquals(def.Parameter))
-            {
-                Parameter = null;
-            }
-        }
     }
 }
 

@@ -84,6 +84,7 @@ namespace NeeView
                 command.TouchGesture = TouchGesture.Empty;
                 command.MouseGesture = MouseSequence.Empty;
             }
+            command.CreateDefaultMemento();
             return command;
         }
 

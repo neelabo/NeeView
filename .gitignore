@@ -243,3 +243,4 @@ launchSettings.json
 /docs/_site
 /docs/sample.md
 /docs/_*.ps1
+/.github/copilot-instructions.md

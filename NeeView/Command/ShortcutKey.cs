@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -88,6 +89,11 @@ namespace NeeView
         public static ShortcutKey Parse(string? s)
         {
             return new ShortcutKey(GetInputGestureSourceCollection(s));
+        }
+
+        public static bool IsNullOrEmpty([NotNullWhen(false)] ShortcutKey? shortcutKey)
+        {
+            return shortcutKey is null || shortcutKey.IsEmpty;
         }
     }
 

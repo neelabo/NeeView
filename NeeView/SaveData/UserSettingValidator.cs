@@ -106,7 +106,9 @@ namespace NeeView
                 {
                     // メインビューウィンドウ切り替えコマンドにショートカットキーF12を設定
                     var gestureF12 = new KeyGestureSource(Key.F12);
-                    if (self.Commands.TryGetValue("ToggleMainViewFloating", out var toggleMainViewFloating) && toggleMainViewFloating.ShortCutKey.IsEmpty && !self.Commands.Any(e => e.Value.ShortCutKey.Gestures.Contains(gestureF12)))
+                    if (self.Commands.TryGetValue("ToggleMainViewFloating", out var toggleMainViewFloating)
+                        && ShortcutKey.IsNullOrEmpty(toggleMainViewFloating.ShortCutKey)
+                        && !ContainsShortcutGesture(self.Commands, gestureF12))
                     {
                         toggleMainViewFloating.ShortCutKey = new ShortcutKey(new List<InputGestureSource>() { gestureF12 });
                     }
@@ -268,9 +270,12 @@ namespace NeeView
         /// <returns></returns>
         private static bool ContainsShortcutGesture(CommandCollection commands, InputGestureSource gesture)
         {
+            if (commands is null) return false;
+            if (gesture is null) return false;
+
             return commands.Values
-                .Where(e => !e.ShortCutKey.IsEmpty)
-                .Any(e => e.ShortCutKey.Gestures.Contains(gesture));
+                .SelectMany(e => e.ShortCutKey?.Gestures ?? Enumerable.Empty<InputGestureSource>())
+                .Contains(gesture);
         }
 
 #pragma warning restore CS0612, CS0618 // 型またはメンバーが旧型式です

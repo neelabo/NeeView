@@ -384,8 +384,35 @@ namespace NeeView
 
             // TODO: pair...
 
+            // デフォルト設定の生成
+            foreach (var element in _elements.Values)
+            {
+                element.CreateDefaultMemento();
+            }
+
+#if DEBUG
+            // PairPartner 整合性チェック
+            foreach (var element in _elements)
+            {
+                if (element.Value.PairPartner is not null)
+                {
+                    var pair0 = element.Value;
+                    var pair1 = _elements[pair0.PairPartner];
+                    Debug.Assert(pair0.Parameter is ReversibleCommandParameter);
+                    Debug.Assert(pair1.PairPartner == element.Key);
+                    Debug.Assert(pair1.Parameter?.GetType() == pair0.Parameter?.GetType());
+                }
+            }
+#endif
+
             // デフォルト設定として記憶
-            DefaultMemento = CreateCommandCollectionMemento(false);
+            var collection = new CommandCollection();
+            foreach (var element in _elements)
+            {
+                collection.Add(element.Key, element.Value.DefaultMemento);
+            }
+            DefaultMemento = collection;
+
 
             // 廃棄されたコマンドの情報
             var obsoleteCommands = new List<ObsoleteCommandItem>()
@@ -427,6 +454,7 @@ namespace NeeView
 
         private void AddCommand(string name, CommandElement command)
         {
+            command.CheckDefaultMemento();
             _elements.Add(name, command);
         }
 
@@ -715,20 +743,14 @@ namespace NeeView
             var collection = new CommandCollection();
             foreach (var item in _elements)
             {
-                var memento = item.Value.CreateMemento();
+                var memento = item.Value.CreateMemento(trim);
 
-                if (trim && DefaultMemento != null && !item.Value.IsCloneCommand())
+                // トリミングが有効な場合、クローンコマンド以外でデフォルト設定のコマンドを除外
+                if (trim)
                 {
-                    // デフォルトと同じものは除外
-                    if (DefaultMemento.TryGetValue(item.Key, out var defaultMemento))
+                    if (!item.Value.IsCloneCommand() && memento.IsDefault())
                     {
-                        if (memento.MemberwiseEquals(defaultMemento))
-                        {
-                            continue;
-                        }
-
-                        // 既定値の CommandParameter を省略
-                        memento.ValidateCommandParameter(defaultMemento);
+                        continue;
                     }
                 }
 
