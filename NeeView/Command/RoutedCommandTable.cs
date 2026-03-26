@@ -381,12 +381,23 @@ namespace NeeView
                 ? args.AllowFlip
                 : (parameter != MenuCommandTag.Tag);
 
-            var command = CommandTable.Current.GetElement(GetFixedCommandName(name, allowFlip));
+            var commandName = GetFixedCommandName(name, allowFlip);
+            var command = CommandTable.Current.GetElement(commandName);
+            var commandParameter = command.Parameter;
+
+            // ペアコマンドの場合はペア元のコマンドパラメータを使用する
+            if (commandName != name)
+            {
+                commandParameter = CommandTable.Current.GetElement(name).Parameter;
+            }
+
+            var option = (parameter is MenuCommandTag) ? CommandOption.ByMenu : CommandOption.None;
+            var commandArgs = new CommandArgs(null, option);
 
             // 通知
             if (command.IsShowMessage)
             {
-                string message = command.ExecuteMessage(sender, CommandArgs.Empty);
+                string message = command.ExecuteMessage(sender, commandParameter, commandArgs);
                 if (!string.IsNullOrEmpty(message))
                 {
                     InfoMessage.Current.SetMessage(InfoMessageType.Command, message);
@@ -394,8 +405,7 @@ namespace NeeView
             }
 
             // 実行
-            var option = (parameter is MenuCommandTag) ? CommandOption.ByMenu : CommandOption.None;
-            command.Execute(sender, new CommandArgs(null, option));
+            command.Execute(sender, commandParameter, commandArgs);
         }
 
         // スライダー方向によって移動コマンドを入れ替える
