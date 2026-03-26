@@ -49,7 +49,7 @@
         </Style>
     </UserControl.Resources>
 
-    <ListBox x:Name="Root" Style="{StaticResource NVListBox}" ItemContainerStyle="{StaticResource ListBoxItemStyle}">
+    <ListBox x:Name="Root" Style="{StaticResource NVListBox}" ItemContainerStyle="{StaticResource ListBoxItemStyle}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled">
         <ListBox.ItemsPanel>
             <ItemsPanelTemplate>
                 <StackPanel Orientation="Horizontal"/>
