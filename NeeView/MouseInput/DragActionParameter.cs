@@ -53,7 +53,7 @@ namespace NeeView
         public double Sensitivity
         {
             get { return _sensitivity; }
-            set { SetProperty(ref _sensitivity, value); }
+            set { SetProperty(ref _sensitivity, AppMath.Round(value)); }
         }
     }
 
@@ -156,25 +156,14 @@ namespace NeeView
 
         public override void Write(Utf8JsonWriter writer, DragActionParameter value, JsonSerializerOptions options)
         {
-
             var type = value.GetType();
             Debug.Assert(KnownTypes.Contains(type));
 
-            var def = (DragActionParameter?)Activator.CreateInstance(type);
-            if (value.MemberwiseEquals(def))
-            {
-                //Debug.WriteLine($"{type} is default.");
-                writer.WriteNullValue();
-            }
-            else
-            {
-                writer.WriteStartObject();
-                writer.WriteString("Type", type.Name);
-                writer.WritePropertyName("Value");
-                JsonSerializer.Serialize(writer, value, type, options);
-                writer.WriteEndObject();
-            }
-
+            writer.WriteStartObject();
+            writer.WriteString("Type", type.Name);
+            writer.WritePropertyName("Value");
+            JsonSerializer.Serialize(writer, value, type, options);
+            writer.WriteEndObject();
         }
     }
 }

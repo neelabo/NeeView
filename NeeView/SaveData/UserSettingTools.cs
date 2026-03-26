@@ -207,6 +207,11 @@ namespace NeeView
         {
             var options = CreateCommonSerializerOptions();
 
+            if (!AppSettings.Current.TrimSaveData)
+            {
+                return options;
+            }
+
             options.Converters.Add(new DiffJsonConverter<Config>());
 
             options.Converters.Add(new DiffJsonConverter<SystemConfig>());
@@ -307,6 +312,10 @@ namespace NeeView
             options.Converters.Add(new DiffJsonConverter<MenuNode>());
             options.Converters.Add(new DiffJsonConverter<SusiePluginMemento>());
             options.Converters.Add(new DiffJsonConverter<CommandElementMemento>());
+
+            options.Converters.Add(new DiffJsonConverter<MoveScaleDragActionParameter>());
+            options.Converters.Add(new DiffJsonConverter<MoveDragActionParameter>());
+            options.Converters.Add(new DiffJsonConverter<SensitiveDragActionParameter>());
 
             options.Converters.Add(new DiffJsonConverter<ReversibleCommandParameter>());
             options.Converters.Add(new DiffJsonConverter<MoveSizePageCommandParameter>());
