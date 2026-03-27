@@ -32,6 +32,11 @@ Msi and Appx are true.
 Create a default temporary folder in the profile folder.  
 If false, the system's temporary folder is used.
 
+### TrimSaveData (v46.0+)
+
+Prevents default property values from being written to the configuration file.
+If set to false, all properties are written.
+
 ### PathProcessGroup
 
 The app path is used to determine multiple launch restrictions.  
@@ -39,7 +44,7 @@ When false, only the process name is used for identification.
 
 ### SoftwareRendering (v46.0+)
 
-The WPF rendering is in software only.
+When true, The WPF rendering is in software only.
 Performance will be reduced.
 
 ### Watermark
