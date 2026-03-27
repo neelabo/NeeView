@@ -1,5 +1,4 @@
 ﻿using NeeView.Susie;
-using NeeView.Susie.Client;
 
 namespace NeeView
 {
@@ -8,11 +7,11 @@ namespace NeeView
     /// </summary>
     public class SusieImagePluginAccessor
     {
-        private readonly SusiePluginClient _client;
+        private readonly SusiePluginManager _manager;
 
-        public SusieImagePluginAccessor(SusiePluginClient client, SusiePluginInfo? plugin)
+        public SusieImagePluginAccessor(SusiePluginManager manager, SusiePluginInfo? plugin)
         {
-            _client = client;
+            _manager = manager;
             Plugin = plugin;
         }
 
@@ -21,7 +20,7 @@ namespace NeeView
 
         public SusieImage? GetPicture(string fileName, byte[]? buff, bool isCheckExtension)
         {
-            return _client.GetImage(Plugin?.Name, fileName, buff, isCheckExtension);
+            return _manager.GetImage(Plugin?.Name, fileName, buff, isCheckExtension);
         }
     }
 }

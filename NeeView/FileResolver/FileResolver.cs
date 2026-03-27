@@ -112,7 +112,7 @@ namespace NeeView
             int count = 0;
             var sw = Stopwatch.StartNew();
 
-            using (var transaction = Database.Current.BeginTransaction())
+            using (var transaction = FileIdTable.BeginTransaction())
             {
                 try
                 {

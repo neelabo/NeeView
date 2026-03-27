@@ -17,6 +17,11 @@ namespace NeeView
         }
 
 
+        public Database.DatabaseTransaction BeginTransaction()
+        {
+            return _db.BeginTransaction();
+        }
+
         public void CreateTable()
         {
             _db.ThrowIfDiposed();

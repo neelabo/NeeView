@@ -1,5 +1,4 @@
 ﻿using NeeView.Susie;
-using NeeView.Susie.Client;
 using System.Collections.Generic;
 
 namespace NeeView
@@ -9,32 +8,29 @@ namespace NeeView
     /// </summary>
     public class SusieArchivePluginAccessor
     {
-        private readonly SusiePluginClient _client;
+        private readonly SusiePluginManager _manager;
 
-        public SusieArchivePluginAccessor(SusiePluginClient client, SusiePluginInfo plugin)
+        public SusieArchivePluginAccessor(SusiePluginManager manager, SusiePluginInfo plugin)
         {
-            _client = client;
+            _manager = manager;
             Plugin = plugin;
         }
 
         public SusiePluginInfo Plugin { get; }
 
-
         public List<SusieArchiveEntry> GetArchiveEntries(string fileName)
         {
-            return _client.GetArchiveEntries(Plugin.Name, fileName);
+            return _manager.GetArchiveEntries(Plugin.Name, fileName);
         }
 
         public byte[] ExtractArchiveEntry(string fileName, int position)
         {
-            return _client.ExtractArchiveEntry(Plugin.Name, fileName, position);
+            return _manager.ExtractArchiveEntry(Plugin.Name, fileName, position);
         }
-
 
         public void ExtractArchiveEntryToFolder(string fileName, int position, string extractFolder)
         {
-            _client.ExtractArchiveEntryToFolder(Plugin.Name, fileName, position, extractFolder);
+            _manager.ExtractArchiveEntryToFolder(Plugin.Name, fileName, position, extractFolder);
         }
-
     }
 }

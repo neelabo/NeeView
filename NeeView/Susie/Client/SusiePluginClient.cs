@@ -1,4 +1,7 @@
-﻿using NeeLaboratory;
+﻿//#define LOCAL_DEBUG
+
+using NeeLaboratory;
+using NeeLaboratory.Generators;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,7 +10,8 @@ using System.Threading.Tasks;
 
 namespace NeeView.Susie.Client
 {
-    public class SusiePluginClient : IRemoteSusiePlugin, IDisposable
+    [LocalDebug]
+    public partial class SusiePluginClient : IRemoteSusiePlugin, IDisposable
     {
         private readonly SusiePluginRemoteClient _remote;
         private Action? _recoveryAction;
@@ -98,7 +102,7 @@ namespace NeeView.Susie.Client
 
         private async ValueTask<List<Chunk>> CallAsync(List<Chunk> args, CancellationToken token)
         {
-            //Debug.WriteLine($"SusiePluginClient.Call: {args[0].Id}");
+            LocalDebug.WriteLine($"Call: {args[0].Id} {SusiePluginCommandId.ToString(args[0].Id)}");
 
             if (!_remote.IsConnected)
             {
@@ -130,11 +134,10 @@ namespace NeeView.Susie.Client
         {
             if (chunk.Data is null) throw new InvalidOperationException("chunk.Data must not be null");
 
-            //Debug.WriteLine($"Chunk.ID: {chunk.Id}");
-            //Debug.WriteLine($"Chunk.Data: " + System.Text.Encoding.UTF8.GetString(chunk.Data));
+            LocalDebug.WriteLine($"Chunk.ID: {chunk.Id}");
+            LocalDebug.WriteLine($"Chunk.Data: " + System.Text.Encoding.UTF8.GetString(chunk.Data));
             return SusieCommandSerializer.Deserialize<TResult>(chunk.Data);
         }
-
 
 
         public void Initialize(string pluginFolder, List<SusiePluginInfo> plugins)

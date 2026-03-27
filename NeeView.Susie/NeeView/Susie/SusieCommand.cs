@@ -27,9 +27,27 @@ namespace NeeView.Susie
         public const int ExtractArchiveEntryToFolder = 0x000B;
 
         public const int Error = -1;
+
+        public static string ToString(int id)
+        {
+            return id switch
+            {
+                None => nameof(None),
+                Initialize => nameof(Initialize),
+                GetPlugin => nameof(GetPlugin),
+                SetPlugin => nameof(SetPlugin),
+                SetPluginOrder => nameof(SetPluginOrder),
+                GetImagePlugin => nameof(GetImagePlugin),
+                GetArchivePlugin => nameof(GetArchivePlugin),
+                ShowConfigurationDlg => nameof(ShowConfigurationDlg),
+                GetImage => nameof(GetImage),
+                GetArchiveEntries => nameof(GetArchiveEntries),
+                ExtractArchiveEntry => nameof(ExtractArchiveEntry),
+                ExtractArchiveEntryToFolder => nameof(ExtractArchiveEntryToFolder),
+                _ => $"Unknown({id})"
+            };
+        }
     }
-
-
 
     public class SusiePluginCommandResult
     {

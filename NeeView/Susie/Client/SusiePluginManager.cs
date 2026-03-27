@@ -1,5 +1,8 @@
-﻿using NeeLaboratory.Collections.Specialized;
+﻿//#define LOCAL_DEBUG
+
+using NeeLaboratory.Collections.Specialized;
 using NeeLaboratory.ComponentModel;
+using NeeLaboratory.Generators;
 using NeeView.Properties;
 using NeeView.Susie;
 using NeeView.Susie.Client;
@@ -8,6 +11,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -17,25 +21,31 @@ using System.Windows.Interop;
 
 namespace NeeView
 {
-    public class SusiePluginManager : BindableBase
+    [LocalDebug]
+    public partial class SusiePluginManager : BindableBase
     {
-        static SusiePluginManager() => Current = new SusiePluginManager();
-        public static SusiePluginManager Current { get; }
+        private static readonly Lazy<SusiePluginManager> _current = new();
+        public static SusiePluginManager Current => _current.Value;
 
         private bool _isInitialized;
         private SusiePluginClient? _client;
         private List<SusiePluginInfo> _unauthorizedPlugins;
         private ObservableCollection<SusiePluginInfo> _INPlugins;
         private ObservableCollection<SusiePluginInfo> _AMPlugins;
+        private RecoveryState _recoveryState = new("", []);
         private static Lock _lock = new();
 
-        private SusiePluginManager()
+        private readonly Lazy<SusiePluginDatabaseCache> _susiePluginDatabase = new(() => new(Database.Current));
+
+        public SusiePluginManager()
         {
-            _unauthorizedPlugins = new List<SusiePluginInfo>();
-            _INPlugins = new ObservableCollection<SusiePluginInfo>();
-            _AMPlugins = new ObservableCollection<SusiePluginInfo>();
+            _unauthorizedPlugins = [];
+            INPlugins = [];
+            AMPlugins = [];
         }
 
+
+        private SusiePluginDatabaseCache SusiePluginDatabase => _susiePluginDatabase.Value;
 
         public List<SusiePluginInfo> UnauthorizedPlugins
         {
@@ -46,13 +56,35 @@ namespace NeeView
         public ObservableCollection<SusiePluginInfo> INPlugins
         {
             get { return _INPlugins; }
-            private set { SetProperty(ref _INPlugins, value); }
+
+            [MemberNotNull(nameof(_INPlugins))]
+            private set
+            {
+                if (_INPlugins != value)
+                {
+                    _INPlugins?.CollectionChanged -= Plugins_CollectionChanged;
+                    _INPlugins = value;
+                    _INPlugins.CollectionChanged += Plugins_CollectionChanged;
+                    RaisePropertyChanged(nameof(INPlugins));
+                }
+            }
         }
 
         public ObservableCollection<SusiePluginInfo> AMPlugins
         {
             get { return _AMPlugins; }
-            private set { SetProperty(ref _AMPlugins, value); }
+
+            [MemberNotNull(nameof(_AMPlugins))]
+            private set
+            {
+                if (_AMPlugins != value)
+                {
+                    _AMPlugins?.CollectionChanged -= Plugins_CollectionChanged;
+                    _AMPlugins = value;
+                    _AMPlugins.CollectionChanged += Plugins_CollectionChanged;
+                    RaisePropertyChanged(nameof(AMPlugins));
+                }
+            }
         }
 
         public IEnumerable<SusiePluginInfo> Plugins
@@ -68,13 +100,12 @@ namespace NeeView
         /// <summary>
         /// 対応画像ファイル拡張子
         /// </summary>
-        public FileTypeCollection ImageExtensions = new();
+        public FileTypeCollection ImageExtensions { get; } = new();
 
         /// <summary>
         /// 対応圧縮ファイル拡張子
         /// </summary>
-        public FileTypeCollection ArchiveExtensions = new();
-
+        public FileTypeCollection ArchiveExtensions { get; } = new();
 
 
         public void Initialize()
@@ -116,15 +147,32 @@ namespace NeeView
 #endif
         }
 
-
         private void Plugins_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
+            LocalDebug.WriteLine($"ChangedAction={e.Action}");
+
             if (e.Action == NotifyCollectionChangedAction.Move)
             {
                 FlushSusiePluginOrder();
             }
         }
 
+        private void UpdateRecoveryState()
+        {
+            LocalDebug.WriteLine($"UpdateRecoveryState()");
+
+            var state = new RecoveryState(Path.GetFullPath(Config.Current.Susie.SusiePluginPath), Plugins.ToList());
+
+            Volatile.Write(ref _recoveryState, state);
+        }
+
+        private void RecoverClientState()
+        {
+            if (_client is null) throw new InvalidOperationException("Client is null");
+
+            var state = Volatile.Read(ref _recoveryState);
+            _client.Initialize(state.PluginFolder, state.Plugins.ToList());
+        }
 
         // PluginCollectionのOpen/Close
         private void UpdateSusiePluginCollection()
@@ -154,7 +202,7 @@ namespace NeeView
                 try
                 {
                     LoadSusiePlugins();
-                    _client.SetRecoveryAction(LoadSusiePlugins);
+                    _client.SetRecoveryAction(RecoverClientState);
                 }
                 catch (Exception ex)
                 {
@@ -162,25 +210,62 @@ namespace NeeView
                     var errorLogFileName = App.ErrorLogFileName;
                     App.ExportErrorLog(errorLogFileName, ex);
                     ToastService.Current.Show(new Toast(TextResources.GetString("SusieConnectError.Message") + $"<br/><a href=\"{errorLogFileName}\">{errorLogFileName}</a>", null, ToastIcon.Error) { IsXHtml = true });
+
+                    _client.Dispose();
+                    _client = null;
                 }
             }
         }
 
         private void LoadSusiePlugins()
         {
-            if (_client is null) throw new InvalidOperationException("Client is null");
+            lock (_lock)
+            {
+                if (_client is null) throw new InvalidOperationException("Client is null");
 
-            _client.Initialize(System.IO.Path.GetFullPath(Config.Current.Susie.SusiePluginPath), Plugins.ToList());
+                RestoreBaseInfo(Plugins);
 
-            var plugins = _client.GetPlugin(null);
-            UnauthorizedPlugins = new List<SusiePluginInfo>();
-            INPlugins = new ObservableCollection<SusiePluginInfo>(plugins.Where(e => e.PluginType == SusiePluginType.Image));
-            INPlugins.CollectionChanged += Plugins_CollectionChanged;
-            AMPlugins = new ObservableCollection<SusiePluginInfo>(plugins.Where(e => e.PluginType == SusiePluginType.Archive));
-            AMPlugins.CollectionChanged += Plugins_CollectionChanged;
+                _client.Initialize(System.IO.Path.GetFullPath(Config.Current.Susie.SusiePluginPath), Plugins.ToList());
 
-            UpdateImageExtensions();
-            UpdateArchiveExtensions();
+                var plugins = _client.GetPlugin(null);
+                UnauthorizedPlugins = new List<SusiePluginInfo>();
+                INPlugins = new ObservableCollection<SusiePluginInfo>(plugins.Where(e => e.PluginType == SusiePluginType.Image));
+                AMPlugins = new ObservableCollection<SusiePluginInfo>(plugins.Where(e => e.PluginType == SusiePluginType.Archive));
+
+                UpdateRecoveryState();
+
+                StoreBaseInfo(Plugins);
+
+                UpdateImageExtensions();
+                UpdateArchiveExtensions();
+            }
+        }
+
+
+        private void RestoreBaseInfo(IEnumerable<SusiePluginInfo> plugins)
+        {
+            var paths = plugins.Select(e => GetPluginFullPath(e)).ToList();
+
+            var cache = SusiePluginDatabase.Read(paths).ToDictionary(e => Path.GetFileName(e.Path));
+            foreach (var plugin in plugins)
+            {
+                if (cache.TryGetValue(plugin.Name, out var info))
+                {
+                    info.WriteTo(plugin);
+                }
+            }
+        }
+
+        private void StoreBaseInfo(IEnumerable<SusiePluginInfo> plugins)
+        {
+            var items = plugins.Select(e => new SusiePluginBaseInfo(e, Config.Current.Susie.SusiePluginPath)).ToList();
+
+            SusiePluginDatabase.Write(items);
+        }
+
+        private static string GetPluginFullPath(SusiePluginInfo plugin)
+        {
+            return Path.GetFullPath(Path.Combine(Config.Current.Susie.SusiePluginPath, plugin.Name));
         }
 
         private void CloseSusiePluginCollection()
@@ -195,6 +280,8 @@ namespace NeeView
                 UnauthorizedPlugins = Plugins.ToList();
                 INPlugins = new ObservableCollection<SusiePluginInfo>();
                 AMPlugins = new ObservableCollection<SusiePluginInfo>();
+
+                UpdateRecoveryState();
 
                 UpdateImageExtensions();
                 UpdateArchiveExtensions();
@@ -312,7 +399,45 @@ namespace NeeView
         {
             lock (_lock)
             {
+                UpdateRecoveryState();
+
                 _client?.SetPluginOrder(Plugins.Select(e => e.Name).ToList());
+            }
+        }
+
+        public SusieImage? GetImage(string? pluginName, string fileName, byte[]? buff, bool isCheckExtension)
+        {
+            lock (_lock)
+            {
+                if (_client is null) throw new InvalidOperationException("Susie plugin client is not exists");
+                return _client.GetImage(pluginName, fileName, buff, isCheckExtension);
+            }
+        }
+
+        public List<SusieArchiveEntry> GetArchiveEntries(string pluginName, string fileName)
+        {
+            lock (_lock)
+            {
+                if (_client is null) throw new InvalidOperationException("Susie plugin client is not exists");
+                return _client.GetArchiveEntries(pluginName, fileName);
+            }
+        }
+
+        public byte[] ExtractArchiveEntry(string pluginName, string fileName, int position)
+        {
+            lock (_lock)
+            {
+                if (_client is null) throw new InvalidOperationException("Susie plugin client is not exists");
+                return _client?.ExtractArchiveEntry(pluginName, fileName, position) ?? [];
+            }
+        }
+
+        public void ExtractArchiveEntryToFolder(string pluginName, string fileName, int position, string extractFolder)
+        {
+            lock (_lock)
+            {
+                if (_client is null) throw new InvalidOperationException("Susie plugin client is not exists");
+                _client.ExtractArchiveEntryToFolder(pluginName, fileName, position, extractFolder);
             }
         }
 
@@ -322,7 +447,7 @@ namespace NeeView
             {
                 if (_client is null) throw new InvalidOperationException("Client is null");
 
-                return new SusieImagePluginAccessor(_client, null);
+                return new SusieImagePluginAccessor(this, null);
             }
         }
 
@@ -335,7 +460,7 @@ namespace NeeView
                 var plugin = _client.GetImagePlugin(fileName, buff, isCheckExtension);
                 if (plugin is null) return null;
 
-                return new SusieImagePluginAccessor(_client, plugin);
+                return new SusieImagePluginAccessor(this, plugin);
             }
         }
 
@@ -348,7 +473,7 @@ namespace NeeView
                 var plugin = _client.GetArchivePlugin(fileName, buff, isCheckExtension, pluginName);
                 if (plugin is null) return null;
 
-                return new SusieArchivePluginAccessor(_client, plugin);
+                return new SusieArchivePluginAccessor(this, plugin);
             }
         }
 
@@ -358,6 +483,7 @@ namespace NeeView
             {
                 if (_client is null) throw new InvalidOperationException("Client is null");
 
+                // Susie server process is 32-bit, so HWND is marshaled as Int32 over IPC.
                 var handle = new WindowInteropHelper(owner).Handle;
                 _client.ShowConfigurationDlg(pluginName, handle.ToInt32());
             }
@@ -412,6 +538,9 @@ namespace NeeView
         }
 
         #endregion Memento
+
+
+        private sealed record RecoveryState(string PluginFolder, List<SusiePluginInfo> Plugins);
     }
 
 
@@ -420,26 +549,16 @@ namespace NeeView
     }
 
     [Memento]
-    public class SusiePluginMemento : ISusiePluginInfo
+    public class SusiePluginMemento
     {
         [JsonIgnore]
         public string Name { get; set; } = "";
 
         public bool IsEnabled { get; set; } = true;
+
         public bool IsCacheEnabled { get; set; } = true;
+
         public bool IsPreExtract { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string? ApiVersion { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string? PluginVersion { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public bool HasConfigurationDlg { get; set; }
-
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public FileExtensionCollection? DefaultExtensions { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public FileExtensionCollection? UserExtensions { get; set; }
@@ -452,10 +571,6 @@ namespace NeeView
             setting.IsEnabled = plugin.IsEnabled;
             setting.IsCacheEnabled = plugin.IsCacheEnabled;
             setting.IsPreExtract = plugin.IsPreExtract;
-            setting.ApiVersion = plugin.ApiVersion;
-            setting.PluginVersion = plugin.PluginVersion;
-            setting.HasConfigurationDlg = plugin.HasConfigurationDlg;
-            setting.DefaultExtensions = plugin.DefaultExtensions?.Clone();
             setting.UserExtensions = plugin.UserExtensions?.Clone();
             return setting;
         }
@@ -467,10 +582,6 @@ namespace NeeView
             info.IsEnabled = IsEnabled;
             info.IsCacheEnabled = IsCacheEnabled;
             info.IsPreExtract = IsPreExtract;
-            info.ApiVersion = ApiVersion;
-            info.PluginVersion = PluginVersion;
-            info.HasConfigurationDlg = HasConfigurationDlg;
-            info.DefaultExtensions = DefaultExtensions?.Clone();
             info.UserExtensions = UserExtensions?.Clone();
             return info;
         }
