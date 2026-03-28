@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.Linq;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -16,11 +17,21 @@ namespace NeeLaboratory.Resources
         {
             _path = path;
 
-            // TODO: ファイルシステムにアクセスしているので async が望ましい
-            var cultures = Directory.GetFiles(_path, "*" + _ext)
-                .Select(e => GetCultureInfoFromFileName(e))
-                .WhereNotNull()
-                .OrderBy(e => e.NativeName);
+            List<CultureInfo> cultures;
+            try
+            {
+                // TODO: ファイルシステムにアクセスしているので async が望ましい
+                cultures = Directory.GetFiles(_path, "*" + _ext)
+                    .Select(e => GetCultureInfoFromFileName(e))
+                    .WhereNotNull()
+                    .OrderBy(e => e.NativeName)
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                cultures = [];
+            }
 
             SetCultures(cultures);
         }
