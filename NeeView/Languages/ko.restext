@@ -2473,6 +2473,7 @@ WindowChromeFrame.WindowFrame=표준
 WindowConfig.IsAutoHideInFullScreen=전체 화면에서 자동 숨김 모드 적용
 WindowConfig.IsAutoHideInMaximized=최대화 창에서 자동 숨김 모드 적용
 WindowConfig.IsAutoHideInNormal=일반 창에서 자동 숨김 모드 적용
+WindowConfig.IsAutoHideScrollBar=
 WindowConfig.IsCaptionEmulateInFullScreen=전체 화면 시 제목 표시줄 조작
 WindowConfig.IsCaptionEmulateInFullScreen.Remarks=전체 화면 중 제목 표시줄을 더블 클릭하거나 드래그 가능하도록 합니다.
 WindowConfig.IsRestoreAeroSnapPlacement=Aero 스냅 창 위치 기억

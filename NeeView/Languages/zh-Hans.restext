@@ -2473,6 +2473,7 @@ WindowChromeFrame.WindowFrame=标准
 WindowConfig.IsAutoHideInFullScreen=全屏时应用自动隐藏模式
 WindowConfig.IsAutoHideInMaximized=最大化窗口时应用自动隐藏模式
 WindowConfig.IsAutoHideInNormal=常规窗口时应用自动隐藏模式
+WindowConfig.IsAutoHideScrollBar=
 WindowConfig.IsCaptionEmulateInFullScreen=全屏状态标题栏操作
 WindowConfig.IsCaptionEmulateInFullScreen.Remarks=全屏状态下，允许在标题栏进行双击和拖放操作。
 WindowConfig.IsRestoreAeroSnapPlacement=恢复 Aero Snap 窗口坐标

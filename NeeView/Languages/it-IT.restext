@@ -2487,6 +2487,7 @@ WindowChromeFrame.WindowFrame=Standard
 WindowConfig.IsAutoHideInFullScreen=Applica modalità auto-nascondi a schermo pieno
 WindowConfig.IsAutoHideInMaximized=Applica modalità auto-nascondi in finestra massimizzata
 WindowConfig.IsAutoHideInNormal=Applica modalità auto-nascondi in finestra normale
+WindowConfig.IsAutoHideScrollBar=
 WindowConfig.IsCaptionEmulateInFullScreen=Operazione barra del titolo a schermo pieno
 WindowConfig.IsCaptionEmulateInFullScreen.Remarks=Accepts double-click and drag operations in the title bar during full screen.
 WindowConfig.IsRestoreAeroSnapPlacement=Ripristina posizione finestra Aero Snap

@@ -2481,6 +2481,7 @@ WindowChromeFrame.WindowFrame=Padrão
 WindowConfig.IsAutoHideInFullScreen=Aplicar modo de ocultação automática em tela cheia
 WindowConfig.IsAutoHideInMaximized=Aplicar modo de ocultação automática na janela maximizada
 WindowConfig.IsAutoHideInNormal=Aplicar modo de ocultação automática na janela normal
+WindowConfig.IsAutoHideScrollBar=
 WindowConfig.IsCaptionEmulateInFullScreen=Operação da barra de título em tela inteira
 WindowConfig.IsCaptionEmulateInFullScreen.Remarks=Aceita operações de clique duplo e arrastar na barra de título durante tela cheia.
 WindowConfig.IsRestoreAeroSnapPlacement=Restaurar o posicionamento da janela do Aero Snap

@@ -2481,6 +2481,7 @@ WindowChromeFrame.WindowFrame=Стандартная
 WindowConfig.IsAutoHideInFullScreen=Применять автоскрытие в полноэкранном режиме
 WindowConfig.IsAutoHideInMaximized=Применять автоскрытие в развёрнутом окне
 WindowConfig.IsAutoHideInNormal=Применять автоскрытие в обычном окне
+WindowConfig.IsAutoHideScrollBar=
 WindowConfig.IsCaptionEmulateInFullScreen=Эмуляция заголовка в полноэкранном режиме
 WindowConfig.IsCaptionEmulateInFullScreen.Remarks=Принимает двойные щелчки и перетаскивание в области заголовка в полноэкранном режиме.
 WindowConfig.IsRestoreAeroSnapPlacement=Восстанавливать положение окна Aero Snap

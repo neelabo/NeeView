@@ -18,6 +18,7 @@ namespace NeeView
         [DefaultEquality] private bool _isAutoHideInNormal = false;
         [DefaultEquality] private bool _isAutoHideInMaximized = false;
         [DefaultEquality] private bool _IsAutoHideInFullScreen = true;
+        [DefaultEquality] private bool _isAutoHideScrollBar = false;
 
 
         [PropertyMember]
@@ -88,6 +89,12 @@ namespace NeeView
             set { SetProperty(ref _IsAutoHideInFullScreen, value); }
         }
 
+        [PropertyMember]
+        public bool IsAutoHideScrollBar
+        {
+            get { return _isAutoHideScrollBar; }
+            set { SetProperty(ref _isAutoHideScrollBar, value); }
+        }
 
         #region HiddenParameters
 

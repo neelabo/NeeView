@@ -73,6 +73,7 @@ namespace NeeView.Setting
             this.Items.Add(section);
 
             section = new SettingItemSection(TextResources.GetString("SettingPage.Window.Advance"));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Window, nameof(WindowConfig.IsAutoHideScrollBar))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Window, nameof(WindowConfig.IsCaptionEmulateInFullScreen))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Window, nameof(WindowConfig.MouseActivateAndEat))));
             this.Items.Add(section);
