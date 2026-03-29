@@ -69,6 +69,20 @@ namespace NeeView
 
 
     /// <summary>
+    /// DependencyProperty for scroll bar thumb
+    /// </summary>
+    public static class ScrollBarThumbHelper
+    {
+        public static readonly DependencyProperty CornerRadiusProperty =
+            DependencyProperty.RegisterAttached("CornerRadius", typeof(CornerRadius), typeof(ScrollBarThumbHelper),
+                new PropertyMetadata(new CornerRadius(3)));
+
+        public static void SetCornerRadius(DependencyObject obj, CornerRadius value) => obj.SetValue(CornerRadiusProperty, value);
+        public static CornerRadius GetCornerRadius(DependencyObject obj) => (CornerRadius)obj.GetValue(CornerRadiusProperty);
+    }
+
+
+    /// <summary>
     /// DependencyProperty for vertical scroll bar
     /// </summary>
     public static class VerticalScrollBarHelper
@@ -96,9 +110,10 @@ namespace NeeView
 
         public static void UpdateAnimation(FrameworkElement element, bool isActive, bool now)
         {
-            var anime = ScrollBarSettings.CreateAnimation(element, isActive, now, element.ActualWidth);
-
+            var anime = ScrollBarTools.CreateAnimation(element, isActive, now, element.ActualWidth);
             element.BeginAnimation(FrameworkElement.WidthProperty, anime);
+
+            ScrollBarTools.UpdateThumbCornerRadius(element, isActive);
         }
     }
 
@@ -131,9 +146,10 @@ namespace NeeView
 
         public static void UpdateAnimation(FrameworkElement element, bool isActive, bool now)
         {
-            var anime = ScrollBarSettings.CreateAnimation(element, isActive, now, element.ActualHeight);
-
+            var anime = ScrollBarTools.CreateAnimation(element, isActive, now, element.ActualHeight);
             element.BeginAnimation(FrameworkElement.HeightProperty, anime);
+
+            ScrollBarTools.UpdateThumbCornerRadius(element, isActive);
         }
     }
 
@@ -162,7 +178,7 @@ namespace NeeView
 
                 if (element.IsLoaded && Config.Current.Window.IsAutoHideScrollBar)
                 {
-                    anime.EasingFunction = isActive ? ScrollBarSettings.EasingIn : ScrollBarSettings.EasingOut;
+                    anime.EasingFunction = isActive ? ScrollBarTools.EasingIn : ScrollBarTools.EasingOut;
                     anime.Duration = TimeSpan.FromSeconds(0.1);
                 }
                 else
@@ -175,41 +191,16 @@ namespace NeeView
         }
     }
 
-
     /// <summary>
-    /// global NVScrollBar settings
+    /// NVScrollBar animation tools
     /// </summary>
-    public class ScrollBarSettings : BindableBase
+    public static class ScrollBarTools
     {
-        private static readonly ScrollBarSettings _instance = new();
-        public static ScrollBarSettings Instance => _instance;
-
         public const double ActiveWidth = 12.0;
         public const double InactiveWidth = 6.0;
 
         public static CubicEase EasingIn { get; } = new CubicEase() { EasingMode = EasingMode.EaseIn };
         public static CubicEase EasingOut { get; } = new CubicEase() { EasingMode = EasingMode.EaseOut };
-
-        private bool _isAutoHide;
-
-        public ScrollBarSettings()
-        {
-            Config.Current.Window.SubscribePropertyChanged(nameof(WindowConfig.IsAutoHideScrollBar),
-                (s, e) => UpdateScrollBarSettings());
-
-            UpdateScrollBarSettings();
-        }
-
-        public bool IsAutoHide
-        {
-            get => _isAutoHide;
-            set => SetProperty(ref _isAutoHide, value);
-        }
-
-        private void UpdateScrollBarSettings()
-        {
-            IsAutoHide = Config.Current.Window.IsAutoHideScrollBar;
-        }
 
         public static double GetWidth(bool isAutoHide, bool isActive)
         {
@@ -236,6 +227,46 @@ namespace NeeView
             }
 
             return anime;
+        }
+
+        public static void UpdateThumbCornerRadius(FrameworkElement element, bool isActive)
+        {
+            if (element is not Track { Thumb: not null } track) return;
+
+            bool isAutoHide = ScrollBarSettings.Instance.IsAutoHide;
+            var cornerRadius = new CornerRadius(isAutoHide && !isActive ? 0 : 3);
+            ScrollBarThumbHelper.SetCornerRadius(track.Thumb, cornerRadius);
+        }
+    }
+
+
+    /// <summary>
+    /// global NVScrollBar settings
+    /// </summary>
+    public class ScrollBarSettings : BindableBase
+    {
+        private static readonly ScrollBarSettings _instance = new();
+        public static ScrollBarSettings Instance => _instance;
+
+        private bool _isAutoHide;
+
+        public ScrollBarSettings()
+        {
+            Config.Current.Window.SubscribePropertyChanged(nameof(WindowConfig.IsAutoHideScrollBar),
+                (s, e) => UpdateScrollBarSettings());
+
+            UpdateScrollBarSettings();
+        }
+
+        public bool IsAutoHide
+        {
+            get => _isAutoHide;
+            set => SetProperty(ref _isAutoHide, value);
+        }
+
+        private void UpdateScrollBarSettings()
+        {
+            IsAutoHide = Config.Current.Window.IsAutoHideScrollBar;
         }
     }
 }
