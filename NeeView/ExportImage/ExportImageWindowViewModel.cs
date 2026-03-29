@@ -1,7 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.Properties;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,6 +11,7 @@ namespace NeeView
     public class ExportImageWindowViewModel : BindableBase
     {
         private readonly ExportImage _model;
+        private readonly ExportImagePreview _preview;
         private List<DestinationFolder>? _destinationFolderList;
         private static DestinationFolder? _lastSelectedDestinationFolder;
         private DestinationFolder? _selectedDestinationFolder = _lastSelectedDestinationFolder;
@@ -19,7 +19,36 @@ namespace NeeView
         public ExportImageWindowViewModel(ExportImage model)
         {
             _model = model;
-            _model.PropertyChanged += Model_PropertyChanged;
+            _preview = new ExportImagePreview(_model);
+
+            _model.SubscribePropertyChanged(nameof(_model.Mode),
+                (s, e) => RaisePropertyChangedWithUpdatePreview(nameof(Mode)));
+
+            _model.SubscribePropertyChanged(nameof(_model.HasBackground),
+                (s, e) => RaisePropertyChangedWithUpdatePreview(nameof(HasBackground)));
+
+            _model.SubscribePropertyChanged(nameof(_model.IsOriginalSize),
+                (s, e) => RaisePropertyChangedWithUpdatePreview(nameof(IsOriginalSize)));
+
+            _model.SubscribePropertyChanged(nameof(_model.IsDotKeep),
+                (s, e) => RaisePropertyChangedWithUpdatePreview(nameof(IsDotKeep)));
+
+            _model.SubscribePropertyChanged(nameof(_model.Exporter),
+                (s, e) => _preview.UpdatePreview());
+
+            _preview.SubscribePropertyChanged(nameof(_preview.Preview),
+                (s, e) => RaisePropertyChanged(nameof(Preview)));
+
+            _preview.SubscribePropertyChanged(nameof(_preview.PreviewWidth),
+                (s, e) => RaisePropertyChanged(nameof(PreviewWidth)));
+
+            _preview.SubscribePropertyChanged(nameof(_preview.PreviewHeight),
+                (s, e) => RaisePropertyChanged(nameof(PreviewHeight)));
+
+            _preview.SubscribePropertyChanged(nameof(_preview.ImageFormatNote),
+                (s, e) => RaisePropertyChanged(nameof(ImageFormatNote)));
+
+            _preview.UpdatePreview();
 
             UpdateDestinationFolderList();
         }
@@ -53,22 +82,22 @@ namespace NeeView
 
         public FrameworkElement? Preview
         {
-            get { return _model.Preview; }
+            get { return _preview.Preview; }
         }
 
         public double PreviewWidth
         {
-            get { return _model.PreviewWidth; }
+            get { return _preview.PreviewWidth; }
         }
 
         public double PreviewHeight
         {
-            get { return _model.PreviewHeight; }
+            get { return _preview.PreviewHeight; }
         }
 
         public string ImageFormatNote
         {
-            get { return _model.ImageFormatNote; }
+            get { return _preview.ImageFormatNote; }
         }
 
 
@@ -91,6 +120,13 @@ namespace NeeView
             }
         }
 
+
+        private void RaisePropertyChangedWithUpdatePreview(string name)
+        {
+            RaisePropertyChanged(name);
+            _preview.UpdatePreview();
+        }
+
         public void UpdateDestinationFolderList()
         {
             var oldSelect = _selectedDestinationFolder;
@@ -102,45 +138,10 @@ namespace NeeView
             SelectedDestinationFolder = list.FirstOrDefault(e => e.Equals(oldSelect)) ?? list.First();
         }
 
-        private void Model_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(_model.Mode):
-                    RaisePropertyChanged(nameof(Mode));
-                    break;
-
-                case nameof(_model.HasBackground):
-                    RaisePropertyChanged(nameof(HasBackground));
-                    break;
-
-                case nameof(_model.Preview):
-                    RaisePropertyChanged(nameof(Preview));
-                    break;
-
-                case nameof(_model.PreviewWidth):
-                    RaisePropertyChanged(nameof(PreviewWidth));
-                    break;
-
-                case nameof(_model.PreviewHeight):
-                    RaisePropertyChanged(nameof(PreviewHeight));
-                    break;
-
-                case nameof(_model.ImageFormatNote):
-                    RaisePropertyChanged(nameof(ImageFormatNote));
-                    break;
-            }
-        }
-
-        public void UpdatePreview()
-        {
-            _model.UpdatePreview();
-        }
-
         public async ValueTask<bool?> ShowSelectSaveFileDialogAsync(Window owner, CancellationToken token)
         {
             var dialog = new ExportImageSeveFileDialog(_model.ExportFolder,
-                _model.CreateFileName(ExportImageFileNameMode.Default, ExportImageFormat.Png),
+                _model.CreateFileName(ExportImageFileNameMode.Default, BitmapImageFormat.Png),
                 _model.Mode == ExportImageMode.View);
 
             if (SelectedDestinationFolder != null && SelectedDestinationFolder.IsValid())
@@ -151,7 +152,8 @@ namespace NeeView
             var result = dialog.ShowDialog(owner);
             if (result == true)
             {
-                await _model.ExportAsync(dialog.FileName, true, token);
+                var path = System.IO.Path.GetFullPath(dialog.FileName);
+                await _model.ExportAsync(path, true, token);
             }
 
             return result;

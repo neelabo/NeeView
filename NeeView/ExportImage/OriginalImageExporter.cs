@@ -1,6 +1,7 @@
 ﻿using NeeView.Media.Imaging;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,7 +23,7 @@ namespace NeeView
             _page = _source?.Pages?.FirstOrDefault() ?? throw new ArgumentException("source must have any page");
         }
 
-        public ImageExporterContent? CreateView(ImageExporterCreateOptions options)
+        public ImageExporterContent? CreateView(IImageExporterOptions options)
         {
             if (_page == null) return null;
 
@@ -43,12 +44,18 @@ namespace NeeView
             }
         }
 
-        public async ValueTask ExportAsync(string path, bool isOverwrite, int qualityLevel, ImageExporterCreateOptions options, CancellationToken token)
+        public async ValueTask ExportAsync(Stream stream, bool decrypt, BitmapImageFormat format, IImageExporterOptions options, CancellationToken token)
+        {
+            await _page.ArchiveEntry.OpenEntryAsync(decrypt, token);
+        }
+
+        public async ValueTask ExportAsync(string path, bool isOverwrite, IImageExporterOptions options, CancellationToken token)
         {
             await _page.ArchiveEntry.ExtractToFileAsync(path, isOverwrite, token);
         }
 
-        public ImageSource? CreateImageSource(ImageExporterCreateOptions options)
+
+        public ImageSource? CreateImageSource(IImageExporterOptions options)
         {
             return (_source.PageFrameContent.ViewContents.FirstOrDefault() as IHasImageSource)?.ImageSource;
         }
@@ -76,7 +83,7 @@ namespace NeeView
             return _source.Pages[0].LastWriteTime;
         }
 
-        public long GetLength(string path, int qualityLevel, ImageExporterCreateOptions options)
+        public long GetLength(string path, IImageExporterOptions options)
         {
             return _source.Pages[0].Length;
         }

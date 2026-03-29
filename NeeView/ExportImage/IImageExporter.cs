@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -7,20 +8,23 @@ namespace NeeView
 {
     public interface IImageExporter : IDisposable
     {
-        ImageExporterContent? CreateView(ImageExporterCreateOptions options);
-        ValueTask ExportAsync(string path, bool isOverwrite, int qualityLevel, ImageExporterCreateOptions options, CancellationToken token);
-        ImageSource? CreateImageSource(ImageExporterCreateOptions options);
+        ImageExporterContent? CreateView(IImageExporterOptions options);
+        ValueTask ExportAsync(Stream stream, bool decrypt, BitmapImageFormat format, IImageExporterOptions options, CancellationToken token);
+        ValueTask ExportAsync(string path, bool isOverwrite, IImageExporterOptions options, CancellationToken token);
+        ImageSource? CreateImageSource(IImageExporterOptions options);
         string CreateFileName();
         bool CanExport();
         public void ThrowIfCannotExport();
         DateTime GetLastWriteTime();
-        long GetLength(string path, int qualityLevel, ImageExporterCreateOptions options);
+        long GetLength(string path, IImageExporterOptions options);
     }
 
-    public class ImageExporterCreateOptions
+
+    public interface IImageExporterOptions
     {
-        public bool HasBackground { get; set; }
-        public bool IsOriginalSize { get; set; }
-        public bool IsDotKeep { get; set; }
+        public bool HasBackground { get; }
+        public bool IsOriginalSize { get; }
+        public bool IsDotKeep { get; }
+        public int QualityLevel { get; }
     }
 }

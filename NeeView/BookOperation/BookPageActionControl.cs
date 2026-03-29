@@ -389,32 +389,36 @@ namespace NeeView
                     exportImageProceduralDialog.Owner = MainViewComponent.Current.GetWindow();
                     exportImageProceduralDialog.Show(parameter);
                 }
+                catch (OperationCanceledException)
+                {
+                }
                 catch (Exception e)
                 {
                     new MessageDialog($"{TextResources.GetString("ImageExportErrorDialog.Message")}\n{TextResources.GetString("Word.Cause")}: {e.Message}", TextResources.GetString("ImageExportErrorDialog.Title")).ShowDialog();
-                    return;
                 }
             }
         }
 
         // ファイルに保存する
-        public void Export(ExportImageCommandParameter parameter)
+        public async void Export(ExportImageCommandParameter parameter)
         {
             if (CanExport())
             {
                 try
                 {
-                    ExportImageProcedure.Execute(parameter);
+                    await ExportImageProcedure.Run(parameter, parameter.IsShowToast, CancellationToken.None);
+                }
+                catch (OperationCanceledException)
+                {
                 }
                 catch (Exception e)
                 {
                     new MessageDialog($"{TextResources.GetString("ImageExportErrorDialog.Message")}\n{TextResources.GetString("Word.Cause")}: {e.Message}", TextResources.GetString("ImageExportErrorDialog.Title")).ShowDialog();
-                    return;
                 }
             }
         }
 
-#endregion ページ出力
+        #endregion ページ出力
 
     }
 }

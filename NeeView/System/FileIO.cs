@@ -179,35 +179,20 @@ namespace NeeView
         /// <summary>
         /// パスの衝突を連番をつけて回避
         /// </summary>
-        public static string CreateUniquePath(string source)
+        public static string CreateUniquePath(string path)
         {
-            if (!ExistsPath(source))
+            if (File.Exists(path))
             {
-                return source;
+                return LoosePath.CreateUniquePath(path, true, ExistsPath);
             }
-
-            var path = source;
-
-            bool isFile = File.Exists(path);
-            var directory = Path.GetDirectoryName(path) ?? throw new InvalidOperationException("Cannot get parent directory");
-            var filename = isFile ? Path.GetFileNameWithoutExtension(path) : Path.GetFileName(path);
-            var extension = isFile ? Path.GetExtension(path) : "";
-            int count = 1;
-
-            var match = _fileNumberRegex.Match(filename);
-            if (match.Success)
+            else if (Directory.Exists(path))
             {
-                filename = match.Groups[1].Value.Trim();
-                count = int.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture);
+                return LoosePath.CreateUniquePath(path, false, ExistsPath);
             }
-
-            do
+            else
             {
-                path = Path.Combine(directory, $"{filename} ({++count}){extension}");
+                return path;
             }
-            while (ExistsPath(path));
-
-            return path;
         }
 
         /// <summary>

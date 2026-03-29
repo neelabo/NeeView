@@ -1,5 +1,4 @@
-﻿//using System.Drawing;
-using System.Windows;
+﻿using System.Windows;
 
 namespace NeeView
 {
@@ -23,8 +22,7 @@ namespace NeeView
                 ExportFolder = parameter.ExportFolder;
             }
 
-            var source = ExportImageSource.Create();
-
+            var source = ExportImageSourceFactory.Create();
             using var exporter = new ExportImage(source);
             exporter.ExportFolder = string.IsNullOrWhiteSpace(ExportFolder) ? System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyPictures) : ExportFolder;
             exporter.Mode = Mode;

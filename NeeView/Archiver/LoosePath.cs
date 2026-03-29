@@ -384,5 +384,32 @@ namespace NeeView
                 return false;
             }
         }
+
+        public static string CreateUniquePath(string name, bool withExtension, Func<string, bool> existsFunc)
+        {
+            if (!existsFunc(name))
+            {
+                return name;
+            }
+
+            var ext = "";
+            var baseName = name;
+
+            if (withExtension)
+            {
+                ext = GetExtension(name);
+                baseName = name[..^ext.Length].TrimEnd();
+            }
+
+            for (int i = 2; ; i++)
+            {
+                // TODO: 競合回避の番号の付け方を指定可能にする。 e.g.: "name (2).ext", "name_2.ext" など
+                var newName = $"{baseName} ({i}){ext}";
+                if (!existsFunc(newName))
+                {
+                    return newName;
+                }
+            }
+        }
     }
 }
