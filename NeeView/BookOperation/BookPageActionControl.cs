@@ -398,13 +398,13 @@ namespace NeeView
         }
 
         // ファイルに保存する
-        public void Export(ExportImageCommandParameter parameter)
+        public async void Export(ExportImageCommandParameter parameter)
         {
             if (CanExport())
             {
                 try
                 {
-                    ExportImageProcedure.Execute(parameter);
+                    await ExportImageProcedure.RunDialogFlow(parameter, parameter.IsShowToast, CancellationToken.None);
                 }
                 catch (Exception e)
                 {

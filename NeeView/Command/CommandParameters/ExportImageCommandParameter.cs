@@ -5,7 +5,7 @@ using NeeView.Windows.Property;
 namespace NeeView
 {
     [Equatable(Explicit = true)]
-    public partial class ExportImageCommandParameter : CommandParameter
+    public partial class ExportImageCommandParameter : CommandParameter, IExportImageParameter
     {
         [DefaultEquality] private ExportImageMode _mode;
         [DefaultEquality] private bool _hasBackground;
@@ -13,10 +13,10 @@ namespace NeeView
         [DefaultEquality] private bool _isDotKeep;
         [DefaultEquality] private string? _exportFolder;
         [DefaultEquality] private ExportImageFileNameMode _fileNameMode;
-        [DefaultEquality] private ExportImageFormat _fileFormat;
+        [DefaultEquality] private BitmapImageFormat _fileFormat;
         [DefaultEquality] private int _qualityLevel = 80;
         [DefaultEquality] private bool _isShowToast = true;
-        [DefaultEquality] private ExportImageOverwriteMode _overwriteMode;
+        [DefaultEquality] private ExportImageOverwriteMode _overwriteMode = ExportImageOverwriteMode.Confirm;
 
 
         [PropertyMember]
@@ -62,7 +62,7 @@ namespace NeeView
         }
 
         [PropertyMember]
-        public ExportImageFormat FileFormat
+        public BitmapImageFormat FileFormat
         {
             get => _fileFormat;
             set => SetProperty(ref _fileFormat, value);
@@ -94,6 +94,9 @@ namespace NeeView
     public enum ExportImageOverwriteMode
     {
         Confirm,
+
         AddNumber,
+
+        Invalid,
     }
 }

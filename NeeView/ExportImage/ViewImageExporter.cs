@@ -22,7 +22,7 @@ namespace NeeView
             _source = source ?? throw new ArgumentNullException(nameof(source));
         }
 
-        public ImageExporterContent? CreateView(ImageExporterCreateOptions options)
+        public ImageExporterContent? CreateView(IImageExporterOptions options)
         {
             if (_source == null) return null;
 
@@ -75,7 +75,7 @@ namespace NeeView
             return new ImageExporterContent(grid, rect.Size);
         }
 
-
+        // ファイル名からフォーマットを推測、ってのは、ダイアログで行うべきだと思う？
         private BitmapImageFormat GetBitmapImageFormatFromFileName(string path)
         {
             var ext = System.IO.Path.GetExtension(path).ToLowerInvariant();
@@ -86,7 +86,20 @@ namespace NeeView
             };
         }
 
-        public async ValueTask ExportAsync(string path, bool isOverwrite, int qualityLevel, ImageExporterCreateOptions options, CancellationToken token)
+        public async ValueTask ExportAsync(Stream stream, bool decrypt, BitmapImageFormat format, IImageExporterOptions options, CancellationToken token)
+        {
+            token.ThrowIfCancellationRequested();
+
+            await AppDispatcher.InvokeAsync(() =>
+            {
+                // create bitmap
+                var bitmapSource = CreateBitmapSource(options);
+                // export to stream
+                Export(stream, format, options.QualityLevel, bitmapSource);
+            });
+        }
+
+        public async ValueTask ExportAsync(string path, bool isOverwrite, IImageExporterOptions options, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -102,13 +115,13 @@ namespace NeeView
             using (var stream = new FileStream(path, fileMode))
             {
                 var format = GetBitmapImageFormatFromFileName(path);
-                await AppDispatcher.InvokeAsync(() => Export(stream, format, qualityLevel, bitmapSource));
+                await AppDispatcher.InvokeAsync(() => Export(stream, format, options.QualityLevel, bitmapSource));
             }
         }
 
-        public void Export(Stream stream, string path, int qualityLevel, ImageExporterCreateOptions options)
+        public void Export(Stream stream, string path, IImageExporterOptions options)
         {
-            Export(stream, path, qualityLevel, CreateBitmapSource(options));
+            Export(stream, path, options.QualityLevel, CreateBitmapSource(options));
         }
 
         public void Export(Stream stream, string path, int qualityLevel, BitmapSource bitmapSource)
@@ -133,12 +146,12 @@ namespace NeeView
             }
         }
 
-        public ImageSource CreateImageSource(ImageExporterCreateOptions options)
+        public ImageSource CreateImageSource(IImageExporterOptions options)
         {
             return CreateBitmapSource(options);
         }
 
-        private BitmapSource CreateBitmapSource(ImageExporterCreateOptions options)
+        private BitmapSource CreateBitmapSource(IImageExporterOptions options)
         {
             if (_source.View == null) throw new InvalidOperationException();
 
@@ -207,10 +220,10 @@ namespace NeeView
             return DateTime.MinValue;
         }
 
-        public long GetLength(string path, int qualityLevel, ImageExporterCreateOptions options)
+        public long GetLength(string path, IImageExporterOptions options)
         {
             using var stream = new MemoryStream();
-            Export(stream, path, qualityLevel, options);
+            Export(stream, path, options);
             return stream.Length;
         }
 
