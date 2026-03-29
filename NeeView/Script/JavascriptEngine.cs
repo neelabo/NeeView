@@ -188,7 +188,7 @@ namespace NeeView
 
         private string GetFullPath(string path)
         {
-            if (ScriptDirectory != null && !Path.IsPathRooted(path))
+            if (ScriptDirectory != null && !Path.IsPathFullyQualified(path))
             {
                 path = Path.Combine(ScriptDirectory, path);
             }

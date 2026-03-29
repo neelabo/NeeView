@@ -235,7 +235,7 @@ namespace NeeView
             }
             else
             {
-                var path = Path.IsPathRooted(themeProfile.BasedOn) ? themeProfile.BasedOn : Path.Combine(currentPath, themeProfile.BasedOn);
+                var path = Path.IsPathFullyQualified(themeProfile.BasedOn) ? themeProfile.BasedOn : Path.Combine(currentPath, themeProfile.BasedOn);
                 if (nests != null && nests.Contains(path)) throw new FormatException($"Circular reference: {path}");
                 nests = nests is null ? new List<string>() { path } : nests.Append(path);
                 var baseTheme = ValidateBasedOn(ThemeProfileTools.LoadFromFile(path), Path.GetDirectoryName(path), nests);

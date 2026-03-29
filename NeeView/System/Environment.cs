@@ -190,7 +190,7 @@ namespace NeeView
                     _neeviewProfile = GetEnvironmentValue("NEEVIEW_PROFILE").Trim();
                     if (!string.IsNullOrEmpty(_neeviewProfile))
                     {
-                        if (!Path.IsPathRooted(_neeviewProfile))
+                        if (!Path.IsPathFullyQualified(_neeviewProfile))
                         {
                             // Error: 環境変数 NEEVIEW_PROFILE は絶対パスではありません
                             throw new IOException("NEEVIEW_PROFILE: Not an absolute path");
@@ -475,7 +475,7 @@ namespace NeeView
                     {
                         _logFile = "";
                     }
-                    else if (Path.IsPathRooted(logFile))
+                    else if (Path.IsPathFullyQualified(logFile))
                     {
                         _logFile = logFile;
                     }
