@@ -23,8 +23,8 @@ namespace NeeView
         {
             //BookOperation.Current.Control.ExportBookDialog(e.Parameter.Cast<ExportBookAsCommandParameter>());
 
-            var exporter = new BookExporter(BookOperation.Current);
-            await exporter.ProcessAsync(System.Threading.CancellationToken.None);
+            var exporter = new ExportBook(BookOperation.Current);
+            await exporter.RunAsync(true, System.Threading.CancellationToken.None);
         }
     }
 }

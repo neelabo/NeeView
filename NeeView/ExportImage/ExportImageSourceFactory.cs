@@ -6,9 +6,12 @@ namespace NeeView
 {
     public static class ExportImageSourceFactory
     {
+        // TODO: PageFrameBoxPresenter のメンバでもいいかも？
+        // TODO: BookAddress の取得方法。BookOperation.Current.Address はよろしくない
         public static ExportImageSource Create()
         {
             var _presenter = PageFrameBoxPresenter.Current;
+
             var pageFrameContent = _presenter.GetSelectedPageFrameContent();
             if (pageFrameContent is null) throw new InvalidOperationException();
 
@@ -32,7 +35,7 @@ namespace NeeView
 
             var context = new ExportImageSource(
                 pageFrameContent: pageFrameContent,
-                bookAddress: BookOperation.Current.Address,
+                bookAddress: BookOperation.Current.Address ?? throw new InvalidOperationException("book is null"),
                 pages: pages,
                 view: element,
                 viewTransform: transform,

@@ -20,6 +20,9 @@ namespace NeeView
         public ExportImage(ExportImageSource source)
         {
             _source = source;
+          
+            this.SubscribePropertyChanged(nameof(Mode), (s, e) => UpdateExporter());
+
             UpdateExporter();
         }
 

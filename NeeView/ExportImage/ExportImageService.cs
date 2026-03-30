@@ -11,8 +11,8 @@ namespace NeeView
     {
         private readonly ExportImageSource _source;
         private readonly ExportImageParameter _parameter;
-        private readonly IImageExporter _exporter;
         private readonly IExportImageFileNamePolicy _fileNamePolicy;
+        protected IImageExporter _exporter;
 
 
         public ExportImageService(ExportImageSource source, IExportImageParameter parameter)
@@ -20,7 +20,9 @@ namespace NeeView
             _source = source;
 
             _parameter = new ExportImageParameter(parameter);
-            _parameter.ExportFolder = string.IsNullOrWhiteSpace(_parameter.ExportFolder) ? System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyPictures) : _parameter.ExportFolder;
+
+            // これは？旧バージョンの動作を確認すること
+            //_parameter.ExportFolder = string.IsNullOrWhiteSpace(_parameter.ExportFolder) ? System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyPictures) : _parameter.ExportFolder;
 
             _fileNamePolicy = new DefaultExportImageFileNamePolicy();
 
@@ -29,10 +31,13 @@ namespace NeeView
 
 
         public ExportImageSource Source => _source;
-        public IExportImageParameter Parameter => _parameter;
+
+        public ExportImageParameter Parameter => _parameter;
 
         public string? ExportFolder => _parameter.ExportFolder;
+
         public ExportImageMode Mode => _parameter.Mode;
+
 
         private static IImageExporter CreateExporter(ExportImageMode mode, ExportImageSource source)
         {
@@ -103,6 +108,5 @@ namespace NeeView
             _exporter.Dispose();
         }
     }
-
 
 }

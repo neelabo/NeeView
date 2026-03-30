@@ -131,17 +131,33 @@ namespace NeeView
 
         public void Export(Stream stream, BitmapImageFormat format, int qualityLevel, BitmapSource bitmapSource)
         {
+            BitmapEncoder encoder;
             if (format == BitmapImageFormat.Png)
             {
-                var encoder = new PngBitmapEncoder();
-                encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
-                encoder.Save(stream);
+                encoder = new PngBitmapEncoder();
             }
             else
             {
-                var encoder = new JpegBitmapEncoder();
-                encoder.QualityLevel = qualityLevel;
-                encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+                encoder = new JpegBitmapEncoder()
+                {
+                    QualityLevel = qualityLevel
+                };
+            }
+
+            encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
+
+            // ストリームがシークをサポートしていない場合は、MemoryStreamを経由する
+            if (!stream.CanSeek)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    encoder.Save(memoryStream);
+                    memoryStream.Position = 0;
+                    memoryStream.CopyTo(stream);
+                }
+            }
+            else
+            {
                 encoder.Save(stream);
             }
         }

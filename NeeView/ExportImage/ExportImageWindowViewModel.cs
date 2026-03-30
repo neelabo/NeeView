@@ -21,8 +21,8 @@ namespace NeeView
             _model = model;
             _preview = new ExportImagePreview(_model);
 
-            _model.SubscribePropertyChanged(nameof(_model.Exporter),
-                (s, e) => RaisePropertyChanged(nameof(Mode)));
+            _model.SubscribePropertyChanged(nameof(_model.Mode),
+                (s, e) => RaisePropertyChangedWithUpdatePreview(nameof(Mode)));
 
             _model.SubscribePropertyChanged(nameof(_model.HasBackground),
                 (s, e) => RaisePropertyChangedWithUpdatePreview(nameof(HasBackground)));

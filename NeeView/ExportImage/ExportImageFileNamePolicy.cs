@@ -2,12 +2,13 @@
 {
     public interface IExportImageFileNamePolicy
     {
-        string CreateFileName(ExportImageSource source, ExportImageMode mode, ExportImageFileNameMode fileNameMode, BitmapImageFormat format);
+        string CreateFileName(IExportPageSource source, ExportImageMode mode, ExportImageFileNameMode fileNameMode, BitmapImageFormat format);
     }
 
     public sealed class DefaultExportImageFileNamePolicy : IExportImageFileNamePolicy
     {
-        public string CreateFileName(ExportImageSource source, ExportImageMode mode, ExportImageFileNameMode fileNameMode, BitmapImageFormat format)
+        public string CreateFileName(IExportPageSource source, ExportImageMode mode, ExportImageFileNameMode fileNameMode, BitmapImageFormat format)
+
         {
             var nameMode = fileNameMode == ExportImageFileNameMode.Default
                 ? mode == ExportImageMode.Original ? ExportImageFileNameMode.Original : ExportImageFileNameMode.BookPageNumber
@@ -24,6 +25,7 @@
             }
             else
             {
+                // TODO: bookAddress は pages[0].BookPath でもいいかも？
                 var bookName = LoosePath.GetFileNameWithoutExtension(source.BookAddress);
 
                 var indexLabel = mode != ExportImageMode.Original && source.Pages.Count > 1
@@ -33,6 +35,5 @@
                 return LoosePath.ValidFileName($"{bookName}_{indexLabel}{extension}");
             }
         }
-
     }
 }

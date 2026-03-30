@@ -6,9 +6,9 @@ using System.Windows.Media.Effects;
 
 namespace NeeView
 {
-    public class ExportImageSource
+    public class ExportImageSource : IExportPageSource
     {
-        public ExportImageSource(PageFrameContent pageFrameContent, string? bookAddress, List<Page> pages, FrameworkElement view, Brush? background, Brush? backgroundFront, Transform viewTransform, Effect? viewEffect)
+        public ExportImageSource(PageFrameContent pageFrameContent, string bookAddress, List<Page> pages, FrameworkElement view, Brush? background, Brush? backgroundFront, Transform viewTransform, Effect? viewEffect)
         {
             PageFrameContent = pageFrameContent;
             BookAddress = bookAddress;
@@ -22,7 +22,7 @@ namespace NeeView
 
         public PageFrameContent PageFrameContent { get; }
 
-        public string? BookAddress { get; }
+        public string BookAddress { get; }
 
         public List<Page> Pages { get; }
 

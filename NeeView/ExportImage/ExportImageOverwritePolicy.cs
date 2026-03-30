@@ -1,44 +1,48 @@
-﻿using NeeView.IO;
-using NeeView.Media.Imaging;
-using NeeView.Properties;
+﻿using NeeView.Properties;
 using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 
 namespace NeeView
 {
     public interface IExportOverwritePolicy
     {
-        FileWriteSettings Resolve(ExportImageService service, string filename);
+        string Resolve(string name, IExportOverwriteResolver resolver, ExportImageService? service);
     }
 
 
+    /// <summary>
+    /// 衝突したら失敗とする
+    /// </summary>
     public class InvalidExportOverwritePolicy : IExportOverwritePolicy
     {
-        public FileWriteSettings Resolve(ExportImageService service, string filename)
+        public string Resolve(string name, IExportOverwriteResolver resolver, ExportImageService? service)
         {
-            var path = System.IO.Path.GetFullPath(LoosePath.Combine(service.ExportFolder, filename));
-            return new(path, false);
+            if (resolver.Exists(name))
+            {
+                throw new IOException($"The file already exists: {name}");
+            }
+            return name;
         }
     }
 
 
+    /// <summary>
+    /// 衝突したら確認ダイアログを表示する
+    /// </summary>
     public class ConfirmExportOverwritePolicy : IExportOverwritePolicy
     {
-        public FileWriteSettings Resolve(ExportImageService service, string filename)
+        public string Resolve(string name, IExportOverwriteResolver resolver, ExportImageService? service)
         {
-            var path = System.IO.Path.GetFullPath(LoosePath.Combine(service.ExportFolder, filename));
-
-            if (!File.Exists(path))
+            if (!resolver.Exists(name))
             {
-                return new(path, false);
+                return name;
             }
 
             var stackPanel = new StackPanel();
-            stackPanel.Children.Add(new TextBlock() { Text = TextResources.GetFormatString("ConfirmFileReplaceDialog.Message", LoosePath.GetFileName(path)), Margin = new Thickness(0, 10, 0, 10) });
-            stackPanel.Children.Add(CreateOverwriteContent(path, service));
+            stackPanel.Children.Add(new TextBlock() { Text = TextResources.GetFormatString("ConfirmFileReplaceDialog.Message", name), Margin = new Thickness(0, 10, 0, 10) });
+            stackPanel.Children.Add(resolver.CreateOverwriteContent(name, service));
             var dialog = new MessageDialog(stackPanel, TextResources.GetString("ConfirmFileReplaceDialog.Title"));
             var commandReplace = new UICommand("ConfirmFileReplaceDialog.Replace") { IsPossible = true };
             var commandAddNumber = new UICommand("ConfirmFileReplaceDialog.AddNumber") { IsPossible = true };
@@ -50,68 +54,27 @@ namespace NeeView
             var answer = dialog.ShowDialog();
             if (answer.Command == commandReplace)
             {
-                return new(path, true);
+                return name;
             }
             else if (answer.Command == commandAddNumber)
             {
-                return new(FileIO.CreateUniquePath(path), false);
+                return resolver.CreateUniqueName(name);
             }
             else
             {
                 throw new OperationCanceledException();
             }
         }
-
-
-        private static FrameworkElement CreateOverwriteContent(string path, ExportImageService exporter)
-        {
-            PreviewContent content0;
-            var image0 = exporter.CreateImageSource();
-            content0 = new PreviewContent(image0, exporter.GetLastWriteTime(), exporter.GetLength(path), image0?.GetPixelWidth() ?? 0, image0?.GetPixelHeight() ?? 0);
-
-            PreviewContent content1;
-            var fileInfo = new FileInfo(path);
-            try
-            {
-                var bitmap = new BitmapImage();
-                bitmap.BeginInit();
-                bitmap.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
-                bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                bitmap.UriSource = new Uri(path, UriKind.Absolute);
-                bitmap.EndInit();
-                bitmap.Freeze();
-                content1 = new PreviewContent(bitmap, fileInfo.GetSafeLastWriteTime(), fileInfo.Length, bitmap.PixelWidth, bitmap.PixelHeight);
-            }
-            catch
-            {
-                // Show file type icon if not open as image
-                var bitmapSourceCollection = FileIconCollection.Current.CreateFileIcon(path, FileIconType.FileType, true, true);
-                bitmapSourceCollection.Freeze();
-                var bitmap = bitmapSourceCollection.GetBitmapSource(128.0);
-                content1 = new PreviewContent(bitmap, fileInfo.GetSafeLastWriteTime(), fileInfo.Length, -1, -1);
-            }
-
-            var content = new ExportOverwriteContent(content0, content1);
-
-            return content;
-        }
     }
 
-
+    /// <summary>
+    /// 衝突したらユニーク名にする
+    /// </summary>
     public class AddNumberExportOverwritePolicy : IExportOverwritePolicy
     {
-        public FileWriteSettings Resolve(ExportImageService service, string filename)
+        public string Resolve(string name, IExportOverwriteResolver resolver, ExportImageService? service)
         {
-            var path = System.IO.Path.GetFullPath(LoosePath.Combine(service.ExportFolder, filename));
-
-            if (!File.Exists(path))
-            {
-                return new(path, false);
-            }
-
-            return new(FileIO.CreateUniquePath(path), false);
+            return resolver.CreateUniqueName(name);
         }
     }
-
-    public record FileWriteSettings(string FilePath, bool AllowOverwrite);
 }
