@@ -1,6 +1,4 @@
-﻿#define LOCAL_DEBUG
-
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -12,6 +10,8 @@ namespace NeeView
 {
     public interface IExportImageWriter : IDisposable
     {
+        public string CurrentName { get; }
+
         Task<Stream> OpenEntryAsync(ExportPageSource source, ExportImageService? service, ExportImageParameter parameter, IExportOverwritePolicy overwritePolicy, CancellationToken token);
 
         void Close();
@@ -37,25 +37,31 @@ namespace NeeView
 
     public class FolderExportImageWriter : IExportImageWriter
     {
-        private string _root;
+        private string _path;
 
         public FolderExportImageWriter(string path, bool isOverwrite)
         {
             Debug.Assert(System.IO.Path.IsPathFullyQualified(path));
 
-            _root = path;
+            _path = path;
 
             // 親フォルダーは存在していなければいけない
-            if (!Directory.Exists(Path.GetDirectoryName(_root)))
+            if (!Directory.Exists(Path.GetDirectoryName(_path)))
             {
-                throw new DirectoryNotFoundException($"Export folder not found: {Path.GetDirectoryName(_root)}");
+                throw new DirectoryNotFoundException($"Directory not found: {Path.GetDirectoryName(_path)}");
             }
 
-            // TODO: フォルダーは存在してはいけない？重複回避？
+            // 上書きチェック
+            if (!isOverwrite && FileIO.ExistsPath(_path))
+            {
+                throw new IOException($"File already exists: {_path}");
+            }
 
             // フォルダーの存在を確定
-            Directory.CreateDirectory(_root);
+            Directory.CreateDirectory(_path);
         }
+
+        public string CurrentName { get; private set; } = "";
 
         // service がなあ。
         public async Task<Stream> OpenEntryAsync(ExportPageSource pageSource, ExportImageService? service, ExportImageParameter parameter, IExportOverwritePolicy overwritePolicy, CancellationToken token)
@@ -67,8 +73,7 @@ namespace NeeView
             // 使用できないファイル名を置換
             filename = LoosePath.ValidPath(filename);
 
-            //TODO: service の ExportFolder, parameter の ExportFolder, _root などの衝突がありうるので、ファイルパスの生成ルールを明確にする必要がある
-            var resolver = new FileExportOverwriteResolver(parameter);
+            var resolver = new FileExportOverwriteResolver(_path);
             var name = overwritePolicy.Resolve(filename, resolver, service);
             var path = resolver.GetFullPath(name);
 
@@ -82,6 +87,8 @@ namespace NeeView
                 }
             }
 
+            CurrentName = name;
+
             return new FileStream(path, FileMode.CreateNew, FileAccess.Write);
         }
 
@@ -94,6 +101,7 @@ namespace NeeView
         }
     }
 
+
     public class ZipExportImageWriter : IExportImageWriter
     {
         private FileStream _output;
@@ -104,24 +112,29 @@ namespace NeeView
 
         public ZipExportImageWriter(string path, bool isOverwrite)
         {
-            // 親フォルダーは存在していなければいけない
-            if (!Directory.Exists(Path.GetDirectoryName(path)))
-            {
-                throw new DirectoryNotFoundException($"Export folder not found: {Path.GetDirectoryName(path)}");
-            }
-
-            // TODO: ZIPファイルは存在してはいけない？重複回避？
-            if (!isOverwrite && FileIO.ExistsPath(path))
-            {
-                throw new IOException($"The file already exists: {path}");
-            }
+            Debug.Assert(System.IO.Path.IsPathFullyQualified(path));
 
             _path = path;
+
+            // 親フォルダーは存在していなければいけない
+            if (!Directory.Exists(Path.GetDirectoryName(_path)))
+            {
+                throw new DirectoryNotFoundException($"Directory not found: {Path.GetDirectoryName(_path)}");
+            }
+
+            // 上書きチェック
+            if (!isOverwrite && FileIO.ExistsPath(_path))
+            {
+                throw new IOException($"File already exists: {_path}");
+            }
+
             _tempPath = Temporary.CreateWorkFileName(_path);
 
             _output = new FileStream(_tempPath, FileMode.CreateNew, FileAccess.ReadWrite);
             _archive = new System.IO.Compression.ZipArchive(_output, ZipArchiveMode.Create);
         }
+
+        public string CurrentName { get; private set; } = "";
 
         public async Task<Stream> OpenEntryAsync(ExportPageSource pageSource, ExportImageService? service, ExportImageParameter parameter, IExportOverwritePolicy overwritePolicy, CancellationToken token)
         {
@@ -135,6 +148,8 @@ namespace NeeView
             // ZIPでもエントリ名の重複は回避する
             name = overwritePolicy.Resolve(name, _resolver, service);
             _resolver.Add(name);
+
+            CurrentName = name;
 
             var entry = _archive.CreateEntry(name);
             return await entry.OpenAsync(token);

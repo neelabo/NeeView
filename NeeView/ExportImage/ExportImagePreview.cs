@@ -1,23 +1,45 @@
 ﻿using NeeLaboratory.ComponentModel;
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
 namespace NeeView
 {
-    public class ExportImagePreview : BindableBase
+    public class ExportImagePreview : BindableBase, IDisposable
     {
-        private readonly ExportImage _exportImage;
+        private ExportImageParameter _parameter;
+        private ExportImageSource _source;
+        private IImageExporter _exporter;
 
         private FrameworkElement? _preview;
         private double _previewWidth = double.NaN;
         private double _previewHeight = double.NaN;
         private string _imageFormatNote = "";
+        private bool _disposedValue;
+        private DisposableCollection _disposables = new();
 
-        public ExportImagePreview(ExportImage exportImage)
+        public ExportImagePreview(ExportImageParameter parameter, ExportImageSource source)
         {
-            _exportImage = exportImage;
+            _parameter = parameter;
+            _source = source;
+
+            _disposables.Add(_parameter.SubscribePropertyChanged(nameof(_parameter.Mode),
+                (s, e) => { UpdateExporter(); UpdatePreview(); }));
+
+            _disposables.Add(_parameter.SubscribePropertyChanged(nameof(_parameter.HasBackground),
+                (s, e) => UpdatePreview()));
+
+            _disposables.Add(_parameter.SubscribePropertyChanged(nameof(_parameter.IsOriginalSize),
+                (s, e) => UpdatePreview()));
+
+            _disposables.Add(_parameter.SubscribePropertyChanged(nameof(_parameter.IsDotKeep),
+                (s, e) => UpdatePreview()));
+
+            UpdateExporter();
+            UpdatePreview();
         }
+
 
         public FrameworkElement? Preview
         {
@@ -43,11 +65,53 @@ namespace NeeView
             set { SetProperty(ref _imageFormatNote, value); }
         }
 
-        public void UpdatePreview()
+        public IImageExporter Exporter
+        {
+            get { return _exporter; }
+
+            [MemberNotNull(nameof(_exporter))]
+            set
+            {
+                if (_exporter != value)
+                {
+                    _exporter?.Dispose();
+                    _exporter = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    _disposables.Dispose();
+                    _exporter?.Dispose();
+                }
+                _disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        [MemberNotNull(nameof(_exporter))]
+        private void UpdateExporter()
+        {
+            Exporter = ImageExporterFactory.CreateExporter(_source, _parameter.Mode);
+        }
+
+        private void UpdatePreview()
         {
             try
             {
-                var content = _exportImage.Exporter.CreateView(_exportImage);
+                var content = _exporter.CreateView(_parameter);
                 if (content is null) throw new InvalidOperationException();
                 Preview = content.View;
                 PreviewWidth = content.Size.IsEmpty ? double.NaN : content.Size.Width;

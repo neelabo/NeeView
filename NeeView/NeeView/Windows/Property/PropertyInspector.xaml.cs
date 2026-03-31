@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using NeeView.Setting;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace NeeView.Windows.Property
 {
@@ -15,7 +17,6 @@ namespace NeeView.Windows.Property
             set { SetValue(DocumentProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for Document.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty DocumentProperty =
             DependencyProperty.Register("Document", typeof(PropertyDocument), typeof(PropertyInspector), new PropertyMetadata(null));
 
@@ -26,7 +27,6 @@ namespace NeeView.Windows.Property
             set { SetValue(IsHsvModeProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for IsHsvMode.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsHsvModeProperty =
             DependencyProperty.Register("IsHsvMode", typeof(bool), typeof(PropertyInspector), new PropertyMetadata(false));
 
@@ -38,7 +38,6 @@ namespace NeeView.Windows.Property
             set { SetValue(IsResetButtonVisibleProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for IsResetButtonVisible.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsResetButtonVisibleProperty =
             DependencyProperty.Register("IsResetButtonVisible", typeof(bool), typeof(PropertyInspector), new PropertyMetadata(true, IsResetButtonVisibleProperty_Changed));
 
@@ -57,7 +56,6 @@ namespace NeeView.Windows.Property
             set { SetValue(ColumnRateProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for ColumnRate.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ColumnRateProperty =
             DependencyProperty.Register("ColumnRate", typeof(double), typeof(PropertyInspector), new PropertyMetadata(0.75));
 
@@ -67,16 +65,46 @@ namespace NeeView.Windows.Property
             set { SetValue(IsSwitchModeProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for IsSwitchMode.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsSwitchModeProperty =
             DependencyProperty.Register("IsSwitchMode", typeof(bool), typeof(PropertyInspector), new PropertyMetadata(false));
 
 
+        public bool IsStretch
+        {
+            get { return (bool)GetValue(IsStretchProperty); }
+            set { SetValue(IsStretchProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsStretchProperty =
+            DependencyProperty.Register(nameof(IsStretch), typeof(bool), typeof(PropertyInspector), new PropertyMetadata(true));
 
 
-        /// <summary>
-        /// 
-        /// </summary>
+        public VisibilityPropertyValue? VisibilityValue
+        {
+            get { return (VisibilityPropertyValue)GetValue(VisibilityValueProperty); }
+            set { SetValue(VisibilityValueProperty, value); }
+        }
+
+        public static readonly DependencyProperty VisibilityValueProperty =
+            DependencyProperty.Register(nameof(VisibilityValue), typeof(VisibilityPropertyValue), typeof(PropertyInspector), new PropertyMetadata(null, VisibilityValueProperty_Changed));
+
+        private static void VisibilityValueProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is PropertyInspector control)
+            {
+                var value = (VisibilityPropertyValue?)e.NewValue;
+                if (value is not null)
+                {
+                    value.SetBind(control);
+                }
+                else
+                {
+                    BindingOperations.ClearBinding(control, VisibilityProperty);
+                }
+            }
+        }
+
+
         public PropertyInspector()
         {
             InitializeComponent();
@@ -85,7 +113,6 @@ namespace NeeView.Windows.Property
         }
 
 
-        //
         private void Reset(object? sender, RoutedEventArgs e)
         {
             foreach (var item in Document.Elements.OfType<PropertyMemberElement>())
@@ -96,7 +123,6 @@ namespace NeeView.Windows.Property
             this.properties.Items.Refresh();
         }
 
-        //
         public void Refresh()
         {
             this.properties.Items.Refresh();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using System.Windows;
@@ -8,21 +9,26 @@ namespace NeeView
     public class AppSettings
     {
         private static AppSettings? _current;
-        public static AppSettings Current
+        public static AppSettings Current => _current ?? (_current = Create());
+
+        private static AppSettings Create()
         {
-            get
+            var fileName = "/NeeView.settings.json";
+            var resource_uri = new Uri(fileName, UriKind.Relative);
+            var info = Application.GetContentStream(resource_uri);
+
+            if (info is null)
             {
-                if (_current == null)
-                {
-                    var fileName = "/NeeView.settings.json";
-                    var resource_uri = new Uri(fileName, UriKind.Relative);
-                    var info = Application.GetContentStream(resource_uri) ?? throw new FileNotFoundException($"File not found: {fileName}");
-                    using var stream = info.Stream;
-                    _current = JsonSerializer.Deserialize<AppSettings>(stream, UserSettingTools.GetDeserializeOptions());
-                    if (_current is null) throw new FormatException($"Cannot read: {fileName}");
-                }
-                return _current;
+#if DEBUG
+                Debug.WriteLine(info is not null, $"File not found: {fileName}");
+                return new();
+#endif
+                throw new FileNotFoundException($"File not found: {fileName}");
             }
+
+            using var stream = info.Stream;
+            return JsonSerializer.Deserialize<AppSettings>(stream, UserSettingTools.GetDeserializeOptions())
+                ?? throw new FormatException($"Cannot read: {fileName}");
         }
 
         /// <summary>

@@ -39,14 +39,7 @@ namespace NeeView
 
         public static async ValueTask InvokeAsync(Action action)
         {
-            if (UIDispatcher.CheckAccess())
-            {
-                action.Invoke();
-            }
-            else
-            {
-                await UIDispatcher.InvokeAsync(action);
-            }
+            await UIDispatcher.InvokeAsync(action);
         }
 
         public static DispatcherOperation<TResult> InvokeAsync<TResult>(Func<TResult> callback)

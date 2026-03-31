@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.Collection;
+using NeeView.Setting;
 using System;
 using System.Collections.Generic;
 
@@ -37,6 +38,11 @@ namespace NeeView.Windows.Property
         /// ソースのデフォルトインスタンス取得
         /// </summary>
         public Func<object>? GetDefaultSource { get; set; }
+
+        /// <summary>
+        /// Visibility Property Value
+        /// </summary>
+        public VisibilityPropertyValue? VisibilityValue { get; set; }
     }
 
 }

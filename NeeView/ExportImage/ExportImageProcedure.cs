@@ -56,7 +56,7 @@ namespace NeeView
                 return dialog.FileName;
             }
 
-            var resolver = new FileExportOverwriteResolver(service.Parameter);
+            var resolver = new FileExportOverwriteResolver(service.ExportFolder);
             var name = overwritePolicy.Resolve(filename, resolver, service);
             return resolver.GetFullPath(name);
         }

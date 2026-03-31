@@ -973,14 +973,18 @@ namespace NeeView.PageFrames
             }
 
             var nextIndex = frameRange.Top(direction.ToSign()).Index + direction.ToSign();
-            if (_context.IsLoopPage)
+
+            if (!AppState.Instance.IsProcessingBook)
             {
-                nextIndex = _bookContext.NormalizeIndex(nextIndex);
-            }
-            else if (!_bookContext.ContainsIndex(nextIndex))
-            {
-                PageTerminated?.Invoke(this, new PageTerminatedEventArgs(direction.ToSign(), false));
-                return;
+                if (_context.IsLoopPage)
+                {
+                    nextIndex = _bookContext.NormalizeIndex(nextIndex);
+                }
+                else if (!_bookContext.ContainsIndex(nextIndex))
+                {
+                    PageTerminated?.Invoke(this, new PageTerminatedEventArgs(direction.ToSign(), false));
+                    return;
+                }
             }
 
             var nextPosition = new PagePosition(nextIndex, (direction == LinkedListDirection.Next ? 0 : 1));
@@ -1010,13 +1014,16 @@ namespace NeeView.PageFrames
 
             var pos = frameRange.Next(direction.ToSign());
 
-            if (_context.IsLoopPage)
+            if (!AppState.Instance.IsProcessingBook)
             {
-            }
-            else if (!_bookContext.ContainsIndex(pos.Index))
-            {
-                PageTerminated?.Invoke(this, new PageTerminatedEventArgs(direction.ToSign(), false));
-                return;
+                if (_context.IsLoopPage)
+                {
+                }
+                else if (!_bookContext.ContainsIndex(pos.Index))
+                {
+                    PageTerminated?.Invoke(this, new PageTerminatedEventArgs(direction.ToSign(), false));
+                    return;
+                }
             }
 
             MoveTo(pos, direction, false, true, false);
@@ -1033,16 +1040,20 @@ namespace NeeView.PageFrames
 
             var position = new PagePosition(SelectedRange.Min.Index + delta, 0);
             var direction = LinkedListDirection.Next;
-            if (_context.IsLoopPage)
+
+            if (!AppState.Instance.IsProcessingBook)
             {
-            }
-            else if (!_bookContext.ContainsIndex(position.Index))
-            {
-                (var nextPosition, var nextDirection) = CorrectPosition(new(position, direction), true);
-                if ((nextDirection == LinkedListDirection.Next ? SelectedRange.Min.Index : SelectedRange.Max.Index) == nextPosition.Index)
+                if (_context.IsLoopPage)
                 {
-                    PageTerminated?.Invoke(this, new PageTerminatedEventArgs(Math.Sign(delta), false));
-                    return;
+                }
+                else if (!_bookContext.ContainsIndex(position.Index))
+                {
+                    (var nextPosition, var nextDirection) = CorrectPosition(new(position, direction), true);
+                    if ((nextDirection == LinkedListDirection.Next ? SelectedRange.Min.Index : SelectedRange.Max.Index) == nextPosition.Index)
+                    {
+                        PageTerminated?.Invoke(this, new PageTerminatedEventArgs(Math.Sign(delta), false));
+                        return;
+                    }
                 }
             }
 
@@ -1599,9 +1610,13 @@ namespace NeeView.PageFrames
         public void RaisePageTerminatedEvent(object? sender, int direction, bool isMedia)
         {
             if (_disposedValue) return;
-
+                
             if (isMedia && !_bookContext.IsMedia) return;
-            PageTerminated?.Invoke(sender, new PageTerminatedEventArgs(direction, isMedia));
+
+            if (!AppState.Instance.IsProcessingBook)
+            {
+                PageTerminated?.Invoke(sender, new PageTerminatedEventArgs(direction, isMedia));
+            }
         }
 
         /// <summary>

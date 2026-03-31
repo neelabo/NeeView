@@ -6,6 +6,6 @@
         BitmapImageFormat FileFormat { get; }
         ExportImageFileNameMode FileNameMode { get; }
         ExportImageOverwriteMode OverwriteMode { get; }
-        string? ExportFolder { get; }
+        string ExportFolder { get; }
     }
 }

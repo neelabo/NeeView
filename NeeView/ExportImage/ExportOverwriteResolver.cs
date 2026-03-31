@@ -16,19 +16,18 @@ namespace NeeView
         public FrameworkElement CreateOverwriteContent(string name, ExportImageService? service);
     }
 
-        public class FileExportOverwriteResolver : IExportOverwriteResolver
+    public class FileExportOverwriteResolver : IExportOverwriteResolver
     {
-        private readonly ExportImageParameter _parameter;
+        private readonly string _directory;
 
-        public FileExportOverwriteResolver(ExportImageParameter parameter)
+        public FileExportOverwriteResolver(string directory)
         {
-            _parameter = parameter;
+            _directory = directory;
         }
 
-        // TODO: 絶対パス化いつも必要か？
         public string GetFullPath(string name)
         {
-            return System.IO.Path.GetFullPath(LoosePath.Combine(_parameter.ExportFolder, name));
+            return System.IO.Path.GetFullPath(LoosePath.Combine(_directory, name));
         }
 
         public bool Exists(string name)

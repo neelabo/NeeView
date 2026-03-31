@@ -1,0 +1,126 @@
+﻿<Window x:Class="NeeView.ExportBookDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:local="clr-namespace:NeeView"
+    xmlns:nw="clr-namespace:NeeView.Windows" 
+    xmlns:nvp="clr-namespace:NeeView.Windows.Property"
+    xmlns:nwc="clr-namespace:NeeView.Windows.Controls"
+    xmlns:properties="clr-namespace:NeeView.Properties" 
+    mc:Ignorable="d"
+    Style="{StaticResource ChromeWindowStyle}"
+    Title="{properties:TextBinding ExportBookAsCommand}" Height="600" Width="800" ResizeMode="CanResizeWithGrip">
+
+    <Window.Resources>
+        <ResourceDictionary>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/PanelIcons.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="TextButton" TargetType="Button" BasedOn="{StaticResource NVDialogButton}">
+                <Setter Property="Margin" Value="10,10,0,0" />
+                <Setter Property="MaxWidth" Value="512" />
+            </Style>
+
+            <Style x:Key="TextButtonMain" TargetType="Button" BasedOn="{StaticResource NVDialogAccentButton}">
+                <Setter Property="Margin" Value="10,10,0,0" />
+                <Setter Property="MaxWidth" Value="512" />
+            </Style>
+
+            <Style x:Key="ItemStack" TargetType="StackPanel">
+                <Setter Property="Margin" Value="0,5" />
+            </Style>
+
+            <Style x:Key="Header" TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            </Style>
+
+            <Style x:Key="Body" TargetType="TextBlock">
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
+
+            <Style TargetType="{x:Type nvp:PropertyInspector}">
+                <Setter Property="IsResetButtonVisible" Value="False"/>
+                <Setter Property="IsStretch" Value="False"/>
+                <Setter Property="ColumnRate" Value="0.5"/>
+            </Style>
+
+            <local:ExportBookTypeToSaveAsString x:Key="ExportBookTypeToSaveAsString"/>
+
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="400" MinWidth="{Binding ElementName=Buttons, Path=ActualWidth}" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <Border BorderThickness="0,0,1,0" BorderBrush="{DynamicResource Panel.Border}" Background="{DynamicResource Panel.Background}">
+            <DockPanel>
+                <StackPanel x:Name="Buttons" DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+                    <Button x:Name="SaveButton" Style="{StaticResource TextButtonMain}" Content="{Binding BookType, Converter={StaticResource ExportBookTypeToSaveAsString}}" Click="SaveButton_Click" />
+                    <Button x:Name="CancelButton" Style="{StaticResource TextButton}" Content="{properties:TextBinding Word.Cancel}" Click="CancelButton_Click" />
+                </StackPanel>
+
+                <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Margin="10,0">
+                    <nvp:PropertyInspector Document="{Binding ExportBookTypeDocument}" Margin="0"/>
+                    <DockPanel>
+                        <Button x:Name="DestinationFolderOptionButton" DockPanel.Dock="Right" Style="{StaticResource IconButton}" Padding="5,0" Click="DestinationFolderOptionButton_Click" TabIndex="102">
+                            <Image Source="{StaticResource ic_setting_24px_a}" Width="16" Height="16" />
+                        </Button>
+                        <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding DestinationFolderList}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedDestinationFolder}" TabIndex="101" />
+                        <TextBlock Style="{StaticResource Header}" Text="{properties:TextBinding ExportImageWindow.Folder}" />
+                    </DockPanel>
+                </StackPanel>
+
+                <DockPanel DockPanel.Dock="Top" Margin="10,5">
+                    <Button x:Name="CopyButton" DockPanel.Dock="Right" Style="{StaticResource IconButton}" Margin="5,0" Padding="5" VerticalAlignment="Center" Click="CopyButton_Click" MouseLeave="CopyButton_MouseLeave">
+                        <Image Source="{StaticResource ic_content_copy_24px}" Width="16" Height="16" />
+                        <Button.ToolTip>
+                            <ToolTip Content="Copy book name to clipboard"/>
+                        </Button.ToolTip>
+                    </Button>
+                    <Popup x:Name="CopyPopup" PlacementTarget="{Binding ElementName=CopyButton}" Placement="Mouse" >
+                        <Border Background="{DynamicResource Panel.Background}" BorderBrush="{DynamicResource Panel.Border}" BorderThickness="1"  CornerRadius="4" >
+                            <TextBlock Text="Copied!" Margin="5,2" Foreground="{DynamicResource Panel.Foreground}"/>
+                        </Border>
+                    </Popup>
+                    <nwc:ReadOnlyTextBox DockPanel.Dock="Right" Text="{Binding BookName}" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                </DockPanel>
+
+                <Separator DockPanel.Dock="Top" Margin="5,0,5,5" Background="{DynamicResource Panel.Separator}"/>
+
+                <ScrollViewer Style="{StaticResource NVScrollViewer}" Margin="10,0,0,0" CanContentScroll="False">
+                    <nvp:PropertyInspector Document="{Binding ExportBookDocument}" Margin="0"/>
+                </ScrollViewer>
+
+            </DockPanel>
+        </Border>
+
+        <Grid x:Name="Base" Grid.Column="1">
+            <DockPanel Margin="20" MinWidth="200" MinHeight="200">
+                <TextBlock DockPanel.Dock="Bottom" Text="{Binding ImageFormatNote}" Margin="10" HorizontalAlignment="Center" />
+                <DockPanel Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Grid >
+                        <Border BorderBrush="Gray" BorderThickness="0,0,5,5" Margin="5,5,0,0"
+                            Width="{Binding ElementName=PreviewViewBox, Path=ActualWidth}"
+                            Height="{Binding ElementName=PreviewViewBox, Path=ActualHeight}"/>
+                        <Border BorderBrush="Gray" BorderThickness="3" Margin="0,0,5,5">
+                            <Viewbox x:Name="PreviewViewBox"  HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="{Binding PreviewWidth}" MaxHeight="{Binding PreviewHeight}" Margin="-1">
+                                <ContentControl Content="{Binding Preview}" HorizontalAlignment="Center" VerticalAlignment="Center" Focusable="False" IsTabStop="False" />
+                            </Viewbox>
+                        </Border>
+                    </Grid>
+                </DockPanel>
+            </DockPanel>
+        </Grid>
+
+        <GridSplitter Grid.Column="1" Width="8" HorizontalAlignment="Left" Background="Transparent" FocusVisualStyle="{StaticResource NVFocusVisual}" IsTabStop="False" />
+
+    </Grid>
+</Window>

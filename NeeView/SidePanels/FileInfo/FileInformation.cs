@@ -22,8 +22,7 @@ namespace NeeView
         {
             var mainViewComponent = MainViewComponent.Current;
 
-            mainViewComponent.PageFrameBoxPresenter.ViewContentChanged +=
-                (s, e) => Update(e);
+            mainViewComponent.PageFrameBoxPresenter.ViewContentChanged += PageFrameBoxPresenter_ViewContentChanged;
 
             _viewContentsDelay = new DelayValue<List<FileInformationSource>>();
             _viewContentsDelay.ValueChanged += ViewContentsDelay_ValueChanged;
@@ -40,6 +39,13 @@ namespace NeeView
         public FileInformationSource? GetMainFileInformation()
         {
             return FileInformationCollection?.OrderBy(e => e.Page?.Index ?? int.MaxValue).FirstOrDefault();
+        }
+
+        private void PageFrameBoxPresenter_ViewContentChanged(object? sender, FrameViewContentChangedEventArgs e)
+        {
+            if (AppState.Instance.IsProcessingBook) return;
+
+            Update(e);
         }
 
         public void Update(FrameViewContentChangedEventArgs e)

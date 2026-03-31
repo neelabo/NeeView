@@ -52,6 +52,7 @@ namespace NeeView
             dialog.Width = 800;
 
             var answer = dialog.ShowDialog();
+
             if (answer.Command == commandReplace)
             {
                 return name;

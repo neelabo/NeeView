@@ -1,16 +1,20 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeLaboratory.Generators;
 using NeeView.Collections.Generic;
 using NeeView.IO;
 using NeeView.PageFrames;
 using NeeView.Properties;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace NeeView
 {
-    public class BookControl : BindableBase, IBookControl, IDisposable, IPendingBook
+    [LocalDebug]
+    public partial class BookControl : BindableBase, IBookControl, IDisposable, IPendingBook
     {
         private readonly PageFrameBox _box;
         private readonly Book _book;
@@ -148,7 +152,7 @@ namespace NeeView
         }
 
         public async Task CopyBookAsync(CancellationToken token)
-        { 
+        {
             if (!CanCopyBookToClipboard()) return;
 
             var entry = await ArchiveEntryUtility.CreateAsync(_book.Path, ArchiveHint.None, true, token);
@@ -170,7 +174,7 @@ namespace NeeView
         {
             await CutBookToClipboardAsync(CancellationToken.None);
         }
-          
+
         public async ValueTask CutBookToClipboardAsync(CancellationToken token)
         {
             if (!CanCutBookToClipboard()) return;
@@ -386,6 +390,50 @@ namespace NeeView
         }
 
         #endregion
+
+        public bool CanExportBook()
+        {
+            return _book != null && !_book.IsMedia && _book.Pages.Count > 0;
+        }
+
+        public async void ExportBook()
+        {
+            if (!CanExportBook()) return;
+
+            // スライドショーを一時停止
+            var isPlayingSlideShow = SlideShow.Current.IsPlayingSlideShow;
+            SlideShow.Current.IsPlayingSlideShow = false;
+
+            var parameter = Config.Current.Book.ExportBookParameter;
+
+            try
+            {
+                var bookName = _book.Source.IsDirectory ? LoosePath.GetFileName(_book.Path) : LoosePath.GetFileNameWithoutExtension(_book.Path);
+
+                var dialog = new ExportBookDialog(parameter, bookName);
+                dialog.Owner = MainViewComponent.Current.GetWindow();
+                dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                var result = dialog.ShowDialog();
+                if (result != true)
+                {
+                    return;
+                }
+
+                Debug.Assert(parameter.ExportFolder == LoosePath.GetDirectoryName(parameter.ExportBookPath), "Export folder must be the same as the book folder.");
+
+                var progress = new Progress<ProgressInfo>();
+                var exporter = new ExportBook(BookOperation.Current, progress);
+                var progressDialog = new ProgressDialog(MainWindow.Current, progress) { CanCancel = true };
+                progressDialog.ShowDialog(token => Task.Run(() => exporter.RunAsync(parameter, true, token), token));
+            }
+            finally
+            {
+                // 出力パスは保存しない
+                parameter.ExportBookPath = "";
+
+                SlideShow.Current.IsPlayingSlideShow = isPlayingSlideShow;
+            }
+        }
     }
 
 

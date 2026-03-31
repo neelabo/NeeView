@@ -131,7 +131,7 @@ namespace NeeView
     public interface ICancelableObject
     {
         string Name { get; }
-        bool CanCancell { get; }
+        bool CanCancel { get; }
         bool IsCanceled { get; set; }
         void Cancel();
     }
@@ -146,7 +146,7 @@ namespace NeeView
         }
 
         public string Name { get; }
-        public bool CanCancell => CancelAction != null;
+        public bool CanCancel => CancelAction != null;
         public bool IsCanceled { get; set; }
         public Action? CancelAction { get; set; }
 

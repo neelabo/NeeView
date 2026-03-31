@@ -75,6 +75,27 @@
     <Style x:Key="ChromeDialogStyle" TargetType="{x:Type Window}" BasedOn="{StaticResource ChromeWindowStyle}">
         <Setter Property="BorderBrush" Value="{DynamicResource Window.Dialog.Border}" />
         <Setter Property="BorderThickness" Value="{DynamicResource Window.Dialog.BorderThickness}" />
+    </Style>
+
+    <Style x:Key="ChromeNoneStyle" TargetType="{x:Type Window}" BasedOn="{StaticResource ChromeWindowStyle}">
+        <Setter Property="BorderBrush" Value="{DynamicResource Window.Dialog.Border}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource Window.Dialog.BorderThickness}" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Window}">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Border x:Name="WindowBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                            <Grid>
+                                <AdornerDecorator>
+                                    <ContentPresenter />
+                                </AdornerDecorator>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
 
     </Style>
 

@@ -26,7 +26,14 @@
 
                 <DataTemplate DataType="{x:Type local:PropertyMemberElement}">
                     <local:PropertyControl Header="{Binding Name}" Value="{Binding TypeValue}" Tips="{Binding Tips}"
-                                       ColumnRate="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=ColumnRate}"/>
+                        IsStretch="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=IsStretch}"
+                        ColumnRate="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=ColumnRate}"
+                        VisibilityValue="{Binding Options.VisibilityValue}"/>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type local:PropertyDocumentElement}">
+                    <local:PropertyInspector Document="{Binding Document}"
+                        VisibilityValue="{Binding Options.VisibilityValue}"/>
                 </DataTemplate>
 
                 <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
