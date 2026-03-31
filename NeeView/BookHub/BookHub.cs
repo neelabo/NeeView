@@ -207,6 +207,8 @@ namespace NeeView
 
             if (!this.IsEnabled) return null;
 
+            if (AppState.Instance.IsProcessingBook) return null;
+
             var query = new QueryPath(path).Normalize();
             var sourcePath = query.SimpleQuery;
 

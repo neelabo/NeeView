@@ -249,7 +249,11 @@ namespace NeeView
             {
                 if (disposing)
                 {
-                    ResetScalingMode();
+                    // TODO: Dispose のなかで Dispatcher 呼ぶのはどうなんだろう？
+                    // スケールモードの初期化、これは使うときだけ変更すれば良くないか？
+                    // だめだ、ViewContent を直接変更しており、これは現在の表示そのものだ。
+                    // そもそも「ドットを維持」を一時的に変更するのはよくない。エフェクトの設定そのまま反映でよいではないか？
+                    AppDispatcher.Invoke(() =>ResetScalingMode());
                 }
                 _disposedValue = true;
             }

@@ -21,10 +21,7 @@ namespace NeeView
 
         public override async void Execute(object? sender, CommandContext e)
         {
-            //BookOperation.Current.Control.ExportBookDialog(e.Parameter.Cast<ExportBookAsCommandParameter>());
-
-            var exporter = new ExportBook(BookOperation.Current);
-            await exporter.RunAsync(true, System.Threading.CancellationToken.None);
+            BookOperation.Current.BookControl.Export(); // e.Parameter.Cast<ExportBookAsCommandParameter>());
         }
     }
 }

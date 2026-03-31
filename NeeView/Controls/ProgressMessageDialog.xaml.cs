@@ -22,7 +22,7 @@ namespace NeeView
 
         public string Message => _cancellableObject?.Name ?? "";
 
-        public bool CanCancel => _cancellableObject?.CanCancell ?? false;
+        public bool CanCancel => _cancellableObject?.CanCancel ?? false;
 
         public bool IsCanceled => _cancellableObject?.IsCanceled ?? false;
 

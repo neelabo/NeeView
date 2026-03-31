@@ -31,6 +31,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>NeeView.UnitTest</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+  
+  <ItemGroup>
     <PackageReference Include="bblanchon.PDFium.Win32" Version="143.0.7497" />
     <PackageReference Include="Generator.Equals" Version="3.3.0" />
     <PackageReference Include="Jint" Version="4.4.2" />

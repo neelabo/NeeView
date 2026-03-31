@@ -1,0 +1,38 @@
+﻿<Window x:Class="NeeView.ProgressDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NeeView"
+        xmlns:properties="clr-namespace:NeeView.Properties"
+        mc:Ignorable="d"
+        Style="{StaticResource ChromeDialogStyle}" 
+        UseLayoutRounding="True"
+        WindowStyle="None"
+        ShowInTaskbar="False"
+        Title="ProgressDialog" SizeToContent="Height" Width="480" ResizeMode="NoResize">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <local:StringNullOrWhiteSpaceToVisibilityConverter x:Key="StringNullOrWhiteSpaceToVisibilityHiddenConverter" True="Collapsed" False="Visible" />
+    </Window.Resources>
+
+    <Grid>
+        <StackPanel Margin="10">
+            <StackPanel Margin="0,10">
+                <TextBlock x:Name="CaptionTextBlock" TextWrapping="Wrap" Text="{Binding Caption}" FontSize="{DynamicResource SystemFontSizeHuge}" FontWeight="Bold"
+                    Visibility="{Binding Caption, Converter={StaticResource StringNullOrWhiteSpaceToVisibilityHiddenConverter}}"
+                    d:Text="Caption" d:Visibility="Visible" />
+                <TextBlock x:Name="MessageTextBlock" TextWrapping="Wrap" Text="{Binding Message}" Margin="0,10"
+                    d:Text="Message" />
+                <ProgressBar x:Name="ProgressBar" Value="{Binding ProgressValue}" Minimum="0.0" Maximum="1.0" Margin="0,10"
+                    Foreground="{DynamicResource Control.Accent}" Background="{DynamicResource Control.Background}" BorderThickness="0" Height="4"
+                    d:Value="50" />
+            </StackPanel>
+
+            <Button x:Name="CancelButton" DockPanel.Dock="Bottom" Style="{StaticResource NVDialogButton}" HorizontalAlignment="Right" Margin="0,0,0,0" Content="{properties:TextBinding Word.Cancel}" Click="CancelButton_Click"
+                Visibility="{Binding CanCancel, Converter={StaticResource BooleanToVisibilityConverter}}"
+                d:Visibility="Visible" />
+        </StackPanel>
+    </Grid>
+</Window>

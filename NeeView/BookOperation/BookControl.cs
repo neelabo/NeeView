@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeLaboratory.Generators;
 using NeeView.Collections.Generic;
 using NeeView.IO;
 using NeeView.PageFrames;
@@ -7,10 +8,12 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace NeeView
 {
-    public class BookControl : BindableBase, IBookControl, IDisposable, IPendingBook
+    [LocalDebug]
+    public partial class BookControl : BindableBase, IBookControl, IDisposable, IPendingBook
     {
         private readonly PageFrameBox _box;
         private readonly Book _book;
@@ -148,7 +151,7 @@ namespace NeeView
         }
 
         public async Task CopyBookAsync(CancellationToken token)
-        { 
+        {
             if (!CanCopyBookToClipboard()) return;
 
             var entry = await ArchiveEntryUtility.CreateAsync(_book.Path, ArchiveHint.None, true, token);
@@ -170,7 +173,7 @@ namespace NeeView
         {
             await CutBookToClipboardAsync(CancellationToken.None);
         }
-          
+
         public async ValueTask CutBookToClipboardAsync(CancellationToken token)
         {
             if (!CanCutBookToClipboard()) return;
@@ -386,6 +389,68 @@ namespace NeeView
         }
 
         #endregion
+
+        public bool CanExport()
+        {
+            return _book != null && !_book.IsMedia && _book.Pages.Count > 0;
+        }
+
+
+        private static ExportBookParameter _exportParameter = new ExportBookParameter()
+        {
+            Mode = ExportImageMode.Original,
+            IsOriginalSize = true,
+            OverwriteMode = ExportImageOverwriteMode.AddNumber,
+            FileNameMode = ExportImageFileNameMode.Original,
+            FileFormat = BitmapImageFormat.Jpeg,
+            ExportFolder = "",
+            BookName = "",
+            BookType = ExportBookType.Zip,
+        };
+
+        // TODO: Task化
+        public async void Export()
+        {
+            if (!CanExport()) return;
+
+            var isPlayingSlideShow = SlideShow.Current.IsPlayingSlideShow;
+            SlideShow.Current.IsPlayingSlideShow = false;
+
+            try
+            {
+                _exportParameter.ExportFolder = "";
+                _exportParameter.BookName = _book.Source.IsDirectory ? LoosePath.GetFileName(_book.Path) : LoosePath.GetFileNameWithoutExtension(_book.Path);
+
+                var dialog = new ExportBookDialog(_exportParameter);
+                dialog.Owner = MainWindow.Current; // TODO: 呼び出しウィンドウにする
+                dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                dialog.Topmost = true;
+                var result = dialog.ShowDialog();
+                if (result != true)
+                {
+                    LocalDebug.WriteLine("cancelled.");
+                    return;
+                }
+
+                using var progressDialog = new ProgressDialog();
+                progressDialog.Show();
+
+                var exporter = new ExportBook(BookOperation.Current, progressDialog.Progress);
+                await Task.Run(() => exporter.RunAsync(_exportParameter, true, System.Threading.CancellationToken.None));
+            }
+            catch (OperationCanceledException)
+            {
+            }
+            catch (Exception e)
+            {
+                // TODO: これいる？
+                new MessageDialog($"{TextResources.GetString("ImageExportErrorDialog.Message")}\n{TextResources.GetString("Word.Cause")}: {e.Message}", TextResources.GetString("ImageExportErrorDialog.Title")).ShowDialog();
+            }
+            finally
+            {
+                SlideShow.Current.IsPlayingSlideShow = isPlayingSlideShow;
+            }
+        }
     }
 
 

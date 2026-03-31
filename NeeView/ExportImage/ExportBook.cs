@@ -2,7 +2,9 @@
 
 using NeeLaboratory.Generators;
 using NeeView.Properties;
+using NeeView.Windows.Property;
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -12,66 +14,77 @@ using System.Threading.Tasks;
 
 namespace NeeView
 {
+    public class ExportBookParameter : ExportImageParameter
+    {
+        private ExportBookType _bookType;
+        private string _bookName = "";
+
+        [PropertyMember]
+        public ExportBookType BookType
+        {
+            get => _bookType;
+            set => SetProperty(ref _bookType, value);
+        }
+
+        [PropertyMember]
+        public string BookName
+        {
+            get => _bookName;
+            set => SetProperty(ref _bookName, value);
+        }
+    }
+
+
     [LocalDebug]
     public partial class ExportBook
     {
         private readonly BookOperation _operation;
         private readonly Book _book;
         private bool _terminated;
+        private IProgress<ProgressInfo> _progress;
 
 
-        public ExportBook(BookOperation operation)
+        public ExportBook(BookOperation operation, IProgress<ProgressInfo> progress)
         {
             _operation = operation;
             _book = operation.Book ?? throw new InvalidOperationException("Book is null");
+            _progress = progress;
         }
 
 
-        public async Task RunAsync(bool showToast, CancellationToken token)
+        public async Task RunAsync(ExportBookParameter parameter, bool showToast, CancellationToken token)
         {
             LocalDebug.WriteLine("start...");
 
-            // ブックをロック
-            // ページ終端挙動を停止
-            // :
+            // TODO: v ページ終端挙動を停止
+            // TODO: v ページリスト、スライダーの挙動を停止
+            // TODO: ブックをロック (すべての操作、ドロップなどによる変更、スライドショー)
+            // TODO: 動画ブックどうする？ ... 当面禁止。原理的には10秒単位の画像出力が可能
 
-            // TODO: 出力設定ダイアログ表示
-            // 画像出力ダイアログ + 出力先フォルダー or ZIPファイル
-            // プレビューはどうしよう。先頭ページのみ？
+            var currentPage = _operation.ViewPages.FirstOrDefault();
+            var isPlayingSlideShow = SlideShow.Current.IsPlayingSlideShow;
 
-            var parameter = new ExportImageParameter()
-            {
-                Mode = ExportImageMode.Original,
-                IsOriginalSize = true,
-                OverwriteMode = ExportImageOverwriteMode.AddNumber,
-                FileNameMode = ExportImageFileNameMode.Original,
-                FileFormat = BitmapImageFormat.Jpeg,
-                ExportFolder = @"F:\Temp\Export"
-            };
-
-            parameter.ExportFolder = @"F:\Temp\Export\test.zip";
-            var exportBookType = ExportBookType.Zip;
-
-            var overwritePolicy = ExportImageOverwritePolicyFactory.Create(parameter.OverwriteMode);
+            AppState.Instance.IsProcessingBook = true;
 
             try
             {
+                var overwritePolicy = ExportImageOverwritePolicyFactory.Create(parameter.OverwriteMode);
+
                 if (parameter.OverwriteMode == ExportImageOverwriteMode.Confirm)
                 {
                     throw new InvalidOperationException("Overwrite confirm mode is not supported for book export.");
                 }
 
-                // TODO: Mode = ExportImageMode.Origin の場合、ページの表示自体不要。
                 // TODO: ページが存在していないときの処理
 
                 switch (parameter.Mode)
                 {
                     case ExportImageMode.Original:
-                        await ExportOriginalAsync(parameter, exportBookType, overwritePolicy, token);
+                        await ExportOriginalAsync(parameter, parameter.BookType, overwritePolicy, token);
                         break;
 
                     case ExportImageMode.View:
-                        await ExportViewAsync(parameter, exportBookType, overwritePolicy, token);
+                        await ExportViewAsync(parameter, parameter.BookType, overwritePolicy, token);
                         break;
 
                     default:
@@ -89,16 +102,22 @@ namespace NeeView
                 var toast = new Toast(ex.Message, TextResources.GetString("Word.Error"), ToastIcon.Error);
                 ToastService.Current.Show(toast);
             }
+            finally
+            {
+                // いろいろ復元
+                // TODO: Transform の復元
+                
+                AppDispatcher.Invoke(() => _operation.JumpPage(this, currentPage));
 
-            // 表示ページ復元
-            // :
+                AppState.Instance.IsProcessingBook = false;
+            }
 
             LocalDebug.WriteLine("done.");
         }
 
-        private async Task ExportOriginalAsync(ExportImageParameter parameter, ExportBookType bookType, IExportOverwritePolicy overwritePolicy, CancellationToken token)
+        private async Task ExportOriginalAsync(ExportBookParameter parameter, ExportBookType bookType, IExportOverwritePolicy overwritePolicy, CancellationToken token)
         {
-            using (var writer = ExportImageWriterFactory.Create(bookType, parameter.ExportFolder, parameter.OverwriteMode == ExportImageOverwriteMode.Confirm))
+            using (var writer = ExportImageWriterFactory.Create(bookType, parameter.ExportFolder, true))
             {
                 var pages = _operation.Book?.Pages;
                 if (pages is null || pages.Count == 0)
@@ -106,17 +125,23 @@ namespace NeeView
                     throw new ApplicationException("No pages to export.");
                 }
 
-                // TODO: ProgressBar
 
                 foreach (var page in pages)
                 {
-                    // TODO: ページが存在しないときの処理
+                    _progress.Report(new ProgressInfo((double)(page.Index + 1) / pages.Count, page.EntryLastName));
 
                     var pageSource = new ExportPageSource(page);
-                    using (var stream = await writer.OpenEntryAsync(pageSource, null,  parameter, overwritePolicy, token))
+                    using (var stream = await writer.OpenEntryAsync(pageSource, null, parameter, overwritePolicy, token))
                     {
-                        using var inputStream = await page.ArchiveEntry.OpenEntryAsync(true, token);
-                        inputStream.CopyTo(stream);
+                        try
+                        {
+                            using var inputStream = await page.ArchiveEntry.OpenEntryAsync(true, token);
+                            inputStream.CopyTo(stream);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine(ex.Message);
+                        }
                     }
                 }
 
@@ -126,19 +151,28 @@ namespace NeeView
 
 
 
-        private async Task ExportViewAsync(ExportImageParameter parameter, ExportBookType bookType, IExportOverwritePolicy overwritePolicy, CancellationToken token)
+        private async Task ExportViewAsync(ExportBookParameter parameter, ExportBookType bookType, IExportOverwritePolicy overwritePolicy, CancellationToken token)
         {
             _terminated = false;
-            _operation.Control.MoveToFirst(this);
 
-            using (var writer = ExportImageWriterFactory.Create(bookType, parameter.ExportFolder, parameter.OverwriteMode == ExportImageOverwriteMode.Confirm))
+            AppDispatcher.Invoke(() => _operation.Control.MoveToFirst(this));
+            Report();
+
+            using (var writer = ExportImageWriterFactory.Create(bookType, parameter.ExportFolder, true))
             {
-                // TODO: ProgressBar
                 while (await ExportViewPageAsync(writer, parameter, overwritePolicy, token))
                 {
-                    _operation.Control.MoveNext(this);
+                    AppDispatcher.Invoke(() => _operation.Control.MoveNext(this));
+                    Report();
                 }
                 writer.Close();
+            }
+
+            void Report()
+            {
+                var page = _operation.ViewPages.First();
+                var pageCount = _operation.Book?.Pages.Count ?? 1;
+                _progress.Report(new ProgressInfo((double)(page.Index + 1) / pageCount, page.EntryLastName));
             }
         }
 
@@ -155,7 +189,7 @@ namespace NeeView
 
             // TODO: ページの処理
 
-            var source = ExportImageSourceFactory.Create();
+            var source = AppDispatcher.Invoke(() => ExportImageSourceFactory.Create());
             using var service = new ExportImageService(source, parameter);
             service.ThrowIfCannotExport();
 

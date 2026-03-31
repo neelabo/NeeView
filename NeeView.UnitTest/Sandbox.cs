@@ -1,13 +1,9 @@
-﻿using Microsoft.VisualStudio.TestPlatform.Utilities;
-using NeeLaboratory;
+﻿using NeeLaboratory;
 using NeeView.ComponentModel;
-using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using Xunit.Abstractions;
@@ -322,7 +318,7 @@ namespace NeeView.UnitTest
             Assert.Equal(@"bookmark:folder\item1", actual.SimplePath);
         }
 
-        
+
         [Theory]
         [InlineData(@"E:\aaa\bbb", @"E:\aaa\B",
             """"
@@ -383,6 +379,14 @@ namespace NeeView.UnitTest
                 }
             };
             return folder;
+        }
+
+        [Fact]
+        public void TextResourceTest()
+        {
+            var key = "Word.OK";
+            var s = Properties.TextResources.GetString(key);
+            Assert.Equal("OK", s);
         }
     }
 }

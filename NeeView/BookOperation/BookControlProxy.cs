@@ -181,10 +181,10 @@ namespace NeeView
         {
             return _source?.IsBookmarkOn(parent) ?? false;
         }
-
+        
+        public void Export()
+        {
+            _source?.Export();
+        }
     }
-
-
-
-
 }

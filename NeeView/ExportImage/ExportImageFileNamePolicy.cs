@@ -21,7 +21,7 @@
             if (nameMode == ExportImageFileNameMode.Original)
             {
                 var filename = LoosePath.ValidFileName(source.Pages[0].EntryLastName);
-                return System.IO.Path.ChangeExtension(filename, extension);
+                return System.IO.Path.ChangeExtension(filename, extension).TrimEnd('.');
             }
             else
             {

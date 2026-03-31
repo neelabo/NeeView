@@ -44,5 +44,7 @@ namespace NeeView
         void SetBookmark(bool isBookmark, string? parent);
         void ToggleBookmark(string? parent);
         bool IsBookmarkOn(string? parent);
+
+        void Export();
     }
 }
