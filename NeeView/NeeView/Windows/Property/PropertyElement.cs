@@ -435,4 +435,28 @@ namespace NeeView.Windows.Property
             return (PropertyMemberAttribute?)Attribute.GetCustomAttributes(info, typeof(PropertyMemberAttribute)).FirstOrDefault();
         }
     }
+
+
+    public class PropertyDocumentElement : PropertyDrawElement
+    {
+        public PropertyDocumentElement(PropertyDocument document, PropertyMemberElementOptions options)
+        {
+            Document = document;
+            Options = options;
+        }
+
+        public PropertyDocument Document { get; set; }
+        public PropertyMemberElementOptions Options { get; set; }
+
+
+        public static PropertyDocumentElement Create(PropertyDocument document)
+        {
+            return Create(document, PropertyMemberElementOptions.Default);
+        }
+
+        public static PropertyDocumentElement Create(PropertyDocument document, PropertyMemberElementOptions options)
+        {
+            return new PropertyDocumentElement(document, options);
+        }
+    }
 }

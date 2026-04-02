@@ -47,6 +47,7 @@ namespace NeeView
         private Color _loadingPageColor = Color.FromRgb(0xE0, 0xE0, 0xE0);
         private string _bookThumbnailFileName = "folder.jpg";
         private int _bookThumbnailDepth = 2;
+        private ExportBookParameter _exportBookParameter = new();
 
         [IgnoreEquality]
         private readonly RegexCollectionCache _excludeRegexCache = new();
@@ -288,6 +289,19 @@ namespace NeeView
             get { return _bookThumbnailDepth; }
             set { SetProperty(ref _bookThumbnailDepth, Math.Max(value, 1)); }
         }
+
+        #region Hidden Parameters
+
+        /// <summary>
+        /// ExportBookAsCommand 用設定
+        /// </summary>
+        public ExportBookParameter ExportBookParameter
+        {
+            get { return _exportBookParameter; }
+            set { SetProperty(ref _exportBookParameter, value); }
+        }
+
+        #endregion
 
         #region Obsolete
 

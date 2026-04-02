@@ -43,7 +43,7 @@ namespace NeeView.PageFrames
 
             _rootCanvas.Children.Add(_canvas);
 
-            //this.SetBinding(VisibilityProperty, new Binding(nameof(AppState.IsProcessingBook)) { Source = AppState.Instance, Converter = new BooleanToInverseVisibilityConverter() { True = Visibility.Hidden } });
+            this.SetBinding(VisibilityProperty, new Binding(nameof(AppState.IsProcessingBook)) { Source = AppState.Instance, Converter = new BooleanToInverseVisibilityConverter() { True = Visibility.Hidden } });
 
 #if DEBUG
             // [DEV]

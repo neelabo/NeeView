@@ -218,6 +218,7 @@ namespace NeeView
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "CopyBook" }),
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "CopyBookToFolderAs" }),
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "MoveBookToFolderAs" }),
+                    new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "ExportBookAs" }),
                     new TreeListNode<MenuElement>(new SeparatorMenuElement()),
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "DeleteBook" }),
                     new TreeListNode<MenuElement>(new CommandMenuElement() { CommandName = "RenameBook" }),

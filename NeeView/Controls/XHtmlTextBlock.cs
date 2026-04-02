@@ -129,7 +129,14 @@ namespace NeeView
 
         private static void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
-            ExternalProcess.Start(e.Uri.AbsoluteUri);
+            if (e.Uri.Scheme == "explorer")
+            {
+                ExternalProcess.OpenWithFileManager(e.Uri.LocalPath);
+            }
+            else
+            {
+                ExternalProcess.Start(e.Uri.LocalPath);
+            }
             e.Handled = true;
         }
     }

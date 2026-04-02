@@ -22,14 +22,13 @@ namespace NeeView
                 ExportFolder = parameter.ExportFolder;
             }
 
-            var source = ExportImageSourceFactory.Create();
-            using var exporter = new ExportImage(source);
+            var exporter = new ExportImageParameter();
             exporter.ExportFolder = string.IsNullOrWhiteSpace(ExportFolder) ? System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyPictures) : ExportFolder;
             exporter.Mode = Mode;
             exporter.HasBackground = HasBackground;
             exporter.QualityLevel = parameter.QualityLevel;
 
-            var vm = new ExportImageWindowViewModel(exporter);
+            var vm = new ExportImageWindowViewModel(exporter, ExportImageSourceFactory.Create());
             var editor = new ExportImageWindow(vm);
             editor.Owner = Owner ?? MainWindow.Current;
             editor.WindowStartupLocation = WindowStartupLocation.CenterOwner;

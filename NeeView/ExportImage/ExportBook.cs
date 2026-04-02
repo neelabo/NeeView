@@ -2,7 +2,6 @@
 
 using NeeLaboratory.Generators;
 using NeeView.Properties;
-using NeeView.Windows.Property;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -10,38 +9,15 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-// [作業中]
-
 namespace NeeView
 {
-    public class ExportBookParameter : ExportImageParameter
-    {
-        private ExportBookType _bookType;
-        private string _bookName = "";
-
-        [PropertyMember]
-        public ExportBookType BookType
-        {
-            get => _bookType;
-            set => SetProperty(ref _bookType, value);
-        }
-
-        [PropertyMember]
-        public string BookName
-        {
-            get => _bookName;
-            set => SetProperty(ref _bookName, value);
-        }
-    }
-
-
     [LocalDebug]
     public partial class ExportBook
     {
         private readonly BookOperation _operation;
         private readonly Book _book;
+        private readonly IProgress<ProgressInfo> _progress;
         private bool _terminated;
-        private IProgress<ProgressInfo> _progress;
 
 
         public ExportBook(BookOperation operation, IProgress<ProgressInfo> progress)
@@ -56,15 +32,13 @@ namespace NeeView
         {
             LocalDebug.WriteLine("start...");
 
-            // TODO: v ページ終端挙動を停止
-            // TODO: v ページリスト、スライダーの挙動を停止
-            // TODO: ブックをロック (すべての操作、ドロップなどによる変更、スライドショー)
-            // TODO: 動画ブックどうする？ ... 当面禁止。原理的には10秒単位の画像出力が可能
-
             var currentPage = _operation.ViewPages.FirstOrDefault();
             var isPlayingSlideShow = SlideShow.Current.IsPlayingSlideShow;
 
             AppState.Instance.IsProcessingBook = true;
+
+            // Progress の表示確定のため、少し待つ
+            await Task.Delay(50);
 
             try
             {
@@ -74,8 +48,6 @@ namespace NeeView
                 {
                     throw new InvalidOperationException("Overwrite confirm mode is not supported for book export.");
                 }
-
-                // TODO: ページが存在していないときの処理
 
                 switch (parameter.Mode)
                 {
@@ -93,9 +65,13 @@ namespace NeeView
 
                 if (showToast)
                 {
-                    var toast = new Toast(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("ExportImage.Message.Success"), parameter.ExportFolder));
+                    var link = $"<a href=\"explorer://{parameter.ExportBookPath}\">{System.IO.Path.GetFileName(parameter.ExportBookPath)}</a>";
+                    var toast = new Toast(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("ExportImage.Message.Success"), link)) { IsXHtml = true };
                     ToastService.Current.Show(toast);
                 }
+            }
+            catch (OperationCanceledException)
+            {
             }
             catch (Exception ex)
             {
@@ -104,10 +80,9 @@ namespace NeeView
             }
             finally
             {
-                // いろいろ復元
-                // TODO: Transform の復元
+                await AppDispatcher.InvokeAsync(() => _operation.JumpPage(this, currentPage));
                 
-                AppDispatcher.Invoke(() => _operation.JumpPage(this, currentPage));
+                // TODO: Transform の復元
 
                 AppState.Instance.IsProcessingBook = false;
             }
@@ -115,9 +90,14 @@ namespace NeeView
             LocalDebug.WriteLine("done.");
         }
 
+        /// <summary>
+        /// オリジナルのページをそのまま出力するモード
+        /// </summary>
         private async Task ExportOriginalAsync(ExportBookParameter parameter, ExportBookType bookType, IExportOverwritePolicy overwritePolicy, CancellationToken token)
         {
-            using (var writer = ExportImageWriterFactory.Create(bookType, parameter.ExportFolder, true))
+            token.ThrowIfCancellationRequested();
+
+            using (var writer = ExportImageWriterFactory.Create(bookType, parameter.ExportBookPath, true))
             {
                 var pages = _operation.Book?.Pages;
                 if (pages is null || pages.Count == 0)
@@ -125,14 +105,16 @@ namespace NeeView
                     throw new ApplicationException("No pages to export.");
                 }
 
-
                 foreach (var page in pages)
                 {
-                    _progress.Report(new ProgressInfo((double)(page.Index + 1) / pages.Count, page.EntryLastName));
+                    token.ThrowIfCancellationRequested();
+
 
                     var pageSource = new ExportPageSource(page);
                     using (var stream = await writer.OpenEntryAsync(pageSource, null, parameter, overwritePolicy, token))
                     {
+                        _progress.Report(new ProgressInfo((double)(page.Index + 1) / pages.Count, writer.CurrentName));
+
                         try
                         {
                             using var inputStream = await page.ArchiveEntry.OpenEntryAsync(true, token);
@@ -149,30 +131,26 @@ namespace NeeView
             }
         }
 
-
-
+        /// <summary>
+        /// 表示を出力するモード
+        /// </summary>
         private async Task ExportViewAsync(ExportBookParameter parameter, ExportBookType bookType, IExportOverwritePolicy overwritePolicy, CancellationToken token)
         {
+            token.ThrowIfCancellationRequested();
+
             _terminated = false;
 
-            AppDispatcher.Invoke(() => _operation.Control.MoveToFirst(this));
-            Report();
+            await AppDispatcher.InvokeAsync(() => _operation.Control.MoveToFirst(this));
 
-            using (var writer = ExportImageWriterFactory.Create(bookType, parameter.ExportFolder, true))
+            using (var writer = ExportImageWriterFactory.Create(bookType, parameter.ExportBookPath, true))
             {
                 while (await ExportViewPageAsync(writer, parameter, overwritePolicy, token))
                 {
-                    AppDispatcher.Invoke(() => _operation.Control.MoveNext(this));
-                    Report();
+                    token.ThrowIfCancellationRequested();
+
+                    await AppDispatcher.InvokeAsync(() => _operation.Control.MoveNext(this));
                 }
                 writer.Close();
-            }
-
-            void Report()
-            {
-                var page = _operation.ViewPages.First();
-                var pageCount = _operation.Book?.Pages.Count ?? 1;
-                _progress.Report(new ProgressInfo((double)(page.Index + 1) / pageCount, page.EntryLastName));
             }
         }
 
@@ -187,17 +165,17 @@ namespace NeeView
             var pages = _operation.ViewPages;
             LocalDebug.WriteLine("ViewPage:" + string.Join(',', pages.Select(e => e.Index.ToString())));
 
-            // TODO: ページの処理
-
-            var source = AppDispatcher.Invoke(() => ExportImageSourceFactory.Create());
+            var source = await AppDispatcher.InvokeAsync(() => ExportImageSourceFactory.Create());
             using var service = new ExportImageService(source, parameter);
             service.ThrowIfCannotExport();
 
-            // TODO: 例外発生時の後処理。ファイルのクリーンアップなど。ExportBook全体での例外処理(通知)も必要。
             var pageSource = new ExportPageSource(service.Source.BookAddress, service.Source.Pages);
             using (var stream = await writer.OpenEntryAsync(pageSource, service, parameter, overwritePolicy, token))
             {
-                // TODO: ページが存在していないときの処理
+                var page = pages.First();
+                var pageCount = _operation.Book?.Pages.Count ?? 1;
+                _progress.Report(new ProgressInfo((double)(page.Index + 1) / pageCount, writer.CurrentName));
+
                 await service.ExportStreamAsync(stream, token);
             }
 

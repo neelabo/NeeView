@@ -1,31 +1,50 @@
 ﻿using NeeLaboratory.Generators;
+using NeeView.Properties;
 using System;
 using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 
 namespace NeeView
 {
     [NotifyPropertyChanged]
-    public partial class ProgressDialog : Window, INotifyPropertyChanged, IDisposable
+    public partial class ProgressDialog : Window, INotifyPropertyChanged
     {
-        private readonly Progress<ProgressInfo> _progress = new();
+        private readonly Progress<ProgressInfo> _progress;
+        private readonly CancellationTokenSource _tokenSource = new();
         private string _caption = "";
         private string _message = "";
-        private double _progressValue;
+        private double _progressValue = 0.0;
         private bool _canCancel;
-        private bool _disposedValue;
+        private bool _canceled;
+        private bool _closed;
 
-        public ProgressDialog()
+        public ProgressDialog() : this(null, new Progress<ProgressInfo>())
         {
-            this.Topmost = true;
-            this.Owner = MainWindow.Current; // TODO: 呼び出したウィンドウをOwnerにする
+        }
+
+        public ProgressDialog(Window? owner) : this(owner, new Progress<ProgressInfo>())
+        {
+        }
+
+        public ProgressDialog(Window? owner, Progress<ProgressInfo> progress)
+        {
+            if (owner is not null)
+            {
+                this.Owner = owner;
+            }
+
             this.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
             InitializeComponent();
             this.DataContext = this;
 
+            _progress = progress;
             _progress.ProgressChanged += (s, e) =>
             {
+                if (_canceled) return;
                 ProgressValue = e.Value;
                 Message = e.Text;
             };
@@ -36,7 +55,10 @@ namespace NeeView
 
         public event EventHandler? Canceled;
 
+
         public IProgress<ProgressInfo> Progress => _progress;
+
+        public CancellationToken CancellationToken => _tokenSource.Token;
 
 
         public string Caption
@@ -63,10 +85,16 @@ namespace NeeView
             set { SetProperty(ref _canCancel, value); }
         }
 
-        protected override void OnClosed(EventArgs e)
+        protected override void OnKeyDown(KeyEventArgs e)
         {
-            _disposedValue = true;
-            base.OnClosed(e);
+            if (_canCancel && e.Key == Key.Escape)
+            {
+                Cancel();
+                e.Handled = true;
+                return;
+            }
+
+            base.OnKeyDown(e);
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
@@ -76,27 +104,46 @@ namespace NeeView
 
         private void Cancel()
         {
+            if (_canceled) return;
+            _canceled = true;
+
             this.CancelButton.IsEnabled = false;
+            this.Message = TextResources.GetString("Word.Canceling");
+            this.ProgressBar.Visibility = Visibility.Hidden;
+
+            _tokenSource.Cancel();
             Canceled?.Invoke(this, EventArgs.Empty);
         }
 
-        protected virtual void Dispose(bool disposing)
+        public new void Close()
         {
-            if (!_disposedValue)
-            {
-                if (disposing)
-                {
-                    this.Close();
-                }
+            if (_closed) return;
+            _closed = true;
 
-                _disposedValue = true;
-            }
+            base.Close();
         }
 
-        public void Dispose()
+        public bool? ShowDialog(Task task)
         {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
+            if (_closed) return false;
+
+            task.ContinueWith(t => this.Dispatcher.Invoke(async () =>
+            {
+                if (_canceled)
+                {
+                    await Task.Delay(1000);
+                }
+                Close();
+            }));
+
+            return ShowDialog();
+        }
+
+        public bool? ShowDialog(Func<CancellationToken, Task> createTask)
+        {
+            if (_closed) return false;
+
+            return ShowDialog(createTask(_tokenSource.Token));
         }
     }
 

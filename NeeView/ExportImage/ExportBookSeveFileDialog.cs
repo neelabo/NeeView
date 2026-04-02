@@ -1,29 +1,25 @@
 ﻿using Microsoft.Win32;
 using NeeView.Properties;
 using System;
-using System.Linq;
 using System.Windows;
 
 namespace NeeView
 {
     public class ExportBookSaveFileDialog
     {
-        private static string _lastFolder = "";
-
-
-        public ExportBookSaveFileDialog(string? initialDirectory, string fileName, ExportBookType bookType)
+        public ExportBookSaveFileDialog(string initialDirectory, string defaultDirectory, string fileName, ExportBookType bookType)
         {
-            InitialDirectory = initialDirectory;
+            InitialDirectory = ValidateDirectoryPath(initialDirectory);
+            DefaultDirectory = ValidateDirectoryPath(defaultDirectory);
             FileName = fileName;
             ExportBookType = bookType;
         }
 
 
-        public string? InitialDirectory { get; set; }
-
-        public string FileName { get; set; }
-
-        public ExportBookType ExportBookType { get; set; }
+        public string InitialDirectory { get; }
+        public string DefaultDirectory { get; }
+        public string FileName { get; private set; }
+        public ExportBookType ExportBookType { get; }
 
 
         public bool? ShowDialog(Window owner)
@@ -32,28 +28,16 @@ namespace NeeView
             {
                 if (ExportBookType == ExportBookType.Folder)
                 {
-                    var dialog = CreateSaveFolderDialog(ValidateDirectoryPath(InitialDirectory), FileName);
+                    var dialog = CreateSaveFolderDialog(InitialDirectory, DefaultDirectory, FileName);
                     var result = dialog.ShowDialog(owner);
                     FileName = dialog.FolderName;
-
-                    if (result == true)
-                    {
-                        _lastFolder = System.IO.Path.GetDirectoryName(dialog.FolderName) ?? "";
-                    }
-
                     return result;
                 }
                 else
                 {
-                    var dialog = CreateSaveFileDialog(ValidateDirectoryPath(InitialDirectory), FileName);
+                    var dialog = CreateSaveFileDialog(InitialDirectory, DefaultDirectory, FileName);
                     var result = dialog.ShowDialog(owner);
                     FileName = dialog.FileName;
-
-                    if (result == true)
-                    {
-                        _lastFolder = System.IO.Path.GetDirectoryName(dialog.FileName) ?? "";
-                    }
-
                     return result;
                 }
             }
@@ -76,16 +60,16 @@ namespace NeeView
             }
         }
 
-        private static SaveFileDialog CreateSaveFileDialog(string directory, string filename)
+        private static SaveFileDialog CreateSaveFileDialog(string initialDirectory, string defaultDirectory, string filename)
         {
             var dialog = new SaveFileDialog();
 
-            dialog.InitialDirectory = string.IsNullOrEmpty(directory) ? _lastFolder : directory;
-            dialog.DefaultDirectory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyPictures);
+            dialog.InitialDirectory = initialDirectory;
+            dialog.DefaultDirectory = defaultDirectory;
 
-            dialog.Title = $"{TextResources.GetString("ExportBookAsCommand")} ({TextResources.GetString("ExportBookType.Zip")})";
+            dialog.Title = $"{TextResources.GetString("ExportBookAsCommand")} ({TextResources.GetString("Word.Zip")})";
 
-            dialog.OverwritePrompt = true;
+            dialog.OverwritePrompt = false;
 
             dialog.AddExtension = true;
 
@@ -101,14 +85,14 @@ namespace NeeView
             return dialog;
         }
 
-        public static OpenFolderDialog CreateSaveFolderDialog(string directory, string filename)
+        public static OpenFolderDialog CreateSaveFolderDialog(string initialDirectory, string defaultDirectory, string filename)
         {
             var dialog = new OpenFolderDialog();
 
-            dialog.InitialDirectory = string.IsNullOrEmpty(directory) ? _lastFolder : directory;
-            dialog.DefaultDirectory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyPictures);
+            dialog.InitialDirectory = initialDirectory;
+            dialog.DefaultDirectory = defaultDirectory;
 
-            dialog.Title = $"{TextResources.GetString("ExportBookAsCommand")} ({TextResources.GetString("ExportBookType.Folder")})";
+            dialog.Title = $"{TextResources.GetString("ExportBookAsCommand")} ({TextResources.GetString("Word.Folder")})";
 
             dialog.FolderName = filename;
 

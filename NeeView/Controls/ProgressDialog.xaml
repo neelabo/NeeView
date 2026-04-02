@@ -6,9 +6,8 @@
         xmlns:local="clr-namespace:NeeView"
         xmlns:properties="clr-namespace:NeeView.Properties"
         mc:Ignorable="d"
-        Style="{StaticResource ChromeDialogStyle}" 
+        Style="{StaticResource ChromeNoneStyle}" 
         UseLayoutRounding="True"
-        WindowStyle="None"
         ShowInTaskbar="False"
         Title="ProgressDialog" SizeToContent="Height" Width="480" ResizeMode="NoResize">
 
@@ -26,8 +25,8 @@
                 <TextBlock x:Name="MessageTextBlock" TextWrapping="Wrap" Text="{Binding Message}" Margin="0,10"
                     d:Text="Message" />
                 <ProgressBar x:Name="ProgressBar" Value="{Binding ProgressValue}" Minimum="0.0" Maximum="1.0" Margin="0,10"
-                    Foreground="{DynamicResource Control.Accent}" Background="{DynamicResource Control.Background}" BorderThickness="0" Height="4"
-                    d:Value="50" />
+                    Foreground="{DynamicResource Control.Accent}" Background="{DynamicResource Slider.Background}" BorderThickness="0" Height="4"
+                    d:Value="0.5" />
             </StackPanel>
 
             <Button x:Name="CancelButton" DockPanel.Dock="Bottom" Style="{StaticResource NVDialogButton}" HorizontalAlignment="Right" Margin="0,0,0,0" Content="{properties:TextBinding Word.Cancel}" Click="CancelButton_Click"

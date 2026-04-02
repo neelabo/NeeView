@@ -1,55 +1,69 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.Properties;
 using NeeView.Windows.Property;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 
 namespace NeeView
 {
     public class ExportBookDialogViewModel : BindableBase
     {
-        private readonly ExportBookParameter _model;
-        private readonly ExportImagePreview2 _preview;
+        private readonly ExportBookParameter _parameter;
+        private readonly ExportImagePreview _preview;
+        private string _bookName;
         private List<DestinationFolder>? _destinationFolderList;
-        private static DestinationFolder? _lastSelectedDestinationFolder;
-        private DestinationFolder? _selectedDestinationFolder = _lastSelectedDestinationFolder;
+        private DestinationFolder? _selectedDestinationFolder;
 
-        public ExportBookDialogViewModel(ExportBookParameter model)
+
+        public ExportBookDialogViewModel(ExportBookParameter parameter, string bookName)
         {
-            _model = model;
+            _parameter = parameter;
+            _bookName = bookName;
 
             var source = ExportImageSourceFactory.Create();
-            _preview = new ExportImagePreview2(_model, source);
+            _preview = new ExportImagePreview(_parameter, source);
 
-            this.ExportImageViewDocument = new PropertyDocument();
-            this.ExportImageViewDocument.AddProperty(_model, nameof(_model.HasBackground));
-            this.ExportImageViewDocument.AddProperty(_model, nameof(_model.IsOriginalSize));
-            this.ExportImageViewDocument.AddProperty(_model, nameof(_model.IsDotKeep));
-            this.ExportImageViewDocument.AddProperty(_model, nameof(_model.FileFormat));
-            this.ExportImageViewDocument.AddProperty(_model, nameof(_model.QualityLevel));
-            this.ExportImageViewDocument.AddProperty(_model, nameof(_model.FileNameMode));
-            this.ExportImageViewDocument.AddProperty(_model, nameof(_model.OverwriteMode));
-            this.ExportImageViewDocument.SetVisualType<PropertyValue_Boolean>(PropertyVisualType.ToggleSwitch);
-            this.ExportImageViewDocument.SetVisualType<PropertyValue_Color>(PropertyVisualType.ComboColorPicker);
+            _parameter.OverwriteMode = _parameter.OverwriteMode == ExportImageOverwriteMode.Confirm ? ExportImageOverwriteMode.Invalid : _parameter.OverwriteMode;
 
+            var overwriteMap = AliasNameExtensions.GetAliasNameDictionary<ExportImageOverwriteMode>()
+                .Where(e => e.Key != ExportImageOverwriteMode.Confirm)
+                .ToDictionary(e => (Enum)e.Key, e => e.Value);
 
-            _model.SubscribePropertyChanged(nameof(_model.Mode),
-                (s, e) => RaisePropertyChanged(nameof(Mode)));
+            this.ExportBookDocument = new PropertyDocument();
+            this.ExportBookDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameMode)));
+            this.ExportBookDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.OverwriteMode), new() { EnumMap = overwriteMap }));
+            this.ExportBookDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.Mode)));
 
-            _model.SubscribePropertyChanged(nameof(_model.HasBackground),
-                (s, e) => RaisePropertyChanged(nameof(HasBackground)));
+            var viewDocument = new PropertyDocument();
 
-            _model.SubscribePropertyChanged(nameof(_model.IsOriginalSize),
-                (s, e) => RaisePropertyChanged(nameof(IsOriginalSize)));
+            this.ExportBookDocument.AddProperty(PropertyDocumentElement.Create(viewDocument, new PropertyMemberElementOptions()
+            {
+                VisibilityValue = new Setting.VisibilityPropertyValue(new Binding(nameof(_parameter.Mode))
+                {
+                    Source = _parameter,
+                    Converter = new ValueToVisibilityConverter<ExportImageMode>() { Visible = ExportImageMode.View }
+                })
+            }));
 
-            _model.SubscribePropertyChanged(nameof(_model.IsDotKeep),
-                (s, e) => RaisePropertyChanged(nameof(IsDotKeep)));
+            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.HasBackground)));
+            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.IsOriginalSize)));
+            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.IsDotKeep)));
+            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileFormat)));
+            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.QualityLevel)));
 
-            _model.SubscribePropertyChanged(nameof(_model.BookType),
+            viewDocument.SetVisualType<PropertyValue_Boolean>(PropertyVisualType.ToggleSwitch);
+
+            this.ExportBookTypeDocument = new PropertyDocument();
+            this.ExportBookTypeDocument.AddProperty(_parameter, nameof(_parameter.BookType));
+
+            _parameter.SubscribePropertyChanged(nameof(_parameter.BookType),
                 (s, e) => RaisePropertyChanged(nameof(BookType)));
 
             _preview.SubscribePropertyChanged(nameof(_preview.Preview),
@@ -68,39 +82,19 @@ namespace NeeView
         }
 
 
-        public PropertyDocument ExportImageViewDocument { get; set; }
+        public PropertyDocument ExportBookDocument { get; set; }
+        public PropertyDocument ExportBookTypeDocument { get; set; }
 
-        public Dictionary<ExportImageMode, string> ExportImageModeList => AliasNameExtensions.GetAliasNameDictionary<ExportImageMode>();
-        public Dictionary<ExportBookType, string> ExportBookTypeList => AliasNameExtensions.GetAliasNameDictionary<ExportBookType>();
-
-        public ExportImageMode Mode
+        public string BookName
         {
-            get { return _model.Mode; }
-            set { _model.Mode = value; }
-        }
-
-        public bool HasBackground
-        {
-            get { return _model.HasBackground; }
-            set { _model.HasBackground = value; }
-        }
-
-        public bool IsOriginalSize
-        {
-            get { return _model.IsOriginalSize; }
-            set { _model.IsOriginalSize = value; }
-        }
-
-        public bool IsDotKeep
-        {
-            get { return _model.IsDotKeep; }
-            set { _model.IsDotKeep = value; }
+            get { return _bookName; }
+            set { _bookName = value; }
         }
 
         public ExportBookType BookType
         {
-            get { return _model.BookType; }
-            set { _model.BookType = value; }
+            get { return _parameter.BookType; }
+            set { _parameter.BookType = value; }
         }
 
         public FrameworkElement? Preview
@@ -123,8 +117,6 @@ namespace NeeView
             get { return _preview.ImageFormatNote; }
         }
 
-
-        // NOTE: 未使用？
         public List<DestinationFolder>? DestinationFolderList
         {
             get { return _destinationFolderList; }
@@ -134,14 +126,9 @@ namespace NeeView
         public DestinationFolder? SelectedDestinationFolder
         {
             get { return _selectedDestinationFolder; }
-            set
-            {
-                if (SetProperty(ref _selectedDestinationFolder, value))
-                {
-                    _lastSelectedDestinationFolder = _selectedDestinationFolder;
-                }
-            }
+            set { SetProperty(ref _selectedDestinationFolder, value); }
         }
+
 
         public void UpdateDestinationFolderList()
         {
@@ -151,25 +138,22 @@ namespace NeeView
             list.AddRange(Config.Current.System.DestinationFolderCollection);
             DestinationFolderList = list;
 
-            SelectedDestinationFolder = list.FirstOrDefault(e => e.Equals(oldSelect)) ?? list.First();
+            SelectedDestinationFolder = list.FirstOrDefault(e => e.Path == _parameter.ExportFolder) ?? list.First();
         }
 
         public async ValueTask<bool?> ShowSelectSaveFileDialogAsync(Window owner, CancellationToken token)
         {
-            var initialFileName = _model.BookType == ExportBookType.Zip
-                ? _model.BookName + ".zip"
+            var initialFileName = _parameter.BookType == ExportBookType.Zip
+                ? _bookName + ".zip"
                 : "";
 
             var initialDirectory = SelectedDestinationFolder?.IsValid() == true
                 ? SelectedDestinationFolder.Path
-                : "";
+                : _parameter.ExportFolder;
 
-            var dialog = new ExportBookSaveFileDialog(initialDirectory, initialFileName, _model.BookType);
+            var defaultDirectory = "";
 
-            //if (_model.BookType == ExportBookType.Folder)
-            //{
-            //    Clipboard.SetText(_model.BookName);
-            //}
+            var dialog = new ExportBookSaveFileDialog(initialDirectory, defaultDirectory, initialFileName, _parameter.BookType);
 
             var result = dialog.ShowDialog(owner);
             if (result != true)
@@ -177,19 +161,34 @@ namespace NeeView
                 return result;
             }
 
-            _model.ExportFolder = dialog.FileName;
+            _parameter.ExportBookPath = dialog.FileName;
+            _parameter.ExportFolder = LoosePath.GetDirectoryName(dialog.FileName);
 
-            if (_model.BookType == ExportBookType.Folder)
+            Debug.Assert(_parameter.OverwriteMode != ExportImageOverwriteMode.Confirm);
+            if (_parameter.OverwriteMode == ExportImageOverwriteMode.Confirm)
+            {
+                _parameter.OverwriteMode = ExportImageOverwriteMode.Invalid;
+            }
+
+            if (_parameter.BookType == ExportBookType.Zip)
+            {
+                if (FileIO.ExistsPath(_parameter.ExportBookPath))
+                {
+                    var allowOverwrite = ShowOverwriteConfirmDialog(owner, TextResources.GetFormatString("OverwriteFileDialog.Message", System.IO.Path.GetFileName(_parameter.ExportBookPath)), TextResources.GetString("OverwriteFileDialog.Title"));
+                    if (!allowOverwrite)
+                    {
+                        return false;
+                    }
+                }
+            }
+            else if (_parameter.BookType == ExportBookType.Folder)
             {
                 // フォルダが存在し、空でない場合は上書き確認
-                var directory = new DirectoryInfo(_model.ExportFolder);
+                var directory = new DirectoryInfo(_parameter.ExportBookPath);
                 if (directory.Exists && directory.EnumerateFileSystemInfos().Any())
                 {
-                    var confirm = new MessageDialog(TextResources.GetFormatString("OverwriteFolderDialog.Message", System.IO.Path.GetFileName(_model.ExportFolder)), TextResources.GetString("OverwriteFolderDialog.Title"));
-                    confirm.Commands.Add(new UICommand(TextResources.GetString("Word.Overwrite")) { IsPossible = true });
-                    confirm.Commands.Add(UICommands.Cancel);
-                    var confirmResult = confirm.ShowDialog(owner);
-                    if (!confirmResult.IsPossible)
+                    var allowOverwrite = ShowOverwriteConfirmDialog(owner, TextResources.GetFormatString("OverwriteFolderDialog.Message", System.IO.Path.GetFileName(_parameter.ExportBookPath)), TextResources.GetString("OverwriteFolderDialog.Title"));
+                    if (!allowOverwrite)
                     {
                         return false;
                     }
@@ -197,6 +196,15 @@ namespace NeeView
             }
 
             return result;
+        }
+
+        private bool ShowOverwriteConfirmDialog(Window owner, string message, string title)
+        {
+            var confirm = new MessageDialog(message, title);
+            confirm.Commands.Add(new UICommand("Word.Overwrite") { IsPossible = true });
+            confirm.Commands.Add(UICommands.Cancel);
+            var confirmResult = confirm.ShowDialog(owner);
+            return confirmResult.IsPossible;
         }
     }
 }

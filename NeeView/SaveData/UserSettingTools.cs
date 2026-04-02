@@ -317,6 +317,8 @@ namespace NeeView
             options.Converters.Add(new DiffJsonConverter<MoveDragActionParameter>());
             options.Converters.Add(new DiffJsonConverter<SensitiveDragActionParameter>());
 
+            options.Converters.Add(new DiffJsonConverter<ExportBookParameter>());
+
             options.Converters.Add(new DiffJsonConverter<ReversibleCommandParameter>());
             options.Converters.Add(new DiffJsonConverter<MoveSizePageCommandParameter>());
             options.Converters.Add(new DiffJsonConverter<TogglePageModeCommandParameter>());

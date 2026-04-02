@@ -121,7 +121,7 @@ namespace NeeView.Windows.Property
 
         public void AddProperty(object source, string propertyName)
         {
-            var element = CreatePropertyMemberElement(source, propertyName);
+            var element = PropertyMemberElement.Create(source, propertyName);
             Debug.Assert(element != null);
             if (element != null)
             {
@@ -129,15 +129,11 @@ namespace NeeView.Windows.Property
             }
         }
 
-        private static PropertyMemberElement? CreatePropertyMemberElement(object source, string propertyName)
+        public void AddProperty(PropertyDrawElement element)
         {
-            var type = source.GetType();
-            var info = type.GetProperty(propertyName);
-            if (info == null) return null;
+            Debug.Assert(element != null);
 
-            var attribute = GetPropertyMemberAttribute(info);
-            if (attribute is null) return null;
-            return new PropertyMemberElement(source, info, attribute, PropertyMemberElementOptions.Default);
+            this.Elements.Add(element);
         }
 
         private static PropertyMemberAttribute? GetPropertyMemberAttribute(MemberInfo info)

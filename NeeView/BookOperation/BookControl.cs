@@ -5,6 +5,7 @@ using NeeView.IO;
 using NeeView.PageFrames;
 using NeeView.Properties;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -390,64 +391,46 @@ namespace NeeView
 
         #endregion
 
-        public bool CanExport()
+        public bool CanExportBook()
         {
             return _book != null && !_book.IsMedia && _book.Pages.Count > 0;
         }
 
-
-        private static ExportBookParameter _exportParameter = new ExportBookParameter()
+        public async void ExportBook()
         {
-            Mode = ExportImageMode.Original,
-            IsOriginalSize = true,
-            OverwriteMode = ExportImageOverwriteMode.AddNumber,
-            FileNameMode = ExportImageFileNameMode.Original,
-            FileFormat = BitmapImageFormat.Jpeg,
-            ExportFolder = "",
-            BookName = "",
-            BookType = ExportBookType.Zip,
-        };
+            if (!CanExportBook()) return;
 
-        // TODO: Task化
-        public async void Export()
-        {
-            if (!CanExport()) return;
-
+            // スライドショーを一時停止
             var isPlayingSlideShow = SlideShow.Current.IsPlayingSlideShow;
             SlideShow.Current.IsPlayingSlideShow = false;
 
+            var parameter = Config.Current.Book.ExportBookParameter;
+
             try
             {
-                _exportParameter.ExportFolder = "";
-                _exportParameter.BookName = _book.Source.IsDirectory ? LoosePath.GetFileName(_book.Path) : LoosePath.GetFileNameWithoutExtension(_book.Path);
+                var bookName = _book.Source.IsDirectory ? LoosePath.GetFileName(_book.Path) : LoosePath.GetFileNameWithoutExtension(_book.Path);
 
-                var dialog = new ExportBookDialog(_exportParameter);
-                dialog.Owner = MainWindow.Current; // TODO: 呼び出しウィンドウにする
+                var dialog = new ExportBookDialog(parameter, bookName);
+                dialog.Owner = MainViewComponent.Current.GetWindow();
                 dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                dialog.Topmost = true;
                 var result = dialog.ShowDialog();
                 if (result != true)
                 {
-                    LocalDebug.WriteLine("cancelled.");
                     return;
                 }
 
-                using var progressDialog = new ProgressDialog();
-                progressDialog.Show();
+                Debug.Assert(parameter.ExportFolder == LoosePath.GetDirectoryName(parameter.ExportBookPath), "Export folder must be the same as the book folder.");
 
-                var exporter = new ExportBook(BookOperation.Current, progressDialog.Progress);
-                await Task.Run(() => exporter.RunAsync(_exportParameter, true, System.Threading.CancellationToken.None));
-            }
-            catch (OperationCanceledException)
-            {
-            }
-            catch (Exception e)
-            {
-                // TODO: これいる？
-                new MessageDialog($"{TextResources.GetString("ImageExportErrorDialog.Message")}\n{TextResources.GetString("Word.Cause")}: {e.Message}", TextResources.GetString("ImageExportErrorDialog.Title")).ShowDialog();
+                var progress = new Progress<ProgressInfo>();
+                var exporter = new ExportBook(BookOperation.Current, progress);
+                var progressDialog = new ProgressDialog(MainWindow.Current, progress) { CanCancel = true };
+                progressDialog.ShowDialog(token => Task.Run(() => exporter.RunAsync(parameter, true, token), token));
             }
             finally
             {
+                // 出力パスは保存しない
+                parameter.ExportBookPath = "";
+
                 SlideShow.Current.IsPlayingSlideShow = isPlayingSlideShow;
             }
         }

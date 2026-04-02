@@ -558,3 +558,6 @@ WindowChromeFrame.None=@Word.None
 WindowConfig.State=@WindowStateEx
 WindowSettingTitle=@Word.Settings
 WindowStateEx.FullScreen=@Word.FullScreen
+SettingPage.Archive.Zip=@Word.Zip
+SettingPage.Archive.Pdf=@Word.Pdf
+SettingPage.Archive.PdfFeature=@Word.Pdf

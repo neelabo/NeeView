@@ -200,6 +200,8 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
+            if (AppState.Instance.IsProcessingBook) return;
+
             var now = DateTime.Now;
             var book = e.Book;
 
@@ -227,6 +229,8 @@ namespace NeeView
         private void Presenter_ViewPageChanged(object? sender, ViewPageChangedEventArgs e)
         {
             if (_disposedValue) return;
+
+            if (AppState.Instance.IsProcessingBook) return;
 
             var now = DateTime.Now;
             var viewedPages = e.Pages.ToList();

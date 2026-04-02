@@ -14,7 +14,7 @@
 
     <DockPanel x:Name="Root" Margin="0,5">
         <ContentControl x:Name="ValueUI" DockPanel.Dock="Right" UseLayoutRounding="True" Grid.Column="1" VerticalAlignment="Center" Margin="5,0" IsTabStop="False"
-                        Content="{Binding Value, RelativeSource={RelativeSource AncestorType=UserControl}}" ContentTemplateSelector="{StaticResource PropertyValueTemplateSelector}" />
+            Content="{Binding Value, RelativeSource={RelativeSource AncestorType=UserControl}}" ContentTemplateSelector="{StaticResource PropertyValueTemplateSelector}" />
         <TextBlock UseLayoutRounding="True" MinWidth="50" 
                    Text="{Binding Header, RelativeSource={RelativeSource AncestorType=UserControl}}"
                    ToolTip="{Binding Tips, RelativeSource={RelativeSource AncestorType=UserControl}}"

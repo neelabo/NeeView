@@ -6,10 +6,11 @@
     xmlns:local="clr-namespace:NeeView"
     xmlns:nw="clr-namespace:NeeView.Windows" 
     xmlns:nvp="clr-namespace:NeeView.Windows.Property"
+    xmlns:nwc="clr-namespace:NeeView.Windows.Controls"
     xmlns:properties="clr-namespace:NeeView.Properties" 
     mc:Ignorable="d"
     Style="{StaticResource ChromeWindowStyle}"
-    Title="{properties:TextBinding ExportImageWindow.Title}" Height="600" Width="800" ResizeMode="CanResizeWithGrip">
+    Title="{properties:TextBinding ExportBookAsCommand}" Height="600" Width="800" ResizeMode="CanResizeWithGrip">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -41,6 +42,14 @@
                 <Setter Property="Background" Value="Transparent" />
             </Style>
 
+            <Style TargetType="{x:Type nvp:PropertyInspector}">
+                <Setter Property="IsResetButtonVisible" Value="False"/>
+                <Setter Property="IsStretch" Value="False"/>
+                <Setter Property="ColumnRate" Value="0.5"/>
+            </Style>
+
+            <local:ExportBookTypeToSaveAsString x:Key="ExportBookTypeToSaveAsString"/>
+
         </ResourceDictionary>
     </Window.Resources>
 
@@ -54,59 +63,42 @@
         <Border BorderThickness="0,0,1,0" BorderBrush="{DynamicResource Panel.Border}" Background="{DynamicResource Panel.Background}">
             <DockPanel>
                 <StackPanel x:Name="Buttons" DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
-                    <Button x:Name="SaveButton" Style="{StaticResource TextButtonMain}" Content="{properties:TextBinding ExportImageWindow.SaveAs}" Click="SaveButton_Click" />
+                    <Button x:Name="SaveButton" Style="{StaticResource TextButtonMain}" Content="{Binding BookType, Converter={StaticResource ExportBookTypeToSaveAsString}}" Click="SaveButton_Click" />
                     <Button x:Name="CancelButton" Style="{StaticResource TextButton}" Content="{properties:TextBinding Word.Cancel}" Click="CancelButton_Click" />
-                </StackPanel>
-                <StackPanel DockPanel.Dock="Top" Margin="10">
-                    <StackPanel Style="{StaticResource ItemStack}">
-                        <TextBlock Style="{StaticResource Header}" Text="{properties:TextBinding ExportImageWindow.Mode}" />
-                        <ComboBox ItemsSource="{Binding ExportImageModeList}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding Mode}" TabIndex="1" />
-
-                        <StackPanel d:Visibility="Visible">
-                            <StackPanel.Style>
-                                <Style TargetType="StackPanel">
-                                    <Setter Property="Visibility" Value="Hidden" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Mode}" Value="{x:Static local:ExportImageMode.View}">
-                                            <Setter Property="Visibility" Value="Visible" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </StackPanel.Style>
-
-                            <!--
-                            <CheckBox Content="{properties:TextBinding ExportImageWindow.IncludeBackground}" IsChecked="{Binding HasBackground}" Margin="20,10,0,0" TabIndex="1"
-                                FocusVisualStyle="{StaticResource NVBorderFocusVisual}"/>
-
-                            <CheckBox Content="{properties:TextBinding ExportImageWindow.IsOriginalSize}" IsChecked="{Binding IsOriginalSize}" Margin="20,10,0,0" TabIndex="1"
-                                FocusVisualStyle="{StaticResource NVBorderFocusVisual}"/>
-
-                            <CheckBox Content="{properties:TextBinding ExportImageWindow.IsDotKeep}" IsChecked="{Binding IsDotKeep}" Margin="20,10,0,0" TabIndex="1"
-                                FocusVisualStyle="{StaticResource NVBorderFocusVisual}"/>
-                            -->
-
-                            <nvp:PropertyInspector Document="{Binding ExportImageViewDocument}" IsResetButtonVisible="False" Margin="10,0,0,0"/>
-
-                        </StackPanel>
-
-                    </StackPanel>
                 </StackPanel>
 
                 <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Margin="10,0">
-
-                    <ComboBox x:Name="ExportBookType" ItemsSource="{Binding ExportBookTypeList}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding BookType}" />
-
-                    <StackPanel Style="{StaticResource ItemStack}">
+                    <nvp:PropertyInspector Document="{Binding ExportBookTypeDocument}" Margin="0"/>
+                    <DockPanel>
+                        <Button x:Name="DestinationFolderOptionButton" DockPanel.Dock="Right" Style="{StaticResource IconButton}" Padding="5,0" Click="DestinationFolderOptionButton_Click" TabIndex="102">
+                            <Image Source="{StaticResource ic_setting_24px_a}" Width="16" Height="16" />
+                        </Button>
+                        <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding DestinationFolderList}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedDestinationFolder}" TabIndex="101" />
                         <TextBlock Style="{StaticResource Header}" Text="{properties:TextBinding ExportImageWindow.Folder}" />
-                        <DockPanel>
-                            <Button x:Name="DestinationFolderOptionButton" DockPanel.Dock="Right" Style="{StaticResource IconButton}" Click="DestinationFolderOptionButton_Click" TabIndex="102">
-                                <Image Source="{StaticResource ic_setting_24px_a}" Width="16" Height="16" />
-                            </Button>
-                            <ComboBox ItemsSource="{Binding DestinationFolderList}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedDestinationFolder}" TabIndex="101" />
-                        </DockPanel>
-                    </StackPanel>
-
+                    </DockPanel>
                 </StackPanel>
+
+                <DockPanel DockPanel.Dock="Top" Margin="10,5">
+                    <Button x:Name="CopyButton" DockPanel.Dock="Right" Style="{StaticResource IconButton}" Margin="5,0" Padding="5" VerticalAlignment="Center" Click="CopyButton_Click" MouseLeave="CopyButton_MouseLeave">
+                        <Image Source="{StaticResource ic_content_copy_24px}" Width="16" Height="16" />
+                        <Button.ToolTip>
+                            <ToolTip Content="Copy book name to clipboard"/>
+                        </Button.ToolTip>
+                    </Button>
+                    <Popup x:Name="CopyPopup" PlacementTarget="{Binding ElementName=CopyButton}" Placement="Mouse" >
+                        <Border Background="{DynamicResource Panel.Background}" BorderBrush="{DynamicResource Panel.Border}" BorderThickness="1"  CornerRadius="4" >
+                            <TextBlock Text="Copied!" Margin="5,2" Foreground="{DynamicResource Panel.Foreground}"/>
+                        </Border>
+                    </Popup>
+                    <nwc:ReadOnlyTextBox DockPanel.Dock="Right" Text="{Binding BookName}" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                </DockPanel>
+
+                <Separator DockPanel.Dock="Top" Margin="5,0,5,5" Background="{DynamicResource Panel.Separator}"/>
+
+                <ScrollViewer Style="{StaticResource NVScrollViewer}" Margin="10,0,0,0" CanContentScroll="False">
+                    <nvp:PropertyInspector Document="{Binding ExportBookDocument}" Margin="0"/>
+                </ScrollViewer>
+
             </DockPanel>
         </Border>
 
@@ -114,14 +106,15 @@
             <DockPanel Margin="20" MinWidth="200" MinHeight="200">
                 <TextBlock DockPanel.Dock="Bottom" Text="{Binding ImageFormatNote}" Margin="10" HorizontalAlignment="Center" />
                 <DockPanel Margin="20" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock DockPanel.Dock="Bottom" Text="@{Binding BookName}" HorizontalAlignment="Center" Margin="0,5"/>
                     <Grid >
-                        <Grid Background="Gray" Margin="10,10,0,0"
+                        <Border BorderBrush="Gray" BorderThickness="0,0,5,5" Margin="5,5,0,0"
                             Width="{Binding ElementName=PreviewViewBox, Path=ActualWidth}"
                             Height="{Binding ElementName=PreviewViewBox, Path=ActualHeight}"/>
-                        <Viewbox x:Name="PreviewViewBox" Margin="0,0,10,10" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="{Binding PreviewWidth}" MaxHeight="{Binding PreviewHeight}" >
-                            <ContentControl Content="{Binding Preview}" HorizontalAlignment="Center" VerticalAlignment="Center" Focusable="False" IsTabStop="False" />
-                        </Viewbox>
+                        <Border BorderBrush="Gray" BorderThickness="3" Margin="0,0,5,5">
+                            <Viewbox x:Name="PreviewViewBox"  HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="{Binding PreviewWidth}" MaxHeight="{Binding PreviewHeight}" Margin="-1">
+                                <ContentControl Content="{Binding Preview}" HorizontalAlignment="Center" VerticalAlignment="Center" Focusable="False" IsTabStop="False" />
+                            </Viewbox>
+                        </Border>
                     </Grid>
                 </DockPanel>
             </DockPanel>

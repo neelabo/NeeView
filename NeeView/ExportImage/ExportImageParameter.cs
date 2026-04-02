@@ -1,4 +1,5 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿using Generator.Equals;
+using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 
 namespace NeeView
@@ -6,17 +7,18 @@ namespace NeeView
     /// <summary>
     /// 設定のみ
     /// </summary>
-    public class ExportImageParameter : BindableBase, IExportImageParameter
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
+    public partial class ExportImageParameter : BindableBase, IExportImageParameter
     {
-        private ExportImageMode _mode;
-        private bool _hasBackground;
-        private bool _isOriginalSize = true;
-        private bool _isDotKeep;
-        private int _qualityLevel = 80;
-        private BitmapImageFormat _fileFormat;
-        private ExportImageFileNameMode _fileNameMode;
-        private ExportImageOverwriteMode _overwriteMode = ExportImageOverwriteMode.Confirm;
-        private string? _exportFolder;
+        [DefaultEquality] private ExportImageMode _mode;
+        [DefaultEquality] private bool _hasBackground;
+        [DefaultEquality] private bool _isOriginalSize = true;
+        [DefaultEquality] private bool _isDotKeep;
+        [DefaultEquality] private int _qualityLevel = 80;
+        [DefaultEquality] private BitmapImageFormat _fileFormat;
+        [DefaultEquality] private ExportImageFileNameMode _fileNameMode;
+        [DefaultEquality] private ExportImageOverwriteMode _overwriteMode = ExportImageOverwriteMode.Confirm;
+        [DefaultEquality] private string _exportFolder = "";
 
 
         public ExportImageParameter()

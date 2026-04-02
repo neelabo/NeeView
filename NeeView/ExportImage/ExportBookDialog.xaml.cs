@@ -1,5 +1,9 @@
-﻿using System.Threading;
+﻿using NeeView.Properties;
+using System;
+using System.Globalization;
+using System.Threading;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace NeeView
@@ -16,9 +20,9 @@ namespace NeeView
             InitializeComponent();
         }
 
-        public ExportBookDialog(ExportBookParameter parameter) : this()
+        public ExportBookDialog(ExportBookParameter parameter, string bookName) : this()
         {
-            _vm = new ExportBookDialogViewModel(parameter);
+            _vm = new ExportBookDialogViewModel(parameter, bookName);
             this.DataContext = _vm;
 
             this.Loaded += ExportBookDialog_Loaded;
@@ -51,7 +55,6 @@ namespace NeeView
             }
         }
 
-
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
@@ -63,6 +66,43 @@ namespace NeeView
 
             DestinationFolderDialog.ShowDialog(this);
             _vm.UpdateDestinationFolderList();
+        }
+
+        private void CopyButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_vm is null) return;
+
+            Clipboard.SetText(_vm.BookName);
+            this.CopyPopup.IsOpen = true;
+        }
+
+        private void CopyButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            this.CopyPopup.IsOpen = false;
+        }
+    }
+
+
+    public class ExportBookTypeToSaveAsString : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is ExportBookType bookType)
+            {
+                return bookType switch
+                {
+                    ExportBookType.Folder => TextResources.GetString("ExportBookWindow.SaveAsFolder"),
+                    ExportBookType.Zip => TextResources.GetString("ExportBookWindow.SaveAsZip"),
+                    _ => throw new ArgumentOutOfRangeException(nameof(value), $"Unexpected ExportBookType value: {bookType}")
+                };
+            }
+
+            return DependencyProperty.UnsetValue;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

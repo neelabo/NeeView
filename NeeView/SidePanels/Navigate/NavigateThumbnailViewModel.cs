@@ -107,6 +107,8 @@ namespace NeeView
         {
             if (!_isEnabled) return;
 
+            if (AppState.Instance.IsProcessingBook) return;
+
             var pageFrameContent = _presenter.GetSelectedPageFrameContent();
             var sourceWidth = pageFrameContent?.GetRawContentRect().Width ?? 0.0;
             var sourceHeight = pageFrameContent?.GetRawContentRect().Height ?? 0.0;
