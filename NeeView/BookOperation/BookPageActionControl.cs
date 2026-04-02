@@ -147,7 +147,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                new MessageDialog($"{TextResources.GetString("Word.Cause")}: {ex.Message}", TextResources.GetString("FileDeleteErrorDialog.Title")).ShowDialog();
+                new MessageDialog(TextResources.GetString("FileDeleteErrorDialog.Title"), $"{TextResources.GetString("Word.Cause")}: {ex.Message}").ShowDialog();
                 ReloadBook();
             }
         }
@@ -394,7 +394,7 @@ namespace NeeView
                 }
                 catch (Exception e)
                 {
-                    new MessageDialog($"{TextResources.GetString("ImageExportErrorDialog.Message")}\n{TextResources.GetString("Word.Cause")}: {e.Message}", TextResources.GetString("ImageExportErrorDialog.Title")).ShowDialog();
+                    new MessageDialog(TextResources.GetString("ImageExportErrorDialog.Title"), $"{TextResources.GetString("ImageExportErrorDialog.Message")}\n{TextResources.GetString("Word.Cause")}: {e.Message}").ShowDialog();
                 }
             }
         }
@@ -413,7 +413,7 @@ namespace NeeView
                 }
                 catch (Exception e)
                 {
-                    new MessageDialog($"{TextResources.GetString("ImageExportErrorDialog.Message")}\n{TextResources.GetString("Word.Cause")}: {e.Message}", TextResources.GetString("ImageExportErrorDialog.Title")).ShowDialog();
+                    new MessageDialog(TextResources.GetString("ImageExportErrorDialog.Title"), $"{TextResources.GetString("ImageExportErrorDialog.Message")}\n{TextResources.GetString("Word.Cause")}: {e.Message}").ShowDialog();
                 }
             }
         }

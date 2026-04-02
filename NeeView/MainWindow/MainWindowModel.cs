@@ -425,7 +425,7 @@ namespace NeeView
         {
             if (Environment.IsAppxPackage)
             {
-                new MessageDialog(TextResources.GetString("OpenSettingFolderErrorDialog.Message"), TextResources.GetString("OpenSettingFolderErrorDialog.Title")).ShowDialog();
+                new MessageDialog(TextResources.GetString("OpenSettingFolderErrorDialog.Title"), TextResources.GetString("OpenSettingFolderErrorDialog.Message")).ShowDialog();
                 return;
             }
 

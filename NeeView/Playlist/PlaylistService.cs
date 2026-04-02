@@ -33,7 +33,7 @@ namespace NeeView
 
             if (unlinkedCount > 0)
             {
-                var dialog = new MessageDialog(TextResources.GetFormatString("DeleteItemsDialog.Message", unlinkedCount), TextResources.GetString("DeleteInvalidPlaylistItemDialog.Title"));
+                var dialog = new MessageDialog(TextResources.GetString("DeleteInvalidPlaylistItemDialog.Title"), TextResources.GetFormatString("DeleteItemsDialog.Message", unlinkedCount));
                 dialog.Commands.AddRange(UICommands.OKCancel);
                 var result = dialog.ShowDialog();
                 if (result.IsPossible)
@@ -44,7 +44,7 @@ namespace NeeView
             }
             else
             {
-                var dialog = new MessageDialog(TextResources.GetString("NoDeleteItemsDialog.Message"), TextResources.GetString("NoDeleteInvalidPlaylistItemDialog.Title"));
+                var dialog = new MessageDialog(TextResources.GetString("NoDeleteInvalidPlaylistItemDialog.Title"), TextResources.GetString("NoDeleteItemsDialog.Message"));
                 dialog.ShowDialog();
             }
 

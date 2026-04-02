@@ -44,7 +44,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                new MessageDialog($"{TextResources.GetString("Word.Cause")}: {ex.Message}", TextResources.GetString("PrintErrorDialog.Title")).ShowDialog();
+                new MessageDialog(TextResources.GetString("PrintErrorDialog.Title"), $"{TextResources.GetString("Word.Cause")}: {ex.Message}").ShowDialog();
             }
         }
 

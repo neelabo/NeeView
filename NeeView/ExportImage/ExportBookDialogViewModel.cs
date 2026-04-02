@@ -145,7 +145,7 @@ namespace NeeView
         {
             var initialFileName = _parameter.BookType == ExportBookType.Zip
                 ? _bookName + ".zip"
-                : "";
+                : _bookName;
 
             var initialDirectory = SelectedDestinationFolder?.IsValid() == true
                 ? SelectedDestinationFolder.Path
@@ -200,9 +200,11 @@ namespace NeeView
 
         private bool ShowOverwriteConfirmDialog(Window owner, string message, string title)
         {
-            var confirm = new MessageDialog(message, title);
-            confirm.Commands.Add(new UICommand("Word.Overwrite") { IsPossible = true });
+            var confirm = new MessageDialog(title, message, MessageDialogIcon.Warning);
+            confirm.Title = TextResources.GetString("ExportBookAsCommand");
+            confirm.Commands.Add(new UICommand("Word.Overwrite") { IsPossible = true, IsDanger = true });
             confirm.Commands.Add(UICommands.Cancel);
+            confirm.DefaultCommandIndex = 1;
             var confirmResult = confirm.ShowDialog(owner);
             return confirmResult.IsPossible;
         }

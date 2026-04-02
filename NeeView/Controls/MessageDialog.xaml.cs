@@ -13,90 +13,28 @@ using System.Windows.Input;
 namespace NeeView
 {
     /// <summary>
-    /// ダイアログボタン配置
-    /// </summary>
-    public enum UICommandAlignment
-    {
-        Right,
-        Left
-    }
-
-    /// <summary>
-    /// UWP の UICommandモドキ。MessageDialog用
-    /// </summary>
-    public class UICommand
-    {
-        public UICommand(string label)
-        {
-            this.Label = label;
-        }
-
-        public string Label { get; set; }
-
-        public UICommandAlignment Alignment { get; set; }
-
-        public bool IsPossible { get; set; }
-    }
-
-    /// <summary>
-    /// UICommand の既定値集
-    /// </summary>
-    public static class UICommands
-    {
-        public static UICommand OK { get; } = new UICommand("Word.OK") { IsPossible = true };
-        public static UICommand Yes { get; } = new UICommand("Word.Yes") { IsPossible = true };
-        public static UICommand No { get; } = new UICommand("Word.No");
-        public static UICommand Cancel { get; } = new UICommand("Word.Cancel");
-        public static UICommand Delete { get; } = new UICommand("Word.Delete") { IsPossible = true };
-        public static UICommand Retry { get; } = new UICommand("Word.Retry") { IsPossible = true };
-
-        // dialog.Commands.AddRange(...) のような使用を想定したセット
-        public static readonly List<UICommand> YesNo = new() { Yes, No };
-        public static readonly List<UICommand> OKCancel = new() { OK, Cancel };
-    }
-
-    /// <summary>
-    /// ContentのDI
-    /// </summary>
-    public interface IMessageDialogContentComponent
-    {
-        event EventHandler Decide;
-
-        object Content { get; }
-
-        void OnLoaded(object sender, RoutedEventArgs e);
-    }
-
-    /// <summary>
-    /// MessageDialog Result
-    /// </summary>
-    public class MessageDialogResult
-    {
-        public MessageDialogResult(UICommand? command)
-        {
-            Command = command;
-        }
-
-        public UICommand? Command { get; }
-        public bool IsPossible => Command != null && Command.IsPossible;
-    }
-
-    /// <summary>
-    /// UWP の MessageDialogモドキ
+    /// Standard MessageDialog
     /// </summary>
     [NotifyPropertyChanged]
     public partial class MessageDialog : Window, INotifyPropertyChanged
     {
-        public readonly static RoutedCommand CopyCommand = new("CopyCommand", typeof(MessageDialog), new InputGestureCollection(new List<InputGesture>() { new KeyGesture(Key.C, ModifierKeys.Control) }));
+        public readonly static RoutedCommand CopyCommand = new(nameof(CopyCommand), typeof(MessageDialog), new InputGestureCollection(new List<InputGesture>() { new KeyGesture(Key.C, ModifierKeys.Control) }));
         public static Window? OwnerWindow { get; set; }
 
+        public static bool IsShowInTaskBar { get; set; } = true;
+
+
+        private RelayCommand<UICommand>? _buttonClickedCommand;
+
         private UICommand? _resultCommand;
+
         private bool _isClosing;
 
 
         public MessageDialog()
         {
             InitializeComponent();
+
             this.DataContext = this;
 
             this.Owner = OwnerWindow;
@@ -107,23 +45,25 @@ namespace NeeView
             this.CommandBindings.Add(new CommandBinding(CopyCommand, Copy_Execute));
         }
 
-        public MessageDialog(string message, string title) : this()
+        public MessageDialog(string caption, MessageDialogIcon icon = MessageDialogIcon.None) : this()
         {
-            this.Caption.Text = title;
+            this.Caption.Text = caption;
+            SetIcon(icon);
+        }
+
+        public MessageDialog(string caption, string message, MessageDialogIcon icon = MessageDialogIcon.None) : this(caption, icon)
+        {
             this.Message.Content = CreateTextContent(message);
         }
 
-        public MessageDialog(FrameworkElement content, string title) : this()
+        public MessageDialog(string caption, FrameworkElement content, MessageDialogIcon icon = MessageDialogIcon.None) : this(caption, icon)
         {
-            this.Caption.Text = title;
             this.Message.Content = content;
         }
 
-        public MessageDialog(IMessageDialogContentComponent component, string title) : this()
+        public MessageDialog(string caption, IMessageDialogContentComponent component, MessageDialogIcon icon = MessageDialogIcon.None) : this(caption, icon)
         {
-            this.Caption.Text = title;
             this.Message.Content = component.Content;
-
             component.Decide += (s, e) => Decide();
             this.Loaded += (s, e) => component.OnLoaded(s, e);
         }
@@ -140,8 +80,23 @@ namespace NeeView
 
         public bool CloseWhenDeactivated { get; set; }
 
-        public static bool IsShowInTaskBar { get; set; } = true;
+        public bool IsStretchWindow { get; set; } = true;
 
+
+        public RelayCommand<UICommand> ButtonClickedCommand
+        {
+            get
+            {
+                return _buttonClickedCommand = _buttonClickedCommand ?? new RelayCommand<UICommand>(Execute);
+
+                void Execute(UICommand? command)
+                {
+                    _resultCommand = command;
+                    this.DialogResult = true;
+                    this.Close();
+                }
+            }
+        }
 
         private static FrameworkElement CreateTextContent(string content)
         {
@@ -162,6 +117,30 @@ namespace NeeView
             var caption = VisualTreeUtility.CollectElementText(this.Caption);
             var message = VisualTreeUtility.CollectElementText(this.Message);
             Clipboard.SetText(caption + message);
+        }
+
+        protected override void OnContentRendered(EventArgs e)
+        {
+            base.OnContentRendered(e);
+
+            if (!IsStretchWindow)
+            {
+                return;
+            }
+
+            this.SizeToContent = SizeToContent.Manual;
+
+            this.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            var size = this.DesiredSize;
+
+            this.Width = size.Width;
+            this.Height = size.Height;
+
+            if (this.Owner != null)
+            {
+                this.Left = this.Owner.Left + (this.Owner.Width - this.Width) / 2;
+                this.Top = this.Owner.Top + (this.Owner.Height - this.Height) / 2;
+            }
         }
 
         protected override void OnDeactivated(EventArgs e)
@@ -249,7 +228,7 @@ namespace NeeView
         {
             var button = new Button()
             {
-                Style = App.Current.Resources[isDefault ? "NVDialogAccentButton" : "NVDialogButton"] as Style,
+                Style = App.Current.Resources[command.IsDanger ? "NVDialogDangerButton" : command.IsPossible ? "NVDialogAccentButton" : "NVDialogButton"] as Style,
                 Content = TextResources.GetString(command.Label),
                 Command = ButtonClickedCommand,
                 CommandParameter = command,
@@ -267,23 +246,111 @@ namespace NeeView
             }
         }
 
-        /// <summary>
-        /// ButtonClickedCommand command.
-        /// </summary>
-        private RelayCommand<UICommand>? _buttonClickedCommand;
-        public RelayCommand<UICommand> ButtonClickedCommand
+        private void SetIcon(MessageDialogIcon icon)
         {
-            get
+            SetIcon(icon switch
             {
-                return _buttonClickedCommand = _buttonClickedCommand ?? new RelayCommand<UICommand>(Execute);
-
-                void Execute(UICommand? command)
-                {
-                    _resultCommand = command;
-                    this.DialogResult = true;
-                    this.Close();
-                }
-            }
+                MessageDialogIcon.Error
+                    => "\uE783",
+                MessageDialogIcon.Warning
+                    => "\uE7BA",
+                MessageDialogIcon.Information
+                    => "\uE946",
+                MessageDialogIcon.Question
+                    => "\uE897",
+                _
+                    => ""
+            });
         }
+
+        private void SetIcon(string iconText)
+        {
+            this.FontIcon.Text = iconText;
+            this.FontIcon.Visibility = string.IsNullOrEmpty(iconText) ? Visibility.Collapsed : Visibility.Visible;
+        }
+    }
+
+
+    /// <summary>
+    /// Dialog button alignment
+    /// </summary>
+    public enum UICommandAlignment
+    {
+        Right,
+        Left
+    }
+
+    /// <summary>
+    /// Dialog icon
+    /// </summary>
+    public enum MessageDialogIcon
+    {
+        None,
+        Error,
+        Warning,
+        Information,
+        Question
+    }
+
+    /// <summary>
+    /// MessageDialog UICommand
+    /// </summary>
+    public class UICommand
+    {
+        public UICommand(string label)
+        {
+            this.Label = label;
+        }
+
+        public string Label { get; set; }
+
+        public UICommandAlignment Alignment { get; set; }
+
+        public bool IsPossible { get; set; }
+
+        public bool IsDanger { get; set; }
+    }
+
+    /// <summary>
+    /// Default UICommands
+    /// </summary>
+    public static class UICommands
+    {
+        public static UICommand OK { get; } = new UICommand("Word.OK") { IsPossible = true };
+        public static UICommand Yes { get; } = new UICommand("Word.Yes") { IsPossible = true };
+        public static UICommand No { get; } = new UICommand("Word.No");
+        public static UICommand Cancel { get; } = new UICommand("Word.Cancel");
+        public static UICommand Delete { get; } = new UICommand("Word.Delete") { IsPossible = true };
+        public static UICommand Retry { get; } = new UICommand("Word.Retry") { IsPossible = true };
+
+        // Usage: dialog.Commands.AddRange(...) 
+        public static readonly List<UICommand> YesNo = new() { Yes, No };
+        public static readonly List<UICommand> OKCancel = new() { OK, Cancel };
+    }
+
+    /// <summary>
+    /// Content DI
+    /// </summary>
+    public interface IMessageDialogContentComponent
+    {
+        event EventHandler Decide;
+
+        object Content { get; }
+
+        void OnLoaded(object sender, RoutedEventArgs e);
+    }
+
+    /// <summary>
+    /// MessageDialog Result
+    /// </summary>
+    public class MessageDialogResult
+    {
+        public MessageDialogResult(UICommand? command)
+        {
+            Command = command;
+        }
+
+        public UICommand? Command { get; }
+        public bool IsPossible => Command != null && Command.IsPossible;
     }
 }

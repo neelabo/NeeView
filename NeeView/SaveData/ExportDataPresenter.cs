@@ -35,7 +35,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                new MessageDialog($"{TextResources.GetString("Word.Cause")}: {ex.Message}", TextResources.GetString("ExportErrorDialog.Title")).ShowDialog();
+                new MessageDialog(TextResources.GetString("ExportErrorDialog.Title"), $"{TextResources.GetString("Word.Cause")}: {ex.Message}").ShowDialog();
             }
         }
 
@@ -64,7 +64,7 @@ namespace NeeView
                 }
                 catch (Exception ex)
                 {
-                    new MessageDialog(CreateExceptionContent(ex), TextResources.GetString("ImportErrorDialog.Title")).ShowDialog();
+                    new MessageDialog(TextResources.GetString("ImportErrorDialog.Title"), CreateExceptionContent(ex)).ShowDialog();
                 }
             }
         }

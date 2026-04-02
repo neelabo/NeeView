@@ -32,7 +32,7 @@ namespace NeeView
                 HorizontalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Disabled,
             };
 
-            var dialog = new MessageDialog(textBox, GetTitleString());
+            var dialog = new MessageDialog(GetTitleString(), textBox);
             dialog.SizeToContent = System.Windows.SizeToContent.Manual;
             dialog.Height = 320.0;
             dialog.ResizeMode = System.Windows.ResizeMode.CanResize;

@@ -260,7 +260,7 @@ namespace NeeView.Setting
             {
                 ThumbnailCache.Current.Remove();
 
-                var dialog = new MessageDialog("", TextResources.GetString("CacheDeletedDialog.Title"));
+                var dialog = new MessageDialog(TextResources.GetString("CacheDeletedDialog.Title"), "");
                 if (element != null)
                 {
                     dialog.Owner = Window.GetWindow(element);
@@ -269,7 +269,7 @@ namespace NeeView.Setting
             }
             catch (Exception ex)
             {
-                var dialog = new MessageDialog(ex.Message, TextResources.GetString("CacheDeletedFailedDialog.Title"));
+                var dialog = new MessageDialog(TextResources.GetString("CacheDeletedFailedDialog.Title"), ex.Message);
                 if (element != null)
                 {
                     dialog.Owner = Window.GetWindow(element);

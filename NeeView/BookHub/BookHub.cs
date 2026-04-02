@@ -583,7 +583,7 @@ namespace NeeView
 
             token.ThrowIfCancellationRequested();
 
-            var dialog = new MessageDialog(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("ConfirmRecursiveDialog.Message"), book.Path), TextResources.GetString("ConfirmRecursiveDialog.Title"));
+            var dialog = new MessageDialog(TextResources.GetString("ConfirmRecursiveDialog.Title"), string.Format(CultureInfo.InvariantCulture, TextResources.GetString("ConfirmRecursiveDialog.Message"), book.Path));
             dialog.Commands.Add(UICommands.Yes);
             dialog.Commands.Add(UICommands.No);
 

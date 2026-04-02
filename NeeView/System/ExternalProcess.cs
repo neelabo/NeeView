@@ -45,7 +45,7 @@ namespace NeeView
 
             if (!Config.Current.System.IsNetworkEnabled && _httpPrefix.IsMatch(startInfo.FileName))
             {
-                var dialog = new MessageDialog(TextResources.GetString("ExternalProcess.ConfirmBrowserDialog.Message"), TextResources.GetString("ExternalProcess.ConfirmBrowserDialog.Title"));
+                var dialog = new MessageDialog(TextResources.GetString("ExternalProcess.ConfirmBrowserDialog.Title"), TextResources.GetString("ExternalProcess.ConfirmBrowserDialog.Message"));
                 dialog.Commands.AddRange(UICommands.OKCancel);
                 var result = dialog.ShowDialog();
                 if (!result.IsPossible)

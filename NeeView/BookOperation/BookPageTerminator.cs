@@ -166,7 +166,7 @@ namespace NeeView
         private void PageEndAction_DialogCore(object? sender, PageTerminatedEventArgs e)
         {
             var title = (e.Direction < 0) ? TextResources.GetString("Notice.FirstPage") : TextResources.GetString("Notice.LastPage");
-            var dialog = new MessageDialog(TextResources.GetString("PageEndDialog.Message"), title);
+            var dialog = new MessageDialog(title, TextResources.GetString("PageEndDialog.Message"));
             var nextCommand = new UICommand("PageEndAction.NextBook");
             var loopCommand = new UICommand("PageEndAction.Loop");
             var noneCommand = new UICommand("PageEndAction.None");

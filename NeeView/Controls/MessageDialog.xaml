@@ -12,23 +12,25 @@
         KeyDown="MessageDialog_KeyDown"
         Title="NeeView" SizeToContent="Height" Width="600" ResizeMode="NoResize">
 
-    <DockPanel Margin="30,20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-        <DockPanel DockPanel.Dock="Bottom" Margin="0,20,0,0">
-            <StackPanel x:Name="ButtonPanel" DockPanel.Dock="Right" Orientation="Horizontal">
-                <Button Style="{StaticResource NVDialogAccentButton}" Content="OK" />
-            </StackPanel>
-            <StackPanel x:Name="SubButtonPanel" Orientation="Horizontal" Margin="-20,0,0,0">
-            </StackPanel>
+    <Grid MinWidth="480" MaxWidth="600">
+        <DockPanel  Margin="40,20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <DockPanel DockPanel.Dock="Bottom" Margin="0,20,0,0">
+                <StackPanel x:Name="ButtonPanel" DockPanel.Dock="Right" Orientation="Horizontal">
+                    <Button Style="{StaticResource NVDialogAccentButton}" Content="OK" />
+                </StackPanel>
+                <StackPanel x:Name="SubButtonPanel" Orientation="Horizontal" Margin="-20,0,0,0">
+                </StackPanel>
+            </DockPanel>
+            <DockPanel DockPanel.Dock="Top">
+                <TextBlock FontFamily="Segoe MDL2 Assets" x:Name="FontIcon" Text="&#xE7BA;" FontSize="48" VerticalAlignment="Top" Margin="0,10,20,0" Visibility="Collapsed" d:Visibility="Visible" />
+                <TextBlock x:Name="Caption" DockPanel.Dock="Top" Text="Title" TextWrapping="Wrap" FontSize="{DynamicResource SystemFontSizeHuge}" Margin="0,5" />
+                <ContentControl x:Name="Message" Margin="0,5" IsTabStop="False" Content="Content" />
+            </DockPanel>
+            <DockPanel.ContextMenu>
+                <ContextMenu x:Name="CopyContextMenu">
+                    <MenuItem Header="{properties:TextBinding Common.Menu.Copy}" Command="{x:Static local:MessageDialog.CopyCommand}" />
+                </ContextMenu>
+            </DockPanel.ContextMenu>
         </DockPanel>
-        <TextBlock x:Name="Caption" DockPanel.Dock="Top" Text="Title" TextWrapping="Wrap" FontSize="{DynamicResource SystemFontSizeHuge}" Margin="0,5" />
-
-        <ContentControl x:Name="Message" Margin="0,5" IsTabStop="False" Content="Content" />
-
-        <DockPanel.ContextMenu>
-            <ContextMenu x:Name="CopyContextMenu">
-                <MenuItem Header="{properties:TextBinding Common.Menu.Copy}" Command="{x:Static local:MessageDialog.CopyCommand}" />
-            </ContextMenu>
-        </DockPanel.ContextMenu>
-    </DockPanel>
-
+    </Grid>
 </Window>

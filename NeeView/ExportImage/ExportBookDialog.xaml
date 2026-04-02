@@ -78,27 +78,9 @@
                     </DockPanel>
                 </StackPanel>
 
-                <DockPanel DockPanel.Dock="Top" Margin="10,5">
-                    <Button x:Name="CopyButton" DockPanel.Dock="Right" Style="{StaticResource IconButton}" Margin="5,0" Padding="5" VerticalAlignment="Center" Click="CopyButton_Click" MouseLeave="CopyButton_MouseLeave">
-                        <Image Source="{StaticResource ic_content_copy_24px}" Width="16" Height="16" />
-                        <Button.ToolTip>
-                            <ToolTip Content="Copy book name to clipboard"/>
-                        </Button.ToolTip>
-                    </Button>
-                    <Popup x:Name="CopyPopup" PlacementTarget="{Binding ElementName=CopyButton}" Placement="Mouse" >
-                        <Border Background="{DynamicResource Panel.Background}" BorderBrush="{DynamicResource Panel.Border}" BorderThickness="1"  CornerRadius="4" >
-                            <TextBlock Text="Copied!" Margin="5,2" Foreground="{DynamicResource Panel.Foreground}"/>
-                        </Border>
-                    </Popup>
-                    <nwc:ReadOnlyTextBox DockPanel.Dock="Right" Text="{Binding BookName}" TextWrapping="Wrap" VerticalAlignment="Center"/>
-                </DockPanel>
-
-                <Separator DockPanel.Dock="Top" Margin="5,0,5,5" Background="{DynamicResource Panel.Separator}"/>
-
-                <ScrollViewer Style="{StaticResource NVScrollViewer}" Margin="10,0,0,0" CanContentScroll="False">
+                <ScrollViewer Style="{StaticResource NVScrollViewer}" Margin="10,10,0,0" CanContentScroll="False">
                     <nvp:PropertyInspector Document="{Binding ExportBookDocument}" Margin="0"/>
                 </ScrollViewer>
-
             </DockPanel>
         </Border>
 

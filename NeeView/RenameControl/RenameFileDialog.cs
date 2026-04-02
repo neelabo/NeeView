@@ -17,7 +17,7 @@ namespace NeeView
             var context = new RenameContext(filename);
             context.IsSelectFileNameBody = true;
             context.IsInvalidFileNameChars = true;
-            var dialog = new MessageDialog(new RenameDialogComponent(context), title);
+            var dialog = new MessageDialog(title, new RenameDialogComponent(context));
             dialog.Commands.AddRange(UICommands.OKCancel);
 
             var result = dialog.ShowDialog();

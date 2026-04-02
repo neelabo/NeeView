@@ -53,7 +53,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                new MessageDialog(ex.Message, "").ShowDialog();
+                new MessageDialog("", ex.Message).ShowDialog();
             }
         }
 

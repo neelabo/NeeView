@@ -34,7 +34,7 @@ namespace NeeView
             }
             catch (Exception e)
             {
-                new MessageDialog($"{TextResources.GetString("Word.Cause")}: {e.Message}", TextResources.GetString("CopyImageErrorDialog.Title")).ShowDialog();
+                new MessageDialog(TextResources.GetString("CopyImageErrorDialog.Title"), $"{TextResources.GetString("Word.Cause")}: {e.Message}").ShowDialog();
             }
         }
 

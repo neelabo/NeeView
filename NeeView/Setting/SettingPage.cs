@@ -159,7 +159,7 @@ namespace NeeView.Setting
         {
             if (IsResetButtonConfirm)
             {
-                var dialog = new MessageDialog(TextResources.GetString("SettingResetDialog.Message"), TextResources.GetString("SettingResetDialog.Title"));
+                var dialog = new MessageDialog(TextResources.GetString("SettingResetDialog.Title"), TextResources.GetString("SettingResetDialog.Message"));
                 dialog.Commands.Add(UICommands.OK);
                 dialog.Commands.Add(UICommands.Cancel);
                 var result = dialog.ShowDialog(Window.GetWindow(_content));

@@ -87,7 +87,7 @@ namespace NeeView
 
             var vm = new ImportControlViewModel(importer);
             var dialogContent = new ImportControl(vm);
-            var dialog = new MessageDialog(dialogContent, TextResources.GetString("ImportSelectDialog.Title"));
+            var dialog = new MessageDialog(TextResources.GetString("ImportSelectDialog.Title"), dialogContent);
             dialog.Commands.Add(new UICommand("Word.Import") { IsPossible = true });
             dialog.Commands.Add(UICommands.Cancel);
             var result = dialog.ShowDialog();

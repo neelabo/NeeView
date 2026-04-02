@@ -170,7 +170,7 @@ namespace NeeView
 
         private bool ShowDialogInner(string title, string message, int commands)
         {
-            var dialog = new MessageDialog(message, title);
+            var dialog = new MessageDialog(title, message);
             switch (commands)
             {
                 default:
@@ -211,7 +211,7 @@ namespace NeeView
         private static string? ShowInputDialogInner(string title, string? message, string? text)
         {
             var component = new InputDialogComponent(message, text);
-            var dialog = new MessageDialog(component, title);
+            var dialog = new MessageDialog(title, component);
             dialog.Commands.Add(UICommands.OK);
             dialog.Commands.Add(UICommands.Cancel);
             var result = dialog.ShowDialog(App.Current.MainWindow);
