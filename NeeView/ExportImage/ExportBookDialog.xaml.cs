@@ -67,19 +67,6 @@ namespace NeeView
             DestinationFolderDialog.ShowDialog(this);
             _vm.UpdateDestinationFolderList();
         }
-
-        private void CopyButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (_vm is null) return;
-
-            Clipboard.SetText(_vm.BookName);
-            this.CopyPopup.IsOpen = true;
-        }
-
-        private void CopyButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            this.CopyPopup.IsOpen = false;
-        }
     }
 
 

@@ -115,7 +115,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                new MessageDialog(ex.Message, TextResources.GetString("BootErrorDialog.Title")).ShowDialog();
+                new MessageDialog(TextResources.GetString("BootErrorDialog.Title"), ex.Message).ShowDialog();
                 throw new OperationCanceledException("Wrong startup parameter");
             }
         }
@@ -164,7 +164,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                var dialog = new MessageDialog(ex.Message, TextResources.GetString("BootErrorDialog.Title"));
+                var dialog = new MessageDialog(TextResources.GetString("BootErrorDialog.Title"), ex.Message);
                 dialog.SizeToContent = SizeToContent.WidthAndHeight;
                 dialog.ContentRendered += (s, e) => dialog.InvalidateVisual();
                 throw new OperationCanceledWithDialogException("Wrong startup parameter", dialog);
@@ -172,7 +172,7 @@ namespace NeeView
 
             if (option.IsHelp)
             {
-                var dialog = new MessageDialog(optionMap.GetCommandLineHelpText(), TextResources.GetString("BootOptionDialog.Title"));
+                var dialog = new MessageDialog(TextResources.GetString("BootOptionDialog.Title"), optionMap.GetCommandLineHelpText());
                 dialog.SizeToContent = SizeToContent.WidthAndHeight;
                 dialog.ContentRendered += (s, e) => dialog.InvalidateVisual();
                 throw new OperationCanceledWithDialogException("Show command line help", dialog);

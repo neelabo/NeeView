@@ -59,7 +59,7 @@ namespace NeeView
             catch (Exception ex)
             {
                 element?.Cursor = null;
-                new MessageDialog(ex.Message, errorDialogCaption).ShowDialog();
+                new MessageDialog(errorDialogCaption, ex.Message).ShowDialog();
                 return false;
             }
             finally

@@ -343,7 +343,7 @@ namespace NeeView
         {
             if (string.IsNullOrEmpty(NewPlaylist))
             {
-                new MessageDialog(TextResources.GetString("PlaylistErrorDialog.FolderIsNotSet"), TextResources.GetString("Word.Error")).ShowDialog();
+                new MessageDialog(TextResources.GetString("Word.Error"), TextResources.GetString("PlaylistErrorDialog.FolderIsNotSet")).ShowDialog();
                 return;
             }
 

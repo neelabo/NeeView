@@ -34,7 +34,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                new MessageDialog($"{TextResources.GetString("ImageExportErrorDialog.Message")}\n{TextResources.GetString("Word.Cause")}: {ex.Message}", TextResources.GetString("ImageExportErrorDialog.Title")).ShowDialog();
+                new MessageDialog(TextResources.GetString("ImageExportErrorDialog.Title"), $"{TextResources.GetString("ImageExportErrorDialog.Message")}\n{TextResources.GetString("Word.Cause")}: {ex.Message}").ShowDialog();
                 return false;
             }
         }

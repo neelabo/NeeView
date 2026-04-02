@@ -58,7 +58,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                new MessageDialog($"{TextResources.GetString("Word.Cause")}: {ex.Message}", TextResources.GetString("FileDeleteErrorDialog.Title")).ShowDialog();
+                new MessageDialog(TextResources.GetString("FileDeleteErrorDialog.Title"), $"{TextResources.GetString("Word.Cause")}: {ex.Message}").ShowDialog();
                 return false;
             }
         }
@@ -73,7 +73,7 @@ namespace NeeView
 
             var content = CreateDeleteDialogContent(entries, thumbnail, entryType);
             title = title ?? GetDeleteDialogTitle(entries);
-            var dialog = new MessageDialog(content, title);
+            var dialog = new MessageDialog(title, content);
             dialog.Commands.Add(UICommands.Delete);
             dialog.Commands.Add(UICommands.Cancel);
             return dialog;

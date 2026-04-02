@@ -644,7 +644,7 @@ namespace NeeView
         // 全ユーザデータ削除
         public static void RemoveApplicationData(Window? owner)
         {
-            var dialog = new MessageDialog(TextResources.GetString("DeleteApplicationDataDialog.Message"), TextResources.GetString("DeleteApplicationDataDialog.Title"));
+            var dialog = new MessageDialog(TextResources.GetString("DeleteApplicationDataDialog.Title"), TextResources.GetString("DeleteApplicationDataDialog.Message"));
             dialog.Commands.Add(UICommands.Delete);
             dialog.Commands.Add(UICommands.Cancel);
             var result = dialog.ShowDialog(owner);
@@ -658,12 +658,12 @@ namespace NeeView
                 {
                     RemoveApplicationDataCore();
                     ClearRegistry();
-                    new MessageDialog(TextResources.GetString("DeleteApplicationDataCompleteDialog.Message"), TextResources.GetString("DeleteApplicationDataCompleteDialog.Title")).ShowDialog(owner);
+                    new MessageDialog(TextResources.GetString("DeleteApplicationDataCompleteDialog.Title"), TextResources.GetString("DeleteApplicationDataCompleteDialog.Message")).ShowDialog(owner);
                     LocalApplicationDataRemoved?.Invoke(null, EventArgs.Empty);
                 }
                 catch (Exception ex)
                 {
-                    new MessageDialog(ex.Message, TextResources.GetString("DeleteApplicationDataErrorDialog.Title")).ShowDialog(owner);
+                    new MessageDialog(TextResources.GetString("DeleteApplicationDataErrorDialog.Title"), ex.Message).ShowDialog(owner);
                 }
             }
         }

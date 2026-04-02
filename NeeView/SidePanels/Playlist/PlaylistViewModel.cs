@@ -221,7 +221,7 @@ namespace NeeView
 
         private void SortItemsCommand_Execute()
         {
-            var dialog = new MessageDialog(TextResources.GetString("PlaylistSortDialog.Message"), TextResources.GetString("PlaylistSortDialog.Title"));
+            var dialog = new MessageDialog(TextResources.GetString("PlaylistSortDialog.Title"), TextResources.GetString("PlaylistSortDialog.Message"));
             dialog.Commands.AddRange(UICommands.OKCancel);
             var result = dialog.ShowDialog();
             if (!result.IsPossible)

@@ -313,7 +313,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                new MessageDialog(ex.Message, TextResources.GetString("Message.DeleteFailed")).ShowDialog();
+                new MessageDialog(TextResources.GetString("Message.DeleteFailed"), ex.Message).ShowDialog();
             }
         }
 

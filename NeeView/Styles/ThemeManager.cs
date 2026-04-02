@@ -255,7 +255,7 @@ namespace NeeView
         {
             if (string.IsNullOrEmpty(Config.Current.Theme.CustomThemeFolder))
             {
-                new MessageDialog(TextResources.GetString("ThemeErrorDialog.FolderIsNotSet"), TextResources.GetString("Word.Error")).ShowDialog();
+                new MessageDialog(TextResources.GetString("Word.Error"), TextResources.GetString("ThemeErrorDialog.FolderIsNotSet")).ShowDialog();
                 return;
             }
 
@@ -271,7 +271,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                new MessageDialog(ex.Message, TextResources.GetString("Word.Error")).ShowDialog();
+                new MessageDialog(TextResources.GetString("Word.Error"), ex.Message).ShowDialog();
             }
         }
 

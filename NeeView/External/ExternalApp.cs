@@ -78,7 +78,7 @@ namespace NeeView
             }
             catch (Exception ex)
             {
-                new MessageDialog(ex.Message, TextResources.GetString("OpenApplicationErrorDialog.Title")).ShowDialog();
+                new MessageDialog(TextResources.GetString("OpenApplicationErrorDialog.Title"), ex.Message).ShowDialog();
             }
         }
 

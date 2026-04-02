@@ -143,7 +143,7 @@ namespace NeeView
 
         private void ResetCommand_Execute()
         {
-            var dialog = new MessageDialog(TextResources.GetString("PrintResetDialog.Message"), TextResources.GetString("PrintResetDialog.Title"));
+            var dialog = new MessageDialog(TextResources.GetString("PrintResetDialog.Title"), TextResources.GetString("PrintResetDialog.Message"));
             dialog.Commands.Add(UICommands.OK);
             dialog.Commands.Add(UICommands.Cancel);
             var result = dialog.ShowDialog(App.Current.MainWindow);

@@ -43,7 +43,7 @@ namespace NeeView
             var stackPanel = new StackPanel();
             stackPanel.Children.Add(new TextBlock() { Text = TextResources.GetFormatString("ConfirmFileReplaceDialog.Message", name), Margin = new Thickness(0, 10, 0, 10) });
             stackPanel.Children.Add(resolver.CreateOverwriteContent(name, service));
-            var dialog = new MessageDialog(stackPanel, TextResources.GetString("ConfirmFileReplaceDialog.Title"));
+            var dialog = new MessageDialog(TextResources.GetString("ConfirmFileReplaceDialog.Title"), stackPanel);
             var commandReplace = new UICommand("ConfirmFileReplaceDialog.Replace") { IsPossible = true };
             var commandAddNumber = new UICommand("ConfirmFileReplaceDialog.AddNumber") { IsPossible = true };
             dialog.Commands.Add(commandReplace);

@@ -184,7 +184,7 @@ namespace NeeView
                     var conflict = node.Parent?.FirstOrDefault(e => e != node && e.Value is BookmarkFolder && e.Value.Name == newName);
                     if (conflict != null)
                     {
-                        var dialog = new MessageDialog(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("MergeFolderDialog.Message"), newName), TextResources.GetString("MergeFolderDialog.Title"));
+                        var dialog = new MessageDialog(TextResources.GetString("MergeFolderDialog.Title"), string.Format(CultureInfo.InvariantCulture, TextResources.GetString("MergeFolderDialog.Message"), newName));
                         dialog.Commands.Add(UICommands.Yes);
                         dialog.Commands.Add(UICommands.No);
                         var result = dialog.ShowDialog();
@@ -295,7 +295,7 @@ namespace NeeView
             // 削除確認ダイアログと削除
             if (unlinkedCount > 0)
             {
-                var dialog = new MessageDialog(TextResources.GetFormatString("DeleteItemsDialog.Message", unlinkedCount), TextResources.GetString("DeleteInvalidBookmarkDialog.Title"));
+                var dialog = new MessageDialog(TextResources.GetString("DeleteInvalidBookmarkDialog.Title"), TextResources.GetFormatString("DeleteItemsDialog.Message", unlinkedCount));
                 dialog.Commands.AddRange(UICommands.OKCancel);
                 var result = dialog.ShowDialog();
                 if (result.IsPossible)
@@ -305,7 +305,7 @@ namespace NeeView
             }
             else
             {
-                var dialog = new MessageDialog(TextResources.GetString("NoDeleteItemsDialog.Message"), TextResources.GetString("NoDeleteInvalidBookmarkDialog.Title"));
+                var dialog = new MessageDialog(TextResources.GetString("NoDeleteInvalidBookmarkDialog.Title"), TextResources.GetString("NoDeleteItemsDialog.Message"));
                 dialog.ShowDialog();
             }
 
