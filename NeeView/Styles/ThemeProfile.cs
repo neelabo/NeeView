@@ -27,6 +27,8 @@ namespace NeeView
             "Control.GrayText",
             "Control.Accent",
             "Control.AccentText",
+            "Control.Danger",
+            "Control.DangerText",
             "Control.Focus",
             "Control.MouseOver.Background",
 
@@ -125,6 +127,14 @@ namespace NeeView
             "PlaylistItemIcon.Foreground",
         };
 
+        public static Dictionary<string, Color> _defaultColors = new()
+        {
+            ["Control.Accent"] = Color.FromArgb(0xFF, 0x11, 0x88, 0xDD),
+            ["Control.AccentText"] = Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF),
+            ["Control.Danger"] = Color.FromArgb(0xFF, 0xE8, 0x11, 0x23),
+            ["Control.DangerText"] = Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF),
+        };
+
         static ThemeProfile()
         {
             Default = CreateDefaultThemeProfile();
@@ -220,6 +230,11 @@ namespace NeeView
 
         private Color GetDefaultColor(string key, double opacity)
         {
+            if (_defaultColors.TryGetValue(key, out var color))
+            {
+                return AddOpacityToColor(color, opacity);
+            }
+
             var tokens = key.Split('.');
             if (tokens.Length < 2) throw new FormatException($"Wrong format: {key}");
 

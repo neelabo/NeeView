@@ -10,7 +10,11 @@
     <SolidColorBrush x:Key="Button.Accent.Background" Color="#FF1188DD" />
     <SolidColorBrush x:Key="Button.Accent.Foreground" Color="#FFFFFFFF" />
     <SolidColorBrush x:Key="Button.Accent.Border" Color="#FF1188DD" />
-    
+
+    <SolidColorBrush x:Key="Button.Danger.Background" Color="#FFE81123" />
+    <SolidColorBrush x:Key="Button.Danger.Foreground" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="Button.Danger.Border" Color="#FFE81123" />
+
     <!-- NeeView Theme Colors -->
 
     <SolidColorBrush x:Key="Window.Background" Color="#FF000000" />
@@ -25,6 +29,8 @@
     <SolidColorBrush x:Key="Control.GrayText" Color="#FF909090" />
     <SolidColorBrush x:Key="Control.Accent" Color="#FF1188DD" />
     <SolidColorBrush x:Key="Control.AccentText" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="Control.Danger" Color="#FFE81123" />
+    <SolidColorBrush x:Key="Control.Danger.Text" Color="#FFFFFFFF" />
     <SolidColorBrush x:Key="Control.Focus" Color="#FF1188DD" />
     <SolidColorBrush x:Key="Control.MouseOver.Background" Color="#FF404040" />
     <SolidColorBrush x:Key="Item.Separator" Color="#22888888" />
