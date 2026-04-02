@@ -107,6 +107,8 @@ Control.Border | Generic: Border color of control
 Control.GrayText | Generic: Gray text color of the control
 Control.Accent | Generic: Accent color for control
 Control.AccentText | Generic: Text color on control accent color
+Control.Danger | Generic: Danger color for control (v46.0)
+Control.DangerText |  Generic: Text color on control danger color (v46.0)
 Control.Focus | Generic: Focus color of control
 Control.MouseOver.Background | Generic: Background color when the mouse cursor is over the control
 Item.Separator | List item separator color

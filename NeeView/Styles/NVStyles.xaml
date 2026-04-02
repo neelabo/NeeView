@@ -1591,6 +1591,12 @@
         <Setter Property="Foreground" Value="{DynamicResource Button.Accent.Foreground}" />
     </Style>
 
+    <Style x:Key="NVDangerButton" TargetType="{x:Type Button}" BasedOn="{StaticResource NVButton}">
+        <Setter Property="Background" Value="{DynamicResource Button.Danger.Background}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource Button.Danger.Border}" />
+        <Setter Property="Foreground" Value="{DynamicResource Button.Danger.Foreground}" />
+    </Style>
+
     <Style x:Key="NVDialogButton" TargetType="{x:Type Button}" BasedOn="{StaticResource NVButton}">
         <Setter Property="MinWidth" Value="100" />
         <Setter Property="MinHeight" Value="40" />
@@ -1598,6 +1604,12 @@
     </Style>
 
     <Style x:Key="NVDialogAccentButton" TargetType="{x:Type Button}" BasedOn="{StaticResource NVAccentButton}">
+        <Setter Property="MinWidth" Value="100" />
+        <Setter Property="MinHeight" Value="40" />
+        <Setter Property="Margin" Value="20,2,2,2" />
+    </Style>
+
+    <Style x:Key="NVDialogDangerButton" TargetType="{x:Type Button}" BasedOn="{StaticResource NVDangerButton}">
         <Setter Property="MinWidth" Value="100" />
         <Setter Property="MinHeight" Value="40" />
         <Setter Property="Margin" Value="20,2,2,2" />

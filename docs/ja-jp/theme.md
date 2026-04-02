@@ -74,11 +74,9 @@ ZIP版であれば、既定のテーマの定義ファイルは "Libraries/Theme
 「不透明度」は "/少数" で指定します。"/0.0"で完全に透明になります。
 省略した場合は "/1.0" を指定するのと同じで不透明になります。
 
-
 例： Window.InactiveTitle の色は Window.ActiveTitle の 50% の半透明色
 
     "Window.InactiveTitle": "Window.ActiveTitle/0.5",
-
 
 ## フォールバック
 
@@ -91,7 +89,6 @@ ZIP版であれば、既定のテーマの定義ファイルは "Libraries/Theme
 例： SideBar.Border の値が未定義なので SideBar.Background を参照する。この定義自体が存在しない場合も同様。
 
     "SideBar.Border": "",
-
 
 
 ## テーマで使用されるキーのリスト
@@ -110,6 +107,8 @@ Control.Border | 汎用：コントロールのボーダー色
 Control.GrayText | 汎用：コントロールの灰色文字色
 Control.Accent | 汎用：コントロールのアクセントカラー
 Control.AccentText | 汎用：コントロールのアクセントカラー上の文字色
+Control.Danger | 汎用：コントロールの危険カラー (v46.0)
+Control.DangerText |  汎用：コントロールの危険カラー上の文字色 (v46.0)
 Control.Focus | 汎用：コントロールのフォーカス色
 Control.MouseOver.Background | 汎用：マウスカーソルがあるときの背景色
 Item.Separator | リスト項目の区切りの色

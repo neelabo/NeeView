@@ -16,6 +16,8 @@
     "Control.GrayText": "#FF909090",
     "Control.Accent": "#FF1188DD",
     "Control.AccentText": "#FFFFFFFF",
+    "Control.Danger": "#FFE81123",
+    "Control.DangerText": "#FFFFFFFF",
     "Control.Focus": "Control.Accent",
     "Control.MouseOver.Background": "#FF404040",
 
