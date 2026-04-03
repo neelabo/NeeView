@@ -317,6 +317,7 @@ namespace NeeView
             options.Converters.Add(new DiffJsonConverter<MoveDragActionParameter>());
             options.Converters.Add(new DiffJsonConverter<SensitiveDragActionParameter>());
 
+            options.Converters.Add(new DiffJsonConverter<ExportImageParameter>());
             options.Converters.Add(new DiffJsonConverter<ExportBookParameter>());
 
             options.Converters.Add(new DiffJsonConverter<ReversibleCommandParameter>());
@@ -331,7 +332,6 @@ namespace NeeView
             options.Converters.Add(new DiffJsonConverter<MovePlaylistItemInBookCommandParameter>());
             options.Converters.Add(new DiffJsonConverter<ScrollPageCommandParameter>());
             options.Converters.Add(new DiffJsonConverter<FocusMainViewCommandParameter>());
-            options.Converters.Add(new DiffJsonConverter<ExportImageAsCommandParameter>());
             options.Converters.Add(new DiffJsonConverter<ExportImageCommandParameter>());
             options.Converters.Add(new DiffJsonConverter<OpenExternalAppCommandParameter>());
             options.Converters.Add(new DiffJsonConverter<OpenExternalAppAsCommandParameter>());

@@ -60,7 +60,7 @@ namespace NeeLaboratory.Resources
                 if (item.Value.Text.String[0] == '@' && item.Value.Text.String[1] != '[')
                 {
                     var sourceKey = item.Value.Text.String[1..];
-                    Debug.Assert(_map.ContainsKey(sourceKey));
+                    Debug.Assert(_map.ContainsKey(sourceKey), $"TextResource: {sourceKey} not found.");
                     _map[item.Key] = _map.TryGetValue(sourceKey, out var value) ? value : item.Value;
                 }
                 else

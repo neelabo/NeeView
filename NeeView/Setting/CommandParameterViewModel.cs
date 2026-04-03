@@ -27,7 +27,12 @@ namespace NeeView.Setting
                 this.Note = string.Format(CultureInfo.InvariantCulture, TextResources.GetString("CommandParameter.Share"), CommandTable.Current.GetElement(_key).Text);
             }
 
-            var defaultParameter = _commandElement.ParameterSource?.GetDefault();
+            if (_commandElement.ParameterSource is null || _commandElement.ParameterSource.Obsolete)
+            {
+                return;
+            }
+
+            var defaultParameter = _commandElement.ParameterSource.GetDefault();
             if (defaultParameter == null)
             {
                 return;

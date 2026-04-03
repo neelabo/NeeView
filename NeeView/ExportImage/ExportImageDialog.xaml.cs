@@ -5,18 +5,18 @@ using System.Windows.Input;
 namespace NeeView
 {
     /// <summary>
-    /// ExportImageWindow.xaml の相互作用ロジック
+    /// ExportImageDialog.xaml の相互作用ロジック
     /// </summary>
-    public partial class ExportImageWindow : Window
+    public partial class ExportImageDialog : Window
     {
-        private readonly ExportImageWindowViewModel? _vm;
+        private readonly ExportImageDialogViewModel? _vm;
 
-        public ExportImageWindow()
+        public ExportImageDialog()
         {
             InitializeComponent();
         }
 
-        public ExportImageWindow(ExportImageWindowViewModel vm) : this()
+        public ExportImageDialog(ExportImageDialogViewModel vm) : this()
         {
             _vm = vm;
             this.DataContext = _vm;
@@ -24,6 +24,9 @@ namespace NeeView
             this.Loaded += ExportImageWindow_Loaded;
             this.KeyDown += ExportImageWindow_KeyDown;
         }
+
+
+        public string FileName => _vm?.FileName ?? "";
 
 
         private void ExportImageWindow_Loaded(object sender, RoutedEventArgs e)

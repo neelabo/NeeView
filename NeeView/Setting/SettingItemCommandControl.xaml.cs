@@ -290,7 +290,7 @@ namespace NeeView.Setting
 
                 var item = new CommandItem(element.Key, command);
 
-                if (command.ParameterSource != null)
+                if (command.ParameterSource != null && !command.ParameterSource.Obsolete)
                 {
                     item.HasParameter = true;
 

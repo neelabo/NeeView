@@ -47,6 +47,7 @@ namespace NeeView
         private Color _loadingPageColor = Color.FromRgb(0xE0, 0xE0, 0xE0);
         private string _bookThumbnailFileName = "folder.jpg";
         private int _bookThumbnailDepth = 2;
+        private ExportImageParameter _exportImageParameter = new();
         private ExportBookParameter _exportBookParameter = new();
 
         [IgnoreEquality]
@@ -291,6 +292,15 @@ namespace NeeView
         }
 
         #region Hidden Parameters
+
+        /// <summary>
+        /// ExportImageAsCommand 用設定
+        /// </summary>
+        public ExportImageParameter ExportImageParameter
+        {
+            get { return _exportImageParameter; }
+            set { SetProperty(ref _exportImageParameter, value); }
+        }
 
         /// <summary>
         /// ExportBookAsCommand 用設定

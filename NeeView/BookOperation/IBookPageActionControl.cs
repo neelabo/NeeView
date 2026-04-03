@@ -19,7 +19,7 @@ namespace NeeView
 
         bool CanExport();
         void Export(ExportImageCommandParameter parameter);
-        void ExportDialog(ExportImageAsCommandParameter parameter);
+        void ExportDialog();
 
         bool CanOpenFilePlace();
         void OpenFilePlace();

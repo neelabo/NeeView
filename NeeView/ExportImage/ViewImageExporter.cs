@@ -189,6 +189,7 @@ namespace NeeView
             double dpi = 96.0;
             var bmp = new RenderTargetBitmap((int)canvas.Width, (int)canvas.Height, dpi, dpi, PixelFormats.Pbgra32);
             bmp.Render(canvas);
+            bmp.Freeze();
 
             canvas.Children.Clear(); // コンテンツ開放
 
