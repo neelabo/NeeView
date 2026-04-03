@@ -205,9 +205,9 @@ namespace NeeView
             _source?.Export(parameter);
         }
 
-        public void ExportDialog(ExportImageAsCommandParameter parameter)
+        public void ExportDialog()
         {
-            _source?.ExportDialog(parameter);
+            _source?.ExportDialog();
         }
 
         public bool CanCopyToFolder(DestinationFolder parameter, MultiPagePolicy multiPagePolicy)

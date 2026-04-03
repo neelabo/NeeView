@@ -29,6 +29,8 @@ namespace NeeView
             this.KeyDown += ExportBookDialog_KeyDown;
         }
 
+        public string FileName => _vm?.FileName ?? "";
+
         private void ExportBookDialog_Loaded(object sender, RoutedEventArgs e)
         {
             this.SaveButton.Focus();

@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace NeeView
 {
@@ -378,16 +379,26 @@ namespace NeeView
 
         // ファイルに保存する (ダイアログ)
         // TODO: OutOfMemory対策
-        // TODO: ダイアログにリソースを直接渡すようにする
-        public void ExportDialog(ExportImageAsCommandParameter parameter)
+        public async void ExportDialog()
         {
             if (CanExport())
             {
                 try
                 {
-                    var exportImageProceduralDialog = new ExportImageProceduralDialog();
-                    exportImageProceduralDialog.Owner = MainViewComponent.Current.GetWindow();
-                    exportImageProceduralDialog.Show(parameter);
+                    var parameter = Config.Current.Book.ExportImageParameter;
+                    var source = ExportImageSourceFactory.Create();
+
+                    var vm = new ExportImageDialogViewModel(parameter, source);
+                    var dialog = new ExportImageDialog(vm);
+                    dialog.Owner = MainViewComponent.Current.GetWindow();
+                    dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                    var result = dialog.ShowDialog();
+                    if (result != true)
+                    {
+                        return;
+                    }
+                    using var exporter = ImageExporterFactory.CreateExporter(source, parameter.Mode);
+                    await exporter.ExportAsync(dialog.FileName, true, parameter, CancellationToken.None);
                 }
                 catch (OperationCanceledException)
                 {

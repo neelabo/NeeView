@@ -10,7 +10,7 @@ namespace NeeView
             this.ShortCutKey = new ShortcutKey("Ctrl+S");
             this.IsShowMessage = false;
 
-            this.ParameterSource = new CommandParameterSource(new ExportImageAsCommandParameter());
+            this.ParameterSource = new CommandParameterSource(new ExportImageAsCommandParameter()) { Obsolete = true };
         }
 
         public override bool CanExecute(object? sender, CommandContext e)
@@ -20,7 +20,7 @@ namespace NeeView
 
         public override void Execute(object? sender, CommandContext e)
         {
-            BookOperation.Current.Control.ExportDialog(e.Parameter.Cast<ExportImageAsCommandParameter>());
+            BookOperation.Current.Control.ExportDialog();
         }
     }
 }

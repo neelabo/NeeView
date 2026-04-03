@@ -1,39 +1,53 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.Properties;
+using NeeView.Windows.Property;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 
 namespace NeeView
 {
-    public class ExportImageWindowViewModel : BindableBase
+    public class ExportImageDialogViewModel : BindableBase
     {
-        private readonly ExportImageParameter _model;
+        private readonly ExportImageParameter _parameter;
         private readonly ExportImageSource _source;
         private readonly ExportImagePreview _preview;
         private List<DestinationFolder>? _destinationFolderList;
         private static DestinationFolder? _lastSelectedDestinationFolder;
         private DestinationFolder? _selectedDestinationFolder = _lastSelectedDestinationFolder;
 
-        public ExportImageWindowViewModel(ExportImageParameter model, ExportImageSource source)
+        public ExportImageDialogViewModel(ExportImageParameter parameter, ExportImageSource source)
         {
-            _model = model;
+            _parameter = parameter;
             _source = source;
-            _preview = new ExportImagePreview(_model, source);
+            _preview = new ExportImagePreview(_parameter, source);
 
-            _model.SubscribePropertyChanged(nameof(_model.Mode),
-                (s, e) => RaisePropertyChanged(nameof(Mode)));
+            this.ExportBookDocument = new PropertyDocument();
+            this.ExportBookDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameMode)));
+            this.ExportBookDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.OverwriteMode)));
+            this.ExportBookDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.Mode)));
 
-            _model.SubscribePropertyChanged(nameof(_model.HasBackground),
-                (s, e) => RaisePropertyChanged(nameof(HasBackground)));
+            var viewDocument = new PropertyDocument();
 
-            _model.SubscribePropertyChanged(nameof(_model.IsOriginalSize),
-                (s, e) => RaisePropertyChanged(nameof(IsOriginalSize)));
+            this.ExportBookDocument.AddProperty(PropertyDocumentElement.Create(viewDocument, new PropertyMemberElementOptions()
+            {
+                VisibilityValue = new Setting.VisibilityPropertyValue(new Binding(nameof(_parameter.Mode))
+                {
+                    Source = _parameter,
+                    Converter = new ValueToVisibilityConverter<ExportImageMode>() { Visible = ExportImageMode.View }
+                })
+            }));
 
-            _model.SubscribePropertyChanged(nameof(_model.IsDotKeep),
-                (s, e) => RaisePropertyChanged(nameof(IsDotKeep)));
+            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.HasBackground)));
+            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.IsOriginalSize)));
+            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.IsDotKeep)));
+            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileFormat)));
+            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.QualityLevel)));
+
+            viewDocument.SetVisualType<PropertyValue_Boolean>(PropertyVisualType.ToggleSwitch);
 
             _preview.SubscribePropertyChanged(nameof(_preview.Preview),
                 (s, e) => RaisePropertyChanged(nameof(Preview)));
@@ -50,32 +64,11 @@ namespace NeeView
             UpdateDestinationFolderList();
         }
 
+        public string FileName { get; private set; } = "";
 
         public Dictionary<ExportImageMode, string> ExportImageModeList => AliasNameExtensions.GetAliasNameDictionary<ExportImageMode>();
 
-        public ExportImageMode Mode
-        {
-            get { return _model.Mode; }
-            set { _model.Mode = value; }
-        }
-
-        public bool HasBackground
-        {
-            get { return _model.HasBackground; }
-            set { _model.HasBackground = value; }
-        }
-
-        public bool IsOriginalSize
-        {
-            get { return _model.IsOriginalSize; }
-            set { _model.IsOriginalSize = value; }
-        }
-
-        public bool IsDotKeep
-        {
-            get { return _model.IsDotKeep; }
-            set { _model.IsDotKeep = value; }
-        }
+        public PropertyDocument ExportBookDocument { get; set; }
 
         public FrameworkElement? Preview
         {
@@ -96,7 +89,6 @@ namespace NeeView
         {
             get { return _preview.ImageFormatNote; }
         }
-
 
         public List<DestinationFolder>? DestinationFolderList
         {
@@ -130,9 +122,9 @@ namespace NeeView
 
         public async ValueTask<bool?> ShowSelectSaveFileDialogAsync(Window owner, CancellationToken token)
         {
-            var dialog = new ExportImageSeveFileDialog(_model.ExportFolder,
-                    CreateFileName(ExportImageFileNameMode.Default, BitmapImageFormat.Png),
-                    _model.Mode == ExportImageMode.View);
+            var dialog = new ExportImageSeveFileDialog(_parameter.ExportFolder,
+                    CreateFileName(ExportImageFileNameMode.Default, _parameter.FileFormat),
+                    _parameter.Mode == ExportImageMode.View);
 
             if (SelectedDestinationFolder != null && SelectedDestinationFolder.IsValid())
             {
@@ -142,10 +134,7 @@ namespace NeeView
             var result = dialog.ShowDialog(owner);
             if (result == true)
             {
-                var path = System.IO.Path.GetFullPath(dialog.FileName);
-
-                using var exporter = ImageExporterFactory.CreateExporter(_source, _model.Mode);
-                await exporter.ExportAsync(path, true, _model, token);
+                this.FileName = dialog.FileName;
             }
 
             return result;
@@ -154,7 +143,7 @@ namespace NeeView
         public string CreateFileName(ExportImageFileNameMode fileNameMode, BitmapImageFormat format)
         {
             var fileNamePolicy = new DefaultExportImageFileNamePolicy();
-            return fileNamePolicy.CreateFileName(_source, Mode, fileNameMode, format);
+            return fileNamePolicy.CreateFileName(_source, _parameter.Mode, fileNameMode, format);
         }
 
     }

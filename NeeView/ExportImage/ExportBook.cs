@@ -28,7 +28,7 @@ namespace NeeView
         }
 
 
-        public async Task RunAsync(ExportBookParameter parameter, bool showToast, CancellationToken token)
+        public async Task RunAsync(string bookPath, ExportBookParameter parameter, bool showToast, CancellationToken token)
         {
             LocalDebug.WriteLine("start...");
 
@@ -52,11 +52,11 @@ namespace NeeView
                 switch (parameter.Mode)
                 {
                     case ExportImageMode.Original:
-                        await ExportOriginalAsync(parameter, parameter.BookType, overwritePolicy, token);
+                        await ExportOriginalAsync(bookPath, parameter, parameter.BookType, overwritePolicy, token);
                         break;
 
                     case ExportImageMode.View:
-                        await ExportViewAsync(parameter, parameter.BookType, overwritePolicy, token);
+                        await ExportViewAsync(bookPath, parameter, parameter.BookType, overwritePolicy, token);
                         break;
 
                     default:
@@ -65,7 +65,7 @@ namespace NeeView
 
                 if (showToast)
                 {
-                    var link = $"<a href=\"explorer://{parameter.ExportBookPath}\">{System.IO.Path.GetFileName(parameter.ExportBookPath)}</a>";
+                    var link = $"<a href=\"explorer://{bookPath}\">{System.IO.Path.GetFileName(bookPath)}</a>";
                     var toast = new Toast(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("ExportImage.Message.Success"), link)) { IsXHtml = true };
                     ToastService.Current.Show(toast);
                 }
@@ -93,11 +93,11 @@ namespace NeeView
         /// <summary>
         /// オリジナルのページをそのまま出力するモード
         /// </summary>
-        private async Task ExportOriginalAsync(ExportBookParameter parameter, ExportBookType bookType, IExportOverwritePolicy overwritePolicy, CancellationToken token)
+        private async Task ExportOriginalAsync(string bookPath, ExportBookParameter parameter, ExportBookType bookType, IExportOverwritePolicy overwritePolicy, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
-            using (var writer = ExportImageWriterFactory.Create(bookType, parameter.ExportBookPath, true))
+            using (var writer = ExportImageWriterFactory.Create(bookType, bookPath, true))
             {
                 var pages = _operation.Book?.Pages;
                 if (pages is null || pages.Count == 0)
@@ -134,7 +134,7 @@ namespace NeeView
         /// <summary>
         /// 表示を出力するモード
         /// </summary>
-        private async Task ExportViewAsync(ExportBookParameter parameter, ExportBookType bookType, IExportOverwritePolicy overwritePolicy, CancellationToken token)
+        private async Task ExportViewAsync(string bookPath, ExportBookParameter parameter, ExportBookType bookType, IExportOverwritePolicy overwritePolicy, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -142,7 +142,7 @@ namespace NeeView
 
             await AppDispatcher.InvokeAsync(() => _operation.Control.MoveToFirst(this));
 
-            using (var writer = ExportImageWriterFactory.Create(bookType, parameter.ExportBookPath, true))
+            using (var writer = ExportImageWriterFactory.Create(bookType, bookPath, true))
             {
                 while (await ExportViewPageAsync(writer, parameter, overwritePolicy, token))
                 {

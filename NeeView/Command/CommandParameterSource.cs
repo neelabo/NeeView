@@ -27,6 +27,15 @@ namespace NeeView
         public event EventHandler<ParameterChangedEventArgs>? ParameterChanged;
 
 
+        /// <summary>
+        /// コマンドパラメーター無効化フラグ
+        /// </summary>
+        /// <remarks>
+        /// コマンドパラメーターは廃止されたが、スクリプト等からのアクセスでエラーにならないようにするために残す場合のフラグ。
+        /// </remarks>
+        public bool Obsolete { get; set; }
+
+
         public CommandParameter? GetRaw()
         {
             return _parameter;

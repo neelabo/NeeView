@@ -222,6 +222,24 @@ namespace NeeView
                 self.Config.Window.State = self.Config.Window.WindowPlacement.GetWindowStateEx();
             }
 
+            // ver 46.0
+            if (self.Format.CompareTo(new FormatVersion(Environment.SolutionName, VersionNumber.Ver46_Alpha1)) <= 0)
+            {
+                if (self.Commands != null)
+                {
+                    if (self.Commands.TryGetValue("ExportImageAs", out var command))
+                    {
+                        if (command.Parameter is ExportImageAsCommandParameter parameter)
+                        {
+                            self.Config.Book.ExportImageParameter.ExportFolder = parameter.ExportFolderLegacy ?? "";
+                            self.Config.Book.ExportImageParameter.QualityLevel = parameter.QualityLevelLegacy;
+                            command.Parameter = null;
+                        }
+                    }
+                }
+            }
+
+
             // NOTE: ver.99 (バージョン変更処理テスト)
 #if false
             if (self.Format.CompareTo(new FormatVersion(Environment.SolutionName, 99, 0, 0)) < 0)

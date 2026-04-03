@@ -15,7 +15,7 @@ namespace NeeView
         [DefaultEquality] private bool _isOriginalSize = true;
         [DefaultEquality] private bool _isDotKeep;
         [DefaultEquality] private int _qualityLevel = 80;
-        [DefaultEquality] private BitmapImageFormat _fileFormat;
+        [DefaultEquality] private BitmapImageFormat _fileFormat = BitmapImageFormat.Png;
         [DefaultEquality] private ExportImageFileNameMode _fileNameMode;
         [DefaultEquality] private ExportImageOverwriteMode _overwriteMode = ExportImageOverwriteMode.Confirm;
         [DefaultEquality] private string _exportFolder = "";
@@ -39,63 +39,62 @@ namespace NeeView
         }
 
 
-        [PropertyMember(Name = "ExportImageCommandParameter.HasBackground")]
+        [PropertyMember]
         public bool HasBackground
         {
             get => _hasBackground;
             set => SetProperty(ref _hasBackground, value);
         }
 
-        [PropertyMember(Name = "ExportImageCommandParameter.IsOriginalSize")]
+        [PropertyMember]
         public bool IsOriginalSize
         {
             get { return _isOriginalSize; }
             set { SetProperty(ref _isOriginalSize, value); }
         }
 
-        [PropertyMember(Name = "ExportImageCommandParameter.IsDotKeep")]
+        [PropertyMember]
         public bool IsDotKeep
         {
             get { return _isDotKeep; }
             set { SetProperty(ref _isDotKeep, value); }
         }
 
-        [PropertyRange(5, 100, TickFrequency = 5, Name = "ExportImageCommandParameter.QualityLevel")]
+        [PropertyRange(5, 100, TickFrequency = 5)]
         public int QualityLevel
         {
             get => _qualityLevel;
             set => SetProperty(ref _qualityLevel, value);
         }
 
-        [PropertyMember(Name = "ExportImageCommandParameter.Mode")]
+        [PropertyMember]
         public ExportImageMode Mode
         {
             get => _mode;
             set => SetProperty(ref _mode, value);
         }
 
-        [PropertyMember(Name = "ExportImageCommandParameter.FileFormat")]
+        [PropertyMember]
         public BitmapImageFormat FileFormat
         {
             get => _fileFormat;
             set => SetProperty(ref _fileFormat, value);
         }
 
-        [PropertyMember(Name = "ExportImageCommandParameter.FileNameMode")]
+        [PropertyMember]
         public ExportImageFileNameMode FileNameMode
         {
             get => _fileNameMode;
             set => SetProperty(ref _fileNameMode, value);
         }
 
-        [PropertyMember(Name = "ExportImageCommandParameter.OverwriteMode")]
+        [PropertyMember]
         public ExportImageOverwriteMode OverwriteMode
         {
             get { return _overwriteMode; }
             set { SetProperty(ref _overwriteMode, value); }
         }
 
-        // 一時記憶用？
         [PropertyMember]
         public string ExportFolder
         {

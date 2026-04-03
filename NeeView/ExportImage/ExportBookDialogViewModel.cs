@@ -81,6 +81,7 @@ namespace NeeView
             UpdateDestinationFolderList();
         }
 
+        public string FileName { get; private set; } = "";
 
         public PropertyDocument ExportBookDocument { get; set; }
         public PropertyDocument ExportBookTypeDocument { get; set; }
@@ -161,7 +162,6 @@ namespace NeeView
                 return result;
             }
 
-            _parameter.ExportBookPath = dialog.FileName;
             _parameter.ExportFolder = LoosePath.GetDirectoryName(dialog.FileName);
 
             Debug.Assert(_parameter.OverwriteMode != ExportImageOverwriteMode.Confirm);
@@ -172,9 +172,10 @@ namespace NeeView
 
             if (_parameter.BookType == ExportBookType.Zip)
             {
-                if (FileIO.ExistsPath(_parameter.ExportBookPath))
+                // ファイルが存在する場合は上書き確認
+                if (FileIO.ExistsPath(dialog.FileName))
                 {
-                    var allowOverwrite = ShowOverwriteConfirmDialog(owner, TextResources.GetFormatString("OverwriteFileDialog.Message", System.IO.Path.GetFileName(_parameter.ExportBookPath)), TextResources.GetString("OverwriteFileDialog.Title"));
+                    var allowOverwrite = ShowOverwriteConfirmDialog(owner, TextResources.GetString("OverwriteFileDialog.Title"), TextResources.GetFormatString("OverwriteFileDialog.Message", System.IO.Path.GetFileName(dialog.FileName)));
                     if (!allowOverwrite)
                     {
                         return false;
@@ -184,10 +185,10 @@ namespace NeeView
             else if (_parameter.BookType == ExportBookType.Folder)
             {
                 // フォルダが存在し、空でない場合は上書き確認
-                var directory = new DirectoryInfo(_parameter.ExportBookPath);
+                var directory = new DirectoryInfo(dialog.FileName);
                 if (directory.Exists && directory.EnumerateFileSystemInfos().Any())
                 {
-                    var allowOverwrite = ShowOverwriteConfirmDialog(owner, TextResources.GetFormatString("OverwriteFolderDialog.Message", System.IO.Path.GetFileName(_parameter.ExportBookPath)), TextResources.GetString("OverwriteFolderDialog.Title"));
+                    var allowOverwrite = ShowOverwriteConfirmDialog(owner, TextResources.GetString("OverwriteFolderDialog.Title"), TextResources.GetFormatString("OverwriteFolderDialog.Message", System.IO.Path.GetFileName(dialog.FileName)));
                     if (!allowOverwrite)
                     {
                         return false;
@@ -195,12 +196,17 @@ namespace NeeView
                 }
             }
 
+            if (result == true)
+            {
+                this.FileName = dialog.FileName;
+            }
+
             return result;
         }
 
-        private bool ShowOverwriteConfirmDialog(Window owner, string message, string title)
+        private bool ShowOverwriteConfirmDialog(Window owner, string caption, string message)
         {
-            var confirm = new MessageDialog(title, message, MessageDialogIcon.Warning);
+            var confirm = new MessageDialog(caption, message, MessageDialogIcon.Warning);
             confirm.Title = TextResources.GetString("ExportBookAsCommand");
             confirm.Commands.Add(new UICommand("Word.Overwrite") { IsPossible = true, IsDanger = true });
             confirm.Commands.Add(UICommands.Cancel);
