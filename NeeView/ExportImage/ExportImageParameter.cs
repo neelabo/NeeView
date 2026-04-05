@@ -16,10 +16,18 @@ namespace NeeView
         [DefaultEquality] private bool _isDotKeep;
         [DefaultEquality] private int _qualityLevel = 80;
         [DefaultEquality] private BitmapImageFormat _fileFormat = BitmapImageFormat.Png;
-        [DefaultEquality] private ExportImageFileNameMode _fileNameMode;
+        [DefaultEquality] private string _fileNameFormat0 = DefaultFileNameFormat0;
+        [DefaultEquality] private string _fileNameFormat1 = DefaultFileNameFormat1;
+        [DefaultEquality] private string _fileNameFormat2 = DefaultFileNameFormat2;
         [DefaultEquality] private ExportImageOverwriteMode _overwriteMode = ExportImageOverwriteMode.Confirm;
         [DefaultEquality] private string _exportFolder = "";
 
+
+        public const string DefaultFileNameFormat0 = "{Name}";
+        public const string DefaultFileNameFormat1 = "{Index:000}";
+        public const string DefaultFileNameFormat2 = "{Index:000}";
+        //public const string OldPattern1 ="{Book}_{Page:000}";
+        //public const string OldPattern2 ="{Book}_{Page1:000}-{Page2:000}";
 
         public ExportImageParameter()
         {
@@ -34,7 +42,6 @@ namespace NeeView
             _exportFolder = parameter.ExportFolder;
             _qualityLevel = parameter.QualityLevel;
             _fileFormat = parameter.FileFormat;
-            _fileNameMode = parameter.FileNameMode;
             _overwriteMode = parameter.OverwriteMode;
         }
 
@@ -82,10 +89,24 @@ namespace NeeView
         }
 
         [PropertyMember]
-        public ExportImageFileNameMode FileNameMode
+        public string FileNameFormat0
         {
-            get => _fileNameMode;
-            set => SetProperty(ref _fileNameMode, value);
+            get { return _fileNameFormat0; }
+            set { SetProperty(ref _fileNameFormat0, value); }
+        }
+
+        [PropertyMember]
+        public string FileNameFormat1
+        {
+            get { return _fileNameFormat1; }
+            set { SetProperty(ref _fileNameFormat1, value); }
+        }
+
+        [PropertyMember]
+        public string FileNameFormat2
+        {
+            get { return _fileNameFormat2; }
+            set { SetProperty(ref _fileNameFormat2, value); }
         }
 
         [PropertyMember]

@@ -169,7 +169,7 @@ namespace NeeView
             using var service = new ExportImageService(source, parameter);
             service.ThrowIfCannotExport();
 
-            var pageSource = new ExportPageSource(service.Source.BookAddress, service.Source.Pages);
+            var pageSource = new ExportPageSource(service.Source.BookAddress, service.Source.Direction, service.Source.Elements);
             using (var stream = await writer.OpenEntryAsync(pageSource, service, parameter, overwritePolicy, token))
             {
                 var page = pages.First();

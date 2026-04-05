@@ -12,8 +12,8 @@ namespace NeeView
                     => new ConfirmExportOverwritePolicy(),
                 ExportImageOverwriteMode.AddNumber
                     => new AddNumberExportOverwritePolicy(),
-                ExportImageOverwriteMode.Invalid
-                    => new InvalidExportOverwritePolicy(),
+                ExportImageOverwriteMode.Disallow
+                    => new DisallowExportOverwritePolicy(),
                 _
                     => throw new NotSupportedException($"Unsupported overwrite mode: {mode}"),
             };

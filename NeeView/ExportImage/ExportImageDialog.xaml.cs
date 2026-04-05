@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 
@@ -20,27 +21,36 @@ namespace NeeView
         {
             _vm = vm;
             this.DataContext = _vm;
-
-            this.Loaded += ExportImageWindow_Loaded;
-            this.KeyDown += ExportImageWindow_KeyDown;
         }
 
 
         public string FileName => _vm?.FileName ?? "";
 
 
-        private void ExportImageWindow_Loaded(object sender, RoutedEventArgs e)
+        protected override void OnClosed(EventArgs e)
         {
+            base.OnClosed(e);
+            
+            _vm?.Dispose();
+        }
+
+        protected override void OnContentRendered(EventArgs e)
+        {
+            base.OnContentRendered(e);
+            
             this.SaveButton.Focus();
         }
 
-        private void ExportImageWindow_KeyDown(object sender, KeyEventArgs e)
+        protected override void OnKeyDown(KeyEventArgs e)
         {
             if (e.Key == Key.Escape && Keyboard.Modifiers == ModifierKeys.None)
             {
                 this.Close();
                 e.Handled = true;
+                return;
             }
+
+            base.OnKeyDown(e);
         }
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)

@@ -135,7 +135,8 @@ namespace NeeView
             }
             else
             {
-                ExternalProcess.Start(e.Uri.LocalPath);
+                var path = e.Uri.Scheme == "file" ? e.Uri.LocalPath : e.Uri.AbsoluteUri;
+                ExternalProcess.Start(path);
             }
             e.Handled = true;
         }

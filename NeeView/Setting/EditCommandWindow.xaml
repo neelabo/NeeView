@@ -36,7 +36,7 @@
             <Image Source="{StaticResource ic_info_24px}" Width="16" Height="16" Margin="5" VerticalAlignment="Center"/>
             <TextBlock x:Name="ReverseNoteTextBlock" DockPanel.Dock="Bottom" Text="When the slider direction is from left to right, execute [PairCommand]." TextWrapping="Wrap" VerticalAlignment="Center"/>
         </StackPanel>
-        <TabControl x:Name="TabControl" Margin="5" TabIndex="1" KeyboardNavigation.TabNavigation="Local">
+        <TabControl x:Name="TabControl" Margin="5" TabIndex="1" KeyboardNavigation.TabNavigation="Local" >
             <TabItem x:Name="GeneralTab">
                 <TabItem.Header>
                     <Grid MinWidth="60" MinHeight="30">

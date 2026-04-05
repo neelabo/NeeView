@@ -12,4 +12,16 @@
         Png,
     }
 
+    public static class BitmapImageFormatExtensions
+    {
+        public static string GetExtension(this BitmapImageFormat format)
+        {
+            return format switch
+            {
+                BitmapImageFormat.Jpeg => ".jpg",
+                BitmapImageFormat.Png => ".png",
+                _ => throw new System.ArgumentOutOfRangeException(nameof(format), format, null)
+            };
+        }
+    }
 }

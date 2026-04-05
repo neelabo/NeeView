@@ -21,6 +21,10 @@ namespace NeeView
             var transform = pageFrameContent.ViewTransform;
             if (transform is null) throw new InvalidOperationException();
 
+            var direction = pageFrameContent.PageFrame.Direction;
+
+            var elements = pageFrameContent.PageFrame.Elements.Where(e => !e.IsDummy).Select(e => new PageNameElement(e.Page, e.PagePart)).ToList();
+
             var pages = pageFrameContent.PageFrame.Elements.Select(e => e.Page).ToList();
 
             var background = MainViewComponent.Current.Background;
@@ -33,16 +37,19 @@ namespace NeeView
             //transform.Children.Add(scaleTransform);
             //transform.Children.Add(rotateTransform);
 
-            var context = new ExportImageSource(
-                pageFrameContent: pageFrameContent,
-                bookAddress: BookOperation.Current.Address ?? throw new InvalidOperationException("book is null"),
-                pages: pages,
-                view: element,
-                viewTransform: transform,
-                viewEffect: ImageEffect.Current.Effect,
-                background: bg1,
-                backgroundFront: bg2
-            );
+            var context = new ExportImageSource()
+            {
+                PageFrameContent = pageFrameContent,
+                BookAddress = BookOperation.Current.Address ?? throw new InvalidOperationException("book is null"),
+                Direction = direction,
+                Elements = elements,
+                Pages = pages,
+                View = element,
+                ViewTransform = transform,
+                ViewEffect = ImageEffect.Current.Effect,
+                Background = bg1,
+                BackgroundFront = bg2
+            };
 
             return context;
         }

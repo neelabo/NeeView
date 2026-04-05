@@ -13,14 +13,15 @@ using System.Windows.Data;
 
 namespace NeeView
 {
-    public class ExportBookDialogViewModel : BindableBase
+    public class ExportBookDialogViewModel : BindableBase, IDisposable
     {
         private readonly ExportBookParameter _parameter;
         private readonly ExportImagePreview _preview;
         private string _bookName;
         private List<DestinationFolder>? _destinationFolderList;
         private DestinationFolder? _selectedDestinationFolder;
-
+        private bool _disposedValue;
+        private DisposableCollection _disposables = new DisposableCollection();
 
         public ExportBookDialogViewModel(ExportBookParameter parameter, string bookName)
         {
@@ -30,16 +31,33 @@ namespace NeeView
             var source = ExportImageSourceFactory.Create();
             _preview = new ExportImagePreview(_parameter, source);
 
-            _parameter.OverwriteMode = _parameter.OverwriteMode == ExportImageOverwriteMode.Confirm ? ExportImageOverwriteMode.Invalid : _parameter.OverwriteMode;
+            _disposables.Add(_preview);
+
+            _parameter.OverwriteMode = _parameter.OverwriteMode == ExportImageOverwriteMode.Confirm ? ExportImageOverwriteMode.Disallow : _parameter.OverwriteMode;
 
             var overwriteMap = AliasNameExtensions.GetAliasNameDictionary<ExportImageOverwriteMode>()
                 .Where(e => e.Key != ExportImageOverwriteMode.Confirm)
                 .ToDictionary(e => (Enum)e.Key, e => e.Value);
 
             this.ExportBookDocument = new PropertyDocument();
-            this.ExportBookDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameMode)));
-            this.ExportBookDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.OverwriteMode), new() { EnumMap = overwriteMap }));
             this.ExportBookDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.Mode)));
+
+
+            var originalDocument = new PropertyDocument();
+
+            this.ExportBookDocument.AddProperty(PropertyDocumentElement.Create(originalDocument, new PropertyMemberElementOptions()
+            {
+                VisibilityValue = new Setting.VisibilityPropertyValue(new Binding(nameof(_parameter.Mode))
+                {
+                    Source = _parameter,
+                    Converter = new ValueToVisibilityConverter<ExportImageMode>() { Visible = ExportImageMode.Original }
+                })
+            }));
+
+            var fileNameFormatControl0 = ExportFileNameFormatControlFactory.CreateOriginalFileNameFormatControl(_parameter);
+
+            originalDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameFormat0), control: fileNameFormatControl0));
+            originalDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.OverwriteMode), new PropertyMemberElementOptions() { EnumMap = overwriteMap }));
 
             var viewDocument = new PropertyDocument();
 
@@ -52,6 +70,13 @@ namespace NeeView
                 })
             }));
 
+            var direction = source.PageFrameContent.ViewContentsDirection;
+            var fileNameFormatControl1 = ExportFileNameFormatControlFactory.CreateViewFileNameFormatControl(_parameter, 1, direction);
+            var fileNameFormatControl2 = ExportFileNameFormatControlFactory.CreateViewFileNameFormatControl(_parameter, 2, direction);
+
+            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameFormat1), control: fileNameFormatControl1));
+            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameFormat2), control: fileNameFormatControl2));
+            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.OverwriteMode), options: new() { EnumMap = overwriteMap }));
             viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.HasBackground)));
             viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.IsOriginalSize)));
             viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.IsDotKeep)));
@@ -63,23 +88,24 @@ namespace NeeView
             this.ExportBookTypeDocument = new PropertyDocument();
             this.ExportBookTypeDocument.AddProperty(_parameter, nameof(_parameter.BookType));
 
-            _parameter.SubscribePropertyChanged(nameof(_parameter.BookType),
-                (s, e) => RaisePropertyChanged(nameof(BookType)));
+            _disposables.Add(_parameter.SubscribePropertyChanged(nameof(_parameter.BookType),
+                (s, e) => RaisePropertyChanged(nameof(BookType))));
 
-            _preview.SubscribePropertyChanged(nameof(_preview.Preview),
-                (s, e) => RaisePropertyChanged(nameof(Preview)));
+            _disposables.Add(_preview.SubscribePropertyChanged(nameof(_preview.Preview),
+                (s, e) => RaisePropertyChanged(nameof(Preview))));
 
-            _preview.SubscribePropertyChanged(nameof(_preview.PreviewWidth),
-                (s, e) => RaisePropertyChanged(nameof(PreviewWidth)));
+            _disposables.Add(_preview.SubscribePropertyChanged(nameof(_preview.PreviewWidth),
+                (s, e) => RaisePropertyChanged(nameof(PreviewWidth))));
 
-            _preview.SubscribePropertyChanged(nameof(_preview.PreviewHeight),
-                (s, e) => RaisePropertyChanged(nameof(PreviewHeight)));
+            _disposables.Add(_preview.SubscribePropertyChanged(nameof(_preview.PreviewHeight),
+                (s, e) => RaisePropertyChanged(nameof(PreviewHeight))));
 
-            _preview.SubscribePropertyChanged(nameof(_preview.ImageFormatNote),
-                (s, e) => RaisePropertyChanged(nameof(ImageFormatNote)));
+            _disposables.Add(_preview.SubscribePropertyChanged(nameof(_preview.ImageFormatNote),
+                (s, e) => RaisePropertyChanged(nameof(ImageFormatNote))));
 
             UpdateDestinationFolderList();
         }
+
 
         public string FileName { get; private set; } = "";
 
@@ -167,7 +193,7 @@ namespace NeeView
             Debug.Assert(_parameter.OverwriteMode != ExportImageOverwriteMode.Confirm);
             if (_parameter.OverwriteMode == ExportImageOverwriteMode.Confirm)
             {
-                _parameter.OverwriteMode = ExportImageOverwriteMode.Invalid;
+                _parameter.OverwriteMode = ExportImageOverwriteMode.Disallow;
             }
 
             if (_parameter.BookType == ExportBookType.Zip)
@@ -213,6 +239,25 @@ namespace NeeView
             confirm.DefaultCommandIndex = 1;
             var confirmResult = confirm.ShowDialog(owner);
             return confirmResult.IsPossible;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    _disposables.Dispose();
+                }
+
+                _disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

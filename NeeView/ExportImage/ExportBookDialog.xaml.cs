@@ -24,25 +24,35 @@ namespace NeeView
         {
             _vm = new ExportBookDialogViewModel(parameter, bookName);
             this.DataContext = _vm;
-
-            this.Loaded += ExportBookDialog_Loaded;
-            this.KeyDown += ExportBookDialog_KeyDown;
         }
 
         public string FileName => _vm?.FileName ?? "";
 
-        private void ExportBookDialog_Loaded(object sender, RoutedEventArgs e)
+
+        protected override void OnClosed(EventArgs e)
         {
+            _vm?.Dispose();
+
+            base.OnClosed(e);
+        }
+
+        protected override void OnContentRendered(EventArgs e)
+        {
+            base.OnContentRendered(e);
+
             this.SaveButton.Focus();
         }
 
-        private void ExportBookDialog_KeyDown(object sender, KeyEventArgs e)
+        protected override void OnKeyDown(KeyEventArgs e)
         {
             if (e.Key == Key.Escape && Keyboard.Modifiers == ModifierKeys.None)
             {
                 this.Close();
                 e.Handled = true;
+                return;
             }
+
+            base.OnKeyDown(e);
         }
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)

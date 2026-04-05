@@ -19,7 +19,7 @@ namespace NeeView
         public int Index => _page.Index;
 
         [WordNodeMember]
-        [Alternative("@_ScriptManual.PagePathChangeNote", 42, ErrorLevel = ScriptErrorLevel.Error, IsFullName = true)] // ver.42
+        [Alternative("@_ScriptManual.PagePathChangeNote", 42, ScriptErrorLevel.Error, IsFullName = true)] // ver.42
         public string Path => _page.TargetPath;
 
         [WordNodeMember]
@@ -29,7 +29,7 @@ namespace NeeView
         public long Size => _page.Length;
 
         [WordNodeMember]
-        [Alternative("@_ScriptManual.DateTypeChangeNote", 42, ErrorLevel = ScriptErrorLevel.Error, IsFullName = true)] // ver.42
+        [Alternative("@_ScriptManual.DateTypeChangeNote", 42, ScriptErrorLevel.Error, IsFullName = true)] // ver.42
         public DateTime LastWriteTime => _page.LastWriteTime;
 
         [WordNodeMember]

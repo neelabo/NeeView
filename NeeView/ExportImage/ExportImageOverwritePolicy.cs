@@ -15,7 +15,7 @@ namespace NeeView
     /// <summary>
     /// 衝突したら失敗とする
     /// </summary>
-    public class InvalidExportOverwritePolicy : IExportOverwritePolicy
+    public class DisallowExportOverwritePolicy : IExportOverwritePolicy
     {
         public string Resolve(string name, IExportOverwriteResolver resolver, ExportImageService? service)
         {

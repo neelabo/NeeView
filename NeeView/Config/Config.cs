@@ -143,7 +143,7 @@ namespace NeeView
             set { }
         }
 
-        [Obsolete("no used"), Alternative(null, 46, ErrorLevel = ScriptErrorLevel.Error)] // ver.46
+        [Obsolete("no used"), Alternative(null, 46, ScriptErrorLevel.Error)] // ver.46
         [JsonIgnore]
         public string? Control
         {

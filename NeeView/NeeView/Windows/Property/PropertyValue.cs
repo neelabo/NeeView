@@ -81,6 +81,25 @@ namespace NeeView.Windows.Property
         }
     }
 
+    public class PropertyValue_Control : PropertyValue<object>
+    {
+        // NOTE: control を直接保持するとメモリーリークの原因になるため、WeakReferenceで保持する
+        private readonly WeakReference<FrameworkElement> _controlRef;
+
+        public PropertyValue_Control(PropertyMemberElement setter, FrameworkElement control) : base(setter)
+        {
+            _controlRef = new WeakReference<FrameworkElement>(control);
+        }
+
+        public FrameworkElement? Control
+        {
+            get
+            {
+                _controlRef.TryGetTarget(out var target);
+                return target;
+            }
+        }
+    }
 
     public class PropertyValue_Object : PropertyValue<object>
     {

@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using static System.Windows.Forms.DataFormats;
 
 namespace NeeView
 {
@@ -24,7 +25,7 @@ namespace NeeView
             // これは？旧バージョンの動作を確認すること
             //_parameter.ExportFolder = string.IsNullOrWhiteSpace(_parameter.ExportFolder) ? System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyPictures) : _parameter.ExportFolder;
 
-            _fileNamePolicy = new DefaultExportImageFileNamePolicy();
+            _fileNamePolicy = new DefaultExportImageFileNamePolicy(parameter);
 
             _exporter = CreateExporter(parameter.Mode, _source);
         }
@@ -75,13 +76,14 @@ namespace NeeView
 
         public string CreateFileName()
         {
-            return CreateFileName(_parameter.FileNameMode, _parameter.FileFormat);
+            //return CreateFileName(_parameter.FileNameMode, _parameter.FileFormat);
+            return _fileNamePolicy.CreateFileName(_source, 1);
         }
 
-        public string CreateFileName(ExportImageFileNameMode fileNameMode, BitmapImageFormat format)
-        {
-            return _fileNamePolicy.CreateFileName(_source, Mode, fileNameMode, format);
-        }
+        //public string CreateFileName(ExportImageFileNameMode fileNameMode, BitmapImageFormat format)
+        //{
+        //    return _fileNamePolicy.CreateFileName(_source, Mode, fileNameMode, format);
+        //}
 
         public bool CanExport()
         {

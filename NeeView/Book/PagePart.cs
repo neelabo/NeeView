@@ -29,6 +29,16 @@ namespace NeeView
                 _ => pagePart,
             };
         }
+
+        public static string ToSuffix(this PagePart pagePart)
+        {
+            return pagePart switch
+            {
+                PagePart.Left => "L",
+                PagePart.Right => "R",
+                _ => "",
+            };
+        }
     }
 
 

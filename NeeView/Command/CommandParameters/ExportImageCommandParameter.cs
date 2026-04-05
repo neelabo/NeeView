@@ -1,6 +1,8 @@
 ﻿using Generator.Equals;
 using NeeView.Windows.Controls;
 using NeeView.Windows.Property;
+using System;
+using System.Text.Json.Serialization;
 
 namespace NeeView
 {
@@ -12,7 +14,9 @@ namespace NeeView
         [DefaultEquality] private bool _isOriginalSize = true;
         [DefaultEquality] private bool _isDotKeep;
         [DefaultEquality] private string? _exportFolder;
-        [DefaultEquality] private ExportImageFileNameMode _fileNameMode;
+        [DefaultEquality] private string _fileNameFormat0 = ExportImageParameter.DefaultFileNameFormat0;
+        [DefaultEquality] private string _fileNameFormat1 = ExportImageParameter.DefaultFileNameFormat1;
+        [DefaultEquality] private string _fileNameFormat2 = ExportImageParameter.DefaultFileNameFormat2;
         [DefaultEquality] private BitmapImageFormat _fileFormat;
         [DefaultEquality] private int _qualityLevel = 80;
         [DefaultEquality] private bool _isShowToast = true;
@@ -54,11 +58,25 @@ namespace NeeView
             set => SetProperty(ref _exportFolder, value);
         }
 
-        [PropertyMember(Name = "ExportImageParameter.FileNameMode")]
-        public ExportImageFileNameMode FileNameMode
+        [PropertyMember]
+        public string FileNameFormat0
         {
-            get => _fileNameMode;
-            set => SetProperty(ref _fileNameMode, value);
+            get { return _fileNameFormat0; }
+            set { SetProperty(ref _fileNameFormat0, value); }
+        }
+
+        [PropertyMember]
+        public string FileNameFormat1
+        {
+            get { return _fileNameFormat1; }
+            set { SetProperty(ref _fileNameFormat1, value); }
+        }
+
+        [PropertyMember]
+        public string FileNameFormat2
+        {
+            get { return _fileNameFormat2; }
+            set { SetProperty(ref _fileNameFormat2, value); }
         }
 
         [PropertyMember(Name = "ExportImageParameter.FileFormat")]
@@ -88,15 +106,43 @@ namespace NeeView
             get { return _overwriteMode; }
             set { SetProperty(ref _overwriteMode, value); }
         }
+
+
+        #region Obsolete
+
+        [Obsolete, Alternative("FileNameFormat0,1,2", 46, ScriptErrorLevel.Warning)] // ver.46
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        [PropertyMember(Name = "ExportImageParameter.FileNameMode")]
+        public ExportImageFileNameMode FileNameMode
+        {
+            get => default;
+            set
+            {
+                if (value == ExportImageFileNameMode.BookPageNumber)
+                { 
+                    FileNameFormat0 = "{Book}_{Page:000}";
+                    FileNameFormat1 = "{Book}_{Page:000}";
+                    FileNameFormat2 = "{Book}_{Page1:000}-{Page2:000}";
+                }
+                else
+                {
+                    FileNameFormat0 = ExportImageParameter.DefaultFileNameFormat0;
+                    FileNameFormat1 = ExportImageParameter.DefaultFileNameFormat1;
+                    FileNameFormat2 = ExportImageParameter.DefaultFileNameFormat1;
+                }
+            }
+        }
+
+        #endregion
     }
 
 
     public enum ExportImageOverwriteMode
     {
         Confirm,
-
+        
         AddNumber,
 
-        Invalid,
+        Disallow,
     }
 }
