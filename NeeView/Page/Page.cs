@@ -13,7 +13,7 @@ using System.Windows.Media;
 namespace NeeView
 {
     [NotifyPropertyChanged]
-    public partial class Page : IDisposable, INotifyPropertyChanged, IPageContentLoader, IPageThumbnailLoader, IHasPage, IRenameable, ISearchItem, IPendingItem
+    public partial class Page : IDisposable, INotifyPropertyChanged, IPageContentLoader, IPageThumbnailLoader, IHasPage, IRenameable, ISearchItem, IPendingItem, IPageNameSource
     {
         private int _index;
         private readonly ArchiveEntryNode _entryNode;

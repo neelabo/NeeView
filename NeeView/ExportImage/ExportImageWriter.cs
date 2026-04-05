@@ -38,6 +38,7 @@ namespace NeeView
     public class FolderExportImageWriter : IExportImageWriter
     {
         private string _path;
+        private int _index;
 
         public FolderExportImageWriter(string path, bool isOverwrite)
         {
@@ -66,9 +67,11 @@ namespace NeeView
         // service がなあ。
         public async Task<Stream> OpenEntryAsync(ExportPageSource pageSource, ExportImageService? service, ExportImageParameter parameter, IExportOverwritePolicy overwritePolicy, CancellationToken token)
         {
-            var namePolicy = new DefaultExportImageFileNamePolicy();
+            _index++;
 
-            var filename = namePolicy.CreateFileName(pageSource, parameter.Mode, parameter.FileNameMode, parameter.FileFormat);
+            var namePolicy = new DefaultExportImageFileNamePolicy(parameter);
+
+            var filename = namePolicy.CreateFileName(pageSource, _index);
 
             // 使用できないファイル名を置換
             filename = LoosePath.ValidPath(filename);
@@ -109,6 +112,7 @@ namespace NeeView
         private ZipExportOverwriteResolver _resolver = new();
         private string _path;
         private string _tempPath;
+        private int _index;
 
         public ZipExportImageWriter(string path, bool isOverwrite)
         {
@@ -138,9 +142,14 @@ namespace NeeView
 
         public async Task<Stream> OpenEntryAsync(ExportPageSource pageSource, ExportImageService? service, ExportImageParameter parameter, IExportOverwritePolicy overwritePolicy, CancellationToken token)
         {
-            var fileNamePolicy = new DefaultExportImageFileNamePolicy();
+            _index++;
 
-            var name = fileNamePolicy.CreateFileName(pageSource, parameter.Mode, parameter.FileNameMode, parameter.FileFormat);
+            var fileNamePolicy = new DefaultExportImageFileNamePolicy(parameter);
+
+            var name = fileNamePolicy.CreateFileName(pageSource, _index);
+
+            // 使用できないファイル名を置換
+            name = LoosePath.ValidPath(name);
 
             // 階層構造はそのまま。区切り記号をスラッシュに統一
             name = name.Replace('\\', '/');

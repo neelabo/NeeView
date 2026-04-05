@@ -73,11 +73,6 @@ namespace NeeView
             }
         }
 
-        public string CreateFileName()
-        {
-            return LoosePath.ValidFileName(_page.EntryLastName);
-        }
-
         public DateTime GetLastWriteTime()
         {
             return _source.Pages[0].LastWriteTime;

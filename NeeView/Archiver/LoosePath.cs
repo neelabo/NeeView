@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -108,6 +109,20 @@ namespace NeeView
             else
             {
                 return filename[..^ext.Length];
+            }
+        }
+
+        public static string WithoutExtension(string? s)
+        {
+            if (string.IsNullOrEmpty(s)) return "";
+            var ext = GetExtension(s);
+            if (string.IsNullOrEmpty(ext))
+            {
+                return s;
+            }
+            else
+            {
+                return s[..^ext.Length];
             }
         }
 
@@ -235,7 +250,7 @@ namespace NeeView
         {
             if (string.IsNullOrEmpty(s)) return "";
 
-            string valid = s;
+            string valid = s.Trim();
             char[] invalids = System.IO.Path.GetInvalidFileNameChars();
 
             foreach (char c in invalids)
@@ -385,7 +400,7 @@ namespace NeeView
             }
         }
 
-        public static string CreateUniquePath(string name, bool withExtension, Func<string, bool> existsFunc)
+        public static string CreateUniquePath(string name, bool withExtension, Func<string, bool> existsFunc, UniqueNamePolicy policy = UniqueNamePolicy.NumberSuffix)
         {
             if (!existsFunc(name))
             {
@@ -401,10 +416,11 @@ namespace NeeView
                 baseName = name[..^ext.Length].TrimEnd();
             }
 
+            var format = policy == UniqueNamePolicy.UnderscoreNumberSuffix ? "{0}_{1}{2}" : "{0} ({1}){2}";
+
             for (int i = 2; ; i++)
             {
-                // TODO: 競合回避の番号の付け方を指定可能にする。 e.g.: "name (2).ext", "name_2.ext" など
-                var newName = $"{baseName} ({i}){ext}";
+                var newName = string.Format(CultureInfo.InvariantCulture, format, baseName, i, ext);
                 if (!existsFunc(newName))
                 {
                     return newName;
@@ -412,4 +428,14 @@ namespace NeeView
             }
         }
     }
+
+    public enum UniqueNamePolicy
+    {
+        // name (2).ext
+        NumberSuffix,
+        
+        // name_2.ext
+        UnderscoreNumberSuffix,
+    }
+
 }

@@ -52,7 +52,7 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300" MinWidth="{Binding ElementName=Buttons, Path=ActualWidth}" />
+            <ColumnDefinition Width="400" MinWidth="{Binding ElementName=Buttons, Path=ActualWidth}" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 

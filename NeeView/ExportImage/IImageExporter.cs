@@ -12,7 +12,6 @@ namespace NeeView
         ValueTask ExportAsync(Stream stream, bool decrypt, BitmapImageFormat format, IImageExporterOptions options, CancellationToken token);
         ValueTask ExportAsync(string path, bool isOverwrite, IImageExporterOptions options, CancellationToken token);
         ImageSource? CreateImageSource(IImageExporterOptions options);
-        string CreateFileName();
         bool CanExport();
         public void ThrowIfCannotExport();
         DateTime GetLastWriteTime();

@@ -82,35 +82,42 @@ namespace NeeView.Windows.Property
         private PropertyInfo _info;
 
 
-        public PropertyMemberElement(object source, PropertyInfo info, PropertyMemberAttribute attribute, PropertyMemberElementOptions options)
+        public PropertyMemberElement(object source, PropertyInfo info, PropertyMemberAttribute attribute, PropertyMemberElementOptions options, FrameworkElement? control = null)
         {
             InitializeCommon(source, info, attribute, options);
 
-            switch (attribute)
+            if (control != null)
             {
-                case PropertyPercentFontSizeAttribute percentFontSizeAttribute:
-                    InitializeByPercentFontSizeAttribute(percentFontSizeAttribute);
-                    break;
+                InitializeByControlOption(control);
+            }
+            else
+            {
+                switch (attribute)
+                {
+                    case PropertyPercentFontSizeAttribute percentFontSizeAttribute:
+                        InitializeByPercentFontSizeAttribute(percentFontSizeAttribute);
+                        break;
 
-                case PropertyPercentAttribute percentAttribute:
-                    InitializeByPercentAttribute(percentAttribute);
-                    break;
+                    case PropertyPercentAttribute percentAttribute:
+                        InitializeByPercentAttribute(percentAttribute);
+                        break;
 
-                case PropertyRangeAttribute rangeAttribute:
-                    InitializeByRangeAttribute(rangeAttribute);
-                    break;
+                    case PropertyRangeAttribute rangeAttribute:
+                        InitializeByRangeAttribute(rangeAttribute);
+                        break;
 
-                case PropertyPathAttribute pathAttribute:
-                    InitializeByPathAttribute(pathAttribute);
-                    break;
+                    case PropertyPathAttribute pathAttribute:
+                        InitializeByPathAttribute(pathAttribute);
+                        break;
 
-                case PropertyStringsAttribute stringsAttribute:
-                    InitializeByStringsAttribute(stringsAttribute);
-                    break;
+                    case PropertyStringsAttribute stringsAttribute:
+                        InitializeByStringsAttribute(stringsAttribute);
+                        break;
 
-                default:
-                    InitializeByDefaultAttribute(attribute);
-                    break;
+                    default:
+                        InitializeByDefaultAttribute(attribute);
+                        break;
+                }
             }
         }
 
@@ -155,6 +162,12 @@ namespace NeeView.Windows.Property
                     }
                 };
             }
+        }
+
+        [MemberNotNull(nameof(TypeValue))]
+        private void InitializeByControlOption(FrameworkElement control)
+        {
+            this.TypeValue = new PropertyValue_Control(this, control);
         }
 
         [MemberNotNull(nameof(TypeValue))]
@@ -408,13 +421,18 @@ namespace NeeView.Windows.Property
             return Create(source, name, PropertyMemberElementOptions.Default);
         }
 
+        public static PropertyMemberElement Create(object source, string name, FrameworkElement? control)
+        {
+            return Create(source, name, PropertyMemberElementOptions.Default, control);
+        }
+
         /// <summary>
         /// オブジェクトとプロパティ名から PropertyMemberElement を作成する
         /// </summary>
         /// <param name="source"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static PropertyMemberElement Create(object source, string name, PropertyMemberElementOptions options)
+        public static PropertyMemberElement Create(object source, string name, PropertyMemberElementOptions options, FrameworkElement? control = null)
         {
             var info = source.GetType().GetProperty(name);
             if (info is null) throw new ArgumentException($"{source.GetType()} does not have the property '{name}'");
@@ -422,7 +440,7 @@ namespace NeeView.Windows.Property
             var attribute = GetPropertyMemberAttribute(info);
             if (attribute is null) throw new InvalidOperationException($"Need PropertyMemberAttribute at {source.GetType()}.{name}");
 
-            return new PropertyMemberElement(source, info, attribute, options);
+            return new PropertyMemberElement(source, info, attribute, options, control);
         }
 
         /// <summary>
@@ -435,6 +453,7 @@ namespace NeeView.Windows.Property
             return (PropertyMemberAttribute?)Attribute.GetCustomAttributes(info, typeof(PropertyMemberAttribute)).FirstOrDefault();
         }
     }
+
 
 
     public class PropertyDocumentElement : PropertyDrawElement

@@ -1,5 +1,8 @@
-﻿namespace NeeView
+﻿using System;
+
+namespace NeeView
 {
+    [Obsolete]
     public enum ExportImageFileNameMode
     {
         [AliasName]

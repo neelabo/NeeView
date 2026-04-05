@@ -282,6 +282,8 @@ namespace NeeView
 
         public override void OnUpdateSelectedFrame(FrameChangeType changeType)
         {
+            if (AppState.Instance.IsProcessingBook) return;
+
             _hoverTransformControl?.UpdateSelected();
             // NOTE: ホバースクロール即時反映。タイミングによってはその後に座標補正されてしまうため、実行タイミングを遅らせている
             AppDispatcher.BeginInvoke(() => HoverScrollIfEnabled(Mouse.GetPosition(_context.Sender), System.Environment.TickCount, DragActionUpdateOptions.Immediate));

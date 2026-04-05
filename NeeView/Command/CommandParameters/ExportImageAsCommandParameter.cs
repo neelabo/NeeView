@@ -12,7 +12,7 @@ namespace NeeView
     [Equatable(Explicit = true)]
     public partial class ExportImageAsCommandParameter : CommandParameter
     {
-        [Obsolete("no used"), Alternative(null, 46, ErrorLevel = ScriptErrorLevel.Warning)]
+        [Obsolete("no used"), Alternative(null, 46, ScriptErrorLevel.Warning)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
         [PropertyPath(FileDialogType = FileDialogType.Directory)]
         [DefaultEquality]
@@ -22,7 +22,7 @@ namespace NeeView
             set => ExportFolderLegacy = value;
         }
 
-        [Obsolete("no used"), Alternative(null, 46, ErrorLevel = ScriptErrorLevel.Warning)]
+        [Obsolete("no used"), Alternative(null, 46, ScriptErrorLevel.Warning)]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
         [PropertyRange(5, 100, TickFrequency = 5)]
         [DefaultEquality]

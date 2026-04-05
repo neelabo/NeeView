@@ -203,13 +203,6 @@ namespace NeeView
             element.UpdateLayout();
         }
 
-        public string CreateFileName()
-        {
-            var bookName = LoosePath.ValidFileName(LoosePath.GetFileNameWithoutExtension(_source.BookAddress));
-            var indexLabel = (_source.Pages.Count > 1) ? $"{_source.Pages[0].Index:000}-{_source.Pages[1].Index:000}" : $"{_source.Pages[0].Index:000}";
-            return $"{bookName}_{indexLabel}.png";
-        }
-
         private void ResetScalingMode()
         {
             SetScalingMode(null);
