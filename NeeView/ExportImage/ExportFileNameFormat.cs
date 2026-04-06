@@ -34,8 +34,8 @@ namespace NeeView
                 "" => _elements.First(),
                 "1" => _elements.First(),
                 "2" => _elements.Last(),
-                "L" => _source.Direction > 0 ? _elements.Last() : _elements.First(),
-                "R" => _source.Direction > 0 ? _elements.First() : _elements.Last(),
+                "L" => _source.Direction > 0 ? _elements.First() : _elements.Last(),
+                "R" => _source.Direction > 0 ? _elements.Last() : _elements.First(),
                 _ => throw new NotSupportedException($"Invalid suffix: {suffix}"),
             };
         }
