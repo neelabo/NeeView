@@ -12,16 +12,16 @@ namespace NeeView
         /// Ctrl+F12をトリガーにしたデバッグコマンド実行
         /// </summary>
         [Conditional("DEBUG")]
-        public static void Initialize()
+        public static void Initialize(Window window)
         {
-            App.Current.MainWindow.PreviewKeyDown += OnPreviewKeyDown;
+            window.PreviewKeyDown += OnPreviewKeyDown;
 
-            static void OnPreviewKeyDown(object sender, KeyEventArgs e)
+            void OnPreviewKeyDown(object sender, KeyEventArgs e)
             {
                 // trigger is Ctrl+F12
                 if (Keyboard.Modifiers == ModifierKeys.Control && e.Key == Key.F12)
                 {
-                    CheckFocus();
+                    CheckFocus(window);
                     //CheckMouseCapture();
 
                     e.Handled = true;
@@ -36,30 +36,30 @@ namespace NeeView
         }
 
         [Conditional("DEBUG")]
-        public static void RegisterFocusChanged()
+        public static void RegisterFocusChanged(Window window)
         {
             EventManager.RegisterClassHandler(
                 typeof(UIElement),
                 Keyboard.PreviewGotKeyboardFocusEvent,
                 (KeyboardFocusChangedEventHandler)OnPreviewGotKeyboardFocus);
 
-            static void OnPreviewGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+            void OnPreviewGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
             {
-                if (FocusManager.GetFocusedElement(App.Current.MainWindow) is not Visual element)
+                if (FocusManager.GetFocusedElement(window) is not Visual element)
                 {
                     Debug.WriteLine($">> FocusLost:");
-                    CheckFocus();
+                    CheckFocus(window);
                 }
             }
         }
 
         // 現在のフォーカスを取得
         [Conditional("DEBUG")]
-        public static void CheckFocus()
+        public static void CheckFocus(Window window)
         {
             Debug.WriteLine($"KeyboardFocus: {Keyboard.FocusedElement}");
 
-            var element = FocusManager.GetFocusedElement(App.Current.MainWindow) as Visual;
+            var element = FocusManager.GetFocusedElement(window) as Visual;
             ElementWalk(element);
             Debug.WriteLine(".");
 

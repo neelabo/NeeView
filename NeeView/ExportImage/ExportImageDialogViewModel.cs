@@ -43,9 +43,10 @@ namespace NeeView
                 })
             }));
 
-            var fileNameFormatControl0 = ExportFileNameFormatControlFactory.CreateOriginalFileNameFormatControl(_parameter);
 
-            originalDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameFormat0), control: fileNameFormatControl0));
+            var fileNameFormatModel0 = new ExportFileNameFormatModel(_parameter, ProxyProperty.Create(_parameter, e => e.FileNameFormat0), ExportFileNameFormat.CreateDummyFileNameSource(1, 1), ExportImageParameter.DefaultFileNameFormat0);
+
+            originalDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameFormat0), data: fileNameFormatModel0));
             originalDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.OverwriteMode)));
 
             var viewDocument = new PropertyDocument();
@@ -60,11 +61,11 @@ namespace NeeView
             }));
 
             var direction = source.PageFrameContent.ViewContentsDirection;
-            var fileNameFormatControl1 = ExportFileNameFormatControlFactory.CreateViewFileNameFormatControl(_parameter, 1, direction);
-            var fileNameFormatControl2 = ExportFileNameFormatControlFactory.CreateViewFileNameFormatControl(_parameter, 2, direction);
+            var fileNameFormatModel1 = new ExportFileNameFormatModel(_parameter, ProxyProperty.Create(_parameter, e => e.FileNameFormat1), ExportFileNameFormat.CreateDummyFileNameSource(1, direction), ExportImageParameter.DefaultFileNameFormat1);
+            var fileNameFormatModel2 = new ExportFileNameFormatModel(_parameter, ProxyProperty.Create(_parameter, e => e.FileNameFormat2), ExportFileNameFormat.CreateDummyFileNameSource(2, direction), ExportImageParameter.DefaultFileNameFormat2);
 
-            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameFormat1), control: fileNameFormatControl1));
-            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameFormat2), control: fileNameFormatControl2));
+            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameFormat1), data: fileNameFormatModel1));
+            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameFormat2), data: fileNameFormatModel2));
             viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.OverwriteMode)));
             viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.HasBackground)));
             viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.IsOriginalSize)));

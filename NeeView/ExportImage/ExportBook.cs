@@ -81,9 +81,8 @@ namespace NeeView
             finally
             {
                 await AppDispatcher.InvokeAsync(() => _operation.JumpPage(this, currentPage));
-                
-                // TODO: Transform の復元
 
+                // TODO: Transform の復元
                 AppState.Instance.IsProcessingBook = false;
             }
 

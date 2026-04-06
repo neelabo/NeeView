@@ -35,7 +35,7 @@ namespace NeeView
                 "1" => _elements.First(),
                 "2" => _elements.Last(),
                 "L" => _source.Direction > 0 ? _elements.Last() : _elements.First(),
-                "R" => _source.Direction > 1 ? _elements.First() : _elements.Last(),
+                "R" => _source.Direction > 0 ? _elements.First() : _elements.Last(),
                 _ => throw new NotSupportedException($"Invalid suffix: {suffix}"),
             };
         }
@@ -54,7 +54,6 @@ namespace NeeView
 
             foreach (var w in words)
             {
-                // TODO: word のフォーマット部分を分離 (word : fmt)
                 var tokens = w.Split(':', 2);
 
                 var word = tokens[0].Trim();
@@ -141,8 +140,8 @@ namespace NeeView
 
         public static ExportPageSource CreateDummyFileNameSource(int pageCount, int direction)
         {
-            var source1 = new ExportPageSource("BookName", 1, [new PageNameElement(new PageNameSource(1, "Foo.jpg"))]);
-            var source2 = new ExportPageSource("BookName", direction, [new PageNameElement(new PageNameSource(1, "Foo.jpg")), new PageNameElement(new PageNameSource(2, "Bar.jpg"))]);
+            var source1 = new ExportPageSource("BookName", 1, [new PageNameElement(new PageNameSource(1, "Dir\\Foo.jpg"))]);
+            var source2 = new ExportPageSource("BookName", direction, [new PageNameElement(new PageNameSource(1, "Dir\\Foo.jpg")), new PageNameElement(new PageNameSource(2, "Dir\\Bar.jpg"))]);
 
             return pageCount == 1 ? source1 : source2;
         }

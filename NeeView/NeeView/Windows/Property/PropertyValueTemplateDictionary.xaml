@@ -12,8 +12,8 @@
 
     <nv:DoubleToPercentStringConverter x:Key="DoubleToPercentStringConverter" />
 
-    <DataTemplate DataType="{x:Type local:PropertyValue_Control}">
-        <ContentControl Content="{Binding Control}" />
+    <DataTemplate DataType="{x:Type local:PropertyValue_Data}">
+        <ContentControl Content="{Binding Data}" Focusable="False" />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:PropertyValue_Object}">

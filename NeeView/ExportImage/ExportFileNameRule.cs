@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Windows;
+using System;
 using System.Globalization;
 using System.Windows.Controls;
 
@@ -6,23 +7,17 @@ namespace NeeView
 {
     public class ExportFileNameRule : ValidationRule
     {
-        private IExportImageParameter _parameter;
-        private IExportPageSource _source;
-        private int _index = 1;
-
-        public ExportFileNameRule(IExportImageParameter parameter, IExportPageSource source, int index)
-        {
-            _parameter = parameter;
-            _source = source;
-            _index = index;
-        }
+        public BindingProxy? TargetProxy { get; set; }
 
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             try
             {
-                var format = value as string ?? "";
-                ExportFileNameFormat.Format(format, _source, _index, _parameter.Mode, _parameter.FileFormat);
+                if (TargetProxy?.Data is ExportFileNameRuleData data)
+                {
+                    var format = value as string ?? "";
+                    ExportFileNameFormat.Format(format, data.Source, data.Index, data.Parameter.Mode, data.Parameter.FileFormat);
+                }
                 return ValidationResult.ValidResult;
             }
             catch (Exception ex)
@@ -31,5 +26,20 @@ namespace NeeView
             }
         }
     }
+
+    public class ExportFileNameRuleData
+    {
+        public ExportFileNameRuleData(IExportImageParameter parameter, IExportPageSource source, int index)
+        {
+            Parameter = parameter;
+            Source = source;
+            Index = index;
+        }
+
+        public IExportImageParameter Parameter { get; }
+        public IExportPageSource Source { get; }
+        public int Index { get; } = 1;
+    }
+
 }
 

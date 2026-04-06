@@ -54,9 +54,9 @@ namespace NeeView
                 })
             }));
 
-            var fileNameFormatControl0 = ExportFileNameFormatControlFactory.CreateOriginalFileNameFormatControl(_parameter);
+            var fileNameFormatModel0 = new ExportFileNameFormatModel(_parameter, ProxyProperty.Create((ExportImageParameter)_parameter, e => e.FileNameFormat0), ExportFileNameFormat.CreateDummyFileNameSource(1, 1), ExportImageParameter.DefaultFileNameFormat0);
 
-            originalDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameFormat0), control: fileNameFormatControl0));
+            originalDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameFormat0), data: fileNameFormatModel0));
             originalDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.OverwriteMode), new PropertyMemberElementOptions() { EnumMap = overwriteMap }));
 
             var viewDocument = new PropertyDocument();
@@ -71,11 +71,11 @@ namespace NeeView
             }));
 
             var direction = source.PageFrameContent.ViewContentsDirection;
-            var fileNameFormatControl1 = ExportFileNameFormatControlFactory.CreateViewFileNameFormatControl(_parameter, 1, direction);
-            var fileNameFormatControl2 = ExportFileNameFormatControlFactory.CreateViewFileNameFormatControl(_parameter, 2, direction);
+            var fileNameFormatModel1 = new ExportFileNameFormatModel(_parameter, ProxyProperty.Create((ExportImageParameter)_parameter, e => e.FileNameFormat1), ExportFileNameFormat.CreateDummyFileNameSource(1, direction), ExportImageParameter.DefaultFileNameFormat1);
+            var fileNameFormatModel2 = new ExportFileNameFormatModel(_parameter, ProxyProperty.Create((ExportImageParameter)_parameter, e => e.FileNameFormat2), ExportFileNameFormat.CreateDummyFileNameSource(2, direction), ExportImageParameter.DefaultFileNameFormat2);
 
-            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameFormat1), control: fileNameFormatControl1));
-            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameFormat2), control: fileNameFormatControl2));
+            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameFormat1), data: fileNameFormatModel1));
+            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameFormat2), data: fileNameFormatModel2));
             viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.OverwriteMode), options: new() { EnumMap = overwriteMap }));
             viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.HasBackground)));
             viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.IsOriginalSize)));

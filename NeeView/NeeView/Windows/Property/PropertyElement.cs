@@ -82,13 +82,21 @@ namespace NeeView.Windows.Property
         private PropertyInfo _info;
 
 
-        public PropertyMemberElement(object source, PropertyInfo info, PropertyMemberAttribute attribute, PropertyMemberElementOptions options, FrameworkElement? control = null)
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="source">プロパティの所属インスタンス</param>
+        /// <param name="info">プロパティ情報</param>
+        /// <param name="attribute">PropertyMember属性</param>
+        /// <param name="options">オプション</param>
+        /// <param name="data">プロパティの代わりに表示するデータ</param>
+        public PropertyMemberElement(object source, PropertyInfo info, PropertyMemberAttribute attribute, PropertyMemberElementOptions options, object? data = null)
         {
             InitializeCommon(source, info, attribute, options);
 
-            if (control != null)
+            if (data != null)
             {
-                InitializeByControlOption(control);
+                InitializeByDataOption(data);
             }
             else
             {
@@ -165,9 +173,9 @@ namespace NeeView.Windows.Property
         }
 
         [MemberNotNull(nameof(TypeValue))]
-        private void InitializeByControlOption(FrameworkElement control)
+        private void InitializeByDataOption(object data)
         {
-            this.TypeValue = new PropertyValue_Control(this, control);
+            this.TypeValue = new PropertyValue_Data(this, data);
         }
 
         [MemberNotNull(nameof(TypeValue))]
@@ -418,21 +426,20 @@ namespace NeeView.Windows.Property
 
         public static PropertyMemberElement Create(object source, string name)
         {
-            return Create(source, name, PropertyMemberElementOptions.Default);
+            return Create(source, name, PropertyMemberElementOptions.Default, null);
         }
 
-        public static PropertyMemberElement Create(object source, string name, FrameworkElement? control)
+        public static PropertyMemberElement Create(object source, string name, object? data)
         {
-            return Create(source, name, PropertyMemberElementOptions.Default, control);
+            return Create(source, name, PropertyMemberElementOptions.Default, data);
         }
 
-        /// <summary>
-        /// オブジェクトとプロパティ名から PropertyMemberElement を作成する
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public static PropertyMemberElement Create(object source, string name, PropertyMemberElementOptions options, FrameworkElement? control = null)
+        public static PropertyMemberElement Create(object source, string name, PropertyMemberElementOptions options)
+        {
+            return Create(source, name, options, null);
+        }
+
+        public static PropertyMemberElement Create(object source, string name, PropertyMemberElementOptions options, object? data)
         {
             var info = source.GetType().GetProperty(name);
             if (info is null) throw new ArgumentException($"{source.GetType()} does not have the property '{name}'");
@@ -440,7 +447,7 @@ namespace NeeView.Windows.Property
             var attribute = GetPropertyMemberAttribute(info);
             if (attribute is null) throw new InvalidOperationException($"Need PropertyMemberAttribute at {source.GetType()}.{name}");
 
-            return new PropertyMemberElement(source, info, attribute, options, control);
+            return new PropertyMemberElement(source, info, attribute, options, data);
         }
 
         /// <summary>

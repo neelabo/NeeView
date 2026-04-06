@@ -1,37 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Windows.Data;
 
 namespace NeeView
 {
-    /// <summary>
-    /// ExportFileNameFormat をもとに、ファイル名の例を表示するための Converter
-    /// </summary>
     public class ExportFileNameConverter : IMultiValueConverter
     {
-        private readonly Func<string?, string> _validateFunc;
-
-
-        public ExportFileNameConverter()
-        {
-            _validateFunc = s => s ?? "";
-        }
-
-        public ExportFileNameConverter(Func<string?, string> validateFunc)
-        {
-            _validateFunc = validateFunc;
-        }
-
-
         public virtual object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             try
             {
-                var source = (IExportPageSource)parameter;
-                var format = GetValue<string>(values, 0);
-                var mode = GetValue<ExportImageMode>(values, 1);
-                var imageFormat = GetValue<BitmapImageFormat>(values, 2);
+                var source = GetValue<ExportFileNameConverterParameter>(values, 0);
+                var format = GetValue<string>(values, 1);
+                var mode = GetValue<ExportImageMode>(values, 2);
+                var imageFormat = GetValue<BitmapImageFormat>(values, 3);
 
                 if (string.IsNullOrEmpty(format))
                 {
@@ -40,7 +24,7 @@ namespace NeeView
                 else
                 {
                     var name = ExportFileNameFormat.Format(format, source, 1, mode, imageFormat);
-                    var result = "e.g. " + _validateFunc(name);
+                    var result = "e.g., " + source.ValidateFunc(name);
 
                     return result;
                 }
@@ -87,7 +71,6 @@ namespace NeeView
             return true;
         }
 
-
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
@@ -95,24 +78,24 @@ namespace NeeView
     }
 
 
-    /// <summary>
-    /// 不正なファイル名を修正する ExportFileNameConverter
-    /// </summary>
-    public class ExportValidateFileNameConverter : ExportFileNameConverter
+    public class ExportFileNameConverterParameter : IExportPageSource
     {
-        public ExportValidateFileNameConverter() : base(LoosePath.ValidFileName)
+        public ExportFileNameConverterParameter(IExportPageSource source, Func<string?, string>? validateFunc = null)
         {
+            BookAddress = source.BookAddress;
+            Direction = source.Direction;
+            Elements = source.Elements;
+            ValidateFunc = validateFunc ?? (s => s ?? "");
         }
+
+        public string BookAddress { get; }
+
+        public int Direction { get; }
+
+        public List<PageNameElement> Elements { get; }
+
+        public Func<string?, string> ValidateFunc { get; }
     }
 
-    /// <summary>
-    /// 不正なパス名を修正する ExportFileNameConverter
-    /// </summary>
-    public class ExportValidateFilePathConverter : ExportFileNameConverter
-    {
-        public ExportValidateFilePathConverter() : base(LoosePath.ValidPath)
-        {
-        }
-    }
 }
 

@@ -967,7 +967,7 @@ namespace NeeView
         [Conditional("DEBUG")]
         private static void Debug_Initialize()
         {
-            DebugGesture.Initialize();
+            DebugGesture.Initialize(App.Current.MainWindow);
         }
 
         #endregion

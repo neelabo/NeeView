@@ -12,9 +12,12 @@ namespace NeeView
     {
         private readonly ExportImageDialogViewModel? _vm;
 
+
         public ExportImageDialog()
         {
             InitializeComponent();
+
+            //DebugGesture.Initialize(this);
         }
 
         public ExportImageDialog(ExportImageDialogViewModel vm) : this()

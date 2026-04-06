@@ -4,24 +4,67 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NeeView"
+             xmlns:nw="clr-namespace:NeeView.Windows"
              xmlns:properties="clr-namespace:NeeView.Properties"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
-             d:DesignHeight="60" d:DesignWidth="200">
+             d:DesignHeight="60" d:DesignWidth="200" IsTabStop="False">
+    <UserControl.Resources>
+        <local:ExportFileNameConverter x:Key="ExportFileNameConverter"/>
+        <nw:BindingProxy x:Key="RuleData" Data="{Binding RuleData}" />
+    </UserControl.Resources>
 
-    <StackPanel Width="180">
-        <TextBox x:Name="FormatTextBox" d:Text="{}{Index:000}" />
+    <StackPanel Width="180" >
+
+        <TextBox x:Name="FormatTextBox" d:Text="{}{Index:000}">
+            <TextBox.Text>
+                <Binding Path="FileNameFormat" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <local:ExportFileNameRule TargetProxy="{StaticResource RuleData}"/>
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="LostFocus">
+                    <i:InvokeCommandAction Command="{Binding LostFocusCommand}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </TextBox>
+
         <DockPanel Margin="0,2,0,0">
+
             <ToggleButton x:Name="HelpButton" DockPanel.Dock="Right" Style="{StaticResource IconToggleButton}" Width="20" Height="20" VerticalAlignment="Top">
                 <Image Source="{StaticResource ic_help_24px}" Width="14" Height="14"/>
             </ToggleButton>
             <Popup Style="{StaticResource NVPopup}" IsOpen="{Binding ElementName=HelpButton, Path=IsChecked}" PlacementTarget="{Binding ElementName=HelpButton}" Placement="Right" VerticalOffset="-5"
                 d:IsOpen="True">
                 <ContentControl Style="{StaticResource NVPopupContent}">
-                    <local:XHtmlTextBlock x:Name="HelpTextBlock" Margin="10" MaxWidth="600" TextWrapping="Wrap" IsXHtml="True"
-                        d:Text="HelpText"/>
+                    <local:XHtmlTextBlock x:Name="HelpTextBlock" Text="{Binding HelpText}" Margin="10" MaxWidth="600" TextWrapping="Wrap" IsXHtml="True" />
                 </ContentControl>
             </Popup>
-            <TextBlock x:Name="NoteTextBlock" VerticalAlignment="Top" FontSize="{DynamicResource SystemFontSize}" Foreground="{DynamicResource Control.GrayText}" d:Text="e.g. 001.png"/>
+
+            <TextBlock x:Name="NoteTextBlock" VerticalAlignment="Top" FontSize="{DynamicResource SystemFontSize}" Foreground="{DynamicResource Control.GrayText}" d:Text="e.g. 001.png">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Text">
+                            <Setter.Value>
+                                <MultiBinding Converter="{StaticResource ExportFileNameConverter}">
+                                    <Binding Path="Source" Mode="OneTime"/>
+                                    <Binding Path="Text" ElementName="FormatTextBox"/>
+                                    <Binding Path="Parameter.Mode"/>
+                                    <Binding Path="Parameter.FileFormat"/>
+                                </MultiBinding>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=(Validation.HasError), ElementName=FormatTextBox}" Value="True">
+                                <Setter Property="Text" Value="{Binding Path=(Validation.Errors)/ErrorContent, ElementName=FormatTextBox}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
         </DockPanel>
     </StackPanel>
 </UserControl>

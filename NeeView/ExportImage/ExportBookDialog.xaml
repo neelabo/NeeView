@@ -48,6 +48,10 @@
                 <Setter Property="ColumnRate" Value="0.5"/>
             </Style>
 
+            <DataTemplate DataType="{x:Type local:ExportFileNameFormatModel}">
+                <local:ExportFileNameFormatControl />
+            </DataTemplate>
+
             <local:ExportBookTypeToSaveAsString x:Key="ExportBookTypeToSaveAsString"/>
 
         </ResourceDictionary>
