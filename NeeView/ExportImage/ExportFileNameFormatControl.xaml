@@ -39,7 +39,7 @@
             <Popup Style="{StaticResource NVPopup}" IsOpen="{Binding ElementName=HelpButton, Path=IsChecked}" PlacementTarget="{Binding ElementName=HelpButton}" Placement="Right" VerticalOffset="-5"
                 d:IsOpen="True">
                 <ContentControl Style="{StaticResource NVPopupContent}">
-                    <local:XHtmlTextBlock x:Name="HelpTextBlock" Text="{Binding HelpText}" Margin="10" MaxWidth="600" TextWrapping="Wrap" IsXHtml="True" />
+                    <local:XHtmlTextBlock x:Name="HelpTextBlock" Source="{Binding HelpText}" IsXHtml="True" Margin="10" MaxWidth="600" TextWrapping="Wrap" />
                 </ContentControl>
             </Popup>
 

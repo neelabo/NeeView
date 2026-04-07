@@ -1,49 +1,41 @@
 ﻿using NeeLaboratory.ComponentModel;
-using System;
-using System.Collections.Generic;
+using NeeView.PageFrames;
 using System.Linq;
 
 namespace NeeView
 {
     public class TitleString : BindableBase
     {
-        private readonly TitleStringService _titleStringService;
-        private string _format = "";
-        private List<string> _keys = new();
         private string _title = "";
+        private string _format = "";
+        private TitleFormatSource _formatSource = new();
+        private TitleStringChangedAction _changedAction = TitleStringChangedAction.None;
 
-        private readonly List<string> _keywords = new()
-        {
-            "$Book",
-            "$PageMax",
-            "$Page",
-            "$PageL",
-            "$PageR",
-            "$FullPath",
-            "$FullPathL",
-            "$FullPathR",
-            "$FullName",
-            "$FullNameL",
-            "$FullNameR",
-            "$Name",
-            "$NameL",
-            "$NameR",
-            "$SizeEx",
-            "$SizeExL",
-            "$SizeExR",
-            "$Size",
-            "$SizeL",
-            "$SizeR",
-            "$ViewScale",
-            "$Scale",
-            "$ScaleL",
-            "$ScaleR",
-        };
 
-        public TitleString(TitleStringService titleStringService)
+        public TitleString()
         {
-            _titleStringService = titleStringService;
-            _titleStringService.Changed += TitleStringService_Changed;
+            var presenter = MainViewComponent.Current.PageFrameBoxPresenter;
+
+            presenter.ViewContentChanged += (s, e) =>
+            {
+                if (AppState.Instance.IsProcessingBook) return;
+                if (e.Action < ViewContentChangedAction.ContentLoading) return;
+
+                UpdateTitle(TitleStringChangedAction.ViewContentChanged);
+            };
+
+            presenter.TransformChanged += (s, e) =>
+            {
+                if (e.Action == PageFrames.TransformAction.Scale)
+                {
+                    UpdateTitle(TitleStringChangedAction.ScaleChanged);
+                }
+            };
+
+            presenter.StretchChanged += (s, e) =>
+            {
+                UpdateTitle(TitleStringChangedAction.StretchChanged);
+            };
         }
 
 
@@ -54,25 +46,34 @@ namespace NeeView
         }
 
 
-        private void TitleStringService_Changed(object? sender, EventArgs e)
+        public void SetFormat(string format)
         {
+            if (_format == format) return;
+
+            _format = format;
+
+            _formatSource = TitleStringFormatter.CreateFormatSource(_format);
+
+            _changedAction = _formatSource.Words
+                .Select(e => e.FormatInfo?.ChangedAction ?? TitleStringChangedAction.None)
+                .Aggregate(TitleStringChangedAction.FormatChanged, (a, b) => a | b);
+
             UpdateTitle();
         }
 
-        public void SetFormat(string format)
+
+        private void UpdateTitle(TitleStringChangedAction action)
         {
-            if (_format != format)
+            if ((_changedAction | action) != 0)
             {
-                _format = format;
-                _keys = _keywords.Where(e => format.Contains(e, StringComparison.Ordinal)).ToList();
                 UpdateTitle();
             }
         }
 
         public void UpdateTitle()
         {
-            Title = _titleStringService.Replace(_format, _keys);
+            var titleSource = new TitleSource(BookHub.Current.GetCurrentBook(), MainViewComponent.Current);
+            Title = TitleStringFormatter.Format(_formatSource, titleSource);
         }
     }
-
 }

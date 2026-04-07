@@ -650,9 +650,10 @@ namespace NeeView.Setting
 
         protected override UIElement CreateContentInner()
         {
-            var textBlock = new TextBlock()
+            var textBlock = new XHtmlTextBlock()
             {
-                Text = _text,
+                Source = _text,
+                IsXHtml = true,
                 Padding = new Thickness(20),
             };
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace NeeView
@@ -19,7 +20,7 @@ namespace NeeView
         /// </returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="FormatException"></exception>
-        public static (List<string> Words, string NewFormat) Parse(string format)
+        public static ParsedStringFormat Parse(string format)
         {
             if (format is null) throw new ArgumentNullException(nameof(format));
 
@@ -78,8 +79,25 @@ namespace NeeView
                 i++;
             }
 
-            return (words, sb.ToString());
+            return new(sb.ToString(), words);
         }
+    }
+
+
+    public class ParsedStringFormat
+    {
+        public ParsedStringFormat() : this("", [])
+        {
+        }
+
+        public ParsedStringFormat(string newFormat, IEnumerable<string> words)
+        {
+            Format = newFormat;
+            Words = [.. words];
+        }
+
+        public string Format { get; }
+        public List<string> Words { get; }
     }
 }
 

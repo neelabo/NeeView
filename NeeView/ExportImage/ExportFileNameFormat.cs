@@ -48,11 +48,11 @@ namespace NeeView
 
         public static string Format(string format, IExportPageSource _source, int index)
         {
-            var (words, newFormat) = StringFormatParser.Parse(format);
+            var result = StringFormatParser.Parse(format);
 
             List<object?> args = new();
 
-            foreach (var w in words)
+            foreach (var w in result.Words)
             {
                 var tokens = w.Split(':', 2);
 
@@ -96,7 +96,7 @@ namespace NeeView
                 }
             }
 
-            return string.Format(newFormat, args.ToArray());
+            return string.Format(result.Format, args.ToArray());
         }
 
         private static string GetSuffix(string value, string key)

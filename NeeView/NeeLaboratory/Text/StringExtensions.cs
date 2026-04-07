@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -96,6 +97,36 @@ namespace NeeLaboratory.Text
         public static string NewLineToSpace(this string s)
         {
             return _newLineRegex.Replace(s, " ");
+        }
+
+        /// <summary>
+        /// "\a" のような文字列を、エスケープされているかどうかを含めて列挙する
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static IEnumerable<EscapedChar> EscapeStringWalker(this string s)
+        {
+            bool isEscaped = false;
+            foreach (var c in s)
+            {
+                if (c == '\\' && !isEscaped)
+                {
+                    isEscaped = true;
+                    continue;
+                }
+                yield return new(c, isEscaped);
+                isEscaped = false;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 文字と、その文字がエスケープされているかどうかを表す構造体
+    /// </summary>
+    public readonly record struct EscapedChar(char Char, bool IsEscaped)
+    {
+        public EscapedChar(char c) : this(c, false)
+        {
         }
     }
 }

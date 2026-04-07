@@ -20,7 +20,6 @@ namespace NeeView
 
         private readonly BookHub _bookHub;
         private readonly PageFrameBoxPresenter _presenter;
-        private readonly TitleStringService _titleStringService;
         private readonly TitleString _titleString;
 
 
@@ -28,9 +27,8 @@ namespace NeeView
         {
             _bookHub = BookHub.Current;
             _presenter = MainViewComponent.Current.PageFrameBoxPresenter;
-            _titleStringService = TitleStringService.Default;
 
-            _titleString = new TitleString(_titleStringService);
+            _titleString = new TitleString();
             _titleString.AddPropertyChanged(nameof(TitleString.Title), TitleString_TitleChanged);
 
             _presenter.ViewContentChanged += (s, e) =>

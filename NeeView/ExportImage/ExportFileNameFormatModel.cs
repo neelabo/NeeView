@@ -74,8 +74,7 @@ namespace NeeView
         private string GetHelpText()
         {
             var sb = new StringBuilder();
-            sb.AppendLine(TextResources.GetString("ExportFileNameFormat.Note.Basic"));
-            sb.AppendLine("e.g., {Index:000} → 001,002,...");
+            sb.AppendLine(Bold(TextResources.GetString("StringFormat.Note.Basic")));
             sb.AppendLine();
             sb.AppendLine(GetHelpWordText(ExportFileNameFormat.BookKey));
             sb.AppendLine(GetHelpWordText(ExportFileNameFormat.NameKey));
@@ -83,25 +82,33 @@ namespace NeeView
             sb.AppendLine(GetHelpWordText(ExportFileNameFormat.PageKey));
             sb.AppendLine(GetHelpWordText(ExportFileNameFormat.IndexKey));
             sb.AppendLine();
-            sb.AppendLine(TextResources.GetString("ExportFileNameFormat.Note.TwoPages"));
-            sb.AppendLine("e.g., {Book}_{Page1}-{Page2}");
+            sb.AppendLine("e.g., {Index:000} → 012");
+            sb.AppendLine();
+            sb.AppendLine(Bold(TextResources.GetString("StringFormat.Note.Suffix")));
             sb.AppendLine();
             sb.AppendLine(GetHelpSuffixText("1"));
             sb.AppendLine(GetHelpSuffixText("2"));
             sb.AppendLine(GetHelpSuffixText("L"));
-            sb.Append(GetHelpSuffixText("R"));
+            sb.AppendLine(GetHelpSuffixText("R"));
+            sb.AppendLine();
+            sb.AppendLine("e.g., {Book}_{Page1}-{Page2}");
 
             return sb.ToString();
         }
 
+        private static string Bold(string s)
+        {
+            return "<b>" + s + "</b>";
+        }
+
         private string GetHelpWordText(string word)
         {
-            return $"- {word} ... {TextResources.GetString("ExportFileNameFormat." + word)}";
+            return $"- {word} ... {TextResources.GetString("StringFormat." + word)}";
         }
 
         private string GetHelpSuffixText(string suffix)
         {
-            return $"- {suffix} ... {TextResources.GetString("ExportFileNameFormat.Suffix" + suffix)}";
+            return $"- {suffix} ... {TextResources.GetString("StringFormat.Suffix." + suffix)}";
         }
     }
 }

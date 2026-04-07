@@ -7,9 +7,9 @@ namespace NeeView
     [Equatable(IgnoreInheritedMembers = true)]
     public partial class WindowTitleConfig : BindableBase
     {
-        private const string WindowTitleFormat1Default = "$Book ($Page / $PageMax) - $FullName";
-        private const string WindowTitleFormat2Default = "$Book ($Page / $PageMax) - $FullNameL | $NameR";
-        private const string WindowTitleFormatMediaDefault = "$Book";
+        private const string WindowTitleFormat1Default = "{Book} ({Page}{PagePart: (#)} / {PageMax}) - {EntryPath:/ > }";
+        private const string WindowTitleFormat2Default = "{Book} ({Page}{PagePart: (#)} / {PageMax}) - {EntryPathL:/ > } | {NameR}";
+        private const string WindowTitleFormatMediaDefault = "{Book}";
         private string? _windowTitleFormat1;
         private string? _windowTitleFormat2;
         private string? _windowTitleFormatMedia;

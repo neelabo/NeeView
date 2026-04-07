@@ -225,6 +225,14 @@ namespace NeeView
             // ver 46.0
             if (self.Format.CompareTo(new FormatVersion(Environment.SolutionName, VersionNumber.Ver46_Alpha1)) <= 0)
             {
+                self.Config.WindowTitle.WindowTitleFormat1 = TitleStringValidator.ValidateVersion46(self.Config.WindowTitle.WindowTitleFormat1);
+                self.Config.WindowTitle.WindowTitleFormat2 = TitleStringValidator.ValidateVersion46(self.Config.WindowTitle.WindowTitleFormat2);
+                self.Config.WindowTitle.WindowTitleFormatMedia = TitleStringValidator.ValidateVersion46(self.Config.WindowTitle.WindowTitleFormatMedia);
+
+                self.Config.PageTitle.PageTitleFormat1 = TitleStringValidator.ValidateVersion46(self.Config.PageTitle.PageTitleFormat1);
+                self.Config.PageTitle.PageTitleFormat2 = TitleStringValidator.ValidateVersion46(self.Config.PageTitle.PageTitleFormat2);
+                self.Config.PageTitle.PageTitleFormatMedia = TitleStringValidator.ValidateVersion46(self.Config.PageTitle.PageTitleFormatMedia);
+
                 if (self.Commands != null)
                 {
                     if (self.Commands.TryGetValue("ExportImageAs", out var command))
