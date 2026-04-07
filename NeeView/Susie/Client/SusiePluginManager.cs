@@ -509,6 +509,8 @@ namespace NeeView
         public void RestoreSusiePluginCollection(SusiePluginCollection? memento)
         {
             if (memento == null) return;
+
+            CloseSusiePluginCollection();
             this.UnauthorizedPlugins = memento.Select(e => e.Value.ToSusiePluginInfo(e.Key)).ToList();
 
             if (_isInitialized)
