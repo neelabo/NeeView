@@ -4,15 +4,16 @@ using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class WindowTitleConfig : BindableBase
     {
         private const string WindowTitleFormat1Default = "{Book} ({Page}{Part: (#)} / {PageMax}) - {EntryPath:/ > }";
         private const string WindowTitleFormat2Default = "{Book} ({Page}{Part: (#)} / {PageMax}) - {EntryPathL:/ > } | {NameR}";
         private const string WindowTitleFormatMediaDefault = "{Book}";
-        private string? _windowTitleFormat1;
-        private string? _windowTitleFormat2;
-        private string? _windowTitleFormatMedia;
+
+        [DefaultEquality] private string? _windowTitleFormat1;
+        [DefaultEquality] private string? _windowTitleFormat2;
+        [DefaultEquality] private string? _windowTitleFormatMedia;
 
 
         /// <summary>

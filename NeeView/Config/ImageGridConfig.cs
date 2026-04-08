@@ -6,15 +6,15 @@ using System.Windows.Media;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class ImageGridConfig : BindableBase
     {
-        private bool _isEnabled;
-        private Color _color = Color.FromArgb(0x80, 0x80, 0x80, 0x80);
-        private int _divX = 8;
-        private int _divY = 8;
-        private bool _isSquare;
-        private ImageGridTarget _target;
+        [DefaultEquality] private bool _isEnabled;
+        [DefaultEquality] private Color _color = Color.FromArgb(0x80, 0x80, 0x80, 0x80);
+        [DefaultEquality] private int _divX = 8;
+        [DefaultEquality] private int _divY = 8;
+        [DefaultEquality] private bool _isSquare;
+        [DefaultEquality] private ImageGridTarget _target;
 
 
         [PropertyMember(IsVisible = false)]

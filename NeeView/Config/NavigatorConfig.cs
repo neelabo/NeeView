@@ -4,12 +4,12 @@ using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class NavigatorConfig : BindableBase
     {
-        private bool _isVisibleThumbnail;
-        private double _thumbnailHeight = 256.0;
-        private bool _isVisibleControlBar;
+        [DefaultEquality] private bool _isVisibleThumbnail;
+        [DefaultEquality] private double _thumbnailHeight = 256.0;
+        [DefaultEquality] private bool _isVisibleControlBar;
 
         [PropertyMember]
         public bool IsVisibleThumbnail

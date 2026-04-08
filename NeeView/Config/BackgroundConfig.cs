@@ -5,13 +5,13 @@ using System.Windows.Media;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class BackgroundConfig : BindableBase
     {
-        private BackgroundType _backgroundType = BackgroundType.Black;
-        private BrushSource _customBackground = new();
-        private Color _pageBackgroundColor = Colors.Transparent;
-        private bool _isPageBackgroundChecker;
+        [DefaultEquality] private BackgroundType _backgroundType = BackgroundType.Black;
+        [DefaultEquality] private BrushSource _customBackground = new();
+        [DefaultEquality] private Color _pageBackgroundColor = Colors.Transparent;
+        [DefaultEquality] private bool _isPageBackgroundChecker;
 
 
         [PropertyMember]

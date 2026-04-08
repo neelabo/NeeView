@@ -5,7 +5,7 @@ using System.Windows.Media.Effects;
 
 namespace NeeView.Effects
 {
-    [Equatable(Explicit =true)]
+    [Equatable(Explicit = true)]
     public partial class BlurEffectUnit : EffectUnit
     {
         [DefaultEquality] private double _radius = 5.0;

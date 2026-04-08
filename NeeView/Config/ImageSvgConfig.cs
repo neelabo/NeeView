@@ -4,14 +4,13 @@ using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class ImageSvgConfig : BindableBase
     {
         public static FileTypeCollection DefaultSupportFileTypes { get; } = new FileTypeCollection(".svg");
 
-
-        private bool _isEnabled = true;
-        private FileTypeCollection _supportFileTypes = (FileTypeCollection)DefaultSupportFileTypes.Clone();
+        [DefaultEquality] private bool _isEnabled = true;
+        [DefaultEquality] private FileTypeCollection _supportFileTypes = (FileTypeCollection)DefaultSupportFileTypes.Clone();
 
         // support SVG
         [PropertyMember]

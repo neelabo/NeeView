@@ -4,16 +4,16 @@ using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class ZipArchiveConfig : BindableBase
     {
         public static FileTypeCollection DefaultSupportFileTypes { get; } = new FileTypeCollection(".zip");
 
 
-        private bool _isEnabled = true;
-        private FileTypeCollection _supportFileTypes = (FileTypeCollection)DefaultSupportFileTypes.Clone();
-        private bool _isWriteAccessEnabled = false;
-        private ZipEncoding _encoding = ZipEncoding.Local;
+        [DefaultEquality] private bool _isEnabled = true;
+        [DefaultEquality] private FileTypeCollection _supportFileTypes = (FileTypeCollection)DefaultSupportFileTypes.Clone();
+        [DefaultEquality] private bool _isWriteAccessEnabled = false;
+        [DefaultEquality] private ZipEncoding _encoding = ZipEncoding.Local;
 
 
         [PropertyMember]

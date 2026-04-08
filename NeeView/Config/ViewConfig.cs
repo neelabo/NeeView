@@ -6,36 +6,36 @@ using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class ViewConfig : BindableBaseFull
     {
-        private PageStretchMode _stretchMode = PageStretchMode.Uniform;
-        private PageStretchMode _validStretchMode = PageStretchMode.Uniform;
-        private bool _allowStretchScaleUp = true;
-        private bool _allowStretchScaleDown = true;
-        private bool _allowFileContentAutoRotate;
-        private bool _isLimitMove = true;
-        private bool _isMoveLockStart = true;
-        private DragControlCenter _rotateCenter;
-        private DragControlCenter _scaleCenter;
-        private DragControlCenter _flipCenter;
-        private bool _isScaleStretchTracking;
-        private bool _isKeepScale;
-        private bool _isKeepAngle;
-        private bool _isKeepFlip;
-        private ViewHorizontalOrigin _viewHorizontalOrigin = ViewHorizontalOrigin.CenterOrDirectionDependent;
-        private ViewVerticalOrigin _viewVerticalOrigin = ViewVerticalOrigin.CenterOrDirectionDependent;
-        private double _angleFrequency = 0;
-        private bool _isBaseScaleEnabled = true;
-        private bool _isRotateStretchEnabled = true;
-        private double _mainViewMargin;
-        private bool _isKeepScaleBooks;
-        private bool _isKeepAngleBooks;
-        private bool _isKeepFlipBooks;
-        private bool _isKeepPageTransform;
-        private double _scrollDuration = 0.2;
-        private double _pageMoveDuration = 0.0;
-        private AutoRotatePolicy _autoRotatePolicy = AutoRotatePolicy.FitToViewArea;
+        [DefaultEquality] private PageStretchMode _stretchMode = PageStretchMode.Uniform;
+        [DefaultEquality] private PageStretchMode _validStretchMode = PageStretchMode.Uniform;
+        [DefaultEquality] private bool _allowStretchScaleUp = true;
+        [DefaultEquality] private bool _allowStretchScaleDown = true;
+        [DefaultEquality] private bool _allowFileContentAutoRotate;
+        [DefaultEquality] private bool _isLimitMove = true;
+        [DefaultEquality] private bool _isMoveLockStart = true;
+        [DefaultEquality] private DragControlCenter _rotateCenter;
+        [DefaultEquality] private DragControlCenter _scaleCenter;
+        [DefaultEquality] private DragControlCenter _flipCenter;
+        [DefaultEquality] private bool _isScaleStretchTracking;
+        [DefaultEquality] private bool _isKeepScale;
+        [DefaultEquality] private bool _isKeepAngle;
+        [DefaultEquality] private bool _isKeepFlip;
+        [DefaultEquality] private ViewHorizontalOrigin _viewHorizontalOrigin = ViewHorizontalOrigin.CenterOrDirectionDependent;
+        [DefaultEquality] private ViewVerticalOrigin _viewVerticalOrigin = ViewVerticalOrigin.CenterOrDirectionDependent;
+        [DefaultEquality] private double _angleFrequency = 0;
+        [DefaultEquality] private bool _isBaseScaleEnabled = true;
+        [DefaultEquality] private bool _isRotateStretchEnabled = true;
+        [DefaultEquality] private double _mainViewMargin;
+        [DefaultEquality] private bool _isKeepScaleBooks;
+        [DefaultEquality] private bool _isKeepAngleBooks;
+        [DefaultEquality] private bool _isKeepFlipBooks;
+        [DefaultEquality] private bool _isKeepPageTransform;
+        [DefaultEquality] private double _scrollDuration = 0.2;
+        [DefaultEquality] private double _pageMoveDuration = 0.0;
+        [DefaultEquality] private AutoRotatePolicy _autoRotatePolicy = AutoRotatePolicy.FitToViewArea;
 
         [IgnoreEquality]
         private BookSettingConfig? _bookSetting;

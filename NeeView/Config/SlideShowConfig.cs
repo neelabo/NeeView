@@ -5,14 +5,14 @@ using System;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class SlideShowConfig : BindableBase
     {
-        private double _slideShowInterval = 5.0;
-        private bool _isCancelSlideByMouseMove = true;
-        private bool _isSlideShowByLoop = true;
-        private bool _isTimerVisible;
-        private bool _isPrioritizeTime;
+        [DefaultEquality] private double _slideShowInterval = 5.0;
+        [DefaultEquality] private bool _isCancelSlideByMouseMove = true;
+        [DefaultEquality] private bool _isSlideShowByLoop = true;
+        [DefaultEquality] private bool _isTimerVisible;
+        [DefaultEquality] private bool _isPrioritizeTime;
 
         /// <summary>
         /// スライドショーの表示間隔(秒)

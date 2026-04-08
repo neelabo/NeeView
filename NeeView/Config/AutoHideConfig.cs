@@ -7,17 +7,17 @@ using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class AutoHideConfig : BindableBase
     {
-        private double _autoHideDelayTime = 1.0;
-        private double _autoHideDelayVisibleTime = 0.0;
-        private AutoHideFocusLockMode _autoHideFocusLockMode = AutoHideFocusLockMode.LogicalTextBoxFocusLock;
-        private bool _isAutoHideKeyDownDelay = true;
-        private double _autoHideHitTestHorizontalMargin = 32.0;
-        private double _autoHideHitTestVerticalMargin = 32.0;
-        private AutoHideConflictMode _autoHideConflictTopMargin = AutoHideConflictMode.AllowPixel;
-        private AutoHideConflictMode _autoHideConflictBottomMargin = AutoHideConflictMode.Allow;
+        [DefaultEquality] private double _autoHideDelayTime = 1.0;
+        [DefaultEquality] private double _autoHideDelayVisibleTime = 0.0;
+        [DefaultEquality] private AutoHideFocusLockMode _autoHideFocusLockMode = AutoHideFocusLockMode.LogicalTextBoxFocusLock;
+        [DefaultEquality] private bool _isAutoHideKeyDownDelay = true;
+        [DefaultEquality] private double _autoHideHitTestHorizontalMargin = 32.0;
+        [DefaultEquality] private double _autoHideHitTestVerticalMargin = 32.0;
+        [DefaultEquality] private AutoHideConflictMode _autoHideConflictTopMargin = AutoHideConflictMode.AllowPixel;
+        [DefaultEquality] private AutoHideConflictMode _autoHideConflictBottomMargin = AutoHideConflictMode.Allow;
 
         // パネルやメニューが自動的に消えるまでの時間(秒)
         [PropertyMember(HasDecimalPoint = true)]

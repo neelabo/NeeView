@@ -9,13 +9,13 @@ namespace NeeView
     /// <summary>
     /// Resize filter (PhotoSauce.MagicScaler)
     /// </summary>
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class ImageResizeFilterConfig : BindableBase
     {
-        private bool _isResizeFilterEnabled = false;
-        private ResizeInterpolation _resizeInterpolation = ResizeInterpolation.Lanczos;
-        private bool _isUnsharpMaskEnabled;
-        private UnsharpMaskConfig _unsharpMask;
+        [DefaultEquality] private bool _isResizeFilterEnabled = false;
+        [DefaultEquality] private ResizeInterpolation _resizeInterpolation = ResizeInterpolation.Lanczos;
+        [DefaultEquality] private bool _isUnsharpMaskEnabled;
+        [DefaultEquality] private UnsharpMaskConfig _unsharpMask;
 
         public ImageResizeFilterConfig()
         {

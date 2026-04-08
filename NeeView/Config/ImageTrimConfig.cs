@@ -5,16 +5,16 @@ using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class ImageTrimConfig : BindableBase
     {
         private const double _maxRate = 0.9;
 
-        private bool _isEnabled;
-        private double _top;
-        private double _bottom;
-        private double _left;
-        private double _right;
+        [DefaultEquality] private bool _isEnabled;
+        [DefaultEquality] private double _top;
+        [DefaultEquality] private double _bottom;
+        [DefaultEquality] private double _left;
+        [DefaultEquality] private double _right;
 
 
         [PropertyMember(IsVisible = false)]

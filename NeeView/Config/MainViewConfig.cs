@@ -6,19 +6,19 @@ using System.Windows;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class MainViewConfig : BindableBase
     {
-        private bool _isFloating;
-        private bool _isTopmost;
-        private bool _isFrontAsPossible;
-        private bool _isHideTitleBar;
-        private bool _isAutoStretch;
-        private bool _isAutoHide = true;
-        private bool _isAutoShow = true;
-        private Size _referenceSize;
-        private AlternativeContent _alternativeContent = AlternativeContent.PageList;
-        private bool _isFloatingEndWhenClosed;
+        [DefaultEquality] private bool _isFloating;
+        [DefaultEquality] private bool _isTopmost;
+        [DefaultEquality] private bool _isFrontAsPossible;
+        [DefaultEquality] private bool _isHideTitleBar;
+        [DefaultEquality] private bool _isAutoStretch;
+        [DefaultEquality] private bool _isAutoHide = true;
+        [DefaultEquality] private bool _isAutoShow = true;
+        [DefaultEquality] private Size _referenceSize;
+        [DefaultEquality] private AlternativeContent _alternativeContent = AlternativeContent.PageList;
+        [DefaultEquality] private bool _isFloatingEndWhenClosed;
 
 
         /// <summary>

@@ -6,16 +6,16 @@ using System.Windows;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class PdfArchiveConfig : BindableBase
     {
         public static bool IsPdfArchiveSupported => GetPdfRenderer() == PdfRenderer.Pdfium || Windows10Tools.IsWindows10_OrGreater(10240);
 
         public static FileTypeCollection DefaultSupportFileTypes { get; } = new FileTypeCollection(".pdf");
 
-        private bool _isEnabled = true;
-        private Size _renderSize = new(1920, 1080);
-        private FileTypeCollection _supportFileTypes = (FileTypeCollection)DefaultSupportFileTypes.Clone();
+        [DefaultEquality] private bool _isEnabled = true;
+        [DefaultEquality] private Size _renderSize = new(1920, 1080);
+        [DefaultEquality] private FileTypeCollection _supportFileTypes = (FileTypeCollection)DefaultSupportFileTypes.Clone();
 
 
         [PropertyMember]

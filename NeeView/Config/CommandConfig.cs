@@ -4,14 +4,14 @@ using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class CommandConfig : BindableBase
     {
-        private bool _isAccessKeyEnabled = true;
-        private bool _isReversePageMove = true;
-        private bool _isReversePageMoveWheel;
-        private bool _isReversePageMoveHorizontalWheel = true;
-        private bool _isHorizontalWheelLimitedOnce = true;
+        [DefaultEquality] private bool _isAccessKeyEnabled = true;
+        [DefaultEquality] private bool _isReversePageMove = true;
+        [DefaultEquality] private bool _isReversePageMoveWheel;
+        [DefaultEquality] private bool _isReversePageMoveHorizontalWheel = true;
+        [DefaultEquality] private bool _isHorizontalWheelLimitedOnce = true;
 
         [PropertyMember]
         public bool IsAccessKeyEnabled

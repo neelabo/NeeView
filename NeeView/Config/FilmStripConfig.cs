@@ -6,18 +6,18 @@ using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class FilmStripConfig : BindableBase
     {
-        private bool _isEnabled;
-        private bool _isHideFilmStrip;
-        private double _imageWidth = 96.0;
-        private bool _isVisibleNumber;
-        private bool _isSelectedCenter;
-        private bool _isManipulationBoundaryFeedbackEnabled = true;
-        private bool _isVisiblePlaylistMark;
-        private bool _isWheelMovePage;
-        private bool _isDetailPopupEnabled = true;
+        [DefaultEquality] private bool _isEnabled;
+        [DefaultEquality] private bool _isHideFilmStrip;
+        [DefaultEquality] private double _imageWidth = 96.0;
+        [DefaultEquality] private bool _isVisibleNumber;
+        [DefaultEquality] private bool _isSelectedCenter;
+        [DefaultEquality] private bool _isManipulationBoundaryFeedbackEnabled = true;
+        [DefaultEquality] private bool _isVisiblePlaylistMark;
+        [DefaultEquality] private bool _isWheelMovePage;
+        [DefaultEquality] private bool _isDetailPopupEnabled = true;
 
 
         /// <summary>

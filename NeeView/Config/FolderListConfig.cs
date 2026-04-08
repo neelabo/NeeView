@@ -4,12 +4,12 @@ using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class FolderListConfig : BindableBase, IHasPanelListItemStyle
     {
-        private FolderTreeLayout _folderTreeLayout = FolderTreeLayout.Left;
-        private bool _isFolderTreeVisible = false;
-        private PanelListItemStyle _panelListItemStyle = PanelListItemStyle.Content;
+        [DefaultEquality] private FolderTreeLayout _folderTreeLayout = FolderTreeLayout.Left;
+        [DefaultEquality] private bool _isFolderTreeVisible = false;
+        [DefaultEquality] private PanelListItemStyle _panelListItemStyle = PanelListItemStyle.Content;
 
         /// <summary>
         /// リスト項目のスタイル
@@ -48,12 +48,14 @@ namespace NeeView
         /// フォルダーツリーエリアの幅
         /// </summary>
         [PropertyMapIgnore]
+        [DefaultEquality] 
         public double FolderTreeAreaWidth { get; set { field = AppMath.Round(value); } } = 128.0;
 
         /// <summary>
         /// フォルダーツリーエリアの高さ
         /// </summary>
         [PropertyMapIgnore]
+        [DefaultEquality] 
         public double FolderTreeAreaHeight { get; set { field = AppMath.Round(value); } } = 72.0;
 
         #endregion

@@ -14,41 +14,41 @@ using System.Windows.Media;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class BookConfig : BindableBase
     {
         public static StringCollection DefaultExcludeRegexes { get; } = new StringCollection("^__MACOSX$;^\\.DS_Store$");
 
-        private double _wideRatio = 1.0;
-        private StringCollection _excludeRegexes = (StringCollection)DefaultExcludeRegexes.Clone();
-        private PageEndAction _pageEndAction;
-        private bool _resetNextBookPage = true;
-        private bool _isPrioritizeBookMove = false;
-        private bool _isPrioritizePageMove = true;
-        private bool _isReadyToPageMove;
-        private bool _isNotifyPageLoop;
-        private bool _isConfirmRecursive;
-        private double _contentSpace = -1.0;
-        private double _frameSpace = -1.0;
-        private string? _terminalSound;
-        private bool _isAutoRecursive = false;
-        private FolderSortOrder _folderSortOrder = FolderSortOrder.First;
-        private bool _resetPageWhenRandomSort;
-        private bool _isInsertDummyPage;
-        private bool _isInsertDummyFirstPage = false;
-        private bool _isInsertDummyLastPage = true;
-        private Color _dummyPageColor = Colors.White;
-        private bool _isPanorama;
-        private PageFrameOrientation _orientation = PageFrameOrientation.Horizontal;
-        private double _dividePageRate = 0.5;
-        private bool _isStaticWidePage;
-        private WidePageStretch _widePageStretch = WidePageStretch.UniformHeight;
-        private WidePageVerticalAlignment _widePageVerticalAlignment = WidePageVerticalAlignment.Center;
-        private Color _loadingPageColor = Color.FromRgb(0xE0, 0xE0, 0xE0);
-        private string _bookThumbnailFileName = "folder.jpg";
-        private int _bookThumbnailDepth = 2;
-        private ExportImageParameter _exportImageParameter = new();
-        private ExportBookParameter _exportBookParameter = new();
+        [DefaultEquality] private double _wideRatio = 1.0;
+        [DefaultEquality] private StringCollection _excludeRegexes = (StringCollection)DefaultExcludeRegexes.Clone();
+        [DefaultEquality] private PageEndAction _pageEndAction;
+        [DefaultEquality] private bool _resetNextBookPage = true;
+        [DefaultEquality] private bool _isPrioritizeBookMove = false;
+        [DefaultEquality] private bool _isPrioritizePageMove = true;
+        [DefaultEquality] private bool _isReadyToPageMove;
+        [DefaultEquality] private bool _isNotifyPageLoop;
+        [DefaultEquality] private bool _isConfirmRecursive;
+        [DefaultEquality] private double _contentSpace = -1.0;
+        [DefaultEquality] private double _frameSpace = -1.0;
+        [DefaultEquality] private string? _terminalSound;
+        [DefaultEquality] private bool _isAutoRecursive = false;
+        [DefaultEquality] private FolderSortOrder _folderSortOrder = FolderSortOrder.First;
+        [DefaultEquality] private bool _resetPageWhenRandomSort;
+        [DefaultEquality] private bool _isInsertDummyPage;
+        [DefaultEquality] private bool _isInsertDummyFirstPage = false;
+        [DefaultEquality] private bool _isInsertDummyLastPage = true;
+        [DefaultEquality] private Color _dummyPageColor = Colors.White;
+        [DefaultEquality] private bool _isPanorama;
+        [DefaultEquality] private PageFrameOrientation _orientation = PageFrameOrientation.Horizontal;
+        [DefaultEquality] private double _dividePageRate = 0.5;
+        [DefaultEquality] private bool _isStaticWidePage;
+        [DefaultEquality] private WidePageStretch _widePageStretch = WidePageStretch.UniformHeight;
+        [DefaultEquality] private WidePageVerticalAlignment _widePageVerticalAlignment = WidePageVerticalAlignment.Center;
+        [DefaultEquality] private Color _loadingPageColor = Color.FromRgb(0xE0, 0xE0, 0xE0);
+        [DefaultEquality] private string _bookThumbnailFileName = "folder.jpg";
+        [DefaultEquality] private int _bookThumbnailDepth = 2;
+        [DefaultEquality] private ExportImageParameter _exportImageParameter = new();
+        [DefaultEquality] private ExportBookParameter _exportBookParameter = new();
 
         [IgnoreEquality]
         private readonly RegexCollectionCache _excludeRegexCache = new();

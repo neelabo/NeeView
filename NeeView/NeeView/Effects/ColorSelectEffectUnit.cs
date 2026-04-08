@@ -5,7 +5,7 @@ using System.Windows.Media.Effects;
 
 namespace NeeView.Effects
 {
-    [Equatable(Explicit =true)]
+    [Equatable(Explicit = true)]
     public partial class ColorSelectEffectUnit : EffectUnit
     {
         [DefaultEquality] private double _hue = 15.0;

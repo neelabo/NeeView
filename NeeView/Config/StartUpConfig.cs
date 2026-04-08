@@ -6,21 +6,21 @@ using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class StartUpConfig : BindableBase
     {
-        private string? _lastBookPath;
-        private string? _lastFolderPath;
-        private BookMemento? _lastBook;
-        private BookshelfFolderMemento? _lastFolder;
-        private bool _isSplashScreenEnabled = true;
-        private bool _isMultiBootEnabled;
-        private bool _isRestoreWindowPlacement = true;
-        private bool _isRestoreSecondWindowPlacement = true;
-        private bool _isRestoreFullScreen;
-        private bool _isOpenLastBook;
-        private bool _isOpenLastFolder;
-        private bool _isAutoPlaySlideShow;
+        [DefaultEquality] private string? _lastBookPath;
+        [DefaultEquality] private string? _lastFolderPath;
+        [DefaultEquality] private BookMemento? _lastBook;
+        [DefaultEquality] private BookshelfFolderMemento? _lastFolder;
+        [DefaultEquality] private bool _isSplashScreenEnabled = true;
+        [DefaultEquality] private bool _isMultiBootEnabled;
+        [DefaultEquality] private bool _isRestoreWindowPlacement = true;
+        [DefaultEquality] private bool _isRestoreSecondWindowPlacement = true;
+        [DefaultEquality] private bool _isRestoreFullScreen;
+        [DefaultEquality] private bool _isOpenLastBook;
+        [DefaultEquality] private bool _isOpenLastFolder;
+        [DefaultEquality] private bool _isAutoPlaySlideShow;
 
 
         // スプラッシュスクリーン

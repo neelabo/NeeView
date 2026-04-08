@@ -5,20 +5,20 @@ using System;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class BookSettingPolicyConfig : BindableBase, ICloneable
     {
-        private BookSettingPageSelectMode _page = BookSettingPageSelectMode.RestoreOrDefault;
-        private BookSettingSelectMode _pageMode = BookSettingSelectMode.RestoreOrDefault;
-        private BookSettingSelectMode _bookReadOrder = BookSettingSelectMode.RestoreOrDefault;
-        private BookSettingSelectMode _isSupportedDividePage = BookSettingSelectMode.RestoreOrDefault;
-        private BookSettingSelectMode _isSupportedSingleFirstPage = BookSettingSelectMode.RestoreOrDefault;
-        private BookSettingSelectMode _isSupportedSingleLastPage = BookSettingSelectMode.RestoreOrDefault;
-        private BookSettingSelectMode _isSupportedWidePage = BookSettingSelectMode.RestoreOrDefault;
-        private BookSettingSelectMode _isRecursiveFolder = BookSettingSelectMode.RestoreOrDefault;
-        private BookSettingSelectMode _sortMode = BookSettingSelectMode.RestoreOrDefault;
-        private BookSettingSelectMode _autoRotate = BookSettingSelectMode.RestoreOrContinue;
-        private BookSettingSelectMode _baseScale = BookSettingSelectMode.RestoreOrDefault;
+        [DefaultEquality] private BookSettingPageSelectMode _page = BookSettingPageSelectMode.RestoreOrDefault;
+        [DefaultEquality] private BookSettingSelectMode _pageMode = BookSettingSelectMode.RestoreOrDefault;
+        [DefaultEquality] private BookSettingSelectMode _bookReadOrder = BookSettingSelectMode.RestoreOrDefault;
+        [DefaultEquality] private BookSettingSelectMode _isSupportedDividePage = BookSettingSelectMode.RestoreOrDefault;
+        [DefaultEquality] private BookSettingSelectMode _isSupportedSingleFirstPage = BookSettingSelectMode.RestoreOrDefault;
+        [DefaultEquality] private BookSettingSelectMode _isSupportedSingleLastPage = BookSettingSelectMode.RestoreOrDefault;
+        [DefaultEquality] private BookSettingSelectMode _isSupportedWidePage = BookSettingSelectMode.RestoreOrDefault;
+        [DefaultEquality] private BookSettingSelectMode _isRecursiveFolder = BookSettingSelectMode.RestoreOrDefault;
+        [DefaultEquality] private BookSettingSelectMode _sortMode = BookSettingSelectMode.RestoreOrDefault;
+        [DefaultEquality] private BookSettingSelectMode _autoRotate = BookSettingSelectMode.RestoreOrContinue;
+        [DefaultEquality] private BookSettingSelectMode _baseScale = BookSettingSelectMode.RestoreOrDefault;
 
 
         [PropertyMember]

@@ -4,18 +4,18 @@ using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class NoticeConfig : BindableBase
     {
-        private ShowMessageStyle _noticeShowMessageStyle = ShowMessageStyle.Normal;
-        private ShowMessageStyle _bookNameShowMessageStyle = ShowMessageStyle.Normal;
-        private ShowMessageStyle _commandShowMessageStyle = ShowMessageStyle.Normal;
-        private ShowMessageStyle _gestureShowMessageStyle = ShowMessageStyle.Normal;
-        private ShowMessageStyle _nowLoadingShowMessageStyle = ShowMessageStyle.Normal;
-        private ShowMessageStyle _viewTransformShowMessageStyle = ShowMessageStyle.None;
-        private bool _isOriginalScaleShowMessage;
-        private bool _isBusyMarkEnabled = true;
-        private bool _isEmptyMessageEnabled = true;
+        [DefaultEquality] private ShowMessageStyle _noticeShowMessageStyle = ShowMessageStyle.Normal;
+        [DefaultEquality] private ShowMessageStyle _bookNameShowMessageStyle = ShowMessageStyle.Normal;
+        [DefaultEquality] private ShowMessageStyle _commandShowMessageStyle = ShowMessageStyle.Normal;
+        [DefaultEquality] private ShowMessageStyle _gestureShowMessageStyle = ShowMessageStyle.Normal;
+        [DefaultEquality] private ShowMessageStyle _nowLoadingShowMessageStyle = ShowMessageStyle.Normal;
+        [DefaultEquality] private ShowMessageStyle _viewTransformShowMessageStyle = ShowMessageStyle.None;
+        [DefaultEquality] private bool _isOriginalScaleShowMessage;
+        [DefaultEquality] private bool _isBusyMarkEnabled = true;
+        [DefaultEquality] private bool _isEmptyMessageEnabled = true;
 
 
         [PropertyMember]

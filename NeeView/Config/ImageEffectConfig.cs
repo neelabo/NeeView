@@ -5,7 +5,7 @@ using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = false, IgnoreInheritedMembers = true)]
     public partial class ImageEffectConfig : BindableBase
     {
         private bool _isEnabled;

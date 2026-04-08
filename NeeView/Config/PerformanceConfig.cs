@@ -8,16 +8,16 @@ using System.Windows;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class PerformanceConfig : BindableBase
     {
-        private int _cacheMemorySize = 200;
-        private int _jobWorkerSize = 4;
-        private Size _maximumSize = new(4096, 4096);
-        private int _preLoadSize = 5;
-        private bool _isLimitSourceSize;
-        private bool _isLoadingPageVisible = true;
-        private int _preExtractSolidSize = 1000;
+        [DefaultEquality] private int _cacheMemorySize = 200;
+        [DefaultEquality] private int _jobWorkerSize = 4;
+        [DefaultEquality] private Size _maximumSize = new(4096, 4096);
+        [DefaultEquality] private int _preLoadSize = 5;
+        [DefaultEquality] private bool _isLimitSourceSize;
+        [DefaultEquality] private bool _isLoadingPageVisible = true;
+        [DefaultEquality] private int _preExtractSolidSize = 1000;
 
 
         /// <summary>

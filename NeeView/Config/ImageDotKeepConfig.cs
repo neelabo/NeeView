@@ -5,11 +5,11 @@ using System.Windows;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class ImageDotKeepConfig : BindableBase
     {
-        private bool _isEnabled;
-        private double _threshold = 1.0;
+        [DefaultEquality] private bool _isEnabled;
+        [DefaultEquality] private double _threshold = 1.0;
 
         [PropertyMember]
         public bool IsEnabled

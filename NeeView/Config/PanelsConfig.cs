@@ -8,27 +8,27 @@ using System.Windows;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class PanelsConfig : BindableBase
     {
-        private bool _isHideLeftPanel;
-        private bool _isHideRightPanel;
-        private bool _isSideBarEnabled = true;
-        private double _opacity = 1.0;
-        private bool _isHideLeftPanelInAutoHideMode = true;
-        private bool _isHideRightPanelInAutoHideMode = true;
-        private bool _isDecoratePlace = true;
-        private bool _openWithDoubleClick;
-        private bool _isLeftRightKeyEnabled;
-        private bool _isManipulationBoundaryFeedbackEnabled;
-        private double _mouseWheelSpeedRate = 1.0;
-        private double _leftPanelWidth = 300.0;
-        private double _rightPanelWidth = 300.0;
-        private bool _isLimitPanelWidth;
-        private bool? _isVisibleItemsCount;
-        private bool _isTextSearchEnabled;
-        private double _conflictTopMargin = 32.0;
-        private double _conflictBottomMargin = 20.0;
+        [DefaultEquality] private bool _isHideLeftPanel;
+        [DefaultEquality] private bool _isHideRightPanel;
+        [DefaultEquality] private bool _isSideBarEnabled = true;
+        [DefaultEquality] private double _opacity = 1.0;
+        [DefaultEquality] private bool _isHideLeftPanelInAutoHideMode = true;
+        [DefaultEquality] private bool _isHideRightPanelInAutoHideMode = true;
+        [DefaultEquality] private bool _isDecoratePlace = true;
+        [DefaultEquality] private bool _openWithDoubleClick;
+        [DefaultEquality] private bool _isLeftRightKeyEnabled;
+        [DefaultEquality] private bool _isManipulationBoundaryFeedbackEnabled;
+        [DefaultEquality] private double _mouseWheelSpeedRate = 1.0;
+        [DefaultEquality] private double _leftPanelWidth = 300.0;
+        [DefaultEquality] private double _rightPanelWidth = 300.0;
+        [DefaultEquality] private bool _isLimitPanelWidth;
+        [DefaultEquality] private bool? _isVisibleItemsCount;
+        [DefaultEquality] private bool _isTextSearchEnabled;
+        [DefaultEquality] private double _conflictTopMargin = 32.0;
+        [DefaultEquality] private double _conflictBottomMargin = 20.0;
 
 
         /// <summary>
@@ -180,15 +180,19 @@ namespace NeeView
 
 
         [PropertyMapLabel("Word.StyleList")]
+        [DefaultEquality]
         public NormalItemProfile NormalItemProfile { get; set; } = new();
 
         [PropertyMapLabel("Word.StyleContent")]
+        [DefaultEquality]
         public ContentItemProfile ContentItemProfile { get; set; } = new();
 
         [PropertyMapLabel("Word.StyleBanner")]
+        [DefaultEquality]
         public BannerItemProfile BannerItemProfile { get; set; } = new();
 
         [PropertyMapLabel("Word.StyleThumbnail")]
+        [DefaultEquality]
         public ThumbnailItemProfile ThumbnailItemProfile { get; set; } = new();
 
 
@@ -220,6 +224,7 @@ namespace NeeView
         // ver 38
         [PropertyMapIgnore]
         [ObjectMergeReferenceCopy]
+        [DefaultEquality]
         public LayoutPanelManagerMemento? Layout { get; set; }
 
         #endregion HiddenParameters

@@ -4,16 +4,16 @@ using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class PageListConfig : BindableBase, IHasPanelListItemStyle
     {
-        private PanelListItemStyle _panelListItemStyle = PanelListItemStyle.Content;
-        private PageNameFormat _format = PageNameFormat.Smart;
-        private bool _showBookTitle = true;
-        private bool _focusMainView;
-        private bool _isGroupBy;
-        private bool _isVisibleItemsCount = true;
-        private bool _isVisibleSearchBox = true;
+        [DefaultEquality] private PanelListItemStyle _panelListItemStyle = PanelListItemStyle.Content;
+        [DefaultEquality] private PageNameFormat _format = PageNameFormat.Smart;
+        [DefaultEquality] private bool _showBookTitle = true;
+        [DefaultEquality] private bool _focusMainView;
+        [DefaultEquality] private bool _isGroupBy;
+        [DefaultEquality] private bool _isVisibleItemsCount = true;
+        [DefaultEquality] private bool _isVisibleSearchBox = true;
 
 
         /// <summary>

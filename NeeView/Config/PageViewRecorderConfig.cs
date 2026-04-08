@@ -5,11 +5,11 @@ using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class PageViewRecorderConfig : BindableBase
     {
-        private bool _isSavePageViewRecord;
-        private string? _pageViewRecordFilePath;
+        [DefaultEquality] private bool _isSavePageViewRecord;
+        [DefaultEquality] private string? _pageViewRecordFilePath;
 
         // 履歴を保存するか
         [PropertyMember]

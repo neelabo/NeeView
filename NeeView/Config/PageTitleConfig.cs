@@ -4,16 +4,17 @@ using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class PageTitleConfig : BindableBase
     {
         private const string PageTitleFormat1Default = "{Name}";
         private const string PageTitleFormat2Default = "{NameL} | {NameR}";
         private const string PageTitleFormatMediaDefault = " ";
-        private bool _isEnabled = true;
-        private string? _pageTitleFormat1;
-        private string? _pageTitleFormat2;
-        private string? _pageTitleFormatMedia;
+
+        [DefaultEquality] private bool _isEnabled = true;
+        [DefaultEquality] private string? _pageTitleFormat1;
+        [DefaultEquality] private string? _pageTitleFormat2;
+        [DefaultEquality] private string? _pageTitleFormatMedia;
 
 
         /// <summary>

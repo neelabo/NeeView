@@ -5,21 +5,21 @@ using System;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class LoupeConfig : BindableBase
     {
-        private double _defaultScale = 2.0;
-        private bool _isLoupeCenter;
-        private double _minimumScale = 1.0;
-        private double _maximumScale = 10.0;
-        private double _scaleStep = 1.0;
-        private bool _isResetByRestart = false;
-        private bool _isResetByPageChanged = true;
-        private bool _isVisibleLoupeInfo = true;
-        private bool _isWheelScalingEnabled = true;
-        private double _speed = 1.0;
-        private bool _isEscapeKeyEnabled = true;
-        private bool _isBaseOnOriginal;
+        [DefaultEquality] private double _defaultScale = 2.0;
+        [DefaultEquality] private bool _isLoupeCenter;
+        [DefaultEquality] private double _minimumScale = 1.0;
+        [DefaultEquality] private double _maximumScale = 10.0;
+        [DefaultEquality] private double _scaleStep = 1.0;
+        [DefaultEquality] private bool _isResetByRestart = false;
+        [DefaultEquality] private bool _isResetByPageChanged = true;
+        [DefaultEquality] private bool _isVisibleLoupeInfo = true;
+        [DefaultEquality] private bool _isWheelScalingEnabled = true;
+        [DefaultEquality] private double _speed = 1.0;
+        [DefaultEquality] private bool _isEscapeKeyEnabled = true;
+        [DefaultEquality] private bool _isBaseOnOriginal;
 
 
         [PropertyMember]

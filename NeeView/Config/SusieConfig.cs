@@ -5,13 +5,13 @@ using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class SusieConfig : BindableBaseFull
     {
-        private bool _isEnabled;
-        private bool _isFirstOrderSusieImage;
-        private bool _isFirstOrderSusieArchive;
-        private string _susiePluginPath = "";
+        [DefaultEquality] private bool _isEnabled;
+        [DefaultEquality] private bool _isFirstOrderSusieImage;
+        [DefaultEquality] private bool _isFirstOrderSusieArchive;
+        [DefaultEquality] private string _susiePluginPath = "";
 
 
         /// <summary>

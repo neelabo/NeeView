@@ -7,29 +7,29 @@ using System.Windows;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class MouseConfig : BindableBase
     {
-        private bool _isGestureEnabled = true;
-        private bool _isDragEnabled = true;
-        private double _gestureMinimumDistance = 30.0;
-        private LongButtonDownMode _longButtonDownMode = LongButtonDownMode.Loupe;
-        private bool _isCursorHideEnabled = true;
-        private double _cursorHideTime = 2.0;
-        private double _minimumDragDistance = 5.0;
-        private LongButtonMask _longButtonMask;
-        private double _longButtonDownTime = 1.0;
-        private double _longButtonRepeatTime = 0.1;
-        private bool _isCursorHideReleaseAction = true;
-        private double _cursorHideReleaseDistance = 5.0;
-        private bool _isHoverScroll;
-        private double _hoverScrollSensitivity = 2.0;
-        private double _hoverScrollDuration = 0.5;
-        private double _inertiaSensitivity = 0.5;
-        private double _autoScrollSensitivity = 1.0;
-        private bool _isMouseWheelScrollEnabled;
-        private double _mouseWheelScrollSensitivity = 1.0;
-        private double _mouseWheelScrollDuration = 0.2;
+        [DefaultEquality] private bool _isGestureEnabled = true;
+        [DefaultEquality] private bool _isDragEnabled = true;
+        [DefaultEquality] private double _gestureMinimumDistance = 30.0;
+        [DefaultEquality] private LongButtonDownMode _longButtonDownMode = LongButtonDownMode.Loupe;
+        [DefaultEquality] private bool _isCursorHideEnabled = true;
+        [DefaultEquality] private double _cursorHideTime = 2.0;
+        [DefaultEquality] private double _minimumDragDistance = 5.0;
+        [DefaultEquality] private LongButtonMask _longButtonMask;
+        [DefaultEquality] private double _longButtonDownTime = 1.0;
+        [DefaultEquality] private double _longButtonRepeatTime = 0.1;
+        [DefaultEquality] private bool _isCursorHideReleaseAction = true;
+        [DefaultEquality] private double _cursorHideReleaseDistance = 5.0;
+        [DefaultEquality] private bool _isHoverScroll;
+        [DefaultEquality] private double _hoverScrollSensitivity = 2.0;
+        [DefaultEquality] private double _hoverScrollDuration = 0.5;
+        [DefaultEquality] private double _inertiaSensitivity = 0.5;
+        [DefaultEquality] private double _autoScrollSensitivity = 1.0;
+        [DefaultEquality] private bool _isMouseWheelScrollEnabled;
+        [DefaultEquality] private double _mouseWheelScrollSensitivity = 1.0;
+        [DefaultEquality] private double _mouseWheelScrollDuration = 0.2;
 
 
         // マウスジェスチャー有効

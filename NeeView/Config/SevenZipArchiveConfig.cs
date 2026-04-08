@@ -5,16 +5,16 @@ using System.Windows;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class SevenZipArchiveConfig : BindableBase
     {
         public static FileTypeCollection DefaultSupportFileTypes { get; } = new FileTypeCollection(".7z;.cb7;.cbr;.cbz;.lzh;.rar;.zip");
 
 
-        private bool _isEnabled = true;
-        private string _x86DllPath = "";
-        private string _x64DllPath = "";
-        private FileTypeCollection _supportFileTypes = (FileTypeCollection)DefaultSupportFileTypes.Clone();
+        [DefaultEquality] private bool _isEnabled = true;
+        [DefaultEquality] private string _x86DllPath = "";
+        [DefaultEquality] private string _x64DllPath = "";
+        [DefaultEquality] private FileTypeCollection _supportFileTypes = (FileTypeCollection)DefaultSupportFileTypes.Clone();
 
 
         [PropertyMember]

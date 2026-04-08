@@ -4,18 +4,18 @@ using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class TouchConfig : BindableBase
     {
-        private bool _isEnabled = true;
-        private TouchAction _dragAction = TouchAction.Gesture;
-        private TouchAction _holdAction = TouchAction.Drag;
-        private bool _isAngleEnabled = true;
-        private bool _isScaleEnabled = true;
-        private double _gestureMinimumDistance = 16.0;
-        private double _minimumManipulationRadius = 80.0;
-        private double _minimumManipulationDistance = 30.0;
-        private double _inertiaSensitivity = 0.6;
+        [DefaultEquality] private bool _isEnabled = true;
+        [DefaultEquality] private TouchAction _dragAction = TouchAction.Gesture;
+        [DefaultEquality] private TouchAction _holdAction = TouchAction.Drag;
+        [DefaultEquality] private bool _isAngleEnabled = true;
+        [DefaultEquality] private bool _isScaleEnabled = true;
+        [DefaultEquality] private double _gestureMinimumDistance = 16.0;
+        [DefaultEquality] private double _minimumManipulationRadius = 80.0;
+        [DefaultEquality] private double _minimumManipulationDistance = 30.0;
+        [DefaultEquality] private double _inertiaSensitivity = 0.6;
 
 
         [PropertyMember]

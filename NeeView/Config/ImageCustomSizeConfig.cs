@@ -8,14 +8,14 @@ using System.Windows;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class ImageCustomSizeConfig : BindableBase
     {
-        private bool _isEnabled;
-        private Size _size = new(256, 256);
-        private CustomSizeAspectRatio _aspectRatio;
-        private double _applicabilityRate = 1.0;
-        private bool _isAlignLongSide = false;
+        [DefaultEquality] private bool _isEnabled;
+        [DefaultEquality] private Size _size = new(256, 256);
+        [DefaultEquality] private CustomSizeAspectRatio _aspectRatio;
+        [DefaultEquality] private double _applicabilityRate = 1.0;
+        [DefaultEquality] private bool _isAlignLongSide = false;
 
 
         /// <summary>
