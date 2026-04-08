@@ -22,5 +22,10 @@ namespace NeeView
                 this.HelpButton.IsChecked = false;
             }
         }
+
+        private void PopupCloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.HelpButton.IsChecked = false;
+        }
     }
 }

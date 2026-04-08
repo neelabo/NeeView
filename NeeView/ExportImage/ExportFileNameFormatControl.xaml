@@ -39,7 +39,12 @@
             <Popup Style="{StaticResource NVPopup}" IsOpen="{Binding ElementName=HelpButton, Path=IsChecked}" PlacementTarget="{Binding ElementName=HelpButton}" Placement="Right" VerticalOffset="-5"
                 d:IsOpen="True">
                 <ContentControl Style="{StaticResource NVPopupContent}">
-                    <local:XHtmlTextBlock x:Name="HelpTextBlock" Source="{Binding HelpText}" IsXHtml="True" Margin="10" MaxWidth="600" TextWrapping="Wrap" />
+                    <DockPanel>
+                        <Button DockPanel.Dock="Right" Style="{StaticResource IconButton}" Click="PopupCloseButton_Click" HorizontalAlignment="Right" VerticalAlignment="Top" Width="20" Height="20">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8BB;" Width="14" Height="14" Foreground="{DynamicResource {x:Static SystemColors.InfoTextBrushKey}}"/>
+                        </Button>
+                        <local:XHtmlTextBlock x:Name="HelpTextBlock" Source="{Binding HelpText}" IsXHtml="True" Margin="10" MaxWidth="600" TextWrapping="Wrap" />
+                    </DockPanel>
                 </ContentControl>
             </Popup>
 
