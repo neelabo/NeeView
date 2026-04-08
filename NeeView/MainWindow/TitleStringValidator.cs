@@ -35,7 +35,7 @@ namespace NeeView
         };
 
 
-        public static string ValidateVersion46(string format)
+        public static string ValidatePlaceholder(string format)
         {
             // v46.0+
             foreach (var pair in _replaceList)

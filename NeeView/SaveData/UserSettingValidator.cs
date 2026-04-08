@@ -1,4 +1,5 @@
 ﻿using NeeView.Runtime.LayoutPanel;
+using NeeView.StringTemplate;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -225,17 +226,36 @@ namespace NeeView
             // ver 46.0
             if (self.Format.CompareTo(new FormatVersion(Environment.SolutionName, VersionNumber.Ver46_Alpha1)) <= 0)
             {
-                self.Config.WindowTitle.WindowTitleFormat1 = TitleStringValidator.ValidateVersion46(self.Config.WindowTitle.WindowTitleFormat1);
-                self.Config.WindowTitle.WindowTitleFormat2 = TitleStringValidator.ValidateVersion46(self.Config.WindowTitle.WindowTitleFormat2);
-                self.Config.WindowTitle.WindowTitleFormatMedia = TitleStringValidator.ValidateVersion46(self.Config.WindowTitle.WindowTitleFormatMedia);
+                self.Config.System.FileManagerFileArgs = StringFormatTools.ValidatePlaceholder(self.Config.System.FileManagerFileArgs, "File");
+                self.Config.System.FileManagerFolderArgs = StringFormatTools.ValidatePlaceholder(self.Config.System.FileManagerFolderArgs, "File");
+                self.Config.System.ExternalAppCollection.ValidatePlaceholder();
 
-                self.Config.PageTitle.PageTitleFormat1 = TitleStringValidator.ValidateVersion46(self.Config.PageTitle.PageTitleFormat1);
-                self.Config.PageTitle.PageTitleFormat2 = TitleStringValidator.ValidateVersion46(self.Config.PageTitle.PageTitleFormat2);
-                self.Config.PageTitle.PageTitleFormatMedia = TitleStringValidator.ValidateVersion46(self.Config.PageTitle.PageTitleFormatMedia);
+                self.Config.Information.MapProgramFormat = StringFormatTools.ValidatePlaceholder(self.Config.Information.MapProgramFormat, "LatDeg");
+                self.Config.Information.MapProgramFormat = StringFormatTools.ValidatePlaceholder(self.Config.Information.MapProgramFormat, "LonDeg");
+                self.Config.Information.MapProgramFormat = StringFormatTools.ValidatePlaceholder(self.Config.Information.MapProgramFormat, "Lat");
+                self.Config.Information.MapProgramFormat = StringFormatTools.ValidatePlaceholder(self.Config.Information.MapProgramFormat, "Lon");
+
+                self.Config.WindowTitle.WindowTitleFormat1 = TitleStringValidator.ValidatePlaceholder(self.Config.WindowTitle.WindowTitleFormat1);
+                self.Config.WindowTitle.WindowTitleFormat2 = TitleStringValidator.ValidatePlaceholder(self.Config.WindowTitle.WindowTitleFormat2);
+                self.Config.WindowTitle.WindowTitleFormatMedia = TitleStringValidator.ValidatePlaceholder(self.Config.WindowTitle.WindowTitleFormatMedia);
+
+                self.Config.PageTitle.PageTitleFormat1 = TitleStringValidator.ValidatePlaceholder(self.Config.PageTitle.PageTitleFormat1);
+                self.Config.PageTitle.PageTitleFormat2 = TitleStringValidator.ValidatePlaceholder(self.Config.PageTitle.PageTitleFormat2);
+                self.Config.PageTitle.PageTitleFormatMedia = TitleStringValidator.ValidatePlaceholder(self.Config.PageTitle.PageTitleFormatMedia);
 
                 if (self.Commands != null)
                 {
-                    if (self.Commands.TryGetValue("ExportImageAs", out var command))
+                    CommandElementMemento? command;
+                    if (self.Commands.TryGetValue("OpenExternalApp", out command))
+                    {
+                        if (command.Parameter is OpenExternalAppCommandParameter parameter)
+                        {
+                            parameter.Command = parameter.Command is null ? null : StringFormatTools.ValidatePlaceholder(parameter.Command, "NeeView");
+                            parameter.Parameter = StringFormatTools.ValidatePlaceholder(parameter.Parameter, "File");
+                            parameter.Parameter = StringFormatTools.ValidatePlaceholder(parameter.Parameter, "Uri");
+                        }
+                    }
+                    if (self.Commands.TryGetValue("ExportImageAs", out command))
                     {
                         if (command.Parameter is ExportImageAsCommandParameter parameter)
                         {
@@ -259,7 +279,6 @@ namespace NeeView
 
             return self;
         }
-
 
         /// <summary>
         /// CommandCollection に含まれているショートカットキーと衝突しないように新しいコマンドを登録する

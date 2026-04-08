@@ -3,6 +3,6 @@
 
 param = {
     "Command": "mspaint.exe",
-    "Parameter": "\"$File\""
+    "Parameter": "\"{File}\""
 }
 nv.Command.OpenExternalApp.Patch(param).Execute()

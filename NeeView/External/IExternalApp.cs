@@ -9,7 +9,7 @@
 
         /// <summary>
         /// コマンドパラメーター
-        /// $File = 渡されるファイルパス
+        /// {File} = 渡されるファイルパス
         /// </summary>
         string Parameter { get; set; }
 

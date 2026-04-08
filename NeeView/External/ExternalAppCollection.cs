@@ -48,6 +48,14 @@ namespace NeeView
         }
 
         #endregion Equtable
+
+        public void ValidatePlaceholder()
+        {
+            foreach (var item in this)
+            {
+                item.ValidatePlaceholder();
+            }
+        }
     }
 
 

@@ -38,7 +38,7 @@ namespace NeeView
         }
 
         // コマンドパラメータ
-        // $FILE = 渡されるファイルパス
+        // {File} = 渡されるファイルパス
         public string Parameter
         {
             get { return _parameter; }
@@ -85,6 +85,13 @@ namespace NeeView
         public object Clone()
         {
             return MemberwiseClone();
+        }
+
+        public void ValidatePlaceholder()
+        {
+            Command = Command is null ? null : StringTemplate.StringFormatTools.ValidatePlaceholder(Command, "NeeView");
+            Parameter = StringTemplate.StringFormatTools.ValidatePlaceholder(Parameter, "File");
+            Parameter = StringTemplate.StringFormatTools.ValidatePlaceholder(Parameter, "Uri");
         }
     }
 

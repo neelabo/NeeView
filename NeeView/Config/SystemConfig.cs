@@ -13,8 +13,8 @@ namespace NeeView
     [Equatable(IgnoreInheritedMembers = true)]
     public partial class SystemConfig : BindableBase, ICopyPolicy
     {
-        private static readonly string _defaultFileManagerFileArgs = "/select,\"$File\"";
-        private static readonly string _defaultFileManagerFolderArgs = "\"$File\"";
+        private static readonly string _defaultFileManagerFileArgs = "/select,\"{File}\"";
+        private static readonly string _defaultFileManagerFolderArgs = "\"{File}\"";
 
         private ArchiveEntryCollectionMode _archiveRecursiveMode = ArchiveEntryCollectionMode.IncludeSubArchives;
         private bool _isNetworkEnabled = true;

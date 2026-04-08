@@ -4,8 +4,8 @@
 nv.Command.SaveSetting.Execute() // Perform a save to keep settings the same
 
 param = {
-    "Command": "$NeeView", // Special way of writing to indicate the path of NeeView itself
-    "Parameter": "-n \"$File\"",
+    "Command": "{NeeView}", // Special way of writing to indicate the path of NeeView itself
+    "Parameter": "-n \"{File}\"",
     "MultiPagePolicy": "Once",
     "ArchivePolicy": "SendArchivePath"
 }

@@ -14,6 +14,9 @@ namespace NeeView
 
     public static partial class ExternalProcess
     {
+        private const string FileKeyLegacy = "$File";
+        private const string FileKey = "{File}";
+
         [GeneratedRegex(@"^\s*http[s]?:", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
         private static partial Regex _httpPrefix { get; }
 
@@ -109,7 +112,9 @@ namespace NeeView
 
         private static string ValidateArgs(string source, string file)
         {
-            var text = source.Replace("$File", file, StringComparison.Ordinal);
+            var text = source;
+            text = text.Replace(FileKeyLegacy, file, StringComparison.Ordinal); // 互換性のため、$File も {File} も同じ意味で置換される。
+            text = text.Replace(FileKey, file, StringComparison.Ordinal);
             return string.IsNullOrWhiteSpace(text) ? file : text;
         }
     }

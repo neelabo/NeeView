@@ -11,12 +11,26 @@ namespace NeeView
     // 外部アプリ起動
     public class ExternalAppUtility
     {
+        private const string NeeViewKeyLegacy = "$NeeView";
+        private const string NeeViewKey = "{NeeView}";
+
+        private static readonly string[] _keywords = [
+            OpenExternalAppCommandParameter.FileKeyLegacy,
+            OpenExternalAppCommandParameter.FileKey,
+            OpenExternalAppCommandParameter.UriKeyLegacy,
+            OpenExternalAppCommandParameter.UriKey];
+
         // コマンドパラメータ文字列のバリデート
         public static string ValidateApplicationParam(string source)
         {
             if (source == null) source = "";
             source = source.Trim();
-            return source.Contains(OpenExternalAppCommandParameter.KeyFile, StringComparison.Ordinal) ? source : (source + $" \"{OpenExternalAppCommandParameter.KeyFile}\"");
+
+            if (_keywords.All(e => !source.Contains(e)))
+            {
+                source = source + $" \"{OpenExternalAppCommandParameter.FileKey}\"";
+            }
+            return source;
         }
 
         /// <summary>
@@ -80,7 +94,9 @@ namespace NeeView
             }
             else
             {
-                var command = options.Command.Replace("$NeeView", Environment.AssemblyLocation, StringComparison.Ordinal);
+                var command = options.Command;
+                command = command.Replace(NeeViewKeyLegacy, Environment.AssemblyLocation, StringComparison.Ordinal); // 互換性のため、$NeeView も {NeeView} も同じ意味で置換される。
+                command = command.Replace(NeeViewKey, Environment.AssemblyLocation, StringComparison.Ordinal);
                 var sentence = $"\"{command}\" {param}";
                 Debug.WriteLine($"CallProcess: {sentence}");
                 try
@@ -96,12 +112,14 @@ namespace NeeView
             return;
         }
 
-        private static string ReplaceKeyword(string s, string filenName)
+        private static string ReplaceKeyword(string s, string fileName)
         {
-            var uriData = Uri.EscapeDataString(filenName);
+            var uriData = Uri.EscapeDataString(fileName);
 
-            s = s.Replace(OpenExternalAppCommandParameter.KeyUri, uriData, StringComparison.Ordinal);
-            s = s.Replace(OpenExternalAppCommandParameter.KeyFile, filenName, StringComparison.Ordinal);
+            s = s.Replace(OpenExternalAppCommandParameter.UriKeyLegacy, uriData, StringComparison.Ordinal); // 互換性のため、$Uri と {Uri} も同じ意味で置換される。
+            s = s.Replace(OpenExternalAppCommandParameter.UriKey, uriData, StringComparison.Ordinal);
+            s = s.Replace(OpenExternalAppCommandParameter.FileKeyLegacy, fileName, StringComparison.Ordinal); // 互換性のため、$File と {File} も同じ意味で置換される。
+            s = s.Replace(OpenExternalAppCommandParameter.FileKey, fileName, StringComparison.Ordinal);
             return s;
         }
 

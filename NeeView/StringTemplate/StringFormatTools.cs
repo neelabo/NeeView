@@ -96,6 +96,14 @@ namespace NeeView.StringTemplate
             }
         }
 
+        /// <summary>
+        /// $name -> {name}
+        /// </summary>
+        public static string ValidatePlaceholder(string s, string name)
+        {
+            return s.Replace("$" + name, "{" + name + "}", StringComparison.Ordinal);
+        }
+
     }
 
 }

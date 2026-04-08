@@ -8,9 +8,11 @@ namespace NeeView
     public partial class OpenExternalAppCommandParameter : CommandParameter, INotifyPropertyChanged, IExternalApp
     {
         // コマンドパラメータで使用されるキーワード
-        public const string KeyFile = "$File";
-        public const string KeyUri = "$Uri";
-        public const string DefaultParameter = "\"" + KeyFile + "\"";
+        public const string FileKeyLegacy = "$File";
+        public const string UriKeyLegacy = "$Uri";
+        public const string FileKey = "{File}";
+        public const string UriKey = "{Uri}";
+        public const string DefaultParameter = "\"" + FileKey + "\"";
 
         [DefaultEquality] private ArchivePolicy _archivePolicy = ArchivePolicy.SendExtractFile;
         [DefaultEquality] private string? _command;
@@ -28,7 +30,7 @@ namespace NeeView
         }
 
         // コマンドパラメータ
-        // $File = 渡されるファイルパス
+        // {File} = 渡されるファイルパス
         [PropertyMember]
         public string Parameter
         {
