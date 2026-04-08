@@ -14,11 +14,11 @@ namespace NeeView
 
             sb.AppendLine(GetHelpWordText(TitleStringFormatter.BookKey));
             sb.AppendLine(GetHelpWordText(TitleStringFormatter.PageKey));
-            sb.AppendLine(GetHelpWordText(TitleStringFormatter.PagePartKey) + " (L, R)");
             sb.AppendLine(GetHelpWordText(TitleStringFormatter.PageMaxKey));
             sb.AppendLine(GetHelpWordText(TitleStringFormatter.NameKey));
             sb.AppendLine(GetHelpWordText(TitleStringFormatter.EntryPathKey));
             sb.AppendLine(GetHelpWordText(TitleStringFormatter.FullPathKey));
+            sb.AppendLine(GetHelpWordText(TitleStringFormatter.PartKey) + " (L, R)");
             sb.AppendLine(GetHelpWordText(TitleStringFormatter.SizeKey) + " (e.g., 640 × 480)");
             sb.AppendLine(GetHelpWordText(TitleStringFormatter.BitsKey));
             sb.AppendLine(GetHelpWordText(TitleStringFormatter.ViewScaleKey));
@@ -42,7 +42,7 @@ namespace NeeView
             sb.AppendLine("- # ... " + TextResources.GetString("StringFormat.String.Format"));
             sb.AppendLine();
             sb.AppendLine("e.g., {FullPath:/ > } → C: > Foo > Bar.jpg");
-            sb.AppendLine("e.g., {Name}{PagePart:(#)} →  Bar.jpg(L)");
+            sb.AppendLine("e.g., {Name}{Part:(#)} →  Bar.jpg(L)");
             sb.Append("e.g., {Size}{Bits: x #} → 640 x 480 x 24");
 
             return sb.ToString();

@@ -12,7 +12,7 @@ namespace NeeView
             new("$PageMax", "{PageMax}"),
             new("$PageL", "{PageL}"),
             new("$PageR", "{PageR}"),
-            new("$Page", "{Page}{PagePart: (#)}"),
+            new("$Page", "{Page}{Part: (#)}"),
             new("$FullPathL", "{FullPathL:/ > }"),
             new("$FullPathR", "{FullPathR:/ > }"),
             new("$FullPath", "{FullPath:/ > }"),

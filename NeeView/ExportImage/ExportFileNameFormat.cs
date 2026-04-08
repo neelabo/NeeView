@@ -1,141 +1,28 @@
-﻿using System;
+﻿using NeeView.StringTemplate;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace NeeView
 {
-    // {Book} ... ブック名
-    // {Name} ... ページファイル名
-    // {EntryPath} .... ページのエントリパス。ブックを基準とした相対パス
-    // {Page} ... ページ番号 (数字)
-    // {Index} ... 連番 (数字)
-    //
-    // .NET の String.Format 書式
-    // 例:{Index:000} → 001,002,...
-    //
-    //  2ページを1画像に出力する場合のページに属する変数には [1,2,L,R] のサフィックスが使用可能 (1=基準ページ、2=次のページ、L=左ページ、R=右ページ)
-    // 例:{Book}_{Page1}-{Page2}
-
     public static class ExportFileNameFormat
     {
         public const string BookKey = "Book";
-        public const string NameKey = "Name";
-        public const string EntryPathKey = "EntryPath";
+        public const string PartKey = "Part";
         public const string PageKey = "Page";
+        public const string EntryPathKey = "EntryPath";
+        public const string NameKey = "Name";
         public const string IndexKey = "Index";
 
-        public static PageNameElement GetPageElement(IExportPageSource _source, string suffix)
+        private static readonly Dictionary<string, KeyInfo<ExportIndexPageSource>> _wordFormatMap = new Dictionary<string, KeyInfo<ExportIndexPageSource>>(StringComparer.Ordinal)
         {
-            var _elements = _source.Elements;
-
-            return suffix switch
-            {
-                "" => _elements.First(),
-                "1" => _elements.First(),
-                "2" => _elements.Last(),
-                "L" => _source.Direction > 0 ? _elements.First() : _elements.Last(),
-                "R" => _source.Direction > 0 ? _elements.Last() : _elements.First(),
-                _ => throw new NotSupportedException($"Invalid suffix: {suffix}"),
-            };
-        }
-
-        private static IPageNameSource GetPage(IExportPageSource _source, string suffix)
-        {
-            var element = GetPageElement(_source, suffix);
-            return element.Page;
-        }
-
-        public static string Format(string format, IExportPageSource _source, int index)
-        {
-            var result = StringFormatParser.Parse(format);
-
-            List<object?> args = new();
-
-            foreach (var w in result.Words)
-            {
-                var tokens = w.Split(':', 2);
-
-                var word = tokens[0].Trim();
-                var fmt = tokens.Length > 1 ? tokens[1] : null;
-
-                if (word == BookKey)
-                {
-                    var s = LoosePath.GetFileNameWithoutExtension(_source.BookAddress);
-                    s = FormatString(s, fmt);
-                    args.Add(s);
-                }
-                else if (word.StartsWith(NameKey))
-                {
-                    var s = LoosePath.WithoutExtension(GetPage(_source, GetSuffix(word, NameKey)).EntryLastName);
-                    s = FormatString(s, fmt);
-                    args.Add(s);
-                }
-                else if (word.StartsWith(EntryPathKey))
-                {
-                    var s = LoosePath.WithoutExtension(GetPage(_source, GetSuffix(word, EntryPathKey)).EntryName);
-                    s = FormatString(s, fmt);
-                    args.Add(s);
-                }
-                else if (word.StartsWith(PageKey))
-                {
-                    var element = GetPageElement(_source, GetSuffix(word, PageKey));
-                    var n = element.Page.Index + 1;
-                    var s = FormatString(n, fmt) + element.PagePart.ToSuffix();
-                    args.Add(s);
-                }
-                else if (word == IndexKey)
-                {
-                    var n = index;
-                    var s = FormatString(n, fmt);
-                    args.Add(s);
-                }
-                else
-                {
-                    throw new NotSupportedException($"Unknown: {word}");
-                }
-            }
-
-            return string.Format(result.Format, args.ToArray());
-        }
-
-        private static string GetSuffix(string value, string key)
-        {
-            Debug.Assert(value.StartsWith(key));
-            return value.Substring(key.Length);
-        }
-
-        private static string FormatString<T>(T value, string? fmt)
-            where T : notnull
-        {
-            if (fmt is null)
-            {
-                return value.ToString() ?? "";
-            }
-            else
-            {
-                return string.Format($"{{0:{fmt}}}", value);
-            }
-        }
-
-        /// <summary>
-        /// 実際にフォーマットしてみる
-        /// </summary>
-        /// <param name="source">入力ページの情報</param>
-        /// <param name="format">出力ネームフォーマット</param>
-        /// <param name="mode">オリジナル出力/ビュー出力</param>
-        /// <param name="imageFormat">ビュー出力のときの画像種類</param>
-        /// <returns></returns>
-        public static string Format(string format, IExportPageSource source, int index, ExportImageMode mode, BitmapImageFormat imageFormat)
-        {
-            var ext = mode == ExportImageMode.Original
-                ? LoosePath.GetExtension(source.Elements.First().Page.EntryName)
-                : imageFormat.GetExtension();
-
-            var name = ExportFileNameFormat.Format(format, source, index);
-
-            return name + ext;
-        }
+            [BookKey] = new(GetBookWord),
+            [PartKey] = new(GetPartWord),
+            [PageKey] = new(GetPageWord),
+            [EntryPathKey] = new(GetEntryPathWord),
+            [NameKey] = new(GetNameWord),
+            [IndexKey] = new(GetIndexWord),
+        };
 
 
         public static ExportPageSource CreateDummyFileNameSource(int pageCount, int direction)
@@ -145,7 +32,87 @@ namespace NeeView
 
             return pageCount == 1 ? source1 : source2;
         }
-    }
 
+        public static string Format(string format, ExportIndexPageSource source)
+        {
+            var stringFormat = Formatter.CreateStringFormat(format, _wordFormatMap);
+            return Formatter.Format(stringFormat, source);
+        }
+
+        public static string Format(string format, IExportPageSource source, int index)
+        {
+            return Format(format, new ExportIndexPageSource(source, index));
+        }
+
+        public static string Format(string format, IExportPageSource source, int index, ExportImageMode mode, BitmapImageFormat imageFormat)
+        {
+            var ext = mode == ExportImageMode.Original
+                ? LoosePath.GetExtension(source.Elements.First().Page.EntryName)
+                : imageFormat.GetExtension();
+
+            var name = Format(format, source, index);
+
+            return name + ext;
+        }
+
+        private static string GetBookWord(ExportIndexPageSource source, string format, string suffix)
+        {
+            var bookName = LoosePath.GetFileNameWithoutExtension(source.BookAddress);
+            return StringFormatTools.FormatValue(format, bookName);
+        }
+
+        private static string GetPageWord(ExportIndexPageSource source, string format, string suffix)
+        {
+            var content = GetContent(source, suffix);
+            if (content is null) return "";
+            var pageNumber = content.Page.Index + 1;
+            return StringFormatTools.FormatValue(format, pageNumber);
+        }
+
+        private static string GetPartWord(ExportIndexPageSource source, string format, string suffix)
+        {
+            var content = GetContent(source, suffix);
+            if (content is null) return "";
+            var pagePart = content.PagePart.ToSuffix();
+            return StringFormatTools.FormatValue(format, pagePart);
+        }
+
+        private static string GetEntryPathWord(ExportIndexPageSource source, string format, string suffix)
+        {
+            var content = GetContent(source, suffix);
+            if (content is null) return "";
+            var entryPath = LoosePath.WithoutExtension(content.Page.EntryName);
+            return StringFormatTools.FormatValue(format, entryPath);
+        }
+
+        private static string GetNameWord(ExportIndexPageSource source, string format, string suffix)
+        {
+            var content = GetContent(source, suffix);
+            if (content is null) return "";
+            var name = LoosePath.WithoutExtension(content.Page.EntryLastName);
+            return StringFormatTools.FormatValue(format, name);
+        }
+
+        private static string GetIndexWord(ExportIndexPageSource source, string format, string suffix)
+        {
+            return StringFormatTools.FormatValue(format, source.Index);
+        }
+
+        public static PageNameElement GetContent(ExportIndexPageSource source, string suffix)
+        {
+            var _elements = source.Elements;
+
+            return suffix switch
+            {
+                "" => _elements.First(),
+                "1" => _elements.First(),
+                "2" => _elements.Last(),
+                "L" => source.Direction > 0 ? _elements.First() : _elements.Last(),
+                "R" => source.Direction > 0 ? _elements.Last() : _elements.First(),
+                _ => throw new NotSupportedException($"Invalid suffix: {suffix}"),
+            };
+        }
+
+    }
 }
 

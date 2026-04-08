@@ -113,12 +113,16 @@ namespace NeeView
         [Obsolete, Alternative("FileNameFormat0,1,2", 46, ScriptErrorLevel.Warning)] // ver.46
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
         [PropertyMember(Name = "ExportImageParameter.FileNameMode")]
-        public ExportImageFileNameMode FileNameMode
+        public ExportImageFileNameMode? FileNameMode
         {
-            get => default;
+            get => ExportImageFileNameMode.Original;
             set
             {
-                if (value == ExportImageFileNameMode.BookPageNumber)
+                if (value is null)
+                {
+                    return;
+                }
+                else if (value == ExportImageFileNameMode.BookPageNumber)
                 { 
                     FileNameFormat0 = "{Book}_{Page:000}";
                     FileNameFormat1 = "{Book}_{Page:000}";

@@ -79,6 +79,7 @@ namespace NeeView
             sb.AppendLine(GetHelpWordText(ExportFileNameFormat.BookKey));
             sb.AppendLine(GetHelpWordText(ExportFileNameFormat.NameKey));
             sb.AppendLine(GetHelpWordText(ExportFileNameFormat.EntryPathKey));
+            sb.AppendLine(GetHelpWordText(ExportFileNameFormat.PartKey) + " (L, R)");
             sb.AppendLine(GetHelpWordText(ExportFileNameFormat.PageKey));
             sb.AppendLine(GetHelpWordText(ExportFileNameFormat.IndexKey));
             sb.AppendLine();
@@ -92,6 +93,14 @@ namespace NeeView
             sb.AppendLine(GetHelpSuffixText("R"));
             sb.AppendLine();
             sb.AppendLine("e.g., {Book}_{Page1}-{Page2}");
+            sb.AppendLine();
+            sb.AppendLine(Bold(TextResources.GetString("StringFormat.Note.String")));
+            sb.AppendLine();
+            sb.AppendLine("- / ... " + TextResources.GetString("StringFormat.String.Separator"));
+            sb.AppendLine("- # ... " + TextResources.GetString("StringFormat.String.Format"));
+            sb.AppendLine();
+            sb.AppendLine("e.g., {EntryPath:/__} → Foo__Bar");
+            sb.Append("e.g., {Name}{Part:(#)} →  Bar(L)");
 
             return sb.ToString();
         }

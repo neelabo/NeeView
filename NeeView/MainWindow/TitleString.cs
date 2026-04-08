@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.PageFrames;
+using NeeView.StringTemplate;
 using System.Linq;
 
 namespace NeeView
@@ -8,8 +9,8 @@ namespace NeeView
     {
         private string _title = "";
         private string _format = "";
-        private TitleFormatSource _formatSource = new();
-        private TitleStringChangedAction _changedAction = TitleStringChangedAction.None;
+        private StringFormat<TitleSource> _formatSource = new();
+        private StringFormatChangedAction _changedAction = StringFormatChangedAction.None;
 
 
         public TitleString()
@@ -21,20 +22,20 @@ namespace NeeView
                 if (AppState.Instance.IsProcessingBook) return;
                 if (e.Action < ViewContentChangedAction.ContentLoading) return;
 
-                UpdateTitle(TitleStringChangedAction.ViewContentChanged);
+                UpdateTitle(StringFormatChangedAction.ViewContentChanged);
             };
 
             presenter.TransformChanged += (s, e) =>
             {
                 if (e.Action == PageFrames.TransformAction.Scale)
                 {
-                    UpdateTitle(TitleStringChangedAction.ScaleChanged);
+                    UpdateTitle(StringFormatChangedAction.ScaleChanged);
                 }
             };
 
             presenter.StretchChanged += (s, e) =>
             {
-                UpdateTitle(TitleStringChangedAction.StretchChanged);
+                UpdateTitle(StringFormatChangedAction.StretchChanged);
             };
         }
 
@@ -55,14 +56,14 @@ namespace NeeView
             _formatSource = TitleStringFormatter.CreateFormatSource(_format);
 
             _changedAction = _formatSource.Words
-                .Select(e => e.FormatInfo?.ChangedAction ?? TitleStringChangedAction.None)
-                .Aggregate(TitleStringChangedAction.FormatChanged, (a, b) => a | b);
+                .Select(e => e.FormatInfo?.ChangedAction ?? StringFormatChangedAction.None)
+                .Aggregate(StringFormatChangedAction.FormatChanged, (a, b) => a | b);
 
             UpdateTitle();
         }
 
 
-        private void UpdateTitle(TitleStringChangedAction action)
+        private void UpdateTitle(StringFormatChangedAction action)
         {
             if ((_changedAction | action) != 0)
             {

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace NeeView
 {
@@ -11,9 +9,6 @@ namespace NeeView
         int Direction { get; }
 
         List<PageNameElement> Elements { get; }
-
-        //[Obsolete("Use Elements instead.")]
-        //List<Page> Pages { get; }
     }
 
 

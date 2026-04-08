@@ -1,10 +1,10 @@
 ﻿using System;
 
 
-namespace NeeView
+namespace NeeView.StringTemplate
 {
     [Flags]
-    public enum TitleStringChangedAction
+    public enum StringFormatChangedAction
     {
         None = 0,
 
