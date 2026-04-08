@@ -7,29 +7,27 @@ using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class HistoryConfig : BindableBase, IHasPanelListItemStyle
     {
-        private PanelListItemStyle _panelListItemStyle = PanelListItemStyle.Content;
-        private bool _isSaveHistory = true;
-        private bool _isKeepFolderStatus = true;
-        private bool _isKeepSearchHistory = true;
-        private bool _isInnerArchiveHistoryEnabled = true;
-        private bool _isUncHistoryEnabled = true;
-        private bool _isForceUpdateHistory;
-        private int _historyEntryPageCount = 0;
-        private double _historyEntryPlayTime = 10.0;
-        private int _limitSize = -1;
-        private TimeSpan _limitSpan;
-        private bool _isCurrentFolder;
-        private bool _isAutoCleanupEnabled;
-        private bool _isGroupBy;
-        private int _recentBookCount = 10;
-        private bool _isVisibleItemsCount = true;
-        private bool _isVisibleSearchBox = true;
-
-        [JsonInclude, JsonPropertyName(nameof(HistoryFilePath))]
-        public string? _historyFilePath;
+        [DefaultEquality] private PanelListItemStyle _panelListItemStyle = PanelListItemStyle.Content;
+        [DefaultEquality] private bool _isSaveHistory = true;
+        [DefaultEquality] private bool _isKeepFolderStatus = true;
+        [DefaultEquality] private bool _isKeepSearchHistory = true;
+        [DefaultEquality] private bool _isInnerArchiveHistoryEnabled = true;
+        [DefaultEquality] private bool _isUncHistoryEnabled = true;
+        [DefaultEquality] private bool _isForceUpdateHistory;
+        [DefaultEquality] private int _historyEntryPageCount = 0;
+        [DefaultEquality] private double _historyEntryPlayTime = 10.0;
+        [DefaultEquality] private int _limitSize = -1;
+        [DefaultEquality] private TimeSpan _limitSpan;
+        [DefaultEquality] private bool _isCurrentFolder;
+        [DefaultEquality] private bool _isAutoCleanupEnabled;
+        [DefaultEquality] private bool _isGroupBy;
+        [DefaultEquality] private int _recentBookCount = 10;
+        [DefaultEquality] private bool _isVisibleItemsCount = true;
+        [DefaultEquality] private bool _isVisibleSearchBox = true;
+        [DefaultEquality] private string? _historyFilePath;
 
 
         [PropertyMember]
@@ -54,6 +52,14 @@ namespace NeeView
         {
             get { return _historyFilePath ?? SaveDataProfile.DefaultHistoryFilePath; }
             set { SetProperty(ref _historyFilePath, (string.IsNullOrWhiteSpace(value) || value.Trim() == SaveDataProfile.DefaultHistoryFilePath) ? null : value.Trim()); }
+        }
+
+        [JsonPropertyName(nameof(HistoryFilePath))]
+        [PropertyMapIgnore]
+        public string? HistoryFilePathRaw
+        {
+            get { return _historyFilePath; }
+            set { _historyFilePath = value; }
         }
 
         // フォルダーリストの情報記憶

@@ -5,9 +5,7 @@ namespace NeeView
 {
     public record class PlaylistSourceItem
     {
-        [JsonInclude, JsonPropertyName(nameof(Name))]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string? _name;
+        private string? _name;
 
         public PlaylistSourceItem()
         {
@@ -32,6 +30,15 @@ namespace NeeView
         {
             get { return _name ?? LoosePath.GetFileName(Path); }
             set { _name = (string.IsNullOrEmpty(value) || value.Trim() == LoosePath.GetFileName(Path)) ? null : value.Trim(); }
+        }
+
+        [JsonPropertyName(nameof(Name))]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [PropertyMapIgnore]
+        public string? NameRaw
+        {
+            get { return _name; }
+            set { _name = value; }
         }
 
         public string? RawName => _name;

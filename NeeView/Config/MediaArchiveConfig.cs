@@ -6,25 +6,23 @@ using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class MediaArchiveConfig : BindableBase, IMediaContext
     {
         public static FileTypeCollection DefaultSupportFileTypes { get; } = new FileTypeCollection(".asf;.avi;.mp4;.mkv;.mov;.wmv");
 
 
-        private bool _isEnabled = true;
-        private bool _isMediaPageEnabled = false;
-        private FileTypeCollection _supportFileTypes = (FileTypeCollection)DefaultSupportFileTypes.Clone();
-        private double _pageSeconds = 10.0;
-        private double _mediaStartDelaySeconds = 0.5;
-        private bool _isMuted;
-        private double _volume = 0.5;
-        private bool _isRepeat;
-        private bool _isLibVlcEnabled;
-        private DefaultSubtitle _defaultSubtitle = DefaultSubtitle.Default;
-
-        [JsonInclude, JsonPropertyName(nameof(LibVlcPath))]
-        public string? _libVlcPath;
+        [DefaultEquality] private bool _isEnabled = true;
+        [DefaultEquality] private bool _isMediaPageEnabled = false;
+        [DefaultEquality] private FileTypeCollection _supportFileTypes = (FileTypeCollection)DefaultSupportFileTypes.Clone();
+        [DefaultEquality] private double _pageSeconds = 10.0;
+        [DefaultEquality] private double _mediaStartDelaySeconds = 0.5;
+        [DefaultEquality] private bool _isMuted;
+        [DefaultEquality] private double _volume = 0.5;
+        [DefaultEquality] private bool _isRepeat;
+        [DefaultEquality] private bool _isLibVlcEnabled;
+        [DefaultEquality] private DefaultSubtitle _defaultSubtitle = DefaultSubtitle.Default;
+        [DefaultEquality] private string? _libVlcPath;
 
 
         /// <summary>
@@ -104,6 +102,14 @@ namespace NeeView
             set { SetProperty(ref _libVlcPath, (string.IsNullOrWhiteSpace(value) || value.Trim() == LibVlcProfile.DefaultLibVlcPath) ? null : value.Trim()); }
         }
 
+        [JsonPropertyName(nameof(LibVlcPath))]
+        [PropertyMapIgnore]
+        public string? LibVlcPathRaw
+        {
+            get { return _libVlcPath; }
+            set { _libVlcPath = value; }
+        }
+
         [PropertyMember]
         public DefaultSubtitle DefaultSubtitle
         {
@@ -111,6 +117,7 @@ namespace NeeView
             set { SetProperty(ref _defaultSubtitle, value); }
         }
     }
+
 
     /// <summary>
     /// 既定の字幕

@@ -10,48 +10,39 @@ using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class SystemConfig : BindableBase, ICopyPolicy
     {
         private static readonly string _defaultFileManagerFileArgs = "/select,\"{File}\"";
         private static readonly string _defaultFileManagerFolderArgs = "\"{File}\"";
 
-        private ArchiveEntryCollectionMode _archiveRecursiveMode = ArchiveEntryCollectionMode.IncludeSubArchives;
-        private bool _isNetworkEnabled = true;
-        private bool _isSettingBackup;
-        private bool _isHiddenFileVisible;
-        private bool _isFileWriteAccessEnabled = false;
-        private string? _language;
-        private BookPageCollectMode _bookPageCollectMode = BookPageCollectMode.ImageAndBook;
-        private bool _isRemoveConfirmed = true;
-        private bool _isRemoveWantNukeWarning;
-        private bool _isSyncUserSetting = true;
-        private bool _isIgnoreImageDpi = true;
-        private string _downloadPath = "";
-        private bool _isOpenBookAtCurrentPlace;
-        private StringComparerType _stringComparer = StringComparerType.Native;
-        private bool _isInputMethodEnabled;
-        private DestinationFolderCollection _destinationFolderCollection = new();
-        private ExternalAppCollection _externalAppCollection = new() { new ExternalApp() };
-        private string? _textEditor;
-        private string? _webBrowser;
-        private string? _fileManager;
-        private bool _isIncrementalSearchEnabled = true;
-        private int _searchHistorySize = 8;
-        private ArchivePolicy _archiveCopyPolicy = ArchivePolicy.SendExtractFile;
-        private TextCopyPolicy _textCopyPolicy = TextCopyPolicy.None;
-
-        [JsonInclude, JsonPropertyName(nameof(DateTimeFormat))]
-        public string? _dateTimeFormat;
-
-        [JsonInclude, JsonPropertyName(nameof(TemporaryDirectory))]
-        public string? _temporaryDirectory;
-
-        [JsonInclude, JsonPropertyName(nameof(FileManagerFileArgs))]
-        public string? _fileManagerFileArgs;
-
-        [JsonInclude, JsonPropertyName(nameof(FileManagerFolderArgs))]
-        public string? _fileManagerFolderArgs;
+        [DefaultEquality] private ArchiveEntryCollectionMode _archiveRecursiveMode = ArchiveEntryCollectionMode.IncludeSubArchives;
+        [DefaultEquality] private bool _isNetworkEnabled = true;
+        [DefaultEquality] private bool _isSettingBackup;
+        [DefaultEquality] private bool _isHiddenFileVisible;
+        [DefaultEquality] private bool _isFileWriteAccessEnabled = false;
+        [DefaultEquality] private string? _language;
+        [DefaultEquality] private BookPageCollectMode _bookPageCollectMode = BookPageCollectMode.ImageAndBook;
+        [DefaultEquality] private bool _isRemoveConfirmed = true;
+        [DefaultEquality] private bool _isRemoveWantNukeWarning;
+        [DefaultEquality] private bool _isIgnoreImageDpi = true;
+        [DefaultEquality] private string _downloadPath = "";
+        [DefaultEquality] private bool _isOpenBookAtCurrentPlace;
+        [DefaultEquality] private StringComparerType _stringComparer = StringComparerType.Native;
+        [DefaultEquality] private bool _isInputMethodEnabled;
+        [DefaultEquality] private DestinationFolderCollection _destinationFolderCollection = new();
+        [DefaultEquality] private ExternalAppCollection _externalAppCollection = new() { new ExternalApp() };
+        [DefaultEquality] private string? _textEditor;
+        [DefaultEquality] private string? _webBrowser;
+        [DefaultEquality] private string? _fileManager;
+        [DefaultEquality] private bool _isIncrementalSearchEnabled = true;
+        [DefaultEquality] private int _searchHistorySize = 8;
+        [DefaultEquality] private ArchivePolicy _archiveCopyPolicy = ArchivePolicy.SendExtractFile;
+        [DefaultEquality] private TextCopyPolicy _textCopyPolicy = TextCopyPolicy.None;
+        [DefaultEquality] private string? _dateTimeFormat;
+        [DefaultEquality] private string? _temporaryDirectory;
+        [DefaultEquality] private string? _fileManagerFileArgs;
+        [DefaultEquality] private string? _fileManagerFolderArgs;
 
 
         /// <summary>
@@ -74,6 +65,14 @@ namespace NeeView
         {
             get { return _dateTimeFormat ?? DateTimeTools.DefaultDateTimePattern; }
             set { SetProperty(ref _dateTimeFormat, (string.IsNullOrWhiteSpace(value) || value == DateTimeTools.DefaultDateTimePattern) ? null : value); }
+        }
+
+        [JsonPropertyName(nameof(DateTimeFormat))]
+        [PropertyMapIgnore]
+        public string? DateTimeFormatRaw
+        {
+            get { return _dateTimeFormat; }
+            set { _dateTimeFormat = value; }
         }
 
         [PropertyMember]
@@ -136,6 +135,14 @@ namespace NeeView
         {
             get { return _temporaryDirectory ?? Temporary.TempRootPathDefault; }
             set { SetProperty(ref _temporaryDirectory, (string.IsNullOrWhiteSpace(value) || value.Trim() == Temporary.TempRootPathDefault) ? null : value.Trim()); }
+        }
+
+        [JsonPropertyName(nameof(TemporaryDirectory))]
+        [PropertyMapIgnore]
+        public string? TemporaryDirectoryRaw
+        {
+            get { return _temporaryDirectory; }
+            set { _temporaryDirectory = value; }
         }
 
         // ダウンロードファイル置き場
@@ -252,6 +259,14 @@ namespace NeeView
             set { SetProperty(ref _fileManagerFileArgs, string.IsNullOrWhiteSpace(value) || value.Trim() == _defaultFileManagerFileArgs ? null : value.Trim()); }
         }
 
+        [JsonPropertyName(nameof(FileManagerFileArgs))]
+        [PropertyMapIgnore]
+        public string? FileManagerFileArgsRaw
+        {
+            get { return _fileManagerFileArgs; }
+            set { _fileManagerFileArgs = value; }
+        }
+
         // ファイルマネージャーの起動引数 (フォルダー)
         [JsonIgnore]
         [PropertyMember]
@@ -259,6 +274,14 @@ namespace NeeView
         {
             get { return _fileManagerFolderArgs ?? _defaultFileManagerFolderArgs; }
             set { SetProperty(ref _fileManagerFolderArgs, string.IsNullOrWhiteSpace(value) || value.Trim() == _defaultFileManagerFolderArgs ? null : value.Trim()); }
+        }
+
+        [JsonPropertyName(nameof(FileManagerFolderArgs))]
+        [PropertyMapIgnore]
+        public string? FileManagerFolderArgsRaw
+        {
+            get { return _fileManagerFolderArgs; }
+            set { _fileManagerFolderArgs = value; }
         }
 
         /// <summary>

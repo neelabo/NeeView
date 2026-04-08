@@ -10,37 +10,31 @@ using System.Windows;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class BookshelfConfig : FolderListConfig
     {
         [IgnoreEquality]
         private readonly RegexCollectionCache _excludeRegexCache = new();
 
-        private bool _isVisibleHistoryMark = true;
-        private bool _isVisibleBookmarkMark = true;
-        private StringCollection _excludeRegexes = new();
-        private bool _isSyncFolderTree;
-        private bool _isSyncFolderTreeAuto;
-        private bool _isCloseBookWhenMove;
-        private bool _isOpenNextBookWhenRemove = true;
-        private bool _isInsertItem = true;
-        private bool _isMultipleRarFilterEnabled;
-        private bool _isCruise;
-        private bool _isSearchIncludeSubdirectories = true;
-        private FolderOrder _defaultFolderOrder;
-        private FolderOrder _playlistFolderOrder;
-        private FolderSortOrder _folderSortOrder = FolderSortOrder.First;
-        private bool _isVisibleItemsCount = true;
-        private bool _isVisibleSearchBox = true;
-
-        [JsonInclude, JsonPropertyName(nameof(Home))]
-        public string? _home;
-
-        [JsonInclude, JsonPropertyName(nameof(FolderConfigFilePath))]
-        public string? _folderConfigFilePath;
-
-        [JsonInclude, JsonPropertyName(nameof(QuickAccessFilePath))]
-        public string? _quickAccessFilePath;
+        [DefaultEquality] private bool _isVisibleHistoryMark = true;
+        [DefaultEquality] private bool _isVisibleBookmarkMark = true;
+        [DefaultEquality] private StringCollection _excludeRegexes = new();
+        [DefaultEquality] private bool _isSyncFolderTree;
+        [DefaultEquality] private bool _isSyncFolderTreeAuto;
+        [DefaultEquality] private bool _isCloseBookWhenMove;
+        [DefaultEquality] private bool _isOpenNextBookWhenRemove = true;
+        [DefaultEquality] private bool _isInsertItem = true;
+        [DefaultEquality] private bool _isMultipleRarFilterEnabled;
+        [DefaultEquality] private bool _isCruise;
+        [DefaultEquality] private bool _isSearchIncludeSubdirectories = true;
+        [DefaultEquality] private FolderOrder _defaultFolderOrder;
+        [DefaultEquality] private FolderOrder _playlistFolderOrder;
+        [DefaultEquality] private FolderSortOrder _folderSortOrder = FolderSortOrder.First;
+        [DefaultEquality] private bool _isVisibleItemsCount = true;
+        [DefaultEquality] private bool _isVisibleSearchBox = true;
+        [DefaultEquality] private string? _home;
+        [DefaultEquality] private string? _folderConfigFilePath;
+        [DefaultEquality] private string? _quickAccessFilePath;
 
         /// <summary>
         /// ホームのパス
@@ -51,6 +45,14 @@ namespace NeeView
         {
             get { return _home ?? BookshelfFolderList.GetDefaultHomePath(); }
             set { SetProperty(ref _home, (string.IsNullOrWhiteSpace(value) || value.Trim() == BookshelfFolderList.GetDefaultHomePath()) ? null : value.Trim()); }
+        }
+
+        [JsonPropertyName(nameof(Home))]
+        [PropertyMapIgnore]
+        public string? HomeRaw
+        {
+            get { return _home; }
+            set { _home = value; }
         }
 
         /// <summary>
@@ -224,6 +226,14 @@ namespace NeeView
             set { SetProperty(ref _folderConfigFilePath, (string.IsNullOrWhiteSpace(value) || value.Trim() == SaveDataProfile.DefaultFolderConfigFilePath) ? null : value.Trim()); }
         }
 
+        [JsonPropertyName(nameof(FolderConfigFilePath))]
+        [PropertyMapIgnore]
+        public string? FolderConfigFilePathRaw
+        {
+            get { return _folderConfigFilePath; }
+            set { _folderConfigFilePath = value; }
+        }
+
         /// <summary>
         /// クイックアクセス設定の保存場所
         /// </summary>
@@ -235,6 +245,13 @@ namespace NeeView
             set { SetProperty(ref _quickAccessFilePath, (string.IsNullOrWhiteSpace(value) || value.Trim() == SaveDataProfile.DefaultQuickAccessFilePath) ? null : value.Trim()); }
         }
 
+        [JsonPropertyName(nameof(QuickAccessFilePath))]
+        [PropertyMapIgnore]
+        public string? QuickAccessFilePathRaw
+        {
+            get { return _quickAccessFilePath; }
+            set { _quickAccessFilePath = value; }
+        }
 
         #region Obsolete
 

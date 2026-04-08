@@ -5,18 +5,15 @@ using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class FontsConfig : BindableBase
     {
-        private double _fontScale = 1.25;
-        private double _menuFontScale = 1.0;
-        private double _folderTreeFontScale = 1.0;
-        private double _panelFontScale = 1.25;
-        private bool _isClearTypeEnabled = true;
-
-        [JsonPropertyName(nameof(FontName))]
-        [JsonInclude]
-        public string? _fontName;
+        [DefaultEquality] private double _fontScale = 1.25;
+        [DefaultEquality] private double _menuFontScale = 1.0;
+        [DefaultEquality] private double _folderTreeFontScale = 1.0;
+        [DefaultEquality] private double _panelFontScale = 1.25;
+        [DefaultEquality] private bool _isClearTypeEnabled = true;
+        [DefaultEquality] private string? _fontName;
 
         /// <summary>
         /// 標準フォント名
@@ -27,6 +24,14 @@ namespace NeeView
         {
             get { return _fontName ?? SystemVisualParameters.Current.MessageFontName; }
             set { SetProperty(ref _fontName, (string.IsNullOrWhiteSpace(value) || value == SystemVisualParameters.Current.MessageFontName) ? null : value); }
+        }
+
+        [JsonPropertyName(nameof(FontName))]
+        [PropertyMapIgnore]
+        public string? FontNameRaw
+        {
+            get { return _fontName; }
+            set { _fontName = value; }
         }
 
         /// <summary>

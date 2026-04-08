@@ -7,13 +7,11 @@ using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class ThemeConfig : BindableBase
     {
-        private ThemeSource _themeType = new(NeeView.ThemeType.Dark);
-
-        [JsonInclude, JsonPropertyName(nameof(CustomThemeFolder))]
-        public string? _customThemeFolder;
+        [DefaultEquality] private ThemeSource _themeType = new(NeeView.ThemeType.Dark);
+        [DefaultEquality] private string? _customThemeFolder;
 
 
         // テーマ
@@ -44,6 +42,13 @@ namespace NeeView
             set { SetProperty(ref _customThemeFolder, (string.IsNullOrWhiteSpace(value) || value.Trim() == SaveDataProfile.DefaultCustomThemeFolder) ? null : value.Trim()); }
         }
 
+        [JsonPropertyName(nameof(CustomThemeFolder))]
+        [PropertyMapIgnore]
+        public string? CustomThemeFolderRaw
+        {
+            get { return _customThemeFolder; }
+            set { _customThemeFolder = value; }
+        }
 
         #region Obsolete
 

@@ -5,18 +5,14 @@ using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class ScriptConfig : BindableBase
     {
-        private bool _isScriptFolderEnabled;
-        private ScriptErrorLevel _errorLevel = ScriptErrorLevel.Error;
-        private bool _onBookLoadedWhenRenamed = true;
-        private bool _isSQLiteEnabled;
-
-
-        [JsonInclude]
-        [JsonPropertyName(nameof(ScriptFolder))]
-        public string? _scriptFolder = null;
+        [DefaultEquality] private bool _isScriptFolderEnabled;
+        [DefaultEquality] private ScriptErrorLevel _errorLevel = ScriptErrorLevel.Error;
+        [DefaultEquality] private bool _onBookLoadedWhenRenamed = true;
+        [DefaultEquality] private bool _isSQLiteEnabled;
+        [DefaultEquality] private string? _scriptFolder = null;
 
 
         [PropertyMember]
@@ -32,6 +28,14 @@ namespace NeeView
         {
             get { return _scriptFolder ?? SaveDataProfile.DefaultScriptsFolder; }
             set { SetProperty(ref _scriptFolder, (string.IsNullOrEmpty(value) || value.Trim() == SaveDataProfile.DefaultScriptsFolder) ? null : value.Trim()); }
+        }
+
+        [JsonPropertyName(nameof(ScriptFolder))]
+        [PropertyMapIgnore]
+        public string? ScriptFolderRaw
+        {
+            get { return _scriptFolder; }
+            set { _scriptFolder = value; }
         }
 
         [PropertyMember]

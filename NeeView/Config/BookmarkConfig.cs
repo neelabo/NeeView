@@ -5,18 +5,16 @@ using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = false)]
+    [Equatable(Explicit = true)]
     public partial class BookmarkConfig : FolderListConfig
     {
-        private bool _isSaveBookmark = true;
-        private bool _isSyncBookshelfEnabled = true;
-        private FolderOrder _bookmarkFolderOrder;
-        private bool _isSearchIncludeSubdirectories = true;
-        private bool _isVisibleItemsCount = true;
-        private bool _isVisibleSearchBox = true;
-
-        [JsonInclude, JsonPropertyName(nameof(BookmarkFilePath))]
-        public string? _bookmarkFilePath;
+        [DefaultEquality] private bool _isSaveBookmark = true;
+        [DefaultEquality] private bool _isSyncBookshelfEnabled = true;
+        [DefaultEquality] private FolderOrder _bookmarkFolderOrder;
+        [DefaultEquality] private bool _isSearchIncludeSubdirectories = true;
+        [DefaultEquality] private bool _isVisibleItemsCount = true;
+        [DefaultEquality] private bool _isVisibleSearchBox = true;
+        [DefaultEquality] private string? _bookmarkFilePath;
 
 
         /// <summary>
@@ -44,6 +42,14 @@ namespace NeeView
         {
             get { return _bookmarkFilePath ?? SaveDataProfile.DefaultBookmarkFilePath; }
             set { SetProperty(ref _bookmarkFilePath, string.IsNullOrWhiteSpace(value) || value.Trim() == SaveDataProfile.DefaultBookmarkFilePath ? null : value.Trim()); }
+        }
+
+        [JsonPropertyName(nameof(BookmarkFilePath))]
+        [PropertyMapIgnore]
+        public string? BookmarkFilePathRaw
+        {
+            get { return _bookmarkFilePath; }
+            set { _bookmarkFilePath = value; }
         }
 
         // ブックマークの既定の並び順

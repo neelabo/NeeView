@@ -8,10 +8,7 @@ namespace NeeView
     public sealed class QuickAccess : QuickAccessEntry
     {
         private string? _path;
-
-        [JsonInclude, JsonPropertyName(nameof(Name))]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string? _name;
+        private string? _name;
 
 
         public QuickAccess() : this(null, null)
@@ -55,6 +52,15 @@ namespace NeeView
                 var name = GetValidateName(value?.Trim());
                 SetProperty(ref _name, string.IsNullOrEmpty(name) || name == DefaultName ? null : name);
             }
+        }
+
+        [JsonPropertyName(nameof(Name))]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        [PropertyMapIgnore]
+        public string? NameRaw
+        {
+            get { return _name; }
+            set { _name = value; }
         }
 
         public override string? RawName => _name;

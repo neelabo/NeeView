@@ -10,12 +10,15 @@ using System.Windows;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class InformationConfig : BindableBase
     {
         private static readonly string _defaultDateTimeFormat = TextResources.GetString("Information.DateFormat");
         private static readonly string _defaultMapProgramFormat = @"https://www.google.com/maps/place/{Lat}+{Lon}/";
-        private GridLength _propertyHeaderWidth = new(128.0);
+        
+        [DefaultEquality] private GridLength _propertyHeaderWidth = new(128.0);
+        [DefaultEquality] private string? _dateTimeFormat = null;
+        [DefaultEquality] private string? _mapProgramFormat;
 
         [IgnoreEquality]
         private readonly Dictionary<InformationGroup, bool> _groupVisibilityMap = new()
@@ -29,11 +32,6 @@ namespace NeeView
             [InformationGroup.Gps] = true,
             [InformationGroup.Extras] = false,
         };
-
-        [JsonInclude, JsonPropertyName(nameof(DateTimeFormat))]
-        public string? _dateTimeFormat = null;
-        [JsonInclude, JsonPropertyName(nameof(MapProgramFormat))]
-        public string? _mapProgramFormat;
 
 
         private bool SetVisibleGroup(InformationGroup group, bool isVisible, [CallerMemberName] string? propertyName = null)
@@ -59,6 +57,14 @@ namespace NeeView
             set { SetProperty(ref _dateTimeFormat, (string.IsNullOrWhiteSpace(value) || value == _defaultDateTimeFormat) ? null : value); }
         }
 
+        [JsonPropertyName(nameof(DateTimeFormat))]
+        [PropertyMapIgnore]
+        public string? DateTimeFormatRaw
+        {
+            get { return _dateTimeFormat; }
+            set { _dateTimeFormat = value; }
+        }
+
         [JsonIgnore]
         [PropertyMember]
         public string MapProgramFormat
@@ -67,6 +73,13 @@ namespace NeeView
             set { SetProperty(ref _mapProgramFormat, (string.IsNullOrWhiteSpace(value) || value == _defaultMapProgramFormat) ? null : value); }
         }
 
+        [JsonPropertyName(nameof(MapProgramFormat))]
+        [PropertyMapIgnore]
+        public string? MapProgramFormatRaw
+        {
+            get { return _mapProgramFormat; }
+            set { _mapProgramFormat = value; }
+        }
 
         [PropertyMember]
         public bool IsVisibleFile

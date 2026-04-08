@@ -6,19 +6,15 @@ using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class PlaylistConfig : BindableBase, IHasPanelListItemStyle
     {
-        private PanelListItemStyle _panelListItemStyle;
-        private bool _isGroupBy;
-        private bool _isCurrentBookFilterEnabled;
-        private bool _isFirstIn;
-
-        [JsonInclude, JsonPropertyName(nameof(PlaylistFolder))]
-        public string? _playlistFolder;
-
-        [JsonInclude, JsonPropertyName(nameof(CurrentPlaylist))]
-        public string? _currentPlaylist;
+        [DefaultEquality] private PanelListItemStyle _panelListItemStyle;
+        [DefaultEquality] private bool _isGroupBy;
+        [DefaultEquality] private bool _isCurrentBookFilterEnabled;
+        [DefaultEquality] private bool _isFirstIn;
+        [DefaultEquality] public string? _playlistFolder;
+        [DefaultEquality] public string? _currentPlaylist;
 
 
         [PropertyMember]
@@ -36,6 +32,14 @@ namespace NeeView
             set { SetProperty(ref _playlistFolder, ToShortPlaylistFolder(value)); }
         }
 
+        [JsonPropertyName(nameof(PlaylistFolder))]
+        [PropertyMapIgnore]
+        public string? PlaylistFolderRaw
+        {
+            get { return _playlistFolder; }
+            set { _playlistFolder = value; }
+        }
+
         [JsonIgnore]
         [PropertyMapIgnore]
         public string DefaultPlaylist => string.IsNullOrEmpty(PlaylistFolder) ? "" : System.IO.Path.Combine(PlaylistFolder, "Default.nvpls");
@@ -50,6 +54,14 @@ namespace NeeView
         {
             get { return ToFullPlaylistPath(_currentPlaylist); }
             set { SetProperty(ref _currentPlaylist, ToShortPlaylistPath(value)); }
+        }
+
+        [JsonPropertyName(nameof(CurrentPlaylist))]
+        [PropertyMapIgnore]
+        public string? CurrentPlaylistRaw
+        {
+            get { return _currentPlaylist; }
+            set { _currentPlaylist = value; }
         }
 
         [PropertyMember]

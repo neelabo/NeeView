@@ -8,24 +8,23 @@ using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    [Equatable(IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class ThumbnailConfig : BindableBase
     {
         public static bool IsVideoThumbnailSupported => Windows10Tools.IsWindows10_OrGreater(10240);
 
-        private bool _isCacheEnabled = true;
-        private TimeSpan _cacheLimitSpan;
-        private BitmapImageFormat _format = BitmapImageFormat.Jpeg;
-        private int _quality = 80;
-        private int _thumbnailBookCapacity = 200;
-        private int _thumbnailPageCapacity = 100;
-        private int _imageWidth = 256;
-#if USE_WINRT
-        private bool _isVideoThumbnailEnabled = true;
-#endif
+        [DefaultEquality] private bool _isCacheEnabled = true;
+        [DefaultEquality] private TimeSpan _cacheLimitSpan;
+        [DefaultEquality] private BitmapImageFormat _format = BitmapImageFormat.Jpeg;
+        [DefaultEquality] private int _quality = 80;
+        [DefaultEquality] private int _thumbnailBookCapacity = 200;
+        [DefaultEquality] private int _thumbnailPageCapacity = 100;
+        [DefaultEquality] private int _imageWidth = 256;
+        [DefaultEquality] private string? _thumbnailCacheFilePath;
 
-        [JsonInclude, JsonPropertyName(nameof(ThumbnailCacheFilePath))]
-        public string? _thumbnailCacheFilePath;
+#if USE_WINRT
+        [DefaultEquality] private bool _isVideoThumbnailEnabled = true;
+#endif
 
 
         [PropertyMember]
@@ -42,6 +41,14 @@ namespace NeeView
         {
             get { return _thumbnailCacheFilePath ?? Database.DefaultThumbnailCacheFilePath; }
             set { SetProperty(ref _thumbnailCacheFilePath, string.IsNullOrWhiteSpace(value) || value.Trim() == Database.DefaultThumbnailCacheFilePath ? null : value.Trim()); }
+        }
+
+        [JsonPropertyName(nameof(ThumbnailCacheFilePath))]
+        [PropertyMapIgnore]
+        public string? ThumbnailCacheFilePathRaw
+        {
+            get { return _thumbnailCacheFilePath; }
+            set { _thumbnailCacheFilePath = value; }
         }
 
         /// <summary>
