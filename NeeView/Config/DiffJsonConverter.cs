@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NeeLaboratory.Linq;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -11,51 +13,95 @@ namespace NeeView
     /// 初期値と同じ値のプロパティを出力しない JsonConverter
     /// </summary>
     /// <remarks>
+    /// フィールドはなるべく同名プロパティの位置になるような順番で出力する。
     /// シリアライズ専用。以下の属性やオプションには対応していません。
     /// - JsonPropertyOrder
-    /// - PropertyNamingPolicy
+    /// - PropertyNamingPolicy など
     /// </remarks>
     /// <typeparam name="T"></typeparam>
     public class DiffJsonConverter<T> : JsonConverter<T> where T : new()
     {
         private sealed class PropMeta
         {
-            public required PropertyInfo Prop { get; init; }
-            public required Type PropertyType { get; init; }
-            public required string JsonName { get; init; }
-            public required Func<T, object?> Getter { get; init; }
+            public PropMeta(string jsonName, Type propertyType, Func<T, object?> getter)
+            {
+                JsonName = jsonName;
+                PropertyType = propertyType;
+                Getter = getter;
+            }
+
+            public string JsonName { get; }
+            public Type PropertyType { get; }
+            public Func<T, object?> Getter { get; }
         }
 
         private static readonly PropMeta[] _props = BuildProps();
 
         private static PropMeta[] BuildProps()
         {
-            return typeof(T)
-                .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                .Where(p =>
-                    p.GetMethod is { IsPublic: true } &&
-                    p.SetMethod is { IsPublic: true } &&
-                    p.GetCustomAttribute<JsonIgnoreAttribute>(false)?.Condition is not (JsonIgnoreCondition.Always or JsonIgnoreCondition.WhenWriting))
-                .Select(p =>
-                {
-                    var nameAttr = p.GetCustomAttribute<JsonPropertyNameAttribute>(false);
-                    var jsonName = nameAttr?.Name ?? p.Name;
+            var type = typeof(T);
+            var map = new OrderedDictionary<string, PropMeta?>();
 
+            foreach (var p in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+            {
+                var nameAttr = p.GetCustomAttribute<JsonPropertyNameAttribute>(false);
+                var jsonName = nameAttr?.Name ?? p.Name;
+
+                if (p.GetMethod is { IsPublic: true } &&
+                    p.SetMethod is { IsPublic: true } &&
+                    p.GetIndexParameters().Length == 0 &&
+                    p.GetCustomAttribute<JsonIgnoreAttribute>(false)?.Condition is not (JsonIgnoreCondition.Always or JsonIgnoreCondition.WhenWriting))
+                {
                     var instanceParam = Expression.Parameter(typeof(T), "target");
                     Expression propertyAccess = Expression.Property(instanceParam, p);
                     Expression convertResult = Expression.Convert(propertyAccess, typeof(object));
                     var lambda = Expression.Lambda<Func<T, object?>>(convertResult, instanceParam);
                     var getter = lambda.Compile();
 
-                    return new PropMeta
+                    AddToMap(jsonName, new PropMeta(jsonName, p.PropertyType, getter));
+                }
+                else
+                {
+                    AddToMap(jsonName, null);
+                }
+            }
+
+            foreach (var f in type.GetFields(BindingFlags.Instance | BindingFlags.Public))
+            {
+                var nameAttr = f.GetCustomAttribute<JsonPropertyNameAttribute>(false);
+                var jsonName = nameAttr?.Name ?? f.Name;
+
+                if (f.IsPublic &&
+                    f.GetCustomAttribute<JsonIncludeAttribute>(false) is not null &&
+                    f.GetCustomAttribute<JsonIgnoreAttribute>(false)?.Condition is not (JsonIgnoreCondition.Always or JsonIgnoreCondition.WhenWriting))
+                {
+                    var instanceParam = Expression.Parameter(type, "target");
+                    Expression fieldAccess = Expression.Field(instanceParam, f);
+                    Expression convertResult = Expression.Convert(fieldAccess, typeof(object));
+                    var lambda = Expression.Lambda<Func<T, object?>>(convertResult, instanceParam);
+                    var getter = lambda.Compile();
+
+                    AddToMap(jsonName, new PropMeta(jsonName, f.FieldType, getter));
+                }
+            }
+
+            return map.Values.WhereNotNull().ToArray();
+
+            void AddToMap(string jsonName, PropMeta? propMeta)
+            {
+                if (map.TryGetValue(jsonName, out var value))
+                {
+                    if (value is not null)
                     {
-                        Prop = p,
-                        PropertyType = p.PropertyType,
-                        JsonName = jsonName,
-                        Getter = getter,
-                    };
-                })
-                .ToArray();
+                        throw new InvalidOperationException($"Duplicate JSON property name '{jsonName}' in type '{type.FullName}'.");
+                    }
+                    map[jsonName] = propMeta;
+                }
+                else
+                {
+                    map.Add(jsonName, propMeta);
+                }
+            }
         }
 
         public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
