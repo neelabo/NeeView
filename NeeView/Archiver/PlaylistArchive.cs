@@ -76,7 +76,7 @@ namespace NeeView
             var targetPath = item.Path;
 
             // プレイリストに動画ブックの特殊形式 (/path/to/movie.mp4/movie.mp4) があるときの補正
-            if (ArchiveManager.Current.GetSupportedType(targetPath) == ArchiveType.MediaArchive && !File.Exists(targetPath))
+            if (ArchiveManager.Current.GetSupportedType(targetPath) == ArchiveType.MediaArchive && !FileIO.FileExists(targetPath))
             {
                 var targetDirectory = LoosePath.GetDirectoryName(targetPath);
                 if (ArchiveManager.Current.GetSupportedType(targetDirectory) == ArchiveType.MediaArchive)

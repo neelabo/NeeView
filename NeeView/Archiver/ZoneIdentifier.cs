@@ -23,7 +23,7 @@ namespace NeeView
             try
             {
                 var zoneIdentifierPath = GetZoneIdentifierPath(path);
-                if (File.Exists(zoneIdentifierPath))
+                if (FileIO.FileExists(zoneIdentifierPath))
                 {
                     var bytes = File.ReadAllBytes(zoneIdentifierPath);
                     return new ZoneIdentifier(bytes);
@@ -42,7 +42,7 @@ namespace NeeView
             try
             {
                 var zoneIdentifierPath = GetZoneIdentifierPath(path);
-                if (File.Exists(zoneIdentifierPath))
+                if (FileIO.FileExists(zoneIdentifierPath))
                 {
                     var bytes = await File.ReadAllBytesAsync(zoneIdentifierPath, token);
                     return new ZoneIdentifier(bytes);

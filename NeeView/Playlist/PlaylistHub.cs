@@ -96,7 +96,7 @@ namespace NeeView
         {
             if (SelectedItem != Config.Current.Playlist.DefaultPlaylist)
             {
-                if (!File.Exists(SelectedItem))
+                if (!FileIO.FileExists(SelectedItem))
                 {
                     SelectedItem = Config.Current.Playlist.DefaultPlaylist;
                 }
@@ -297,11 +297,11 @@ namespace NeeView
         /// <returns></returns>
         private string GetReloadPlaylistPath(string path)
         {
-            if (File.Exists(SelectedItem))
+            if (FileIO.FileExists(SelectedItem))
             {
                 return SelectedItem;
             }
-            if (File.Exists(path))
+            if (FileIO.FileExists(path))
             {
                 return path;
             }
@@ -370,7 +370,7 @@ namespace NeeView
         public async ValueTask DeleteAsync()
         {
             if (!CanDelete()) return;
-            if (!File.Exists(SelectedItem)) return;
+            if (!FileIO.FileExists(SelectedItem)) return;
 
             var entry = ArchiveEntryUtility.CreateTemporaryEntry(SelectedItem);
             bool isSucceed = await ConfirmFileIO.DeleteAsync(entry, TextResources.GetString("Playlist.DeleteDialog.Title"), null);

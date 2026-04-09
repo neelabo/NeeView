@@ -32,25 +32,40 @@ namespace NeeView
         private MultiBootService? _multiBootService;
 
 
-        // オプション設定
+        /// <summary>
+        /// オプション設定
+        /// </summary>
         public CommandLineOption Option => _option ?? throw new InvalidOperationException("_option must not be null");
 
-        // システムロック
+        /// <summary>
+        /// システムロック
+        /// </summary>
         public System.Threading.Lock Lock { get; } = new();
 
-        // 起動日時
+        /// <summary>
+        /// 起動日時
+        /// </summary>
         public DateTime StartTime { get; private set; }
 
-        // 開発用：ストップウォッチ
+        /// <summary>
+        /// 開発用：ストップウォッチ
+        /// </summary>
         public Stopwatch Stopwatch { get; private set; } = new();
 
-        // MainWindowはLoad完了している？
+        /// <summary>
+        /// MainWindowはLoad完了している？
+        /// </summary>
         public bool IsMainWindowLoaded { get; set; }
 
         /// <summary>
         /// アプリの起動時間(ms)取得
         /// </summary>
         public int TickCount => System.Environment.TickCount - _tickBase;
+
+        /// <summary>
+        /// トレースログは有効？
+        /// </summary>
+        public bool IsTraceLogEnabled { get; set; }
 
 
         /// <summary>
@@ -66,15 +81,6 @@ namespace NeeView
             // DLL 検索パスから現在の作業ディレクトリ (CWD) を削除
             PInvoke.SetDllDirectory("");
 
-#if TRACE_LOG
-            var nowTime = DateTime.Now;
-            var traceLogFilename = $"Trace{nowTime.ToString("yyMMdHHmmss")}.log";
-            StreamWriter sw = new StreamWriter(traceLogFilename) { AutoFlush = true };
-            TextWriterTraceListener twtl = new TextWriterTraceListener(TextWriter.Synchronized(sw), "MyListener");
-            Trace.Listeners.Add(twtl);
-            Trace.WriteLine($"Trace: Start ({nowTime})");
-#endif
-
             // 起動処理排他ロック取得。時間内 (30sec) に獲得できなければアプリ終了
             var bootLock = new BootProcessLock(30 * 1000);
             var bootLockKey = bootLock.Lock();
@@ -86,10 +92,11 @@ namespace NeeView
                 // [開発用] ログ出力設定
                 if (!string.IsNullOrEmpty(Environment.LogFile))
                 {
-                    var twtl = new TextWriterTraceListener(Environment.LogFile, "TraceLog");
-                    Trace.Listeners.Add(twtl);
+                    var traceListener = new TextWriterTraceListener(Environment.LogFile, "TraceLog");
+                    Trace.Listeners.Add(traceListener);
                     Trace.AutoFlush = true;
                     Trace.WriteLine(System.Environment.NewLine + new string('=', 80));
+                    IsTraceLogEnabled = true;
                 }
 
                 Trace.WriteLine($"App.Startup: PID={System.Environment.ProcessId}: {DateTime.Now}");

@@ -373,7 +373,7 @@ namespace NeeView
 
             try
             {
-                if (!Directory.Exists(folder.Path))
+                if (!FileIO.DirectoryExists(folder.Path))
                 {
                     throw new DirectoryNotFoundException();
                 }
@@ -415,7 +415,7 @@ namespace NeeView
 
             try
             {
-                if (!Directory.Exists(folder.Path))
+                if (!FileIO.DirectoryExists(folder.Path))
                 {
                     throw new DirectoryNotFoundException();
                 }

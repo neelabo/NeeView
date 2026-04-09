@@ -33,7 +33,7 @@ namespace NeeView
         public bool Exists(string name)
         {
             var path = GetFullPath(name);
-            return File.Exists(path);
+            return FileIO.FileExists(path);
         }
 
         public string CreateUniqueName(string name)

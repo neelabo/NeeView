@@ -74,7 +74,7 @@ namespace NeeView.IO
 
         public static List<BitmapSource> CreateDirectoryIconCollection(string filename, bool allowJumbo)
         {
-            var flags = System.IO.Directory.Exists(filename) ? 0 : SHGFI_FLAGS.SHGFI_USEFILEATTRIBUTES;
+            var flags = FileIO.DirectoryExists(filename) ? 0 : SHGFI_FLAGS.SHGFI_USEFILEATTRIBUTES;
             return CreateFileIconCollection(filename, FILE_FLAGS_AND_ATTRIBUTES.FILE_ATTRIBUTE_DIRECTORY, flags, allowJumbo);
         }
 

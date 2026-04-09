@@ -268,7 +268,7 @@ namespace NeeView.Windows.Controls
 
             if (FileDialogType == FileDialogType.Directory)
             {
-                if (Directory.Exists(dropFiles[0]))
+                if (FileIO.DirectoryExists(dropFiles[0]))
                 {
                     Text = dropFiles[0];
                 }

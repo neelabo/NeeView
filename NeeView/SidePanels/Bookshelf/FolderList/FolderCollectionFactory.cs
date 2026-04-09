@@ -49,7 +49,7 @@ namespace NeeView
                 {
                     return await CreateSearchFolderCollectionAsync(path, isActive, includeSubdirectories, token);
                 }
-                else if (path.Path == null || Directory.Exists(path.Path))
+                else if (path.Path == null || FileIO.DirectoryExists(path.Path))
                 {
                     return await CreateEntryFolderCollectionAsync(path, isActive, token);
                 }

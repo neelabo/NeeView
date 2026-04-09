@@ -197,7 +197,7 @@ namespace NeeView
             if (_parameter.BookType == ExportBookType.Zip)
             {
                 // ファイルが存在する場合は上書き確認
-                if (FileIO.ExistsPath(dialog.FileName))
+                if (FileIO.EntryExists(dialog.FileName))
                 {
                     var allowOverwrite = ShowOverwriteConfirmDialog(owner, TextResources.GetString("OverwriteFileDialog.Title"), TextResources.GetFormatString("OverwriteFileDialog.Message", System.IO.Path.GetFileName(dialog.FileName)));
                     if (!allowOverwrite)

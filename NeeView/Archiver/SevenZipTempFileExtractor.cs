@@ -38,7 +38,7 @@ namespace NeeView
 
             _directory = directory;
 
-            if (!Directory.Exists(_directory))
+            if (!FileIO.DirectoryExists(_directory))
             {
                 Directory.CreateDirectory(_directory);
             }

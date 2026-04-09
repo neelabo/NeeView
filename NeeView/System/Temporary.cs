@@ -65,7 +65,7 @@ namespace NeeView
             TempRootPath = path ?? TempRootPathDefault;
             if (validate && TempRootPath != TempRootPathDefault)
             {
-                if (!Directory.Exists(TempRootPath))
+                if (!FileIO.DirectoryExists(TempRootPath))
                 {
                     ToastService.Current.Show(new Toast(string.Format(CultureInfo.InvariantCulture, TextResources.GetString("Notice.TemporaryErrorDirectoryNotFound"), TempRootPath), TextResources.GetString("Notice.TemporaryErrorTitle"), ToastIcon.Error));
                     TempRootPath = TempRootPathDefault;

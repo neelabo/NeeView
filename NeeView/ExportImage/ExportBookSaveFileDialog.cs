@@ -50,7 +50,7 @@ namespace NeeView
 
         private static string ValidateDirectoryPath(string? path)
         {
-            if (System.IO.Directory.Exists(path))
+            if (FileIO.DirectoryExists(path))
             {
                 return path;
             }

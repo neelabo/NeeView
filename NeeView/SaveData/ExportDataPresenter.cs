@@ -43,7 +43,7 @@ namespace NeeView
         public void Import(ImportBackupCommandParameter parameter)
         {
             var param = (ImportBackupCommandParameter)parameter.Clone();
-            if (string.IsNullOrWhiteSpace(param.FileName) || !System.IO.File.Exists(param.FileName))
+            if (string.IsNullOrWhiteSpace(param.FileName) || !FileIO.FileExists(param.FileName))
             {
                 var dialogParam = new OpenExportDataDialogParameter();
                 if (_dialogService.ShowDialog("OpenExportDataDialog", dialogParam) != true) return;

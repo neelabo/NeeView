@@ -91,7 +91,7 @@ namespace NeeView
         // TODO: BookHubへ？
         public void Load(string path, BookLoadOption option = BookLoadOption.None)
         {
-            if (FileShortcut.IsShortcut(path) && (System.IO.File.Exists(path) || System.IO.Directory.Exists(path)))
+            if (FileShortcut.IsShortcut(path) && FileIO.EntryExists(path))
             {
                 var shortcut = new FileShortcut(path);
                 var target = shortcut.TargetPath;

@@ -102,7 +102,7 @@ namespace NeeView
 
                 if (this.SettingFilename != null)
                 {
-                    if (!File.Exists(this.SettingFilename))
+                    if (!FileIO.FileExists(this.SettingFilename))
                     {
                         throw new ArgumentException($"{TextResources.GetString("OptionArgumentException.FileNotFound")}: {this.SettingFilename}");
                     }

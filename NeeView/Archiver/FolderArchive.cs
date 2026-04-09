@@ -183,7 +183,7 @@ namespace NeeView
             if (entry.IsDeleted) return false;
 
             var path = entry.EntityPath;
-            return File.Exists(path) || Directory.Exists(path);
+            return FileIO.EntryExists(path);
         }
 
         /// <summary>

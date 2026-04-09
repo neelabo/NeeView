@@ -83,7 +83,7 @@ namespace NeeView
 
             // TODO: アプリの初期化処理で行うべき
             // ダウンロードフォルダー生成
-            if (!System.IO.Directory.Exists(Temporary.Current.TempDownloadDirectory))
+            if (!FileIO.DirectoryExists(Temporary.Current.TempDownloadDirectory))
             {
                 System.IO.Directory.CreateDirectory(Temporary.Current.TempDownloadDirectory);
             }

@@ -275,7 +275,7 @@ namespace NeeView
             }
             catch (Exception e)
             {
-                if (!System.IO.Directory.Exists(downloadPath)) throw new DropException(TextResources.GetString("Notice.OutputFailed") + "\n" + e.Message, e);
+                if (!FileIO.DirectoryExists(downloadPath)) throw new DropException(TextResources.GetString("Notice.OutputFailed") + "\n" + e.Message, e);
             }
 
             return fileName;

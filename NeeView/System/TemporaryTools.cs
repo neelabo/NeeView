@@ -31,7 +31,7 @@ namespace NeeView
                     tempFileName = Path.Combine(directoryPath, string.Create(CultureInfo.InvariantCulture, $"{prefix}{_count:D4}{ext}"));
                     _count++;
                 }
-                while (File.Exists(tempFileName) || Directory.Exists(tempFileName));
+                while (FileIO.EntryExists(tempFileName));
 
                 return tempFileName;
             }
@@ -59,12 +59,12 @@ namespace NeeView
             string tempFileName = Path.Combine(directoryPath, validName);
             int count = 0;
 
-            while (File.Exists(tempFileName) || Directory.Exists(tempFileName))
+            while (FileIO.EntryExists(tempFileName))
             {
                 var subDirectory = Path.Combine(directoryPath, $"tmp{count:D4}");
                 count++;
 
-                if (File.Exists(subDirectory))
+                if (FileIO.FileExists(subDirectory))
                 {
                     continue;
                 }

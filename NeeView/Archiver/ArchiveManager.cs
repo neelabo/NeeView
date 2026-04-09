@@ -307,12 +307,12 @@ namespace NeeView
             if (_disposedValue) return [];
             if (string.IsNullOrEmpty(fileName)) return [];
 
-            if (Directory.Exists(fileName))
+            if (FileIO.DirectoryExists(fileName))
             {
                 return [new ArchiverIdentifier(ArchiveType.FolderArchive)];
             }
 
-            if (!File.Exists(fileName))
+            if (!FileIO.FileExists(fileName))
             {
                 return [];
             }
@@ -403,7 +403,7 @@ namespace NeeView
         private Archive CreateArchive(string path, ArchiveEntry? source, ArchiveHint archiveHint)
         {
             // TODO: source が null のときに archiveHint が archive に記録されない
-            if (Directory.Exists(path))
+            if (FileIO.DirectoryExists(path))
             {
                 return CreateArchive(ArchiveType.FolderArchive, path, source, archiveHint);
             }
@@ -478,11 +478,11 @@ namespace NeeView
 
             if (isAllowFileSystem)
             {
-                return Directory.Exists(path) || (File.Exists(path) && IsSupported(path, true));
+                return FileIO.DirectoryExists(path) || (FileIO.FileExists(path) && IsSupported(path, true));
             }
             else
             {
-                return File.Exists(path) && IsSupported(path, false);
+                return FileIO.FileExists(path) && IsSupported(path, false);
             }
         }
 
@@ -504,7 +504,7 @@ namespace NeeView
             while (true)
             {
                 path = LoosePath.GetDirectoryName(path);
-                if (string.IsNullOrEmpty(path) || Directory.Exists(path))
+                if (string.IsNullOrEmpty(path) || FileIO.DirectoryExists(path))
                 {
                     break;
                 }

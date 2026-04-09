@@ -26,7 +26,7 @@ namespace NeeView
 
         public static PlaylistSourceEditor? Create(string path)
         {
-            if (File.Exists(path))
+            if (FileIO.FileExists(path))
             {
                 var playlist = PlaylistSourceTools.Load(path);
                 return new PlaylistSourceEditor(path, playlist);

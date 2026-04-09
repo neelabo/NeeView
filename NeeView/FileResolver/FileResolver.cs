@@ -198,7 +198,7 @@ namespace NeeView
             }
 
             // パスが存在しない場合は登録解除して false を返す
-            if (!File.Exists(path) && !Directory.Exists(path))
+            if (!FileIO.EntryExists(path))
             {
                 LocalDebug.WriteLine($"File not found.");
                 //_database.Remove(path); .. 解除必要か？
@@ -238,7 +238,7 @@ namespace NeeView
                 return null;
             }
 
-            if (File.Exists(path) || Directory.Exists(path))
+            if (FileIO.EntryExists(path))
             {
                 LocalDebug.WriteLine($"Exists.");
                 return path;
@@ -311,7 +311,7 @@ namespace NeeView
                     var systemResolved = Resolve(systemPath, false);
                     if (systemResolved != null)
                     {
-                        if (File.Exists(systemResolved))
+                        if (FileIO.FileExists(systemResolved))
                         {
                             // 有効ならアーカイブパスを返す
                             resolved = systemResolved + path.Substring(index);

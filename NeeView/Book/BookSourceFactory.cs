@@ -17,7 +17,7 @@ namespace NeeView
             var pages = await CreatePageCollection(archiveEntryCollection, setting.BookPageCollectMode, new PageContentFactory(bookMemoryService, true), setting.Decrypt, token);
 
             // 再起判定は通常のディレクトリーのみ適用
-            var canAutoRecursive = System.IO.Directory.Exists(address.TargetPath.SimplePath);
+            var canAutoRecursive = FileIO.DirectoryExists(address.TargetPath.SimplePath);
 
             // 再帰判定用サブフォルダー数カウント
             int subFolderCount = 0;

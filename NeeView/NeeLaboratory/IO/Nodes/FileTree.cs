@@ -2,6 +2,7 @@
 using NeeLaboratory.Generators;
 using NeeLaboratory.Threading;
 using NeeLaboratory.Threading.Jobs;
+using NeeView;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -40,7 +41,7 @@ namespace NeeLaboratory.IO.Nodes
         public FileTree(string path, EnumerationOptions enumerationOptions) : base(path)
         {
             if (string.Compare(path, Path.GetFullPath(path), StringComparison.OrdinalIgnoreCase) != 0) throw new ArgumentException($"Not an absolute path: {path}");
-            if (!Directory.Exists(path)) throw new DirectoryNotFoundException($"Directory not found: {path}");
+            if (!FileIO.DirectoryExists(path)) throw new DirectoryNotFoundException($"Directory not found: {path}");
 
             _path = path;
 

@@ -83,7 +83,7 @@ namespace NeeView
         {
             if (!entry.IsDirectory) throw new InvalidOperationException("Not archive directory: " + entry.EntryName);
 
-            if (!isOverwrite && Directory.Exists(exportFileName)) throw new IOException($"Directory already exists: {exportFileName}");
+            if (!isOverwrite && FileIO.DirectoryExists(exportFileName)) throw new IOException($"Directory already exists: {exportFileName}");
 
             var prefix = CreateEntryPrefix(entry);
 

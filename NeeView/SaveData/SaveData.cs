@@ -81,7 +81,7 @@ namespace NeeView
             using (ProcessLock.Lock())
             {
                 var filename = App.Current.Option.SettingFilename;
-                if (File.Exists(filename))
+                if (FileIO.FileExists(filename))
                 {
                     var fileStamp = FileStamp.Create(filename);
                     var failedDialog = new UserSettingLoadFailedDialog(cancellable);
@@ -141,7 +141,7 @@ namespace NeeView
         {
             using (ProcessLock.Lock())
             {
-                if (!File.Exists(filename))
+                if (!FileIO.FileExists(filename))
                 {
                     return;
                 }
@@ -178,7 +178,7 @@ namespace NeeView
         {
             using (ProcessLock.Lock())
             {
-                if (!File.Exists(filename))
+                if (!FileIO.FileExists(filename))
                 {
                     return;
                 }
@@ -205,7 +205,7 @@ namespace NeeView
         {
             using (ProcessLock.Lock())
             {
-                if (!File.Exists(filename))
+                if (!FileIO.FileExists(filename))
                 {
                     return;
                 }
@@ -259,7 +259,7 @@ namespace NeeView
         {
             var old = path + BackupExtension;
 
-            if (File.Exists(path))
+            if (FileIO.FileExists(path))
             {
                 try
                 {
@@ -267,7 +267,7 @@ namespace NeeView
                 }
                 catch
                 {
-                    if (File.Exists(old))
+                    if (FileIO.FileExists(old))
                     {
                         loadBackupCallback?.Invoke();
                         return load(old);
@@ -278,7 +278,7 @@ namespace NeeView
                     }
                 }
             }
-            else if (File.Exists(old))
+            else if (FileIO.FileExists(old))
             {
                 return load(old);
             }
@@ -320,7 +320,7 @@ namespace NeeView
 
                 // バックアップファイルも削除
                 var backup = filename + ".old";
-                if (File.Exists(backup))
+                if (FileIO.FileExists(backup))
                 {
                     Debug.WriteLine($"Remove: {backup}");
                     FileIO.DeleteFile(backup);

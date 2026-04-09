@@ -39,7 +39,7 @@ namespace NeeView.IO
             Stop();
 
 
-            if (string.IsNullOrEmpty(path) || !FileIO.ExistsPath(path))
+            if (string.IsNullOrEmpty(path) || !FileIO.EntryExists(path))
             {
                 return;
             }

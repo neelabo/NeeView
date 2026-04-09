@@ -55,7 +55,10 @@ namespace NeeView
                 {
                     if (Path != null && Path.StartsWith(Temporary.Current.TempDirectory, StringComparison.Ordinal)) // 念入りチェック
                     {
-                        if (File.Exists(Path)) File.Delete(Path);
+                        if (FileIO.FileExists(Path))
+                        {
+                            File.Delete(Path);
+                        }
                     }
                 }
                 catch (Exception e)

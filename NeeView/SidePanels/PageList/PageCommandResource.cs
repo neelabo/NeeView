@@ -132,7 +132,7 @@ namespace NeeView
             if (item != null)
             {
                 string? path;
-                if (FileIO.ExistsPath(item.EntryFullName))
+                if (FileIO.EntryExists(item.EntryFullName))
                 {
                     path = item.EntryFullName;
                 }

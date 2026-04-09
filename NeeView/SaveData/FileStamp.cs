@@ -26,7 +26,7 @@ namespace NeeView
 
         public static FileStamp Create(string path)
         {
-            var lastWriteTime = File.Exists(path) ? File.GetLastWriteTime(path) : default;
+            var lastWriteTime = FileIO.FileExists(path) ? File.GetLastWriteTime(path) : default;
             return new FileStamp(path, lastWriteTime);
         }
 

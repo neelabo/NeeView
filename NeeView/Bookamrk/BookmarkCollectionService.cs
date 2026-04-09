@@ -247,7 +247,7 @@ namespace NeeView
 
             return query.Scheme switch
             {
-                QueryScheme.File => ArchiveManager.Current.IsSupported(query.SimplePath, true, true) || System.IO.Directory.Exists(query.SimplePath),
+                QueryScheme.File => ArchiveManager.Current.IsSupported(query.SimplePath, true, true) || FileIO.DirectoryExists(query.SimplePath),
                 _ => false,
             };
         }

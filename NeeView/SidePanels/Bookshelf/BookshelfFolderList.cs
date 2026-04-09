@@ -151,7 +151,7 @@ namespace NeeView
                     return path;
 
                 case QueryScheme.File:
-                    if (Directory.Exists(path.SimplePath))
+                    if (FileIO.DirectoryExists(path.SimplePath))
                     {
                         return path;
                     }
@@ -179,7 +179,7 @@ namespace NeeView
         public static string GetDefaultHomePath()
         {
             var myPicture = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyPictures);
-            if (Directory.Exists(myPicture))
+            if (FileIO.DirectoryExists(myPicture))
             {
                 return myPicture;
             }

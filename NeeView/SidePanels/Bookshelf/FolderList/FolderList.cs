@@ -1748,7 +1748,7 @@ namespace NeeView
         private async ValueTask RemoveFilesAsync(IEnumerable<FolderItem> items)
         {
             if (!items.Any()) return;
-            if (items.Any(e => !FileIO.ExistsPath(e.TargetPath.SimplePath))) return;
+            if (items.Any(e => !FileIO.EntryExists(e.TargetPath.SimplePath))) return;
 
             FolderItem? next = null;
             FolderItem? currentBook = items.FirstOrDefault(e => e.TargetPath.SimplePath == BookHub.Current.Address);
@@ -1770,7 +1770,7 @@ namespace NeeView
             var removed = await ConfirmFileIO.DeleteAsync(entries, TextResources.GetString("FileDeleteBookDialog.Title"), null);
             if (removed && _folderCollection != null)
             {
-                var removes = items.Where(e => !FileIO.ExistsPath(e.TargetPath.SimplePath)).ToList();
+                var removes = items.Where(e => !FileIO.EntryExists(e.TargetPath.SimplePath)).ToList();
                 foreach (var item in removes)
                 {
                     _folderCollection.RequestDelete(item.TargetPath);

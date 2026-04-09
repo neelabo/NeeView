@@ -179,7 +179,7 @@ namespace NeeView
         {
             if (!_isInitialized) throw new InvalidOperationException("Not initialized");
 
-            if (Config.Current.Susie.IsEnabled && Directory.Exists(Config.Current.Susie.SusiePluginPath))
+            if (Config.Current.Susie.IsEnabled && FileIO.DirectoryExists(Config.Current.Susie.SusiePluginPath))
             {
                 OpenSusiePluginCollection();
             }

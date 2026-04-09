@@ -44,13 +44,13 @@ namespace NeeView
             IEnumerable<FolderItem> items = [];
             if (query.Scheme == QueryScheme.File)
             {
-                if (Directory.Exists(query.SimplePath))
+                if (FileIO.DirectoryExists(query.SimplePath))
                 {
                     var collection = new FolderEntryCollection(query, false, false);
                     collection.InitializeItems(FolderOrder.FileName, token);
                     items = collection.Where(e => !e.IsEmpty());
                 }
-                else if (File.Exists(query.SimplePath) || FileIO.IsArchivePath(query.SimplePath))
+                else if (FileIO.FileExists(query.SimplePath) || FileIO.IsArchivePath(query.SimplePath))
                 {
                     var collection = new FolderArchiveCollection(query, Config.Current.System.ArchiveRecursiveMode, false, false);
                     await collection.InitializeItemsAsync(FolderOrder.FileName, token);
@@ -68,7 +68,7 @@ namespace NeeView
 
         public bool CanHasChild(QueryPath query)
         {
-            return Directory.Exists(query.SimplePath);
+            return FileIO.DirectoryExists(query.SimplePath);
         }
 
         public List<BreadcrumbToken> GetDriveChildren()

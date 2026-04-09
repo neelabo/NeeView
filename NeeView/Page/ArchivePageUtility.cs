@@ -30,7 +30,7 @@ namespace NeeView
         /// <returns></returns>
         private static async ValueTask<ArchiveEntry> SelectAlternativeEntry(ArchiveEntry entry, bool decrypt, CancellationToken token)
         {
-            if (System.IO.Directory.Exists(entry.SystemPath) || entry.IsBook())
+            if (FileIO.DirectoryExists(entry.SystemPath) || entry.IsBook())
             {
                 try
                 {

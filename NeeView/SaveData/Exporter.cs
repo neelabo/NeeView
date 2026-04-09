@@ -19,19 +19,19 @@ namespace NeeView
                 {
                     archive.CreateEntryFromFile(SaveData.UserSettingFilePath, SaveDataProfile.UserSettingFileName);
 
-                    if (File.Exists(SaveData.FolderConfigFilePath))
+                    if (FileIO.FileExists(SaveData.FolderConfigFilePath))
                     {
                         archive.CreateEntryFromFile(SaveData.FolderConfigFilePath, SaveDataProfile.FolderConfigFileName);
                     }
-                    if (File.Exists(SaveData.QuickAccessFilePath))
+                    if (FileIO.FileExists(SaveData.QuickAccessFilePath))
                     {
                         archive.CreateEntryFromFile(SaveData.QuickAccessFilePath, SaveDataProfile.QuickAccessFileName);
                     }
-                    if (File.Exists(SaveData.HistoryFilePath))
+                    if (FileIO.FileExists(SaveData.HistoryFilePath))
                     {
                         archive.CreateEntryFromFile(SaveData.HistoryFilePath, SaveDataProfile.HistoryFileName);
                     }
-                    if (File.Exists(SaveData.BookmarkFilePath))
+                    if (FileIO.FileExists(SaveData.BookmarkFilePath))
                     {
                         archive.CreateEntryFromFile(SaveData.BookmarkFilePath, SaveDataProfile.BookmarkFileName);
                     }
@@ -64,7 +64,7 @@ namespace NeeView
             catch (Exception)
             {
                 // 中途半端なファイルは削除
-                if (File.Exists(filename))
+                if (FileIO.FileExists(filename))
                 {
                     Debug.WriteLine($"Delete {filename}");
                     File.Delete(filename);

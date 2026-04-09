@@ -195,7 +195,7 @@ namespace NeeView
                             // Error: 環境変数 NEEVIEW_PROFILE は絶対パスではありません
                             throw new IOException("NEEVIEW_PROFILE: Not an absolute path");
                         }
-                        if (!Directory.Exists(_neeviewProfile))
+                        if (!FileIO.DirectoryExists(_neeviewProfile))
                         {
                             // Error: 環境変数 NEEVIEW_PROFILE が示すディレクトリが存在しません: (path)
                             throw new DirectoryNotFoundException($"NEEVIEW_PROFILE: Directory not found: {_neeviewProfile}");
@@ -602,7 +602,7 @@ namespace NeeView
         /// </summary>
         private static void CreateFolder(string path)
         {
-            if (!Directory.Exists(path))
+            if (!FileIO.DirectoryExists(path))
             {
                 Directory.CreateDirectory(path);
             }
@@ -716,7 +716,7 @@ namespace NeeView
                 string newPath = GetLocalAppDataPath();
 
                 // if already exist new path, exit.
-                if (Directory.Exists(newPath)) return;
+                if (FileIO.DirectoryExists(newPath)) return;
 
                 // if old path not exist, exit
                 var directory = new DirectoryInfo(oldPath);

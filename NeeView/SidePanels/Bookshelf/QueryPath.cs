@@ -388,7 +388,7 @@ namespace NeeView
             if (Scheme == QueryScheme.File)
             {
                 var path = SimplePath;
-                if (FileShortcut.IsShortcut(path) && File.Exists(path))
+                if (FileShortcut.IsShortcut(path) && FileIO.FileExists(path))
                 {
                     var shortcut = new FileShortcut(path);
                     if (shortcut.TryGetTargetPath(out var target))

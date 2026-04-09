@@ -327,7 +327,7 @@ namespace NeeView
                 {
                 }
 
-                if (Directory.Exists(_path))
+                if (FileIO.DirectoryExists(_path))
                 {
                     Directory.Delete(_path, true);
                 }

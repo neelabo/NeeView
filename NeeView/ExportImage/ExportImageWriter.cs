@@ -47,13 +47,13 @@ namespace NeeView
             _path = path;
 
             // 親フォルダーは存在していなければいけない
-            if (!Directory.Exists(Path.GetDirectoryName(_path)))
+            if (!FileIO.DirectoryExists(Path.GetDirectoryName(_path)))
             {
                 throw new DirectoryNotFoundException($"Directory not found: {Path.GetDirectoryName(_path)}");
             }
 
             // 上書きチェック
-            if (!isOverwrite && FileIO.ExistsPath(_path))
+            if (!isOverwrite && FileIO.EntryExists(_path))
             {
                 throw new IOException($"File already exists: {_path}");
             }
@@ -121,13 +121,13 @@ namespace NeeView
             _path = path;
 
             // 親フォルダーは存在していなければいけない
-            if (!Directory.Exists(Path.GetDirectoryName(_path)))
+            if (!FileIO.DirectoryExists(Path.GetDirectoryName(_path)))
             {
                 throw new DirectoryNotFoundException($"Directory not found: {Path.GetDirectoryName(_path)}");
             }
 
             // 上書きチェック
-            if (!isOverwrite && FileIO.ExistsPath(_path))
+            if (!isOverwrite && FileIO.EntryExists(_path))
             {
                 throw new IOException($"File already exists: {_path}");
             }

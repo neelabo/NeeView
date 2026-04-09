@@ -696,7 +696,7 @@ namespace NeeView
             if (query == null) return;
             if (_vm.Model is null) return;
 
-            if ((query.Scheme == QueryScheme.File && (Directory.Exists(query.SimplePath) || IsPlaylistFile(query.SimplePath)))
+            if ((query.Scheme == QueryScheme.File && (FileIO.DirectoryExists(query.SimplePath) || IsPlaylistFile(query.SimplePath)))
                 || (query.Scheme == QueryScheme.Bookmark && BookmarkCollection.Current.FindNode(query)?.Value is BookmarkFolder))
             {
                 if (isDrop)
@@ -724,7 +724,7 @@ namespace NeeView
             bool isDropped = false;
             foreach (var fileName in fileNames)
             {
-                if (Directory.Exists(fileName) || IsPlaylistFile(fileName))
+                if (FileIO.DirectoryExists(fileName) || IsPlaylistFile(fileName))
                 {
                     if (isDrop)
                     {
@@ -758,7 +758,7 @@ namespace NeeView
 
         private static bool IsPlaylistFile(string path)
         {
-            return File.Exists(path) && PlaylistArchive.IsSupportExtension(path);
+            return FileIO.FileExists(path) && PlaylistArchive.IsSupportExtension(path);
         }
 
         private static void DropToBookmark(object? sender, DragEventArgs e, bool isDrop, BookmarkFolderNode bookmarkFolderTarget, IEnumerable<TreeListNode<IBookmarkEntry>>? bookmarkEntries)
@@ -869,7 +869,7 @@ namespace NeeView
 
         private static bool CanDropToBookmark(string path)
         {
-            return ArchiveManager.Current.IsSupported(path, true, true) || System.IO.Directory.Exists(path);
+            return ArchiveManager.Current.IsSupported(path, true, true) || FileIO.DirectoryExists(path);
         }
 
         #endregion DragDrop

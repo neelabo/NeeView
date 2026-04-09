@@ -58,7 +58,7 @@ namespace NeeView.Susie.Client
                 subProcessFileName = Path.GetFullPath(Path.Combine(Environment.AssemblyFolder, @"..\..\..\..\..\..\NeeView.Susie.Server\bin\x86", Environment.ConfigType, @"net10.0\NeeView.Susie.Server.exe"));
             }
 
-            if (!File.Exists(subProcessFileName))
+            if (!FileIO.FileExists(subProcessFileName))
             {
                 throw new FileNotFoundException($"File not found: {subProcessFileName}");
             }

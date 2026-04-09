@@ -6,6 +6,7 @@ using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -49,9 +50,21 @@ namespace NeeView
         /// <summary>
         /// ファイルかディレクトリの存在チェック
         /// </summary>
-        public static bool ExistsPath(string path)
+        public static bool EntryExists([NotNullWhen(true)] string? path)
         {
-            return File.Exists(path) || Directory.Exists(path);
+            return FileExists(path) || DirectoryExists(path);
+        }
+
+        public static bool FileExists([NotNullWhen(true)] string? path)
+        {
+            using var scope = new SystemLockMonitor();
+            return File.Exists(path);
+        }
+
+        public static bool DirectoryExists([NotNullWhen(true)] string? path)
+        {
+            using var scope = new SystemLockMonitor();
+            return Directory.Exists(path);
         }
 
         /// <summary>
@@ -74,7 +87,7 @@ namespace NeeView
         /// <exception cref="IOException"></exception>
         public static void CheckOverwrite(string path, bool isOverwrite)
         {
-            if (!isOverwrite && File.Exists(path)) throw new IOException($"File already exists: {path}");
+            if (!isOverwrite && FileExists(path)) throw new IOException($"File already exists: {path}");
         }
 
         /// <summary>
@@ -85,7 +98,7 @@ namespace NeeView
         /// <exception cref="IOException"></exception>
         public static void ReadyOverwrite(string path, bool isOverwrite)
         {
-            if (File.Exists(path))
+            if (FileExists(path))
             {
                 if (isOverwrite)
                 {
@@ -123,7 +136,7 @@ namespace NeeView
             // フルパス
             source = Path.GetFullPath(source);
 
-            if (FileIO.ExistsPath(source))
+            if (EntryExists(source))
             {
                 // 大文字・小文字をファイルシステム情報にあわせる
                 var path = GetLongPathName(source);
@@ -138,7 +151,7 @@ namespace NeeView
                 foreach (var part in parts)
                 {
                     path = LoosePath.Combine(path, part);
-                    if (File.Exists(path))
+                    if (FileExists(path))
                     {
                         path = GetLongPathName(path);
                         path = LoosePath.Combine(path, source[path.Length..]);
@@ -181,13 +194,13 @@ namespace NeeView
         /// </summary>
         public static string CreateUniquePath(string path)
         {
-            if (File.Exists(path))
+            if (FileExists(path))
             {
-                return LoosePath.CreateUniquePath(path, true, ExistsPath);
+                return LoosePath.CreateUniquePath(path, true, EntryExists);
             }
-            else if (Directory.Exists(path))
+            else if (DirectoryExists(path))
             {
-                return LoosePath.CreateUniquePath(path, false, ExistsPath);
+                return LoosePath.CreateUniquePath(path, false, EntryExists);
             }
             else
             {
@@ -466,7 +479,7 @@ namespace NeeView
         /// <exception cref="IOException"></exception>
         public static void Replace(string sourceFileName, string destinationFileName, string? destinationBackupFileName, int retryCount, int retryIntervalMillisecond)
         {
-            if (destinationBackupFileName != null && File.Exists(destinationFileName))
+            if (destinationBackupFileName != null && FileExists(destinationFileName))
             {
                 File.Copy(destinationFileName, destinationBackupFileName, overwrite: true);
             }
@@ -517,18 +530,18 @@ namespace NeeView
             {
                 return false;
             }
-            if (Directory.Exists(path) || File.Exists(path))
+            if (EntryExists(path))
             {
                 return false;
             }
 
             for (var s = LoosePath.GetDirectoryName(path); !string.IsNullOrEmpty(s); s = LoosePath.GetDirectoryName(s))
             {
-                if (File.Exists(s))
+                if (FileExists(s))
                 {
                     return true;
                 }
-                if (Directory.Exists(s))
+                if (DirectoryExists(s))
                 {
                     return false;
                 }
@@ -570,7 +583,7 @@ namespace NeeView
 
         public static async ValueTask SHCopyAsync(string source, string destination, CancellationToken token)
         {
-            if (LoosePath.IsDirectoryEnd(destination) || Directory.Exists(destination))
+            if (LoosePath.IsDirectoryEnd(destination) || DirectoryExists(destination))
             {
                 await Task.Run(() => SHCopyToFolder([source], destination), token);
             }
@@ -612,7 +625,7 @@ namespace NeeView
         {
             await CloseBookAsync([source]);
 
-            if (LoosePath.IsDirectoryEnd(destination) || Directory.Exists(destination))
+            if (LoosePath.IsDirectoryEnd(destination) || DirectoryExists(destination))
             {
                 await Task.Run(() => SHMoveToFolder([source], destination), token);
             }
@@ -796,7 +809,7 @@ namespace NeeView
         public static string? CheckChangeExtension(string src, string dst, bool showConfirmDialog)
         {
             // ディレクトリはチェク不要
-            if (Directory.Exists(src)) return dst;
+            if (DirectoryExists(src)) return dst;
 
             var srcExt = System.IO.Path.GetExtension(src);
             var dstExt = System.IO.Path.GetExtension(dst);
@@ -824,7 +837,7 @@ namespace NeeView
         public static string? CheckDuplicateFilename(string src, string dst, bool showConfirmDialog)
         {
             // 対象が存在していなければ許可
-            if (!File.Exists(dst) && !Directory.Exists(dst)) return dst;
+            if (!EntryExists(dst)) return dst;
 
             // 大文字小文字の違いを許可
             if (string.Compare(src, dst, StringComparison.OrdinalIgnoreCase) == 0) return dst;
@@ -839,7 +852,7 @@ namespace NeeView
             {
                 dst = $"{dir}\\{name} ({++count}){ext}";
             }
-            while (System.IO.File.Exists(dst) || System.IO.Directory.Exists(dst));
+            while (EntryExists(dst));
 
             // 確認
             if (showConfirmDialog)
@@ -919,11 +932,11 @@ namespace NeeView
         {
             try
             {
-                if (System.IO.Directory.Exists(src))
+                if (DirectoryExists(src))
                 {
                     System.IO.Directory.Move(src, dst);
                 }
-                else if (System.IO.File.Exists(src))
+                else if (FileExists(src))
                 {
                     System.IO.File.Move(src, dst);
                 }

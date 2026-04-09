@@ -72,7 +72,7 @@ namespace NeeView
             {
                 if (_place is null)
                 {
-                    if (FileIO.ExistsPath(Path))
+                    if (FileIO.EntryExists(Path))
                     {
                         _place = LoosePath.GetDirectoryName(Path);
                     }
@@ -102,7 +102,7 @@ namespace NeeView
                         targetPath = new FileShortcut(Path).TargetPath ?? Path;
                     }
                     _archiveType = ArchiveManager.Current.GetSupportedType(targetPath);
-                    if (_archiveType == ArchiveType.None && System.IO.Directory.Exists(targetPath))
+                    if (_archiveType == ArchiveType.None && FileIO.DirectoryExists(targetPath))
                     {
                         _archiveType = ArchiveType.FolderArchive;
                     }
@@ -182,7 +182,7 @@ namespace NeeView
             {
                 var tokens = path.Split(LoosePath.Separators);
                 var count = tokens.Length;
-                if (count >= 2 && tokens[count - 1] == tokens[count - 2] && !System.IO.File.Exists(path))
+                if (count >= 2 && tokens[count - 1] == tokens[count - 2] && !FileIO.FileExists(path))
                 {
                     return LoosePath.GetDirectoryName(path);
                 }

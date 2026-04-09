@@ -39,7 +39,7 @@ namespace NeeView
                 {
                     using (ProcessLock.Lock())
                     {
-                        if (File.Exists(_path))
+                        if (FileIO.FileExists(_path))
                         {
                             _bytes = File.ReadAllBytes(_path);
                             _fileStamp = FileStamp.Create(_path);

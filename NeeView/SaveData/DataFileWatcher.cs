@@ -53,7 +53,7 @@ namespace NeeView
                 _path = path;
 
                 var directory = Path.GetDirectoryName(_path) ?? "";
-                if (!Directory.Exists(directory))
+                if (!FileIO.DirectoryExists(directory))
                 {
                     throw new DirectoryNotFoundException($"The directory '{directory}' does not exist.");
                 }

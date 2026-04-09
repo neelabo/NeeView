@@ -164,7 +164,7 @@ namespace NeeView
         /// </summary>
         public bool CanCutBookToClipboard()
         {
-            return Config.Current.System.IsFileWriteAccessEnabled && _book != null && (_book.LoadOption & BookLoadOption.Undeletable) == 0 && (File.Exists(_book.Path) || Directory.Exists(_book.Path));
+            return Config.Current.System.IsFileWriteAccessEnabled && _book != null && (_book.LoadOption & BookLoadOption.Undeletable) == 0 && FileIO.EntryExists(_book.Path);
         }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace NeeView
         /// </summary>
         public bool CanMoveBookToFolder(DestinationFolder parameter)
         {
-            return Config.Current.System.IsFileWriteAccessEnabled && _book != null && (_book.LoadOption & BookLoadOption.Undeletable) == 0 && (File.Exists(_book.Path) || Directory.Exists(_book.Path));
+            return Config.Current.System.IsFileWriteAccessEnabled && _book != null && (_book.LoadOption & BookLoadOption.Undeletable) == 0 && FileIO.EntryExists(_book.Path);
         }
 
         /// <summary>
@@ -261,7 +261,7 @@ namespace NeeView
         /// </summary>
         public bool CanRenameBook()
         {
-            return Config.Current.System.IsFileWriteAccessEnabled && _book != null && (_book.LoadOption & BookLoadOption.Undeletable) == 0 && (File.Exists(_book.Path) || Directory.Exists(_book.Path));
+            return Config.Current.System.IsFileWriteAccessEnabled && _book != null && (_book.LoadOption & BookLoadOption.Undeletable) == 0 && FileIO.EntryExists(_book.Path);
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace NeeView
         // 現在表示しているブックの削除可能？
         public bool CanDeleteBook()
         {
-            return Config.Current.System.IsFileWriteAccessEnabled && _book != null && (_book.LoadOption & BookLoadOption.Undeletable) == 0 && (File.Exists(_book.Path) || Directory.Exists(_book.Path));
+            return Config.Current.System.IsFileWriteAccessEnabled && _book != null && (_book.LoadOption & BookLoadOption.Undeletable) == 0 && FileIO.EntryExists(_book.Path);
         }
 
         // 現在表示しているブックを削除する

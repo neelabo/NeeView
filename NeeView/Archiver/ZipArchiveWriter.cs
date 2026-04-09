@@ -163,7 +163,7 @@ namespace NeeView
             {
                 LocalDebug.WriteLine($"Exception: {ex.Message}");
 
-                if (File.Exists(tempFilename))
+                if (FileIO.FileExists(tempFilename))
                 {
                     File.Delete(tempFilename);
                 }

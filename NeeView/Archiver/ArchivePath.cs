@@ -42,7 +42,7 @@ namespace NeeView
         {
             Debug.Assert(System.IO.Path.IsPathFullyQualified(path));
 
-            if (File.Exists(path) || Directory.Exists(path))
+            if (FileIO.EntryExists(path))
             {
                 return new ArchivePath(path, 0);
             }
@@ -62,7 +62,7 @@ namespace NeeView
 
             // ルート部分（C:\ や \\Server\Share）を特定
             var root = System.IO.Path.GetPathRoot(path);
-            if (string.IsNullOrEmpty(root) || !Directory.Exists(root)) return 0;
+            if (string.IsNullOrEmpty(root) || !FileIO.DirectoryExists(root)) return 0;
 
             int lastValidEnd = root.Length;
             int currentPos = lastValidEnd;
@@ -88,11 +88,11 @@ namespace NeeView
 
                 string checkPath = currentSlice.ToString();
 
-                if (Directory.Exists(checkPath))
+                if (FileIO.DirectoryExists(checkPath))
                 {
                     lastValidEnd = currentSegmentEnd;
                 }
-                else if (File.Exists(checkPath))
+                else if (FileIO.FileExists(checkPath))
                 {
                     return currentSegmentEnd;
                 }

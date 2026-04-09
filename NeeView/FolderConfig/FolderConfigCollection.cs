@@ -111,7 +111,7 @@ namespace NeeView
 
             var config = GetFolderConfig(place);
 
-            if (config is null && query.Scheme == QueryScheme.File && Directory.Exists(place))
+            if (config is null && query.Scheme == QueryScheme.File && FileIO.DirectoryExists(place))
             {
                 // ファイルの古いパスを取得し、そのフォルダー設定取得を試みる
                 var oldPath = FileResolver.Current.GetOldPath(place, e => Folders.ContainsKey(e));

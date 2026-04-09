@@ -38,7 +38,7 @@ namespace NeeView
 
             var query = new QueryPath(path);
 
-            if (File.Exists(path) || Directory.Exists(path))
+            if (FileIO.EntryExists(path))
             {
                 return StaticFolderArchive.Default.CreateArchiveEntry(path, archiveHint);
             }
@@ -53,7 +53,7 @@ namespace NeeView
                     {
                         archivePath = LoosePath.Combine(archivePath, part);
 
-                        if (File.Exists(archivePath))
+                        if (FileIO.FileExists(archivePath))
                         {
                             var archive = await ArchiveManager.Current.CreateArchiveAsync(StaticFolderArchive.Default.CreateArchiveEntry(archivePath, archiveHint), false, token);
                             var entries = await archive.GetEntriesAsync(decrypt, token);
@@ -224,7 +224,7 @@ namespace NeeView
         /// <returns></returns>
         public static string? GetExistDirectoryName(string path)
         {
-            if (Directory.Exists(path))
+            if (FileIO.DirectoryExists(path))
             {
                 return path;
             }
@@ -232,7 +232,7 @@ namespace NeeView
             while (!string.IsNullOrEmpty(path))
             {
                 path = LoosePath.GetDirectoryName(path);
-                if (Directory.Exists(path))
+                if (FileIO.DirectoryExists(path))
                 {
                     return path;
                 }
@@ -248,7 +248,7 @@ namespace NeeView
         /// <returns></returns>
         public static string? GetExistEntryName(string path)
         {
-            if (Directory.Exists(path) || File.Exists(path))
+            if (FileIO.EntryExists(path))
             {
                 return path;
             }
@@ -256,7 +256,7 @@ namespace NeeView
             while (!string.IsNullOrEmpty(path))
             {
                 path = LoosePath.GetDirectoryName(path);
-                if (Directory.Exists(path) || File.Exists(path))
+                if (FileIO.EntryExists(path))
                 {
                     return path;
                 }

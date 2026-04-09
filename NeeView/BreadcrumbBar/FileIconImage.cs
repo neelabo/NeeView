@@ -90,11 +90,11 @@ namespace NeeView
             {
                 iconType = FileIconType.Drive;
             }
-            else if (Directory.Exists(path))
+            else if (FileIO.DirectoryExists(path))
             {
                 iconType = FileIconType.Directory;
             }
-            else if (File.Exists(path))
+            else if (FileIO.FileExists(path))
             {
                 iconType = FileIconType.File;
             }

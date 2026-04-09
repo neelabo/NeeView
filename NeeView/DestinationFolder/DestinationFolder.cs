@@ -53,7 +53,7 @@ namespace NeeView
         {
             if (!paths.Any()) return;
 
-            if (!Directory.Exists(this.Path))
+            if (!FileIO.DirectoryExists(this.Path))
             {
                 throw new DirectoryNotFoundException();
             }
@@ -65,7 +65,7 @@ namespace NeeView
         {
             if (!paths.Any()) return;
 
-            if (!Directory.Exists(this.Path))
+            if (!FileIO.DirectoryExists(this.Path))
             {
                 throw new DirectoryNotFoundException();
             }

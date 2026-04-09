@@ -41,7 +41,7 @@ namespace NeeView
 
         public static void Save(this PlaylistSource playlist, string path, bool overwrite, bool createDirectory)
         {
-            if (!overwrite && File.Exists(path))
+            if (!overwrite && FileIO.FileExists(path))
             {
                 throw new IOException($"Cannot overwrite: {path}");
             }
@@ -55,7 +55,7 @@ namespace NeeView
 
                 var directory = Path.GetDirectoryName(path);
                 if (directory is null) throw new IOException("Directory must not be null.");
-                if (!Directory.Exists(directory))
+                if (!FileIO.DirectoryExists(directory))
                 {
                     if (createDirectory)
                     {

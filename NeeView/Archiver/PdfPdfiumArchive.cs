@@ -125,7 +125,7 @@ namespace NeeView
         protected override async ValueTask ExtractToFileInnerAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
         {
             // 上書き時は移動前に削除
-            if (isOverwrite && File.Exists(exportFileName))
+            if (isOverwrite && FileIO.FileExists(exportFileName))
             {
                 File.Delete(exportFileName);
             }
