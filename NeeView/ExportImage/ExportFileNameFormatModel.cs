@@ -10,13 +10,15 @@ namespace NeeView
     {
         private readonly PropertyProxy<ExportImageParameter, string> _property;
 
-        public ExportFileNameFormatModel(ExportImageParameter parameter, PropertyProxy<ExportImageParameter, string> property, ExportPageSource source, string defaultFileNameFormat)
+        public ExportFileNameFormatModel(ExportImageParameter parameter, PropertyProxy<ExportImageParameter, string> property, ExportPageSource source, string defaultFileNameFormat, string emptyMessage = "")
         {
             Parameter = parameter;
 
             _property = property;
 
             DefaultFileNameFormat = defaultFileNameFormat;
+
+            EmptyMessage = emptyMessage;
 
             Func<string?, string> validateFunc = parameter is ExportBookParameter ? LoosePath.ValidPath : LoosePath.ValidFileName;
             Source = new ExportFileNameConverterParameter(source, validateFunc);
@@ -50,6 +52,8 @@ namespace NeeView
         }
 
         public string DefaultFileNameFormat { get; } = "";
+        
+        public string EmptyMessage { get; } = "";
 
         public string HelpText { get; }
 

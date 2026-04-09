@@ -2663,6 +2663,7 @@ Word.Returns=이전값
 Word.Right=오른쪽
 Word.RootDirectory=(최상위)
 Word.Rotation=회전
+Word.SameAsAbove=위와 동일
 Word.Script=스크립트
 Word.SearchWord=검색어
 Word.Sec=초

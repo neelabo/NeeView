@@ -132,7 +132,7 @@ namespace NeeView
                 {
                     FileNameFormat0 = ExportImageParameter.DefaultFileNameFormat0;
                     FileNameFormat1 = ExportImageParameter.DefaultFileNameFormat1;
-                    FileNameFormat2 = ExportImageParameter.DefaultFileNameFormat1;
+                    FileNameFormat2 = ExportImageParameter.DefaultFileNameFormat2;
                 }
             }
         }

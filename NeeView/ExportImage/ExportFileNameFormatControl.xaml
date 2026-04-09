@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NeeView"
              xmlns:nw="clr-namespace:NeeView.Windows"
+             xmlns:nwc="clr-namespace:NeeView.Windows.Controls"
              xmlns:properties="clr-namespace:NeeView.Properties"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
@@ -16,20 +17,20 @@
 
     <StackPanel Width="180" >
 
-        <TextBox x:Name="FormatTextBox" d:Text="{}{Index:000}">
-            <TextBox.Text>
-                <Binding Path="FileNameFormat" UpdateSourceTrigger="PropertyChanged">
+        <nwc:TextBoxWithMessage x:Name="FormatTextBox" EmptyMessage="{Binding EmptyMessage}"  d:Text="{}{Index:000}">
+            <nwc:TextBoxWithMessage.Text>
+                <Binding Path="FileNameFormat" UpdateSourceTrigger="PropertyChanged" Mode="TwoWay">
                     <Binding.ValidationRules>
                         <local:ExportFileNameRule TargetProxy="{StaticResource RuleData}"/>
                     </Binding.ValidationRules>
                 </Binding>
-            </TextBox.Text>
+            </nwc:TextBoxWithMessage.Text>
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="LostFocus">
                     <i:InvokeCommandAction Command="{Binding LostFocusCommand}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-        </TextBox>
+        </nwc:TextBoxWithMessage>
 
         <DockPanel Margin="0,2,0,0">
 

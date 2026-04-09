@@ -54,7 +54,7 @@ namespace NeeView
                 })
             }));
 
-            var fileNameFormatModel0 = new ExportFileNameFormatModel(_parameter, ProxyProperty.Create((ExportImageParameter)_parameter, e => e.FileNameFormat0), ExportFileNameFormat.CreateDummyFileNameSource(1, 1), ExportImageParameter.DefaultFileNameFormat0);
+            var fileNameFormatModel0 = new ExportFileNameFormatModel(_parameter, ProxyProperty.Create((ExportImageParameter)_parameter, e => e.FileNameFormat0), ExportFileNameFormat.CreateDummyFileNameSource(1, 1), ExportBookParameter.DefaultBookFileNameFormat0);
 
             originalDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameFormat0), data: fileNameFormatModel0));
             originalDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.OverwriteMode), new PropertyMemberElementOptions() { EnumMap = overwriteMap }));
@@ -71,8 +71,8 @@ namespace NeeView
             }));
 
             var direction = source.PageFrameContent.ViewContentsDirection;
-            var fileNameFormatModel1 = new ExportFileNameFormatModel(_parameter, ProxyProperty.Create((ExportImageParameter)_parameter, e => e.FileNameFormat1), ExportFileNameFormat.CreateDummyFileNameSource(1, direction), ExportImageParameter.DefaultFileNameFormat1);
-            var fileNameFormatModel2 = new ExportFileNameFormatModel(_parameter, ProxyProperty.Create((ExportImageParameter)_parameter, e => e.FileNameFormat2), ExportFileNameFormat.CreateDummyFileNameSource(2, direction), ExportImageParameter.DefaultFileNameFormat2);
+            var fileNameFormatModel1 = new ExportFileNameFormatModel(_parameter, ProxyProperty.Create((ExportImageParameter)_parameter, e => e.FileNameFormat1), ExportFileNameFormat.CreateDummyFileNameSource(1, direction), ExportBookParameter.DefaultBookFileNameFormat1);
+            var fileNameFormatModel2 = new ExportFileNameFormatModel(_parameter, ProxyProperty.Create((ExportImageParameter)_parameter, e => e.FileNameFormat2), ExportFileNameFormat.CreateDummyFileNameSource(2, direction), ExportBookParameter.DefaultBookFileNameFormat2, TextResources.GetString("Word.SameAsAbove"));
 
             viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameFormat1), data: fileNameFormatModel1));
             viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameFormat2), data: fileNameFormatModel2));
@@ -159,8 +159,6 @@ namespace NeeView
 
         public void UpdateDestinationFolderList()
         {
-            var oldSelect = _selectedDestinationFolder;
-
             var list = new List<DestinationFolder> { new DestinationFolder(TextResources.GetString("Word.None"), "") };
             list.AddRange(Config.Current.System.DestinationFolderCollection);
             DestinationFolderList = list;
@@ -222,10 +220,7 @@ namespace NeeView
                 }
             }
 
-            if (result == true)
-            {
-                this.FileName = dialog.FileName;
-            }
+            this.FileName = dialog.FileName;
 
             return result;
         }

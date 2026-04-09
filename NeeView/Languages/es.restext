@@ -2672,6 +2672,7 @@ Word.Returns=Devuelve
 Word.Right=Derecha
 Word.RootDirectory=(Raíz)
 Word.Rotation=Rotación
+Word.SameAsAbove=Igual que el anterior
 Word.Script=Script
 Word.SearchWord=Palabra de búsqueda
 Word.Sec=seg

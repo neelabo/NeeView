@@ -24,7 +24,7 @@ namespace NeeView
 
 
         public const string DefaultFileNameFormat0 = "{Name}";
-        public const string DefaultFileNameFormat1 = "{Index:000}";
+        public const string DefaultFileNameFormat1 = "{Name}";
         public const string DefaultFileNameFormat2 = "";
         //public const string OldPattern1 ="{Book}_{Page:000}";
         //public const string OldPattern2 ="{Book}_{Page1:000}-{Page2:000}";

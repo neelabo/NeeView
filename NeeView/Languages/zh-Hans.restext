@@ -2663,6 +2663,7 @@ Word.Returns=返回值
 Word.Right=右
 Word.RootDirectory=(Root)
 Word.Rotation=旋转
+Word.SameAsAbove=同上
 Word.Script=脚本
 Word.SearchWord=搜索内容
 Word.Sec=秒

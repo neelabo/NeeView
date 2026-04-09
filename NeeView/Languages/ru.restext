@@ -2672,6 +2672,7 @@ Word.Returns=Возвращает
 Word.Right=Право
 Word.RootDirectory=(Корень)
 Word.Rotation=Вращение
+Word.SameAsAbove=То же, что выше
 Word.Script=Скрипт
 Word.SearchWord=Слово для поиска
 Word.Sec=сек

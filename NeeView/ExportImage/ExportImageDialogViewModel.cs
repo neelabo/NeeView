@@ -17,8 +17,7 @@ namespace NeeView
         private readonly ExportImageSource _source;
         private readonly ExportImagePreview _preview;
         private List<DestinationFolder>? _destinationFolderList;
-        private static DestinationFolder? _lastSelectedDestinationFolder;
-        private DestinationFolder? _selectedDestinationFolder = _lastSelectedDestinationFolder;
+        private DestinationFolder? _selectedDestinationFolder;
         private bool _disposedValue;
         private DisposableCollection _disposables = new();
 
@@ -62,7 +61,7 @@ namespace NeeView
 
             var direction = source.PageFrameContent.ViewContentsDirection;
             var fileNameFormatModel1 = new ExportFileNameFormatModel(_parameter, ProxyProperty.Create(_parameter, e => e.FileNameFormat1), ExportFileNameFormat.CreateDummyFileNameSource(1, direction), ExportImageParameter.DefaultFileNameFormat1);
-            var fileNameFormatModel2 = new ExportFileNameFormatModel(_parameter, ProxyProperty.Create(_parameter, e => e.FileNameFormat2), ExportFileNameFormat.CreateDummyFileNameSource(2, direction), ExportImageParameter.DefaultFileNameFormat2);
+            var fileNameFormatModel2 = new ExportFileNameFormatModel(_parameter, ProxyProperty.Create(_parameter, e => e.FileNameFormat2), ExportFileNameFormat.CreateDummyFileNameSource(2, direction), ExportImageParameter.DefaultFileNameFormat2, TextResources.GetString("Word.SameAsAbove"));
 
             viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameFormat1), data: fileNameFormatModel1));
             viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameFormat2), data: fileNameFormatModel2));
@@ -125,43 +124,36 @@ namespace NeeView
         public DestinationFolder? SelectedDestinationFolder
         {
             get { return _selectedDestinationFolder; }
-            set
-            {
-                if (SetProperty(ref _selectedDestinationFolder, value))
-                {
-                    _lastSelectedDestinationFolder = _selectedDestinationFolder;
-                }
-            }
+            set { SetProperty(ref _selectedDestinationFolder, value); }
         }
 
 
         public void UpdateDestinationFolderList()
         {
-            var oldSelect = _selectedDestinationFolder;
-
             var list = new List<DestinationFolder> { new DestinationFolder(TextResources.GetString("Word.None"), "") };
             list.AddRange(Config.Current.System.DestinationFolderCollection);
             DestinationFolderList = list;
 
-            SelectedDestinationFolder = list.FirstOrDefault(e => e.Equals(oldSelect)) ?? list.First();
+            SelectedDestinationFolder = list.FirstOrDefault(e => e.Path == _parameter.ExportFolder) ?? list.First();
         }
 
         public async ValueTask<bool?> ShowSelectSaveFileDialogAsync(Window owner, CancellationToken token)
         {
-            var dialog = new ExportImageSeveFileDialog(_parameter.ExportFolder,
-                    CreateFileName(1),
-                    _parameter.Mode == ExportImageMode.View);
+            var initialDirectory = SelectedDestinationFolder?.IsValid() == true
+                ? SelectedDestinationFolder.Path
+                : _parameter.ExportFolder;
 
-            if (SelectedDestinationFolder != null && SelectedDestinationFolder.IsValid())
-            {
-                dialog.InitialDirectory = SelectedDestinationFolder.Path;
-            }
+            var dialog = new ExportImageSeveFileDialog(initialDirectory, CreateFileName(1), _parameter.Mode == ExportImageMode.View);
 
             var result = dialog.ShowDialog(owner);
-            if (result == true)
+            if (result != true)
             {
-                this.FileName = dialog.FileName;
+                return result;
             }
+
+            _parameter.ExportFolder = LoosePath.GetDirectoryName(dialog.FileName);
+
+            this.FileName = dialog.FileName;
 
             return result;
         }
