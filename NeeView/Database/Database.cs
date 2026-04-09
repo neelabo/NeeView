@@ -223,7 +223,7 @@ namespace NeeView
             if (DatabasePath == null) throw new InvalidOperationException();
 
             var fileInfo = new FileInfo(DatabasePath);
-            if (fileInfo.Exists)
+            if (FileIO.Exists(fileInfo))
             {
                 return fileInfo.Length;
             }

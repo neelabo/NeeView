@@ -112,7 +112,7 @@ namespace NeeView
                 var failedDialog = new LoadFailedFormatDialog("Notice.FailedToLoad", TextResources.GetString("Word.History"));
 
                 var fileInfo = new FileInfo(filename);
-                if (fileInfo.Exists)
+                if (FileIO.Exists(fileInfo))
                 {
                     BookHistoryCollectionMemento? memento = SafetyLoad(BookHistoryCollectionMemento.Load, HistoryFilePath, failedDialog);
                     var result = BookHistoryCollection.Current.Restore(memento, true);
@@ -345,7 +345,7 @@ namespace NeeView
                 {
                     // NOTE: 一度マージが発生したらその後は常にマージを行う。負荷が高いのが問題。
                     var fileInfo = new FileInfo(HistoryFilePath);
-                    if (fileInfo.Exists && (_historyMergeFlag || fileInfo.GetSafeLastWriteTime() > _historyLastWriteTime))
+                    if (FileIO.Exists(fileInfo) && (_historyMergeFlag || fileInfo.GetSafeLastWriteTime() > _historyLastWriteTime))
                     {
                         //Debug.WriteLine("SaveData.SaveHistory(): merge.");
                         var failedDialog = new LoadFailedFormatDialog("Notice.FailedToLoad", TextResources.GetString("Word.History"));

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using NeeView;
+using System.IO;
 
 namespace NeeLaboratory.Resources
 {
@@ -15,7 +16,7 @@ namespace NeeLaboratory.Resources
 
         public Stream Open()
         {
-            return File.Open(_path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            return FileIO.Open(_path, FileMode.Open, FileAccess.Read, FileShare.Read);
         }
     }
 }

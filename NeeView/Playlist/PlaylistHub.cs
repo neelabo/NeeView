@@ -179,7 +179,7 @@ namespace NeeView
                         items.Add(Config.Current.Playlist.DefaultPlaylist);
                     }
                     var directory = new DirectoryInfo(System.IO.Path.GetFullPath(Config.Current.Playlist.PlaylistFolder));
-                    if (directory.Exists)
+                    if (FileIO.Exists(directory))
                     {
                         var files = directory.GetFiles("*.nvpls")
                             .Select(e => e.FullName)

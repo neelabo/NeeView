@@ -210,7 +210,7 @@ namespace NeeView
             {
                 // フォルダが存在し、空でない場合は上書き確認
                 var directory = new DirectoryInfo(dialog.FileName);
-                if (directory.Exists && directory.EnumerateFileSystemInfos().Any())
+                if (FileIO.Exists(directory) && directory.EnumerateFileSystemInfos().Any())
                 {
                     var allowOverwrite = ShowOverwriteConfirmDialog(owner, TextResources.GetString("OverwriteFolderDialog.Title"), TextResources.GetFormatString("OverwriteFolderDialog.Message", System.IO.Path.GetFileName(dialog.FileName)));
                     if (!allowOverwrite)

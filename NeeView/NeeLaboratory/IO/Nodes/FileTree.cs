@@ -160,7 +160,7 @@ namespace NeeLaboratory.IO.Nodes
         {
             Debug.Assert(_enumerationOptions.RecurseSubdirectories == false);
             if (directoryInfo is null) throw new ArgumentNullException(nameof(directoryInfo));
-            if (!directoryInfo.Exists) throw new DirectoryNotFoundException($"Directory not found: {nameof(directoryInfo)}");
+            if (!FileIO.Exists(directoryInfo)) throw new DirectoryNotFoundException($"Directory not found: {nameof(directoryInfo)}");
 
             // 既に子が定義されているなら処理しない
             if (parent.Children is not null)
@@ -189,7 +189,7 @@ namespace NeeLaboratory.IO.Nodes
         {
             Debug.Assert(_enumerationOptions.RecurseSubdirectories == false);
             if (directoryInfo is null) throw new ArgumentNullException(nameof(directoryInfo));
-            if (!directoryInfo.Exists) throw new DirectoryNotFoundException($"Directory not found: {nameof(directoryInfo)}");
+            if (!FileIO.Exists(directoryInfo)) throw new DirectoryNotFoundException($"Directory not found: {nameof(directoryInfo)}");
 
             // 既に子が定義されているなら処理しない
             if (parent.Children is not null)
@@ -357,7 +357,7 @@ namespace NeeLaboratory.IO.Nodes
 
         protected FileSystemInfo CreateFileInfo(string path)
         {
-            var attr = File.GetAttributes(path);
+            var attr = FileIO.GetAttributes(path);
             var file = (FileSystemInfo)(attr.HasFlag(FileAttributes.Directory) ? new DirectoryInfo(path) : new System.IO.FileInfo(path));
             return file;
         }

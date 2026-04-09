@@ -69,7 +69,7 @@ namespace NeeView
                 var linkTarget = entry.ResolveLinkTarget();
                 if (linkTarget is not null)
                 {
-                    if (linkTarget.Exists)
+                    if (FileIO.Exists(linkTarget))
                     {
                         var path = entry.TargetPath;
                         var length = linkTarget.Attributes.HasFlag(FileAttributes.Directory) ? linkTarget.GetSafeLastWriteTime().ToBinary() : (linkTarget as FileInfo)?.Length ?? 0;

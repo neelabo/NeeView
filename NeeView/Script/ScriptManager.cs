@@ -90,7 +90,7 @@ namespace NeeView
             try
             {
                 var directory = new DirectoryInfo(path);
-                if (!directory.Exists)
+                if (!FileIO.Exists(directory))
                 {
                     directory.Create();
                     ResourceTools.ExportFileFromResource(System.IO.Path.Combine(directory.FullName, "Sample.nvjs"), "/Resources/Scripts/Sample.nvjs");

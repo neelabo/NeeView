@@ -149,7 +149,7 @@ namespace NeeView
 
                 try
                 {
-                    _file = File.Open(path, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+                    _file = FileIO.Open(path, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
                     _writeBuffer = new StringBuilder(1024);
                 }
                 catch (IOException err)

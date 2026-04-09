@@ -64,7 +64,7 @@ namespace NeeView
         public VlcMediaPlayer()
         {
             var libDirectory = new DirectoryInfo(Config.Current.Archive.Media.LibVlcPath);
-            if (!libDirectory.Exists) throw new DirectoryNotFoundException($"The directory containing libvlc.dll does not exist: {libDirectory.FullName}");
+            if (!FileIO.Exists(libDirectory)) throw new DirectoryNotFoundException($"The directory containing libvlc.dll does not exist: {libDirectory.FullName}");
             _source = new VlcVideoSourceProvider(Application.Current.Dispatcher);
 
             // dll version check

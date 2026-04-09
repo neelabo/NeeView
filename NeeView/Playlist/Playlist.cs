@@ -858,7 +858,7 @@ namespace NeeView
             using (ProcessLock.Lock())
             {
                 var file = new FileInfo(path);
-                if (file.Exists)
+                if (FileIO.Exists(file))
                 {
                     try
                     {
@@ -892,7 +892,7 @@ namespace NeeView
                         return new Playlist(path) { ErrorMessage = ex.Message };
                     }
                 }
-                else if (file.Directory?.Exists == true || IsDefaultPlaylistsFolder(file))
+                else if (FileIO.Exists(file.Directory) || IsDefaultPlaylistsFolder(file))
                 {
                     var playlist = new Playlist(path, default, new PlaylistSource(), true);
                     if (createNewFile)

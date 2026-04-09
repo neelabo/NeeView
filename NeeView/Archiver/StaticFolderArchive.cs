@@ -36,12 +36,12 @@ namespace NeeView
         {
             var fullPath = System.IO.Path.GetFullPath(path);
             var directoryInfo = new DirectoryInfo(fullPath);
-            if (directoryInfo.Exists)
+            if (FileIO.Exists(directoryInfo))
             {
                 return CreateArchiveEntry(directoryInfo, 0, archiveHint);
             }
             var fileInfo = new FileInfo(fullPath);
-            if (fileInfo.Exists)
+            if (FileIO.Exists(fileInfo))
             {
                 return CreateArchiveEntry(fileInfo, 0, archiveHint);
             }

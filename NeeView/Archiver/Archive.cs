@@ -57,7 +57,7 @@ namespace NeeView
                 // ファイルシステムとみなし情報を取得する
                 EntryName = LoosePath.GetFileName(Path);
                 var fileSystemInfo = FileIO.CreateFileSystemInfo(Path);
-                if (fileSystemInfo.Exists)
+                if (FileIO.Exists(fileSystemInfo))
                 {
                     Length = fileSystemInfo is FileInfo fileInfo ? fileInfo.Length : -1;
                     CreationTime = fileSystemInfo.GetSafeCreationTime();
@@ -264,7 +264,7 @@ namespace NeeView
         {
             if (string.IsNullOrEmpty(Path)) return;
             var fileInfo = new FileInfo(Path);
-            if (fileInfo.Exists)
+            if (FileIO.Exists(fileInfo))
             {
                 await FileIO.WaitFileReadableAsync(fileInfo, timeout, token);
             }

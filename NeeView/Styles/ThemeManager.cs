@@ -79,7 +79,7 @@ namespace NeeView
                 try
                 {
                     var directory = new DirectoryInfo(Config.Current.Theme.CustomThemeFolder);
-                    if (directory.Exists)
+                    if (FileIO.Exists(directory))
                     {
                         return directory.GetFiles("*.json").Select(e => new ThemeSource(ThemeType.Custom, e.Name)).ToList();
                     }
@@ -262,7 +262,7 @@ namespace NeeView
             try
             {
                 var directory = new DirectoryInfo(Config.Current.Theme.CustomThemeFolder);
-                if (!directory.Exists)
+                if (!FileIO.Exists(directory))
                 {
                     directory.Create();
                     ThemeProfileTools.SaveFromContent(_customThemeTemplateContentPath, Path.Combine(directory.FullName, "Sample.json"));

@@ -64,13 +64,13 @@ namespace NeeView
         public FolderItem? CreateFolderItem(string path)
         {
             var directory = new DirectoryInfo(path);
-            if (directory.Exists)
+            if (FileIO.Exists(directory))
             {
                 return CreateFolderItem(directory);
             }
 
             var file = new FileInfo(path);
-            if (file.Exists)
+            if (FileIO.Exists(file))
             {
                 return CreateFolderItem(file);
             }
@@ -81,7 +81,7 @@ namespace NeeView
 
         public FolderItem? CreateFolderItem(FileSystemInfo? e)
         {
-            if (e == null || !e.Exists) return null;
+            if (e == null || !FileIO.Exists(e)) return null;
 
             if ((e.Attributes & FileAttributes.Directory) != 0)
             {
@@ -133,7 +133,7 @@ namespace NeeView
         /// </summary>
         public FolderItem? CreateFolderItem(DirectoryInfo? e)
         {
-            if (e == null || !e.Exists) return null;
+            if (e == null || !FileIO.Exists(e)) return null;
 
             var item = new FileFolderItem(_isOverlayEnabled)
             {
@@ -159,7 +159,7 @@ namespace NeeView
 
         public FolderItem? CreateFolderItem(FileInfo? e)
         {
-            if (e == null || !e.Exists) return null;
+            if (e == null || !FileIO.Exists(e)) return null;
 
             if (FileShortcut.IsShortcut(e.FullName))
             {

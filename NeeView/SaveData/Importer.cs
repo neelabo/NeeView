@@ -346,7 +346,7 @@ namespace NeeView
             }
 
             var directory = new DirectoryInfo(Config.Current.Playlist.PlaylistFolder);
-            if (!directory.Exists)
+            if (!FileIO.Exists(directory))
             {
                 directory.Create();
             }
@@ -369,7 +369,7 @@ namespace NeeView
             }
 
             var directory = new DirectoryInfo(Config.Current.Theme.CustomThemeFolder);
-            if (!directory.Exists)
+            if (!FileIO.Exists(directory))
             {
                 directory.Create();
             }
@@ -392,7 +392,7 @@ namespace NeeView
             }
 
             var directory = new DirectoryInfo(Config.Current.Script.ScriptFolder);
-            if (!directory.Exists)
+            if (!FileIO.Exists(directory))
             {
                 directory.Create();
             }

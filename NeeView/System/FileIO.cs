@@ -67,6 +67,32 @@ namespace NeeView
             return Directory.Exists(path);
         }
 
+        public static bool Exists([NotNullWhen(true)] FileSystemInfo? info)
+        {
+            if (info is null) return false;
+
+            using var scope = new SystemLockMonitor();
+            return info.Exists;
+        }
+
+        public static FileAttributes GetAttributes(string path)
+        {
+            using var scope = new SystemLockMonitor();
+            return File.GetAttributes(path);
+        }
+
+        public static DateTime GetLastWriteTime(string path)
+        {
+            using var scope = new SystemLockMonitor();
+            return File.GetLastWriteTime(path);
+        }
+
+        public static FileStream Open(string path, FileMode mode, FileAccess access, FileShare share)
+        {
+            using var scope = new SystemLockMonitor();
+            return File.Open(path, mode, access, share);
+        }
+
         /// <summary>
         /// FileSystemInfoを取得
         /// </summary>
@@ -75,7 +101,7 @@ namespace NeeView
         public static FileSystemInfo CreateFileSystemInfo(string path)
         {
             var directoryInfo = new DirectoryInfo(path);
-            if (directoryInfo.Exists) return directoryInfo;
+            if (FileIO.Exists(directoryInfo)) return directoryInfo;
             else return new FileInfo(path);
         }
 
@@ -291,7 +317,7 @@ namespace NeeView
         {
             var directoryPath = LoosePath.TrimDirectoryEnd(path);
             var dir = new DirectoryInfo(LoosePath.TrimDirectoryEnd(directoryPath));
-            if (!dir.Exists)
+            if (!FileIO.Exists(dir))
             {
                 dir.Create();
             }

@@ -175,7 +175,7 @@ namespace NeeView
 
         private static async ValueTask CopyAsync(string src, string dst, CancellationToken token)
         {
-            using var sourceStream = File.Open(src, FileMode.Open, FileAccess.Read, FileShare.Read);
+            using var sourceStream = FileIO.Open(src, FileMode.Open, FileAccess.Read, FileShare.Read);
             using var destinationStream = File.Create(dst);
             await sourceStream.CopyToAsync(destinationStream, token);
             await destinationStream.FlushAsync(token);

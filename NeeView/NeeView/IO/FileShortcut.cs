@@ -37,7 +37,7 @@ namespace NeeView.IO
 
         // 有効？
         [MemberNotNullWhen(true, nameof(Target), nameof(TargetPath))]
-        public bool IsValid => _target != null && _target.Exists;
+        public bool IsValid => _target != null && FileIO.Exists(_target);
 
 
 
@@ -129,7 +129,7 @@ namespace NeeView.IO
             {
                 throw new ArgumentNullException(nameof(linkFile));
             }
-            if (!linkFile.Exists)
+            if (!FileIO.Exists(linkFile))
             {
                 throw new FileNotFoundException();
             }

@@ -84,7 +84,7 @@ namespace NeeView
         public long GetLength()
         {
             var file = new FileInfo(_path);
-            if (file.Exists) return file.Length;
+            if (FileIO.Exists(file)) return file.Length;
 
             return -1;
         }

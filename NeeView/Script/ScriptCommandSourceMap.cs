@@ -36,7 +36,7 @@ namespace NeeView
                 try
                 {
                     var directory = new DirectoryInfo(Config.Current.Script.ScriptFolder);
-                    if (directory.Exists)
+                    if (FileIO.Exists(directory))
                     {
                         return directory.GetFiles("*" + ScriptCommandSource.Extension).ToList();
                     }

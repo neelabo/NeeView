@@ -62,7 +62,7 @@ namespace NeeView
             {
                 var directory = new DirectoryInfo(Place.SimplePath);
 
-                if (!directory.Exists)
+                if (!FileIO.Exists(directory))
                 {
                     var items = new ObservableCollection<FolderItem>
                     {

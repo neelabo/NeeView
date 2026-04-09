@@ -230,7 +230,7 @@ namespace NeeView
             if (strict)
             {
                 var fileInfo = new FileInfo(Path);
-                if (!fileInfo.Exists || fileInfo.Attributes.HasFlag(FileAttributes.ReadOnly))
+                if (!FileIO.Exists(fileInfo) || fileInfo.Attributes.HasFlag(FileAttributes.ReadOnly))
                 {
                     return false;
                 }
@@ -265,7 +265,7 @@ namespace NeeView
             if (removes.Count == 0) return DeleteResult.Success;
 
             var fileInfo = new FileInfo(Path);
-            if (!fileInfo.Exists)
+            if (!FileIO.Exists(fileInfo))
             {
                 throw new FileNotFoundException("The file does not exist.", Path);
             }

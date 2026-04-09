@@ -232,12 +232,12 @@ namespace NeeView
             try
             {
                 var directoryInfo = new DirectoryInfo(path);
-                if (directoryInfo.Exists)
+                if (FileIO.Exists(directoryInfo))
                 {
                     return directoryInfo;
                 }
                 var fileInfo = new FileInfo(path);
-                if (fileInfo.Exists)
+                if (FileIO.Exists(fileInfo))
                 {
                     return fileInfo;
                 }

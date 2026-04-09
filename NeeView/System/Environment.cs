@@ -720,7 +720,7 @@ namespace NeeView
 
                 // if old path not exist, exit
                 var directory = new DirectoryInfo(oldPath);
-                if (!directory.Exists) return;
+                if (!FileIO.Exists(directory)) return;
 
                 // move ... OK?
                 directory.MoveTo(newPath);
