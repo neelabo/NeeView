@@ -256,6 +256,11 @@ namespace NeeView
         {
             var state = Config.Current.Window.State;
 
+            if (Config.Current.Window.WindowPlacement != null)
+            {
+                state = Config.Current.Window.WindowPlacement.GetWindowStateEx();
+            }
+
             if (App.Current.Option.IsResetPlacement == SwitchOption.on)
             {
                 state = WindowStateEx.Normal;

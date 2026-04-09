@@ -217,12 +217,6 @@ namespace NeeView
                 }
             }
 
-            // ver 46.0+
-            if (self.Config.Window.WindowPlacement != null)
-            {
-                self.Config.Window.State = self.Config.Window.WindowPlacement.GetWindowStateEx();
-            }
-
             // ver 46.0
             if (self.Format.CompareTo(new FormatVersion(Environment.SolutionName, VersionNumber.Ver46_Alpha1)) <= 0)
             {
