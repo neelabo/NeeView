@@ -6,6 +6,7 @@ using NeeView.PageFrames;
 using NeeView.Properties;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -397,8 +398,10 @@ namespace NeeView
                     {
                         return;
                     }
-                    using var exporter = ImageExporterFactory.CreateExporter(source, parameter.Mode);
-                    await exporter.ExportAsync(dialog.FileName, true, parameter, CancellationToken.None);
+
+                    Debug.Assert(parameter.ExportFolder == Path.GetDirectoryName(dialog.FileName));
+                    var filename = Path.GetFileName(dialog.FileName);
+                    await ExportImageProcedure.Run(parameter, filename, true, CancellationToken.None);
                 }
                 catch (OperationCanceledException)
                 {
@@ -417,7 +420,7 @@ namespace NeeView
             {
                 try
                 {
-                    await ExportImageProcedure.Run(parameter, parameter.IsShowToast, CancellationToken.None);
+                    await ExportImageProcedure.Run(parameter, null, parameter.IsShowToast, CancellationToken.None);
                 }
                 catch (OperationCanceledException)
                 {

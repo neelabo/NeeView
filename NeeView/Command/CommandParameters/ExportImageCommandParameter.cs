@@ -58,21 +58,21 @@ namespace NeeView
             set => SetProperty(ref _exportFolder, value);
         }
 
-        [PropertyMember]
+        [PropertyMember(Name = "ExportImageParameter.FileNameFormat0")]
         public string FileNameFormat0
         {
             get { return _fileNameFormat0; }
             set { SetProperty(ref _fileNameFormat0, value); }
         }
 
-        [PropertyMember]
+        [PropertyMember(Name = "ExportImageParameter.FileNameFormat1")]
         public string FileNameFormat1
         {
             get { return _fileNameFormat1; }
             set { SetProperty(ref _fileNameFormat1, value); }
         }
 
-        [PropertyMember]
+        [PropertyMember(Name = "ExportImageParameter.FileNameFormat2")]
         public string FileNameFormat2
         {
             get { return _fileNameFormat2; }
@@ -112,7 +112,7 @@ namespace NeeView
 
         [Obsolete, Alternative("FileNameFormat0,1,2", 46, ScriptErrorLevel.Warning)] // ver.46
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
-        [PropertyMember(Name = "ExportImageParameter.FileNameMode")]
+        [PropertyMapIgnore]
         public ExportImageFileNameMode? FileNameMode
         {
             get => ExportImageFileNameMode.Original;

@@ -1,6 +1,7 @@
 ﻿using NeeView.Properties;
 using System;
 using System.Globalization;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace NeeView
     /// </summary>
     public static class ExportImageProcedure
     {
-        public static async Task Run(IExportImageParameter parameter, bool showToast, CancellationToken token)
+        public static async Task Run(IExportImageParameter parameter, string? filename, bool showToast, CancellationToken token)
         {
             var source = ExportImageSourceFactory.Create();
             using var service = new ExportImageService(source, parameter);
@@ -19,7 +20,7 @@ namespace NeeView
 
             try
             {
-                var path = CreateFileWriteSettings(service, ExportImageOverwritePolicyFactory.Create(parameter.OverwriteMode));
+                var path = CreateOutputPath(service, ExportImageOverwritePolicyFactory.Create(parameter.OverwriteMode), filename);
 
                 await service.ExportAsync(path, true, token);
 
@@ -40,23 +41,28 @@ namespace NeeView
         }
 
 
-        private static string CreateFileWriteSettings(ExportImageService service, IExportOverwritePolicy overwritePolicy)
+        private static string CreateOutputPath(ExportImageService service, IExportOverwritePolicy overwritePolicy, string? filename)
         {
-            var filename = service.CreateFileName();
+            var parameter = service.Parameter;
+            filename = filename ??service.CreateFileName();
 
             // 出力フォルダー指定がなければ、ダイアログで出力ファイル名を確定する
-            if (string.IsNullOrWhiteSpace(service.ExportFolder))
+            if (string.IsNullOrWhiteSpace(parameter.ExportFolder))
             {
-                var dialog = new ExportImageSeveFileDialog(service.ExportFolder, filename, service.Mode == ExportImageMode.View);
+                var canSelectFormat = parameter.Mode == ExportImageMode.View;
+
+                var dialog = new ExportImageSeveFileDialog(parameter.ExportFolder, filename, canSelectFormat, false);
                 var result = dialog.ShowDialog(MainWindow.Current);
                 if (result != true)
                 {
                     throw new OperationCanceledException();
                 }
-                return dialog.FileName;
+
+                parameter.ExportFolder = Path.GetDirectoryName(dialog.FileName) ?? throw new DirectoryNotFoundException();
+                filename = Path.GetFileName(dialog.FileName);
             }
 
-            var resolver = new FileExportOverwriteResolver(service.ExportFolder);
+            var resolver = new FileExportOverwriteResolver(parameter.ExportFolder);
             var name = overwritePolicy.Resolve(filename, resolver, service);
             return resolver.GetFullPath(name);
         }

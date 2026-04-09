@@ -12,7 +12,7 @@
         KeyDown="MessageDialog_KeyDown"
         Title="NeeView" SizeToContent="Height" Width="600" ResizeMode="NoResize">
 
-    <Grid MinWidth="480" MaxWidth="600">
+    <Grid MinWidth="480" MaxWidth="800">
         <DockPanel  Margin="40,20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <DockPanel DockPanel.Dock="Bottom" Margin="0,20,0,0">
                 <StackPanel x:Name="ButtonPanel" DockPanel.Dock="Right" Orientation="Horizontal">

@@ -8,11 +8,12 @@ namespace NeeView
 {
     public class ExportImageSeveFileDialog
     {
-        public ExportImageSeveFileDialog(string? initialDirectory, string fileName, bool canSelectFormat)
+        public ExportImageSeveFileDialog(string? initialDirectory, string fileName, bool canSelectFormat, bool overwritePrompt)
         {
             InitialDirectory = initialDirectory;
             FileName = fileName;
             CanSelectFormat = canSelectFormat;
+            OverwritePrompt = overwritePrompt;
         }
 
 
@@ -22,12 +23,14 @@ namespace NeeView
 
         public bool CanSelectFormat { get; set; }
 
+        public bool OverwritePrompt { get;  set; }
+
 
         public bool? ShowDialog(Window owner)
         {
             try
             {
-                var dialog = CreateSaveFileDialog(FileName, ValidateDirectoryPath(InitialDirectory), CanSelectFormat);
+                var dialog = CreateSaveFileDialog(FileName, ValidateDirectoryPath(InitialDirectory), CanSelectFormat, OverwritePrompt);
                 var result = dialog.ShowDialog(owner);
                 FileName = dialog.FileName;
                 return result;
@@ -51,12 +54,12 @@ namespace NeeView
             }
         }
 
-        private static SaveFileDialog CreateSaveFileDialog(string filename, string directory, bool canSelectFormat)
+        private static SaveFileDialog CreateSaveFileDialog(string filename, string directory, bool canSelectFormat, bool overwritePrompt)
         {
             var dialog = new SaveFileDialog();
 
             dialog.InitialDirectory = directory;
-            dialog.OverwritePrompt = true;
+            dialog.OverwritePrompt = overwritePrompt;
 
             dialog.AddExtension = true;
 

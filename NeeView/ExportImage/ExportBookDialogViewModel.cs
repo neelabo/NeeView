@@ -57,7 +57,7 @@ namespace NeeView
             var fileNameFormatModel0 = new ExportFileNameFormatModel(_parameter, ProxyProperty.Create((ExportImageParameter)_parameter, e => e.FileNameFormat0), ExportFileNameFormat.CreateDummyFileNameSource(1, 1), ExportBookParameter.DefaultBookFileNameFormat0);
 
             originalDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileNameFormat0), data: fileNameFormatModel0));
-            originalDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.OverwriteMode), new PropertyMemberElementOptions() { EnumMap = overwriteMap }));
+            originalDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.OverwriteMode), options: new() { EnumMap = overwriteMap }));
 
             var viewDocument = new PropertyDocument();
 

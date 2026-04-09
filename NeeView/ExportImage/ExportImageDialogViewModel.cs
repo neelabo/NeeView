@@ -143,7 +143,13 @@ namespace NeeView
                 ? SelectedDestinationFolder.Path
                 : _parameter.ExportFolder;
 
-            var dialog = new ExportImageSeveFileDialog(initialDirectory, CreateFileName(1), _parameter.Mode == ExportImageMode.View);
+            var fileName = LoosePath.ValidFileName(new DefaultExportImageFileNamePolicy(_parameter).CreateFileName(_source, 1));
+
+            var canSelectFormat = _parameter.Mode == ExportImageMode.View;
+
+            var overwritePrompt = false;
+
+            var dialog = new ExportImageSeveFileDialog(initialDirectory, fileName, canSelectFormat, overwritePrompt);
 
             var result = dialog.ShowDialog(owner);
             if (result != true)
@@ -156,13 +162,6 @@ namespace NeeView
             this.FileName = dialog.FileName;
 
             return result;
-        }
-
-        public string CreateFileName(int index)
-        {
-            var fileNamePolicy = new DefaultExportImageFileNamePolicy(_parameter);
-            var fileName = fileNamePolicy.CreateFileName(_source, index);
-            return LoosePath.ValidFileName(fileName);
         }
 
         protected virtual void Dispose(bool disposing)

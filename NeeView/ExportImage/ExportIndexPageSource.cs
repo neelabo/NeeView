@@ -16,6 +16,7 @@ namespace NeeView
             BookAddress = bookAddress;
             Direction = direction;
             Elements = [.. elements];
+            Index = index;
         }
 
         public string BookAddress { get; }
