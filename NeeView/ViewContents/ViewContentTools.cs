@@ -3,6 +3,7 @@
 using NeeLaboratory.Generators;
 using NeeView.PageFrames;
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -67,37 +68,68 @@ namespace NeeView
             return new MessagePageControl(viewData);
         }
 
+
         public static void SetBitmapScalingMode(UIElement element, Size imageSize, ViewContentSize contentSize, BitmapScalingMode? scalingMode)
         {
+            var pixelSize = GetRenderPixelSize(element, imageSize);
+
             // ScalingMode が指定されている
             if (scalingMode is not null)
             {
-                LocalDebug.WriteLine($"XX: Force {scalingMode.Value}: {imageSize:f0}");
+                LocalDebug.WriteLine($"XX: Force {scalingMode.Value}: {pixelSize:f0} / {imageSize:f0}");
                 RenderOptions.SetBitmapScalingMode(element, scalingMode.Value);
                 element.SnapsToDevicePixels = scalingMode.Value == BitmapScalingMode.NearestNeighbor;
             }
             // 画像サイズがビッタリの場合はドットバイドットになるような設定
-            else if (contentSize.IsRightAngle && Math.Abs(contentSize.PixelSize.Width - imageSize.Width) < 1.1 && Math.Abs(contentSize.PixelSize.Height - imageSize.Height) < 1.1)
+            else if (contentSize.IsRightAngle && SizeEquals(contentSize.PixelSize, pixelSize, 1.1))
             {
-                LocalDebug.WriteLine($"OO: NearestNeighbor: {imageSize:f0}");
+                LocalDebug.WriteLine($"OO: NearestNeighbor: {pixelSize:f0} /{imageSize:f0}");
                 RenderOptions.SetBitmapScalingMode(element, BitmapScalingMode.NearestNeighbor);
                 element.SnapsToDevicePixels = true;
             }
             // DotKeep mode
             // TODO: Config.Current参照はよろしくない
-            else if (Config.Current.ImageDotKeep.IsImageDotKeep(contentSize.PixelSize, imageSize))
+            else if (Config.Current.ImageDotKeep.IsImageDotKeep(contentSize.PixelSize, pixelSize))
             {
-                LocalDebug.WriteLine($"XX: NearestNeighbor: {imageSize:f0} != request {contentSize.PixelSize:f0}");
+                LocalDebug.WriteLine($"XX: NearestNeighbor: {pixelSize:f0} / {imageSize:f0} != request {contentSize.PixelSize:f0}");
                 RenderOptions.SetBitmapScalingMode(element, BitmapScalingMode.NearestNeighbor);
                 element.SnapsToDevicePixels = true;
             }
             else
             {
-                LocalDebug.WriteLine($"XX: Fantastic: {imageSize:f0} != request {contentSize.PixelSize:f0}");
+                LocalDebug.WriteLine($"XX: Fantastic: {pixelSize:f0} / {imageSize:f0} != request {contentSize.PixelSize:f0}");
                 RenderOptions.SetBitmapScalingMode(element, BitmapScalingMode.Fant);
                 element.SnapsToDevicePixels = false;
             }
         }
 
+
+        private static Size GetRenderPixelSize(UIElement element, Size imageSize)
+        {
+#if DEBUG
+            var sourceSize = BrushImageContentTools.GetImageSourcePixelSize(element);
+            Debug.Assert(sourceSize.IsEmpty || SizeEquals(sourceSize, imageSize, 1.0), $"GetRenderPixelSize: {sourceSize} != {imageSize}");
+#endif
+            var viewbox = BrushImageContentTools.GetViewBox(element);
+            if (viewbox.IsEmpty)
+            {
+                return imageSize;
+            }
+            else
+            {
+                return new Size(viewbox.Width * imageSize.Width, viewbox.Height * imageSize.Height);
+            }
+        }
+
+        private static bool SizeEquals(Size a, Size b, double margin)
+        {
+            return DoubleEquals(a.Width, b.Width, margin) && DoubleEquals(a.Height, b.Height, margin);
+        }
+
+        private static bool DoubleEquals(double a, double b, double margin)
+        {
+            return Math.Abs(a - b) < margin;
+        }
     }
+
 }
