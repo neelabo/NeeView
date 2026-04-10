@@ -1,4 +1,6 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿//#define LOCAL_DEBUG
+
+using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
 using System;
 using System.Diagnostics;
@@ -8,6 +10,7 @@ using System.Windows.Media.Animation;
 
 namespace NeeView.PageFrames
 {
+    [LocalDebug]
     public partial class PageFrameViewTransform : IPointControl, INotifyTransformChanged, IDisposable
     {
         private readonly MultiTransform _transform = new();
@@ -105,11 +108,16 @@ namespace NeeView.PageFrames
         public void SetPoint(Point value, TimeSpan span, IEasingFunction? easeX, IEasingFunction? easeY)
         {
             if (_disposedValue) return;
-            if (_transform.Point == value) return;
 
-            //Debug.WriteLine($"$$ {{{Point:f0}}} to {{{value:f0}}} ({span.TotalMilliseconds})");
-            _transform.SetPoint(value, span, easeX, easeY);
-            TransformChanged?.Invoke(this, new TransformChangedEventArgs(this, TransformCategory.View, TransformAction.Point));
+            // 座標の小数点以下は切り捨てる（描画品質の向上のため）
+            value = TransformTools.RoundPoint(value);
+
+            if (_transform.Point != value)
+            {
+                LocalDebug.WriteLine($"$$ {{{Point:f0}}} to {{{value:f0}}} ({span.TotalMilliseconds})");
+                _transform.SetPoint(value, span, easeX, easeY);
+                TransformChanged?.Invoke(this, new TransformChangedEventArgs(this, TransformCategory.View, TransformAction.Point));
+            }
         }
 
         public Vector GetVelocity()

@@ -1,4 +1,6 @@
-﻿using NeeLaboratory.Generators;
+﻿//#define LOCAL_DEBUG
+
+using NeeLaboratory.Generators;
 using System;
 using System.ComponentModel;
 using System.Windows;
@@ -7,6 +9,7 @@ using System.Windows.Media.Animation;
 
 namespace NeeView.PageFrames
 {
+    [LocalDebug]
     [NotifyPropertyChanged]
     public partial class LoupeTransformContext : IPointControl, IScaleControl, INotifyPropertyChanged, INotifyTransformChanged
     {
@@ -51,8 +54,12 @@ namespace NeeView.PageFrames
         // NOTE: no use easing function.
         public void SetPoint(Point value, TimeSpan span, IEasingFunction? easeX, IEasingFunction? easeY)
         {
+            // 座標の小数点以下は切り捨てる（描画品質の向上のため）
+            value = TransformTools.RoundPoint(value);
+
             if (_transform.Point != value)
             {
+                LocalDebug.WriteLine($"$$ {{{Point:f0}}} to {{{value:f0}}} ({span.TotalMilliseconds})");
                 _transform.SetPoint(value);
                 RaisePropertyChanged(nameof(Point));
                 TransformChanged?.Invoke(this, new TransformChangedEventArgs(this, TransformCategory.Loupe, TransformAction.Point));

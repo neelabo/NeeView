@@ -86,6 +86,8 @@ namespace NeeView.PageFrames
         public PageFrameContent(ViewContentFactory viewContentFactory, PageFrameContext context, PageFrame pageFrame, Page? nextPage, PageFrameActivity activity, PageFrameTransformAccessor transform, LoupeTransformContext loupeContext, BaseScaleTransform baseScaleTransform, ContentSizeCalculator calculator)
         {
             _canvas = new Canvas();
+            _canvas.Name = "PageFrameContent_Canvas";
+        
             _canvas.RenderTransform = _viewTransform;
 
             _contentCanvas = new Canvas();

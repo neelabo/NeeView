@@ -13,6 +13,8 @@ namespace NeeView.PageFrames
 
         public PageFrameContainerCanvas(PageFrameContext context, PageFrameContainerCollection containers)
         {
+            this.Name = "PageFrameContainerCanvas";
+
             _context = context;
             _containers = containers;
 
