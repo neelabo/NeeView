@@ -24,7 +24,7 @@ namespace NeeView
     /// MainWindow.xaml の相互作用ロジック
     /// </summary>
     [LocalDebug]
-    public partial class MainWindow : Window, IDpiScaleProvider, IHasWindowController, INotifyMouseHorizontalWheelChanged, IHasRenameManager, IMainViewWindow, IWindowProcedure
+    public partial class MainWindow : Window, IDpiScaleProvider, IHasWindowController, IHasRenameManager, IMainViewWindow, IWindowProcedure
     {
         private static MainWindow? _current;
         public static MainWindow Current => _current ?? throw new InvalidOperationException();
@@ -72,8 +72,7 @@ namespace NeeView
 
             ContextMenuWatcher.Initialize();
 
-            var mouseHorizontalWheel = new MouseHorizontalWheelService(this);
-            mouseHorizontalWheel.MouseHorizontalWheelChanged += (s, e) => MouseHorizontalWheelChanged?.Invoke(s, e);
+            MouseHorizontalWheelService.SubscribeHorizontalWheelEvent(this);
 
             // 固定画像初期化
             ThumbnailResource.InitializeStaticImages();
@@ -113,6 +112,7 @@ namespace NeeView
                 IsLeftButtonDownEnabled = false,
                 IsRightButtonDownEnabled = false,
                 IsVerticalWheelEnabled = false,
+                //IsHorizontalWheelEnabled = false, // NOTE: チルトホイールはWPFコントロールで使用されておらず衝突の可能性がない
                 IsMouseEventTerminated = false
             };
             RoutedCommandTable.Current.AddMouseInput(new MouseInput(mouseContext));
@@ -222,12 +222,6 @@ namespace NeeView
             Debug.WriteLine($"App.MainWindow.Initialize.Done: {App.Current.Stopwatch.ElapsedMilliseconds}ms");
         }
 
-
-        /// <summary>
-        /// マウス水平ホイールイベント
-        /// </summary>
-        [Subscribable]
-        public event MouseWheelEventHandler? MouseHorizontalWheelChanged;
 
         /// <summary>
         /// キー入力イベント購読

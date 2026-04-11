@@ -43,7 +43,6 @@ namespace NeeView
         private readonly FrameworkElement _sender;
         private MouseInputState _state;
         private MouseInputState _subState = MouseInputState.Normal;
-        private MouseHorizontalWheelSource? _mouseHorizontalWheelSource;
 
         /// <summary>
         /// 現在状態（実体）
@@ -136,11 +135,7 @@ namespace NeeView
             _sender.MouseWheel += OnMouseWheel;
             _sender.MouseMove += OnMouseMove;
             _sender.PreviewKeyDown += OnKeyDown;
-
-            // 水平ホイールイベント管理
-            _sender.Loaded += (s, e) => InitializeMouseHorizontalWheel();
-            _sender.Unloaded += (s, e) => ReleaseMouseHorizontalWheel();
-            InitializeMouseHorizontalWheel();
+            _sender.AddMouseHorizontalWheelHandle(OnMouseHorizontalWheel);
 
             // ルーペモード監視
             _context.Loupe?.SubscribePropertyChanged(nameof(LoupeContext.IsEnabled), LoupeContext_IsEnabledChanged);
@@ -282,30 +277,6 @@ namespace NeeView
             MouseButtonChanged = null;
             MouseWheelChanged = null;
             MouseHorizontalWheelChanged = null;
-        }
-
-        /// <summary>
-        /// 水平ホイール有効化
-        /// </summary>
-        private void InitializeMouseHorizontalWheel()
-        {
-            _mouseHorizontalWheelSource?.Dispose();
-
-            if (Window.GetWindow(_sender) is not INotifyMouseHorizontalWheelChanged window) return;
-
-            ////Debug.WriteLine($"MouseInput.Sender: InitializeMouseHorizontalWheel()");
-            _mouseHorizontalWheelSource = new MouseHorizontalWheelSource(_sender, window);
-            _mouseHorizontalWheelSource.MouseHorizontalWheelChanged += (s, e) => OnMouseHorizontalWheel(s, e);
-        }
-
-        /// <summary>
-        /// 水平ホイール無効化
-        /// </summary>
-        private void ReleaseMouseHorizontalWheel()
-        {
-            ////Debug.WriteLine($"MouseInput.Sender: ReleaseMouseHorizontalWheel()");
-            _mouseHorizontalWheelSource?.Dispose();
-            _mouseHorizontalWheelSource = null;
         }
 
         public bool IsCaptured()
@@ -476,6 +447,7 @@ namespace NeeView
             if (e.Handled) return;
 
             bool isEnabled = (sender == _sender)
+                && !IsStylusDevice(e)
                 && _context.IsHorizontalWheelEnabled;
 
             if (isEnabled)

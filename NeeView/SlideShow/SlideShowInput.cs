@@ -8,7 +8,6 @@ namespace NeeView
     {
         private readonly SlideShow _slideShow;
         private readonly FrameworkElement _element;
-        private readonly MouseHorizontalWheelSource? _mouseHorizontalWheelSource;
         private bool _disposedValue;
 
 
@@ -20,13 +19,7 @@ namespace NeeView
             _element.PreviewMouseDown += Element_PreviewMouseDown;
             _element.PreviewMouseMove += Element_PreviewMouseMove;
             _element.PreviewMouseWheel += Element_PreviewMouseWheel;
-
-            if (Window.GetWindow(_element) is INotifyMouseHorizontalWheelChanged window)
-            {
-                ////Debug.WriteLine($"MouseInput.Sender: InitializeMouseHorizontalWheel()");
-                _mouseHorizontalWheelSource = new MouseHorizontalWheelSource(_element, window);
-                _mouseHorizontalWheelSource.MouseHorizontalWheelChanged += Element_MouseHorizontalWheelChanged;
-            }
+            _element.AddMouseHorizontalWheelHandle(Element_MouseHorizontalWheelChanged);
         }
 
         private void Element_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -67,7 +60,7 @@ namespace NeeView
                     _element.PreviewMouseDown -= Element_PreviewMouseDown;
                     _element.PreviewMouseMove -= Element_PreviewMouseMove;
                     _element.PreviewMouseWheel -= Element_PreviewMouseWheel;
-                    _mouseHorizontalWheelSource?.Dispose();
+                    _element.RemoveMouseHorizontalWheelHandle(Element_MouseHorizontalWheelChanged);
                 }
                 _disposedValue = true;
             }

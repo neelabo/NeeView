@@ -33,10 +33,7 @@ namespace NeeView.Setting
         {
             if (DesignTimeHelper.IsInDesignMode()) return;
 
-            var window = Window.GetWindow(this) as INotifyMouseHorizontalWheelChanged ?? throw new InvalidOperationException();
-
-            var source = new MouseHorizontalWheelSource(this.MouseGestureBox, window);
-            source.MouseHorizontalWheelChanged += MouseGestureBox_MouseHorizontalWheelChanged;
+            this.MouseGestureBox.AddMouseHorizontalWheelHandle(MouseGestureBox_MouseHorizontalWheelChanged);
         }
 
         public void Initialize(IReadOnlyDictionary<string, CommandElement> commandMap, string key)

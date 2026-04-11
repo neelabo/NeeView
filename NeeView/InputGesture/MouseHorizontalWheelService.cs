@@ -8,17 +8,48 @@ using Windows.Win32.Foundation;
 
 namespace NeeView
 {
-    public class MouseHorizontalWheelService : INotifyMouseHorizontalWheelChanged
+    public class MouseHorizontalWheelService
     {
-        public static readonly RoutedEvent MouseHorizontalWheelEvent = EventManager.RegisterRoutedEvent("MouseHorizontalWheel", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(MouseHorizontalWheelService));
+        public static readonly RoutedEvent PreviewMouseHorizontalWheelEvent = EventManager.RegisterRoutedEvent("PreviewMouseHorizontalWheel", RoutingStrategy.Tunnel, typeof(MouseWheelEventHandler), typeof(MouseHorizontalWheelService));
 
-        private readonly Window _window;
-
-
-        public MouseHorizontalWheelService(Window window)
+        public static void AddPreviewMouseHorizontalWheelHandler(DependencyObject d, MouseWheelEventHandler handler)
         {
-            _window = window;
+            if (d is UIElement element)
+            {
+                element.AddHandler(PreviewMouseHorizontalWheelEvent, handler);
+            }
+        }
 
+        public static void RemovePreviewMouseHorizontalWheelHandler(DependencyObject d, MouseWheelEventHandler handler)
+        {
+            if (d is UIElement element)
+            {
+                element.RemoveHandler(PreviewMouseHorizontalWheelEvent, handler);
+            }
+        }
+
+
+        public static readonly RoutedEvent MouseHorizontalWheelEvent = EventManager.RegisterRoutedEvent("MouseHorizontalWheel", RoutingStrategy.Bubble, typeof(MouseWheelEventHandler), typeof(MouseHorizontalWheelService));
+
+        public static void AddMouseHorizontalWheelHandler(DependencyObject d, MouseWheelEventHandler handler)
+        {
+            if (d is UIElement element)
+            {
+                element.AddHandler(MouseHorizontalWheelEvent, handler);
+            }
+        }
+
+        public static void RemoveMouseHorizontalWheelHandler(DependencyObject d, MouseWheelEventHandler handler)
+        {
+            if (d is UIElement element)
+            {
+                element.RemoveHandler(MouseHorizontalWheelEvent, handler);
+            }
+        }
+
+
+        public static void SubscribeHorizontalWheelEvent(Window window)
+        {
             var hwnd = new WindowInteropHelper(window).Handle;
             if (hwnd != IntPtr.Zero)
             {
@@ -26,51 +57,92 @@ namespace NeeView
             }
             else
             {
-                _window.Loaded += Window_Loaded;
+                window.Loaded -= Window_Loaded;
+                window.Loaded += Window_Loaded;
             }
         }
 
-
-        public event MouseWheelEventHandler? MouseHorizontalWheelChanged;
-
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private static void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            _window.Loaded -= Window_Loaded;
+            Debug.Assert(sender is Window, "The sender of the Loaded event should be a Window.");
+            if (sender is not Window window) return;
 
-            var hwnd = new WindowInteropHelper(_window).Handle;
+            window.Loaded -= Window_Loaded;
+
+            var hwnd = new WindowInteropHelper(window).Handle;
             HwndSource.FromHwnd(hwnd).AddHook(WndProc);
         }
 
-        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+
+        private static IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             switch ((uint)msg)
             {
                 case PInvoke.WM_MOUSEHWHEEL:
-                    MouseWheelEventArgs? args = null;
                     try
                     {
-                        // NOTE: デバイスが特定できないのでとりあえず Mouse.PrimaryDevice を使用
-                        // NOTE: ReferenceSource を見る限り Mouse.PrimaryDevice が null になることはないようだが、念の為に確認している
-                        if (Mouse.PrimaryDevice != null)
-                        {
-                            var delta = PInvoke.GET_WHEEL_DELTA_WPARAM(new WPARAM((nuint)wParam));
-                            args = new MouseWheelEventArgs(Mouse.PrimaryDevice, System.Environment.TickCount, delta) { RoutedEvent = MouseHorizontalWheelEvent };
-                        }
+                        var delta = PInvoke.GET_WHEEL_DELTA_WPARAM(new WPARAM((nuint)wParam));
+                        handled = RaiseMouseHorizontalWheelEvent(delta);
                     }
                     catch (Exception ex)
                     {
                         Debug.WriteLine(ex.Message);
                     }
-                    if (args != null)
-                    {
-                        MouseHorizontalWheelChanged?.Invoke(_window, args);
-                        handled = args.Handled;
-                    }
                     break;
             }
 
             return IntPtr.Zero;
+        }
+
+        private static bool RaiseMouseHorizontalWheelEvent(int delta)
+        {
+            if (Mouse.PrimaryDevice is null)
+            {
+                return false;
+            }
+
+            var target = Mouse.DirectlyOver as UIElement;
+            if (target is null)
+            {
+                return false;
+            }
+
+            var args = new MouseWheelEventArgs(Mouse.PrimaryDevice, System.Environment.TickCount, delta);
+            args.RoutedEvent = PreviewMouseHorizontalWheelEvent;
+            args.Source = target;
+            target.RaiseEvent(args);
+
+            if (args.Handled) return true;
+
+            args.RoutedEvent = MouseHorizontalWheelEvent;
+            target.RaiseEvent(args);
+
+            return args.Handled;
+        }
+    }
+
+
+
+    public static partial class UIElementExtensions
+    {
+        public static void AddPreviewMouseHorizontalWheelHandle(this UIElement element, MouseWheelEventHandler handler)
+        {
+            element.AddHandler(MouseHorizontalWheelService.PreviewMouseHorizontalWheelEvent, handler);
+        }
+
+        public static void RemovePreviewMouseHorizontalWheelHandle(this UIElement element, MouseWheelEventHandler handler)
+        {
+            element.RemoveHandler(MouseHorizontalWheelService.PreviewMouseHorizontalWheelEvent, handler);
+        }
+
+        public static void AddMouseHorizontalWheelHandle(this UIElement element, MouseWheelEventHandler handler)
+        {
+            element.AddHandler(MouseHorizontalWheelService.MouseHorizontalWheelEvent, handler);
+        }
+
+        public static void RemoveMouseHorizontalWheelHandle(this UIElement element, MouseWheelEventHandler handler)
+        {
+            element.RemoveHandler(MouseHorizontalWheelService.MouseHorizontalWheelEvent, handler);
         }
     }
 
