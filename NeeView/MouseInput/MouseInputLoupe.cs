@@ -39,14 +39,7 @@ namespace NeeView
         {
             AttachLoupe(sender);
 
-            if (parameter is bool isLongDownMode)
-            {
-                _isLongDownMode = isLongDownMode;
-            }
-            else
-            {
-                _isLongDownMode = false;
-            }
+            _isLongDownMode = parameter is bool isLongDownMode && isLongDownMode;
 
             sender.Focus();
             SetCursor(Cursors.None);

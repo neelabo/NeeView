@@ -1,5 +1,6 @@
 ﻿using NeeView.Windows.Media;
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 
@@ -8,7 +9,7 @@ namespace NeeView
     /// <summary>
     /// オートスクロール
     /// </summary>
-    public class MouseInputAutoScroll : MouseInputBase
+    public class MouseInputAutoScroll : MouseInputNormal
     {
         private bool _isLongDownMode;
         private Point _start;
@@ -30,9 +31,13 @@ namespace NeeView
         /// <param name="parameter">trueならば長押しモード</param>
         public override void OnOpened(FrameworkElement sender, object? parameter)
         {
+            base.OnOpenedWithoutHoverScroll(sender, parameter);
+
             if (_context.DragTransformContextFactory is null) throw new InvalidOperationException();
 
             _isLongDownMode = parameter is bool isLongDownMode && isLongDownMode;
+
+            IsLongButtonEnabled = !_isLongDownMode;
 
             sender.Focus();
             SetCursor(Cursors.ScrollAll);
@@ -51,6 +56,8 @@ namespace NeeView
         /// <param name="sender"></param>
         public override void OnClosed(FrameworkElement sender)
         {
+            base.OnClosed(sender);
+
             SetCursor(null);
 
             _renderingSubscriber?.Dispose();
@@ -65,7 +72,14 @@ namespace NeeView
         /// <param name="sender"></param>
         public override void OnPageFrameBoxChanged(FrameworkElement sender)
         {
-            ResetState();
+            if (Config.Current.Mouse.IsStopAutoScrollUponInteraction)
+            {
+                ResetState();
+            }
+            else
+            {
+                base.OnPageFrameBoxChanged(sender);
+            }
         }
 
         /// <summary>
@@ -91,16 +105,6 @@ namespace NeeView
             _transformControl?.DoMove(-_velocity * e.DeltaTime.TotalMilliseconds, TimeSpan.Zero);
         }
 
-        public override void OnCaptureOpened(FrameworkElement sender)
-        {
-            MouseInputHelper.CaptureMouse(this, sender);
-        }
-
-        public override void OnCaptureClosed(FrameworkElement sender)
-        {
-            MouseInputHelper.ReleaseMouseCapture(this, sender);
-        }
-
         /// <summary>
         /// マウスボタンが押されたときの処理
         /// </summary>
@@ -108,7 +112,19 @@ namespace NeeView
         /// <param name="e"></param>
         public override void OnMouseButtonDown(object? sender, MouseButtonEventArgs e)
         {
-            ResetState();
+            if (_isLongDownMode)
+            {
+                return;
+            }
+            else if (Config.Current.Mouse.IsStopAutoScrollUponInteraction)
+            {
+                ResetState();
+                e.Handled = true;
+            }
+            else
+            {
+                base.OnMouseButtonDown(sender, e);
+            }
         }
 
         /// <summary>
@@ -118,9 +134,19 @@ namespace NeeView
         /// <param name="e"></param>
         public override void OnMouseButtonUp(object? sender, MouseButtonEventArgs e)
         {
-            if (_isLongDownMode)
+            if (_isLongDownMode && MouseButtonBitsExtensions.Create(e) == MouseButtonBits.None)
             {
                 ResetState();
+                e.Handled = true;
+            }
+            else if (Config.Current.Mouse.IsStopAutoScrollUponInteraction)
+            {
+                ResetState();
+                e.Handled = true;
+            }
+            else
+            {
+                base.OnMouseButtonUp(sender, e);
             }
         }
 
@@ -141,6 +167,11 @@ namespace NeeView
             _velocity = new Vector(LimitScalarValue(delta.X, min, max), LimitScalarValue(delta.Y, min, max));
 
             SetCursor(GetScrollCursor(_velocity));
+
+            if (!_isLongDownMode)
+            {
+                base.OnMouseMoveWithoutHoverScroll(sender, e);
+            }
         }
 
         /// <summary>
@@ -195,8 +226,15 @@ namespace NeeView
         /// <param name="e"></param>
         public override void OnMouseWheel(object? sender, MouseWheelEventArgs e)
         {
-            ResetState();
-            MouseWheelChanged?.Invoke(sender, e);
+            if (Config.Current.Mouse.IsStopAutoScrollUponInteraction)
+            {
+                ResetState();
+                e.Handled = true;
+            }
+            else
+            {
+                base.OnMouseWheel(sender, e);
+            }
         }
 
         /// <summary>
@@ -204,8 +242,15 @@ namespace NeeView
         /// </summary>
         public override void OnMouseHorizontalWheel(object? sender, MouseWheelEventArgs e)
         {
-            ResetState();
-            MouseHorizontalWheelChanged?.Invoke(sender, e);
+            if (Config.Current.Mouse.IsStopAutoScrollUponInteraction)
+            {
+                ResetState();
+                e.Handled = true;
+            }
+            else
+            {
+                base.OnMouseHorizontalWheel(sender, e);
+            }
         }
 
         /// <summary>
@@ -215,9 +260,22 @@ namespace NeeView
         /// <param name="e"></param>
         public override void OnKeyDown(object? sender, KeyEventArgs e)
         {
-            if (e.IsRepeat) return;
-
-            ResetState();
+            if (Config.Current.Mouse.IsStopAutoScrollUponInteraction)
+            {
+                if (!e.IsRepeat)
+                {
+                    ResetState();
+                    e.Handled = true;
+                }
+            }
+            else
+            {
+                if (e.Key == Key.Escape)
+                {
+                    ResetState();
+                    e.Handled = true;
+                }
+            }
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 
@@ -157,6 +158,7 @@ namespace NeeView
         /// <param name="parameter"></param>
         protected void SetState(MouseInputState state, object? parameter = null)
         {
+            Debug.Assert(state != MouseInputState.Normal, "Please use ResetState for state transitions.");
             StateChanged?.Invoke(this, new MouseInputStateEventArgs(state, parameter));
         }
 

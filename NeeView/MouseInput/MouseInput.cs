@@ -42,6 +42,7 @@ namespace NeeView
         private readonly int _serialNumber = _serialCount++;
         private readonly FrameworkElement _sender;
         private MouseInputState _state;
+        private MouseInputState _subState = MouseInputState.Normal;
         private MouseHorizontalWheelSource? _mouseHorizontalWheelSource;
 
         /// <summary>
@@ -203,8 +204,54 @@ namespace NeeView
         /// <summary>
         /// 現在の状態
         /// </summary>
-        public MouseInputState State => _state;
+        public MouseInputState State
+        {
+            get => _state;
+            private set
+            {
+                if (SetProperty(ref _state, value))
+                {
+                    RaisePropertyChanged(nameof(IsAutoScrollMode));
+                }
+            }
+        }
 
+        /// <summary>
+        /// サブステート。通常に戻るときの状態を保存するために使用される。
+        /// </summary>
+        public MouseInputState SubState
+        {
+            get => _subState;
+            private set
+            {
+                if (SetProperty(ref _subState, value))
+                {
+                    RaisePropertyChanged(nameof(IsAutoScrollMode));
+                }
+            }
+        }
+
+        /// <summary>
+        /// オートスクロールモードかどうか
+        /// </summary>
+        public bool IsAutoScrollMode
+        {
+            get
+            {
+                return State == MouseInputState.AutoScroll || (State != MouseInputState.Normal && SubState == MouseInputState.AutoScroll);
+            } 
+            set
+            {
+                if (value)
+                {
+                    SetState(MouseInputState.AutoScroll, false);
+                }
+                else
+                {
+                    SetState(MouseInputState.Normal, false);
+                }
+            }
+        }
 
         /// <summary>
         /// マウスクリック
@@ -221,7 +268,7 @@ namespace NeeView
 
         private void LoupeContext_IsEnabledChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (_state == MouseInputState.Loupe && (_context.Loupe is null || !_context.Loupe.IsEnabled))
+            if (State == MouseInputState.Loupe && (_context.Loupe is null || !_context.Loupe.IsEnabled))
             {
                 SetState(MouseInputState.Normal, null);
             }
@@ -280,20 +327,35 @@ namespace NeeView
         /// </summary>
         public void SetState(MouseInputState state, object? parameter, bool force = false)
         {
-            if (!force && state == _state) return;
-            //Debug.WriteLine($"#MouseState: {state}");
+            // オートスクロール以外から通常に戻るときは、サブ状態で復元する
+            if (State != MouseInputState.AutoScroll && state == MouseInputState.Normal)
+            {
+                state = SubState;
+            }
+
+            if (!force && state == State) return;
+            LocalDebug.WriteLine($"#MouseState: {state}");
 
             var inputOld = _current;
             var inputNew = _mouseInputCollection[state];
 
             if (inputNew is null)
             {
-                //Debug.WriteLine($"MouseInput: Not support state: {inputNew}");
+                LocalDebug.WriteLine($"MouseInput: Not support state: {inputNew}");
                 return;
             }
 
-            _state = state;
+            // サブステートを保存
+            SubState = State switch
+            {
+                MouseInputState.Normal => MouseInputState.Normal,
+                MouseInputState.AutoScroll => MouseInputState.AutoScroll,
+                _ => SubState
+            };
+
+            State = state;
             _current = inputNew;
+
             inputOld?.OnClosed(_sender);
             inputNew?.OnOpened(_sender, parameter);
 
@@ -333,6 +395,8 @@ namespace NeeView
         /// </summary>
         private void OnMouseButtonDown(object sender, MouseButtonEventArgs e)
         {
+            if (e.Handled) return;
+
             LocalWritePoint("Down", e);
 
             bool isEnabled = (sender == _sender)
@@ -359,6 +423,8 @@ namespace NeeView
         /// </summary>
         private void OnMouseButtonUp(object sender, MouseButtonEventArgs e)
         {
+            if (e.Handled) return;
+
             LocalWritePoint("Up", e);
 
             bool isEnabled = (sender == _sender)
@@ -385,6 +451,8 @@ namespace NeeView
         /// </summary>
         private void OnMouseWheel(object sender, MouseWheelEventArgs e)
         {
+            if (e.Handled) return;
+
             bool isEnabled = (sender == _sender)
                 && !IsStylusDevice(e)
                 && _context.IsVerticalWheelEnabled;
@@ -405,12 +473,14 @@ namespace NeeView
         /// </summary>
         private void OnMouseHorizontalWheel(object sender, MouseWheelEventArgs e)
         {
+            if (e.Handled) return;
+
             bool isEnabled = (sender == _sender)
                 && _context.IsHorizontalWheelEnabled;
 
             if (isEnabled)
             {
-                ////Debug.WriteLine($"MouseInput: OnMouseHorizontalWheel: {e.Delta} ({e.Timestamp})");
+                LocalDebug.WriteLine($"MouseInput: OnMouseHorizontalWheel: {e.Delta} ({e.Timestamp}), State={State}");
                 _current?.OnMouseHorizontalWheel(_sender, e);
             }
 
@@ -425,6 +495,8 @@ namespace NeeView
         /// </summary>
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
+            if (e.Handled) return;
+
             var buttons = MouseButtonBitsExtensions.Create(e);
             if (buttons.Any())
             {
@@ -461,6 +533,8 @@ namespace NeeView
         /// </summary>
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
+            if (e.Handled) return;
+
             bool isEnabled = (sender == _sender);
 
             if (isEnabled)

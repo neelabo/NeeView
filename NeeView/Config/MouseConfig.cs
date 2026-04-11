@@ -27,6 +27,7 @@ namespace NeeView
         [DefaultEquality] private double _hoverScrollDuration = 0.5;
         [DefaultEquality] private double _inertiaSensitivity = 0.5;
         [DefaultEquality] private double _autoScrollSensitivity = 1.0;
+        [DefaultEquality] private bool _isStopAutoScrollUponInteraction = false;
         [DefaultEquality] private bool _isMouseWheelScrollEnabled;
         [DefaultEquality] private double _mouseWheelScrollSensitivity = 1.0;
         [DefaultEquality] private double _mouseWheelScrollDuration = 0.2;
@@ -155,6 +156,13 @@ namespace NeeView
         {
             get { return _autoScrollSensitivity; }
             set { SetProperty(ref _autoScrollSensitivity, AppMath.Round(value)); }
+        }
+
+        [PropertyMember]
+        public bool IsStopAutoScrollUponInteraction
+        {
+            get { return _isStopAutoScrollUponInteraction; }
+            set { SetProperty(ref _isStopAutoScrollUponInteraction, value); }
         }
 
         [PropertyMember]

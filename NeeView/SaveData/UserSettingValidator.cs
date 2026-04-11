@@ -175,7 +175,7 @@ namespace NeeView
                 if (self.Commands != null)
                 {
                     // 新規追加されたAutoScrollOnCommand のショートカットの衝突を解決する
-                    ResolveCommandShortCutKeyConflicts(self.Commands, new AutoScrollOnCommand());
+                    ResolveCommandShortCutKeyConflicts(self.Commands, new ToggleAutoScrollCommand());
                 }
             }
 
@@ -259,6 +259,9 @@ namespace NeeView
                         }
                     }
                 }
+
+                self.Commands?.ValidateRename(CommandNameValidator.RenameMap_46_0_0);
+                self.ContextMenu?.ValidateRename(CommandNameValidator.RenameMap_46_0_0);
             }
 
 
@@ -342,6 +345,11 @@ namespace NeeView
             ["NextPagemark"] = "NextPlaylistItem",
             ["PrevPagemarkInBook"] = "PrevPlaylistItemInBook",
             ["NextPagemarkInBook"] = "NextPlaylistItemInBook",
+        };
+
+        public static Dictionary<string, string> RenameMap_46_0_0 { get; } = new Dictionary<string, string>()
+        {
+            ["AutoScrollOn"] = "ToggleAutoScroll",
         };
 
         // NOTE: バージョン変更処理テスト用

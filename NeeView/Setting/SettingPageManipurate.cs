@@ -88,6 +88,7 @@ namespace NeeView.Setting
 
             section = new SettingItemSection(TextResources.GetString("SettingPage.Manipulate.AutoScroll"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Mouse, nameof(MouseConfig.AutoScrollSensitivity))));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Mouse, nameof(MouseConfig.IsStopAutoScrollUponInteraction))));
             this.Items.Add(section);
 
             section = new SettingItemSection(TextResources.GetString("SettingPage.Manipulate.MouseWheelScroll"));

@@ -133,9 +133,9 @@ namespace NeeView
         public static VersionNumber Ver46_Alpha1 { get; } = new(46, 0, 4065);
 
 #if DEBUG
-        public static bool IsDebugMode { get; } = true;
+        public static bool __IsDebugMode__ { get; } = true;
 #else
-        public static bool IsDebugMode { get; } = false;
+        public static bool __IsDebugMode__ { get; } = false;
 #endif
 
     }

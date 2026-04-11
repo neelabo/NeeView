@@ -28,6 +28,7 @@ namespace NeeView
 
         private MouseWheelScroll? _wheelScroll;
 
+
         /// <summary>
         /// コンストラクター
         /// </summary>
@@ -44,9 +45,17 @@ namespace NeeView
             }
         }
 
+
+        /// <summary>
+        /// 長押しボタン有効設定
+        /// </summary>
+        protected bool IsLongButtonEnabled { get; set; } = true;
+
+
         private bool IsLongButtonPressed()
         {
-            return Config.Current.Mouse.LongButtonDownMode != LongButtonDownMode.None
+            return IsLongButtonEnabled
+                && Config.Current.Mouse.LongButtonDownMode != LongButtonDownMode.None
                 && (CreateMouseButtonBits() & Config.Current.Mouse.LongButtonMask.ToMouseButtonBits()) != 0;
         }
 
@@ -122,10 +131,17 @@ namespace NeeView
         /// <param name="parameter"></param>
         public override void OnOpened(FrameworkElement sender, object? parameter)
         {
+            OnOpenedWithoutHoverScroll(sender, parameter);
+
+            OnUpdateSelectedFrame(FrameChangeType.None);
+        }
+
+        protected void OnOpenedWithoutHoverScroll(FrameworkElement sender, object? parameter)
+        {
             _isButtonDown = false;
             SetCursor(null);
 
-            OnUpdateSelectedFrame(FrameChangeType.None);
+            IsLongButtonEnabled = true;
         }
 
         /// <summary>
@@ -216,7 +232,10 @@ namespace NeeView
             }
 
             // その後の操作は全て無効
-            Cancel();
+            if (e.Handled)
+            {
+                Cancel();
+            }
         }
 
         /// <summary>
@@ -236,7 +255,10 @@ namespace NeeView
             }
 
             // その後の操作は全て無効
-            Cancel();
+            if (e.Handled)
+            {
+                Cancel();
+            }
         }
 
         /// <summary>
@@ -248,6 +270,11 @@ namespace NeeView
         {
             HoverScrollIfEnabled(sender, e);
 
+            OnMouseMoveWithoutHoverScroll(sender, e);
+        }
+
+        protected void OnMouseMoveWithoutHoverScroll(object? sender, MouseEventArgs e)
+        { 
             if (!_isButtonDown) return;
 
             var point = e.GetPosition(_context.Sender);

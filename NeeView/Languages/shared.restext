@@ -7,7 +7,6 @@ AlternativeContent.PageList=@Word.PageList
 AutoHideFocusLockMode.LogicalFocusLock=@Word.Panel
 AutoHideFocusLockMode.None=@Word.None
 AutoRotateType=@Word.AutoRotate
-AutoScrollOnCommand=@Word.AutoScroll
 BackgroundConfig.CustomBackground=@Word.CustomBackground
 BookAccessor.CreationTime=@Word.CreationTime
 BookAccessor.LastWriteTime=@Word.LastWriteTime
@@ -226,8 +225,8 @@ HistoryPanelAccessor.SearchWord=@Panel.SearchWord
 HistoryPanelAccessor.SelectedItems=@Panel.SelectedItems
 HistoryPanelAccessor.Style=@Panel.Style
 Homepage.DotNetDateTime=<a href="https://docs.microsoft.com/dotnet/standard/base-types/parsing-datetime">@Word.DotNetDateTime</a>
-Homepage.DotNetRegex=<a href="https://docs.microsoft.com/dotnet/standard/base-types/regular-expression-language-quick-reference">@Word.DotNetRegex</a>
 HomePage.DotNetFormatString=<a href="https://learn.microsoft.com/en-us/dotnet/standard/base-types/custom-numeric-format-strings">@Word.DotNetFormatString</a>
+Homepage.DotNetRegex=<a href="https://docs.microsoft.com/dotnet/standard/base-types/regular-expression-language-quick-reference">@Word.DotNetRegex</a>
 Homepage.Jint=<a href="https://github.com/sebastienros/jint">Jint</a>
 Homepage.ScriptSamples=<a href="https://github.com/neelabo/NeeView/tree/master/SampleScripts">NeeView Sample Scripts</a>
 HsvEffectUnit.Hue=@Word.Hue
@@ -505,6 +504,8 @@ SystemConfig.StringComparerType=@StringComparerType
 TextCopyPolicy.None=@Word.None
 ThemeConfig.ThemeString=@ThemeConfig.ThemeType
 ThemeErrorDialog.FolderIsNotSet=@Message.FolderIsNotSet
+ToggleAutoScrollCommand.Menu=@Word.AutoScroll
+ToggleAutoScrollCommand.On=@Word.AutoScroll
 ToggleFullScreenCommand.Menu=@Word.FullScreen
 ToggleIsAutoRotateCommand=@Word.AutoRotate
 ToggleIsLoupeCommand.Menu=@Word.Loupe

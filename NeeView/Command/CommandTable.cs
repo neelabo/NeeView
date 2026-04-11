@@ -191,7 +191,6 @@ namespace NeeView
                 new ShowHiddenPanelsCommand(),
 
                 new ToggleSlideShowCommand(),
-                new ToggleHoverScrollCommand(),
 
                 new ViewScrollNTypeUpCommand(),
                 new ViewScrollNTypeDownCommand(),
@@ -317,7 +316,8 @@ namespace NeeView
                 new LoupeScaleUpCommand(),
                 new LoupeScaleDownCommand(),
 
-                new AutoScrollOnCommand(),
+                new ToggleHoverScrollCommand(),
+                new ToggleAutoScrollCommand(),
 
                 // script
                 new CancelScriptCommand(),
@@ -425,6 +425,7 @@ namespace NeeView
                 new ObsoleteCommandItem("NextPagemark", "NextPlaylistItem", 39),
                 new ObsoleteCommandItem("PrevPagemarkInBook", "PrevPlaylistItemInBook", 39),
                 new ObsoleteCommandItem("NextPagemarkInBook", "NextPlaylistItemInBook", 39),
+                new ObsoleteCommandItem("AutoScrollOn", "ToggleAutoScroll", 46),
             };
             ObsoleteCommands = obsoleteCommands.ToDictionary(e => e.Obsolete);
         }
