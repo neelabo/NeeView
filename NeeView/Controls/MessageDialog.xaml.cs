@@ -119,30 +119,6 @@ namespace NeeView
             Clipboard.SetText(caption + message);
         }
 
-        protected override void OnContentRendered(EventArgs e)
-        {
-            base.OnContentRendered(e);
-
-            if (!IsStretchWindow)
-            {
-                return;
-            }
-
-            this.SizeToContent = SizeToContent.Manual;
-
-            this.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-            var size = this.DesiredSize;
-
-            this.Width = size.Width;
-            this.Height = size.Height;
-
-            if (this.Owner != null)
-            {
-                this.Left = this.Owner.Left + (this.Owner.Width - this.Width) / 2;
-                this.Top = this.Owner.Top + (this.Owner.Height - this.Height) / 2;
-            }
-        }
-
         protected override void OnDeactivated(EventArgs e)
         {
             base.OnDeactivated(e);
