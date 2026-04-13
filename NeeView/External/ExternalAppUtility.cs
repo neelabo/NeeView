@@ -97,6 +97,12 @@ namespace NeeView
                 var command = options.Command;
                 command = command.Replace(NeeViewKeyLegacy, Environment.AssemblyLocation, StringComparison.Ordinal); // 互換性のため、$NeeView も {NeeView} も同じ意味で置換される。
                 command = command.Replace(NeeViewKey, Environment.AssemblyLocation, StringComparison.Ordinal);
+                
+                if (command.Contains(Environment.AssemblyLocation))
+                {
+                    SaveDataSync.Current.SaveAll(true);
+                }
+                
                 var sentence = $"\"{command}\" {param}";
                 Debug.WriteLine($"CallProcess: {sentence}");
                 try
