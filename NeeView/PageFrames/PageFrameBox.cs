@@ -23,6 +23,7 @@ namespace NeeView.PageFrames
 {
     // TODO: ごちゃっとしてるので整備する
     // TODO: IsStaticFrame ON/OFF でのスクロール制御の違いが煩雑になっているので良くする
+    [LocalDebug]
     [NotifyPropertyChanged]
     public partial class PageFrameBox : Grid, INotifyPropertyChanged, IDisposable, ICanvasToViewTranslator, IDragTransformContextFactory
     {
@@ -52,7 +53,8 @@ namespace NeeView.PageFrames
         private readonly OnceDispatcher _onceDispatcher;
         private bool _isStarted;
         private Dictionary<PageFrameContent, double> _stretchScaleRateMap = new();
-        private PageFrameBoxDelayMove _delayMove;
+        private readonly PageFrameBoxDelayMove _delayMove;
+        private PageFrameAlignment _pageFrameAlignment = PageFrameAlignment.Center;
 
         public PageFrameBox(PageFrameContext context, BookContext bookContext)
         {
@@ -120,7 +122,7 @@ namespace NeeView.PageFrames
 
             _dragTransformContextFactory = new DragTransformContextFactory(this, _transformControlFactory, Config.Current.View, Config.Current.Mouse, Config.Current.Loupe);
 
-            _selected = new SelectedContainer(_containers, SelectCenterNode);
+            _selected = new SelectedContainer(_containers, SelectTargetNode);
             _disposables.Add(_selected);
             _disposables.Add(_selected.SubscribePropertyChanged(nameof(_selected.PageRange),
                 (s, e) => _bookContext.SelectedRange = _selected.PageRange));
@@ -397,16 +399,16 @@ namespace NeeView.PageFrames
             }
         }
 
-        private LinkedListNode<PageFrameContainer> SelectCenterNode()
+        private LinkedListNode<PageFrameContainer> SelectTargetNode()
         {
-            return _rectMath.GetViewCenterContainer(_viewBox.Rect) ?? _containers.CollectNode().First();
+            return _rectMath.GetViewContainer(_viewBox.Rect, _pageFrameAlignment) ?? _containers.CollectNode().First();
         }
 
         private void Context_SizeChanging(object? sender, SizeChangedEventArgs e)
         {
             if (_disposedValue) return;
 
-            _containers.Anchor.Set(_rectMath.GetViewCenterContainer(_viewBox.Rect), _containers.Anchor.Direction);
+            _containers.Anchor.Set(_rectMath.GetViewContainer(_viewBox.Rect, _pageFrameAlignment), _containers.Anchor.Direction);
             StoreStretchScaleRate(e.PreviousSize);
         }
 
@@ -796,7 +798,7 @@ namespace NeeView.PageFrames
             else
             {
                 _delayMove.Cancel();
-                _containers.Anchor.Set(_rectMath.GetViewCenterContainer(_viewBox.Rect, _containers.CollectNode<PageFrameContent>().Where(e => e != next)), direction);
+                _containers.Anchor.Set(_rectMath.GetViewContainer(_viewBox.Rect, _containers.CollectNode<PageFrameContent>().Where(e => e != next).ToList(), _pageFrameAlignment), direction);
                 // TODO: MoveToNextFrame では以下のように基準が null だった。この差が必要なのか確認する。
                 //_containers.Anchor.Set(null, direction);
 
@@ -1517,6 +1519,50 @@ namespace NeeView.PageFrames
         }
 
         /// <summary>
+        /// 基準ベージのアライメント設定
+        /// </summary>
+        /// <param name="horizontalOrigin"></param>
+        /// <param name="verticalOrigin"></param>
+        /// <param name="direction"></param>
+        /// <exception cref="InvalidEnumArgumentException"></exception>
+
+        private void SetPageFrameAlignment(ViewHorizontalOrigin horizontalOrigin, ViewVerticalOrigin verticalOrigin, LinkedListDirection direction)
+        {
+            var orientation = _context.FrameOrientation;
+
+            if (orientation == PageFrameOrientation.Horizontal)
+            {
+                _pageFrameAlignment = horizontalOrigin switch
+                {
+                    ViewHorizontalOrigin.Center => PageFrameAlignment.Center,
+                    ViewHorizontalOrigin.Left => _context.ReadOrder == PageReadOrder.LeftToRight ? PageFrameAlignment.Min : PageFrameAlignment.Max,
+                    ViewHorizontalOrigin.Right => _context.ReadOrder == PageReadOrder.LeftToRight ? PageFrameAlignment.Max : PageFrameAlignment.Min,
+                    ViewHorizontalOrigin.DirectionDependent => direction == LinkedListDirection.Next ? PageFrameAlignment.Min : PageFrameAlignment.Max,
+                    ViewHorizontalOrigin.CenterOrLeft => PageFrameAlignment.Center,
+                    ViewHorizontalOrigin.CenterOrRight => PageFrameAlignment.Center,
+                    ViewHorizontalOrigin.CenterOrDirectionDependent => PageFrameAlignment.Center,
+                    _ => throw new InvalidEnumArgumentException(nameof(horizontalOrigin), (int)horizontalOrigin, typeof(ViewHorizontalOrigin)),
+                };
+            }
+            else
+            {
+                _pageFrameAlignment = verticalOrigin switch
+                {
+                    ViewVerticalOrigin.Center => PageFrameAlignment.Center,
+                    ViewVerticalOrigin.Top => PageFrameAlignment.Min,
+                    ViewVerticalOrigin.Bottom => PageFrameAlignment.Max,
+                    ViewVerticalOrigin.DirectionDependent => direction == LinkedListDirection.Next ? PageFrameAlignment.Min : PageFrameAlignment.Max,
+                    ViewVerticalOrigin.CenterOrTop => PageFrameAlignment.Center,
+                    ViewVerticalOrigin.CenterOrBottom => PageFrameAlignment.Center,
+                    ViewVerticalOrigin.CenterOrDirectionDependent => PageFrameAlignment.Center,
+                    _ => throw new InvalidEnumArgumentException(nameof(verticalOrigin), (int)verticalOrigin, typeof(ViewVerticalOrigin)),
+                };
+            }
+
+            LocalDebug.WriteLine($"{_pageFrameAlignment}");
+        }
+
+        /// <summary>
         /// 対象を表示中央にスクロール。サイズオーバーする場合は方向指定で表示位置を決定する。
         /// </summary>
         private void ScrollToViewOrigin(LinkedListNode<PageFrameContainer> node, LinkedListDirection direction, ScrollToViewOriginOption options = ScrollToViewOriginOption.None)
@@ -1530,6 +1576,8 @@ namespace NeeView.PageFrames
                 horizontalOrigin = ViewHorizontalOrigin.Center;
                 verticalOrigin = ViewVerticalOrigin.Center;
             }
+
+            SetPageFrameAlignment(horizontalOrigin, verticalOrigin, direction);
 
             // scroll frame
             if (!options.HasFlag(ScrollToViewOriginOption.IgnoreFrameScroll))

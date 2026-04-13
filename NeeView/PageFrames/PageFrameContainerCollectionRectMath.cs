@@ -45,18 +45,32 @@ namespace NeeView.PageFrames
         }
 
         /// <summary>
-        /// 表示の中心に最も近いコンテナを取得 
-        /// ... 用途が？
+        /// 基準位置に最も近いコンテナを取得 
         /// </summary>
-        public LinkedListNode<PageFrameContainer>? GetViewCenterContainer(Rect viewRect)
+        public LinkedListNode<PageFrameContainer>? GetViewContainer(Rect viewRect, PageFrameAlignment alignment)
         {
-            return GetViewCenterContainer(viewRect, _containers.CollectNode<PageFrameContent>());
+            var nodes = _containers.CollectNode<PageFrameContent>().ToList();
+            return GetViewContainer(viewRect, nodes, alignment);
+        }
+
+        /// <summary>
+        /// 基準位置に最も近いコンテナを取得 
+        /// </summary>
+        public LinkedListNode<PageFrameContainer>? GetViewContainer(Rect viewRect, IReadOnlyList<LinkedListNode<PageFrameContainer>> nodes, PageFrameAlignment alignment)
+        {
+            return alignment switch
+            {
+                PageFrameAlignment.Min => GetViewMinContainer(viewRect, nodes),
+                PageFrameAlignment.Center => GetViewCenterContainer(viewRect, nodes),
+                PageFrameAlignment.Max => GetViewMaxContainer(viewRect, nodes),
+                _ => throw new ArgumentOutOfRangeException(nameof(alignment)),
+            };
         }
 
         /// <summary>
         /// 表示の中心に最も近いコンテナを取得 
         /// </summary>
-        public LinkedListNode<PageFrameContainer>? GetViewCenterContainer(Rect viewRect, IEnumerable<LinkedListNode<PageFrameContainer>> nodes)
+        private LinkedListNode<PageFrameContainer>? GetViewCenterContainer(Rect viewRect, IReadOnlyList<LinkedListNode<PageFrameContainer>> nodes)
         {
             var node = nodes.FirstOrDefault(e => _math.GetConflict(e.Value.Rect, viewRect).IsCentered())
                 ?? nodes.MinBy(e => GetCenterDistance(e.Value));
@@ -68,6 +82,41 @@ namespace NeeView.PageFrames
                 var rect = container.Rect;
                 var center = _math.GetCenter(viewRect);
                 return Math.Min(Math.Abs(_math.GetMin(rect) - center), Math.Abs(_math.GetMax(rect) - center));
+            }
+        }
+
+        /// <summary>
+        /// 表示の最小位置に最も近いコンテナを取得 
+        /// </summary>
+        private LinkedListNode<PageFrameContainer>? GetViewMinContainer(Rect viewRect, IReadOnlyList<LinkedListNode<PageFrameContainer>> nodes)
+        {
+            var node = nodes.Where(e => _math.GetConflict(e.Value.Rect, viewRect).IsConflict()).MinBy(e => GerDistance(e.Value))
+                ?? nodes.MinBy(e => GerDistance(e.Value));
+
+            return node;
+
+            double GerDistance(PageFrameContainer container)
+            {
+                return Math.Abs(_math.GetMin(container.Rect) - _math.GetMin(viewRect));
+            }
+        }
+
+        /// <summary>
+        /// 表示の最大位置に最も近いコンテナを取得
+        /// </summary>
+        /// <param name="viewRect"></param>
+        /// <param name="nodes"></param>
+        /// <returns></returns>
+        private LinkedListNode<PageFrameContainer>? GetViewMaxContainer(Rect viewRect, IReadOnlyList<LinkedListNode<PageFrameContainer>> nodes)
+        {
+            var node = nodes.Where(e => _math.GetConflict(e.Value.Rect, viewRect).IsConflict()).MinBy(e => GerDistance(e.Value))
+                ?? nodes.MinBy(e => GerDistance(e.Value));
+
+            return node;
+
+            double GerDistance(PageFrameContainer container)
+            {
+                return Math.Abs(_math.GetMax(container.Rect) - _math.GetMax(viewRect));
             }
         }
 
@@ -148,5 +197,6 @@ namespace NeeView.PageFrames
 
             return contentRect;
         }
+
     }
 }
