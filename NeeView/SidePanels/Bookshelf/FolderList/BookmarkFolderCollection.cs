@@ -262,7 +262,6 @@ namespace NeeView
                 Name = bookmark.Name,
                 TargetPath = new QueryPath(bookmark.Path),
                 Attributes = FolderItemAttribute.Bookmark | (bookmark.IsUnlinked ? FolderItemAttribute.Unlinked : FolderItemAttribute.None),
-                EntryTime = bookmark.EntryTime,
                 IsReady = true
             };
 

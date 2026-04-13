@@ -78,8 +78,7 @@ namespace NeeView
 
         public virtual DateTime GetLastEntryTime()
         {
-            if (!BookmarkSource.Any()) return default;
-            return BookmarkSource.Select(e => e.Value is Bookmark bookmark ? bookmark.EntryTime : default).Max();
+            return BookmarkSource.Value is BookmarkFolder folder ? folder.EntryTime : default;
         }
     }
 

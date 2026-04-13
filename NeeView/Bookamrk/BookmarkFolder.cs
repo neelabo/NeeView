@@ -8,12 +8,23 @@ namespace NeeView
     {
         private string? _name;
 
+        public BookmarkFolder()
+        {
+        }
+
+        public BookmarkFolder(string name, DateTime entryTime) : this()
+        {
+            Name = name;
+            EntryTime = entryTime;
+        }
 
         public string? Name
         {
             get { return _name; }
             set { SetProperty(ref _name, value); }
         }
+
+        public DateTime EntryTime { get; set; }
 
 
         public object Clone()

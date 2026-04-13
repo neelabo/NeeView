@@ -26,6 +26,8 @@ namespace NeeView
         private BookmarkCollection()
         {
             _items = CreateEmptyTree();
+
+            BookmarkChanged += BookmarkCollection_BookmarkChanged;
         }
 
 
@@ -42,6 +44,18 @@ namespace NeeView
             set { SetProperty(ref _items, value); }
         }
 
+
+        private void BookmarkCollection_BookmarkChanged(object? sender, BookmarkCollectionChangedEventArgs e)
+        {
+            if (e.Action == EntryCollectionChangedAction.Add)
+            {
+                // 追加のあったブックマークフォルダ―の更新日時を更新
+                if (e.Parent?.Value is BookmarkFolder folder && e.Item?.Value is not BookmarkFolder)
+                {
+                    folder.EntryTime = DateTime.Now;
+                }
+            }
+        }
 
         private static TreeListNode<IBookmarkEntry> CreateEmptyTree()
         {
@@ -61,7 +75,12 @@ namespace NeeView
             }
 
             Items = nodes;
-            Items.Value = new BookmarkFolder();
+
+            // ルートの名前は空
+            if (Items.Value is BookmarkFolder folder)
+            {
+                folder.Name = null;
+            }
 
             BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Reset));
         }
@@ -294,7 +313,7 @@ namespace NeeView
                 {
                     var ignoreNames = target.Where(e => e.Value is BookmarkFolder).Select(e => e.Value.Name).WhereNotNull();
                     var validName = GetValidateFolderName(ignoreNames, name, TextResources.GetString("Word.NewFolder"));
-                    var node = new TreeListNode<IBookmarkEntry>(new BookmarkFolder() { Name = validName });
+                    var node = new TreeListNode<IBookmarkEntry>(new BookmarkFolder(validName, DateTime.Now));
 
                     target.Add(node);
                     target.IsExpanded = true;
@@ -740,6 +759,7 @@ namespace NeeView
             if (source.Value is BookmarkFolder folder)
             {
                 node.Name = folder.Name;
+                node.EntryTime = folder.EntryTime;
                 node.Children = new List<BookmarkNode>();
                 foreach (var child in source)
                 {
@@ -750,7 +770,6 @@ namespace NeeView
             {
                 node.Name = bookmark.RawName;
                 node.Path = bookmark.Path;
-                node.EntryTime = bookmark.EntryTime;
                 node.Page = bookmark.Unit.Memento.Page;
                 node.Props = bookmark.Unit.Memento.ToPropertiesString();
             }
@@ -769,6 +788,7 @@ namespace NeeView
                 var bookmarkFolder = new BookmarkFolder()
                 {
                     Name = source.Name,
+                    EntryTime = source.EntryTime
                 };
                 var node = new TreeListNode<IBookmarkEntry>(bookmarkFolder);
                 if (source.Children is not null)
@@ -793,7 +813,6 @@ namespace NeeView
                 var bookmark = new Bookmark(source.Path)
                 {
                     Name = source.Name ?? "",
-                    EntryTime = source.EntryTime
                 };
                 var node = new TreeListNode<IBookmarkEntry>(bookmark);
                 return node;

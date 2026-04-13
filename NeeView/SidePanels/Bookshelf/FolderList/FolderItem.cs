@@ -158,9 +158,6 @@ namespace NeeView
         // 最終更新日
         public DateTime LastWriteTime { get; set; }
 
-        // 登録日時
-        public DateTime EntryTime { get; set; }
-
         // ファイルサイズ
         public long Length { get; set; }
 

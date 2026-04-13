@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace NeeView
@@ -10,6 +11,14 @@ namespace NeeView
         {
             if (self is null) throw new ArgumentNullException(nameof(self));
             if (self.Format is null) throw new FormatException("UserSetting.Format must not be null.");
+
+#if !DEBUG
+            // 現在のバージョンであればチェック不要
+            if (self.Format.Equals(new FormatVersion(BookmarkCollectionMemento.FormatName)))
+            {
+                return self;
+            }
+#endif
 
 #pragma warning disable CS0612 // 型またはメンバーが旧型式です
 
@@ -59,19 +68,33 @@ namespace NeeView
                 }
             }
 
-            // Obsolete Books (v46.0+)
-            if (self.Books is not null && self.Nodes is not null)
+            // ver 46.0
+            if (self.Format.CompareTo(new FormatVersion(BookmarkCollectionMemento.FormatName, VersionNumber.Ver46_Alpha1)) <= 0)
             {
-                var map = self.Books.ToDictionary(e => e.Path);
-                foreach (var item in self.Nodes.Walk())
+                // Obsolete Books
+                if (self.Books is not null && self.Nodes is not null)
                 {
-                    if (!item.IsFolder && item.Path is not null && map.TryGetValue(item.Path, out var book))
+                    var map = self.Books.ToDictionary(e => e.Path);
+                    foreach (var item in self.Nodes.Walk())
                     {
-                        item.Page = book.Page;
-                        item.Props = book.ToPropertiesString();
+                        if (!item.IsFolder && item.Path is not null && map.TryGetValue(item.Path, out var book))
+                        {
+                            item.Page = book.Page;
+                            item.Props = book.ToPropertiesString();
+                        }
+                    }
+                    self.Books = null;
+                }
+
+                // Folder Update Time
+                if (self.Nodes is not null)
+                {
+                    foreach (var item in self.Nodes.Walk().Where(e => e.IsFolder))
+                    {
+                        Debug.Assert(item.Children is not null);
+                        item.EntryTime = item.Children.Where(e => !e.IsFolder).Select(e => e.EntryTime).DefaultIfEmpty().Max();
                     }
                 }
-                self.Books = null;
             }
 
 #pragma warning restore CS0612 // 型またはメンバーが旧型式です

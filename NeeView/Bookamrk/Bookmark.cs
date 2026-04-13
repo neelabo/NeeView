@@ -41,9 +41,6 @@ namespace NeeView
             }
         }
 
-        // NOTE: ver44.0 以降では未使用ですが、フォーマット互換性のために保持している。
-        public DateTime EntryTime { get; set; } = DateTime.Now;
-
         public string? RawName => _name;
 
         public string Name
