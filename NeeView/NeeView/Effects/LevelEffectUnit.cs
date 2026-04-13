@@ -2,6 +2,7 @@
 using NeeView.Windows.Property;
 using System;
 using System.ComponentModel;
+using System.Text.Json.Serialization;
 using System.Windows.Media.Effects;
 
 namespace NeeView.Effects
@@ -18,21 +19,53 @@ namespace NeeView.Effects
 
         [PropertyRange(0, 1, Title = "Input")]
         [DefaultValue(0.0)]
+        [JsonIgnore]
         public double Black
         {
             get => _black;
-            set => SetProperty(ref _black, AppMath.Round(value));
+            set
+            {
+                var centerRate = _white - _black != 0 ? (_center - _black) / (_white - _black) : 0.5;
+                if (SetProperty(ref _black, AppMath.Round(value)))
+                {
+                    Center = _black + centerRate * (_white - _black);
+                }
+            }
+        }
+
+        [JsonPropertyName(nameof(Black))]
+        [PropertyMapIgnore]
+        public double BlackRaw
+        {
+            get => _black;
+            set => _black = value;
         }
 
         [PropertyRange(0, 1)]
         [DefaultValue(1.0)]
+        [JsonIgnore]
         public double White
         {
             get => _white;
-            set => SetProperty(ref _white, AppMath.Round(value));
+            set
+            {
+                var centerRate = _white - _black != 0 ? (_center - _black) / (_white - _black) : 0.5;
+                if (SetProperty(ref _white, AppMath.Round(value)))
+                {
+                    Center = _black + centerRate * (_white - _black);
+                }
+            }
         }
 
-        [PropertyRange(0.1, 0.9)]
+        [JsonPropertyName(nameof(White))]
+        [PropertyMapIgnore]
+        public double WhiteRaw
+        {
+            get => _white;
+            set => _white = value;
+        }
+
+        [PropertyRange(0.0, 1.0)]
         [DefaultValue(0.5)]
         public double Center
         {
@@ -55,41 +88,6 @@ namespace NeeView.Effects
             get => _maximum;
             set => SetProperty(ref _maximum, AppMath.Round(value));
         }
-
-#if false
-        #region Equals
-
-        public override bool Equals(object? obj)
-        {
-            return obj is LevelEffectUnit other && Equals(other);
-        }
-
-        public virtual bool Equals(LevelEffectUnit? other)
-        {
-            if (other is null) return false;
-
-            return this.Black.Equals(other.Black)
-                && this.White.Equals(other.White)
-                && this.Center.Equals(other.Center)
-                && this.Minimum.Equals(other.Minimum)
-                && this.Maximum.Equals(other.Maximum);
-        }
-
-        public override int GetHashCode()
-        {
-            HashCode hashcode = new();
-            hashcode.Add(this.Black.GetHashCode());
-            hashcode.Add(this.White.GetHashCode());
-            hashcode.Add(this.Center.GetHashCode());
-            hashcode.Add(this.Minimum.GetHashCode());
-            hashcode.Add(this.Maximum.GetHashCode());
-
-            return hashcode.ToHashCode();
-        }
-
-        #endregion Equals
-#endif
-
     }
 
 

@@ -30,7 +30,6 @@ namespace NeeView.Effects
             set { SetValue(InputProperty, value); }
         }
 
-        //
         public static readonly DependencyProperty BlackProperty = DependencyProperty.Register("Black", typeof(double), typeof(LevelEffect), new UIPropertyMetadata(0.0, PixelShaderConstantCallback(0)));
         public double Black
         {
@@ -38,7 +37,6 @@ namespace NeeView.Effects
             set { SetValue(BlackProperty, value); }
         }
 
-        //
         public static readonly DependencyProperty WhiteProperty = DependencyProperty.Register("White", typeof(double), typeof(LevelEffect), new UIPropertyMetadata(1.0, PixelShaderConstantCallback(1)));
         public double White
         {
@@ -46,7 +44,6 @@ namespace NeeView.Effects
             set { SetValue(WhiteProperty, value); }
         }
 
-        //
         public static readonly DependencyProperty CenterProperty = DependencyProperty.Register("Center", typeof(double), typeof(LevelEffect), new UIPropertyMetadata(0.5, PixelShaderConstantCallback(2)));
         public double Center
         {
@@ -54,7 +51,6 @@ namespace NeeView.Effects
             set { SetValue(CenterProperty, value); }
         }
 
-        //
         public static readonly DependencyProperty MinimumProperty = DependencyProperty.Register("Minimum", typeof(double), typeof(LevelEffect), new UIPropertyMetadata(0.0, PixelShaderConstantCallback(3)));
         public double Minimum
         {
@@ -62,7 +58,6 @@ namespace NeeView.Effects
             set { SetValue(MinimumProperty, value); }
         }
 
-        //
         public static readonly DependencyProperty MaximumProperty = DependencyProperty.Register("Maximum", typeof(double), typeof(LevelEffect), new UIPropertyMetadata(1.0, PixelShaderConstantCallback(4)));
         public double Maximum
         {
