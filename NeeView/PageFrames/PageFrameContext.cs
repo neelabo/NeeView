@@ -3,6 +3,7 @@
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
 using NeeView.ComponentModel;
+using NeeView.Maths;
 using System;
 using System.ComponentModel;
 using System.Windows;
@@ -400,5 +401,11 @@ namespace NeeView.PageFrames
             _autoStretchTarget = range;
         }
 
+        public bool IsDividePage(Page page)
+        {
+            return PageMode == PageMode.SinglePage
+                && IsSupportedDividePage
+                && AspectRatioTools.IsLandscape(new PageSizeCalculator(this, page.Content.PageDataSource).GetPageSize());
+        }
     }
 }

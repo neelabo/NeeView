@@ -326,6 +326,17 @@ namespace NeeView.PageFrames
         {
             Debug.Assert(node.Value.Content is PageFrameContent);
             var pos = node.Value.FrameRange.Top(direction.ToSign());
+
+            // 分割ページがトリミングなどのサイズ変更により分割できなくなった場合の補正
+            if (node.Value.FrameRange.PartSize == 1 && node.Value.Content is PageFrameContent pageFrameContent)
+            {
+                var page = pageFrameContent.PageFrame.Elements.FirstOrDefault()?.Page;
+                if (page is not null && !_context.IsDividePage(page))
+                {
+                    pos = new PagePosition(pos.Index, direction == LinkedListDirection.Previous ? 1 : 0);
+                }
+            }
+
             var frame = _frameFactory.CreatePageFrame(pos, direction.ToSign());
 
             // NOTE: ページ検索で現在表示されているページそのものが無くなった場合に null になることがある。この場合は処理を行わない
