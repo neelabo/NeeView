@@ -19,7 +19,13 @@ namespace NeeView
         public ThemeSource ThemeType
         {
             get { return _themeType; }
-            set { SetProperty(ref _themeType, value); }
+            set
+            {
+                if (SetProperty(ref _themeType, value))
+                {
+                    RaisePropertyChanged(nameof(ThemeString));
+                }
+            }
         }
 
         // テーマ (スクリプトアクセス用)

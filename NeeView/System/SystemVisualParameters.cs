@@ -1,7 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
-using Windows.Win32;
 
 namespace NeeView
 {
@@ -92,7 +91,7 @@ namespace NeeView
         private void UpdateColors()
         {
             Theme = GetSystemAppTheme();
-            AccentColor = GetAccentColor();
+            AccentColor = GetAccentColor(Theme);
             IsHighContrast = SystemParameters.HighContrast;
         }
 
@@ -115,12 +114,15 @@ namespace NeeView
             }
         }
 
-        private static Color GetAccentColor()
+        private static Color GetAccentColor(SystemThemeType themeType)
         {
             try
             {
-                PInvoke.DwmGetColorizationColor(out uint colorizationColor, out var colorizationOpaqueBlend);
-                return Color.FromRgb((byte)(colorizationColor >> 16), (byte)(colorizationColor >> 8), (byte)colorizationColor);
+                Color accentColor = themeType == SystemThemeType.Dark
+                    ? SystemColors.AccentColorLight2
+                    : SystemColors.AccentColorDark1;
+
+                return accentColor;
             }
             catch
             {
