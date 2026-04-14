@@ -231,6 +231,15 @@ namespace NeeView
             MediaPlayerOperator.CurrentMediaOperator?.TogglePlay();
         }
 
+        /// <summary>
+        /// 動画位置移動
+        /// </summary>
+        /// <param name="delta"></param>
+        public void MoveMediaPosition(double delta)
+        {
+            MediaPlayerOperator.CurrentMediaOperator?.AddPosition(TimeSpan.FromSeconds(delta));
+        }
+
         #endregion
 
         #region BookCommand : 下位ブックに移動

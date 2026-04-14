@@ -8,6 +8,7 @@ namespace NeeView
         {
             this.Group = TextResources.GetString("CommandGroup.Video");
         }
+
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
             return BookOperation.Current.IsMediaPlaying() ? TextResources.GetString("Word.Stop") : TextResources.GetString("Word.Play");
@@ -23,4 +24,5 @@ namespace NeeView
             BookOperation.Current.ToggleMediaPlay();
         }
     }
+
 }

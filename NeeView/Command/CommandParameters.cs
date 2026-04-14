@@ -86,6 +86,7 @@ namespace NeeView
             typeof(CopyBookToFolderAsCommandParameter),
             typeof(MoveBookToFolderAsCommandParameter),
             typeof(ToggleBookmarkCommandParameter),
+            typeof(MoveMediaPositionCommandParameter),
         };
 
         static JsonCommandParameterConverter()

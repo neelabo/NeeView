@@ -251,6 +251,9 @@ namespace NeeView
                 new MoveToChildBookCommand(),
 
                 new ToggleMediaPlayCommand(),
+                new PrevMediaPositionCommand(),
+                new NextMediaPositionCommand(),
+
                 new ToggleBookOrderCommand(),
                 new SetBookOrderByFileNameACommand(),
                 new SetBookOrderByFileNameDCommand(),
