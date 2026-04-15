@@ -557,7 +557,7 @@ namespace NeeView.PageFrames
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async ValueTask WaitLoadAsync(CancellationToken token)
+        public async Task WaitLoadAsync(CancellationToken token)
         {
             if (_disposedValue) return;
 

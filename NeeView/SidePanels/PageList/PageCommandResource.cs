@@ -314,7 +314,7 @@ namespace NeeView
             return BookOperation.Current.Control.CanDeleteFile(pages);
         }
 
-        private static async ValueTask RemoveAsync(List<Page> pages)
+        private static async Task RemoveAsync(List<Page> pages)
         {
             await BookOperation.Current.Control.DeleteFileAsync(pages);
         }

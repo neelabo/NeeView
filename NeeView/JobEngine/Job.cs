@@ -118,7 +118,7 @@ namespace NeeView
             Log($"Done: {Result}");
         }
 
-        public async ValueTask WaitAsync(CancellationToken token)
+        public async Task WaitAsync(CancellationToken token)
         {
             using (var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(token, _cancellationToken))
             {
@@ -126,7 +126,7 @@ namespace NeeView
             }
         }
 
-        public async ValueTask WaitAsync(int millisecondsTimeout, CancellationToken token)
+        public async Task WaitAsync(int millisecondsTimeout, CancellationToken token)
         {
             using (var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(token, _cancellationToken))
             {

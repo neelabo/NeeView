@@ -85,7 +85,7 @@ namespace NeeView
             return true;
         }
 
-        public async ValueTask DeleteInvalidBookmark()
+        public async Task DeleteInvalidBookmark()
         {
             await BookmarkCollectionService.DeleteInvalidBookmark(CancellationToken.None);
         }

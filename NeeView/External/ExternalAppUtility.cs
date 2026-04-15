@@ -39,7 +39,7 @@ namespace NeeView
         /// <param name="pages">実行するページ群</param>
         /// <param name="options">実行オプション</param>
         /// <param name="token">キャンセルトークン</param>
-        public async ValueTask CallAsync(IEnumerable<Page> pages, IExternalApp options, CancellationToken token)
+        public async Task CallAsync(IEnumerable<Page> pages, IExternalApp options, CancellationToken token)
         {
             try
             {
@@ -129,7 +129,7 @@ namespace NeeView
             return s;
         }
 
-        public static async ValueTask OpenExternalAppAsync(IEnumerable<ArchiveEntry> entries, IExternalApp parameter, CancellationToken token)
+        public static async Task OpenExternalAppAsync(IEnumerable<ArchiveEntry> entries, IExternalApp parameter, CancellationToken token)
         {
             var items = await ArchiveEntryUtility.RealizeArchiveEntry(entries, token);
             var external = new ExternalAppUtility();
@@ -137,7 +137,7 @@ namespace NeeView
             GC.KeepAlive(entries);
         }
 
-        public static async ValueTask<bool> TryOpenExternalAppAsync(IEnumerable<ArchiveEntry> entries, IExternalApp parameter, CancellationToken token)
+        public static async Task<bool> TryOpenExternalAppAsync(IEnumerable<ArchiveEntry> entries, IExternalApp parameter, CancellationToken token)
         {
             return await ExceptionHandling.WithToastAsync((token) => OpenExternalAppAsync(entries.ToList(), parameter, token), TextResources.GetString("OpenApplicationErrorDialog.Title"), token);
         }

@@ -44,12 +44,12 @@ namespace NeeView
             _toolTipService.IsToolTipEnabled = true;
         }
 
-        public async ValueTask RenameAsync(TItem item)
+        public async Task RenameAsync(TItem item)
         {
             await RenameLoopAsync(_listBox, item);
         }
 
-        private async ValueTask RenameLoopAsync(ListBox listBox, TItem? item)
+        private async Task RenameLoopAsync(ListBox listBox, TItem? item)
         {
             BeginRename();
             try
@@ -117,7 +117,7 @@ namespace NeeView
         }
 
 
-        public async ValueTask RenameAsync(TItem item)
+        public async Task RenameAsync(TItem item)
         {
             BeginRename();
             try

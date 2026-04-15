@@ -535,9 +535,9 @@ namespace NeeView.Collections.Generic
             return Value is IRenameable renamable ? renamable.CanRename() : false;
         }
 
-        public ValueTask<bool> RenameAsync(string name)
+        public async Task<bool> RenameAsync(string name)
         {
-            return Value is IRenameable renamable ? renamable.RenameAsync(name) : ValueTask.FromResult(false);
+            return Value is IRenameable renamable ? await renamable.RenameAsync(name) : false;
         }
 
         public bool Equals(TreeListNode<T> other)

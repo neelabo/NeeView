@@ -66,7 +66,7 @@ namespace NeeView
             }
         }
 
-        private async ValueTask CheckVersionAsync(CancellationToken token)
+        private async Task CheckVersionAsync(CancellationToken token)
         {
             _isChecking = true;
 
@@ -111,7 +111,7 @@ namespace NeeView
             }
         }
 
-        private static async ValueTask<GitHubRelease?> GetLatestReleaseAsync(CancellationToken token)
+        private static async Task<GitHubRelease?> GetLatestReleaseAsync(CancellationToken token)
         {
             using var client = new HttpClient();
 

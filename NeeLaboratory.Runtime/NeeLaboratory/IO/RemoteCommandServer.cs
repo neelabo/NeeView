@@ -40,7 +40,7 @@ namespace NeeLaboratory.IO
             return process.ProcessName + ".p" + process.Id;
         }
 
-        private async ValueTask ReceiverAsync()
+        private async Task ReceiverAsync()
         {
             var pipeName = GetPipetName(Process.GetCurrentProcess());
 

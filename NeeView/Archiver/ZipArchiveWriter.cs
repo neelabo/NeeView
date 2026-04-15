@@ -67,7 +67,7 @@ namespace NeeView
             return null;
         }
 
-        private async ValueTask DeleteAsync(AsyncLock asyncLock, CancellationToken token)
+        private async Task DeleteAsync(AsyncLock asyncLock, CancellationToken token)
         {
             LocalDebug.WriteLine($"Start task: {_path}");
 
@@ -173,7 +173,7 @@ namespace NeeView
             }
         }
 
-        private static async ValueTask CopyAsync(string src, string dst, CancellationToken token)
+        private static async Task CopyAsync(string src, string dst, CancellationToken token)
         {
             using var sourceStream = FileIO.Open(src, FileMode.Open, FileAccess.Read, FileShare.Read);
             using var destinationStream = File.Create(dst);

@@ -91,7 +91,7 @@ namespace NeeView
         /// </summary>
         /// <param name="size">サイズ</param>
         /// <param name="token">キャンセルトークン</param>
-        public async ValueTask LoadAsync(Size size, CancellationToken token)
+        public async Task LoadAsync(Size size, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -143,7 +143,7 @@ namespace NeeView
             }
         }
 
-        private async ValueTask LoadCoreAsync(PageDataSource data, Size size, CancellationToken token)
+        private async Task LoadCoreAsync(PageDataSource data, Size size, CancellationToken token)
         {
             NVDebug.AssertMTA();
 

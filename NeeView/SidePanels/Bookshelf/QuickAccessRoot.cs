@@ -15,9 +15,9 @@ namespace NeeView
             return false;
         }
 
-        public override ValueTask<bool> RenameAsync(string name)
+        public override Task<bool> RenameAsync(string name)
         {
-            return ValueTask.FromResult(false);
+            return Task.FromResult(false);
         }
     }
 

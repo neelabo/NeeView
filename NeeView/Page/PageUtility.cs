@@ -21,7 +21,7 @@ namespace NeeView
         /// <summary>
         /// ページ群の実ファイルリストを取得
         /// </summary>
-        public static async ValueTask<List<string>> CreateRealizedFilePathListAsync(IEnumerable<Page> pages, CancellationToken token)
+        public static async Task<List<string>> CreateRealizedFilePathListAsync(IEnumerable<Page> pages, CancellationToken token)
         {
             return await CreateRealizedFilePathListAsync(pages, ArchivePolicy.SendExtractFile, token);
         }
@@ -29,7 +29,7 @@ namespace NeeView
         /// <summary>
         /// ページ群の実ファイルリストを取得
         /// </summary>
-        public static async ValueTask<List<string>> CreateRealizedFilePathListAsync(IEnumerable<Page> pages, ArchivePolicy archivePolicy, CancellationToken token)
+        public static async Task<List<string>> CreateRealizedFilePathListAsync(IEnumerable<Page> pages, ArchivePolicy archivePolicy, CancellationToken token)
         {
             return await ArchiveEntryUtility.RealizeArchiveEntry(pages.Select(e => e.ArchiveEntry), archivePolicy, token);
         }

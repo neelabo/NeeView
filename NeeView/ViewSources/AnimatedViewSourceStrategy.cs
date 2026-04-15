@@ -16,13 +16,12 @@ namespace NeeView
         }
 
 
-        public async ValueTask<DataSource> LoadCoreAsync(PageDataSource data, Size size, CancellationToken token)
+        public async Task<DataSource> LoadCoreAsync(PageDataSource data, Size size, CancellationToken token)
         {
             if (data.Data is not AnimatedPageData pageData) throw new InvalidOperationException(nameof(data.Data));
 
             // TODO: この画像が何度も読み込まれてないか調査すること
             var image = await LoadImageAsync(pageData.MediaSource, token);
-            await Task.CompletedTask;
 
             // 色情報とBPP設定。
             if (image is not null)
@@ -36,7 +35,7 @@ namespace NeeView
 
 
         // TODO: Async
-        private async ValueTask<BitmapSource?> LoadImageAsync(MediaSource mediaSource, CancellationToken token)
+        private async Task<BitmapSource?> LoadImageAsync(MediaSource mediaSource, CancellationToken token)
         {
             try
             {

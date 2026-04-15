@@ -61,7 +61,7 @@ namespace NeeView
         }
 
         // エントリーリストを得る
-        protected override async ValueTask<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token)
+        protected override async Task<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -111,7 +111,7 @@ namespace NeeView
 
 
         // エントリーのストリームを得る
-        protected override async ValueTask<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
+        protected override async Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
         {
             if (entry.Id < 0) throw new ApplicationException("Cannot open this entry: " + entry.EntryName);
 
@@ -138,7 +138,7 @@ namespace NeeView
         /// <param name="exportFileName">エクスポート先のパス</param>
         /// <param name="isOverwrite">上書き許可</param>
         /// <param name="token"></param>
-        protected override async ValueTask ExtractToFileInnerAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
+        protected override async Task ExtractToFileInnerAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
         {
             var extractor = new SusieArchiveExtractor(this);
             await extractor.ExtractAsync(entry, exportFileName, isOverwrite, token);
@@ -228,7 +228,7 @@ namespace NeeView
         /// <summary>
         /// エントリをファイルに展開
         /// </summary>
-        public async ValueTask ExtractAsync(ArchiveEntry entry, string extractFileName, bool isOverwrite, CancellationToken token)
+        public async Task ExtractAsync(ArchiveEntry entry, string extractFileName, bool isOverwrite, CancellationToken token)
         {
             if (entry.Id < 0) throw new ApplicationException("Cannot open this entry: " + entry.EntryName);
             if (entry.IsDirectory) throw new ApplicationException("This entry is directory: " + entry.EntryName);
@@ -252,7 +252,7 @@ namespace NeeView
         /// 事前展開
         /// </summary>
         /// <param name="directory">事前展開ファイル用フォルダ</param>
-        public override async ValueTask PreExtractAsync(string directory, bool decrypt, CancellationToken token)
+        public override async Task PreExtractAsync(string directory, bool decrypt, CancellationToken token)
         {
             using (await _asyncLock.LockAsync(token))
             {

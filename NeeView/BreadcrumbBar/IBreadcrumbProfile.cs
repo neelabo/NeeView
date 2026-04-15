@@ -9,7 +9,7 @@ namespace NeeView
     {
         string GetDisplayName(QueryPath query, int index) => query.Tokens[index];
 
-        ValueTask<List<BreadcrumbToken>> GetChildrenAsync(QueryPath query, CancellationToken token);
+        Task<List<BreadcrumbToken>> GetChildrenAsync(QueryPath query, CancellationToken token);
 
         bool CanHasChild(QueryPath query) => true;
 

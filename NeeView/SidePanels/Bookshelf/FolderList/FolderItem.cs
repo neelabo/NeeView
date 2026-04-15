@@ -402,9 +402,9 @@ namespace NeeView
             return false;
         }
 
-        public virtual ValueTask<bool> RenameAsync(string name)
+        public virtual Task<bool> RenameAsync(string name)
         {
-            return ValueTask.FromResult(false);
+            return Task.FromResult(false);
         }
 
         protected virtual void OnRenamed()
@@ -504,7 +504,7 @@ namespace NeeView
             return false;
         }
 
-        public override async ValueTask<bool> RenameAsync(string name)
+        public override async Task<bool> RenameAsync(string name)
         {
             if (!CanRename()) return false;
 

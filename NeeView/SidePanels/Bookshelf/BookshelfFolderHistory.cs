@@ -39,7 +39,7 @@ namespace NeeView
             return _history.CanPrevious();
         }
 
-        public async ValueTask MoveToPreviousAsync()
+        public async Task MoveToPreviousAsync()
         {
             if (!_history.CanPrevious()) return;
 
@@ -55,7 +55,7 @@ namespace NeeView
             return _history.CanNext();
         }
 
-        public async ValueTask MoveToNextAsync()
+        public async Task MoveToNextAsync()
         {
             if (!_history.CanNext()) return;
 
@@ -66,14 +66,14 @@ namespace NeeView
             _history.Move(+1);
         }
 
-        public async ValueTask MoveToHistoryAsync(KeyValuePair<int, QueryPath> item)
+        public async Task MoveToHistoryAsync(KeyValuePair<int, QueryPath> item)
         {
             var query = _history.GetHistory(item.Key);
             await LoadPageAsync(query);
             _history.SetCurrent(item.Key + 1);
         }
 
-        private async ValueTask LoadPageAsync(QueryPath? item)
+        private async Task LoadPageAsync(QueryPath? item)
         {
             if (item == null) return;
 

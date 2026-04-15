@@ -467,7 +467,7 @@ namespace NeeView
             await RenameAsync();
         }
 
-        private async ValueTask RenameAsync()
+        private async Task RenameAsync()
         {
             var listBox = this.ListBox;
             if (listBox.SelectedItem is not FolderItem item) return;
@@ -646,7 +646,7 @@ namespace NeeView
 
         #region DragDrop
 
-        public async ValueTask DragStartBehavior_DragBeginAsync(object? sender, DragStartEventArgs e, CancellationToken token)
+        public async Task DragStartBehavior_DragBeginAsync(object? sender, DragStartEventArgs e, CancellationToken token)
         {
             var items = this.ListBox.SelectedItems
                 .Cast<FolderItem>()
@@ -695,8 +695,6 @@ namespace NeeView
                 var text = string.Join(System.Environment.NewLine, items.Select(e => e.TargetPath.SimplePath));
                 e.Data.SetText(text);
             }
-
-            await Task.CompletedTask;
         }
 
         private void ListBox_PreviewDragEnter(object sender, DragEventArgs e)

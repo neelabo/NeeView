@@ -248,7 +248,7 @@ namespace NeeView
         /// <param name="progress"></param>
         /// <param name="token"></param>
         /// <returns>リンク切れ項目数</returns>
-        public async ValueTask<int> ResolveUnlinkedAsync(IProgress<ProgressContext>? progress, CancellationToken token)
+        public async Task<int> ResolveUnlinkedAsync(IProgress<ProgressContext>? progress, CancellationToken token)
         {
             List<TreeListNode<IBookmarkEntry>> nodes;
             lock (_lock)

@@ -143,7 +143,7 @@ namespace NeeView.UnitTest
         public int Value { get; }
 
 
-        protected override async ValueTask ExecuteAsync(CancellationToken token)
+        protected override async Task ExecuteAsync(CancellationToken token)
         {
             await Task.Delay(500, CancellationToken.None);
 

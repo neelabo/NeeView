@@ -20,9 +20,9 @@ namespace NeeView
 
         public bool Decrypt => false;
 
-        public async ValueTask<Stream> OpenStreamAsync(CancellationToken token)
+        public Task<Stream> OpenStreamAsync(CancellationToken token)
         {
-            return await Task.FromResult(new MemoryStream(Bytes));
+            return Task.FromResult<Stream>(new MemoryStream(Bytes));
         }
 
         public long GetMemorySize() => Length;

@@ -12,12 +12,12 @@ namespace NeeView
             _content = content;
         }
 
-        public override async ValueTask<ThumbnailSource> LoadThumbnailAsync(CancellationToken token)
+        public override async Task<ThumbnailSource> LoadThumbnailAsync(CancellationToken token)
         {
             NVDebug.AssertMTA();
             token.ThrowIfCancellationRequested();
 
-            return await Task.FromResult(new ThumbnailSource(ThumbnailType.NoEntry));
+            return new ThumbnailSource(ThumbnailType.NoEntry);
         }
     }
 

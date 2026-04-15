@@ -214,7 +214,7 @@ namespace NeeView
         /// <summary>
         /// サムネイル読み込み
         /// </summary>
-        public async ValueTask LoadThumbnailAsync(CancellationToken token)
+        public async Task LoadThumbnailAsync(CancellationToken token)
         {
             if (_disposedValue) return;
 
@@ -271,7 +271,7 @@ namespace NeeView
         }
 
         // TODO: これをPageのメソッドとして公開するのは？
-        public async ValueTask LoadContentAsync(CancellationToken token)
+        public async Task LoadContentAsync(CancellationToken token)
         {
             if (_disposedValue) return;
 
@@ -396,7 +396,7 @@ namespace NeeView
         /// <summary>
         /// delete
         /// </summary>
-        public async ValueTask<DeleteResult> DeleteAsync()
+        public async Task<DeleteResult> DeleteAsync()
         {
             return await ArchiveEntry.DeleteAsync();
         }
@@ -411,7 +411,7 @@ namespace NeeView
             return ArchiveEntry.CanRename();
         }
 
-        public async ValueTask<bool> RenameAsync(string name)
+        public async Task<bool> RenameAsync(string name)
         {
             if (_disposedValue) return false;
 

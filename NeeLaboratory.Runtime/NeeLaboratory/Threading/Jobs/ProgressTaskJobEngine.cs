@@ -15,22 +15,22 @@ namespace NeeLaboratory.Threading.Jobs
     {
         public IProgress<TProgressContext>? Progress { get; set; }
 
-        public JobOperation<int> AddJob(Func<IProgress<TProgressContext>?, CancellationToken, ValueTask> job)
+        public JobOperation<int> AddJob(Func<IProgress<TProgressContext>?, CancellationToken, Task> job)
         {
             return AddJob(InnerJob);
 
-            async ValueTask<int> InnerJob(CancellationToken token)
+            async Task<int> InnerJob(CancellationToken token)
             {
                 await job(Progress, token);
                 return 0;
             }
         }
 
-        public JobOperation<T> AddJob<T>(Func<IProgress<TProgressContext>?, CancellationToken, ValueTask<T>> job)
+        public JobOperation<T> AddJob<T>(Func<IProgress<TProgressContext>?, CancellationToken, Task<T>> job)
         {
             return AddJob(InnerJob);
 
-            async ValueTask<T> InnerJob(CancellationToken token)
+            async Task<T> InnerJob(CancellationToken token)
             {
                 return await job(Progress, token);
             }

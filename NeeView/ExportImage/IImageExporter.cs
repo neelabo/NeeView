@@ -9,8 +9,8 @@ namespace NeeView
     public interface IImageExporter : IDisposable
     {
         ImageExporterContent? CreateView(IImageExporterOptions options);
-        ValueTask ExportAsync(Stream stream, bool decrypt, BitmapImageFormat format, IImageExporterOptions options, CancellationToken token);
-        ValueTask ExportAsync(string path, bool isOverwrite, IImageExporterOptions options, CancellationToken token);
+        Task ExportAsync(Stream stream, bool decrypt, BitmapImageFormat format, IImageExporterOptions options, CancellationToken token);
+        Task ExportAsync(string path, bool isOverwrite, IImageExporterOptions options, CancellationToken token);
         ImageSource? CreateImageSource(IImageExporterOptions options);
         bool CanExport();
         public void ThrowIfCannotExport();

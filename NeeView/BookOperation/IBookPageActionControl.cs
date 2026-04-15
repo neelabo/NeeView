@@ -11,11 +11,11 @@ namespace NeeView
     public interface IBookPageActionControl : IDisposable
     {
         bool CanDeleteFile();
-        ValueTask DeleteFileAsync();
+        Task DeleteFileAsync();
 
         bool CanDeleteFile(List<Page> pages);
-        ValueTask DeleteFileAsync(List<Page> pages);
-        ValueTask RemovePagesAsync(List<Page> pages);
+        Task DeleteFileAsync(List<Page> pages);
+        Task RemovePagesAsync(List<Page> pages);
 
         bool CanExport();
         void Export(ExportImageCommandParameter parameter);

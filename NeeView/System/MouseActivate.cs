@@ -72,7 +72,7 @@ namespace NeeView
             }
         }
 
-        private async ValueTask ResetMouseActivateAsync(int milliseconds)
+        private async Task ResetMouseActivateAsync(int milliseconds)
         {
             await Task.Delay(milliseconds);
             IsMouseActivate = false;

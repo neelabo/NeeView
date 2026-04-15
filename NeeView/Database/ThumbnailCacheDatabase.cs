@@ -147,7 +147,7 @@ namespace NeeView
         /// </summary>
         /// <param name="header"></param>
         /// <returns></returns>
-        internal async ValueTask<ThumbnailCacheRecord?> LoadAsync(ThumbnailCacheHeader header, CancellationToken token)
+        internal async Task<ThumbnailCacheRecord?> LoadAsync(ThumbnailCacheHeader header, CancellationToken token)
         {
             if (_db.Connection is null) return null;
 

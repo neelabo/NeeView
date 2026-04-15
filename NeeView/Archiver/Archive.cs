@@ -260,7 +260,7 @@ namespace NeeView
         /// <param name="timeout"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async ValueTask WaitFileReadableAsync(TimeSpan timeout, CancellationToken token)
+        public async Task WaitFileReadableAsync(TimeSpan timeout, CancellationToken token)
         {
             if (string.IsNullOrEmpty(Path)) return;
             var fileInfo = new FileInfo(Path);
@@ -273,12 +273,12 @@ namespace NeeView
         /// <summary>
         /// エントリリストを取得 (Archive内でのみ使用)
         /// </summary>
-        protected abstract ValueTask<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token);
+        protected abstract Task<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token);
 
         /// <summary>
         /// エントリリストを取得
         /// </summary>
-        public async ValueTask<List<ArchiveEntry>> GetEntriesAsync(bool decrypt, CancellationToken token)
+        public async Task<List<ArchiveEntry>> GetEntriesAsync(bool decrypt, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -327,7 +327,7 @@ namespace NeeView
         /// <summary>
         /// 指定階層のエントリのみ取得
         /// </summary>
-        public async ValueTask<List<ArchiveEntry>> GetEntriesAsync(string path, bool isRecursive, bool decrypt, CancellationToken token)
+        public async Task<List<ArchiveEntry>> GetEntriesAsync(string path, bool isRecursive, bool decrypt, CancellationToken token)
         {
             path = LoosePath.TrimDirectoryEnd(path);
 
@@ -345,7 +345,7 @@ namespace NeeView
         /// <summary>
         /// エントリーのストリームを取得
         /// </summary>
-        public async ValueTask<Stream> OpenStreamAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
+        public async Task<Stream> OpenStreamAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
         {
             if (entry.Id < 0) throw new ApplicationException("Cannot open this entry: " + entry.EntryName);
 
@@ -368,12 +368,12 @@ namespace NeeView
         /// <summary>
         /// エントリのストリームを取得 (Inner)
         /// </summary>
-        protected abstract ValueTask<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token);
+        protected abstract Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token);
 
         /// <summary>
         /// エントリーをファイルとして出力
         /// </summary>
-        public async ValueTask ExtractToFileAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
+        public async Task ExtractToFileAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
         {
             await WaitPreExtractAsync(entry, token);
 
@@ -396,7 +396,7 @@ namespace NeeView
         /// <summary>
         /// エントリをファイルとして出力 (Inner)
         /// </summary>
-        protected abstract ValueTask ExtractToFileInnerAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token);
+        protected abstract Task ExtractToFileInnerAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token);
 
 
         /// <summary>
@@ -468,7 +468,7 @@ namespace NeeView
         /// <summary>
         /// 事前展開
         /// </summary>
-        public virtual ValueTask PreExtractAsync(string directory, bool decrypt, CancellationToken token)
+        public virtual Task PreExtractAsync(string directory, bool decrypt, CancellationToken token)
         {
             throw new NotImplementedException("This archiver does not support pre-extract");
         }
@@ -521,7 +521,7 @@ namespace NeeView
         /// <param name="entry"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async ValueTask WaitPreExtractAsync(ArchiveEntry entry, CancellationToken token)
+        public async Task WaitPreExtractAsync(ArchiveEntry entry, CancellationToken token)
         {
             await _preExtractor.WaitPreExtractAsync(entry, token);
         }
@@ -561,7 +561,7 @@ namespace NeeView
         /// <summary>
         /// delete
         /// </summary>
-        public async ValueTask<DeleteResult> DeleteAsync(ArchiveEntry entry)
+        public async Task<DeleteResult> DeleteAsync(ArchiveEntry entry)
         {
             return await DeleteAsync(new List<ArchiveEntry>() { entry });
         }
@@ -569,9 +569,9 @@ namespace NeeView
         /// <summary>
         /// delete entries
         /// </summary>
-        public virtual async ValueTask<DeleteResult> DeleteAsync(List<ArchiveEntry> entries)
+        public virtual Task<DeleteResult> DeleteAsync(List<ArchiveEntry> entries)
         {
-            return await Task.FromResult(DeleteResult.Failed);
+            return Task.FromResult(DeleteResult.Failed);
         }
 
         /// <summary>
@@ -603,15 +603,15 @@ namespace NeeView
         /// <summary>
         /// rename
         /// </summary>
-        public virtual async ValueTask<bool> RenameAsync(ArchiveEntry entry, string name)
+        public virtual Task<bool> RenameAsync(ArchiveEntry entry, string name)
         {
-            return await Task.FromResult(false);
+            return Task.FromResult(false);
         }
 
         /// <summary>
         /// async read Zone.Identifier
         /// </summary>
-        protected async ValueTask ReadZoneIdentifierAsync(CancellationToken token)
+        protected async Task ReadZoneIdentifierAsync(CancellationToken token)
         {
             _zoneIdentifier = await ZoneIdentifier.ReadAsync(Path, token);
         }
@@ -629,9 +629,12 @@ namespace NeeView
         /// <summary>
         /// async write Zone.Identifier
         /// </summary>
-        public async ValueTask WriteZoneIdentifierAsync(string path, CancellationToken token)
+        public async Task WriteZoneIdentifierAsync(string path, CancellationToken token)
         {
-            if (_zoneIdentifier is null) return;
+            if (_zoneIdentifier is null)
+            {
+                return;
+            }
 
             await _zoneIdentifier.WriteAsync(path, token);
         }

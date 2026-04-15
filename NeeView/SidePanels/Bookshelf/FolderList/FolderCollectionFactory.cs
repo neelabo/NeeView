@@ -20,7 +20,7 @@ namespace NeeView
 
 
         // フォルダーコレクション作成
-        public async ValueTask<FolderCollection> CreateFolderCollectionAsync(QueryPath path, bool isActive, bool includeSubdirectories, CancellationToken token)
+        public async Task<FolderCollection> CreateFolderCollectionAsync(QueryPath path, bool isActive, bool includeSubdirectories, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -69,7 +69,7 @@ namespace NeeView
         }
 
         // 検索コレクション作成
-        public async ValueTask<FolderCollection> CreateSearchFolderCollectionAsync(QueryPath path, bool isActive, bool includeSubdirectories, CancellationToken token)
+        public async Task<FolderCollection> CreateSearchFolderCollectionAsync(QueryPath path, bool isActive, bool includeSubdirectories, CancellationToken token)
         {
             if (_searchEngine == null) throw new InvalidOperationException("SearchEngine does not exist.");
             if (path.Search is null) throw new InvalidOperationException("path.Search must not be null.");
@@ -92,7 +92,7 @@ namespace NeeView
         }
 
         // 通常フォルダーコレクション作成
-        private async ValueTask<FolderCollection> CreateEntryFolderCollectionAsync(QueryPath path, bool isActive, CancellationToken token)
+        private async Task<FolderCollection> CreateEntryFolderCollectionAsync(QueryPath path, bool isActive, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -118,7 +118,7 @@ namespace NeeView
         }
 
         // ブックマークフォルダーコレクション作成
-        private async ValueTask<FolderCollection> CreateBookmarkFolderCollectionAsync(QueryPath path, bool isActive, CancellationToken token)
+        private async Task<FolderCollection> CreateBookmarkFolderCollectionAsync(QueryPath path, bool isActive, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -131,7 +131,7 @@ namespace NeeView
         }
 
         // 検索ブックマークフォルダーコレクション作成
-        private async ValueTask<FolderCollection> CreateSearchBookmarkFolderCollectionAsync(QueryPath path, bool isActive, bool includeSubdirectories, CancellationToken token)
+        private async Task<FolderCollection> CreateSearchBookmarkFolderCollectionAsync(QueryPath path, bool isActive, bool includeSubdirectories, CancellationToken token)
         {
             if (path.Search is null) throw new InvalidOperationException("path.Search must not be null.");
 
@@ -146,7 +146,7 @@ namespace NeeView
         }
 
         // プレイリストフォルダーコレクション作成
-        public async ValueTask<FolderCollection> CreatePlaylistFolderCollectionAsync(QueryPath path, bool isActive, CancellationToken token)
+        public async Task<FolderCollection> CreatePlaylistFolderCollectionAsync(QueryPath path, bool isActive, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -170,7 +170,7 @@ namespace NeeView
         }
 
         // アーカイブフォルダーコレクション作成
-        public async ValueTask<FolderCollection> CreateArchiveFolderCollectionAsync(QueryPath path, bool isActive, CancellationToken token)
+        public async Task<FolderCollection> CreateArchiveFolderCollectionAsync(QueryPath path, bool isActive, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -196,7 +196,7 @@ namespace NeeView
         /// <summary>
         /// Rootコレクション作成
         /// </summary>
-        private async ValueTask<FolderCollection> CreateRootFolderCollectionAsync(QueryPath path, bool isActive, CancellationToken token)
+        private async Task<FolderCollection> CreateRootFolderCollectionAsync(QueryPath path, bool isActive, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -210,7 +210,7 @@ namespace NeeView
         /// <summary>
         /// クイックアクセスコレクション作成
         /// </summary>
-        private async ValueTask<FolderCollection> CreateQuickAccessFolderCollectionAsync(QueryPath path, bool isActive, CancellationToken token)
+        private async Task<FolderCollection> CreateQuickAccessFolderCollectionAsync(QueryPath path, bool isActive, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 

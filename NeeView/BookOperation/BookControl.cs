@@ -123,7 +123,7 @@ namespace NeeView
             await OpenExternalAppAsync(parameter, _realizeTokenSource.Token);
         }
 
-        public async ValueTask OpenExternalAppAsync(IExternalApp parameter, CancellationToken token)
+        public async Task OpenExternalAppAsync(IExternalApp parameter, CancellationToken token)
         {
             var entry = await ArchiveEntryUtility.CreateAsync(_book.Path, ArchiveHint.None, true, token);
             await ExternalAppUtility.TryOpenExternalAppAsync([entry], parameter, token);
@@ -175,7 +175,7 @@ namespace NeeView
             await CutBookToClipboardAsync(CancellationToken.None);
         }
 
-        public async ValueTask CutBookToClipboardAsync(CancellationToken token)
+        public async Task CutBookToClipboardAsync(CancellationToken token)
         {
             if (!CanCutBookToClipboard()) return;
 
@@ -226,7 +226,7 @@ namespace NeeView
             await CopyBookToFolderAsync(parameter, _realizeTokenSource.Token);
         }
 
-        public async ValueTask CopyBookToFolderAsync(DestinationFolder parameter, CancellationToken token)
+        public async Task CopyBookToFolderAsync(DestinationFolder parameter, CancellationToken token)
         {
             if (!CanCopyBookToFolder(parameter)) return;
 
@@ -249,7 +249,7 @@ namespace NeeView
             await MoveBookToFolderAsync(parameter, CancellationToken.None);
         }
 
-        public async ValueTask MoveBookToFolderAsync(DestinationFolder parameter, CancellationToken token)
+        public async Task MoveBookToFolderAsync(DestinationFolder parameter, CancellationToken token)
         {
             if (!CanMoveBookToFolder(parameter)) return;
 

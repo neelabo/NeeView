@@ -86,7 +86,7 @@ namespace NeeView.Susie.Client
             _client = null;
         }
 
-        public async ValueTask<List<Chunk>> CallAsync(List<Chunk> args, CancellationToken token)
+        public async Task<List<Chunk>> CallAsync(List<Chunk> args, CancellationToken token)
         {
             if (!IsConnected)
             {

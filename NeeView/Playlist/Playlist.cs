@@ -442,7 +442,7 @@ namespace NeeView
         /// <param name="progress"></param>
         /// <param name="token"></param>
         /// <returns>無効項目数</returns>
-        public async ValueTask<int> ResolveUnlinkedAsync(IProgress<ProgressContext>? progress, CancellationToken token)
+        public async Task<int> ResolveUnlinkedAsync(IProgress<ProgressContext>? progress, CancellationToken token)
         {
             if (!IsEditable) return 0;
 

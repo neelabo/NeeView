@@ -55,12 +55,12 @@ namespace NeeView
             return _exporter.CreateImageSource(_parameter);
         }
 
-        public async ValueTask ExportStreamAsync(Stream stream, CancellationToken token)
+        public async Task ExportStreamAsync(Stream stream, CancellationToken token)
         {
             await _exporter.ExportAsync(stream, true, _parameter.FileFormat, _parameter, token);
         }
 
-        public async ValueTask ExportAsync(string path, bool isOverwrite, CancellationToken token)
+        public async Task ExportAsync(string path, bool isOverwrite, CancellationToken token)
         {
             Debug.Assert(System.IO.Path.IsPathFullyQualified(path));
             path = System.IO.Path.GetFullPath(path); // 念のため絶対パス化を保証しておく

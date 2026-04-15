@@ -72,20 +72,20 @@ namespace NeeLaboratory.Threading.Jobs
         private void UpdateBusy() => IsBusy = IsProcessing || PendingJobsCount > 0;
 
 
-        public JobOperation<int> AddJob(Func<CancellationToken, ValueTask> job)
+        public JobOperation<int> AddJob(Func<CancellationToken, Task> job)
         {
             if (_disposedValue) throw new ObjectDisposedException(nameof(TaskJobEngine));
 
             return AddJob(InnerJob);
 
-            async ValueTask<int> InnerJob(CancellationToken token)
+            async Task<int> InnerJob(CancellationToken token)
             {
                 await job(token);
                 return 0;
             }
         }
 
-        public JobOperation<T> AddJob<T>(Func<CancellationToken, ValueTask<T>> job)
+        public JobOperation<T> AddJob<T>(Func<CancellationToken, Task<T>> job)
         {
             if (_disposedValue) throw new ObjectDisposedException(nameof(TaskJobEngine));
 
@@ -96,7 +96,7 @@ namespace NeeLaboratory.Threading.Jobs
             return jobUnit;
         }
 
-        public async ValueTask WaitAsync(CancellationToken token)
+        public async Task WaitAsync(CancellationToken token)
         {
             await this.WaitPropertyAsync(nameof(IsBusy), e => !e.IsBusy, token);
         }

@@ -61,7 +61,7 @@ namespace NeeView
         [WordNodeMember]
         public void Execute(PageAccessor[] pages)
         {
-            _externalApp.ExecuteAsync(pages.Select(e => e.Source).ToList(), CancellationToken.None).AsTask().Wait();
+            _externalApp.ExecuteAsync(pages.Select(e => e.Source).ToList(), CancellationToken.None).Wait();
         }
 
         [WordNodeMember]
@@ -73,10 +73,10 @@ namespace NeeView
         [WordNodeMember]
         public void Execute(string[] paths)
         {
-            ExecuteAsync(paths, CancellationToken.None).AsTask().Wait();
+            ExecuteAsync(paths, CancellationToken.None).Wait();
         }
 
-        private async ValueTask ExecuteAsync(string[] paths, CancellationToken token)
+        private async Task ExecuteAsync(string[] paths, CancellationToken token)
         {
             var pages = paths.Select(e => GetPage(e)).ToList();
             if (pages.All(e => e is not null))

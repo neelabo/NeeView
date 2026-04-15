@@ -14,7 +14,7 @@ namespace NeeView
             _loader = new BitmapPageContentLoader();
         }
 
-        protected override async ValueTask<PictureInfo?> LoadPictureInfoCoreAsync(CancellationToken token)
+        protected override async Task<PictureInfo?> LoadPictureInfoCoreAsync(CancellationToken token)
         {
             NVDebug.AssertMTA();
             token.ThrowIfCancellationRequested();
@@ -24,7 +24,7 @@ namespace NeeView
             return imageData.PictureInfo;
         }
 
-        protected override async ValueTask<PageSource> LoadSourceAsync(CancellationToken token)
+        protected override async Task<PageSource> LoadSourceAsync(CancellationToken token)
         {
             NVDebug.AssertMTA();
 

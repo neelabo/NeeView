@@ -64,21 +64,21 @@ namespace NeeView
         /// <summary>
         /// JOBの完了を待つ (すべて)
         /// </summary>
-        public async ValueTask WaitAsync(CancellationToken token)
+        public async Task WaitAsync(CancellationToken token)
         {
-            await Task.WhenAll(_sources.Select(e => e.WaitAsync(token).AsTask()));
+            await Task.WhenAll(_sources.Select(e => e.WaitAsync(token)));
         }
 
         /// <summary>
         /// JOBの完了を待つ
         /// </summary>
         /// <param name="pages">完了待ちをするページ</param>
-        public async ValueTask WaitAsync(List<IPageContentLoader> pages, int millisecondsTimeout, CancellationToken token)
+        public async Task WaitAsync(List<IPageContentLoader> pages, int millisecondsTimeout, CancellationToken token)
         {
             if (_disposedValue) return;
 
             var tasks = pages
-                .Select(e => (_sources.FirstOrDefault(a => a.Key == e)?.WaitAsync(millisecondsTimeout, token).AsTask()))
+                .Select(e => (_sources.FirstOrDefault(a => a.Key == e)?.WaitAsync(millisecondsTimeout, token)))
                 .WhereNotNull()
                 .ToList();
 

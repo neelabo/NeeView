@@ -181,7 +181,7 @@ namespace NeeView
         /// <summary>
         /// 初期化
         /// </summary>
-        private async ValueTask InitializeAsync()
+        private async Task InitializeAsync()
         {
             if (_initialized) return;
             _initialized = true;
@@ -200,7 +200,7 @@ namespace NeeView
         /// <summary>
         /// Window OnContentRendered
         /// </summary>
-        public async ValueTask ContentRenderedAsync()
+        public async Task ContentRenderedAsync()
         {
             await InitializeAsync();
         }

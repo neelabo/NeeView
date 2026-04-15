@@ -28,7 +28,7 @@ namespace NeeView
             }
         }
 
-        public async ValueTask<List<BreadcrumbToken>> GetChildrenAsync(QueryPath query, CancellationToken token)
+        public async Task<List<BreadcrumbToken>> GetChildrenAsync(QueryPath query, CancellationToken token)
         {
             if (query.Scheme == QueryScheme.File)
             {

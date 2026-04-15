@@ -402,7 +402,7 @@ namespace NeeView
         /// <summary>
         /// 本を読み込む
         /// </summary>
-        public async ValueTask LoadAsync(BookHubCommandLoadArgs args, CancellationToken token)
+        public async Task LoadAsync(BookHubCommandLoadArgs args, CancellationToken token)
         {
             if (_disposedValue) return;
 
@@ -608,7 +608,7 @@ namespace NeeView
         /// <summary>
         /// ブックを読み込む(本体)
         /// </summary>
-        private static async ValueTask<Book> LoadAsyncCore(object? sender, BookAddress address, BookLoadOption option, BookMemento setting, bool isNew, ArchiveHint archiveHint, CancellationToken token)
+        private static async Task<Book> LoadAsyncCore(object? sender, BookAddress address, BookLoadOption option, BookMemento setting, bool isNew, ArchiveHint archiveHint, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -779,7 +779,7 @@ namespace NeeView
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async ValueTask WaitAsync(CancellationToken token)
+        public async Task WaitAsync(CancellationToken token)
         {
             if (!_commandEngine.IsBusy) return;
 

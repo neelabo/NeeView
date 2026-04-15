@@ -19,7 +19,7 @@ namespace NeeView
         /// <summary>
         /// 確認ダイアログ作成
         /// </summary>
-        public static async ValueTask<MessageDialog> CreateDeleteConfirmDialog(List<Page> pages, DeleteEntryType entryType)
+        public static async Task<MessageDialog> CreateDeleteConfirmDialog(List<Page> pages, DeleteEntryType entryType)
         {
             var thumbnail = (pages.Count == 1) ? await pages.First().CreatePageVisualAsync() : null;
             var entries = pages.Select(e => e.ArchiveEntry).ToList();
@@ -29,7 +29,7 @@ namespace NeeView
         /// <summary>
         /// ページファイル削除
         /// </summary>
-        public static async ValueTask<bool> DeletePageAsync(List<Page> pages)
+        public static async Task<bool> DeletePageAsync(List<Page> pages)
         {
             if (pages.Count == 0) return false;
 

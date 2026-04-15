@@ -37,7 +37,7 @@ namespace NeeView
         public event EventHandler<ArchiveEntryExtractorExpiredEventArgs>? Expired;
 
 
-        public async ValueTask<FileProxy> WaitAsync(CancellationToken token)
+        public async Task<FileProxy> WaitAsync(CancellationToken token)
         {
             ThrowIfDisposed();
 

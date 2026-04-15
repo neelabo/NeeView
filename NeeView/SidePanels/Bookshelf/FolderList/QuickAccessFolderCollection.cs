@@ -28,7 +28,7 @@ namespace NeeView
         public override FolderOrderClass FolderOrderClass => FolderOrderClass.None;
 
 
-        public override async ValueTask InitializeItemsAsync(CancellationToken token)
+        public override async Task InitializeItemsAsync(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -37,8 +37,6 @@ namespace NeeView
                 this.Items = new ObservableCollection<FolderItem>(_node.Select(e => CreateFolderItem(Place, e)));
                 _node.CollectionChanged += Children_CollectionChanged;
             }
-
-            await Task.CompletedTask;
         }
 
         private void Children_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)

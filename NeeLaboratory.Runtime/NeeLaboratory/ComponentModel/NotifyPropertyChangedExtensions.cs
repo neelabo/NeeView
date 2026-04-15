@@ -10,7 +10,7 @@ namespace NeeLaboratory.ComponentModel
         /// <summary>
         /// 特定のプロパティが条件を満たすまで待機します
         /// </summary>
-        public static async ValueTask WaitPropertyAsync<T>(this T source, string propertyName, Func<T, bool> condition, CancellationToken cancellationToken = default)
+        public static async Task WaitPropertyAsync<T>(this T source, string propertyName, Func<T, bool> condition, CancellationToken cancellationToken = default)
             where T : INotifyPropertyChanged
         {
             cancellationToken.ThrowIfCancellationRequested();

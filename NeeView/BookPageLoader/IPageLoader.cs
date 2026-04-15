@@ -9,7 +9,7 @@ namespace NeeView
     /// </summary>
     public interface IPageLoader : IDisposable
     {
-        public ValueTask LoadAsync(PageRange range, int direction, CancellationToken token);
+        public Task LoadAsync(PageRange range, int direction, CancellationToken token);
         public void Cancel();
     }
 }

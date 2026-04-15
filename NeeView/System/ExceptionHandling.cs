@@ -11,12 +11,12 @@ namespace NeeView
     /// </summary>
     public static class ExceptionHandling
     {
-        public static async ValueTask<bool> WithToastAsync(Func<CancellationToken, ValueTask> task, string errorDialogCaption, CancellationToken token)
+        public static async Task<bool> WithToastAsync(Func<CancellationToken, Task> task, string errorDialogCaption, CancellationToken token)
         {
             return await WithToastAsync(task, errorDialogCaption, null, token);
         }
 
-        public static async ValueTask<bool> WithToastAsync(Func<CancellationToken, ValueTask> task, string errorDialogCaption, FrameworkElement? element, CancellationToken token)
+        public static async Task<bool> WithToastAsync(Func<CancellationToken, Task> task, string errorDialogCaption, FrameworkElement? element, CancellationToken token)
         {
             try
             {
@@ -39,12 +39,12 @@ namespace NeeView
             }
         }
 
-        public static async ValueTask<bool> WithDialogAsync(Func<CancellationToken, ValueTask> task, string errorDialogCaption, CancellationToken token)
+        public static async Task<bool> WithDialogAsync(Func<CancellationToken, Task> task, string errorDialogCaption, CancellationToken token)
         {
             return await WithDialogAsync(task, errorDialogCaption, null, token);
         }
 
-        public static async ValueTask<bool> WithDialogAsync(Func<CancellationToken, ValueTask> task, string errorDialogCaption, FrameworkElement? element, CancellationToken token)
+        public static async Task<bool> WithDialogAsync(Func<CancellationToken, Task> task, string errorDialogCaption, FrameworkElement? element, CancellationToken token)
         {
             try
             {

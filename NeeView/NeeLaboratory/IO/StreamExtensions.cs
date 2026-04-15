@@ -181,7 +181,7 @@ namespace NeeLaboratory.IO
         /// <summary>
         /// 読み込みサイズを保証する ReadAsync()
         /// </summary>
-        public static async ValueTask<int> SafeReadAsync(this Stream stream, byte[] array, int offset, int length, CancellationToken token = default)
+        public static async Task<int> SafeReadAsync(this Stream stream, byte[] array, int offset, int length, CancellationToken token = default)
         {
             int totalRead = 0;
             while (totalRead < length)

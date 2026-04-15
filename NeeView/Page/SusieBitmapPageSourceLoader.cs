@@ -9,7 +9,7 @@ namespace NeeView
 {
     public class SusieBitmapPageSourceLoader : IBitmapPageSourceLoader
     {
-        public async ValueTask<BitmapPageSource> LoadAsync(ArchiveEntryStreamSource streamSource, bool createPictureInfo, bool createSource, CancellationToken token)
+        public async Task<BitmapPageSource> LoadAsync(ArchiveEntryStreamSource streamSource, bool createPictureInfo, bool createSource, CancellationToken token)
         {
             var entry = streamSource.ArchiveEntry;
             if (!Config.Current.Image.Standard.IsAllFileSupported && !PictureProfile.Current.IsSusieSupported(entry.TargetPath))
@@ -19,7 +19,7 @@ namespace NeeView
 
             try
             {
-                var susieImage = entry.EntityPath is not null ? await LoadFromFileAsync(streamSource, token) : await LoadFromStreamAsync(streamSource, token);
+                var susieImage = entry.EntityPath is not null ? LoadFromFile(streamSource) : await LoadFromStreamAsync(streamSource, token);
                 return await CreateImageDataSourceAsync(susieImage, createPictureInfo, createSource, token);
             }
             catch (OperationCanceledException)
@@ -33,7 +33,7 @@ namespace NeeView
         }
 
         // Bitmap読み込み(stream)
-        private static async ValueTask<SusieImage?> LoadFromStreamAsync(ArchiveEntryStreamSource streamSource, CancellationToken token)
+        private static async Task<SusieImage?> LoadFromStreamAsync(ArchiveEntryStreamSource streamSource, CancellationToken token)
         {
             var entry = streamSource.ArchiveEntry;
 
@@ -46,13 +46,12 @@ namespace NeeView
             var accessor = SusiePluginManager.Current.GetImagePluginAccessor();
             var isCheckExtension = !Config.Current.Image.Standard.IsAllFileSupported;
             var result = accessor.GetPicture(entry.RawEntryName, buff, isCheckExtension); // TODO: await
-            await Task.CompletedTask;
 
             return result;
         }
 
         // Bitmap読み込み(ファイル版)
-        private static async ValueTask<SusieImage?> LoadFromFileAsync(ArchiveEntryStreamSource streamSource, CancellationToken token)
+        private static SusieImage? LoadFromFile(ArchiveEntryStreamSource streamSource)
         {
             var entry = streamSource.ArchiveEntry;
 
@@ -62,12 +61,11 @@ namespace NeeView
             var accessor = SusiePluginManager.Current.GetImagePluginAccessor();
             var isCheckExtension = !Config.Current.Image.Standard.IsAllFileSupported;
             var result = accessor.GetPicture(path, null, isCheckExtension); // TODO: await
-            await Task.CompletedTask;
 
             return result;
         }
 
-        private async ValueTask<BitmapPageSource> CreateImageDataSourceAsync(SusieImage? susieImage, bool createPictureInfo, bool createSource, CancellationToken token)
+        private async Task<BitmapPageSource> CreateImageDataSourceAsync(SusieImage? susieImage, bool createPictureInfo, bool createSource, CancellationToken token)
         {
             if (susieImage == null || susieImage.Plugin == null || susieImage.BitmapData == null)
             {

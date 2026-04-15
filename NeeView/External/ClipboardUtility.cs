@@ -15,7 +15,7 @@ namespace NeeView
         /// <summary>
         /// 実体化してDataObjectに追加 (ページ)
         /// </summary>
-        public static async ValueTask<bool> TrySetDataAsync(DataObject data, IEnumerable<Page> pages, CancellationToken token)
+        public static async Task<bool> TrySetDataAsync(DataObject data, IEnumerable<Page> pages, CancellationToken token)
         {
             return await TrySetDataAsync(data, pages.Select(e => e.ArchiveEntry), Config.Current.System, token);
         }
@@ -23,7 +23,7 @@ namespace NeeView
         /// <summary>
         ///  実体化してDataObjectに追加
         /// </summary>
-        public static async ValueTask<bool> TrySetDataAsync(DataObject data, IEnumerable<ArchiveEntry> entries, ICopyPolicy policy, CancellationToken token)
+        public static async Task<bool> TrySetDataAsync(DataObject data, IEnumerable<ArchiveEntry> entries, ICopyPolicy policy, CancellationToken token)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace NeeView
         /// <param name="policy">登録方針</param>
         /// <param name="token"></param>
         /// <returns>登録成功/失敗</returns>
-        private static async ValueTask<bool> SetDataAsync(DataObject data, IEnumerable<ArchiveEntry> entries, ICopyPolicy policy, CancellationToken token)
+        private static async Task<bool> SetDataAsync(DataObject data, IEnumerable<ArchiveEntry> entries, ICopyPolicy policy, CancellationToken token)
         {
             if (!entries.Any()) return false;
 
@@ -103,7 +103,7 @@ namespace NeeView
         /// <summary>
         /// 実体化してクリップボードにコピー (ページ、例外ハンドル済)
         /// </summary>
-        public static async ValueTask<bool> TryCopyAsync(IEnumerable<Page> pages, FrameworkElement? element, CancellationToken token)
+        public static async Task<bool> TryCopyAsync(IEnumerable<Page> pages, FrameworkElement? element, CancellationToken token)
         {
             return await ExceptionHandling.WithDialogAsync((token) => CopyAsync(pages.Select(e => e.ArchiveEntry).ToList(), token), TextResources.GetString("Message.CopyFailed"), element, token);
         }
@@ -111,7 +111,7 @@ namespace NeeView
         /// <summary>
         /// 実体化してクリップボードにコピー
         /// </summary>
-        public static async ValueTask<bool> TryCopyAsync(IEnumerable<ArchiveEntry> entries, CancellationToken token)
+        public static async Task<bool> TryCopyAsync(IEnumerable<ArchiveEntry> entries, CancellationToken token)
         {
             return await ExceptionHandling.WithDialogAsync((token) => CopyAsync(entries.ToList(), token), TextResources.GetString("Message.CopyFailed"), token);
         }
@@ -119,7 +119,7 @@ namespace NeeView
         /// <summary>
         /// 実体化してクリップボードにコピー
         /// </summary>
-        public static async ValueTask CopyAsync(IEnumerable<ArchiveEntry> entries, CancellationToken token)
+        public static async Task CopyAsync(IEnumerable<ArchiveEntry> entries, CancellationToken token)
         {
             var data = new DataObject();
             if (await SetDataAsync(data, entries, Config.Current.System, token))
@@ -132,7 +132,7 @@ namespace NeeView
         /// <summary>
         /// クリップボードに切り取り (ブック、例外ハンドル済)
         /// </summary>
-        public static async ValueTask<bool> TryCutAsync(IPendingBook book, CancellationToken token)
+        public static async Task<bool> TryCutAsync(IPendingBook book, CancellationToken token)
         {
             return await ExceptionHandling.WithDialogAsync((token) => CutAsync(book, token), TextResources.GetString("Message.CopyFailed"), token);
         }
@@ -140,7 +140,7 @@ namespace NeeView
         /// <summary>
         /// クリップボードに切り取り (ブック)
         /// </summary>
-        public static async ValueTask CutAsync(IPendingBook book, CancellationToken token)
+        public static async Task CutAsync(IPendingBook book, CancellationToken token)
         {
             var entry = await ArchiveEntryUtility.CreateAsync(book.Path, ArchiveHint.None, true, token);
             var guid = await CutAsync([entry], token);
@@ -153,7 +153,7 @@ namespace NeeView
         /// <summary>
         /// クリップボードに切り取り (ページ、例外ハンドル済)
         /// </summary>
-        public static async ValueTask<bool> TryCutAsync(IEnumerable<Page> pages, CancellationToken token)
+        public static async Task<bool> TryCutAsync(IEnumerable<Page> pages, CancellationToken token)
         {
             return await ExceptionHandling.WithDialogAsync((token) => CutAsync(pages, token), TextResources.GetString("Message.CopyFailed"), token);
         }
@@ -161,7 +161,7 @@ namespace NeeView
         /// <summary>
         /// クリップボードに切り取り (ページ)
         /// </summary>
-        public static async ValueTask CutAsync(IEnumerable<Page> pages, CancellationToken token)
+        public static async Task CutAsync(IEnumerable<Page> pages, CancellationToken token)
         {
             var entries = pages.Select(e => e.ArchiveEntry);
             var guid = await CutAsync(entries, token);
@@ -174,7 +174,7 @@ namespace NeeView
         /// <summary>
         /// クリップボードに切り取り
         /// </summary>
-        public static async ValueTask<Guid> CutAsync(IEnumerable<ArchiveEntry> entries, CancellationToken token)
+        public static async Task<Guid> CutAsync(IEnumerable<ArchiveEntry> entries, CancellationToken token)
         {
             var data = new DataObject();
 

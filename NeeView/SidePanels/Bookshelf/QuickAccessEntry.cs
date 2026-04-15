@@ -20,9 +20,9 @@ namespace NeeView
             return Name ?? "";
         }
 
-        public virtual ValueTask<bool> RenameAsync(string name)
+        public virtual Task<bool> RenameAsync(string name)
         {
-            return ValueTask.FromResult(false);
+            return Task.FromResult(false);
         }
 
         public virtual object Clone()

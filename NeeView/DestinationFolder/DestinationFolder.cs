@@ -49,7 +49,7 @@ namespace NeeView
             return MemberwiseClone();
         }
 
-        public async ValueTask CopyRawAsync(IEnumerable<string> paths, CancellationToken token)
+        public async Task CopyRawAsync(IEnumerable<string> paths, CancellationToken token)
         {
             if (!paths.Any()) return;
 
@@ -61,7 +61,7 @@ namespace NeeView
             await FileIO.SHCopyToFolderAsync(paths, this.Path, token);
         }
 
-        public async ValueTask MoveRawAsync(IEnumerable<string> paths, CancellationToken token)
+        public async Task MoveRawAsync(IEnumerable<string> paths, CancellationToken token)
         {
             if (!paths.Any()) return;
 
@@ -73,35 +73,35 @@ namespace NeeView
             await FileIO.SHMoveToFolderAsync(paths, this.Path, token);
         }
 
-        public async ValueTask CopyAsync(IEnumerable<string> paths, CancellationToken token)
+        public async Task CopyAsync(IEnumerable<string> paths, CancellationToken token)
         {
             var entries = await PathToArchiveEntry(paths, token);
             await CopyAsync(entries, token);
         }
 
-        public async ValueTask CopyAsync(IEnumerable<ArchiveEntry> entries, CancellationToken token)
+        public async Task CopyAsync(IEnumerable<ArchiveEntry> entries, CancellationToken token)
         {
             var items = await ArchiveEntryUtility.RealizeArchiveEntry(entries, token);
             await CopyRawAsync(items, token);
             GC.KeepAlive(entries);
         }
 
-        public async ValueTask<bool> TryCopyAsync(IEnumerable<string> paths, CancellationToken token)
+        public async Task<bool> TryCopyAsync(IEnumerable<string> paths, CancellationToken token)
         {
             return await ExceptionHandling.WithToastAsync((token) => CopyAsync(paths.ToList(), token), TextResources.GetString("Message.CopyFailed"), token);
         }
 
-        public async ValueTask<bool> TryCopyAsync(IEnumerable<ArchiveEntry> entries, CancellationToken token)
+        public async Task<bool> TryCopyAsync(IEnumerable<ArchiveEntry> entries, CancellationToken token)
         {
             return await ExceptionHandling.WithToastAsync((token) => CopyAsync(entries.ToList(), token), TextResources.GetString("Message.CopyFailed"), token);
         }
 
-        public async ValueTask<bool> TryMoveAsync(IEnumerable<string> paths, CancellationToken token)
+        public async Task<bool> TryMoveAsync(IEnumerable<string> paths, CancellationToken token)
         {
             return await ExceptionHandling.WithToastAsync((token) => MoveRawAsync(paths.ToList(), token), TextResources.GetString("Message.MoveFailed"), token);
         }
 
-        private static async ValueTask<List<ArchiveEntry>> PathToArchiveEntry(IEnumerable<string> paths, CancellationToken token)
+        private static async Task<List<ArchiveEntry>> PathToArchiveEntry(IEnumerable<string> paths, CancellationToken token)
         {
             var entries = new List<ArchiveEntry>();
             foreach (var path in paths)

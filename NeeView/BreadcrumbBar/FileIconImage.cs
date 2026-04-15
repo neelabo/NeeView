@@ -76,7 +76,7 @@ namespace NeeView
 
         private BitmapSourceCollection _collection = new();
 
-        private async ValueTask UpdateBitmapSourceCollectionAsync(CancellationToken token)
+        private async Task UpdateBitmapSourceCollectionAsync(CancellationToken token)
         {
             if (Path is null || Path.Scheme != QueryScheme.File || string.IsNullOrEmpty(Path.SimplePath))
             {

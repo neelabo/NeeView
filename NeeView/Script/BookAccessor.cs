@@ -70,7 +70,7 @@ namespace NeeView
         [WordNodeMember]
         public void Wait()
         {
-            BookOperation.Current.WaitAsync(_cancellationToken).AsTask().Wait();
+            BookOperation.Current.WaitAsync(_cancellationToken).Wait();
         }
 
 

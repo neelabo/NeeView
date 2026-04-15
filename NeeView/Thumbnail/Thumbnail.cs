@@ -269,7 +269,7 @@ namespace NeeView
         /// <summary>
         /// キャッシュを使用してサムネイル生成を試みる
         /// </summary>
-        public async ValueTask InitializeFromCacheAsync(CancellationToken token)
+        public async Task InitializeFromCacheAsync(CancellationToken token)
         {
             if (_disposedValue) return;
             if (IsValid || !IsCacheEnabled) return;

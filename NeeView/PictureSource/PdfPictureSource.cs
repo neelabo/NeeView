@@ -27,19 +27,18 @@ namespace NeeView
         private Size GetImageSize() => PictureInfo?.Size ?? new Size(480, 640);
 
 
-        public async ValueTask<byte[]> CreateImageAsync(ArchiveEntry entry, Size size, BitmapCreateSetting setting, BitmapImageFormat format, int quality, CancellationToken token)
+        public async Task<byte[]> CreateImageAsync(ArchiveEntry entry, Size size, BitmapCreateSetting setting, BitmapImageFormat format, int quality, CancellationToken token)
         {
             Debug.Assert(entry == ArchiveEntry);
             size = size.IsEmpty ? GetImageSize() : size;
-            return await Task.FromResult(_pdfArchive.CreateBitmapData(entry, size, setting, format, quality)); // TODO: async
+            return _pdfArchive.CreateBitmapData(entry, size, setting, format, quality); // TODO: async
         }
 
-        public async ValueTask<ImageSource> CreateImageSourceAsync(ArchiveEntry entry, Size size, BitmapCreateSetting setting, CancellationToken token)
+        public async Task<ImageSource> CreateImageSourceAsync(ArchiveEntry entry, Size size, BitmapCreateSetting setting, CancellationToken token)
         {
             Debug.Assert(entry == ArchiveEntry);
             size = size.IsEmpty ? GetImageSize() : size;
             var bitmap = _pdfArchive.CreateBitmapSource(entry, size); // TODO: async
-            await Task.CompletedTask;
 
             // 色情報設定
             PictureInfo?.SetPixelInfo(bitmap);
@@ -47,7 +46,7 @@ namespace NeeView
             return bitmap;
         }
 
-        public async ValueTask<byte[]> CreateThumbnailAsync(ArchiveEntry entry, ThumbnailProfile profile, CancellationToken token)
+        public async Task<byte[]> CreateThumbnailAsync(ArchiveEntry entry, ThumbnailProfile profile, CancellationToken token)
         {
             Debug.Assert(entry == ArchiveEntry);
             var size = ThumbnailProfile.GetThumbnailSize(GetImageSize());

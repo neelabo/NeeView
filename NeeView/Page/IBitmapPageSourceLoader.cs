@@ -5,6 +5,6 @@ namespace NeeView
 {
     public interface IBitmapPageSourceLoader
     {
-        ValueTask<BitmapPageSource> LoadAsync(ArchiveEntryStreamSource streamSource, bool createPictureInfo, bool createSource, CancellationToken token);
+        Task<BitmapPageSource> LoadAsync(ArchiveEntryStreamSource streamSource, bool createPictureInfo, bool createSource, CancellationToken token);
     }
 }

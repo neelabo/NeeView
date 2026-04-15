@@ -16,10 +16,10 @@ namespace NeeView
         bool CanRename();
 
         /// <summary>
-        /// remame
+        /// rename
         /// </summary>
         /// <param name="name">new name</param>
         /// <returns>is success</returns>
-        ValueTask<bool> RenameAsync(string name);
+        Task<bool> RenameAsync(string name);
     }
 }

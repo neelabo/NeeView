@@ -166,7 +166,7 @@ namespace NeeView
             SelectedDestinationFolder = list.FirstOrDefault(e => e.Path == _parameter.ExportFolder) ?? list.First();
         }
 
-        public async ValueTask<bool?> ShowSelectSaveFileDialogAsync(Window owner, CancellationToken token)
+        public async Task<bool?> ShowSelectSaveFileDialogAsync(Window owner, CancellationToken token)
         {
             var initialFileName = _parameter.BookType == ExportBookType.Zip
                 ? _bookName + ".zip"

@@ -12,7 +12,7 @@ namespace NeeView
 {
     public static class DebugTest
     {
-        public static async ValueTask ExecuteTestAsync()
+        public static async Task ExecuteTestAsync()
         {
 
             ////StringTools.TestStringArgumentSplitter();
@@ -20,7 +20,6 @@ namespace NeeView
 
             var sw = Stopwatch.StartNew();
             Debug.WriteLine("\n[DebugTest]...");
-            await Task.CompletedTask;
 
             // 致命的エラーのテスト
             InnerExceptionTest.Execute();
@@ -84,7 +83,7 @@ namespace NeeView
 
         static class ArchiveEntryCollectionTest
         {
-            public static async ValueTask ExecuteAsync(CancellationToken token)
+            public static async Task ExecuteAsync(CancellationToken token)
             {
                 var path = @"E:\Work\Labo\サンプル\サブフォルダテストX.zip";
                 //var path = @"E:\Work\Labo\サンプル\サブフォルダテストX.zip\サブフォルダテストX";

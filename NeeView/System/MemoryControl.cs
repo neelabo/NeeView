@@ -118,7 +118,7 @@ namespace NeeView
         /// <summary>
         /// OutOfMemory発生でメモリクリーンアップしてリトライ (タスク)
         /// </summary>
-        public async ValueTask<T> RetryFuncWithMemoryCleanupAsync<T>(ValueTask<T> task)
+        public async Task<T> RetryFuncWithMemoryCleanupAsync<T>(Task<T> task)
         {
             try
             {

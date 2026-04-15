@@ -37,7 +37,7 @@ namespace NeeView
             }
         }
 
-        public static async ValueTask InvokeAsync(Action action)
+        public static async Task InvokeAsync(Action action)
         {
             await UIDispatcher.InvokeAsync(action);
         }

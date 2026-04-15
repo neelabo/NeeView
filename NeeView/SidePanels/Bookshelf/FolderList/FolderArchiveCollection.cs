@@ -25,12 +25,12 @@ namespace NeeView
             _mode = mode;
         }
 
-        public override async ValueTask InitializeItemsAsync(CancellationToken token)
+        public override async Task InitializeItemsAsync(CancellationToken token)
         {
             await InitializeItemsAsync(null, token);
         }
 
-        public async ValueTask InitializeItemsAsync(FolderOrder? folderOrderHint, CancellationToken token)
+        public async Task InitializeItemsAsync(FolderOrder? folderOrderHint, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 

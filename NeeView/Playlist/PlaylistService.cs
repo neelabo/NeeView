@@ -24,7 +24,7 @@ namespace NeeView
         /// <param name="playlist"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static async ValueTask DeleteInvalidItemsAsync(Playlist playlist, CancellationToken token)
+        public static async Task DeleteInvalidItemsAsync(Playlist playlist, CancellationToken token)
         {
             var jobOperation = ProcessJobEngine.Current.AddJob(Resolve);
             int unlinkedCount = await jobOperation.WaitAsync(token);
@@ -48,7 +48,7 @@ namespace NeeView
                 dialog.ShowDialog();
             }
 
-            async ValueTask<int> Resolve(IProgress<ProgressContext>? progress, CancellationToken token)
+            async Task<int> Resolve(IProgress<ProgressContext>? progress, CancellationToken token)
             {
                 _removeUnlinkedCancellationTokenSource?.Cancel();
                 _removeUnlinkedCancellationTokenSource = new CancellationTokenSource();

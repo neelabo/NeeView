@@ -24,7 +24,7 @@ namespace NeeView
         {
         }
 
-        public override async ValueTask InitializeItemsAsync(CancellationToken token)
+        public override async Task InitializeItemsAsync(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 

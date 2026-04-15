@@ -100,7 +100,7 @@ namespace NeeView.Susie.Client
             }
         }
 
-        private async ValueTask<List<Chunk>> CallAsync(List<Chunk> args, CancellationToken token)
+        private async Task<List<Chunk>> CallAsync(List<Chunk> args, CancellationToken token)
         {
             LocalDebug.WriteLine($"Call: {args[0].Id} {SusiePluginCommandId.ToString(args[0].Id)}");
 

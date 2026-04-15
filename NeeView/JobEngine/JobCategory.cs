@@ -41,7 +41,7 @@ namespace NeeView
 
             public void Execute(CancellationToken token)
             {
-                _page.LoadContentAsync(token).AsTask().Wait(token);
+                _page.LoadContentAsync(token).Wait(token);
             }
         }
 
@@ -75,7 +75,7 @@ namespace NeeView
 
             public void Execute(CancellationToken token)
             {
-                _page.LoadThumbnailAsync(token).AsTask().Wait(token);
+                _page.LoadThumbnailAsync(token).Wait(token);
             }
         }
 

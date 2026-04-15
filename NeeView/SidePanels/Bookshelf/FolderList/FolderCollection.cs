@@ -156,9 +156,9 @@ namespace NeeView
         }
 
 
-        public virtual async ValueTask InitializeItemsAsync(CancellationToken token)
+        public virtual Task InitializeItemsAsync(CancellationToken token)
         {
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
         public bool IsEmpty()

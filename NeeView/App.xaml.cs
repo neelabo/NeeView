@@ -152,7 +152,7 @@ namespace NeeView
         /// <summary> 
         /// 初期化 
         /// </summary>
-        private async ValueTask InitializeAsync(StartupEventArgs e)
+        private async Task InitializeAsync(StartupEventArgs e)
         {
             Debug.WriteLine($"App.InitializeAsync...: {Stopwatch.ElapsedMilliseconds}ms");
 

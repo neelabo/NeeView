@@ -58,7 +58,7 @@ namespace NeeView
         /// <summary>
         /// JOB完了まで待機
         /// </summary>
-        public async ValueTask WaitAsync(CancellationToken token)
+        public async Task WaitAsync(CancellationToken token)
         {
             await Job.WaitAsync(token);
         }
@@ -66,7 +66,7 @@ namespace NeeView
         /// <summary>
         /// JOB完了まで待機
         /// </summary>
-        public async ValueTask WaitAsync(int millisecondTimeout, CancellationToken token)
+        public async Task WaitAsync(int millisecondTimeout, CancellationToken token)
         {
             await Job.WaitAsync(millisecondTimeout, token);
         }

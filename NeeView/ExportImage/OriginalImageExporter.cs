@@ -44,12 +44,12 @@ namespace NeeView
             }
         }
 
-        public async ValueTask ExportAsync(Stream stream, bool decrypt, BitmapImageFormat format, IImageExporterOptions options, CancellationToken token)
+        public async Task ExportAsync(Stream stream, bool decrypt, BitmapImageFormat format, IImageExporterOptions options, CancellationToken token)
         {
             await _page.ArchiveEntry.OpenEntryAsync(decrypt, token);
         }
 
-        public async ValueTask ExportAsync(string path, bool isOverwrite, IImageExporterOptions options, CancellationToken token)
+        public async Task ExportAsync(string path, bool isOverwrite, IImageExporterOptions options, CancellationToken token)
         {
             await _page.ArchiveEntry.ExtractToFileAsync(path, isOverwrite, token);
         }

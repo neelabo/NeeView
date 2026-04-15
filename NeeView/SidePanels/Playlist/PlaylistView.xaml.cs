@@ -80,12 +80,12 @@ namespace NeeView
             this.IsInvalidFileNameChars = true;
         }
 
-        protected override async ValueTask<bool> OnRenameAsync(string oldValue, string newValue)
+        protected override async Task<bool> OnRenameAsync(string oldValue, string newValue)
         {
             if (oldValue == newValue) return true;
 
             var result = _renameFunc(newValue);
-            return await Task.FromResult(result);
+            return result;
         }
     }
 

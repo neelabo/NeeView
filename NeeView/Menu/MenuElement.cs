@@ -108,12 +108,11 @@ namespace NeeView
             return true;
         }
 
-        public async ValueTask<bool> RenameAsync(string name)
+        public async Task<bool> RenameAsync(string name)
         {
             if (string.IsNullOrWhiteSpace(name)) return false;
 
             Label = name;
-            await ValueTask.CompletedTask;
             return true;
         }
     }
@@ -143,10 +142,9 @@ namespace NeeView
             return true;
         }
 
-        public async ValueTask<bool> RenameAsync(string name)
+        public async Task<bool> RenameAsync(string name)
         {
             Label = name;
-            await ValueTask.CompletedTask;
             return true;
         }
     }

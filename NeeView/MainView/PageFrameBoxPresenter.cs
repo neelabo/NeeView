@@ -300,7 +300,7 @@ namespace NeeView
             Loading?.Invoke(this, new BookPathEventArgs(address));
         }
 
-        private async ValueTask OpenAsync(Book? book, CancellationToken token)
+        private async Task OpenAsync(Book? book, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -349,7 +349,7 @@ namespace NeeView
         /// <param name="box"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        private async ValueTask WaitStableAsync(PageFrameBox box, CancellationToken token)
+        private async Task WaitStableAsync(PageFrameBox box, CancellationToken token)
         {
             if (!IsLoading()) return;
 
@@ -372,7 +372,7 @@ namespace NeeView
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        private async ValueTask WaitForBookStableAsync(CancellationToken token)
+        private async Task WaitForBookStableAsync(CancellationToken token)
         {
             if (!IsLoading()) return;
 
@@ -396,7 +396,7 @@ namespace NeeView
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async ValueTask WaitForViewPageStableAsync(CancellationToken token)
+        public async Task WaitForViewPageStableAsync(CancellationToken token)
         {
             await WaitForBookStableAsync(token);
 

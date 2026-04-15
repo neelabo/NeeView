@@ -219,11 +219,10 @@ namespace NeeView
                 _path = path;
             }
 
-            protected override async ValueTask ExecuteAsync(CancellationToken token)
+            protected override async Task ExecuteAsync(CancellationToken token)
             {
                 ////Debug.WriteLine($"Create: {_path}");
                 _target._folderCollection.AddItem(_path); // TODO: ファイルシステム以外のFolderCollectionでは不正な操作になる
-                await Task.CompletedTask;
             }
         }
 
@@ -238,11 +237,10 @@ namespace NeeView
                 _path = path;
             }
 
-            protected override async ValueTask ExecuteAsync(CancellationToken token)
+            protected override async Task ExecuteAsync(CancellationToken token)
             {
                 ////Debug.WriteLine($"Delete: {_path}");
                 _target._folderCollection.DeleteItem(_path);
-                await Task.CompletedTask;
             }
         }
 
@@ -259,11 +257,10 @@ namespace NeeView
                 _path = path;
             }
 
-            protected override async ValueTask ExecuteAsync(CancellationToken token)
+            protected override async Task ExecuteAsync(CancellationToken token)
             {
                 ////Debug.WriteLine($"Rename: {_oldPath} => {_path}");
                 _target._folderCollection.RenameItem(_oldPath, _path);
-                await Task.CompletedTask;
             }
         }
 

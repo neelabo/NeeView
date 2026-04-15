@@ -16,7 +16,7 @@ namespace NeeView
 
         public override FolderOrderClass FolderOrderClass => FolderOrderClass.None;
 
-        public override async ValueTask InitializeItemsAsync(CancellationToken token)
+        public override async Task InitializeItemsAsync(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -31,8 +31,6 @@ namespace NeeView
             }
 
             this.Items = items;
-
-            await Task.CompletedTask;
         }
 
         private FolderItem CreateFolderItem(QueryPath parent, QueryScheme scheme)

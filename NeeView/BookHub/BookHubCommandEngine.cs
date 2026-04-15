@@ -69,7 +69,7 @@ namespace NeeView
             _args = args;
         }
 
-        protected override async ValueTask ExecuteAsync(CancellationToken token)
+        protected override async Task ExecuteAsync(CancellationToken token)
         {
             await _bookHub.LoadAsync(_args, token);
         }
@@ -101,14 +101,12 @@ namespace NeeView
             this.CanBeCanceled = false;
         }
 
-        protected override async ValueTask ExecuteAsync(CancellationToken token)
+        protected override async Task ExecuteAsync(CancellationToken token)
         {
             _bookHub.Unload(_args);
 
             // ブックを閉じたときの移動履歴を表示するために null を履歴に登録
             BookHubHistory.Current.Add(_args.Sender, null);
-
-            await Task.CompletedTask;
         }
     }
 

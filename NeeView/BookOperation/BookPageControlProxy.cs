@@ -195,9 +195,11 @@ namespace NeeView
             _source?.CopyToClipboard(parameter);
         }
 
-        public ValueTask DeleteFileAsync()
+        public async Task DeleteFileAsync()
         {
-            return _source?.DeleteFileAsync() ?? ValueTask.CompletedTask;
+            if (_source is null) return;
+
+            await _source.DeleteFileAsync();
         }
 
         public void Export(ExportImageCommandParameter parameter)
@@ -250,14 +252,18 @@ namespace NeeView
             return _source?.CanDeleteFile(pages) ?? false;
         }
 
-        public ValueTask DeleteFileAsync(List<Page> pages)
+        public async Task DeleteFileAsync(List<Page> pages)
         {
-            return _source?.DeleteFileAsync(pages) ?? ValueTask.CompletedTask;
+            if (_source is null) return;
+
+            await _source.DeleteFileAsync(pages);
         }
 
-        public ValueTask RemovePagesAsync(List<Page> pages)
+        public async Task RemovePagesAsync(List<Page> pages)
         {
-            return _source?.RemovePagesAsync(pages) ?? ValueTask.CompletedTask;
+            if (_source is null) return;
+
+            await _source.RemovePagesAsync(pages);
         }
 
         #endregion IBookPageActionControl

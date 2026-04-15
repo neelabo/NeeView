@@ -59,7 +59,7 @@ namespace NeeView
             set { SetProperty(ref _isReady, value); }
         }
 
-        private async ValueTask InitializeAsync()
+        private async Task InitializeAsync()
         {
             IsDelayCreation = true;
 

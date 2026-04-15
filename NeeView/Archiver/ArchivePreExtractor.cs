@@ -132,7 +132,7 @@ namespace NeeView
         /// <returns>事前展開が実行され完了すれば true, 実行されなければ false</returns>
         /// <exception cref="ObjectDisposedException"></exception>
         /// <exception cref="PreExtractException">スリープ状態です</exception>
-        private async ValueTask<bool> PreExtractAsync(CancellationToken token)
+        private async Task<bool> PreExtractAsync(CancellationToken token)
         {
             if (_disposedValue) throw new ObjectDisposedException(GetType().FullName);
 
@@ -144,7 +144,10 @@ namespace NeeView
             lock (_lock)
             {
                 if (sleepToken.IsCancellationRequested) throw new PreExtractException("PreExtractor is asleep");
-                if (!State.IsReady()) return false;
+                if (!State.IsReady())
+                {
+                    return false;
+                }
                 SetState(ArchivePreExtractState.Extracting, sleepToken);
             }
 
@@ -229,8 +232,15 @@ namespace NeeView
         /// <returns></returns>
         public async ValueTask WaitPreExtractAsync(ArchiveEntry entry, CancellationToken token)
         {
-            if (!CanPreExtract()) return;
-            if (entry.Data is not null) return;
+            if (!CanPreExtract())
+            {
+                return;
+            }
+
+            if (entry.Data is not null)
+            {
+                return;
+            }
 
             // キャンセル状態を初期状態に戻す
             ResetState();

@@ -21,7 +21,7 @@ namespace NeeView
         public override bool IsBook => Config.Current.Archive.Media.IsEnabled && ArchiveEntry.Archive is not MediaArchive;
 
 
-        protected override async ValueTask<PictureInfo?> LoadPictureInfoCoreAsync(CancellationToken token)
+        protected override async Task<PictureInfo?> LoadPictureInfoCoreAsync(CancellationToken token)
         {
             NVDebug.AssertMTA();
             token.ThrowIfCancellationRequested();
@@ -29,12 +29,11 @@ namespace NeeView
             // ArchiveFileの場合はTempFile化
             var fileProxy = await ArchiveEntry.GetFileProxyAsync(false, token);
             var mediaInfo = CreateMediaInfo(fileProxy.Path); // TODO: async化
-            await Task.CompletedTask;
             var pictureInfo = mediaInfo.PictureInfo;
             return pictureInfo;
         }
 
-        protected override async ValueTask<PageSource> LoadSourceAsync(CancellationToken token)
+        protected override async Task<PageSource> LoadSourceAsync(CancellationToken token)
         {
             NVDebug.AssertMTA();
 
@@ -44,7 +43,6 @@ namespace NeeView
                 var fileProxy = await ArchiveEntry.GetFileProxyAsync(false, token);
                 var mediaInfo = CreateMediaInfo(fileProxy.Path); // TODO: async化
                 var pictureInfo = mediaInfo.PictureInfo;
-                await Task.CompletedTask;
                 return new PageSource(new MediaPageData(fileProxy.Path, mediaInfo.AudioInfo), null, pictureInfo);
             }
             catch (OperationCanceledException)

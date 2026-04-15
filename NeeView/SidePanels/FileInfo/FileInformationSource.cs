@@ -221,9 +221,9 @@ namespace NeeView
             return ((IRenameable)Page).CanRename();
         }
 
-        public ValueTask<bool> RenameAsync(string name)
+        public async Task<bool> RenameAsync(string name)
         {
-            return ((IRenameable)Page).RenameAsync(name);
+            return await ((IRenameable)Page).RenameAsync(name);
         }
 
         #endregion IRenameable

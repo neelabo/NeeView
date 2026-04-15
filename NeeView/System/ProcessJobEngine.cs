@@ -24,18 +24,18 @@ namespace NeeView
         {
             return AddJob(InnerJob);
 
-            async ValueTask InnerJob(IProgress<ProgressContext>? progress, CancellationToken token)
+            async Task InnerJob(IProgress<ProgressContext>? progress, CancellationToken token)
             {
                 progress?.Report(new ProgressContext(name));
                 job.Invoke();
             }
         }
 
-        public JobOperation<int> AddJob(string name, Func<CancellationToken, ValueTask> job)
+        public JobOperation<int> AddJob(string name, Func<CancellationToken, Task> job)
         {
             return AddJob(InnerJob);
 
-            async ValueTask InnerJob(IProgress<ProgressContext>? progress, CancellationToken token)
+            async Task InnerJob(IProgress<ProgressContext>? progress, CancellationToken token)
             {
                 progress?.Report(new ProgressContext(name));
                 await job.Invoke(token);

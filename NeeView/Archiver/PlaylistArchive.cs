@@ -41,7 +41,7 @@ namespace NeeView
         }
 
         // リスト取得
-        protected override async ValueTask<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token)
+        protected override async Task<List<ArchiveEntry>> GetEntriesInnerAsync(bool decrypt, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -71,7 +71,7 @@ namespace NeeView
             return list;
         }
 
-        private async ValueTask<PlaylistArchiveEntry> CreateEntryAsync(PlaylistSourceItem item, int id, CancellationToken token)
+        private async Task<PlaylistArchiveEntry> CreateEntryAsync(PlaylistSourceItem item, int id, CancellationToken token)
         {
             var targetPath = item.Path;
 
@@ -102,7 +102,7 @@ namespace NeeView
         }
 
         // ストリームを開く
-        protected override async ValueTask<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
+        protected override async Task<Stream> OpenStreamInnerAsync(ArchiveEntry entry, bool decrypt, CancellationToken token)
         {
             Debug.Assert(entry.Archive == this);
             if (entry is not PlaylistArchiveEntry e) throw new InvalidCastException();
@@ -110,7 +110,7 @@ namespace NeeView
         }
 
         // ファイル出力
-        protected override async ValueTask ExtractToFileInnerAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
+        protected override async Task ExtractToFileInnerAsync(ArchiveEntry entry, string exportFileName, bool isOverwrite, CancellationToken token)
         {
             Debug.Assert(entry.Archive == this);
             if (entry is not PlaylistArchiveEntry e) throw new InvalidCastException();
@@ -133,7 +133,7 @@ namespace NeeView
         /// delete entries
         /// </summary>
         /// <exception cref="ArgumentException">Not registered with this archiver.</exception>
-        public override async ValueTask<DeleteResult> DeleteAsync(List<ArchiveEntry> entries)
+        public override async Task<DeleteResult> DeleteAsync(List<ArchiveEntry> entries)
         {
             if (entries.Any(e => e.Archive != this)) throw new ArgumentException("There are elements not registered with this archiver.", nameof(entries));
 
@@ -160,7 +160,7 @@ namespace NeeView
         /// <summary>
         /// rename
         /// </summary>
-        public override async ValueTask<bool> RenameAsync(ArchiveEntry entry, string name)
+        public override async Task<bool> RenameAsync(ArchiveEntry entry, string name)
         {
             if (entry.Archive != this) throw new ArgumentException("There are elements not registered with this archiver.", nameof(entry));
             if (!IsFileSystem) return false;

@@ -42,7 +42,7 @@ namespace NeeView
         public override FolderOrderClass FolderOrderClass => FolderOrderClass.Normal;
 
 
-        public override async ValueTask InitializeItemsAsync(CancellationToken token)
+        public override async Task InitializeItemsAsync(CancellationToken token)
         {
             await Task.Run(() => InitializeItems(null, token), token);
         }

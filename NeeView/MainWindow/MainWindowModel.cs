@@ -220,7 +220,7 @@ namespace NeeView
         }
 
         // 起動時処理
-        public async ValueTask LoadedAsync()
+        public async Task LoadedAsync()
         {
             // サイドパネル復元
             CustomLayoutPanelManager.Current.Restore();

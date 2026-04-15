@@ -82,7 +82,7 @@ namespace NeeView
         public UIElement StoredFocusTarget { get; set; }
 
 
-        public async ValueTask<RenameControlResult> ShowAsync()
+        public async Task<RenameControlResult> ShowAsync()
         {
             var tcs = new TaskCompletionSource<RenameControlResult>();
             Closed += RenameControl_Closed;
@@ -97,7 +97,7 @@ namespace NeeView
             }
         }
 
-        public static async ValueTask<RenameControlResult> ShowAsync(RenameControlSource source)
+        public static async Task<RenameControlResult> ShowAsync(RenameControlSource source)
         {
             var renameControl = new RenameControl(source);
             return await renameControl.ShowAsync();
@@ -117,7 +117,7 @@ namespace NeeView
         /// <param name="isSuccess">名前変更成功</param>
         /// <param name="isRestoreFocus">元のコントロールにフォーカスを戻す要求</param>
         /// <param name="moveRename">次の項目に名前変更を要求</param>
-        public async ValueTask CloseAsync(bool isSuccess, bool isRestoreFocus = true, int moveRename = 0)
+        public async Task CloseAsync(bool isSuccess, bool isRestoreFocus = true, int moveRename = 0)
         {
             Debug.Assert(-1 <= moveRename && moveRename <= 1);
 
@@ -148,9 +148,9 @@ namespace NeeView
             Closed?.Invoke(this, args);
         }
 
-        protected virtual async ValueTask<bool> OnRenameAsync(string oldValue, string newValue)
+        protected virtual Task<bool> OnRenameAsync(string oldValue, string newValue)
         {
-            return await Task.FromResult(true);
+            return Task.FromResult(true);
         }
 
         private async void RenameTextBox_LostFocus(object? sender, RoutedEventArgs e)

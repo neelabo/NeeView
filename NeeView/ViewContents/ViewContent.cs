@@ -237,7 +237,7 @@ namespace NeeView
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async ValueTask LoadViewSourceAsync(CancellationToken token)
+        public async Task LoadViewSourceAsync(CancellationToken token)
         {
             if (_disposedValue) return;
 
@@ -252,7 +252,7 @@ namespace NeeView
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async ValueTask WaitLoadAsync(CancellationToken token)
+        public async Task WaitLoadAsync(CancellationToken token)
         {
             if (_disposedValue) return;
 

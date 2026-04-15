@@ -21,7 +21,7 @@ namespace NeeView
             _imageType = imageType;
         }
 
-        protected override async ValueTask<PictureInfo?> LoadPictureInfoCoreAsync(CancellationToken token)
+        protected override async Task<PictureInfo?> LoadPictureInfoCoreAsync(CancellationToken token)
         {
             NVDebug.AssertMTA();
             token.ThrowIfCancellationRequested();
@@ -31,11 +31,11 @@ namespace NeeView
             {
                 var bitmapInfo = BitmapInfo.Create(stream); // TODO: async
                 var pictureInfo = PictureInfo.Create(bitmapInfo, "AnimatedImage");
-                return await Task.FromResult(pictureInfo);
+                return pictureInfo;
             }
         }
 
-        protected override async ValueTask<PageSource> LoadSourceAsync(CancellationToken token)
+        protected override async Task<PageSource> LoadSourceAsync(CancellationToken token)
         {
             NVDebug.AssertMTA();
 

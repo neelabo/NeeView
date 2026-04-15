@@ -197,7 +197,7 @@ namespace NeeView
             _actionControl.CopyToClipboard(parameter);
         }
 
-        public ValueTask DeleteFileAsync()
+        public Task DeleteFileAsync()
         {
             return _actionControl.DeleteFileAsync();
         }
@@ -252,12 +252,12 @@ namespace NeeView
             return _actionControl.CanDeleteFile(pages);
         }
 
-        public ValueTask DeleteFileAsync(List<Page> pages)
+        public Task DeleteFileAsync(List<Page> pages)
         {
             return _actionControl.DeleteFileAsync(pages);
         }
 
-        public ValueTask RemovePagesAsync(List<Page> pages)
+        public Task RemovePagesAsync(List<Page> pages)
         {
             return _actionControl.RemovePagesAsync(pages);
         }

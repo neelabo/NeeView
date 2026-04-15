@@ -322,7 +322,7 @@ namespace NeeView
         }
 
         // NOTE: Historyから呼ばれる
-        public async ValueTask MoveToHistoryAsync(QueryPath path)
+        public async Task MoveToHistoryAsync(QueryPath path)
         {
             if (_disposedValue) return;
 

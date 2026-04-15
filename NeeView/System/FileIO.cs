@@ -296,7 +296,7 @@ namespace NeeView
         /// <param name="token"></param>
         /// <returns></returns>
         /// <exception cref="TimeoutException"></exception>
-        public static async ValueTask WaitFileReadableAsync(FileInfo file, TimeSpan timeout, CancellationToken token)
+        public static async Task WaitFileReadableAsync(FileInfo file, TimeSpan timeout, CancellationToken token)
         {
             var time = new TimeSpan();
             var interval = TimeSpan.FromMilliseconds(500);
@@ -332,12 +332,12 @@ namespace NeeView
         /// </remarks>
         /// <param name="path"></param>
         /// <returns></returns>
-        private static async ValueTask<CloseBookResult> CloseBookAsync(string path)
+        private static async Task<CloseBookResult> CloseBookAsync(string path)
         {
             return await CloseBookAsync([path]);
         }
 
-        private static async ValueTask<CloseBookResult> CloseBookAsync(IEnumerable<string> paths)
+        private static async Task<CloseBookResult> CloseBookAsync(IEnumerable<string> paths)
         {
             // 開いている本であるならば閉じる
             var result = await BookHubTools.CloseBookAsync(paths);
@@ -585,7 +585,7 @@ namespace NeeView
         /// <param name="isOverwrite"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static async ValueTask CopyFileAsync(string sourceFileName, string destFileName, bool isOverwrite, bool createDirectory, CancellationToken token)
+        public static async Task CopyFileAsync(string sourceFileName, string destFileName, bool isOverwrite, bool createDirectory, CancellationToken token)
         {
             await Task.Run(() =>
             {
@@ -602,12 +602,12 @@ namespace NeeView
         /// <summary>
         /// ファイル、ディレクトリーを指定のフォルダーにコピーする
         /// </summary>
-        public static async ValueTask SHCopyToFolderAsync(IEnumerable<string> paths, string toDirectory, CancellationToken token)
+        public static async Task SHCopyToFolderAsync(IEnumerable<string> paths, string toDirectory, CancellationToken token)
         {
             await Task.Run(() => SHCopyToFolder(paths, toDirectory), token);
         }
 
-        public static async ValueTask SHCopyAsync(string source, string destination, CancellationToken token)
+        public static async Task SHCopyAsync(string source, string destination, CancellationToken token)
         {
             if (LoosePath.IsDirectoryEnd(destination) || DirectoryExists(destination))
             {
@@ -638,7 +638,7 @@ namespace NeeView
         /// <summary>
         /// ファイル、ディレクトリーを指定のフォルダーに移動する
         /// </summary>
-        public static async ValueTask SHMoveToFolderAsync(IEnumerable<string> paths, string toDirectory, CancellationToken token)
+        public static async Task SHMoveToFolderAsync(IEnumerable<string> paths, string toDirectory, CancellationToken token)
         {
             await CloseBookAsync(paths);
 
@@ -647,7 +647,7 @@ namespace NeeView
             ValidateBookPages(paths);
         }
 
-        public static async ValueTask SHMoveAsync(string source, string destination, CancellationToken token)
+        public static async Task SHMoveAsync(string source, string destination, CancellationToken token)
         {
             await CloseBookAsync([source]);
 
@@ -702,7 +702,7 @@ namespace NeeView
         /// <summary>
         /// ファイル削除
         /// </summary>
-        public static async ValueTask DeleteAsync(string path, CancellationToken token)
+        public static async Task DeleteAsync(string path, CancellationToken token)
         {
             await DeleteAsync([path], token);
         }
@@ -710,7 +710,7 @@ namespace NeeView
         /// <summary>
         /// ファイル削除
         /// </summary>
-        public static async ValueTask DeleteAsync(IEnumerable<string> paths, CancellationToken token)
+        public static async Task DeleteAsync(IEnumerable<string> paths, CancellationToken token)
         {
             await CloseBookAsync(paths);
 
@@ -899,7 +899,7 @@ namespace NeeView
         /// <summary>
         /// ファイル名前変更。現在ブックにも反映させる
         /// </summary>
-        public static async ValueTask<bool> RenameAsync(string src, string dst, bool restoreBook)
+        public static async Task<bool> RenameAsync(string src, string dst, bool restoreBook)
         {
             var closeBookResult = await CloseBookAsync(src);
 

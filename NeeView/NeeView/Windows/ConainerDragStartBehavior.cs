@@ -23,7 +23,7 @@ namespace NeeView.Windows
     /// ドラッグ開始処理。
     /// データ作成に時間がかかる場合があるため非同期化した。
     /// </summary>
-    public delegate ValueTask DragBeginAsync(object sender, DragStartEventArgs args, CancellationToken token);
+    public delegate Task DragBeginAsync(object sender, DragStartEventArgs args, CancellationToken token);
 
     /// <summary>
     /// TreeViewやListBoxに特化した<see cref="DragStartBehavior"/>
@@ -238,7 +238,7 @@ namespace NeeView.Windows
         /// <summary>
         /// ドラッグ開始処理
         /// </summary>
-        private async ValueTask BeginDragAsync(object sender, MouseEventArgs e, CancellationToken token)
+        private async Task BeginDragAsync(object sender, MouseEventArgs e, CancellationToken token)
         {
             if (_dragItem is null)
             {

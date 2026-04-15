@@ -222,7 +222,7 @@ namespace NeeView
         }
 
         // 無効な履歴削除
-        public async ValueTask<int> RemoveUnlinkedAsync(CancellationToken token)
+        public async Task<int> RemoveUnlinkedAsync(CancellationToken token)
         {
             LocalDebug.WriteLine($"RemoveUnlinked...");
 

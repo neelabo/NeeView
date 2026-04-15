@@ -149,16 +149,16 @@ namespace NeeView.Setting
         {
             var node = _vm.MenuTree?.Root;
             if (node is null) return;
-            await NewFoderCore(node);
+            await NewFolderCore(node);
         }
 
         private async void NewFolder_Exec(object? sender, ExecutedRoutedEventArgs e)
         {
             if (this.ContextMenuTreeView.SelectedItem is not TreeListNode<MenuElement> node) return;
-            await NewFoderCore(node);
+            await NewFolderCore(node);
         }
 
-        private async ValueTask NewFoderCore(TreeListNode<MenuElement> node)
+        private async Task NewFolderCore(TreeListNode<MenuElement> node)
         {
             if (node.Value.MenuElementType == MenuElementType.None && node.Parent is not null)
             {
@@ -219,7 +219,7 @@ namespace NeeView.Setting
         }
 
 
-        private async ValueTask RenameAsync(TreeListNode<MenuElement> item)
+        private async Task RenameAsync(TreeListNode<MenuElement> item)
         {
             if (!item.CanRename()) return;
 
@@ -236,7 +236,7 @@ namespace NeeView.Setting
 
         #region Drag and Drop
 
-        public async ValueTask DragStartBehavior_DragBeginAsync(object? sender, DragStartEventArgs e, CancellationToken token)
+        public async Task DragStartBehavior_DragBeginAsync(object? sender, DragStartEventArgs e, CancellationToken token)
         {
             if (e.DragItem is not TreeViewItem data)
             {
@@ -255,8 +255,6 @@ namespace NeeView.Setting
                     e.Cancel = true;
                     break;
             }
-
-            await ValueTask.CompletedTask;
         }
 
         private void TreeView_PreviewDragEnter(object? sender, DragEventArgs e)

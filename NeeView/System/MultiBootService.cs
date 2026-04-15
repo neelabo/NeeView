@@ -83,7 +83,7 @@ namespace NeeView
         /// <summary>
         /// サーバーにパスを送る
         /// </summary>
-        public async ValueTask RemoteLoadAsAsync(List<string> files)
+        public async Task RemoteLoadAsAsync(List<string> files)
         {
             if (_serverProcess is null) return;
 

@@ -332,9 +332,9 @@ namespace NeeView
             return false;
         }
 
-        public virtual async ValueTask<bool> RenameAsync(string name)
+        public virtual Task<bool> RenameAsync(string name)
         {
-            return await Task.FromResult(false);
+            return Task.FromResult(false);
         }
 
         public bool ContainsRoot(FolderTreeNodeBase root)

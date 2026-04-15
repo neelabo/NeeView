@@ -11,7 +11,7 @@ namespace NeeLaboratory.Threading.Jobs
     public interface IJobOperation
     {
         JobState State { get; }
-        ValueTask InvokeAsync(CancellationToken token);
+        Task InvokeAsync(CancellationToken token);
     }
 
 
@@ -21,11 +21,11 @@ namespace NeeLaboratory.Threading.Jobs
     /// <typeparam name="T">Return type of the job</typeparam>
     public class JobOperation<T> : BindableBase, IJobOperation
     {
-        private readonly Func<CancellationToken, ValueTask<T>> _job;
+        private readonly Func<CancellationToken, Task<T>> _job;
         private JobState _state;
 
 
-        public JobOperation(Func<CancellationToken, ValueTask<T>> job)
+        public JobOperation(Func<CancellationToken, Task<T>> job)
         {
             _job = job;
         }
@@ -40,7 +40,7 @@ namespace NeeLaboratory.Threading.Jobs
         public T? Result { get; private set; }
 
 
-        public async ValueTask InvokeAsync(CancellationToken token)
+        public async Task InvokeAsync(CancellationToken token)
         {
             try
             {
@@ -61,7 +61,7 @@ namespace NeeLaboratory.Threading.Jobs
             }
         }
 
-        public async ValueTask<T?> WaitAsync(CancellationToken token)
+        public async Task<T?> WaitAsync(CancellationToken token)
         {
             await this.WaitPropertyAsync(nameof(State), e => e.State.IsFinished(), token);
             return Result;

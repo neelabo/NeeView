@@ -31,7 +31,7 @@ namespace NeeView
             return new Handler(_mutex);
         }
 
-        public async ValueTask<IDisposable> LockAsync(int timeout)
+        public async Task<IDisposable> LockAsync(int timeout)
         {
             await _mutex.AsTask().WaitAsync(TimeSpan.FromMilliseconds(timeout));
             return new Handler(_mutex);

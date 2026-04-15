@@ -20,7 +20,7 @@ namespace NeeView
         /// サイズ取得前のサイズ
         /// </summary>
         /// <reamerks>
-        /// 直前の選択ページのサイズが保持される。
+        /// 直前の選択ページのサイズが保持される。Task
         /// サイズ確定前のLoadingページのサイズになる。
         /// </reamerks>
         public static Size UndefinedSize { get; set; } = DefaultSize;
@@ -158,7 +158,7 @@ namespace NeeView
             };
         }
 
-        public async ValueTask<PageDataSource> LoadAsync(CancellationToken token)
+        public async Task<PageDataSource> LoadAsync(CancellationToken token)
         {
             if (_disposedValue) throw new ObjectDisposedException(this.GetType().FullName);
 
@@ -195,13 +195,19 @@ namespace NeeView
             }
         }
 
-        protected abstract ValueTask<PageSource> LoadSourceAsync(CancellationToken token);
+        protected abstract Task<PageSource> LoadSourceAsync(CancellationToken token);
 
-        public async ValueTask<PictureInfo?> LoadPictureInfoAsync(CancellationToken token)
+        public async Task<PictureInfo?> LoadPictureInfoAsync(CancellationToken token)
         {
-            if (PictureInfo is not null) return PictureInfo;
+            if (PictureInfo is not null)
+            {
+                return PictureInfo;
+            }
 
-            if (_disposedValue) return new PictureInfo(DefaultSize);
+            if (_disposedValue)
+            {
+                return new PictureInfo(DefaultSize);
+            }
 
             using (await _asyncLock.LockAsync(token))
             {
@@ -214,9 +220,9 @@ namespace NeeView
             }
         }
 
-        protected virtual async ValueTask<PictureInfo?> LoadPictureInfoCoreAsync(CancellationToken token)
+        protected virtual Task<PictureInfo?> LoadPictureInfoCoreAsync(CancellationToken token)
         {
-            return await Task.FromResult<PictureInfo?>(null);
+            return Task.FromResult<PictureInfo?>(null);
         }
 
         public virtual void Unload()

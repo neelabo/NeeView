@@ -11,9 +11,9 @@ namespace NeeView
         {
         }
 
-        public async ValueTask<DataSource> LoadCoreAsync(PageDataSource data, Size size, CancellationToken token)
+        public Task<DataSource> LoadCoreAsync(PageDataSource data, Size size, CancellationToken token)
         {
-            return await Task.FromResult(new DataSource(new EmptyViewData(), 0, null));
+            return Task.FromResult(new DataSource(new EmptyViewData(), 0, null));
         }
     }
 

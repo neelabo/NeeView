@@ -17,20 +17,19 @@ namespace NeeView
         {
         }
 
-        protected override async ValueTask<PictureInfo?> LoadPictureInfoCoreAsync(CancellationToken token)
+        protected override async Task<PictureInfo?> LoadPictureInfoCoreAsync(CancellationToken token)
         {
             NVDebug.AssertMTA();
             token.ThrowIfCancellationRequested();
 
             var drawing = await LoadDrawingImageAsync(token);
             var pictureInfo = CreatePictureInfo(drawing, token);
-            return await Task.FromResult(pictureInfo);
+            return pictureInfo;
         }
 
-        protected override async ValueTask<PageSource> LoadSourceAsync(CancellationToken token)
+        protected override async Task<PageSource> LoadSourceAsync(CancellationToken token)
         {
             NVDebug.AssertMTA();
-            await Task.CompletedTask;
 
             try
             {
@@ -49,7 +48,7 @@ namespace NeeView
             }
         }
 
-        private async ValueTask<DrawingGroup> LoadDrawingImageAsync(CancellationToken token)
+        private async Task<DrawingGroup> LoadDrawingImageAsync(CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 

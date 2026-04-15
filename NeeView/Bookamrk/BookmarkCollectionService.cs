@@ -286,7 +286,7 @@ namespace NeeView
         /// 無効なブックマークを削除
         /// </summary>
         /// <returns></returns>
-        public static async ValueTask DeleteInvalidBookmark(CancellationToken token)
+        public static async Task DeleteInvalidBookmark(CancellationToken token)
         {
             // Job としてブックマーク修復を実行
             var jobOperation = ProcessJobEngine.Current.AddJob(Resolve);
@@ -309,7 +309,7 @@ namespace NeeView
                 dialog.ShowDialog();
             }
 
-            static async ValueTask<int> Resolve(IProgress<ProgressContext>? progress, CancellationToken token)
+            static async Task<int> Resolve(IProgress<ProgressContext>? progress, CancellationToken token)
             {
                 // 直前の命令はキャンセル
                 _removeUnlinkedCancellationTokenSource?.Cancel();

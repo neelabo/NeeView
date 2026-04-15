@@ -367,7 +367,7 @@ namespace NeeView
             return SelectedItem != null && SelectedItem != DefaultPlaylist;
         }
 
-        public async ValueTask DeleteAsync()
+        public async Task DeleteAsync()
         {
             if (!CanDelete()) return;
             if (!FileIO.FileExists(SelectedItem)) return;
@@ -499,7 +499,7 @@ namespace NeeView
 
         #region Playlist Controls
 
-        public async ValueTask DeleteInvalidItemsAsync()
+        public async Task DeleteInvalidItemsAsync()
         {
             await PlaylistService.DeleteInvalidItemsAsync(_playlist, CancellationToken.None);
         }

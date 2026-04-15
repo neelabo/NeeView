@@ -164,7 +164,7 @@ namespace NeeView
         /// 検索ボックスにフォーカスをあわせる。
         /// </summary>
         /// <returns></returns>
-        private async ValueTask FocusSearchBoxAsync()
+        private async Task FocusSearchBoxAsync()
         {
             // 表示が間に合わない場合があるので繰り返しトライする
             for (int i = 0; i < 10; i++)

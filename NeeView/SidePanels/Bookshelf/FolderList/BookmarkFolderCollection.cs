@@ -19,7 +19,7 @@ namespace NeeView
         {
         }
 
-        public override async ValueTask InitializeItemsAsync(CancellationToken token)
+        public override async Task InitializeItemsAsync(CancellationToken token)
         {
             await Task.Run(() => InitializeItems(token), token);
         }
@@ -353,7 +353,7 @@ namespace NeeView
             return _rename.CanRename();
         }
 
-        public override async ValueTask<bool> RenameAsync(string name)
+        public override async Task<bool> RenameAsync(string name)
         {
             return await _rename.RenameAsync(name);
         }
@@ -385,7 +385,7 @@ namespace NeeView
             return _rename.CanRename();
         }
 
-        public override async ValueTask<bool> RenameAsync(string name)
+        public override async Task<bool> RenameAsync(string name)
         {
             return await _rename.RenameAsync(name);
         }
@@ -426,7 +426,7 @@ namespace NeeView
             return false;
         }
 
-        public async ValueTask<bool> RenameAsync(string name)
+        public async Task<bool> RenameAsync(string name)
         {
             if (CanRename())
             {
@@ -434,7 +434,6 @@ namespace NeeView
             }
             else
             {
-                await ValueTask.CompletedTask;
                 return false;
             }
         }
