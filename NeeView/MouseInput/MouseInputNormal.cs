@@ -310,41 +310,22 @@ namespace NeeView
 
         public override void OnUpdateSelectedFrame(FrameChangeType changeType)
         {
+            if (!Config.Current.Mouse.IsHoverScroll) return;
+
             if (AppState.Instance.IsProcessingBook) return;
 
             _hoverTransformControl?.UpdateSelected();
 
-            if (_hoverTransformControl is null) return;
-
             // NOTE: ホバースクロール即時反映。タイミングによってはその後に座標補正されてしまうため、実行タイミングを遅らせている
-            AppDispatcher.BeginInvoke(() => HoverScrollIfEnabled(_context.Sender, System.Environment.TickCount, DragActionUpdateOptions.Immediate));
+            AppDispatcher.BeginInvoke(() => HoverScrollIfEnabled(Mouse.GetPosition(_context.Sender), System.Environment.TickCount, DragActionUpdateOptions.Immediate));
         }
-
 
         /// <summary>
         /// ホバースクロール
         /// </summary>
         private void HoverScrollIfEnabled(object? sender, MouseEventArgs e)
         {
-            HoverScrollIfEnabled(_context.Sender, e.Timestamp, DragActionUpdateOptions.None);
-        }
-
-        private void HoverScrollIfEnabled(IInputElement element, int timestamp, DragActionUpdateOptions options)
-        {
-            if (_hoverTransformControl is null) return;
-
-            Point pos;
-            try
-            {
-                pos = Mouse.GetPosition(element);
-            }
-            catch (Win32Exception)
-            {
-                // NOTE: _context.Sender がビジュアルツリーから外れている場合に Mouse.GetPosition が Win32Exception「ウィンドウハンドルが無効です」を投げる。この場合は処理をスキップする
-                return;
-            }
-
-            HoverScrollIfEnabled(pos, timestamp, options);
+            HoverScrollIfEnabled(e.GetPosition(_context.Sender), e.Timestamp, DragActionUpdateOptions.None);
         }
 
         public void HoverScrollIfEnabled(Point point, int timestamp, DragActionUpdateOptions options)
