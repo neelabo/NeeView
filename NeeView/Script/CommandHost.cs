@@ -48,6 +48,7 @@ namespace NeeView
             DestinationFolderCollection = new DestinationFolderCollectionAccessor();
             SusiePluginCollection = new SusiePluginCollectionAccessor();
             MainView = new MainViewPanelAccessor();
+            Debug = new DebugAccessor();
         }
 
 
@@ -117,6 +118,10 @@ namespace NeeView
             get { return new WindowAccessor(new MainWindowProxy()); }
         }
 
+#if DEBUG
+        [WordNodeMember(IsEnabled = false)]
+#endif
+        public DebugAccessor Debug { get; }
 
         [WordNodeMember]
         [Obsolete("no used"), Alternative(nameof(Playlist), 39)] // ver.39

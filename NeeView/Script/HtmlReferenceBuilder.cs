@@ -187,6 +187,13 @@ namespace NeeView
             var className = name ?? type.Name;
             var title = name ?? $"[Class] {type.Name}";
 
+            // 明示的にドキュメント化を否定している場合は出力しない
+            var docAttribute = type.GetCustomAttribute<DocumentableAttribute>();
+            if (docAttribute is not null && !docAttribute.IsEnabled)
+            {
+                return this;
+            }
+
             builder.Append(CultureInfo.InvariantCulture, $"<h3 id=\"{type.Name}\">{title}</h3>").AppendLine();
 
             var properties = type.GetProperties().Where(e => IsDocumentable(e)).OrderBy(e => e.Name);

@@ -8,6 +8,7 @@ using NeeView.Windows;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -708,6 +709,35 @@ namespace NeeView
         }
 
         #endregion PageFrameBoxContext
+
+
+        #region Development
+
+        public async Task ScrollThroughAllPages(CancellationToken token)
+        {
+            Debug.Assert(_box != null, "Box is null");
+
+            const int MaxTurn = 5;
+            var book = _box.Book;
+            var box = _box.Box;
+
+            for (int turn = 0; turn < MaxTurn; turn++)
+            {
+                box.MoveTo(new PagePosition(0, 0), LinkedListDirection.Next);
+                await WaitStableAsync(box, token);
+
+                var sw = Stopwatch.StartNew();
+                while (!box.SelectedPages.Contains(book.Pages.Last()))
+                {
+                    box.MoveToNextFrame(LinkedListDirection.Next);
+                    await WaitStableAsync(box, token);
+                }
+                sw.Stop();
+                Trace.WriteLine($"[Dev] ScrollThroughAllPages: #{turn}: {sw.ElapsedMilliseconds:#,#} ms");
+            }
+        }
+
+        #endregion
     }
 
 }
