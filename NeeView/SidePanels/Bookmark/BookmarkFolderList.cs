@@ -36,6 +36,8 @@ namespace NeeView
         }
 
 
+        public override QueryPath RootPath => new QueryPath(QueryScheme.Bookmark);
+
         public override bool IsSyncBookshelfEnabled
         {
             get => Config.Current.Bookmark.IsSyncBookshelfEnabled;

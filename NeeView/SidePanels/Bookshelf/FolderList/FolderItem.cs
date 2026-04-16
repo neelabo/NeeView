@@ -47,12 +47,29 @@ namespace NeeView
     public enum FolderItemType
     {
         Empty,
+        ParentDirectory,
         Directory,
         DirectoryShortcut,
         Playlist,
         PlaylistShortcut,
         File,
         FileShortcut,
+    }
+
+    public static class FolderItemTypeExtensions
+    {
+        public static int ConstOrder(this FolderItemType type)
+        {
+            return type switch
+            {
+                FolderItemType.Empty
+                    => 0,
+                FolderItemType.ParentDirectory
+                    => 1,
+                _
+                    => 2,
+            };
+        }
     }
 
     /// <summary>
@@ -212,23 +229,34 @@ namespace NeeView
         {
             get
             {
-                var s = new StringBuilder();
-                if (TargetPlace is not null)
+                if (Type == FolderItemType.Empty)
                 {
-                    s.AppendLine(TargetPlace);
+                    return null;
                 }
-                s.Append(Name);
-                if (LastWriteTime != default)
+                else if (Type == FolderItemType.ParentDirectory)
                 {
-                    s.AppendLine();
-                    s.Append(LastWriteTime.ToString());
+                    return TargetPath.SimplePath;
                 }
-                if (Length >= 0)
+                else
                 {
-                    s.AppendLine();
-                    s.Append($"{Length / 1024:N0} KB");
+                    var s = new StringBuilder();
+                    if (TargetPlace is not null)
+                    {
+                        s.AppendLine(TargetPlace);
+                    }
+                    s.Append(Name);
+                    if (LastWriteTime != default)
+                    {
+                        s.AppendLine();
+                        s.Append(LastWriteTime.ToString());
+                    }
+                    if (Length >= 0)
+                    {
+                        s.AppendLine();
+                        s.Append($"{Length / 1024:N0} KB");
+                    }
+                    return s.ToString();
                 }
-                return s.ToString();
             }
         }
 

@@ -34,7 +34,7 @@ namespace NeeView
 
             if (_node is not null)
             {
-                this.Items = new ObservableCollection<FolderItem>(_node.Select(e => CreateFolderItem(Place, e)));
+                SetItems(_node.Select(e => CreateFolderItem(Place, e)));
                 _node.CollectionChanged += Children_CollectionChanged;
             }
         }

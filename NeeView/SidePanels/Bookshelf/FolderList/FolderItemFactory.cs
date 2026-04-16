@@ -37,6 +37,26 @@ namespace NeeView
             };
         }
 
+        public FolderItem CreateFolderItemParent(QueryPath path)
+        {
+            var parent = path.GetParent();
+
+            var item = new ConstFolderItem(new ResourceThumbnail("ic_folder_up", MainWindow.Current), false)
+            {
+                Type = FolderItemType.ParentDirectory,
+                Place = _place,
+                Name = "..",
+                TargetPath = parent,
+                CreationTime = default,
+                LastWriteTime = default,
+                Length = -1,
+                Attributes = FolderItemAttribute.Directory | FolderItemAttribute.System,
+                IsReady = true
+            };
+
+            return item;
+        }
+
 
         /// <summary>
         /// クエリからFolderItemを作成
@@ -109,6 +129,7 @@ namespace NeeView
                 Name = e.Name,
                 TargetPath = new QueryPath(e.Name),
                 DisplayName = string.Format(CultureInfo.InvariantCulture, "{0} ({1})", e.DriveType.ToDisplayString(), e.Name.TrimEnd('\\')),
+                Length = -1,
                 Attributes = FolderItemAttribute.Directory | FolderItemAttribute.Drive,
                 IsReady = DriveReadyMap.IsDriveReady(e.Name),
             };

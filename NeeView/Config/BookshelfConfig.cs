@@ -209,6 +209,7 @@ namespace NeeView
         /// <summary>
         /// 検索ボックスを表示
         /// </summary>
+        [PropertyMember]
         public bool IsVisibleSearchBox
         {
             get { return _isVisibleSearchBox; }

@@ -65,17 +65,12 @@ namespace NeeView
 
             var list = Sort(items, token);
 
-            if (!list.Any())
-            {
-                list.Add(_folderItemFactory.CreateFolderItemEmpty());
-            }
-
             foreach (var item in list)
             {
                 item.TargetPlace = item.TargetPath.GetParent().SimplePath;
             }
 
-            this.Items = new ObservableCollection<FolderItem>(list);
+            SetItems(list);
 
             if (_isWatchSearchResult)
             {

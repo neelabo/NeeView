@@ -2059,6 +2059,7 @@ SystemConfig.IsInputMethodEnabled.Remarks=*É aplicado a partir da próxima inic
 SystemConfig.IsNetworkEnabled=Permitir acesso à rede
 SystemConfig.IsNetworkEnabled.Remarks=Quando desativado, a confirmação de atualização de versão na caixa de diálogo "@VersionWindow.Title" é interrompida e uma caixa de diálogo de confirmação é exibida antes de conectar-se à Internet com um navegador da web.
 SystemConfig.IsOpenBookAtCurrentPlace=Faça da posição inicial da caixa de diálogo de seleção de arquivo em "@LoadAsCommand" o local do livro atualmente aberto
+SystemConfig.IsParentDirectoryVisible=
 SystemConfig.IsRemoveConfirmed=Mostrar caixa de diálogo de confirmação ao excluir arquivos
 SystemConfig.IsRemoveWantNukeWarning=Mostrar caixa de diálogo de confirmação ao excluir arquivos que não cabem na Lixeira
 SystemConfig.IsSettingBackup=Faça um backup do arquivo de configuração

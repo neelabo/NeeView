@@ -2051,6 +2051,7 @@ SystemConfig.IsInputMethodEnabled.Remarks=※ 다음 실행 시 적용됩니다.
 SystemConfig.IsNetworkEnabled=네트워크 연결 허용
 SystemConfig.IsNetworkEnabled.Remarks=이 항목을 끄면 [@VersionWindow.Title] 창에서 업데이트를 확인하지 않고 웹 브라우저로 인터넷에 접속하기 전에 확인 창을 표시합니다.
 SystemConfig.IsOpenBookAtCurrentPlace=[@LoadAsCommand] 파일 선택 창의 시작 경로를 현재 열린 책의 경로로 설정
+SystemConfig.IsParentDirectoryVisible=
 SystemConfig.IsRemoveConfirmed=파일 삭제 시 확인 창 표시
 SystemConfig.IsRemoveWantNukeWarning=휴지통 용량을 초과하는 크기의 파일 삭제 시 확인 창 표시
 SystemConfig.IsSettingBackup=설정 파일 백업 생성

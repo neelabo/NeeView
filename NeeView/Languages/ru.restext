@@ -2059,6 +2059,7 @@ SystemConfig.IsInputMethodEnabled.Remarks=* Применяется со след
 SystemConfig.IsNetworkEnabled=Разрешить доступ к сети
 SystemConfig.IsNetworkEnabled.Remarks=Когда выключено, проверка обновлений из диалога "@VersionWindow.Title" останавливается, и перед подключением к Интернету через веб-браузер отображается диалог подтверждения.
 SystemConfig.IsOpenBookAtCurrentPlace=Сделать начальной позицией диалога выбора файла в "@LoadAsCommand" местоположение текущей открытой книги
+SystemConfig.IsParentDirectoryVisible=
 SystemConfig.IsRemoveConfirmed=Показывать диалог подтверждения при удалении файлов
 SystemConfig.IsRemoveWantNukeWarning=Показывать диалог подтверждения при удалении файлов, которые не помещаются в Корзину
 SystemConfig.IsSettingBackup=Создавать резервную копию файла настроек

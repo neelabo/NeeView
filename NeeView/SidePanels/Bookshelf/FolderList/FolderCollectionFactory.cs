@@ -20,7 +20,7 @@ namespace NeeView
 
 
         // フォルダーコレクション作成
-        public async Task<FolderCollection> CreateFolderCollectionAsync(QueryPath path, bool isActive, bool includeSubdirectories, CancellationToken token)
+        public async Task<FolderCollection> CreateFolderCollectionAsync(QueryPath path, bool isActive, bool includeSubdirectories, bool allowParent, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -40,26 +40,26 @@ namespace NeeView
                 }
                 else
                 {
-                    return await CreateBookmarkFolderCollectionAsync(path, isActive, token);
+                    return await CreateBookmarkFolderCollectionAsync(path, isActive, allowParent, token);
                 }
             }
             else if (path.Scheme == QueryScheme.File)
             {
                 if (path.Search != null)
                 {
-                    return await CreateSearchFolderCollectionAsync(path, isActive, includeSubdirectories, token);
+                    return await CreateSearchFolderCollectionAsync(path, isActive, includeSubdirectories, allowParent, token);
                 }
                 else if (path.Path == null || FileIO.DirectoryExists(path.Path))
                 {
-                    return await CreateEntryFolderCollectionAsync(path, isActive, token);
+                    return await CreateEntryFolderCollectionAsync(path, isActive, allowParent, token);
                 }
                 else if (PlaylistArchive.IsSupportExtension(path.Path))
                 {
-                    return await CreatePlaylistFolderCollectionAsync(path, isActive, token);
+                    return await CreatePlaylistFolderCollectionAsync(path, isActive, allowParent, token);
                 }
                 else
                 {
-                    return await CreateArchiveFolderCollectionAsync(path, isActive, token);
+                    return await CreateArchiveFolderCollectionAsync(path, isActive, allowParent, token);
                 }
             }
             else
@@ -69,7 +69,7 @@ namespace NeeView
         }
 
         // 検索コレクション作成
-        public async Task<FolderCollection> CreateSearchFolderCollectionAsync(QueryPath path, bool isActive, bool includeSubdirectories, CancellationToken token)
+        public async Task<FolderCollection> CreateSearchFolderCollectionAsync(QueryPath path, bool isActive, bool includeSubdirectories, bool allowParent, CancellationToken token)
         {
             if (_searchEngine == null) throw new InvalidOperationException("SearchEngine does not exist.");
             if (path.Search is null) throw new InvalidOperationException("path.Search must not be null.");
@@ -81,7 +81,7 @@ namespace NeeView
                 _searchEngine.IncludeSubdirectories = includeSubdirectories;
                 var result = await _searchEngine.SearchAsync(path.SimplePath, path.Search, token);
 
-                var collection = new FolderSearchCollection(path, result, isActive, _isOverlayEnabled);
+                var collection = new FolderSearchCollection(path, result, isActive, _isOverlayEnabled) { AllowParentDirectory = allowParent };
                 await collection.InitializeItemsAsync(token);
                 return collection;
             }
@@ -92,14 +92,14 @@ namespace NeeView
         }
 
         // 通常フォルダーコレクション作成
-        private async Task<FolderCollection> CreateEntryFolderCollectionAsync(QueryPath path, bool isActive, CancellationToken token)
+        private async Task<FolderCollection> CreateEntryFolderCollectionAsync(QueryPath path, bool isActive, bool allowParent, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
             FolderCollection collection;
             try
             {
-                collection = new FolderEntryCollection(path, isActive, _isOverlayEnabled);
+                collection = new FolderEntryCollection(path, isActive, _isOverlayEnabled) { AllowParentDirectory = allowParent };
                 await collection.InitializeItemsAsync(token);
             }
             catch (OperationCanceledException)
@@ -118,13 +118,13 @@ namespace NeeView
         }
 
         // ブックマークフォルダーコレクション作成
-        private async Task<FolderCollection> CreateBookmarkFolderCollectionAsync(QueryPath path, bool isActive, CancellationToken token)
+        private async Task<FolderCollection> CreateBookmarkFolderCollectionAsync(QueryPath path, bool isActive, bool allowParent, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
             _ = isActive;
 
-            var collection = new BookmarkFolderCollection(path, _isOverlayEnabled);
+            var collection = new BookmarkFolderCollection(path, _isOverlayEnabled) { AllowParentDirectory = allowParent };
             await collection.InitializeItemsAsync(token);
 
             return collection;
@@ -146,13 +146,13 @@ namespace NeeView
         }
 
         // プレイリストフォルダーコレクション作成
-        public async Task<FolderCollection> CreatePlaylistFolderCollectionAsync(QueryPath path, bool isActive, CancellationToken token)
+        public async Task<FolderCollection> CreatePlaylistFolderCollectionAsync(QueryPath path, bool isActive, bool allowParent, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
             try
             {
-                var collection = new PlaylistFolderCollection(path, _isOverlayEnabled);
+                var collection = new PlaylistFolderCollection(path, _isOverlayEnabled) { AllowParentDirectory = allowParent };
                 await collection.InitializeItemsAsync(token);
                 return collection;
             }
@@ -165,18 +165,18 @@ namespace NeeView
                 // NOTE: 展開できない場合、実在パスでの展開を行う
                 Debug.WriteLine($"Cannot open: {ex.Message}");
                 var place = ArchiveEntryUtility.GetExistDirectoryName(path.SimplePath);
-                return await CreateEntryFolderCollectionAsync(new QueryPath(place), isActive, token);
+                return await CreateEntryFolderCollectionAsync(new QueryPath(place), isActive, allowParent, token);
             }
         }
 
         // アーカイブフォルダーコレクション作成
-        public async Task<FolderCollection> CreateArchiveFolderCollectionAsync(QueryPath path, bool isActive, CancellationToken token)
+        public async Task<FolderCollection> CreateArchiveFolderCollectionAsync(QueryPath path, bool isActive, bool allowParent, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
             try
             {
-                var collection = new FolderArchiveCollection(path, Config.Current.System.ArchiveRecursiveMode, isActive, _isOverlayEnabled);
+                var collection = new FolderArchiveCollection(path, Config.Current.System.ArchiveRecursiveMode, isActive, _isOverlayEnabled) { AllowParentDirectory = allowParent };
                 await collection.InitializeItemsAsync(token);
                 return collection;
             }
@@ -189,7 +189,7 @@ namespace NeeView
                 // NOTE: アーカイブパスが展開できない場合、実在パスでの展開を行う
                 Debug.WriteLine($"Cannot open: {ex.Message}");
                 var place = ArchiveEntryUtility.GetExistDirectoryName(path.SimplePath);
-                return await CreateEntryFolderCollectionAsync(new QueryPath(place), isActive, token);
+                return await CreateEntryFolderCollectionAsync(new QueryPath(place), isActive, allowParent, token);
             }
         }
 

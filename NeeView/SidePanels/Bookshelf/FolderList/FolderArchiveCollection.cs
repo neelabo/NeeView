@@ -40,7 +40,7 @@ namespace NeeView
             }
             catch
             {
-                this.Items = new ObservableCollection<FolderItem>() { _folderItemFactory.CreateFolderItemEmpty() };
+                SetItems([]);
                 return;
             }
 
@@ -54,7 +54,7 @@ namespace NeeView
                     entries = (await _collection.GetEntriesWhereSubArchivesAsync(false, token)).ToArchiveEntryCollection();
                     break;
                 default:
-                    this.Items = new ObservableCollection<FolderItem>() { _folderItemFactory.CreateFolderItemEmpty() };
+                    SetItems([]);
                     return;
             }
 
@@ -66,12 +66,7 @@ namespace NeeView
             var folderOrder = folderOrderHint.HasValue ? folderOrderHint.Value : FolderOrder;
             var list = Sort(items, folderOrder, token);
 
-            if (!list.Any())
-            {
-                list.Add(_folderItemFactory.CreateFolderItemEmpty());
-            }
-
-            this.Items = new ObservableCollection<FolderItem>(list);
+            SetItems(list);
         }
 
 

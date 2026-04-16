@@ -55,7 +55,7 @@ namespace NeeView
 
             if (string.IsNullOrWhiteSpace(Place.SimplePath))
             {
-                this.Items = new ObservableCollection<FolderItem>(DriveInfo.GetDrives().Select(e => _folderItemFactory.CreateFolderItem(e)).WhereNotNull());
+                SetItems(DriveInfo.GetDrives().Select(e => _folderItemFactory.CreateFolderItem(e)).WhereNotNull());
                 return;
             }
             else
@@ -64,11 +64,7 @@ namespace NeeView
 
                 if (!FileIO.Exists(directory))
                 {
-                    var items = new ObservableCollection<FolderItem>
-                    {
-                        _folderItemFactory.CreateFolderItemEmpty()
-                    };
-                    this.Items = items;
+                    SetItems([]);
                 }
                 else
                 {
@@ -101,17 +97,12 @@ namespace NeeView
                         var folderOrder = folderOrderHint.HasValue ? folderOrderHint.Value : FolderOrder;
                         var list = Sort(items, folderOrder, token);
 
-                        if (!list.Any())
-                        {
-                            list.Add(_folderItemFactory.CreateFolderItemEmpty());
-                        }
-
-                        this.Items = new ObservableCollection<FolderItem>(list);
+                        SetItems(list);
                     }
                     catch (Exception ex)
                     {
                         Debug.WriteLine(ex.Message);
-                        this.Items = new ObservableCollection<FolderItem>() { _folderItemFactory.CreateFolderItemEmpty() };
+                        SetItems([]);
                         return;
                     }
                 }
@@ -258,7 +249,7 @@ namespace NeeView
             {
                 return;
             }
-            
+
             RequestCreate(new QueryPath(e.FullPath));
         }
 

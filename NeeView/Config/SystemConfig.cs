@@ -20,6 +20,7 @@ namespace NeeView
         [DefaultEquality] private bool _isNetworkEnabled = true;
         [DefaultEquality] private bool _isSettingBackup;
         [DefaultEquality] private bool _isHiddenFileVisible;
+        [DefaultEquality] private bool _isParentDirectoryVisible;
         [DefaultEquality] private bool _isFileWriteAccessEnabled = false;
         [DefaultEquality] private string? _language;
         [DefaultEquality] private BookPageCollectMode _bookPageCollectMode = BookPageCollectMode.ImageAndBook;
@@ -162,13 +163,20 @@ namespace NeeView
             set { SetProperty(ref _isHiddenFileVisible, value); }
         }
 
+        // 親フォルダーを表示する？
+        [PropertyMember]
+        public bool IsParentDirectoryVisible
+        {
+            get { return _isParentDirectoryVisible; }
+            set { SetProperty(ref _isParentDirectoryVisible, value); }
+        }
+
         [PropertyMember]
         public bool IsFileWriteAccessEnabled
         {
             get { return _isFileWriteAccessEnabled; }
             set { SetProperty(ref _isFileWriteAccessEnabled, value); }
         }
-
 
         // 「ブックを開く」ダイアログを現在の場所を基準にして開く
         // TODO: LoadAs のコマンドパラメータにする

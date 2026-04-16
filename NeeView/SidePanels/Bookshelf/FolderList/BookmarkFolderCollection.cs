@@ -33,12 +33,7 @@ namespace NeeView
             var items = CreateFolderItemCollection(_bookmarkPlace, token);
             var list = Sort(items, token);
 
-            if (!list.Any())
-            {
-                list.Add(_folderItemFactory.CreateFolderItemEmpty());
-            }
-
-            this.Items = new ObservableCollection<FolderItem>(list);
+            SetItems(list);
 
             // 変更監視
             BookmarkCollection.Current.BookmarkChanged += BookmarkCollection_BookmarkChanged;
@@ -287,9 +282,9 @@ namespace NeeView
             return folderOrder switch
             {
                 FolderOrder.EntryTime
-                    => source.OrderBy(e => GetIndex(e)).ToList(),
+                    => source.OrderBy(e => e.Type.ConstOrder()).ThenBy(e => GetIndex(e)).ToList(),
                 FolderOrder.EntryTimeDescending
-                    => source.OrderBy(e => GetIndex(e)).Reverse().ToList(),
+                    => source.OrderBy(e => e.Type.ConstOrder()).ThenBy(e => GetIndex(e)).Reverse().ToList(),
                 _
                     => base.Sort(source, folderOrder, token)
             };

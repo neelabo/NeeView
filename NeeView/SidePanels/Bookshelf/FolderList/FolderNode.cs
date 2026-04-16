@@ -211,7 +211,7 @@ namespace NeeView
             }
 
             var folderCollectionFactory = new FolderCollectionFactory(null, true);
-            using (var collection = await folderCollectionFactory.CreateFolderCollectionAsync(path, false, false, token))
+            using (var collection = await folderCollectionFactory.CreateFolderCollectionAsync(path, false, false, false, token))
             {
                 var children = collection.Items
                     .Where(e => !e.IsEmpty())

@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,7 +20,7 @@ namespace NeeView
         {
             token.ThrowIfCancellationRequested();
 
-            var items = new ObservableCollection<FolderItem>();
+            var items = new List<FolderItem>();
 
             if (Place.Path == null)
             {
@@ -30,7 +30,7 @@ namespace NeeView
                 items.Add(CreateFolderItem(Place, QueryScheme.Bookmark));
             }
 
-            this.Items = items;
+            SetItems(items);
         }
 
         private FolderItem CreateFolderItem(QueryPath parent, QueryScheme scheme)

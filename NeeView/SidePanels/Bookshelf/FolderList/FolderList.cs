@@ -194,6 +194,8 @@ namespace NeeView
         public event EventHandler<FolderListSelectedChangedEventArgs>? SelectedChanged;
 
 
+        public virtual QueryPath RootPath => QueryPath.Root;
+
         /// <summary>
         /// 選択項目
         /// </summary>
@@ -494,7 +496,16 @@ namespace NeeView
         /// </summary>
         private void SavePlace(QueryPath? place, FolderItem? folder, int index)
         {
-            if (folder == null || place == null) return;
+            if (folder == null || place == null)
+            {
+                return;
+            }
+
+            //if (folder.Attributes.HasFlag(FolderItemAttribute.System))
+            //{
+            //    return;
+            //}
+
             Debug.Assert(folder.Place == place);
 
             _lastPlaceDictionary[place] = new FolderItemPosition(folder.TargetPath, index);
@@ -1037,7 +1048,10 @@ namespace NeeView
             // 場所が変更された場合は検索初期化
             _searchEngine.ResetIfConditionChanged(path.SimplePath);
 
-            return await _folderCollectionFactory.CreateFolderCollectionAsync(path, true, IsSearchIncludeSubdirectories, token);
+            // 親項目を表示する？
+            var allowParent = Config.Current.System.IsParentDirectoryVisible && path with { Search = null } != RootPath;
+
+            return await _folderCollectionFactory.CreateFolderCollectionAsync(path, true, IsSearchIncludeSubdirectories, allowParent, token);
         }
 
         #endregion CreateFolderCollection

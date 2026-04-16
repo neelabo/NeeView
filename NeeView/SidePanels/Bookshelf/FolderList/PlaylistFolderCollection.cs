@@ -39,12 +39,7 @@ namespace NeeView
 
             var list = Sort(items, token);
 
-            if (!list.Any())
-            {
-                list.Add(_folderItemFactory.CreateFolderItemEmpty());
-            }
-
-            this.Items = new ObservableCollection<FolderItem>(list);
+            SetItems(list);
         }
 
 

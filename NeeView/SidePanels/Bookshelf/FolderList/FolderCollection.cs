@@ -67,6 +67,11 @@ namespace NeeView
         }
 
         /// <summary>
+        /// 親項目を作る
+        /// </summary>
+        public bool AllowParentDirectory { get; set; }
+
+        /// <summary>
         /// 検索可能？
         /// </summary>
         public virtual bool IsSearchEnabled => false;
@@ -87,7 +92,7 @@ namespace NeeView
         public ObservableCollection<FolderItem> Items
         {
             get { return _items; }
-            protected set
+            private set
             {
                 if (_items != value)
                 {
@@ -105,7 +110,6 @@ namespace NeeView
             }
         }
 
-
         /// <summary>
         /// Collection count
         /// </summary>
@@ -114,7 +118,7 @@ namespace NeeView
         /// <summary>
         /// Valid collection count
         /// </summary>
-        public int ValidCount => IsEmpty() ? 0 : Items.Count;
+        public int ValidCount => GetValidCount();
 
         /// <summary>
         /// フォルダーの場所(クエリ)
@@ -166,6 +170,50 @@ namespace NeeView
             return Items == null
                 || Items.Count == 0
                 || Items.Count == 1 && Items[0].IsEmpty();
+        }
+
+        private int GetValidCount()
+        {
+            if (IsEmpty())
+            {
+                return 0;
+            }
+
+            if (Items.Count >= 1 && Items[0].Type == FolderItemType.ParentDirectory)
+            {
+                return Items.Count - 1;
+            }
+            else
+            {
+                return Items.Count;
+            }
+        }
+
+        /// <summary>
+        /// 項目リスト設定
+        /// </summary>
+        /// <param name="items"></param>
+        public void SetItems(IEnumerable<FolderItem> items)
+        {
+            this.Items = ValidateItems(items);
+        }
+
+        /// <summary>
+        /// 親項目や空項目を追加する
+        /// </summary>
+        private ObservableCollection<FolderItem> ValidateItems(IEnumerable<FolderItem> items)
+        {
+            List<FolderItem> preItems = new();
+            if (AllowParentDirectory && Place.Scheme != QueryScheme.Root)
+            {
+                preItems.Add(_folderItemFactory.CreateFolderItemParent(Place));
+            }
+            if (preItems.Count == 0 && !items.Any())
+            {
+                preItems.Add(_folderItemFactory.CreateFolderItemEmpty());
+            }
+
+            return new ObservableCollection<FolderItem>(preItems.Concat(items));
         }
 
         /// <summary>
@@ -273,14 +321,16 @@ namespace NeeView
         {
             token.ThrowIfCancellationRequested();
 
-            IOrderedEnumerable<FolderItem> orderSource = Config.Current.Bookshelf.FolderSortOrder switch
+            var orderSource = source.OrderBy(e => e.Type.ConstOrder());
+
+            orderSource = Config.Current.Bookshelf.FolderSortOrder switch
             {
                 FolderSortOrder.First
-                    => source.OrderBy(e => e.Type),
+                    => orderSource.ThenBy(e => e.Type),
                 FolderSortOrder.Last
-                    => source.OrderByDescending(e => e.Type),
+                    => orderSource.ThenByDescending(e => e.Type),
                 _
-                    => source.OrderBy(e => 0),
+                    => orderSource
             };
 
             var order = folderOrder switch

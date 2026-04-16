@@ -2059,6 +2059,7 @@ SystemConfig.IsInputMethodEnabled.Remarks=* Se aplica desde el próximo inicio. 
 SystemConfig.IsNetworkEnabled=Permitir acceso a red
 SystemConfig.IsNetworkEnabled.Remarks=Cuando está desactivado, se detiene la confirmación de actualización de versión desde el diálogo "@VersionWindow.Title" y se muestra un diálogo de confirmación antes de conectar a Internet con un navegador web
 SystemConfig.IsOpenBookAtCurrentPlace=Hacer la posición inicial del diálogo de selección de archivo en "@LoadAsCommand" la ubicación del libro actualmente abierto
+SystemConfig.IsParentDirectoryVisible=
 SystemConfig.IsRemoveConfirmed=Mostrar diálogo de confirmación al eliminar archivos
 SystemConfig.IsRemoveWantNukeWarning=Mostrar diálogo de confirmación al eliminar archivos que no caben en la Papelera de reciclaje
 SystemConfig.IsSettingBackup=Hacer una copia de seguridad del archivo de configuración

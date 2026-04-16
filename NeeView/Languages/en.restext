@@ -2059,6 +2059,7 @@ SystemConfig.IsInputMethodEnabled.Remarks=* It is applied from the next startup.
 SystemConfig.IsNetworkEnabled=Allow network access
 SystemConfig.IsNetworkEnabled.Remarks=When turned off, the version update confirmation from the "@VersionWindow.Title" dialog is stopped and a confirmation dialog is displayed before connecting to the Internet with a web browser.
 SystemConfig.IsOpenBookAtCurrentPlace=Make the start position of the file selection dialog in "@LoadAsCommand" the location of the currently opened book
+SystemConfig.IsParentDirectoryVisible=Show parent directory
 SystemConfig.IsRemoveConfirmed=Show confirmation dialog when deleting files
 SystemConfig.IsRemoveWantNukeWarning=Show confirmation dialog when deleting files that don't fit in the Recycle Bin
 SystemConfig.IsSettingBackup=Make a backup of the setting file
