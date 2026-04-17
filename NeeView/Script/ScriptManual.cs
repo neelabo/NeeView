@@ -278,43 +278,47 @@ namespace NeeView
                         var type = command.Parameter.GetType();
                         var title = "";
 
-                        if (command.Share != null)
+                        var parameterAttribute = (DocumentableAttribute?)Attribute.GetCustomAttributes(type, typeof(DocumentableAttribute)).FirstOrDefault();
+                        if (parameterAttribute is null || parameterAttribute.IsEnabled == true)
                         {
-                            properties = "<p style=\"color:red\">" + string.Format(CultureInfo.InvariantCulture, TextResources.GetString("CommandParameter.Share"), command.Share.Name) + "</p>";
-                        }
-
-                        foreach (PropertyInfo info in type.GetProperties())
-                        {
-                            var attribute = (PropertyMemberAttribute?)Attribute.GetCustomAttributes(info, typeof(PropertyMemberAttribute)).FirstOrDefault();
-                            if (attribute != null && attribute.IsVisible)
+                            if (command.Share != null)
                             {
-                                var titleString = PropertyMemberAttributeExtensions.GetPropertyTitle(info, attribute);
-                                if (titleString != null)
-                                {
-                                    title = titleString + " / ";
-                                }
-
-                                var enums = "";
-                                if (info.PropertyType.IsEnum)
-                                {
-                                    enums = string.Join(" / ", info.PropertyType.VisibleAliasNameDictionary().Select(e => $"\"{e.Key}\": {e.Value}")) + "<br/>";
-                                }
-
-                                var propertyName = PropertyMemberAttributeExtensions.GetPropertyName(info, attribute).TrimEnd(TextResources.GetString("Word.Period").ToArray()) + TextResources.GetString("Word.Period");
-                                var text = title + propertyName;
-
-                                var propertyTips = PropertyMemberAttributeExtensions.GetPropertyTips(info, attribute);
-                                if (propertyTips != null)
-                                {
-                                    text = text + " " + propertyTips;
-                                }
-
-                                properties = properties + $"<dt><b>{info.Name}</b>: {info.PropertyType.ToManualString()}</dt><dd>{enums + text}<dd/>";
+                                properties = "<p style=\"color:red\">" + string.Format(CultureInfo.InvariantCulture, TextResources.GetString("CommandParameter.Share"), command.Share.Name) + "</p>";
                             }
-                        }
-                        if (!string.IsNullOrEmpty(properties))
-                        {
-                            properties = "<dl>" + properties + "</dl>";
+
+                            foreach (PropertyInfo info in type.GetProperties())
+                            {
+                                var attribute = (PropertyMemberAttribute?)Attribute.GetCustomAttributes(info, typeof(PropertyMemberAttribute)).FirstOrDefault();
+                                if (attribute != null && attribute.IsVisible)
+                                {
+                                    var titleString = PropertyMemberAttributeExtensions.GetPropertyTitle(info, attribute);
+                                    if (titleString != null)
+                                    {
+                                        title = titleString + " / ";
+                                    }
+
+                                    var enums = "";
+                                    if (info.PropertyType.IsEnum)
+                                    {
+                                        enums = string.Join(" / ", info.PropertyType.VisibleAliasNameDictionary().Select(e => $"\"{e.Key}\": {e.Value}")) + "<br/>";
+                                    }
+
+                                    var propertyName = PropertyMemberAttributeExtensions.GetPropertyName(info, attribute).TrimEnd(TextResources.GetString("Word.Period").ToArray()) + TextResources.GetString("Word.Period");
+                                    var text = title + propertyName;
+
+                                    var propertyTips = PropertyMemberAttributeExtensions.GetPropertyTips(info, attribute);
+                                    if (propertyTips != null)
+                                    {
+                                        text = text + " " + propertyTips;
+                                    }
+
+                                    properties = properties + $"<dt><b>{info.Name}</b>: {info.PropertyType.ToManualString()}</dt><dd>{enums + text}<dd/>";
+                                }
+                            }
+                            if (!string.IsNullOrEmpty(properties))
+                            {
+                                properties = "<dl>" + properties + "</dl>";
+                            }
                         }
                     }
 

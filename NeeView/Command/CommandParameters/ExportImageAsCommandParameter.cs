@@ -10,6 +10,7 @@ namespace NeeView
     /// ExportImageAs Command Parameter (Obsolete)
     /// </summary>
     [Equatable(Explicit = true)]
+    [WordNodeMember(IsEnabled = false)]
     public partial class ExportImageAsCommandParameter : CommandParameter
     {
         [Obsolete("no used"), Alternative(null, 46, ScriptErrorLevel.Warning)]
