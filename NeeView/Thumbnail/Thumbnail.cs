@@ -233,11 +233,8 @@ namespace NeeView
                     var imageSource = CreateImageSource(image);
                     if (imageSource is not null)
                     {
-                        lock (_lock)
-                        {
-                            _imageSource = imageSource;
-                            ThumbnailLifetimeManagement.Current.Add(this);
-                        }
+                        _imageSource = imageSource;
+                        ThumbnailLifetimeManagement.Current.Add(this);
                         LocalWriteLine("Create ImageSourceAsync done.");
                         RaisePropertyChanged(nameof(ImageSource));
                     }
