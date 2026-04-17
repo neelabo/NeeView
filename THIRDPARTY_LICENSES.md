@@ -183,5 +183,6 @@ DLL: libwebp.dll, libsharpyuv.dll, libwebpdemux.dll
 
 Code-in:
 
+* Copyright 2020 Diego Frata
 * URL: [Generator.Equals](https://github.com/diegofrata/Generator.Equals)
 * License: [MIT license](https://github.com/diegofrata/Generator.Equals/blob/main/LICENCE.md)
