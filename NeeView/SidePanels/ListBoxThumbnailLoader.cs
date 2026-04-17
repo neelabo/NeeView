@@ -1,5 +1,10 @@
-﻿using NeeLaboratory.Linq;
+﻿//#define LOCAL_DEBUG
+
+using NeeLaboratory.Generators;
+using NeeLaboratory.Linq;
+using NeeView.Threading;
 using NeeView.Windows.Media;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
@@ -10,10 +15,13 @@ namespace NeeView
     /// <summary>
     /// ListBoxのページサムネイルを読み込む機能
     /// </summary>
-    public class ListBoxThumbnailLoader
+    [LocalDebug]
+    public partial class ListBoxThumbnailLoader
     {
         private readonly IPageListPanel _panel;
         private readonly PageThumbnailJobClient _jobClient;
+        private readonly ConstDelayAction _delayAction = new(200);
+        private List<Page> _pages = [];
 
         public ListBoxThumbnailLoader(IPageListPanel panelListBox, PageThumbnailJobClient jobClient)
         {
@@ -80,24 +88,42 @@ namespace NeeView
                 return;
             }
 
-            // 有効な ListBoxItem 収集
-            var items = _panel.CollectPageList(listBoxItems.Select(i => i.DataContext)).ToList();
-
-            var pages = items
+            var items = _panel
+                .CollectPageList(listBoxItems.Select(i => i.DataContext))
                 .Select(e => e.GetPage())
-                .WhereNotNull()
-                .ToList();
+                .WhereNotNull();
 
-            if (pages.Any())
+            LoadCore(items);
+        }
+
+        private void LoadCore(IEnumerable<Page> items)
+        {
+            var pages = items.ToList();
+            if (pages.Count == 0)
             {
-                _jobClient?.Order(pages.Cast<IPageThumbnailLoader>().ToList());
+                return;
             }
 
-            ////Debug.WriteLine($"ThumbLoad: {pages.Count}");
+            if (pages.SequenceEqual(_pages))
+            {
+                LocalDebug.WriteLine($"{System.Environment.TickCount}: skip");
+                return;
+            }
+
+            LocalDebug.WriteLine($"{System.Environment.TickCount}: ready..");
+
+            _delayAction.Request(() =>
+            {
+                LocalDebug.WriteLine($"{System.Environment.TickCount}: {pages.MinBy(e => e.Index)?.Index}-{pages.MaxBy(e => e.Index)?.Index} ({pages.Count})");
+                _pages = pages;
+                _jobClient?.Order(_pages.Cast<IPageThumbnailLoader>().ToList());
+            });
         }
 
         public void Unload()
         {
+            _pages = [];
+            _delayAction.Cancel();
             _jobClient?.CancelOrder();
         }
     }

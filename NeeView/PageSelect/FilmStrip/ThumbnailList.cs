@@ -1,5 +1,8 @@
-﻿using NeeLaboratory.ComponentModel;
+﻿//#define LOCAL_DEBUG
+
+using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
+using NeeView.Threading;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -29,6 +32,7 @@ namespace NeeView
     /// <summary>
     /// ThumbnailList : Model
     /// </summary>
+    [LocalDebug]
     public partial class ThumbnailList : BindableBase, IDisposable
     {
         static ThumbnailList() => Current = new ThumbnailList();
@@ -41,7 +45,8 @@ namespace NeeView
         private List<Page> _viewItems = new();
         private readonly PageThumbnailJobClient _jobClient;
         private readonly DisposableCollection _disposables = new();
-
+        private readonly ConstDelayAction _delayAction = new(200);
+        private List<Page> _pages = [];
 
         private ThumbnailList()
         {
@@ -388,12 +393,38 @@ namespace NeeView
                 .Select(e => pageList[e])
                 .OrderBy(e => Math.Abs(e.Index - center));
 
-            _jobClient.Order(pages.Cast<IPageThumbnailLoader>().ToList());
+            RequestThumbnailCore(pages);
+        }
+
+        private void RequestThumbnailCore(IEnumerable<Page> items)
+        {
+            var pages = items.ToList();
+            if (pages.Count == 0)
+            {
+                return;
+            }
+
+            if (pages.SequenceEqual(_pages))
+            {
+                LocalDebug.WriteLine($"{System.Environment.TickCount}: skip");
+                return;
+            }
+
+            LocalDebug.WriteLine($"{System.Environment.TickCount}: ready..");
+
+            _delayAction.Request(() =>
+            {
+                LocalDebug.WriteLine($"{System.Environment.TickCount}: {pages.MinBy(e => e.Index)?.Index}-{pages.MaxBy(e => e.Index)?.Index} ({pages.Count})");
+                _pages = pages;
+                _jobClient?.Order(_pages.Cast<IPageThumbnailLoader>().ToList());
+            });
         }
 
         // サムネイル要求解除
         public void CancelThumbnailRequest()
         {
+            _pages = [];
+            _delayAction.Cancel();
             _jobClient.CancelOrder();
         }
 
