@@ -5,7 +5,9 @@ namespace NeeView
 {
     public record class PlaylistSourceItem
     {
+        private string _path = "";
         private string? _name;
+        private bool _invalid;
 
         public PlaylistSourceItem()
         {
@@ -13,16 +15,29 @@ namespace NeeView
 
         public PlaylistSourceItem(string path)
         {
-            Path = path;
+            _path = path;
         }
 
-        public PlaylistSourceItem(string path, string? name)
+        public PlaylistSourceItem(string path, string? name, bool invalid)
         {
-            Path = path;
-            Name = name;
+            _path = path;
+            _name = name;
+            _invalid = invalid;
         }
 
-        public string Path { get; set; } = "";
+
+        public string Path 
+        {
+            get { return _path; }
+            set
+            {
+                if (_path != value)
+                {
+                    _path = value;
+                    _invalid = false;
+                }
+            }
+        }
 
         [JsonIgnore]
         [NotNull]
@@ -41,9 +56,14 @@ namespace NeeView
             set { _name = value; }
         }
 
-        public string? RawName => _name;
-
         public bool IsNameChanged => _name != null;
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public bool Invalid
+        {
+            get { return _invalid; }
+            set { _invalid = value; }
+        }
     }
 
 }

@@ -270,6 +270,7 @@ namespace NeeView
                 progressContext.ProgressValue = (double)count / nodes.Count;
                 progress?.Report(progressContext);
 
+                bookmark.IsUnlinked = false;
                 if (!await ArchiveEntryUtility.ExistsAsync(bookmark.Path, false, token))
                 {
                     var resolved = FileResolver.Current.ResolveArchivePath(bookmark.Path);
@@ -726,6 +727,9 @@ namespace NeeView
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? Props { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public bool Invalid { get; set; }
+
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public List<BookmarkNode>? Children { get; set; }
 
@@ -772,6 +776,7 @@ namespace NeeView
                 node.Path = bookmark.Path;
                 node.Page = bookmark.Unit.Memento.Page;
                 node.Props = bookmark.Unit.Memento.ToPropertiesString();
+                node.Invalid = bookmark.IsUnlinked;
             }
             else
             {
@@ -813,6 +818,7 @@ namespace NeeView
                 var bookmark = new Bookmark(source.Path)
                 {
                     Name = source.Name ?? "",
+                    IsUnlinked = source.Invalid,
                 };
                 var node = new TreeListNode<IBookmarkEntry>(bookmark);
                 return node;

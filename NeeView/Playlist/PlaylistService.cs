@@ -29,6 +29,7 @@ namespace NeeView
             var jobOperation = ProcessJobEngine.Current.AddJob(Resolve);
             int unlinkedCount = await jobOperation.WaitAsync(token);
 
+            playlist.IsDirty = true;
             playlist.DelaySave();
 
             if (unlinkedCount > 0)

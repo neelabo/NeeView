@@ -13,20 +13,19 @@ namespace NeeView
         private string? _place;
         private Page? _archivePage;
         private ArchiveType? _archiveType;
-        private bool _isUnlinked;
 
 
-        public PlaylistItem(string path) : this(path, null)
+        public PlaylistItem(string path) : this(path, null, false)
         {
         }
 
-        public PlaylistItem(PlaylistSourceItem item) : this(item.Path, item.Name)
+        public PlaylistItem(PlaylistSourceItem item) : this(item.Path, item.Name, item.Invalid)
         {
         }
 
-        public PlaylistItem(string path, string? name)
+        public PlaylistItem(string path, string? name, bool invalid)
         {
-            _item = new PlaylistSourceItem(ValidPath(path), name);
+            _item = new PlaylistSourceItem(ValidPath(path), name, invalid);
         }
 
 
@@ -62,7 +61,7 @@ namespace NeeView
             }
         }
 
-        public string? RawName => _item.RawName;
+        public string? RawName => _item.NameRaw;
 
         public bool IsNameChanged => _item.IsNameChanged;
 
@@ -147,11 +146,13 @@ namespace NeeView
 
         public bool IsUnlinked
         {
-            get { return _isUnlinked; }
+            get { return _item.Invalid; }
             set
             {
-                if (SetProperty(ref _isUnlinked, value))
+                if (_item.Invalid != value)
                 {
+                    _item.Invalid = value;
+                    RaisePropertyChanged();
                     RaisePropertyChanged(nameof(IsArchiveIconVisible));
                 }
             }
@@ -192,7 +193,7 @@ namespace NeeView
 
         public PlaylistSourceItem ToPlaylistItem()
         {
-            return new PlaylistSourceItem(Path, Name);
+            return new PlaylistSourceItem(Path, Name, IsUnlinked);
         }
 
         public override string? ToString()

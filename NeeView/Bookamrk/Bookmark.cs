@@ -36,6 +36,7 @@ namespace NeeView
                 if (SetProperty(ref _path, value))
                 {
                     _unit = null;
+                    IsUnlinked = false;
                     RaisePropertyChanged(null);
                 }
             }

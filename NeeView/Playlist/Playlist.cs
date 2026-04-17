@@ -461,6 +461,7 @@ namespace NeeView
                 progressContext.ProgressValue = (double)count / items.Count;
                 progress?.Report(progressContext);
 
+                item.IsUnlinked = false;
                 if (!await ArchiveEntryUtility.ExistsAsync(item.Path, false, token))
                 {
                     var resolved = FileResolver.Current.ResolveArchivePath(item.Path);

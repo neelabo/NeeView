@@ -178,7 +178,7 @@ namespace NeeView
 
         private static PlaylistSourceItem CreateSourceItem(ArchiveEntry entry)
         {
-            return new PlaylistSourceItem(entry.SystemPath, entry.EntryName);
+            return new PlaylistSourceItem(entry.SystemPath, entry.EntryName, false);
         }
     }
 }
