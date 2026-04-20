@@ -125,14 +125,7 @@ namespace NeeView
         {
             if (item is not Page page) return TextResources.GetString("Word.ItemNone");
 
-            if (Config.Current.Book.FolderSortOrder != FolderSortOrder.None && page.PageType != PageType.File)
-            {
-                return TextResources.GetString("Word.Unspecified") + " ";
-            }
-            else
-            {
-                return GetDirectoryName(page);
-            }
+            return GetDirectoryName(page);
         }
 
         private static string GetDirectoryName(Page page)
@@ -141,7 +134,7 @@ namespace NeeView
             if (string.IsNullOrEmpty(path))
             {
                 // NOTE: 最後にスペースを付けるのは、もしもディレクトリ名が重複したときでもグループを区別させるため
-                return TextResources.GetString("Word.RootDirectory") + " ";
+                return ". ";
             }
             else
             {

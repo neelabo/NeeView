@@ -341,14 +341,10 @@ namespace NeeView
 
                 //Debug.WriteLine($"Sort {sortMode} ...");
                 var pages = SearchPages(_sourcePages, searchKeyword, token);
-                pages = SortPages(pages, sortMode, sortSeed, token);
 
-                if (!pages.Any())
-                {
-                    pages = new List<Page>() { _emptyPage };
-                }
-
-                Pages = pages.ToList();
+                var sortResult = BookPageSort.Sort(pages, sortMode, sortSeed, token);
+                Pages = sortResult.Any() ? sortResult.Pages : [_emptyPage];
+                _sortSeed = sortResult.SortSeed;
 
                 //Debug.WriteLine($"Sort {sortMode} done.");
 
@@ -366,6 +362,17 @@ namespace NeeView
             }
         }
 
+        /// <summary>
+        /// ページ番号設定
+        /// </summary>
+        private void PagesNumbering()
+        {
+            for (int i = 0; i < Pages.Count; ++i)
+            {
+                Pages[i].Index = i;
+            }
+        }
+
         #region ページの検索
 
         public IEnumerable<SearchKey> SearchKeywordAnalyze(string keyword)
@@ -379,91 +386,6 @@ namespace NeeView
             if (string.IsNullOrEmpty(keyword)) return pages;
 
             return _searcher.Search(keyword, pages, token).Cast<Page>();
-        }
-
-        #endregion
-
-        #region ページの並び替え
-
-        private IEnumerable<Page> SortPages(IEnumerable<Page> pages, PageSortMode sortMode, int sortSeed, CancellationToken token)
-        {
-            if (_disposedValue) return pages;
-            if (!pages.Any()) return pages;
-
-            var folderSortOrder = Config.Current.Book.FolderSortOrder;
-            if (folderSortOrder == FolderSortOrder.None)
-            {
-                folderSortOrder = sortMode switch
-                {
-                    PageSortMode.FileType => FolderSortOrder.Last,
-                    PageSortMode.FileTypeDescending => FolderSortOrder.First,
-                    _ => FolderSortOrder.None,
-                };
-            }
-
-            IOrderedEnumerable<Page> orderSource = folderSortOrder switch
-            {
-                FolderSortOrder.First
-                    => pages.OrderBy(e => e.PageType),
-                FolderSortOrder.Last
-                    => pages.OrderByDescending(e => e.PageType),
-                _
-                    => pages.OrderBy(e => 0),
-            };
-
-            switch (sortMode)
-            {
-                case PageSortMode.FileName:
-                    pages = orderSource.ThenBy(e => e, PageComparer.FileName(token));
-                    break;
-                case PageSortMode.FileNameDescending:
-                    pages = orderSource.ThenByDescending(e => e, PageComparer.FileName(token));
-                    break;
-                case PageSortMode.FileType:
-                    pages = orderSource.ThenBy(e => e, PageComparer.FileType).ThenBy(e => e, PageComparer.FileName(token));
-                    break;
-                case PageSortMode.FileTypeDescending:
-                    pages = orderSource.ThenByDescending(e => e, PageComparer.FileType).ThenBy(e => e, PageComparer.FileName(token));
-                    break;
-                case PageSortMode.TimeStamp:
-                    pages = orderSource.ThenBy(e => e.ArchiveEntry.LastWriteTime).ThenBy(e => e, PageComparer.FileName(token));
-                    break;
-                case PageSortMode.TimeStampDescending:
-                    pages = orderSource.ThenByDescending(e => e.ArchiveEntry.LastWriteTime).ThenBy(e => e, PageComparer.FileName(token));
-                    break;
-                case PageSortMode.Size:
-                    pages = orderSource.ThenBy(e => e.ArchiveEntry.Length).ThenBy(e => e, PageComparer.FileName(token));
-                    break;
-                case PageSortMode.SizeDescending:
-                    pages = orderSource.ThenByDescending(e => e.ArchiveEntry.Length).ThenBy(e => e, PageComparer.FileName(token));
-                    break;
-                case PageSortMode.Random:
-                    _sortSeed = sortSeed != 0 ? sortSeed : Random.Shared.Next(1, int.MaxValue);
-                    var random = new Random(_sortSeed);
-                    pages = orderSource.ThenBy(e => random.Next());
-                    break;
-                case PageSortMode.Entry:
-                    pages = pages.OrderBy(e => e.EntryIndex);
-                    break;
-                case PageSortMode.EntryDescending:
-                    pages = pages.OrderByDescending(e => e.EntryIndex);
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-
-            return pages;
-        }
-
-        /// <summary>
-        /// ページ番号設定
-        /// </summary>
-        private void PagesNumbering()
-        {
-            for (int i = 0; i < Pages.Count; ++i)
-            {
-                Pages[i].Index = i;
-            }
         }
 
         #endregion
