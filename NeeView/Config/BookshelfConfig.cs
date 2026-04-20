@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace NeeView
 {
-    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true)]
     public partial class BookshelfConfig : FolderListConfig
     {
         [IgnoreEquality]
