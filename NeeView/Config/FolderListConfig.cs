@@ -5,7 +5,7 @@ using NeeView.Windows.Property;
 namespace NeeView
 {
     [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
-    public partial class FolderListConfig : BindableBase, IHasPanelListItemStyle
+    public partial class FolderListConfig : BindableBase, IHasPanelListItemStyle, IFolderTreeLayoutConfig
     {
         [DefaultEquality] private FolderTreeLayout _folderTreeLayout = FolderTreeLayout.Left;
         [DefaultEquality] private bool _isFolderTreeVisible = false;

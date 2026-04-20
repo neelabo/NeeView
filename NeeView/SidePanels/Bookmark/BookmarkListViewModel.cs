@@ -37,18 +37,6 @@ namespace NeeView
             _dpiProvider.DpiChanged +=
                 (s, e) => RaisePropertyChanged(nameof(DpiScale));
 
-            _model.AddPropertyChanged(nameof(_model.IsFolderTreeVisible),
-                (s, e) => RaisePropertyChanged(nameof(IsFolderTreeVisible)));
-
-            _model.AddPropertyChanged(nameof(_model.FolderTreeLayout),
-                (s, e) => RaisePropertyChanged(nameof(FolderTreeLayout)));
-
-            _model.AddPropertyChanged(nameof(_model.FolderTreeAreaWidth),
-                (s, e) => RaisePropertyChanged(nameof(FolderTreeAreaWidth)));
-
-            _model.AddPropertyChanged(nameof(_model.FolderTreeAreaHeight),
-                (s, e) => RaisePropertyChanged(nameof(FolderTreeAreaHeight)));
-
             MoreMenuDescription = new BookmarkListMoreMenu(this);
         }
 
@@ -82,31 +70,6 @@ namespace NeeView
         }
 
         public DpiScale DpiScale => _dpiProvider.DpiScale;
-
-        public bool IsFolderTreeVisible
-        {
-            get => _model.IsFolderTreeVisible;
-            set => _model.IsFolderTreeVisible = value;
-        }
-
-        public FolderTreeLayout FolderTreeLayout
-        {
-            get => _model.FolderTreeLayout;
-            set => _model.FolderTreeLayout = value;
-        }
-
-        public GridLength FolderTreeAreaWidth
-        {
-            get => new(_model.FolderTreeAreaWidth);
-            set => _model.FolderTreeAreaWidth = value.Value;
-        }
-
-        public GridLength FolderTreeAreaHeight
-        {
-            get => new(_model.FolderTreeAreaHeight);
-            set => _model.FolderTreeAreaHeight = value.Value;
-        }
-
 
         #region Commands
 

@@ -106,18 +106,6 @@ namespace NeeView
         {
         }
 
-        private void Grid_SizeChanged(object? sender, SizeChangedEventArgs e)
-        {
-            if (e.WidthChanged)
-            {
-                _vm.Model.AreaWidth = e.NewSize.Width;
-            }
-            if (e.HeightChanged)
-            {
-                _vm.Model.AreaHeight = e.NewSize.Height;
-            }
-        }
-
         #region DragDrop
 
         private readonly DragDropGhost _ghost = new();

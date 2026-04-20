@@ -1,8 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Threading.Tasks;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,32 +8,23 @@ namespace NeeView
 {
     public class ContentsTreeViewModel : BindableBase
     {
-        private PageListConfig _pageListConfig;
-
-
         public ContentsTreeViewModel()
         {
-            _pageListConfig = Config.Current.PageList;
-
-            _pageListConfig.SubscribePropertyChanged(nameof(_pageListConfig.IsFolderTreeVisible),
-                (s, e) => OnUpdateItems());
-
             BookOperation.Current.BookChanged += BookOperation_BookChanged;
         }
 
-        List<ContentsPageNode>? _items;
 
         public List<ContentsPageNode>? Items
         {
             get
             {
-                if (_items is null)
+                if (field is null)
                 {
                     OnUpdateItems();
                 }
-                return _items;
+                return field;
             }
-            private set { SetProperty(ref _items, value); }
+            private set { SetProperty(ref field, value); }
         }
 
         public bool IsVisible
@@ -85,15 +74,10 @@ namespace NeeView
             OnUpdateItems();
         }
 
-        internal void SelectIndex(ContentsPageNode node)
+        public void SelectIndex(ContentsPageNode node)
         {
             if (node.Page is null) return;
             BookOperation.Current.JumpPage(this, node.Page);
-        }
-
-        internal void SelectFirstItem()
-        {
-            _items?.FirstOrDefault()?.IsSelected = true;
         }
     }
 }

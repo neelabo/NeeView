@@ -79,10 +79,8 @@ namespace NeeView
         private FolderCollection? _folderCollection;
         private FolderItem? _selectedItem;
 
-        private readonly System.Threading.Lock _lock = new();
+        private readonly Lock _lock = new();
 
-        private double _areaWidth = double.PositiveInfinity;
-        private double _areaHeight = double.PositiveInfinity;
         private bool _isFocusAtOnce;
 
         private readonly DisposableCollection _disposables = new();
@@ -143,20 +141,6 @@ namespace NeeView
             _disposables.Add(_folderListConfig.SubscribePropertyChanged(nameof(FolderListConfig.PanelListItemStyle), (s, e) =>
             {
                 RaisePropertyChanged(nameof(PanelListItemStyle));
-            }));
-
-            _disposables.Add(_folderListConfig.SubscribePropertyChanged(nameof(FolderListConfig.IsFolderTreeVisible), (s, e) =>
-            {
-                RaisePropertyChanged(nameof(IsFolderTreeVisible));
-                RaisePropertyChanged(nameof(FolderTreeAreaWidth));
-                RaisePropertyChanged(nameof(FolderTreeAreaHeight));
-            }));
-
-            _disposables.Add(_folderListConfig.SubscribePropertyChanged(nameof(FolderListConfig.FolderTreeLayout), (s, e) =>
-            {
-                RaisePropertyChanged(nameof(FolderTreeLayout));
-                RaisePropertyChanged(nameof(FolderTreeAreaWidth));
-                RaisePropertyChanged(nameof(FolderTreeAreaHeight));
             }));
         }
 
@@ -293,113 +277,6 @@ namespace NeeView
         /// 現在のフォルダーが有効？
         /// </summary>
         public bool IsPlaceValid => Place != null;
-
-
-        public bool IsFolderTreeVisible
-        {
-            get => _folderListConfig.IsFolderTreeVisible;
-            set => _folderListConfig.IsFolderTreeVisible = value;
-        }
-
-        public FolderTreeLayout FolderTreeLayout
-        {
-            get => FolderListConfig.FolderTreeLayout;
-            set => FolderListConfig.FolderTreeLayout = value;
-        }
-
-        /// <summary>
-        /// フォルダーツリーエリアの幅
-        /// </summary>
-        public double FolderTreeAreaWidth
-        {
-            get
-            {
-                if (this.IsFolderTreeVisible && this.FolderTreeLayout == FolderTreeLayout.Left)
-                {
-                    return _folderListConfig.FolderTreeAreaWidth;
-                }
-                else
-                {
-                    return 0.0;
-                }
-            }
-            set
-            {
-                if (this.IsFolderTreeVisible && this.FolderTreeLayout == FolderTreeLayout.Left)
-                {
-                    var width = Math.Max(Math.Min(value, _areaWidth - 32.0), 32.0 - 6.0);
-                    if (_folderListConfig.FolderTreeAreaWidth != width)
-                    {
-                        _folderListConfig.FolderTreeAreaWidth = width;
-                        RaisePropertyChanged();
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// フォルダーリストエリアの幅
-        /// クイックアクセスエリアの幅計算用
-        /// </summary>
-        public double AreaWidth
-        {
-            get { return _areaWidth; }
-            set
-            {
-                if (SetProperty(ref _areaWidth, value))
-                {
-                    // 再設定する
-                    FolderTreeAreaWidth = _folderListConfig.FolderTreeAreaWidth;
-                }
-            }
-        }
-
-        /// <summary>
-        /// フォルダーツリーエリアの高さ
-        /// </summary>
-        public double FolderTreeAreaHeight
-        {
-            get
-            {
-                if (this.IsFolderTreeVisible && this.FolderTreeLayout == FolderTreeLayout.Top)
-                {
-                    return _folderListConfig.FolderTreeAreaHeight;
-                }
-                else
-                {
-                    return 0.0;
-                }
-            }
-            set
-            {
-                if (this.IsFolderTreeVisible && this.FolderTreeLayout == FolderTreeLayout.Top)
-                {
-                    var height = Math.Max(Math.Min(value, _areaHeight - 32.0), 32.0 - 6.0);
-                    if (_folderListConfig.FolderTreeAreaHeight != height)
-                    {
-                        _folderListConfig.FolderTreeAreaHeight = height;
-                        RaisePropertyChanged();
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// フォルダーリストエリアの高さ
-        /// クイックアクセスエリアの高さ計算用
-        /// </summary>
-        public double AreaHeight
-        {
-            get { return _areaHeight; }
-            set
-            {
-                if (SetProperty(ref _areaHeight, value))
-                {
-                    // 再設定する
-                    FolderTreeAreaHeight = _folderListConfig.FolderTreeAreaHeight;
-                }
-            }
-        }
 
         // 現在の場所のフォルダーの並び順
         public FolderOrder FolderOrder

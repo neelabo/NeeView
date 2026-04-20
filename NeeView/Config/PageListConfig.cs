@@ -5,7 +5,7 @@ using NeeView.Windows.Property;
 namespace NeeView
 {
     [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
-    public partial class PageListConfig : BindableBase, IHasPanelListItemStyle
+    public partial class PageListConfig : BindableBase, IHasPanelListItemStyle, IFolderTreeLayoutConfig
     {
         [DefaultEquality] private PanelListItemStyle _panelListItemStyle = PanelListItemStyle.Content;
         [DefaultEquality] private PageNameFormat _format = PageNameFormat.Smart;

@@ -72,20 +72,6 @@ namespace NeeView
             }
         }
 
-        private void Grid_SizeChanged(object? sender, SizeChangedEventArgs e)
-        {
-            if (_vm is null) return;
-
-            if (e.WidthChanged)
-            {
-                _vm.Model.AreaWidth = e.NewSize.Width;
-            }
-            if (e.HeightChanged)
-            {
-                _vm.Model.AreaHeight = e.NewSize.Height;
-            }
-        }
-
         public void SetFolderListBoxContent(FolderListBox content)
         {
             this.ListBoxContent.Content = content;

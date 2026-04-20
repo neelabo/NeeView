@@ -4,7 +4,6 @@ using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -15,8 +14,6 @@ namespace NeeView
     {
         private readonly PageList _pageList;
         private readonly PageListConfig _pageListConfig;
-        private double _areaWidth = double.PositiveInfinity;
-        private double _areaHeight = double.PositiveInfinity;
 
 
         public PageListViewModel(PageList pageList)
@@ -35,20 +32,6 @@ namespace NeeView
 
             _pageList.CollectionChanged +=
                 (s, e) => AppDispatcher.Invoke(() => UpdateMoveToUpCommandCanExecute());
-
-            _pageListConfig.SubscribePropertyChanged(nameof(PageListConfig.IsFolderTreeVisible), (s, e) =>
-            {
-                RaisePropertyChanged(nameof(IsFolderTreeVisible));
-                RaisePropertyChanged(nameof(FolderTreeAreaWidth));
-                RaisePropertyChanged(nameof(FolderTreeAreaHeight));
-            });
-
-            _pageListConfig.SubscribePropertyChanged(nameof(PageListConfig.FolderTreeLayout), (s, e) =>
-            {
-                RaisePropertyChanged(nameof(FolderTreeLayout));
-                RaisePropertyChanged(nameof(FolderTreeAreaWidth));
-                RaisePropertyChanged(nameof(FolderTreeAreaHeight));
-            });
 
             InitializeCommands();
 
@@ -71,112 +54,6 @@ namespace NeeView
         }
 
         public SearchBoxModel SearchBoxModel => _pageList.SearchBoxModel;
-
-        public bool IsFolderTreeVisible
-        {
-            get => _pageListConfig.IsFolderTreeVisible;
-            set => _pageListConfig.IsFolderTreeVisible = value;
-        }
-
-        public FolderTreeLayout FolderTreeLayout
-        {
-            get => _pageListConfig.FolderTreeLayout;
-            set => _pageListConfig.FolderTreeLayout = value;
-        }
-
-        /// <summary>
-        /// フォルダーツリーエリアの幅
-        /// </summary>
-        public GridLength FolderTreeAreaWidth
-        {
-            get
-            {
-                if (this.IsFolderTreeVisible && this.FolderTreeLayout == FolderTreeLayout.Left)
-                {
-                    return new(_pageListConfig.FolderTreeAreaWidth);
-                }
-                else
-                {
-                    return new(0.0);
-                }
-            }
-            set
-            {
-                if (this.IsFolderTreeVisible && this.FolderTreeLayout == FolderTreeLayout.Left)
-                {
-                    var width = Math.Max(Math.Min(value.Value, _areaWidth - 32.0), 32.0 - 6.0);
-                    if (_pageListConfig.FolderTreeAreaWidth != width)
-                    {
-                        _pageListConfig.FolderTreeAreaWidth = width;
-                        RaisePropertyChanged();
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// フォルダーリストエリアの幅
-        /// クイックアクセスエリアの幅計算用
-        /// </summary>
-        public double AreaWidth
-        {
-            get { return _areaWidth; }
-            set
-            {
-                if (SetProperty(ref _areaWidth, value))
-                {
-                    // 再設定する
-                    FolderTreeAreaWidth = new(_pageListConfig.FolderTreeAreaWidth);
-                }
-            }
-        }
-
-        /// <summary>
-        /// フォルダーツリーエリアの高さ
-        /// </summary>
-        public GridLength FolderTreeAreaHeight
-        {
-            get
-            {
-                if (this.IsFolderTreeVisible && this.FolderTreeLayout == FolderTreeLayout.Top)
-                {
-                    return new(_pageListConfig.FolderTreeAreaHeight);
-                }
-                else
-                {
-                    return new(0.0);
-                }
-            }
-            set
-            {
-                if (this.IsFolderTreeVisible && this.FolderTreeLayout == FolderTreeLayout.Top)
-                {
-                    var height = Math.Max(Math.Min(value.Value, _areaHeight - 32.0), 32.0 - 6.0);
-                    if (_pageListConfig.FolderTreeAreaHeight != height)
-                    {
-                        _pageListConfig.FolderTreeAreaHeight = height;
-                        RaisePropertyChanged();
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// フォルダーリストエリアの高さ
-        /// クイックアクセスエリアの高さ計算用
-        /// </summary>
-        public double AreaHeight
-        {
-            get { return _areaHeight; }
-            set
-            {
-                if (SetProperty(ref _areaHeight, value))
-                {
-                    // 再設定する
-                    FolderTreeAreaHeight = new(_pageListConfig.FolderTreeAreaHeight);
-                }
-            }
-        }
 
         #region Commands
 
@@ -226,8 +103,8 @@ namespace NeeView
 
                 void Execute(FolderTreeLayout layout)
                 {
-                    FolderTreeLayout = layout;
-                    IsFolderTreeVisible = true;
+                    _pageListConfig.FolderTreeLayout = layout;
+                    _pageListConfig.IsFolderTreeVisible = true;
                 }
             }
         }

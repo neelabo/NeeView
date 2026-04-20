@@ -60,20 +60,9 @@ namespace NeeView
             menu.ItemsSource = _vm.GetHistory(+1, 10);
         }
 
-        private void Grid_SizeChanged(object? sender, SizeChangedEventArgs e)
-        {
-            if (_vm is null) return;
-
-            if (e.WidthChanged)
-            {
-                _vm.AreaWidth = e.NewSize.Width;
-            }
-            if (e.HeightChanged)
-            {
-                _vm.AreaHeight = e.NewSize.Height;
-            }
-        }
-
+        /// <summary>
+        /// フォルダーツリーにフォーカス
+        /// </summary>
         public void FocusContentTreeAtOnce()
         {
             this.FolderTree.FocusAtOnce();

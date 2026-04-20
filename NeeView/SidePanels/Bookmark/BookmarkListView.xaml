@@ -125,61 +125,18 @@
 
         </StackPanel>
 
-        <Grid x:Name="LayoutGrid" SizeChanged="Grid_SizeChanged">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="{Binding FolderTreeAreaWidth, Mode=TwoWay}"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="{Binding FolderTreeAreaHeight, Mode=TwoWay}"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <local:FolderTreeView x:Name="FolderTree"
-                                  Visibility="{Binding Model.IsFolderTreeVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <local:FolderTreeView.Style>
-                    <Style TargetType="{x:Type local:FolderTreeView}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding FolderTreeLayout}" Value="Top">
-                                <Setter Property="Grid.Column" Value="1"/>
-                                <Setter Property="Grid.Row" Value="0"/>
-                                <Setter Property="Margin" Value="2,2,0,8"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding FolderTreeLayout}" Value="Left">
-                                <Setter Property="Grid.Column" Value="0"/>
-                                <Setter Property="Grid.Row" Value="1"/>
-                                <Setter Property="Margin" Value="2,2,8,2"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </local:FolderTreeView.Style>
-            </local:FolderTreeView>
-
-            <GridSplitter x:Name="FolderTreeAreaSplitter" UseLayoutRounding="True" SnapsToDevicePixels="True" Background="{DynamicResource  Panel.Splitter}"
-                          MinWidth="6" MinHeight="6" FocusVisualStyle="{StaticResource NVFocusVisual}"
-                          Visibility="{Binding IsFolderTreeVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <GridSplitter.Style>
-                    <Style TargetType="GridSplitter">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding FolderTreeLayout}" Value="Top">
-                                <Setter Property="Grid.Column" Value="1"/>
-                                <Setter Property="Grid.Row" Value="0"/>
-                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
-                                <Setter Property="VerticalAlignment" Value="Bottom"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding FolderTreeLayout}" Value="Left">
-                                <Setter Property="Grid.Column" Value="0"/>
-                                <Setter Property="Grid.Row" Value="1"/>
-                                <Setter Property="HorizontalAlignment" Value="Right"/>
-                                <Setter Property="VerticalAlignment" Value="Stretch"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </GridSplitter.Style>
-            </GridSplitter>
-
-            <ContentControl x:Name="ListBoxContent" Grid.Column="1" Grid.Row="1" Focusable="False" Margin="2,2,0,2" />
-        </Grid>
+        <local:PanelGrid x:Name="LayoutGrid"
+                IsFolderTreeVisible="{Binding BookmarkConfig.IsFolderTreeVisible}"
+                FolderTreeLayout="{Binding BookmarkConfig.FolderTreeLayout}"
+                FolderTreeAreaWidth="{Binding BookmarkConfig.FolderTreeAreaWidth}"
+                FolderTreeAreaHeight="{Binding BookmarkConfig.FolderTreeAreaHeight}">
+            <local:PanelGrid.MainContent>
+                <ContentControl x:Name="ListBoxContent" Grid.Column="1" Grid.Row="1" Focusable="False" Margin="2,2,0,2" />
+            </local:PanelGrid.MainContent>
+            <local:PanelGrid.SubContent>
+                <local:FolderTreeView x:Name="FolderTree" />
+            </local:PanelGrid.SubContent>
+        </local:PanelGrid>
 
     </DockPanel>
 </UserControl>
