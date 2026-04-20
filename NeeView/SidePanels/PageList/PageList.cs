@@ -26,6 +26,7 @@ namespace NeeView
         private bool _isPageMoved;
         private Book? _book;
 
+
         private PageList()
         {
             BookOperation.Current.BookChanged += BookOperation_BookChanged;
@@ -408,6 +409,14 @@ namespace NeeView
         public void RaiseSearchBoxFocus()
         {
             SearchBoxFocus?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// 目次ON/OFF
+        /// </summary>
+        public void ToggleVisibleFoldersTree()
+        {
+            Config.Current.PageList.IsFolderTreeVisible = !Config.Current.PageList.IsFolderTreeVisible;
         }
 
 

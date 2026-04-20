@@ -45,5 +45,9 @@
             _listBoxViewModel.FocusAtOnce = true;
         }
 
+        public void FocusContentTreeAtOnce()
+        {
+            PageListView.FocusContentTreeAtOnce();
+        }
     }
 }

@@ -183,5 +183,40 @@ namespace NeeView
                 };
             }
         }
+
+
+        /// <summary>
+        /// 目次作成
+        /// </summary>
+        public async Task<List<ContentsArchiveEntryNode>?> CreateContentsTreeAsync(CancellationToken token)
+        {
+            var entries = await GetEntriesAsync(false, token);
+
+            using (var stream = new FileStream(Path, FileMode.Open, FileAccess.Read))
+            using (var pdfDocument = PdfDocument.Load(stream))
+            {
+                return CreateContentsTree(pdfDocument.Bookmarks, entries);
+            }
+        }
+
+        private static List<ContentsArchiveEntryNode>? CreateContentsTree(PdfBookmarkCollection? bookmarks, List<ArchiveEntry> entries)
+        {
+            if (bookmarks is null || bookmarks.Count == 0)
+            {
+                return null;
+            }
+
+            var list = new List<ContentsArchiveEntryNode>();
+
+            foreach (var bookmark in bookmarks)
+            {
+                var archiveEntry = entries[bookmark.PageIndex];
+                var node = new ContentsArchiveEntryNode(bookmark.Title, archiveEntry);
+                node.Children = CreateContentsTree(bookmark.Children, entries);
+                list.Add(node);
+            }
+
+            return list;
+        }
     }
 }

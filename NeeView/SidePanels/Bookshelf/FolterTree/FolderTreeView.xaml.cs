@@ -254,8 +254,22 @@ namespace NeeView
             }
         }
 
-#endregion
+        #endregion
 
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            // このパネルで使用するキーのイベントを止める
+            if (Keyboard.Modifiers == ModifierKeys.None)
+            {
+                if (e.Key == Key.Up || e.Key == Key.Down || e.Key == Key.Left || e.Key == Key.Right || e.Key == Key.Return || e.Key == Key.Delete)
+                {
+                    e.Handled = true;
+                    return;
+                }
+            }
+
+            base.OnKeyDown(e);
+        }
 
         protected override void OnDpiChanged(DpiScale oldDpi, DpiScale newDpi)
         {
@@ -907,6 +921,8 @@ namespace NeeView
         }
 
         #endregion TextSearch
+
+
     }
 
 

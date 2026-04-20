@@ -173,6 +173,7 @@ namespace NeeView
                 new ToggleVisibleNavigatorCommand(),
                 new ToggleVisibleEffectInfoCommand(),
                 new ToggleVisibleFoldersTreeCommand(),
+                new ToggleVisibleContentsTreeCommand(),
                 new FocusFolderSearchBoxCommand(),
                 new FocusBookmarkSearchBoxCommand(),
                 new FocusPageListSearchBoxCommand(),

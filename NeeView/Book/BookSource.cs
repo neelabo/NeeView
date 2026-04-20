@@ -40,7 +40,6 @@ namespace NeeView
         // メディアアーカイバ？
         public bool IsMedia => ArchiveEntryCollection?.Archive is MediaArchive;
 
-
         // プレイリスト？
         public bool IsPlaylist => ArchiveEntryCollection?.Archive is PlaylistArchive;
 

@@ -4,66 +4,179 @@ using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 
 namespace NeeView
 {
-    public class ViewItemsChangedEventArgs : EventArgs
-    {
-        public ViewItemsChangedEventArgs(List<Page> pages, int direction)
-        {
-            this.ViewItems = pages;
-            this.Direction = direction;
-        }
-
-        public List<Page> ViewItems { get; set; }
-        public int Direction { get; set; }
-    }
-
     public class PageListViewModel : BindableBase
     {
-        private PageList _model;
+        private readonly PageList _pageList;
+        private readonly PageListConfig _pageListConfig;
+        private double _areaWidth = double.PositiveInfinity;
+        private double _areaHeight = double.PositiveInfinity;
 
 
-        public PageListViewModel(PageList model)
+        public PageListViewModel(PageList pageList)
         {
-            _model = model;
+            _pageList = pageList;
+            _pageListConfig = Config.Current.PageList;
 
-            _model.AddPropertyChanged(nameof(PageList.PageSortModeList),
+            _pageList.AddPropertyChanged(nameof(PageList.PageSortModeList),
                 (s, e) => AppDispatcher.Invoke(() => RaisePropertyChanged(nameof(PageSortModeList))));
 
-            _model.AddPropertyChanged(nameof(PageList.PageSortMode),
+            _pageList.AddPropertyChanged(nameof(PageList.PageSortMode),
                 (s, e) => AppDispatcher.Invoke(() => RaisePropertyChanged(nameof(PageSortMode))));
 
-            _model.PageHistoryChanged +=
+            _pageList.PageHistoryChanged +=
                 (s, e) => AppDispatcher.Invoke(() => UpdateMoveToHistoryCommandCanExecute());
 
-            _model.CollectionChanged +=
+            _pageList.CollectionChanged +=
                 (s, e) => AppDispatcher.Invoke(() => UpdateMoveToUpCommandCanExecute());
+
+            _pageListConfig.SubscribePropertyChanged(nameof(PageListConfig.IsFolderTreeVisible), (s, e) =>
+            {
+                RaisePropertyChanged(nameof(IsFolderTreeVisible));
+                RaisePropertyChanged(nameof(FolderTreeAreaWidth));
+                RaisePropertyChanged(nameof(FolderTreeAreaHeight));
+            });
+
+            _pageListConfig.SubscribePropertyChanged(nameof(PageListConfig.FolderTreeLayout), (s, e) =>
+            {
+                RaisePropertyChanged(nameof(FolderTreeLayout));
+                RaisePropertyChanged(nameof(FolderTreeAreaWidth));
+                RaisePropertyChanged(nameof(FolderTreeAreaHeight));
+            });
 
             InitializeCommands();
 
             MoreMenuDescription = new PageListMoreMenuDescription(this);
         }
 
+
+        public PageList Model => _pageList;
+
+        public PageListConfig PageListConfig => Config.Current.PageList;
+
         public Dictionary<PageNameFormat, string> FormatList { get; } = AliasNameExtensions.GetAliasNameDictionary<PageNameFormat>();
 
-        public Dictionary<PageSortMode, string> PageSortModeList => _model.PageSortModeList;
+        public Dictionary<PageSortMode, string> PageSortModeList => _pageList.PageSortModeList;
 
         public PageSortMode PageSortMode
         {
-            get => _model.PageSortMode;
-            set => _model.PageSortMode = value;
+            get => _pageList.PageSortMode;
+            set => _pageList.PageSortMode = value;
         }
 
-        public PageList Model => _model;
+        public SearchBoxModel SearchBoxModel => _pageList.SearchBoxModel;
 
-        public SearchBoxModel SearchBoxModel => _model.SearchBoxModel;
+        public bool IsFolderTreeVisible
+        {
+            get => _pageListConfig.IsFolderTreeVisible;
+            set => _pageListConfig.IsFolderTreeVisible = value;
+        }
 
+        public FolderTreeLayout FolderTreeLayout
+        {
+            get => _pageListConfig.FolderTreeLayout;
+            set => _pageListConfig.FolderTreeLayout = value;
+        }
 
-        public PageListConfig PageListConfig => Config.Current.PageList;
+        /// <summary>
+        /// フォルダーツリーエリアの幅
+        /// </summary>
+        public GridLength FolderTreeAreaWidth
+        {
+            get
+            {
+                if (this.IsFolderTreeVisible && this.FolderTreeLayout == FolderTreeLayout.Left)
+                {
+                    return new(_pageListConfig.FolderTreeAreaWidth);
+                }
+                else
+                {
+                    return new(0.0);
+                }
+            }
+            set
+            {
+                if (this.IsFolderTreeVisible && this.FolderTreeLayout == FolderTreeLayout.Left)
+                {
+                    var width = Math.Max(Math.Min(value.Value, _areaWidth - 32.0), 32.0 - 6.0);
+                    if (_pageListConfig.FolderTreeAreaWidth != width)
+                    {
+                        _pageListConfig.FolderTreeAreaWidth = width;
+                        RaisePropertyChanged();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// フォルダーリストエリアの幅
+        /// クイックアクセスエリアの幅計算用
+        /// </summary>
+        public double AreaWidth
+        {
+            get { return _areaWidth; }
+            set
+            {
+                if (SetProperty(ref _areaWidth, value))
+                {
+                    // 再設定する
+                    FolderTreeAreaWidth = new(_pageListConfig.FolderTreeAreaWidth);
+                }
+            }
+        }
+
+        /// <summary>
+        /// フォルダーツリーエリアの高さ
+        /// </summary>
+        public GridLength FolderTreeAreaHeight
+        {
+            get
+            {
+                if (this.IsFolderTreeVisible && this.FolderTreeLayout == FolderTreeLayout.Top)
+                {
+                    return new(_pageListConfig.FolderTreeAreaHeight);
+                }
+                else
+                {
+                    return new(0.0);
+                }
+            }
+            set
+            {
+                if (this.IsFolderTreeVisible && this.FolderTreeLayout == FolderTreeLayout.Top)
+                {
+                    var height = Math.Max(Math.Min(value.Value, _areaHeight - 32.0), 32.0 - 6.0);
+                    if (_pageListConfig.FolderTreeAreaHeight != height)
+                    {
+                        _pageListConfig.FolderTreeAreaHeight = height;
+                        RaisePropertyChanged();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// フォルダーリストエリアの高さ
+        /// クイックアクセスエリアの高さ計算用
+        /// </summary>
+        public double AreaHeight
+        {
+            get { return _areaHeight; }
+            set
+            {
+                if (SetProperty(ref _areaHeight, value))
+                {
+                    // 再設定する
+                    FolderTreeAreaHeight = new(_pageListConfig.FolderTreeAreaHeight);
+                }
+            }
+        }
 
         #region Commands
 
@@ -80,10 +193,10 @@ namespace NeeView
         [MemberNotNull(nameof(MoveToPreviousCommand), nameof(MoveToNextCommand), nameof(MoveToHistoryCommand), nameof(MoveToUpCommand))]
         private void InitializeCommands()
         {
-            MoveToPreviousCommand = new RelayCommand(_model.MoveToPrevious, _model.CanMoveToPrevious);
-            MoveToNextCommand = new RelayCommand(_model.MoveToNext, _model.CanMoveToNext);
-            MoveToHistoryCommand = new RelayCommand<KeyValuePair<int, PageHistoryUnit>>(_model.MoveToHistory);
-            MoveToUpCommand = new RelayCommand(_model.MoveToParent, _model.CanMoveToParent);
+            MoveToPreviousCommand = new RelayCommand(_pageList.MoveToPrevious, _pageList.CanMoveToPrevious);
+            MoveToNextCommand = new RelayCommand(_pageList.MoveToNext, _pageList.CanMoveToNext);
+            MoveToHistoryCommand = new RelayCommand<KeyValuePair<int, PageHistoryUnit>>(_pageList.MoveToHistory);
+            MoveToUpCommand = new RelayCommand(_pageList.MoveToParent, _pageList.CanMoveToParent);
         }
 
 
@@ -96,6 +209,27 @@ namespace NeeView
         private void SetListItemStyle_Executed(PanelListItemStyle style)
         {
             Config.Current.PageList.PanelListItemStyle = style;
+        }
+
+        private RelayCommand? _toggleVisibleFoldersTree;
+        public RelayCommand ToggleVisibleFoldersTree
+        {
+            get { return _toggleVisibleFoldersTree = _toggleVisibleFoldersTree ?? new RelayCommand(_pageList.ToggleVisibleFoldersTree); }
+        }
+
+        private RelayCommand<FolderTreeLayout>? _setFolderTreeLayout;
+        public RelayCommand<FolderTreeLayout> SetFolderTreeLayout
+        {
+            get
+            {
+                return _setFolderTreeLayout = _setFolderTreeLayout ?? new RelayCommand<FolderTreeLayout>(Execute);
+
+                void Execute(FolderTreeLayout layout)
+                {
+                    FolderTreeLayout = layout;
+                    IsFolderTreeVisible = true;
+                }
+            }
         }
 
         #endregion Commands
@@ -152,7 +286,7 @@ namespace NeeView
 
         public List<KeyValuePair<int, PageHistoryUnit>> GetHistory(int direction, int size)
         {
-            return _model.GetHistory(direction, size);
+            return _pageList.GetHistory(direction, size);
         }
 
         /// <summary>
@@ -169,4 +303,18 @@ namespace NeeView
             this.MoveToUpCommand.RaiseCanExecuteChanged();
         }
     }
+
+
+    public class ViewItemsChangedEventArgs : EventArgs
+    {
+        public ViewItemsChangedEventArgs(List<Page> pages, int direction)
+        {
+            this.ViewItems = pages;
+            this.Direction = direction;
+        }
+
+        public List<Page> ViewItems { get; set; }
+        public int Direction { get; set; }
+    }
+
 }

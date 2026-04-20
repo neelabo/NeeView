@@ -323,7 +323,7 @@ namespace NeeView
         {
             return format switch
             {
-                PageNameFormat.Smart => GetSmartlDisplayString(),
+                PageNameFormat.Smart => GetSmartDisplayString(),
                 PageNameFormat.NameOnly => EntryLastName,
                 PageNameFormat.PageNumber => (Index + 1).ToString(),
                 _ => EntryName,
@@ -350,7 +350,7 @@ namespace NeeView
         }
 
         // ページ名：プレフィックスを除いたフルパス
-        public string GetSmartlDisplayString()
+        public string GetSmartDisplayString()
         {
             return EntrySmartName.Replace("\\", " > ", StringComparison.Ordinal);
         }

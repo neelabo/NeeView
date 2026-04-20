@@ -558,3 +558,5 @@ WindowChromeFrame.None=@Word.None
 WindowConfig.State=@WindowStateEx
 WindowSettingTitle=@Word.Settings
 WindowStateEx.FullScreen=@Word.FullScreen
+ToggleVisibleContentsTreeCommand.Menu=@Word.TableOfContents
+ToggleVisibleContentsTreeCommand.On=@Word.TableOfContents

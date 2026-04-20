@@ -14,6 +14,7 @@ namespace NeeView
         public static Book? Default { get; private set; }
 
         private readonly BookSource _source;
+        private readonly BookTableOfContents _toc;
         private BookSettingConfig _setting;
         private readonly BookPageMarker _marker;
         private readonly string _sourcePath;
@@ -35,23 +36,24 @@ namespace NeeView
             _sourcePath = address.SourcePath?.SimplePath ?? "";
             _marker = new BookPageMarker(_source);
             _loadOption = option;
+            _toc = new BookTableOfContents(_source);
 
             var currentMemento = this.Memento.Clone();
             AttachBookSetting(currentMemento.ToBookSetting());
             Debug.Assert(_setting != null);
-
-            _source.Pages.PagesSorted += (s, e) => PagesChanged?.Invoke(s, e);
 
             IsNew = isNew;
             ArchiveHint = archiveHint;
 
             _disposables.Add(_source);
 
+            _disposables.Add(_source.Pages.SubscribePagesSorted(
+                (s, e) => PagesChanged?.Invoke(s, e)));
+
             _disposables.Add(Config.Current.Book.SubscribePropertyChanged(nameof(BookConfig.FolderSortOrder),
                 (s, e) => _source.Pages.UpdatePagesAsync()
             ));
         }
-
 
 
         [Subscribable]
@@ -62,6 +64,7 @@ namespace NeeView
 
 
         public BookSource Source => _source;
+        public BookTableOfContents TableOfContents => _toc;
         public BookPageCollection Pages => _source.Pages;
         IReadOnlyList<Page> IBook.Pages => _source.Pages;
 
