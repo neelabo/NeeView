@@ -347,7 +347,17 @@ namespace NeeView
         // 検索用文字列を取得
         public string GetSearchText()
         {
-            return string.Join(",", new string[] { this.Group, this.Text, this.Menu, this.Remarks, this.ShortCutKey.GetDisplayString(), this.MouseGesture.ToString(), this.MouseGesture.GetDisplayString(), this.TouchGesture.GetDisplayString() });
+            return string.Join(",", new string[] {
+                this.Name,
+                this.Group,
+                this.Text,
+                this.Menu,
+                this.Remarks,
+                this.ShortCutKey.GetDisplayString(),
+                this.MouseGesture.ToString(),
+                this.MouseGesture.GetDisplayString(),
+                this.TouchGesture.GetDisplayString()
+            });
         }
 
         protected virtual CommandElement CloneInstance()

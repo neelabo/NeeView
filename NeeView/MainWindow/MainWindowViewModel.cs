@@ -20,6 +20,7 @@ namespace NeeView
         private Thickness _sidePanelMargin;
         private double _canvasWidth;
         private double _canvasHeight;
+        private bool _isThumbnailListFocusRequest;
 
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace NeeView
             _viewComponent = MainViewComponent.Current;
 
             MenuAutoHideDescription = new MenuAutoHideDescription(MainWindow.Current.LayerMenuSocket, MainWindow.Current.SidePanelFrame);
-            StatusAutoHideDescription = new StatusAutoHideDescription(MainWindow.Current.LayerStatusArea, MainWindow.Current.SidePanelFrame);
+            StatusAutoHideDescription = new StatusAutoHideDescription(MainWindow.Current.LayerStatusArea, MainWindow.Current.SidePanelFrame) { OnVisibleOnce = OnVisibleOnceStatus };
             ThumbnailListAutoHideDescription = new StatusAutoHideDescription(MainWindow.Current.LayerThumbnailListSocket, MainWindow.Current.SidePanelFrame);
 
             // main window model
@@ -177,6 +178,15 @@ namespace NeeView
 
         public bool IsMenuBarActive => MainWindow.Current.IsActive;
 
+        /// <summary>
+        /// サムネイルリスト フォーカス要求
+        /// </summary>
+        public bool IsThumbnailListFocusRequest
+        {
+            get { return _isThumbnailListFocusRequest; }
+            set { SetProperty(ref _isThumbnailListFocusRequest, value); }
+        }
+
 
         /// <summary>
         /// 初期化
@@ -242,25 +252,38 @@ namespace NeeView
             switch (e.Key)
             {
                 case "Menu":
-                    MenuAutoHideDescription.VisibleOnce(e.IsVisible);
+                    MenuAutoHideDescription.VisibleOnce(e.Visibility);
                     break;
 
                 case "Status":
-                    StatusAutoHideDescription.VisibleOnce(e.IsVisible);
+                    StatusAutoHideDescription.VisibleOnce(e.Visibility);
                     break;
 
                 case "ThumbnailList":
-                    ThumbnailListAutoHideDescription.VisibleOnce(e.IsVisible);
+                    ThumbnailListAutoHideDescription.VisibleOnce(e.Visibility);
                     break;
 
                 case "" or null:
-                    MenuAutoHideDescription.VisibleOnce(e.IsVisible);
-                    StatusAutoHideDescription.VisibleOnce(e.IsVisible);
-                    ThumbnailListAutoHideDescription.VisibleOnce(e.IsVisible);
+                    MenuAutoHideDescription.VisibleOnce(e.Visibility);
+                    StatusAutoHideDescription.VisibleOnce(e.Visibility);
+                    ThumbnailListAutoHideDescription.VisibleOnce(e.Visibility);
                     break;
 
                 default:
                     throw new NotSupportedException();
+            }
+        }
+
+        /// <summary>
+        /// ステータスエリア一時表示のコールバック
+        /// </summary>
+        /// <param name="isVisible"></param>
+        private void OnVisibleOnceStatus(bool isVisible)
+        {
+            if (isVisible)
+            {
+                // 可能ならばサムネイルリストをフォーカスする
+                IsThumbnailListFocusRequest = true;
             }
         }
 

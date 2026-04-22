@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeView.Windows;
 using System;
 using System.Diagnostics;
 using System.Windows.Input;
@@ -8,19 +9,20 @@ namespace NeeView
     public class VisibleAtOnceRequestEventArgs : EventArgs
     {
         public VisibleAtOnceRequestEventArgs(string key)
-            : this(key, true)
+            : this(key, VisibilityRequest.Visible)
         {
         }
 
-        public VisibleAtOnceRequestEventArgs(string key, bool isVisible)
+        public VisibleAtOnceRequestEventArgs(string key, VisibilityRequest visibility)
         {
             Key = key;
-            IsVisible = isVisible;
+            Visibility = visibility;
         }
 
         public string Key { get; init; }
-        public bool IsVisible { get; init; }
+        public VisibilityRequest Visibility { get; init; }
     }
+
 
     /// <summary>
     /// NeeView用 サイドパネル管理
@@ -82,7 +84,7 @@ namespace NeeView
 
         public void VisibleAtOnce(string key, bool isVisible = true)
         {
-            VisibleAtOnceRequest?.Invoke(this, new VisibleAtOnceRequestEventArgs(key, isVisible));
+            VisibleAtOnceRequest?.Invoke(this, new VisibleAtOnceRequestEventArgs(key, isVisible ? VisibilityRequest.Visible : VisibilityRequest.Hidden));
         }
 
         private static bool IsVisiblePanel(string key)

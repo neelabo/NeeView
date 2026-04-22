@@ -377,7 +377,7 @@ namespace NeeView.Windows.Controls
 
         private void Description_VisibleOnce(object? sender, VisibleOnceEventArgs e)
         {
-            VisibleOnce(e.IsVisible);
+            VisibleOnce(e.Visibility);
         }
 
         /// <summary>
@@ -532,13 +532,17 @@ namespace NeeView.Windows.Controls
         }
 
 
-        public void VisibleOnce(bool isVisible)
+        public void VisibleOnce(VisibilityRequest visibility)
         {
             if (!_isAttached) return;
             if (!IsEnabled) return;
 
+            var isVisible = visibility.ToIsVisible(this.AssociatedObject.IsVisible);
+
             SetVisibility(isVisible: isVisible, isVisibleDelay: false, now: true, isForce: true);
             UpdateVisibility();
+
+            this.Description?.OnVisibleOnce?.Invoke(isVisible);
         }
 
         /// <summary>
@@ -577,6 +581,13 @@ namespace NeeView.Windows.Controls
         public event EventHandler<VisibilityChangedEventArgs>? VisibilityChanged;
         public event EventHandler<VisibleOnceEventArgs>? VisibleOnceCall;
 
+
+        /// <summary>
+        /// OnVisible 実行後のコールバック
+        /// </summary>
+        public Action<bool>? OnVisibleOnce { get; set; }
+
+
         /// <summary>
         /// 表示ロック追加フラグ
         /// </summary>
@@ -596,9 +607,9 @@ namespace NeeView.Windows.Controls
         /// <summary>
         /// 一度だけ表示させる命令をBehaviorに送る
         /// </summary>
-        public void VisibleOnce(bool isVisible)
+        public void VisibleOnce(VisibilityRequest visibility)
         {
-            VisibleOnceCall?.Invoke(this, new VisibleOnceEventArgs(isVisible));
+            VisibleOnceCall?.Invoke(this, new VisibleOnceEventArgs(visibility));
         }
 
         /// <summary>
@@ -616,11 +627,11 @@ namespace NeeView.Windows.Controls
         {
         }
 
-        public VisibleOnceEventArgs(bool isVisible)
+        public VisibleOnceEventArgs(VisibilityRequest visibility)
         {
-            IsVisible = isVisible;
+            Visibility = visibility;
         }
 
-        public bool IsVisible { get; } = true;
+        public VisibilityRequest Visibility { get; } = VisibilityRequest.Visible;
     }
 }

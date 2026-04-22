@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
+using NeeView.Windows;
 using System;
 using System.ComponentModel;
 using System.Windows;
@@ -111,26 +112,26 @@ namespace NeeView
         /// </summary>
         private void Model_VisibleAtOnceRequest(object? sender, VisibleAtOnceRequestEventArgs e)
         {
-            VisibleAtOnce(e.Key, e.IsVisible);
+            VisibleAtOnce(e.Key, e.Visibility);
         }
 
         /// <summary>
         /// パネルを一度だけ表示
         /// </summary>
-        public void VisibleAtOnce(string key, bool isVisible)
+        public void VisibleAtOnce(string key, VisibilityRequest visibility)
         {
             if (string.IsNullOrEmpty(key))
             {
-                Left.VisibleOnce(isVisible);
-                Right.VisibleOnce(isVisible);
+                Left.VisibleOnce(visibility);
+                Right.VisibleOnce(visibility);
             }
             else if (Left.SelectedItemContains(key))
             {
-                Left.VisibleOnce(isVisible);
+                Left.VisibleOnce(visibility);
             }
             else if (Right.SelectedItemContains(key))
             {
-                Right.VisibleOnce(isVisible);
+                Right.VisibleOnce(visibility);
             }
         }
 

@@ -4,6 +4,7 @@ using NeeLaboratory.ComponentModel;
 using NeeLaboratory.IO.Search;
 using NeeView.Properties;
 using NeeView.Setting;
+using NeeView.Windows;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -485,13 +486,30 @@ namespace NeeView
         }
 
         /// <summary>
+        /// ページスライダー ON/OFF
+        /// </summary>
+        public void SetPageSliderVisible(VisibilityRequest visible)
+        {
+            // TODO: 自動非表示と Slider.IsEnabled の関係を整理する
+            // TODO: 自動非表示のときは Slider.IsEnabled に関係なく VisibleAtOnce で表示/非表示を切り替える？
+            if (CanHidePageSlider)
+            {
+                VisibleAtOnce("Status", visible);
+            }
+            else
+            {
+                Config.Current.Slider.IsEnabled = visible.ToIsVisible(Config.Current.Slider.IsEnabled);
+            }
+        }
+
+        /// <summary>
         /// パネルの自動非表示の一度の状態設定
         /// </summary>
         /// <param name="key">Menu or Status or ThumbnailList. "" ですべてのパネル</param>
-        /// <param name="isVisible">表示/非表示</param>
-        public void VisibleAtOnce(string key, bool isVisible)
+        /// <param name="visibility">表示/非表示</param>
+        public void VisibleAtOnce(string key, VisibilityRequest visibility)
         {
-            VisibleAtOnceRequest?.Invoke(this, new VisibleAtOnceRequestEventArgs(key, isVisible));
+            VisibleAtOnceRequest?.Invoke(this, new VisibleAtOnceRequestEventArgs(key, visibility));
         }
 
         /// <summary>
@@ -499,7 +517,7 @@ namespace NeeView
         /// </summary>
         public void AllPanelHideAtOnce()
         {
-            VisibleAtOnce("", false);
+            VisibleAtOnce("", VisibilityRequest.Hidden);
             SidePanelFrame.Current.VisibleAtOnce("", false);
         }
     }

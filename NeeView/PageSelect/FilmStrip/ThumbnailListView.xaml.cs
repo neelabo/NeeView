@@ -1,4 +1,7 @@
-﻿using NeeView.Properties;
+﻿//#define LOCAL_DEBUG
+
+using NeeLaboratory.Generators;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,6 +18,7 @@ namespace NeeView
     /// <summary>
     /// ThumbnailListView.xaml の相互作用ロジック
     /// </summary>
+    [LocalDebug]
     public partial class ThumbnailListView : UserControl, IVisibleElement
     {
         #region DependencyProperties
@@ -25,7 +29,6 @@ namespace NeeView
             set { SetValue(SourceProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for Source.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SourceProperty =
             DependencyProperty.Register("Source", typeof(ThumbnailList), typeof(ThumbnailListView), new PropertyMetadata(null, Source_Changed));
 
@@ -60,8 +63,28 @@ namespace NeeView
             DependencyProperty.Register("IsBackgroundOpacityEnabled", typeof(bool), typeof(ThumbnailListView), new PropertyMetadata(false));
 
 
+        public bool IsFocusRequest
+        {
+            get { return (bool)GetValue(IsFocusRequestProperty); }
+            set { SetValue(IsFocusRequestProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsFocusRequestProperty =
+            DependencyProperty.Register(nameof(IsFocusRequest), typeof(bool), typeof(ThumbnailListView),
+                new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, IsFocusRequest_Changed));
+
+        private static void IsFocusRequest_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is ThumbnailListView control && (bool)e.NewValue)
+            {
+                control.FocusAtOnce();
+            }
+        }
+
         #endregion
 
+        // ViewModel
+        private ThumbnailListViewModel? _vm;
 
         // フィルムストリップのパネルコントロール
         private VirtualizingStackPanel? _listPanel;
@@ -69,16 +92,15 @@ namespace NeeView
         // 項目を中央表示するためのTransform
         private TranslateTransform _layoutTransform = new();
 
-        private ThumbnailListViewModel? _vm;
         private bool _isThumbnailDirty;
 
-        /// <summary>
-        /// サムネイル更新要求を拒否する
-        /// </summary>
+        // サムネイル更新要求を拒否する
         private bool _isFrozen;
 
         private readonly MouseWheelDelta _mouseWheelDelta = new();
 
+        // SelectionChanged での変更を識別するための前回選択インデックス
+        private int _lastSelectedIndex = -1;
 
 
         static ThumbnailListView()
@@ -168,8 +190,7 @@ namespace NeeView
             this.ThumbnailListBox.ManipulationBoundaryFeedback +=
                 _vm.Model.ScrollViewer_ManipulationBoundaryFeedback;
 
-            this.ThumbnailListBox.SelectionChanged +=
-                ThumbnailListBox_SelectionChanged;
+            this.ThumbnailListBox.GotFocus += ThumbnailListBox_GotFocus;
 
             this.Root.DataContext = _vm;
         }
@@ -183,6 +204,8 @@ namespace NeeView
         private void ViewModel_CollectionChanged(object? sender, EventArgs e)
         {
             _isFrozen = false;
+            _lastSelectedIndex = -1;
+            _isThumbnailDirty = true;
         }
 
         private void ViewModel_ViewItemsChanged(object? sender, ViewItemsChangedEventArgs e)
@@ -266,7 +289,29 @@ namespace NeeView
             }
             _layoutTransform.X = layoutX;
 
-            //Debug.WriteLine($"scrolableWidth={scrollableWidth}, offset={horizontalOffset}, layoutX={layoutX}");
+            LocalDebug.WriteLine($"scrollableWidth={scrollableWidth}, offset={horizontalOffset}, layoutX={layoutX}");
+        }
+
+        /// <summary>
+        /// ListBoxItem での ScrollIntoView
+        /// </summary>
+        /// <remarks>
+        /// 項目が中央表示モードのときに、項目が完全に表示されるようにスクロール位置を調整する
+        /// </remarks>
+        private void ScrollIntoViewLayout(ListBoxItem item)
+        {
+            if (Config.Current.FilmStrip.IsSelectedCenter)
+            {
+                var pos = item.TranslatePoint(new Point(0, 0), this);
+                if (pos.X + item.ActualWidth > this.ActualWidth)
+                {
+                    _layoutTransform.X = Math.Max(_layoutTransform.X - (pos.X + item.ActualWidth - this.ActualWidth), 0.0);
+                }
+                if (pos.X < 0)
+                {
+                    _layoutTransform.X = Math.Min(_layoutTransform.X - pos.X, 0.0);
+                }
+            }
         }
 
         /// <summary>
@@ -427,37 +472,39 @@ namespace NeeView
             }
         }
 
-        private void ThumbnailListBox_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-        }
-
-        // リストボックスのカーソルキーによる不意のスクロール抑制
-        private void ThumbnailListBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        // リストボックスのカーソルキーによる不意のスクロール抑制 (不要かも)
+        private void ThumbnailListBox_KeyDown(object sender, KeyEventArgs e)
         {
             e.Handled = (e.Key == Key.Up || e.Key == Key.Down || e.Key == Key.Left || e.Key == Key.Right);
         }
 
         // リストボックスのカーソルキーによる不意のスクロール抑制
-        private void ThumbnailListBoxPanel_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void ThumbnailListBoxPanel_KeyDown(object sender, KeyEventArgs e)
         {
-            if (Keyboard.Modifiers == ModifierKeys.None)
+            if (Keyboard.Modifiers == ModifierKeys.None && e.Key == Key.Return)
             {
                 // 決定
-                if (e.Key == Key.Return)
-                {
-                    BookOperation.Current.JumpPage(this, ThumbnailListBox.SelectedItem as Page);
-                }
-                // 左右スクロールは自前で実装
-                else if (e.Key == Key.Right)
-                {
-                    MoveSelectedIndex(+1);
-                }
-                else if (e.Key == Key.Left)
-                {
-                    MoveSelectedIndex(-1);
-                }
+                BookOperation.Current.JumpPage(this, ThumbnailListBox.SelectedItem as Page);
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Up || e.Key == Key.Down)
+            {
+                // 上下キー無効
+                e.Handled = true;
+            }
+        }
 
-                e.Handled = (e.Key == Key.Up || e.Key == Key.Down || e.Key == Key.Left || e.Key == Key.Right || e.Key == Key.Return);
+        private void ThumbnailListBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (e.OriginalSource is ListBoxItem container)
+            {
+                LocalDebug.WriteLine($"ListBoxItem Focused: {container.DataContext}");
+                if (Config.Current.FilmStrip.IsSelectedCenter)
+                {
+                    // 項目中央表示の場合にキーボード操作によるフォーカス項目が画面内に表示されるようにする
+                    // 通常表示の場合はListBoxの機能で行われるため不要
+                    ScrollIntoViewLayout(container);
+                }
             }
         }
 
@@ -472,7 +519,7 @@ namespace NeeView
             }
         }
 
-        public void FocusSelectedItem()
+        public void FocusSelectedItem(bool force = false)
         {
             if (_vm is null) return;
             if (this.ThumbnailListBox.SelectedIndex < 0) this.ThumbnailListBox.SelectedIndex = 0;
@@ -482,12 +529,21 @@ namespace NeeView
             ScrollIntoViewIndex(this.ThumbnailListBox.SelectedIndex);
 
             // フォーカスを移動
-            if (_vm.Model.IsFocusAtOnce && this.ThumbnailListBox.IsLoaded)
+            if ((force || _vm.Model.IsFocusAtOnce) && this.ThumbnailListBox.IsLoaded)
             {
                 var listBoxItem = (ListBoxItem)(this.ThumbnailListBox.ItemContainerGenerator.ContainerFromIndex(this.ThumbnailListBox.SelectedIndex));
                 var isFocused = listBoxItem?.Focus();
                 _vm.Model.IsFocusAtOnce = isFocused != true;
             }
+        }
+
+        private void FocusAtOnce()
+        {
+            Dispatcher.BeginInvoke(() =>
+            {
+                FocusSelectedItem(true);
+                IsFocusRequest = false;
+            }, System.Windows.Threading.DispatcherPriority.Input);
         }
 
         private void ThumbnailListBox_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -511,7 +567,13 @@ namespace NeeView
 
         private void ThumbnailListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            UpdateThumbnailListLayout(false);
+            // NOTE: SelectedIndex が変化したときだけに反応する
+            int currentId = this.ThumbnailListBox.SelectedIndex;
+            if (_lastSelectedIndex != currentId)
+            {
+                _lastSelectedIndex = currentId;
+                UpdateThumbnailListLayout(false);
+            }
         }
 
         // スクロールしたらサムネ更新

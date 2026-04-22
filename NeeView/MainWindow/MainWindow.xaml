@@ -127,7 +127,7 @@
 
                         <!-- フィルムストリップ -->
                         <ContentControl x:Name="DockThumbnailListSocket" DockPanel.Dock="Bottom" IsTabStop="False">
-                            <local:ThumbnailListView x:Name="ThumbnailListArea" KeyboardNavigation.TabNavigation="Local" TabIndex="1" />
+                            <local:ThumbnailListView x:Name="ThumbnailListArea" IsFocusRequest="{Binding IsThumbnailListFocusRequest}"  KeyboardNavigation.TabNavigation="Local" TabIndex="1" />
                         </ContentControl>
 
                     </DockPanel>

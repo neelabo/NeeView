@@ -1,4 +1,5 @@
 ﻿using NeeView.Properties;
+using NeeView.Windows;
 using System;
 using System.Globalization;
 using System.Windows.Data;
@@ -29,11 +30,12 @@ namespace NeeView
         {
             if (e.Args.Length > 0)
             {
-                Config.Current.Slider.IsEnabled = Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture);
+                var isVisible = Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture);
+                MainWindowModel.Current.SetPageSliderVisible(isVisible.ToVisibilityRequest());
             }
             else
             {
-                Config.Current.Slider.IsEnabled = !Config.Current.Slider.IsEnabled;
+                MainWindowModel.Current.SetPageSliderVisible(VisibilityRequest.Toggle);
             }
         }
     }

@@ -832,8 +832,8 @@ namespace NeeView
 
         private void ThumbnailList_Visible(object? sender, VisibleEventArgs e)
         {
-            _vm.StatusAutoHideDescription.VisibleOnce(true);
-            _vm.ThumbnailListAutoHideDescription.VisibleOnce(true);
+            _vm.StatusAutoHideDescription.VisibleOnce(VisibilityRequest.Visible);
+            _vm.ThumbnailListAutoHideDescription.VisibleOnce(VisibilityRequest.Visible);
 
             if (e.IsFocus)
             {
@@ -883,7 +883,10 @@ namespace NeeView
             this.LayerStatusArea.MouseLeave +=
                 (s, e) => UpdatePageCaptionVisibility();
 
-            _vm.AddPropertyChanged(nameof(_vm.Title),
+            this.PageSliderView.IsVisibleChanged +=
+                (s, e) => UpdatePageCaptionVisibility((bool)e.NewValue);
+
+            _vm.PageTitle.AddPropertyChanged(nameof(_vm.PageTitle.Title),
                 (s, e) => UpdatePageCaptionVisibility());
 
             ContextMenuWatcher.ContextMenuClosing +=
@@ -910,7 +913,7 @@ namespace NeeView
             this.PageCaption.Margin = new Thickness(margin, margin, margin, margin + space);
         }
 
-        private void UpdatePageCaptionVisibility()
+        private void UpdatePageCaptionVisibility(bool displayAtOnce = false)
         {
             if (ContextMenuWatcher.TargetElement != null)
             {
@@ -918,7 +921,7 @@ namespace NeeView
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(_vm.Title))
+            if (string.IsNullOrWhiteSpace(_vm.PageTitle.Title))
             {
                 LocalDebug.WriteLine($"PageTitle is empty");
                 _pageCaptionVisibility.SetDelayVisibility(Visibility.Collapsed, 0, NeeView.Windows.Data.DelayValueOverwriteOption.Force);
@@ -933,6 +936,10 @@ namespace NeeView
                 }
                 else
                 {
+                    if (displayAtOnce)
+                    {
+                        _pageCaptionVisibility.SetDelayVisibility(Visibility.Visible, 0);
+                    }
                     _pageCaptionVisibility.SetDelayVisibility(Visibility.Collapsed, (int)(Config.Current.AutoHide.AutoHideDelayTime * 1000));
                 }
             }

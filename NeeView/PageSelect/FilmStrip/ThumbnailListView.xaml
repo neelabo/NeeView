@@ -59,7 +59,6 @@
                              SelectionChanged="ThumbnailListBox_SelectionChanged"
                              TargetUpdated="ThumbnailListBox_TargetUpdated"
                              ScrollViewer.ScrollChanged="ThumbnailList_ScrollChanged"
-                             PreviewKeyDown="ThumbnailListBox_PreviewKeyDown"
                              KeyDown="ThumbnailListBox_KeyDown"
                              IsMouseCapturedChanged="ThumbnailListBox_IsMouseCapturedChanged"
                              PreviewMouseWheel="ThumbnailListBox_MouseWheel">
@@ -114,8 +113,9 @@
                 <Style TargetType="ListBoxItem" BasedOn="{StaticResource NVListBoxItem}">
                     <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ThumbnailListItem_MouseLeftButtonDown"/>
                     <EventSetter Event="ContextMenuOpening" Handler="ThumbnailListItem_ContextMenuOpening" />
-                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                    <Setter Property="FocusVisualStyle" Value="{StaticResource NVListItemFocusVisual}" />
                     <Setter Property="Padding" Value="0"/>
+                    <Setter Property="ToolTipService.ShowsToolTipOnKeyboardFocus" Value="False"/>
                     <Setter Property="ContextMenu">
                         <Setter.Value>
                             <ContextMenu />
