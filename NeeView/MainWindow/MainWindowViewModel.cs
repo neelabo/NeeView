@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.Effects;
+using NeeView.Windows;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,18 +22,25 @@ namespace NeeView
         private double _canvasWidth;
         private double _canvasHeight;
         private bool _isThumbnailListFocusRequest;
+        private readonly Messenger _visibleAtOnceMessenger;
 
 
         /// <summary>
         /// コンストラクター
         /// </summary>
-        public MainWindowViewModel(MainWindowModel model)
+        public MainWindowViewModel(MainWindowModel model, Messenger visibleAtOnceMessenger)
         {
             _viewComponent = MainViewComponent.Current;
 
             MenuAutoHideDescription = new MenuAutoHideDescription(MainWindow.Current.LayerMenuSocket, MainWindow.Current.SidePanelFrame);
             StatusAutoHideDescription = new StatusAutoHideDescription(MainWindow.Current.LayerStatusArea, MainWindow.Current.SidePanelFrame);
             ThumbnailListAutoHideDescription = new StatusAutoHideDescription(MainWindow.Current.LayerThumbnailListSocket, MainWindow.Current.SidePanelFrame);
+
+            _visibleAtOnceMessenger = visibleAtOnceMessenger;
+            _visibleAtOnceMessenger.Subscribe<MenuVisibleAtOnceMessage>(VisibleAtOnce);
+            _visibleAtOnceMessenger.Subscribe<StatusVisibleAtOnceMessage>(VisibleAtOnce);
+            _visibleAtOnceMessenger.Subscribe<FilmStripVisibleAtOnceMessage>(VisibleAtOnce);
+            _visibleAtOnceMessenger.Subscribe<AllVisibleAtOnceMessage>(VisibleAtOnce);
 
             // main window model
             _model = model;
@@ -50,8 +58,6 @@ namespace NeeView
                 (s, e) => UpdateSidePanelMargin());
 
             _model.FocusMainViewCall += Model_FocusMainViewCall;
-
-            _model.VisibleAtOnceRequest += Model_VisibleAtOnceRequest;
 
             MainWindow.Current.Activated +=
                 (s, e) => RaisePropertyChanged(nameof(IsMenuBarActive));
@@ -229,38 +235,26 @@ namespace NeeView
             FocusMainViewCall?.Invoke(sender, e);
         }
 
-        /// <summary>
-        /// パネルの一時表示要求
-        /// </summary>
-        private void Model_VisibleAtOnceRequest(object? sender, VisibleAtOnceRequestEventArgs e)
+        public void VisibleAtOnce(MenuVisibleAtOnceMessage e)
         {
-            switch (e.Key)
-            {
-                case "Menu":
-                    MenuAutoHideDescription.VisibleOnce(e.Visibility);
-                    break;
+            MenuAutoHideDescription.VisibleOnce(e.Visibility);
+        }
 
-                case "Status":
-                    StatusAutoHideDescription.VisibleOnce(e.Visibility);
-                    break;
+        public void VisibleAtOnce(StatusVisibleAtOnceMessage e)
+        {
+            StatusAutoHideDescription.VisibleOnce(e.Visibility, e.FocusFilmStrip ? OnVisibleOnceFilmStrip : null);
+        }
 
-                case "StatusFocused":
-                    StatusAutoHideDescription.VisibleOnce(e.Visibility, OnVisibleOnceFilmStrip);
-                    break;
+        public void VisibleAtOnce(FilmStripVisibleAtOnceMessage e)
+        {
+            ThumbnailListAutoHideDescription.VisibleOnce(e.Visibility, e.FocusFilmStrip ? OnVisibleOnceFilmStrip : null);
+        }
 
-                case "ThumbnailList":
-                    ThumbnailListAutoHideDescription.VisibleOnce(e.Visibility, OnVisibleOnceFilmStrip);
-                    break;
-
-                case "" or null:
-                    MenuAutoHideDescription.VisibleOnce(e.Visibility);
-                    StatusAutoHideDescription.VisibleOnce(e.Visibility);
-                    ThumbnailListAutoHideDescription.VisibleOnce(e.Visibility);
-                    break;
-
-                default:
-                    throw new NotSupportedException();
-            }
+        public void VisibleAtOnce(AllVisibleAtOnceMessage e)
+        {
+            MenuAutoHideDescription.VisibleOnce(e.Visibility);
+            StatusAutoHideDescription.VisibleOnce(e.Visibility);
+            ThumbnailListAutoHideDescription.VisibleOnce(e.Visibility);
         }
 
         private void OnVisibleOnceFilmStrip(bool isVisible)
@@ -288,4 +282,10 @@ namespace NeeView
             SidePanelMargin = new Thickness(0, _model.CanHideMenu ? Config.Current.Panels.ConflictTopMargin : 0, 0, _model.CanHidePageSlider ? Config.Current.Panels.ConflictBottomMargin : 0);
         }
     }
+
+
+    public record MenuVisibleAtOnceMessage(VisibilityRequest Visibility);
+    public record StatusVisibleAtOnceMessage(VisibilityRequest Visibility, bool FocusFilmStrip);
+    public record FilmStripVisibleAtOnceMessage(VisibilityRequest Visibility, bool FocusFilmStrip);
+    public record AllVisibleAtOnceMessage(VisibilityRequest Visibility);
 }

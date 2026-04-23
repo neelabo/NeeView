@@ -32,24 +32,24 @@ namespace NeeView
         private bool _canHideLeftPanel;
         private bool _canHideRightPanel;
         private bool _canHideMenu;
-
         private volatile EditCommandWindow? _editCommandWindow;
-
         private readonly MainWindowController _windowController;
+        private readonly Messenger _visibleAtOnceMessenger;
 
 
-        public static void Initialize(MainWindowController windowController)
+        public static void Initialize(MainWindowController windowController, Messenger visibleAtOnceMessenger)
         {
             if (_current is not null) throw new InvalidOperationException();
-            _current = new MainWindowModel(windowController);
+            _current = new MainWindowModel(windowController, visibleAtOnceMessenger);
         }
 
-        private MainWindowModel(MainWindowController windowController)
+        private MainWindowModel(MainWindowController windowController, Messenger visibleAtOnceMessenger)
         {
             if (_current is not null) throw new InvalidOperationException();
             _current = this;
 
             _windowController = windowController;
+            _visibleAtOnceMessenger = visibleAtOnceMessenger;
 
             _windowController.SubscribePropertyChanged(nameof(_windowController.AutoHideMode),
                 (s, e) =>
@@ -139,8 +139,6 @@ namespace NeeView
 
         public event EventHandler? FocusMainViewCall;
 
-        public event EventHandler<VisibleAtOnceRequestEventArgs>? VisibleAtOnceRequest;
-
 
         public MainWindowController WindowController => _windowController;
 
@@ -210,7 +208,12 @@ namespace NeeView
 
         private void RefreshCanHideMenu()
         {
-            CanHideMenu = Config.Current.MenuBar.IsHideMenu || (Config.Current.MenuBar.IsHideMenuInAutoHideMode && _windowController.AutoHideMode);
+            CanHideMenu = IsHideAddressBar();
+        }
+
+        private bool IsHideAddressBar()
+        {
+            return Config.Current.MenuBar.IsHideMenu || (Config.Current.MenuBar.IsHideMenuInAutoHideMode && _windowController.AutoHideMode);
         }
 
         private void RefreshCanHidePageSlider()
@@ -528,6 +531,23 @@ namespace NeeView
         }
 
         /// <summary>
+        /// アドレスバー ON/OFF
+        /// </summary>
+        public void SetAddressBarVisible(VisibilityRequest visible)
+        {
+            if (IsHideAddressBar())
+            {
+                // 自動非表示のときは AddressBar を表示状態にする
+                Config.Current.MenuBar.IsAddressBarEnabled = true;
+                _visibleAtOnceMessenger.Publish(new MenuVisibleAtOnceMessage(visible));
+            }
+            else
+            {
+                Config.Current.MenuBar.IsAddressBarEnabled = visible.ToIsVisible(Config.Current.MenuBar.IsAddressBarEnabled);
+            }
+        }
+
+        /// <summary>
         /// ページスライダー ON/OFF
         /// </summary>
         public void SetPageSliderVisible(VisibilityRequest visible)
@@ -536,7 +556,7 @@ namespace NeeView
             {
                 // 自動非表示のときは Slider を表示状態にする
                 Config.Current.Slider.IsEnabled = true;
-                VisibleAtOnce("Status", visible);
+                _visibleAtOnceMessenger.Publish(new StatusVisibleAtOnceMessage(visible, false));
             }
             else
             {
@@ -554,12 +574,12 @@ namespace NeeView
             {
                 Config.Current.FilmStrip.IsEnabled = true;
                 Config.Current.Slider.IsEnabled = true;
-                VisibleAtOnce("StatusFocused", visible);
+                _visibleAtOnceMessenger.Publish(new StatusVisibleAtOnceMessage(visible, true));
             }
             else if (IsHideFilmStrip())
             {
                 Config.Current.FilmStrip.IsEnabled = true;
-                VisibleAtOnce("ThumbnailList", visible);
+                _visibleAtOnceMessenger.Publish(new FilmStripVisibleAtOnceMessage(visible, true));
             }
             else
             {
@@ -567,23 +587,12 @@ namespace NeeView
             }
         }
 
-
-        /// <summary>
-        /// パネルの自動非表示の一度の状態設定
-        /// </summary>
-        /// <param name="key">Menu or Status or ThumbnailList. "" ですべてのパネル</param>
-        /// <param name="visibility">表示/非表示</param>
-        public void VisibleAtOnce(string key, VisibilityRequest visibility)
-        {
-            VisibleAtOnceRequest?.Invoke(this, new VisibleAtOnceRequestEventArgs(key, visibility));
-        }
-
         /// <summary>
         /// すべての自動パネルをすぐ閉じる
         /// </summary>
         public void AllPanelHideAtOnce()
         {
-            VisibleAtOnce("", VisibilityRequest.Hidden);
+            _visibleAtOnceMessenger.Publish(new AllVisibleAtOnceMessage(VisibilityRequest.Hidden));
             SidePanelFrame.Current.VisibleAtOnce("", false);
         }
     }

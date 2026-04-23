@@ -44,6 +44,9 @@ namespace NeeView
         private readonly MediaControl _mediaControl;
         private readonly MouseActivate _mouseActivate;
 
+        private readonly Messenger _visibleAtOnceMessenger = new();
+
+
         public MainWindow()
         {
             NVInterop.NVFpReset();
@@ -94,10 +97,10 @@ namespace NeeView
 
             MainViewManager.Initialize(_viewComponent, this.MainViewSocket);
 
-            MainWindowModel.Initialize(_windowController);
+            MainWindowModel.Initialize(_windowController, _visibleAtOnceMessenger);
 
             // MainWindow : ViewModel
-            _vm = new MainWindowViewModel(MainWindowModel.Current);
+            _vm = new MainWindowViewModel(MainWindowModel.Current, _visibleAtOnceMessenger);
             this.DataContext = _vm;
 
             _vm.FocusMainViewCall += (s, e) => _viewComponent.RaiseFocusMainViewRequest();

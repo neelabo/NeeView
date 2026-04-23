@@ -1,4 +1,7 @@
 ﻿using NeeView.Properties;
+using NeeView.Windows;
+using System;
+using System.Globalization;
 using System.Windows.Data;
 
 
@@ -24,7 +27,24 @@ namespace NeeView
 
         public override void Execute(object? sender, CommandContext e)
         {
-            MainWindowModel.Current.ToggleVisibleAddressBar();
+            if (e.Options.HasFlag(CommandOption.ByMenu))
+            {
+                Config.Current.MenuBar.IsAddressBarEnabled = e.Args.Length > 0
+                    ? Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture)
+                    : !Config.Current.MenuBar.IsAddressBarEnabled;
+            }
+            else
+            {
+                if (e.Args.Length > 0)
+                {
+                    var isVisible = Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture);
+                    MainWindowModel.Current.SetAddressBarVisible(isVisible.ToVisibilityRequest());
+                }
+                else
+                {
+                    MainWindowModel.Current.SetAddressBarVisible(VisibilityRequest.Toggle);
+                }
+            }
         }
     }
 }
