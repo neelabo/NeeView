@@ -6,12 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace NeeView
 {
@@ -78,6 +78,7 @@ namespace NeeView
             if (d is ThumbnailListView control && (bool)e.NewValue)
             {
                 control.FocusAtOnce();
+                control.Dispatcher.BeginInvoke(() => control.IsFocusRequest = false);
             }
         }
 
@@ -508,18 +509,20 @@ namespace NeeView
             }
         }
 
-        private async void ThumbnailListBox_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void ThumbnailListBox_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if ((bool)e.NewValue == true)
             {
-                await Task.Yield();
-                UpdateThumbnailListLayout(true);
-                _listPanel?.UpdateLayout();
-                FocusSelectedItem();
+                Dispatcher.BeginInvoke(() =>
+                {
+                    UpdateThumbnailListLayout(true);
+                    _listPanel?.UpdateLayout();
+                    FocusSelectedItem();
+                }, DispatcherPriority.Input);
             }
         }
 
-        public void FocusSelectedItem(bool force = false)
+        public void FocusSelectedItem(bool focus = false)
         {
             if (_vm is null) return;
             if (this.ThumbnailListBox.SelectedIndex < 0) this.ThumbnailListBox.SelectedIndex = 0;
@@ -529,21 +532,16 @@ namespace NeeView
             ScrollIntoViewIndex(this.ThumbnailListBox.SelectedIndex);
 
             // フォーカスを移動
-            if ((force || _vm.Model.IsFocusAtOnce) && this.ThumbnailListBox.IsLoaded)
+            if (focus)
             {
                 var listBoxItem = (ListBoxItem)(this.ThumbnailListBox.ItemContainerGenerator.ContainerFromIndex(this.ThumbnailListBox.SelectedIndex));
                 var isFocused = listBoxItem?.Focus();
-                _vm.Model.IsFocusAtOnce = isFocused != true;
             }
         }
 
         private void FocusAtOnce()
         {
-            Dispatcher.BeginInvoke(() =>
-            {
-                FocusSelectedItem(true);
-                IsFocusRequest = false;
-            }, System.Windows.Threading.DispatcherPriority.Input);
+            FocusTools.FocusAtOnce(this.ThumbnailListBox, () => FocusSelectedItem(true));
         }
 
         private void ThumbnailListBox_MouseWheel(object sender, MouseWheelEventArgs e)

@@ -93,8 +93,6 @@ namespace NeeView
 
         public bool IsVisible => VisibleElement?.IsVisible == true;
 
-        public bool IsFocusAtOnce { get; set; }
-
         /// <summary>
         /// ページ番号の表示状態
         /// TODO: Converterで
@@ -404,11 +402,6 @@ namespace NeeView
             {
                 e.Handled = true;
             }
-        }
-
-        public void FocusAtOnce()
-        {
-            IsFocusAtOnce = true;
         }
 
         #region IDisposable Support

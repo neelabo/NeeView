@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace NeeView
 {
@@ -20,6 +22,38 @@ namespace NeeView
             }
 
             return element.Focus();
+        }
+
+        /// <summary>
+        /// 表示直後のフォーカスができないことがある場合の保証
+        /// </summary>
+        /// <param name="control">表示判定を行うコントロール</param>
+        /// <param name="focusAction">フォーカス処理</param>
+        public static void FocusAtOnce(FrameworkElement control, Action focusAction)
+        {
+            if (control.IsVisible)
+            {
+                control.Dispatcher.BeginInvoke(() =>
+                {
+                    focusAction();
+                }, DispatcherPriority.Input);
+            }
+            else
+            {
+                control.IsVisibleChanged += Control_IsVisibleChanged;
+            }
+
+            void Control_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+            {
+                control.IsVisibleChanged -= Control_IsVisibleChanged;
+                if (control.IsVisible)
+                {
+                    control.Dispatcher.BeginInvoke(() =>
+                    {
+                        focusAction();
+                    }, DispatcherPriority.Input);
+                }
+            }
         }
     }
 

@@ -584,6 +584,10 @@ namespace NeeView
             else
             {
                 Config.Current.FilmStrip.IsEnabled = visible.ToIsVisible(Config.Current.FilmStrip.IsEnabled);
+                if (Config.Current.FilmStrip.IsEnabled)
+                {
+                    _visibleAtOnceMessenger.Publish(new FilmStripFocusAtOnceMessage());
+                }
             }
         }
 

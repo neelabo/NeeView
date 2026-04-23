@@ -41,6 +41,7 @@ namespace NeeView
             _visibleAtOnceMessenger.Subscribe<StatusVisibleAtOnceMessage>(VisibleAtOnce);
             _visibleAtOnceMessenger.Subscribe<FilmStripVisibleAtOnceMessage>(VisibleAtOnce);
             _visibleAtOnceMessenger.Subscribe<AllVisibleAtOnceMessage>(VisibleAtOnce);
+            _visibleAtOnceMessenger.Subscribe<FilmStripFocusAtOnceMessage>(FocusAtOnce);
 
             // main window model
             _model = model;
@@ -266,6 +267,11 @@ namespace NeeView
             }
         }
 
+        private void FocusAtOnce(FilmStripFocusAtOnceMessage e)
+        {
+            IsThumbnailListFocusRequest = true;
+        }
+
         /// <summary>
         /// 自動表示パネルをすぐ閉じる
         /// </summary>
@@ -288,4 +294,6 @@ namespace NeeView
     public record StatusVisibleAtOnceMessage(VisibilityRequest Visibility, bool FocusFilmStrip);
     public record FilmStripVisibleAtOnceMessage(VisibilityRequest Visibility, bool FocusFilmStrip);
     public record AllVisibleAtOnceMessage(VisibilityRequest Visibility);
+
+    public record FilmStripFocusAtOnceMessage();
 }
