@@ -776,6 +776,7 @@ FileType.Playlist=Плейлист NeeView
 FilmStripConfig.ImageWidth=Размер эскиза страницы
 FilmStripConfig.IsEnabled=Показывать ленту эскизов
 FilmStripConfig.IsHideFilmStrip=Автоматически скрывать ленту эскизов
+FilmStripConfig.IsHideFilmStripInAutoHideMode=
 FilmStripConfig.IsManipulationBoundaryFeedbackEnabled=Тактильная отдача при достижении конца прокрутки ленты эскизов
 FilmStripConfig.IsSelectedCenter=Прокручивать так, чтобы выбранный элемент был в центре
 FilmStripConfig.IsVisibleNumber=Отображать номер страницы

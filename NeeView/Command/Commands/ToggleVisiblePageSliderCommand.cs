@@ -28,14 +28,23 @@ namespace NeeView
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
+            if (e.Options.HasFlag(CommandOption.ByMenu))
             {
-                var isVisible = Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture);
-                MainWindowModel.Current.SetPageSliderVisible(isVisible.ToVisibilityRequest());
+                Config.Current.Slider.IsEnabled = e.Args.Length > 0
+                    ? Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture)
+                    : !Config.Current.Slider.IsEnabled;
             }
             else
             {
-                MainWindowModel.Current.SetPageSliderVisible(VisibilityRequest.Toggle);
+                if (e.Args.Length > 0)
+                {
+                    var isVisible = Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture);
+                    MainWindowModel.Current.SetPageSliderVisible(isVisible.ToVisibilityRequest());
+                }
+                else
+                {
+                    MainWindowModel.Current.SetPageSliderVisible(VisibilityRequest.Toggle);
+                }
             }
         }
     }

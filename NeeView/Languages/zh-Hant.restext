@@ -773,6 +773,7 @@ FileType.Playlist=
 FilmStripConfig.ImageWidth=頁面縮圖大小
 FilmStripConfig.IsEnabled=顯示膠片條
 FilmStripConfig.IsHideFilmStrip=自動隱藏膠片條
+FilmStripConfig.IsHideFilmStripInAutoHideMode=
 FilmStripConfig.IsManipulationBoundaryFeedbackEnabled=膠片條觸控捲動邊界回彈
 FilmStripConfig.IsSelectedCenter=捲動選擇的項目在中央顯示
 FilmStripConfig.IsVisibleNumber=顯示頁面編號

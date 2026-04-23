@@ -185,7 +185,7 @@
             <!-- Status Layer -->
             <DockPanel x:Name="LayerStatusArea" VerticalAlignment="Bottom" Visibility="Visible" KeyboardNavigation.TabNavigation="Local" KeyboardNavigation.TabIndex="3">
                 <behaviors:Interaction.Behaviors>
-                    <nwc:AutoHideBehavior Screen="{Binding ElementName=Root}" Dock="Bottom" IsEnabled="{Binding Model.CanHidePageSlider}" DelayTime="{Binding AutoHideConfig.AutoHideDelayTime}"
+                    <nwc:AutoHideBehavior Name="StatusAutoHide" Screen="{Binding ElementName=Root}" Dock="Bottom" IsEnabled="{Binding Model.CanHidePageSlider}" DelayTime="{Binding AutoHideConfig.AutoHideDelayTime}"
                             DelayVisibleTime="{Binding AutoHideConfig.AutoHideDelayVisibleTime}" FocusLockMode="{Binding AutoHideConfig.AutoHideFocusLockMode}"
                             IsKeyDownDelayEnabled="{Binding AutoHideConfig.IsAutoHideKeyDownDelay}" HitTestMargin="{Binding AutoHideConfig.AutoHideHitTestVerticalMargin}"
                             Description="{Binding StatusAutoHideDescription}" IsVisibleLocked="{Binding Model.IsPanelVisibleLocked}" />
@@ -195,7 +195,7 @@
                         Visibility="{Binding ElementName=LayerThumbnailListSocket, Path=Visibility}" />
                 <ContentControl x:Name="LayerThumbnailListSocket" DockPanel.Dock="Bottom" IsTabStop="False">
                     <behaviors:Interaction.Behaviors>
-                        <nwc:AutoHideBehavior Screen="{Binding ElementName=Root}" Dock="Bottom" IsEnabled="{Binding CanHideThumbnailList}" DelayTime="{Binding AutoHideConfig.AutoHideDelayTime}"
+                        <nwc:AutoHideBehavior Name="ThumbnailListAutoHide" Screen="{Binding ElementName=Root}" Dock="Bottom" IsEnabled="{Binding Model.CanHideFilmStrip}" DelayTime="{Binding AutoHideConfig.AutoHideDelayTime}"
                                 DelayVisibleTime="{Binding AutoHideConfig.AutoHideDelayVisibleTime}" FocusLockMode="{Binding AutoHideConfig.AutoHideFocusLockMode}"
                                 IsKeyDownDelayEnabled="{Binding AutoHideConfig.IsAutoHideKeyDownDelay}" Description="{Binding ThumbnailListAutoHideDescription}"
                                 IsVisibleLocked="{Binding Model.IsPanelVisibleLocked}">

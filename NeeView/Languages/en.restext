@@ -776,6 +776,7 @@ FileType.Playlist=NeeView Playlist
 FilmStripConfig.ImageWidth=Page thumbnail size
 FilmStripConfig.IsEnabled=Show filmstrip
 FilmStripConfig.IsHideFilmStrip=Automatically hide filmstrip
+FilmStripConfig.IsHideFilmStripInAutoHideMode=Automatically hide the filmstrip when it is auto-hide mode
 FilmStripConfig.IsManipulationBoundaryFeedbackEnabled=Touch scroll termination bound on filmstrip
 FilmStripConfig.IsSelectedCenter=Scroll so that the selected item appears in the center
 FilmStripConfig.IsVisibleNumber=Display page number

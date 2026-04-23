@@ -47,6 +47,7 @@ namespace NeeView.Setting
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Panels, nameof(PanelsConfig.IsHideLeftPanelInAutoHideMode))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Panels, nameof(PanelsConfig.IsHideRightPanelInAutoHideMode))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Slider, nameof(SliderConfig.IsHidePageSliderInAutoHideMode))));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.FilmStrip, nameof(FilmStripConfig.IsHideFilmStripInAutoHideMode))));
             this.Items.Add(section);
 
             section = new SettingItemSection(TextResources.GetString("SettingPage.Panels.SidePanels"));

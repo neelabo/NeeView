@@ -148,9 +148,6 @@ namespace NeeView
             Config.Current.FilmStrip.AddPropertyChanged(nameof(FilmStripConfig.IsHideFilmStrip),
                 (s, e) => DirtyThumbnailListLayout());
 
-            ThumbnailList.Current.VisibleEvent +=
-                ThumbnailList_Visible;
-
             _viewComponent.PageFrameBoxPresenter.SubscribePageFrameBoxChanged(
                 (s, e) => DirtyPageSliderLayout());
 
@@ -811,7 +808,7 @@ namespace NeeView
             _isDirtyThumbnailListLayout = false;
 
             bool isPageSliderDock = !MainWindowModel.Current.CanHidePageSlider;
-            bool isThumbnailListDock = !Config.Current.FilmStrip.IsHideFilmStrip && isPageSliderDock;
+            bool isThumbnailListDock = !MainWindowModel.Current.CanHideFilmStrip && isPageSliderDock;
 
             if (isThumbnailListDock)
             {
@@ -828,17 +825,6 @@ namespace NeeView
 
             // フィルムストリップ
             this.ThumbnailListArea.Visibility = Config.Current.FilmStrip.IsEnabled && !PageFrameBoxPresenter.Current.IsMedia ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        private void ThumbnailList_Visible(object? sender, VisibleEventArgs e)
-        {
-            _vm.StatusAutoHideDescription.VisibleOnce(VisibilityRequest.Visible);
-            _vm.ThumbnailListAutoHideDescription.VisibleOnce(VisibilityRequest.Visible);
-
-            if (e.IsFocus)
-            {
-                ThumbnailList.Current.FocusAtOnce();
-            }
         }
 
         private void InitializeMessageLayerSpace()
@@ -884,6 +870,9 @@ namespace NeeView
                 (s, e) => UpdatePageCaptionVisibility();
 
             this.PageSliderView.IsVisibleChanged +=
+                (s, e) => UpdatePageCaptionVisibility((bool)e.NewValue);
+
+            this.ThumbnailListArea.IsVisibleChanged +=
                 (s, e) => UpdatePageCaptionVisibility((bool)e.NewValue);
 
             _vm.PageTitle.AddPropertyChanged(nameof(_vm.PageTitle.Title),

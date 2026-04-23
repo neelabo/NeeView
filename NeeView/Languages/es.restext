@@ -776,6 +776,7 @@ FileType.Playlist=Lista de reproducción NeeView
 FilmStripConfig.ImageWidth=Tamaño de miniatura de página
 FilmStripConfig.IsEnabled=Mostrar tira de película
 FilmStripConfig.IsHideFilmStrip=Ocultar automáticamente tira de película
+FilmStripConfig.IsHideFilmStripInAutoHideMode=
 FilmStripConfig.IsManipulationBoundaryFeedbackEnabled=Retroalimentación de límite de desplazamiento táctil en tira de película
 FilmStripConfig.IsSelectedCenter=Desplazar para que el elemento seleccionado aparezca en el centro
 FilmStripConfig.IsVisibleNumber=Mostrar número de página

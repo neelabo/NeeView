@@ -58,8 +58,6 @@ namespace NeeView
                 PageSelector_CollectionChanged));
             _disposables.Add(PageSelector.Current.SubscribeSelectionChanged(
                 PageSelector_SelectionChanged));
-            //_disposables.Add(PageSelector.Current.SubscribeViewContentsChanged(
-            //    PageSelector_ViewContentsChanged));
             _disposables.Add(PageSelector.Current.SubscribeSelectedPagesChanged(
                 PageSelector_SelectedPagesChanged));
 
@@ -68,10 +66,6 @@ namespace NeeView
                 {
                     switch (e.PropertyName)
                     {
-                        case nameof(FilmStripConfig.IsEnabled):
-                        case nameof(FilmStripConfig.IsHideFilmStrip):
-                            RaisePropertyChanged(nameof(CanHideThumbnailList));
-                            break;
                         case nameof(FilmStripConfig.IsVisibleNumber):
                             RaisePropertyChanged(nameof(ThumbnailNumberVisibility));
                             break;
@@ -94,9 +88,6 @@ namespace NeeView
         [Subscribable]
         public event EventHandler<ViewItemsChangedEventArgs>? ViewItemsChanged;
 
-        [Subscribable]
-        public event EventHandler<VisibleEventArgs>? VisibleEvent;
-
 
         public IVisibleElement? VisibleElement { get; set; }
 
@@ -105,16 +96,10 @@ namespace NeeView
         public bool IsFocusAtOnce { get; set; }
 
         /// <summary>
-        /// サムネイルを隠すことができる
-        /// </summary>
-        public bool CanHideThumbnailList => Config.Current.FilmStrip.IsEnabled && Config.Current.FilmStrip.IsHideFilmStrip;
-
-        /// <summary>
         /// ページ番号の表示状態
         /// TODO: Converterで
         /// </summary>
         public Visibility ThumbnailNumberVisibility => Config.Current.FilmStrip.IsVisibleNumber ? Visibility.Visible : Visibility.Collapsed;
-
 
         /// <summary>
         /// フィルムストリップ表示状態
@@ -334,26 +319,6 @@ namespace NeeView
 
             PageSelector.Current.FlushSelectedIndex(this);
             UpdateSelectedIndex();
-        }
-
-        public bool SetVisibleThumbnailList(bool isVisible)
-        {
-            if (_disposedValue) return Config.Current.FilmStrip.IsEnabled;
-
-            Config.Current.FilmStrip.IsEnabled = isVisible;
-
-            if (Config.Current.FilmStrip.IsEnabled && !IsVisible)
-            {
-                VisibleEvent?.Invoke(this, new VisibleEventArgs(true));
-            }
-
-            return Config.Current.FilmStrip.IsEnabled;
-        }
-
-        public bool ToggleVisibleThumbnailList(bool byMenu)
-        {
-            bool isVisible = byMenu ? !Config.Current.FilmStrip.IsEnabled : !IsVisible;
-            return SetVisibleThumbnailList(isVisible);
         }
 
         public bool ToggleHideThumbnailList()

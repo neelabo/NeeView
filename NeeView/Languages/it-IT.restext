@@ -776,6 +776,7 @@ FileType.Playlist=
 FilmStripConfig.ImageWidth=Dimensione miniatura pagina
 FilmStripConfig.IsEnabled=Mostra anteprime
 FilmStripConfig.IsHideFilmStrip=Nascondi automaticamente anteprime
+FilmStripConfig.IsHideFilmStripInAutoHideMode=
 FilmStripConfig.IsManipulationBoundaryFeedbackEnabled=Limite scorrimento touch sulle anteprime
 FilmStripConfig.IsSelectedCenter=Scorri così che gli elementi selezionati appaiano al centro
 FilmStripConfig.IsVisibleNumber=Mostra numero pagina

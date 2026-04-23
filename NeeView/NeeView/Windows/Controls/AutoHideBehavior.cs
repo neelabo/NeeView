@@ -2,6 +2,7 @@
 using NeeView.Windows.Data;
 using NeeView.Windows.Media;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -377,7 +378,7 @@ namespace NeeView.Windows.Controls
 
         private void Description_VisibleOnce(object? sender, VisibleOnceEventArgs e)
         {
-            VisibleOnce(e.Visibility);
+            VisibleOnce(e.Visibility, e.Callback);
         }
 
         /// <summary>
@@ -517,6 +518,8 @@ namespace NeeView.Windows.Controls
 
         private void SetVisibility(bool isVisible, bool isVisibleDelay, bool now, bool isForce)
         {
+            //Debug.WriteLine($"AutoHide: {Name}: IsVisible={isVisible}");
+
             if (isVisible)
             {
                 var option = isForce ? DelayValueOverwriteOption.Force : DelayValueOverwriteOption.Shorten;
@@ -532,7 +535,7 @@ namespace NeeView.Windows.Controls
         }
 
 
-        public void VisibleOnce(VisibilityRequest visibility)
+        public void VisibleOnce(VisibilityRequest visibility, Action<bool>? callback)
         {
             if (!_isAttached) return;
             if (!IsEnabled) return;
@@ -542,7 +545,7 @@ namespace NeeView.Windows.Controls
             SetVisibility(isVisible: isVisible, isVisibleDelay: false, now: true, isForce: true);
             UpdateVisibility();
 
-            this.Description?.OnVisibleOnce?.Invoke(isVisible);
+            callback?.Invoke(isVisible);
         }
 
         /// <summary>
@@ -581,13 +584,6 @@ namespace NeeView.Windows.Controls
         public event EventHandler<VisibilityChangedEventArgs>? VisibilityChanged;
         public event EventHandler<VisibleOnceEventArgs>? VisibleOnceCall;
 
-
-        /// <summary>
-        /// OnVisible 実行後のコールバック
-        /// </summary>
-        public Action<bool>? OnVisibleOnce { get; set; }
-
-
         /// <summary>
         /// 表示ロック追加フラグ
         /// </summary>
@@ -607,9 +603,9 @@ namespace NeeView.Windows.Controls
         /// <summary>
         /// 一度だけ表示させる命令をBehaviorに送る
         /// </summary>
-        public void VisibleOnce(VisibilityRequest visibility)
+        public void VisibleOnce(VisibilityRequest visibility, Action<bool>? callback = null)
         {
-            VisibleOnceCall?.Invoke(this, new VisibleOnceEventArgs(visibility));
+            VisibleOnceCall?.Invoke(this, new VisibleOnceEventArgs(visibility, callback));
         }
 
         /// <summary>
@@ -627,11 +623,14 @@ namespace NeeView.Windows.Controls
         {
         }
 
-        public VisibleOnceEventArgs(VisibilityRequest visibility)
+        public VisibleOnceEventArgs(VisibilityRequest visibility, Action<bool>? callback = null)
         {
             Visibility = visibility;
+            Callback = callback;
         }
 
         public VisibilityRequest Visibility { get; } = VisibilityRequest.Visible;
+        public Action<bool>? Callback { get; }
+
     }
 }

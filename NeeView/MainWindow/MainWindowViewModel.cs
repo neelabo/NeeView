@@ -31,7 +31,7 @@ namespace NeeView
             _viewComponent = MainViewComponent.Current;
 
             MenuAutoHideDescription = new MenuAutoHideDescription(MainWindow.Current.LayerMenuSocket, MainWindow.Current.SidePanelFrame);
-            StatusAutoHideDescription = new StatusAutoHideDescription(MainWindow.Current.LayerStatusArea, MainWindow.Current.SidePanelFrame) { OnVisibleOnce = OnVisibleOnceStatus };
+            StatusAutoHideDescription = new StatusAutoHideDescription(MainWindow.Current.LayerStatusArea, MainWindow.Current.SidePanelFrame);
             ThumbnailListAutoHideDescription = new StatusAutoHideDescription(MainWindow.Current.LayerThumbnailListSocket, MainWindow.Current.SidePanelFrame);
 
             // main window model
@@ -41,11 +41,7 @@ namespace NeeView
                 (s, e) => UpdateSidePanelMargin());
 
             _model.AddPropertyChanged(nameof(_model.CanHidePageSlider),
-                (s, e) =>
-                {
-                    UpdateSidePanelMargin();
-                    RaisePropertyChanged(nameof(CanHideThumbnailList));
-                });
+                (s, e) => UpdateSidePanelMargin());
 
             Config.Current.Panels.AddPropertyChanged(nameof(PanelsConfig.ConflictTopMargin),
                 (s, e) => UpdateSidePanelMargin());
@@ -65,9 +61,6 @@ namespace NeeView
 
             Config.Current.Window.AddPropertyChanged(nameof(WindowConfig.IsTopmost),
                 (s, e) => RaisePropertyChanged(nameof(IsTopmost)));
-
-            ThumbnailList.Current.AddPropertyChanged(nameof(CanHideThumbnailList),
-                (s, e) => RaisePropertyChanged(nameof(CanHideThumbnailList)));
 
             BookHub.Current.BookChanged +=
                 (s, e) => CommandManager.InvalidateRequerySuggested();
@@ -154,14 +147,6 @@ namespace NeeView
         {
             get { return _canvasHeight; }
             set { SetProperty(ref _canvasHeight, value); }
-        }
-
-        /// <summary>
-        /// サムネイル一覧を非表示にできるか
-        /// </summary>
-        public bool CanHideThumbnailList
-        {
-            get { return ThumbnailList.CanHideThumbnailList && !Model.CanHidePageSlider; }
         }
 
         /// <summary>
@@ -259,8 +244,12 @@ namespace NeeView
                     StatusAutoHideDescription.VisibleOnce(e.Visibility);
                     break;
 
+                case "StatusFocused":
+                    StatusAutoHideDescription.VisibleOnce(e.Visibility, OnVisibleOnceFilmStrip);
+                    break;
+
                 case "ThumbnailList":
-                    ThumbnailListAutoHideDescription.VisibleOnce(e.Visibility);
+                    ThumbnailListAutoHideDescription.VisibleOnce(e.Visibility, OnVisibleOnceFilmStrip);
                     break;
 
                 case "" or null:
@@ -274,11 +263,7 @@ namespace NeeView
             }
         }
 
-        /// <summary>
-        /// ステータスエリア一時表示のコールバック
-        /// </summary>
-        /// <param name="isVisible"></param>
-        private void OnVisibleOnceStatus(bool isVisible)
+        private void OnVisibleOnceFilmStrip(bool isVisible)
         {
             if (isVisible)
             {

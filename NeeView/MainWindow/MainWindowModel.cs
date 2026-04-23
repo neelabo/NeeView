@@ -28,6 +28,7 @@ namespace NeeView
         private bool _isPanelVisibleLockedOld;
 
         private bool _canHidePageSlider;
+        private bool _canHideFilmStrip;
         private bool _canHideLeftPanel;
         private bool _canHideRightPanel;
         private bool _canHideMenu;
@@ -84,6 +85,21 @@ namespace NeeView
                 RefreshCanHidePageSlider();
             });
 
+            Config.Current.FilmStrip.AddPropertyChanged(nameof(FilmStripConfig.IsEnabled), (s, e) =>
+            {
+                RefreshCanHideFilmStrip();
+            });
+
+            Config.Current.FilmStrip.AddPropertyChanged(nameof(FilmStripConfig.IsHideFilmStripInAutoHideMode), (s, e) =>
+            {
+                RefreshCanHideFilmStrip();
+            });
+
+            Config.Current.FilmStrip.AddPropertyChanged(nameof(FilmStripConfig.IsHideFilmStrip), (s, e) =>
+            {
+                RefreshCanHideFilmStrip();
+            });
+
             Config.Current.Panels.AddPropertyChanged(nameof(PanelsConfig.IsHideLeftPanelInAutoHideMode), (s, e) =>
             {
                 RefreshCanHideLeftPanel();
@@ -104,6 +120,7 @@ namespace NeeView
                 RefreshCanHideRightPanel();
             });
 
+            RefreshCanHideMenu();
             RefreshCanHideLeftPanel();
             RefreshCanHideRightPanel();
             RefreshCanHidePageSlider();
@@ -144,6 +161,15 @@ namespace NeeView
         {
             get { return _canHidePageSlider; }
             set { SetProperty(ref _canHidePageSlider, value); }
+        }
+
+        /// <summary>
+        /// フィルムストリップを自動非表示するか
+        /// </summary>
+        public bool CanHideFilmStrip
+        {
+            get { return _canHideFilmStrip; }
+            set { SetProperty(ref _canHideFilmStrip, value); }
         }
 
         /// <summary>
@@ -189,7 +215,23 @@ namespace NeeView
 
         private void RefreshCanHidePageSlider()
         {
-            CanHidePageSlider = Config.Current.Slider.IsEnabled && (Config.Current.Slider.IsHidePageSlider || (Config.Current.Slider.IsHidePageSliderInAutoHideMode && _windowController.AutoHideMode));
+            CanHidePageSlider = Config.Current.Slider.IsEnabled && IsHidePageSlider();
+            RefreshCanHideFilmStrip();
+        }
+
+        private bool IsHidePageSlider()
+        {
+            return Config.Current.Slider.IsHidePageSlider || (Config.Current.Slider.IsHidePageSliderInAutoHideMode && _windowController.AutoHideMode);
+        }
+
+        private void RefreshCanHideFilmStrip()
+        {
+            CanHideFilmStrip = !CanHidePageSlider && Config.Current.FilmStrip.IsEnabled && IsHideFilmStrip();
+        }
+
+        private bool IsHideFilmStrip()
+        {
+            return Config.Current.FilmStrip.IsHideFilmStrip || (Config.Current.FilmStrip.IsHideFilmStripInAutoHideMode && _windowController.AutoHideMode);
         }
 
         public void RefreshCanHideLeftPanel()
@@ -490,10 +532,10 @@ namespace NeeView
         /// </summary>
         public void SetPageSliderVisible(VisibilityRequest visible)
         {
-            // TODO: 自動非表示と Slider.IsEnabled の関係を整理する
-            // TODO: 自動非表示のときは Slider.IsEnabled に関係なく VisibleAtOnce で表示/非表示を切り替える？
-            if (CanHidePageSlider)
+            if (IsHidePageSlider())
             {
+                // 自動非表示のときは Slider を表示状態にする
+                Config.Current.Slider.IsEnabled = true;
                 VisibleAtOnce("Status", visible);
             }
             else
@@ -501,6 +543,30 @@ namespace NeeView
                 Config.Current.Slider.IsEnabled = visible.ToIsVisible(Config.Current.Slider.IsEnabled);
             }
         }
+
+        /// <summary>
+        /// フィルムストリップON/OFF
+        /// </summary>
+        /// <param name="visible"></param>
+        public void SetFilmStripVisible(VisibilityRequest visible)
+        {
+            if (CanHidePageSlider)
+            {
+                Config.Current.FilmStrip.IsEnabled = true;
+                Config.Current.Slider.IsEnabled = true;
+                VisibleAtOnce("StatusFocused", visible);
+            }
+            else if (IsHideFilmStrip())
+            {
+                Config.Current.FilmStrip.IsEnabled = true;
+                VisibleAtOnce("ThumbnailList", visible);
+            }
+            else
+            {
+                Config.Current.FilmStrip.IsEnabled = visible.ToIsVisible(Config.Current.FilmStrip.IsEnabled);
+            }
+        }
+
 
         /// <summary>
         /// パネルの自動非表示の一度の状態設定

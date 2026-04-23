@@ -11,6 +11,7 @@ namespace NeeView
     {
         [DefaultEquality] private bool _isEnabled;
         [DefaultEquality] private bool _isHideFilmStrip;
+        [DefaultEquality] private bool _isHideFilmStripInAutoHideMode = true;
         [DefaultEquality] private double _imageWidth = 96.0;
         [DefaultEquality] private bool _isVisibleNumber;
         [DefaultEquality] private bool _isSelectedCenter;
@@ -31,13 +32,23 @@ namespace NeeView
         }
 
         /// <summary>
-        /// フィルムストリップ自動的に隠す
+        /// フィルムストリップ自動的に隠す 
         /// </summary>
         [PropertyMember]
         public bool IsHideFilmStrip
         {
             get { return _isHideFilmStrip; }
             set { SetProperty(ref _isHideFilmStrip, value); }
+        }
+
+        /// <summary>
+        /// フィルムストリップ自動的に隠す (自動非表示モード)
+        /// </summary>
+        [PropertyMember]
+        public bool IsHideFilmStripInAutoHideMode
+        {
+            get { return _isHideFilmStripInAutoHideMode; }
+            set { SetProperty(ref _isHideFilmStripInAutoHideMode, value); }
         }
 
         /// <summary>

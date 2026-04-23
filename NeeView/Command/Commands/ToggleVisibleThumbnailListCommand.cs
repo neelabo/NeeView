@@ -1,4 +1,5 @@
 ﻿using NeeView.Properties;
+using NeeView.Windows;
 using System;
 using System.Globalization;
 using System.Windows.Data;
@@ -27,13 +28,23 @@ namespace NeeView
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
+            if (e.Options.HasFlag(CommandOption.ByMenu))
             {
-                ThumbnailList.Current.SetVisibleThumbnailList(Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture));
+                Config.Current.FilmStrip.IsEnabled = e.Args.Length > 0
+                    ? Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture)
+                    : !Config.Current.FilmStrip.IsEnabled;
             }
             else
             {
-                ThumbnailList.Current.ToggleVisibleThumbnailList(e.Options.HasFlag(CommandOption.ByMenu));
+                if (e.Args.Length > 0)
+                {
+                    var isVisible = Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture);
+                    MainWindowModel.Current.SetFilmStripVisible(isVisible.ToVisibilityRequest());
+                }
+                else
+                {
+                    MainWindowModel.Current.SetFilmStripVisible(VisibilityRequest.Toggle);
+                }
             }
         }
     }

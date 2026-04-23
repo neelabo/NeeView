@@ -264,6 +264,11 @@ namespace NeeView
                 self.ContextMenu?.ValidateRename(CommandNameValidator.RenameMap_46_0_0);
             }
 
+            if (self.Format.CompareTo(new FormatVersion(Environment.SolutionName, VersionNumber.Ver46_Alpha2)) <= 0)
+            {
+                self.Config.FilmStrip.IsHideFilmStripInAutoHideMode = self.Config.Slider.IsHidePageSliderInAutoHideMode;
+            }
+
 
             // NOTE: ver.99 (バージョン変更処理テスト)
 #if false

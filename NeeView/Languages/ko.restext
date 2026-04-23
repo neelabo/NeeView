@@ -773,6 +773,7 @@ FileType.Playlist=NeeView 재생 목록
 FilmStripConfig.ImageWidth=페이지 썸네일 크기
 FilmStripConfig.IsEnabled=필름 스트립 표시
 FilmStripConfig.IsHideFilmStrip=필름 스트립 자동으로 숨기기
+FilmStripConfig.IsHideFilmStripInAutoHideMode=
 FilmStripConfig.IsManipulationBoundaryFeedbackEnabled=필름 스트립 터치 스크롤 가장자리 바운드
 FilmStripConfig.IsSelectedCenter=선택한 항목이 중앙에 오도록 스크롤
 FilmStripConfig.IsVisibleNumber=페이지 번호 표시

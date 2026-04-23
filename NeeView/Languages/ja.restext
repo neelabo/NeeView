@@ -773,6 +773,7 @@ FileType.Playlist=NeeView プレイリスト
 FilmStripConfig.ImageWidth=ページ サムネイル サイズ
 FilmStripConfig.IsEnabled=フィルムストリップを表示する
 FilmStripConfig.IsHideFilmStrip=フィルムストリップを自動的に隠す
+FilmStripConfig.IsHideFilmStripInAutoHideMode=自動非表示モードのときにフィルム ストリップを自動的に隠す
 FilmStripConfig.IsManipulationBoundaryFeedbackEnabled=フィルムストリップ タッチ スクロールの終端バウンド
 FilmStripConfig.IsSelectedCenter=選択した項目が中央に表示されるようにスクロールする
 FilmStripConfig.IsVisibleNumber=ページ番号を表示する

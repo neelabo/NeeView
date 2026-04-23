@@ -773,6 +773,7 @@ FileType.Playlist=NeeView 播放列表
 FilmStripConfig.ImageWidth=页面缩略图大小
 FilmStripConfig.IsEnabled=显示幻灯条
 FilmStripConfig.IsHideFilmStrip=自动隐藏幻灯条
+FilmStripConfig.IsHideFilmStripInAutoHideMode=
 FilmStripConfig.IsManipulationBoundaryFeedbackEnabled=幻灯条触控滚动终端绑定
 FilmStripConfig.IsSelectedCenter=滚动以使选定项目显示于中央
 FilmStripConfig.IsVisibleNumber=显示页码
