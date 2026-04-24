@@ -4,14 +4,14 @@ using System;
 namespace NeeView
 {
     /// <summary>
-    /// ThumbnailList : ViewModel
+    /// FilmStrip : ViewModel
     /// </summary>
-    public class ThumbnailListViewModel : BindableBase
+    public class FilmStripViewModel : BindableBase
     {
-        private ThumbnailList _model;
+        private FilmStrip _model;
 
 
-        public ThumbnailListViewModel(ThumbnailList model, ThumbnailListItemDetailToolTip detailToolTip)
+        public FilmStripViewModel(FilmStrip model, FilmStripItemDetailToolTip detailToolTip)
         {
             _model = model ?? throw new InvalidOperationException();
 
@@ -33,13 +33,13 @@ namespace NeeView
         public event EventHandler<ViewItemsChangedEventArgs>? ViewItemsChanged;
 
 
-        public ThumbnailList Model
+        public FilmStrip Model
         {
             get { return _model; }
             set { if (_model != value) { _model = value; RaisePropertyChanged(); } }
         }
 
-        public ThumbnailListItemDetailToolTip DetailToolTip { get; }
+        public FilmStripItemDetailToolTip DetailToolTip { get; }
 
 
         public void MoveWheel(int delta, bool isDirectionReverse)

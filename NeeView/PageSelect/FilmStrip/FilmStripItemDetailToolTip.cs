@@ -4,16 +4,16 @@ using System.ComponentModel;
 
 namespace NeeView
 {
-    public class ThumbnailListItemDetailToolTip : BindableBase, IToolTipService, IDisposable
+    public class FilmStripItemDetailToolTip : BindableBase, IToolTipService, IDisposable
     {
-        static ThumbnailListItemDetailToolTip() => Current = new();
-        public static ThumbnailListItemDetailToolTip Current { get; }
+        static FilmStripItemDetailToolTip() => Current = new();
+        public static FilmStripItemDetailToolTip Current { get; }
 
         private readonly FilmStripConfig _filmstrip;
         private bool _isToolTipEnabled = true;
         private bool _disposedValue;
 
-        public ThumbnailListItemDetailToolTip()
+        public FilmStripItemDetailToolTip()
         {
             _filmstrip = Config.Current.FilmStrip;
             _filmstrip.PropertyChanged += Filmstrip_PropertyChanged;

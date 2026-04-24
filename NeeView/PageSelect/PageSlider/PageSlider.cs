@@ -23,7 +23,7 @@ namespace NeeView
 
             Config.Current.BookSetting.SubscribePropertyChanged(nameof(BookSettingConfig.BookReadOrder), (s, e) => UpdateIsSliderDirectionReversed());
 
-            ThumbnailList.Current.IsSliderDirectionReversed = this.IsSliderDirectionReversed;
+            FilmStrip.Current.IsSliderDirectionReversed = this.IsSliderDirectionReversed;
 
             PageSelector.Current.SelectionChanged += PageSelector_SelectionChanged;
 
@@ -57,7 +57,7 @@ namespace NeeView
                 {
                     _isSliderDirectionReversed = value;
                     RaisePropertyChanged();
-                    ThumbnailList.Current.IsSliderDirectionReversed = _isSliderDirectionReversed;
+                    FilmStrip.Current.IsSliderDirectionReversed = _isSliderDirectionReversed;
                     this.PageMarkers.IsSliderDirectionReversed = _isSliderDirectionReversed;
                     SliderDirectionChanged?.Invoke(this, new ValueChangedEventArgs<bool>() { NewValue = _isSliderDirectionReversed });
                 }

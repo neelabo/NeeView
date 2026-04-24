@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="NeeView.ThumbnailListView"
+﻿<UserControl x:Class="NeeView.FilmStripView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -20,20 +20,20 @@
 
     </UserControl.Resources>
 
-    <Grid x:Name="Root" Visibility="{Binding Model.ThumbnailListVisibility}" SizeChanged="ThumbnailListArea_SizeChanged" UseLayoutRounding="True">
+    <Grid x:Name="Root" Visibility="{Binding Model.FilmStripVisibility}" SizeChanged="FilmStripArea_SizeChanged" UseLayoutRounding="True">
 
         <Border BorderThickness="0,1,0,0" BorderBrush="{DynamicResource BottomBar.Border}" Background="{DynamicResource BottomBar.Background}">
             <Border.Style>
                 <Style TargetType="Border">
                     <Setter Property="Opacity" Value="1.0" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsBackgroundOpacityEnabled, RelativeSource={RelativeSource AncestorType=local:ThumbnailListView}}" Value="True">
+                        <DataTrigger Binding="{Binding IsBackgroundOpacityEnabled, RelativeSource={RelativeSource AncestorType=local:FilmStripView}}" Value="True">
                             <Setter Property="Opacity" Value="{Binding Source={x:Static local:Config.Current}, Path=Slider.Opacity}" />
                         </DataTrigger>
                         <!--
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding IsBackgroundOpacityEnabled, RelativeSource={RelativeSource AncestorType=local:ThumbnailListView}}" Value="True" />
+                                <Condition Binding="{Binding IsBackgroundOpacityEnabled, RelativeSource={RelativeSource AncestorType=local:FilmStripView}}" Value="True" />
                                 <Condition Binding="{Binding Source={x:Static local:Config.Current}, Path=FilmStrip.IsVisiblePlate}" Value="False" />
                             </MultiDataTrigger.Conditions>
                             <Setter Property="Visibility" Value="Collapsed" />
@@ -44,7 +44,7 @@
             </Border.Style>
         </Border>
 
-        <ListBox x:Name="ThumbnailListBox" ItemsSource="{Binding Model.Items, NotifyOnTargetUpdated=True}" ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+        <ListBox x:Name="FilmStripBox" ItemsSource="{Binding Model.Items, NotifyOnTargetUpdated=True}" ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                              SelectionMode="Extended"
                              SelectedIndex="{Binding Model.SelectedIndex}"
                              Background="Transparent"
@@ -54,14 +54,14 @@
                              VerticalAlignment="Bottom"
                              VirtualizingPanel.ScrollUnit="Pixel"
                              VirtualizingStackPanel.VirtualizationMode="Recycling"
-                             Loaded="ThumbnailListBox_Loaded"
-                             IsVisibleChanged="ThumbnailListBox_IsVisibleChanged"
-                             SelectionChanged="ThumbnailListBox_SelectionChanged"
-                             TargetUpdated="ThumbnailListBox_TargetUpdated"
-                             ScrollViewer.ScrollChanged="ThumbnailList_ScrollChanged"
-                             KeyDown="ThumbnailListBox_KeyDown"
-                             IsMouseCapturedChanged="ThumbnailListBox_IsMouseCapturedChanged"
-                             PreviewMouseWheel="ThumbnailListBox_MouseWheel">
+                             Loaded="FilmStripBox_Loaded"
+                             IsVisibleChanged="FilmStripBox_IsVisibleChanged"
+                             SelectionChanged="FilmStripBox_SelectionChanged"
+                             TargetUpdated="FilmStripBox_TargetUpdated"
+                             ScrollViewer.ScrollChanged="FilmStrip_ScrollChanged"
+                             KeyDown="FilmStripBox_KeyDown"
+                             IsMouseCapturedChanged="FilmStripBox_IsMouseCapturedChanged"
+                             PreviewMouseWheel="FilmStripBox_MouseWheel">
             <ListBox.Resources>
 
                 <Style TargetType="{x:Type ListBox}">
@@ -75,7 +75,7 @@
                                         <Grid Width="{Binding Source={x:Static local:Config.Current},  Path=FilmStrip.ImageWidth}"
                                                 Height="{Binding Source={x:Static local:Config.Current},  Path=FilmStrip.ImageWidth}">
                                             <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-                                                <local:ThumbnailListImage Source="{Binding Thumbnail.ImageSource}" Opacity="{Binding PendingCount, Converter={StaticResource PendingCountToOpacityConverter}}" />
+                                                <local:FilmStripImage Source="{Binding Thumbnail.ImageSource}" Opacity="{Binding PendingCount, Converter={StaticResource PendingCountToOpacityConverter}}" />
                                                 <Grid Width="16" Height="16" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-4,4,0"
                                                       Visibility="{Binding Source={x:Static local:Config.Current}, Path=FilmStrip.IsVisiblePlaylistMark, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                     <Image Source="{StaticResource ic_bookmark_24px}" Visibility="{Binding IsMarked, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -103,16 +103,16 @@
                         <Setter.Value>
                             <ItemsPanelTemplate>
                                 <VirtualizingStackPanel Orientation="Horizontal" CanHorizontallyScroll="True" CanVerticallyScroll="False" Margin="2,1"
-                                                                    Loaded="ThumbnailListBoxPanel_Loaded"
-                                                                    KeyDown="ThumbnailListBoxPanel_KeyDown"/>
+                                                                    Loaded="FilmStripBoxPanel_Loaded"
+                                                                    KeyDown="FilmStripBoxPanel_KeyDown"/>
                             </ItemsPanelTemplate>
                         </Setter.Value>
                     </Setter>
                 </Style>
 
                 <Style TargetType="ListBoxItem" BasedOn="{StaticResource NVListBoxItem}">
-                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ThumbnailListItem_MouseLeftButtonDown"/>
-                    <EventSetter Event="ContextMenuOpening" Handler="ThumbnailListItem_ContextMenuOpening" />
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="FilmStripItem_MouseLeftButtonDown"/>
+                    <EventSetter Event="ContextMenuOpening" Handler="FilmStripItem_ContextMenuOpening" />
                     <Setter Property="FocusVisualStyle" Value="{StaticResource NVListItemFocusVisual}" />
                     <Setter Property="Padding" Value="0"/>
                     <Setter Property="ToolTipService.ShowsToolTipOnKeyboardFocus" Value="False"/>

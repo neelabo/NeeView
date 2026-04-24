@@ -10,12 +10,12 @@
 
     <local:NullableToInverseVisibilityConverter x:Key="NullableToInverseVisibilityConverter"/>
 
-    <Style TargetType="{x:Type local:ThumbnailListImage}">
+    <Style TargetType="{x:Type local:FilmStripImage}">
         <Setter Property="Focusable" Value="False"/>
         <Setter Property="Background" Value="{DynamicResource Thumbnail.Foreground}"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:ThumbnailListImage}">
+                <ControlTemplate TargetType="{x:Type local:FilmStripImage}">
                     <Grid x:Name="PART_Root">
                         <Ellipse x:Name="PART_Ellipse" Fill="{TemplateBinding Background}" Width="8" Height="8" VerticalAlignment="Center" HorizontalAlignment="Center"
                                  Visibility="{TemplateBinding Property=Source, Converter={StaticResource NullableToInverseVisibilityConverter}}">

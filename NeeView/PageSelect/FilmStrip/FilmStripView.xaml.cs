@@ -16,25 +16,25 @@ using System.Windows.Threading;
 namespace NeeView
 {
     /// <summary>
-    /// ThumbnailListView.xaml の相互作用ロジック
+    /// FilmStripView.xaml の相互作用ロジック
     /// </summary>
     [LocalDebug]
-    public partial class ThumbnailListView : UserControl, IVisibleElement
+    public partial class FilmStripView : UserControl, IVisibleElement
     {
         #region DependencyProperties
 
-        public ThumbnailList Source
+        public FilmStrip Source
         {
-            get { return (ThumbnailList)GetValue(SourceProperty); }
+            get { return (FilmStrip)GetValue(SourceProperty); }
             set { SetValue(SourceProperty, value); }
         }
 
         public static readonly DependencyProperty SourceProperty =
-            DependencyProperty.Register("Source", typeof(ThumbnailList), typeof(ThumbnailListView), new PropertyMetadata(null, Source_Changed));
+            DependencyProperty.Register("Source", typeof(FilmStrip), typeof(FilmStripView), new PropertyMetadata(null, Source_Changed));
 
         private static void Source_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is ThumbnailListView control)
+            if (d is FilmStripView control)
             {
                 control.Initialize();
             }
@@ -48,7 +48,7 @@ namespace NeeView
         }
 
         private static readonly DependencyPropertyKey IsContentVisiblePropertyKey =
-            DependencyProperty.RegisterReadOnly("IsContentVisible", typeof(bool), typeof(ThumbnailListView), new PropertyMetadata(false));
+            DependencyProperty.RegisterReadOnly("IsContentVisible", typeof(bool), typeof(FilmStripView), new PropertyMetadata(false));
 
         public static readonly DependencyProperty IsContentVisibleProperty = IsContentVisiblePropertyKey.DependencyProperty;
 
@@ -60,7 +60,7 @@ namespace NeeView
         }
 
         public static readonly DependencyProperty IsBackgroundOpacityEnabledProperty =
-            DependencyProperty.Register("IsBackgroundOpacityEnabled", typeof(bool), typeof(ThumbnailListView), new PropertyMetadata(false));
+            DependencyProperty.Register("IsBackgroundOpacityEnabled", typeof(bool), typeof(FilmStripView), new PropertyMetadata(false));
 
 
         public bool IsFocusRequest
@@ -70,12 +70,12 @@ namespace NeeView
         }
 
         public static readonly DependencyProperty IsFocusRequestProperty =
-            DependencyProperty.Register(nameof(IsFocusRequest), typeof(bool), typeof(ThumbnailListView),
+            DependencyProperty.Register(nameof(IsFocusRequest), typeof(bool), typeof(FilmStripView),
                 new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, IsFocusRequest_Changed));
 
         private static void IsFocusRequest_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is ThumbnailListView control && (bool)e.NewValue)
+            if (d is FilmStripView control && (bool)e.NewValue)
             {
                 control.FocusAtOnce();
                 control.Dispatcher.BeginInvoke(() => control.IsFocusRequest = false);
@@ -85,7 +85,7 @@ namespace NeeView
         #endregion
 
         // ViewModel
-        private ThumbnailListViewModel? _vm;
+        private FilmStripViewModel? _vm;
 
         // フィルムストリップのパネルコントロール
         private VirtualizingStackPanel? _listPanel;
@@ -104,20 +104,20 @@ namespace NeeView
         private int _lastSelectedIndex = -1;
 
 
-        static ThumbnailListView()
+        static FilmStripView()
         {
             InitializeCommandStatic();
         }
 
-        public ThumbnailListView()
+        public FilmStripView()
         {
             InitializeComponent();
 
-            _commandResource = new ThumbnailListItemCommandResource(ThumbnailListItemDetailToolTip.Current);
+            _commandResource = new FilmStripItemCommandResource(FilmStripItemDetailToolTip.Current);
             InitializeCommand();
 
-            this.ThumbnailListBox.HorizontalAlignment = HorizontalAlignment.Center;
-            this.ThumbnailListBox.RenderTransform = _layoutTransform;
+            this.FilmStripBox.HorizontalAlignment = HorizontalAlignment.Center;
+            this.FilmStripBox.RenderTransform = _layoutTransform;
 
             this.Root.IsVisibleChanged +=
                 (s, e) => this.IsContentVisible = (bool)e.NewValue;
@@ -126,21 +126,21 @@ namespace NeeView
 
         #region Commands
 
-        public static readonly RoutedCommand OpenCommand = new(nameof(OpenCommand), typeof(ThumbnailListView));
-        public static readonly RoutedCommand OpenBookCommand = new(nameof(OpenBookCommand), typeof(ThumbnailListView));
-        public static readonly RoutedCommand OpenExplorerCommand = new(nameof(OpenExplorerCommand), typeof(ThumbnailListView));
-        public static readonly RoutedCommand OpenExternalAppCommand = new(nameof(OpenExternalAppCommand), typeof(ThumbnailListView));
-        public static readonly RoutedCommand CutCommand = new(nameof(CutCommand), typeof(ThumbnailListView));
-        public static readonly RoutedCommand CopyCommand = new(nameof(CopyCommand), typeof(ThumbnailListView));
-        public static readonly RoutedCommand CopyToFolderCommand = new(nameof(CopyToFolderCommand), typeof(ThumbnailListView));
-        public static readonly RoutedCommand MoveToFolderCommand = new(nameof(MoveToFolderCommand), typeof(ThumbnailListView));
-        public static readonly RoutedCommand RemoveCommand = new(nameof(RemoveCommand), typeof(ThumbnailListView));
-        public static readonly RoutedCommand RenameCommand = new(nameof(RenameCommand), typeof(ThumbnailListView));
-        public static readonly RoutedCommand OpenDestinationFolderCommand = new(nameof(OpenDestinationFolderCommand), typeof(ThumbnailListView));
-        public static readonly RoutedCommand OpenExternalAppDialogCommand = new(nameof(OpenExternalAppDialogCommand), typeof(ThumbnailListView));
-        public static readonly RoutedCommand PlaylistMarkCommand = new(nameof(PlaylistMarkCommand), typeof(ThumbnailListView));
+        public static readonly RoutedCommand OpenCommand = new(nameof(OpenCommand), typeof(FilmStripView));
+        public static readonly RoutedCommand OpenBookCommand = new(nameof(OpenBookCommand), typeof(FilmStripView));
+        public static readonly RoutedCommand OpenExplorerCommand = new(nameof(OpenExplorerCommand), typeof(FilmStripView));
+        public static readonly RoutedCommand OpenExternalAppCommand = new(nameof(OpenExternalAppCommand), typeof(FilmStripView));
+        public static readonly RoutedCommand CutCommand = new(nameof(CutCommand), typeof(FilmStripView));
+        public static readonly RoutedCommand CopyCommand = new(nameof(CopyCommand), typeof(FilmStripView));
+        public static readonly RoutedCommand CopyToFolderCommand = new(nameof(CopyToFolderCommand), typeof(FilmStripView));
+        public static readonly RoutedCommand MoveToFolderCommand = new(nameof(MoveToFolderCommand), typeof(FilmStripView));
+        public static readonly RoutedCommand RemoveCommand = new(nameof(RemoveCommand), typeof(FilmStripView));
+        public static readonly RoutedCommand RenameCommand = new(nameof(RenameCommand), typeof(FilmStripView));
+        public static readonly RoutedCommand OpenDestinationFolderCommand = new(nameof(OpenDestinationFolderCommand), typeof(FilmStripView));
+        public static readonly RoutedCommand OpenExternalAppDialogCommand = new(nameof(OpenExternalAppDialogCommand), typeof(FilmStripView));
+        public static readonly RoutedCommand PlaylistMarkCommand = new(nameof(PlaylistMarkCommand), typeof(FilmStripView));
 
-        private readonly ThumbnailListItemCommandResource _commandResource;
+        private readonly FilmStripItemCommandResource _commandResource;
 
         private static void InitializeCommandStatic()
         {
@@ -155,19 +155,19 @@ namespace NeeView
 
         private void InitializeCommand()
         {
-            this.ThumbnailListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(OpenCommand));
-            this.ThumbnailListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(OpenBookCommand));
-            this.ThumbnailListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(OpenExplorerCommand));
-            this.ThumbnailListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(OpenExternalAppCommand));
-            this.ThumbnailListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(CutCommand));
-            this.ThumbnailListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(CopyCommand));
-            this.ThumbnailListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(CopyToFolderCommand));
-            this.ThumbnailListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(MoveToFolderCommand));
-            this.ThumbnailListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(RemoveCommand));
-            this.ThumbnailListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(RenameCommand));
-            this.ThumbnailListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(OpenDestinationFolderCommand));
-            this.ThumbnailListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(OpenExternalAppDialogCommand));
-            this.ThumbnailListBox.CommandBindings.Add(_commandResource.CreateCommandBinding(PlaylistMarkCommand));
+            this.FilmStripBox.CommandBindings.Add(_commandResource.CreateCommandBinding(OpenCommand));
+            this.FilmStripBox.CommandBindings.Add(_commandResource.CreateCommandBinding(OpenBookCommand));
+            this.FilmStripBox.CommandBindings.Add(_commandResource.CreateCommandBinding(OpenExplorerCommand));
+            this.FilmStripBox.CommandBindings.Add(_commandResource.CreateCommandBinding(OpenExternalAppCommand));
+            this.FilmStripBox.CommandBindings.Add(_commandResource.CreateCommandBinding(CutCommand));
+            this.FilmStripBox.CommandBindings.Add(_commandResource.CreateCommandBinding(CopyCommand));
+            this.FilmStripBox.CommandBindings.Add(_commandResource.CreateCommandBinding(CopyToFolderCommand));
+            this.FilmStripBox.CommandBindings.Add(_commandResource.CreateCommandBinding(MoveToFolderCommand));
+            this.FilmStripBox.CommandBindings.Add(_commandResource.CreateCommandBinding(RemoveCommand));
+            this.FilmStripBox.CommandBindings.Add(_commandResource.CreateCommandBinding(RenameCommand));
+            this.FilmStripBox.CommandBindings.Add(_commandResource.CreateCommandBinding(OpenDestinationFolderCommand));
+            this.FilmStripBox.CommandBindings.Add(_commandResource.CreateCommandBinding(OpenExternalAppDialogCommand));
+            this.FilmStripBox.CommandBindings.Add(_commandResource.CreateCommandBinding(PlaylistMarkCommand));
         }
 
         #endregion
@@ -177,7 +177,7 @@ namespace NeeView
         {
             this.Source.VisibleElement = this;
 
-            _vm = new ThumbnailListViewModel(this.Source, ThumbnailListItemDetailToolTip.Current);
+            _vm = new FilmStripViewModel(this.Source, FilmStripItemDetailToolTip.Current);
 
             _vm.CollectionChanging +=
                 (s, e) => ViewModel_CollectionChanging(s, e);
@@ -188,10 +188,10 @@ namespace NeeView
             _vm.ViewItemsChanged +=
                 (s, e) => ViewModel_ViewItemsChanged(s, e);
 
-            this.ThumbnailListBox.ManipulationBoundaryFeedback +=
+            this.FilmStripBox.ManipulationBoundaryFeedback +=
                 _vm.Model.ScrollViewer_ManipulationBoundaryFeedback;
 
-            this.ThumbnailListBox.GotFocus += ThumbnailListBox_GotFocus;
+            this.FilmStripBox.GotFocus += FilmStripBox_GotFocus;
 
             this.Root.DataContext = _vm;
         }
@@ -216,14 +216,14 @@ namespace NeeView
             ScrollIntoViewItems(e.ViewItems, e.Direction);
         }
 
-        private void UpdateThumbnailListLayout(bool withLoadThumbnails)
+        private void UpdateFilmStripLayout(bool withLoadThumbnails)
         {
-            ScrollIntoViewFixed(this.ThumbnailListBox.SelectedIndex);
+            ScrollIntoViewFixed(this.FilmStripBox.SelectedIndex);
 
             // 必要であればサムネイル要求を行う
             if (withLoadThumbnails || _isThumbnailDirty)
             {
-                if (this.ThumbnailListBox.SelectedIndex >= 0)
+                if (this.FilmStripBox.SelectedIndex >= 0)
                 {
                     _isThumbnailDirty = false;
                     LoadThumbnails(+1);
@@ -254,7 +254,7 @@ namespace NeeView
             }
             else
             {
-                ScrollIntoViewIndex(this.ThumbnailListBox.SelectedIndex);
+                ScrollIntoViewIndex(this.FilmStripBox.SelectedIndex);
             }
         }
 
@@ -266,7 +266,7 @@ namespace NeeView
             if (index < 0) return;
             if (_listPanel is null) return;
 
-            Debug.Assert(VirtualizingStackPanel.GetScrollUnit(this.ThumbnailListBox) == ScrollUnit.Pixel);
+            Debug.Assert(VirtualizingStackPanel.GetScrollUnit(this.FilmStripBox) == ScrollUnit.Pixel);
 
             double itemWidth = GetItemWidth();
             if (itemWidth <= 0.0) return;
@@ -278,7 +278,7 @@ namespace NeeView
             _listPanel.SetHorizontalOffset(horizontalOffset);
 
             // Set the panel layout to center the item
-            var scrollableWidth = Math.Max(0, itemWidth * this.ThumbnailListBox.Items.Count - viewWidth);
+            var scrollableWidth = Math.Max(0, itemWidth * this.FilmStripBox.Items.Count - viewWidth);
             var layoutX = 0.0;
             if (horizontalOffset < 0)
             {
@@ -323,7 +323,7 @@ namespace NeeView
             if (_listPanel is null) return;
             if (index < 0) return;
 
-            Debug.Assert(VirtualizingStackPanel.GetScrollUnit(this.ThumbnailListBox) == ScrollUnit.Pixel);
+            Debug.Assert(VirtualizingStackPanel.GetScrollUnit(this.FilmStripBox) == ScrollUnit.Pixel);
 
             // 項目の幅 取得
             double itemWidth = GetItemWidth();
@@ -362,7 +362,7 @@ namespace NeeView
         private void ScrollIntoViewItems(List<Page> items, int direction)
         {
             if (_vm == null) return;
-            if (!this.ThumbnailListBox.IsLoaded) return;
+            if (!this.FilmStripBox.IsLoaded) return;
             if (_vm.Model.Items == null) return;
             if (_vm.Model.IsItemsDirty) return;
             if (!this.IsVisible) return;
@@ -384,7 +384,7 @@ namespace NeeView
         private void ScrollIntoView(object item)
         {
             //// Debug.WriteLine($"> ScrollInoView: {item}");
-            var index = this.ThumbnailListBox.Items.IndexOf(item);
+            var index = this.FilmStripBox.Items.IndexOf(item);
             ScrollIntoViewIndex(index);
         }
 
@@ -405,18 +405,18 @@ namespace NeeView
             if (_vm == null) return;
             if (_isFrozen) return;
 
-            if (!this.Root.IsVisible || !this.ThumbnailListBox.IsVisible || _listPanel == null || _listPanel.Children.Count <= 0)
+            if (!this.Root.IsVisible || !this.FilmStripBox.IsVisible || _listPanel == null || _listPanel.Children.Count <= 0)
             {
                 _vm.CancelThumbnailRequest();
                 return;
             }
 
-            if (this.ThumbnailListBox.SelectedIndex < 0)
+            if (this.FilmStripBox.SelectedIndex < 0)
             {
                 return;
             }
 
-            Debug.Assert(VirtualizingStackPanel.GetScrollUnit(this.ThumbnailListBox) == ScrollUnit.Pixel);
+            Debug.Assert(VirtualizingStackPanel.GetScrollUnit(this.FilmStripBox) == ScrollUnit.Pixel);
 
             var itemWidth = GetItemWidth();
             if (itemWidth <= 0.0) return; // 項目の準備ができていない？
@@ -447,45 +447,45 @@ namespace NeeView
 
         #region ThunbnailList event func
 
-        private void ThumbnailListArea_SizeChanged(object? sender, SizeChangedEventArgs e)
+        private void FilmStripArea_SizeChanged(object? sender, SizeChangedEventArgs e)
         {
-            UpdateThumbnailListLayout(false);
+            UpdateFilmStripLayout(false);
         }
 
-        private void ThumbnailListBox_Loaded(object? sender, RoutedEventArgs e)
+        private void FilmStripBox_Loaded(object? sender, RoutedEventArgs e)
         {
             // nop.
         }
 
-        private void ThumbnailListBoxPanel_Loaded(object? sender, RoutedEventArgs e)
+        private void FilmStripBoxPanel_Loaded(object? sender, RoutedEventArgs e)
         {
             // パネルコントロール取得
             _listPanel = sender as VirtualizingStackPanel;
-            UpdateThumbnailListLayout(true);
+            UpdateFilmStripLayout(true);
         }
 
         // リストボックスのドラッグ機能を無効化する
-        private void ThumbnailListBox_IsMouseCapturedChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void FilmStripBox_IsMouseCapturedChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (this.ThumbnailListBox.IsMouseCaptured)
+            if (this.FilmStripBox.IsMouseCaptured)
             {
-                MouseInputHelper.ReleaseMouseCapture(this, this.ThumbnailListBox);
+                MouseInputHelper.ReleaseMouseCapture(this, this.FilmStripBox);
             }
         }
 
         // リストボックスのカーソルキーによる不意のスクロール抑制 (不要かも)
-        private void ThumbnailListBox_KeyDown(object sender, KeyEventArgs e)
+        private void FilmStripBox_KeyDown(object sender, KeyEventArgs e)
         {
             e.Handled = (e.Key == Key.Up || e.Key == Key.Down || e.Key == Key.Left || e.Key == Key.Right);
         }
 
         // リストボックスのカーソルキーによる不意のスクロール抑制
-        private void ThumbnailListBoxPanel_KeyDown(object sender, KeyEventArgs e)
+        private void FilmStripBoxPanel_KeyDown(object sender, KeyEventArgs e)
         {
             if (Keyboard.Modifiers == ModifierKeys.None && e.Key == Key.Return)
             {
                 // 決定
-                BookOperation.Current.JumpPage(this, ThumbnailListBox.SelectedItem as Page);
+                BookOperation.Current.JumpPage(this, FilmStripBox.SelectedItem as Page);
                 e.Handled = true;
             }
             else if (e.Key == Key.Up || e.Key == Key.Down)
@@ -495,7 +495,7 @@ namespace NeeView
             }
         }
 
-        private void ThumbnailListBox_GotFocus(object sender, RoutedEventArgs e)
+        private void FilmStripBox_GotFocus(object sender, RoutedEventArgs e)
         {
             if (e.OriginalSource is ListBoxItem container)
             {
@@ -509,13 +509,13 @@ namespace NeeView
             }
         }
 
-        private void ThumbnailListBox_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void FilmStripBox_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if ((bool)e.NewValue == true)
             {
                 Dispatcher.BeginInvoke(() =>
                 {
-                    UpdateThumbnailListLayout(true);
+                    UpdateFilmStripLayout(true);
                     _listPanel?.UpdateLayout();
                     FocusSelectedItem();
                 }, DispatcherPriority.Input);
@@ -525,26 +525,26 @@ namespace NeeView
         public void FocusSelectedItem(bool focus = false)
         {
             if (_vm is null) return;
-            if (this.ThumbnailListBox.SelectedIndex < 0) this.ThumbnailListBox.SelectedIndex = 0;
-            if (this.ThumbnailListBox.SelectedIndex < 0) return;
+            if (this.FilmStripBox.SelectedIndex < 0) this.FilmStripBox.SelectedIndex = 0;
+            if (this.FilmStripBox.SelectedIndex < 0) return;
 
             // 選択項目が表示されるようにスクロール
-            ScrollIntoViewIndex(this.ThumbnailListBox.SelectedIndex);
+            ScrollIntoViewIndex(this.FilmStripBox.SelectedIndex);
 
             // フォーカスを移動
             if (focus)
             {
-                var listBoxItem = (ListBoxItem)(this.ThumbnailListBox.ItemContainerGenerator.ContainerFromIndex(this.ThumbnailListBox.SelectedIndex));
+                var listBoxItem = (ListBoxItem)(this.FilmStripBox.ItemContainerGenerator.ContainerFromIndex(this.FilmStripBox.SelectedIndex));
                 var isFocused = listBoxItem?.Focus();
             }
         }
 
         private void FocusAtOnce()
         {
-            FocusTools.FocusAtOnce(this.ThumbnailListBox, () => FocusSelectedItem(true));
+            FocusTools.FocusAtOnce(this.FilmStripBox, () => FocusSelectedItem(true));
         }
 
-        private void ThumbnailListBox_MouseWheel(object sender, MouseWheelEventArgs e)
+        private void FilmStripBox_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (_vm is null) return;
             int delta = -_mouseWheelDelta.NotchCount(e);
@@ -555,36 +555,36 @@ namespace NeeView
             e.Handled = true;
         }
 
-        private void ThumbnailListBox_TargetUpdated(object sender, DataTransferEventArgs e)
+        private void FilmStripBox_TargetUpdated(object sender, DataTransferEventArgs e)
         {
             if (_vm == null) return;
-            this.ThumbnailListBox.UpdateLayout();
-            UpdateThumbnailListLayout(true);
+            this.FilmStripBox.UpdateLayout();
+            UpdateFilmStripLayout(true);
             _vm.Model.IsItemsDirty = false;
         }
 
-        private void ThumbnailListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void FilmStripBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // NOTE: SelectedIndex が変化したときだけに反応する
-            int currentId = this.ThumbnailListBox.SelectedIndex;
+            int currentId = this.FilmStripBox.SelectedIndex;
             if (_lastSelectedIndex != currentId)
             {
                 _lastSelectedIndex = currentId;
-                UpdateThumbnailListLayout(false);
+                UpdateFilmStripLayout(false);
             }
         }
 
         // スクロールしたらサムネ更新
-        private void ThumbnailList_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        private void FilmStrip_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            if (_listPanel != null && this.ThumbnailListBox.Items.Count > 0)
+            if (_listPanel != null && this.FilmStripBox.Items.Count > 0)
             {
                 LoadThumbnails(e.HorizontalChange < 0 ? -1 : +1);
             }
         }
 
         // 履歴項目決定
-        private void ThumbnailListItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void FilmStripItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (Keyboard.Modifiers != ModifierKeys.None) return;
 
@@ -595,7 +595,7 @@ namespace NeeView
         }
 
         // ContextMenu
-        private void ThumbnailListItem_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        private void FilmStripItem_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
             if (sender is not ListBoxItem container)
             {
@@ -621,7 +621,7 @@ namespace NeeView
                 contextMenu.Items.Add(new Separator());
             }
 
-            var listBox = this.ThumbnailListBox;
+            var listBox = this.FilmStripBox;
             contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("PageListItem.Menu.Open"), Command = OpenCommand });
             contextMenu.Items.Add(new Separator());
             contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("PageListItem.Menu.AddToPlaylist"), Command = PlaylistMarkCommand, IsChecked = _commandResource.PlaylistMark_IsChecked(listBox) });

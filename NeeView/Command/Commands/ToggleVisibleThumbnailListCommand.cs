@@ -22,7 +22,7 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return ThumbnailList.Current.IsVisible ? TextResources.GetString("ToggleVisibleThumbnailListCommand.Off") : TextResources.GetString("ToggleVisibleThumbnailListCommand.On");
+            return FilmStrip.Current.IsVisible ? TextResources.GetString("ToggleVisibleThumbnailListCommand.Off") : TextResources.GetString("ToggleVisibleThumbnailListCommand.On");
         }
 
         [MethodArgument("ToggleCommand.Execute.Remarks")]

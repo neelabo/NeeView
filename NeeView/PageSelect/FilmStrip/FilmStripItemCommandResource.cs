@@ -2,9 +2,9 @@
 
 namespace NeeView
 {
-    public class ThumbnailListItemCommandResource : PageCommandResource<Page>
+    public class FilmStripItemCommandResource : PageCommandResource<Page>
     {
-        public ThumbnailListItemCommandResource(IToolTipService? toolTipService) : base(toolTipService)
+        public FilmStripItemCommandResource(IToolTipService? toolTipService) : base(toolTipService)
         {
         }
 

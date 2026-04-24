@@ -132,7 +132,7 @@ namespace NeeView
         }
 
         /// <summary>
-        /// サムネイルリストのマウスホイール速度倍率
+        /// フィルムストリップのマウスホイール速度倍率
         /// </summary>
         [PropertyRange(0.1, 2.0, TickFrequency = 0.1, Format = "× {0:0.0}")]
         public double MouseWheelSpeedRate

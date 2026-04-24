@@ -30,13 +30,13 @@ namespace NeeView
 
 
     /// <summary>
-    /// ThumbnailList : Model
+    /// FilmStrip : Model
     /// </summary>
     [LocalDebug]
-    public partial class ThumbnailList : BindableBase, IDisposable
+    public partial class FilmStrip : BindableBase, IDisposable
     {
-        static ThumbnailList() => Current = new ThumbnailList();
-        public static ThumbnailList Current { get; }
+        static FilmStrip() => Current = new FilmStrip();
+        public static FilmStrip Current { get; }
 
 
         private bool _isSliderDirectionReversed;
@@ -48,7 +48,7 @@ namespace NeeView
         private readonly ConstDelayAction _delayAction = new(200);
         private List<Page> _pages = [];
 
-        private ThumbnailList()
+        private FilmStrip()
         {
             _jobClient = new PageThumbnailJobClient("FilmStrip", JobCategories.PageThumbnailCategory);
 
@@ -102,7 +102,7 @@ namespace NeeView
         /// <summary>
         /// フィルムストリップ表示状態
         /// </summary>
-        public Visibility ThumbnailListVisibility => BookOperation.Current.Control.Pages.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility FilmStripVisibility => BookOperation.Current.Control.Pages.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
 
         /// <summary>
         /// スライダー方向
@@ -208,7 +208,7 @@ namespace NeeView
         private void Update()
         {
             UpdateItems();
-            RaisePropertyChanged(nameof(ThumbnailListVisibility));
+            RaisePropertyChanged(nameof(FilmStripVisibility));
         }
 
         private void PageSelector_SelectionChanged(object? sender, EventArgs e)
@@ -317,13 +317,6 @@ namespace NeeView
 
             PageSelector.Current.FlushSelectedIndex(this);
             UpdateSelectedIndex();
-        }
-
-        public bool ToggleHideThumbnailList()
-        {
-            if (_disposedValue) return Config.Current.FilmStrip.IsHideFilmStrip;
-
-            return Config.Current.FilmStrip.IsHideFilmStrip = !Config.Current.FilmStrip.IsHideFilmStrip;
         }
 
         // サムネイル要求

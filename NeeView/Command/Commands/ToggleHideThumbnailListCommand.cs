@@ -38,7 +38,7 @@ namespace NeeView
             }
             else
             {
-                ThumbnailList.Current.ToggleHideThumbnailList();
+                Config.Current.FilmStrip.IsHideFilmStrip = !Config.Current.FilmStrip.IsHideFilmStrip;
             }
         }
     }

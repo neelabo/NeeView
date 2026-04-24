@@ -4,11 +4,11 @@ using System.Windows.Media;
 
 namespace NeeView
 {
-    public class ThumbnailListImage : Control
+    public class FilmStripImage : Control
     {
-        static ThumbnailListImage()
+        static FilmStripImage()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(ThumbnailListImage), new FrameworkPropertyMetadata(typeof(ThumbnailListImage)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(FilmStripImage), new FrameworkPropertyMetadata(typeof(FilmStripImage)));
         }
 
 
@@ -19,6 +19,6 @@ namespace NeeView
         }
 
         public static readonly DependencyProperty SourceProperty =
-            DependencyProperty.Register("Source", typeof(ImageSource), typeof(ThumbnailListImage), new PropertyMetadata(null));
+            DependencyProperty.Register("Source", typeof(ImageSource), typeof(FilmStripImage), new PropertyMetadata(null));
     }
 }

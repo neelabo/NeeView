@@ -113,7 +113,7 @@
                                     <local:PageSliderView.Style>
                                         <Style TargetType="local:PageSliderView">
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding ElementName=ThumbnailListArea, Path=IsContentVisible}" Value="False">
+                                                <DataTrigger Binding="{Binding ElementName=FilmStripArea, Path=IsContentVisible}" Value="False">
                                                     <Setter Property="IsBorderVisible" Value="True" />
                                                 </DataTrigger>
                                             </Style.Triggers>
@@ -126,8 +126,8 @@
                         </ContentControl>
 
                         <!-- フィルムストリップ -->
-                        <ContentControl x:Name="DockThumbnailListSocket" DockPanel.Dock="Bottom" IsTabStop="False">
-                            <local:ThumbnailListView x:Name="ThumbnailListArea" IsFocusRequest="{Binding IsThumbnailListFocusRequest}"  KeyboardNavigation.TabNavigation="Local" TabIndex="1" />
+                        <ContentControl x:Name="DockFilmStripSocket" DockPanel.Dock="Bottom" IsTabStop="False">
+                            <local:FilmStripView x:Name="FilmStripArea" IsFocusRequest="{Binding IsFilmStripFocusRequest}"  KeyboardNavigation.TabNavigation="Local" TabIndex="1" />
                         </ContentControl>
 
                     </DockPanel>
@@ -192,12 +192,12 @@
                 </behaviors:Interaction.Behaviors>
                 <ContentControl x:Name="LayerPageSliderSocket" DockPanel.Dock="Bottom" IsTabStop="False" />
                 <Grid x:Name="LayerStatusAreaPadding" DockPanel.Dock="Bottom" Height="{Binding ElementName=DockPageSliderSocket, Path=ActualHeight}"
-                        Visibility="{Binding ElementName=LayerThumbnailListSocket, Path=Visibility}" />
-                <ContentControl x:Name="LayerThumbnailListSocket" DockPanel.Dock="Bottom" IsTabStop="False">
+                        Visibility="{Binding ElementName=LayerFilmStripSocket, Path=Visibility}" />
+                <ContentControl x:Name="LayerFilmStripSocket" DockPanel.Dock="Bottom" IsTabStop="False">
                     <behaviors:Interaction.Behaviors>
-                        <nwc:AutoHideBehavior Name="ThumbnailListAutoHide" Screen="{Binding ElementName=Root}" Dock="Bottom" IsEnabled="{Binding Model.CanHideFilmStrip}" DelayTime="{Binding AutoHideConfig.AutoHideDelayTime}"
+                        <nwc:AutoHideBehavior Name="FilmStripAutoHide" Screen="{Binding ElementName=Root}" Dock="Bottom" IsEnabled="{Binding Model.CanHideFilmStrip}" DelayTime="{Binding AutoHideConfig.AutoHideDelayTime}"
                                 DelayVisibleTime="{Binding AutoHideConfig.AutoHideDelayVisibleTime}" FocusLockMode="{Binding AutoHideConfig.AutoHideFocusLockMode}"
-                                IsKeyDownDelayEnabled="{Binding AutoHideConfig.IsAutoHideKeyDownDelay}" Description="{Binding ThumbnailListAutoHideDescription}"
+                                IsKeyDownDelayEnabled="{Binding AutoHideConfig.IsAutoHideKeyDownDelay}" Description="{Binding FilmStripAutoHideDescription}"
                                 IsVisibleLocked="{Binding Model.IsPanelVisibleLocked}">
                             <nwc:AutoHideBehavior.HitTestMargin>
                                 <MultiBinding Converter="{StaticResource DoubleSumConverter}">

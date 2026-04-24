@@ -21,7 +21,7 @@ namespace NeeView
         private Thickness _sidePanelMargin;
         private double _canvasWidth;
         private double _canvasHeight;
-        private bool _isThumbnailListFocusRequest;
+        private bool _isFilmStripFocusRequest;
         private readonly Messenger _visibleAtOnceMessenger;
 
 
@@ -34,7 +34,7 @@ namespace NeeView
 
             MenuAutoHideDescription = new MenuAutoHideDescription(MainWindow.Current.LayerMenuSocket, MainWindow.Current.SidePanelFrame);
             StatusAutoHideDescription = new StatusAutoHideDescription(MainWindow.Current.LayerStatusArea, MainWindow.Current.SidePanelFrame);
-            ThumbnailListAutoHideDescription = new StatusAutoHideDescription(MainWindow.Current.LayerThumbnailListSocket, MainWindow.Current.SidePanelFrame);
+            FilmStripAutoHideDescription = new StatusAutoHideDescription(MainWindow.Current.LayerFilmStripSocket, MainWindow.Current.SidePanelFrame);
 
             _visibleAtOnceMessenger = visibleAtOnceMessenger;
             _visibleAtOnceMessenger.Subscribe<MenuVisibleAtOnceMessage>(VisibleAtOnce);
@@ -110,7 +110,7 @@ namespace NeeView
         public MainWindowController WindowController => _model.WindowController;
         public WindowTitle WindowTitle => WindowTitle.Current;
         public PageTitle PageTitle => PageTitle.Current;
-        public ThumbnailList ThumbnailList => ThumbnailList.Current;
+        public FilmStrip FilmStrip => FilmStrip.Current;
         public ImageEffect ImageEffect => ImageEffect.Current;
         public MouseInput MouseInput => _viewComponent.MouseInput;
         public InfoMessage InfoMessage => InfoMessage.Current;
@@ -166,17 +166,17 @@ namespace NeeView
         /// </summary>
         public BasicAutoHideDescription StatusAutoHideDescription { get; }
 
-        public BasicAutoHideDescription ThumbnailListAutoHideDescription { get; }
+        public BasicAutoHideDescription FilmStripAutoHideDescription { get; }
 
         public bool IsMenuBarActive => MainWindow.Current.IsActive;
 
         /// <summary>
-        /// サムネイルリスト フォーカス要求
+        /// フィルムストリップ フォーカス要求
         /// </summary>
-        public bool IsThumbnailListFocusRequest
+        public bool IsFilmStripFocusRequest
         {
-            get { return _isThumbnailListFocusRequest; }
-            set { SetProperty(ref _isThumbnailListFocusRequest, value); }
+            get { return _isFilmStripFocusRequest; }
+            set { SetProperty(ref _isFilmStripFocusRequest, value); }
         }
 
 
@@ -248,28 +248,28 @@ namespace NeeView
 
         public void VisibleAtOnce(FilmStripVisibleAtOnceMessage e)
         {
-            ThumbnailListAutoHideDescription.VisibleOnce(e.Visibility, e.FocusFilmStrip ? OnVisibleOnceFilmStrip : null);
+            FilmStripAutoHideDescription.VisibleOnce(e.Visibility, e.FocusFilmStrip ? OnVisibleOnceFilmStrip : null);
         }
 
         public void VisibleAtOnce(AllVisibleAtOnceMessage e)
         {
             MenuAutoHideDescription.VisibleOnce(e.Visibility);
             StatusAutoHideDescription.VisibleOnce(e.Visibility);
-            ThumbnailListAutoHideDescription.VisibleOnce(e.Visibility);
+            FilmStripAutoHideDescription.VisibleOnce(e.Visibility);
         }
 
         private void OnVisibleOnceFilmStrip(bool isVisible)
         {
             if (isVisible)
             {
-                // 可能ならばサムネイルリストをフォーカスする
-                IsThumbnailListFocusRequest = true;
+                // 可能ならばフィルムストリップをフォーカスする
+                IsFilmStripFocusRequest = true;
             }
         }
 
         private void FocusAtOnce(FilmStripFocusAtOnceMessage e)
         {
-            IsThumbnailListFocusRequest = true;
+            IsFilmStripFocusRequest = true;
         }
 
         /// <summary>

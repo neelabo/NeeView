@@ -127,7 +127,7 @@ namespace NeeView
             _mediaControl = new MediaControl();
             this.PageSliderView.Source = PageSlider.Current;
             this.MediaControlView.Source = _mediaControl;
-            this.ThumbnailListArea.Source = ThumbnailList.Current;
+            this.FilmStripArea.Source = FilmStrip.Current;
             this.MenuBar.Source = new MenuBar(_windowStateManager);
             this.AddressBar.Source = new AddressBar();
 
@@ -146,10 +146,10 @@ namespace NeeView
                 (s, e) => DirtyPageSliderLayout());
 
             Config.Current.FilmStrip.AddPropertyChanged(nameof(FilmStripConfig.IsEnabled),
-                (s, e) => DirtyThumbnailListLayout());
+                (s, e) => DirtyFilmStripLayout());
 
             Config.Current.FilmStrip.AddPropertyChanged(nameof(FilmStripConfig.IsHideFilmStrip),
-                (s, e) => DirtyThumbnailListLayout());
+                (s, e) => DirtyFilmStripLayout());
 
             _viewComponent.PageFrameBoxPresenter.SubscribePageFrameBoxChanged(
                 (s, e) => DirtyPageSliderLayout());
@@ -668,7 +668,7 @@ namespace NeeView
 
         private bool _isDirtyMenuAreaLayout;
         private bool _isDirtyPageSliderLayout;
-        private bool _isDirtyThumbnailListLayout;
+        private bool _isDirtyFilmStripLayout;
 
         /// <summary>
         /// 自動非表示モードが変更されたときの処理
@@ -691,7 +691,7 @@ namespace NeeView
         {
             _isDirtyMenuAreaLayout = true;
             _isDirtyPageSliderLayout = true;
-            _isDirtyThumbnailListLayout = true;
+            _isDirtyFilmStripLayout = true;
         }
 
         /// <summary>
@@ -708,15 +708,15 @@ namespace NeeView
         private void DirtyPageSliderLayout()
         {
             _isDirtyPageSliderLayout = true;
-            _isDirtyThumbnailListLayout = true; // フィルムストリップも更新
+            _isDirtyFilmStripLayout = true; // フィルムストリップも更新
         }
 
         /// <summary>
         /// フィルムストリップ更新要求
         /// </summary>
-        private void DirtyThumbnailListLayout()
+        private void DirtyFilmStripLayout()
         {
-            _isDirtyThumbnailListLayout = true;
+            _isDirtyFilmStripLayout = true;
         }
 
 
@@ -760,7 +760,7 @@ namespace NeeView
         private void UpdateStatusAreaLayout()
         {
             UpdatePageSliderLayout();
-            UpdateThumbnailListLayout();
+            UpdateFilmStripLayout();
         }
 
         /// <summary>
@@ -805,29 +805,29 @@ namespace NeeView
         /// <summary>
         /// フィルムストリップレイアウト更新
         /// </summary>
-        private void UpdateThumbnailListLayout()
+        private void UpdateFilmStripLayout()
         {
-            if (!_isDirtyThumbnailListLayout) return;
-            _isDirtyThumbnailListLayout = false;
+            if (!_isDirtyFilmStripLayout) return;
+            _isDirtyFilmStripLayout = false;
 
             bool isPageSliderDock = !MainWindowModel.Current.CanHidePageSlider;
-            bool isThumbnailListDock = !MainWindowModel.Current.CanHideFilmStrip && isPageSliderDock;
+            bool isFilmStripDock = !MainWindowModel.Current.CanHideFilmStrip && isPageSliderDock;
 
-            if (isThumbnailListDock)
+            if (isFilmStripDock)
             {
-                this.LayerThumbnailListSocket.Content = null;
-                this.DockThumbnailListSocket.Content = this.ThumbnailListArea;
-                this.ThumbnailListArea.IsBackgroundOpacityEnabled = false;
+                this.LayerFilmStripSocket.Content = null;
+                this.DockFilmStripSocket.Content = this.FilmStripArea;
+                this.FilmStripArea.IsBackgroundOpacityEnabled = false;
             }
             else
             {
-                this.DockThumbnailListSocket.Content = null;
-                this.LayerThumbnailListSocket.Content = this.ThumbnailListArea;
-                this.ThumbnailListArea.IsBackgroundOpacityEnabled = true;
+                this.DockFilmStripSocket.Content = null;
+                this.LayerFilmStripSocket.Content = this.FilmStripArea;
+                this.FilmStripArea.IsBackgroundOpacityEnabled = true;
             }
 
             // フィルムストリップ
-            this.ThumbnailListArea.Visibility = Config.Current.FilmStrip.IsEnabled && !PageFrameBoxPresenter.Current.IsMedia ? Visibility.Visible : Visibility.Collapsed;
+            this.FilmStripArea.Visibility = Config.Current.FilmStrip.IsEnabled && !PageFrameBoxPresenter.Current.IsMedia ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void InitializeMessageLayerSpace()
@@ -875,7 +875,7 @@ namespace NeeView
             this.PageSliderView.IsVisibleChanged +=
                 (s, e) => UpdatePageCaptionVisibility((bool)e.NewValue);
 
-            this.ThumbnailListArea.IsVisibleChanged +=
+            this.FilmStripArea.IsVisibleChanged +=
                 (s, e) => UpdatePageCaptionVisibility((bool)e.NewValue);
 
             _vm.PageTitle.AddPropertyChanged(nameof(_vm.PageTitle.Title),
