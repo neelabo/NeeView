@@ -445,7 +445,7 @@ namespace NeeView
         }
 
 
-        #region ThunbnailList event func
+        #region FilmStrip event func
 
         private void FilmStripArea_SizeChanged(object? sender, SizeChangedEventArgs e)
         {

@@ -259,14 +259,14 @@ namespace NeeView
                         }
                     }
                 }
-
-                self.Commands?.ValidateRename(CommandNameValidator.RenameMap_46_0_0);
-                self.ContextMenu?.ValidateRename(CommandNameValidator.RenameMap_46_0_0);
             }
 
             if (self.Format.CompareTo(new FormatVersion(Environment.SolutionName, VersionNumber.Ver46_Alpha2)) <= 0)
             {
                 self.Config.FilmStrip.IsHideFilmStripInAutoHideMode = self.Config.Slider.IsHidePageSliderInAutoHideMode;
+
+                self.Commands?.ValidateRename(CommandNameValidator.RenameMap_46_0_0);
+                self.ContextMenu?.ValidateRename(CommandNameValidator.RenameMap_46_0_0);
             }
 
 
@@ -355,6 +355,8 @@ namespace NeeView
         public static Dictionary<string, string> RenameMap_46_0_0 { get; } = new Dictionary<string, string>()
         {
             ["AutoScrollOn"] = "ToggleAutoScroll",
+            ["ToggleVisibleThumbnailList"] = "ToggleVisibleFilmStrip",
+            ["ToggleHideThumbnailList"] = "ToggleHideFilmStrip",
         };
 
         // NOTE: バージョン変更処理テスト用

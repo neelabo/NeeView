@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace NeeView
 {
@@ -17,6 +18,13 @@ namespace NeeView
             foreach (var item in commandTable)
             {
                 _map.Add(item.Key, new CommandAccessor(item.Value, accessDiagnostics));
+            }
+
+            foreach (var item in commandTable.AlternativeCommands)
+            {
+                Debug.Assert(item.Value.Alternative is not null);
+                var command = commandTable[item.Value.Alternative];
+                _map.Add(item.Key, new AlternativeCommandAccessor(item.Key, item.Value, command, accessDiagnostics));
             }
 
             foreach (var item in commandTable.ObsoleteCommands)
@@ -66,7 +74,11 @@ namespace NeeView
         internal ObsoleteAttribute? GetObsolete(string key)
         {
             var accessor = _map[key];
-            if (accessor is ObsoleteCommandAccessor obsoleteCommand)
+            if (accessor is AlternativeCommandAccessor alternativeCommand)
+            {
+                return alternativeCommand.GetObsoleteAttribute();
+            }
+            else if (accessor is ObsoleteCommandAccessor obsoleteCommand)
             {
                 return obsoleteCommand.GetObsoleteAttribute();
             }
@@ -76,7 +88,11 @@ namespace NeeView
         internal AlternativeAttribute? GetAlternative(string key)
         {
             var accessor = _map[key];
-            if (accessor is ObsoleteCommandAccessor obsoleteCommand)
+            if (accessor is AlternativeCommandAccessor alternativeCommand)
+            {
+                return alternativeCommand.GetAlternativeAttribute();
+            }
+            else if (accessor is ObsoleteCommandAccessor obsoleteCommand)
             {
                 return obsoleteCommand.GetAlternativeAttribute();
             }

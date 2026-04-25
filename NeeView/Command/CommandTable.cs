@@ -54,6 +54,8 @@ namespace NeeView
 
         public int ChangeCount { get; private set; }
 
+        public Dictionary<string, ObsoleteCommandItem> AlternativeCommands { get; private set; }
+
         public Dictionary<string, ObsoleteCommandItem> ObsoleteCommands { get; private set; }
 
 
@@ -94,7 +96,7 @@ namespace NeeView
         /// <summary>
         /// コマンドテーブル初期化
         /// </summary>
-        [MemberNotNull(nameof(_elements), nameof(DefaultMemento), nameof(ObsoleteCommands))]
+        [MemberNotNull(nameof(_elements), nameof(DefaultMemento), nameof(AlternativeCommands), nameof(ObsoleteCommands))]
         private void InitializeCommandTable()
         {
 #pragma warning disable CS0612 // 型またはメンバーが旧型式です
@@ -180,8 +182,8 @@ namespace NeeView
                 new FocusHistorySearchBoxCommand(),
                 new FocusBookmarkListCommand(),
                 new FocusMainViewCommand(),
-                new ToggleVisibleThumbnailListCommand(),
-                new ToggleHideThumbnailListCommand(),
+                new ToggleVisibleFilmStripCommand(),
+                new ToggleHideFilmStripCommand(),
                 new ToggleMainViewFloatingCommand(),
 
                 new ToggleFullScreenCommand(),
@@ -418,6 +420,14 @@ namespace NeeView
             }
             DefaultMemento = collection;
 
+            // 廃棄されたコマンドの情報。代替コマンドあり。
+            var alternativeCommands = new List<ObsoleteCommandItem>()
+            {
+                new ObsoleteCommandItem("AutoScrollOn", "ToggleAutoScroll", 46),
+                new ObsoleteCommandItem("ToggleVisibleThumbnailList", "ToggleVisibleFilmStrip", 46),
+                new ObsoleteCommandItem("ToggleHideThumbnailList", "ToggleHideFilmStrip", 46),
+            };
+            AlternativeCommands = alternativeCommands.ToDictionary(e => e.Obsolete);
 
             // 廃棄されたコマンドの情報
             var obsoleteCommands = new List<ObsoleteCommandItem>()
@@ -429,7 +439,6 @@ namespace NeeView
                 new ObsoleteCommandItem("NextPagemark", "NextPlaylistItem", 39),
                 new ObsoleteCommandItem("PrevPagemarkInBook", "PrevPlaylistItemInBook", 39),
                 new ObsoleteCommandItem("NextPagemarkInBook", "NextPlaylistItemInBook", 39),
-                new ObsoleteCommandItem("AutoScrollOn", "ToggleAutoScroll", 46),
             };
             ObsoleteCommands = obsoleteCommands.ToDictionary(e => e.Obsolete);
         }

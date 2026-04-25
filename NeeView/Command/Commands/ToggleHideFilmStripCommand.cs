@@ -6,9 +6,9 @@ using System.Windows.Data;
 
 namespace NeeView
 {
-    public class ToggleHideThumbnailListCommand : CommandElement
+    public class ToggleHideFilmStripCommand : CommandElement
     {
-        public ToggleHideThumbnailListCommand()
+        public ToggleHideFilmStripCommand()
         {
             this.Group = TextResources.GetString("CommandGroup.FilmStrip");
             this.IsShowMessage = false;
@@ -21,7 +21,7 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.FilmStrip.IsHideFilmStrip ? TextResources.GetString("ToggleHideThumbnailListCommand.Off") : TextResources.GetString("ToggleHideThumbnailListCommand.On");
+            return Config.Current.FilmStrip.IsHideFilmStrip ? TextResources.GetString("ToggleHideFilmStripCommand.Off") : TextResources.GetString("ToggleHideFilmStripCommand.On");
         }
 
         public override bool CanExecute(object? sender, CommandContext e)
