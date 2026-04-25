@@ -66,23 +66,26 @@
 
         <Border BorderThickness="0,0,1,0" BorderBrush="{DynamicResource Panel.Border}" Background="{DynamicResource Panel.Background}">
             <DockPanel>
-                <StackPanel x:Name="Buttons" DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+                <StackPanel x:Name="Buttons" DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10"
+                        KeyboardNavigation.TabNavigation="Local" KeyboardNavigation.TabIndex="3">
                     <Button x:Name="SaveButton" Style="{StaticResource TextButtonMain}" Content="{Binding BookType, Converter={StaticResource ExportBookTypeToSaveAsString}}" Click="SaveButton_Click" />
                     <Button x:Name="CancelButton" Style="{StaticResource TextButton}" Content="{properties:TextBinding Word.Cancel}" Click="CancelButton_Click" />
                 </StackPanel>
 
-                <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Margin="10,0">
-                    <nvp:PropertyInspector Document="{Binding ExportBookTypeDocument}" Margin="0"/>
-                    <DockPanel>
-                        <Button x:Name="DestinationFolderOptionButton" DockPanel.Dock="Right" Style="{StaticResource IconButton}" Padding="5,0" Click="DestinationFolderOptionButton_Click" TabIndex="102">
+                <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Margin="10,0"
+                        KeyboardNavigation.TabNavigation="Local" KeyboardNavigation.TabIndex="2">
+                    <nvp:PropertyInspector Document="{Binding ExportBookTypeDocument}" Margin="0" />
+                    <DockPanel KeyboardNavigation.TabNavigation="Local" >
+                        <Button x:Name="DestinationFolderOptionButton" DockPanel.Dock="Right" Style="{StaticResource IconButton}" Padding="5,0" Click="DestinationFolderOptionButton_Click" TabIndex="2">
                             <Image Source="{StaticResource ic_setting_24px_a}" Width="16" Height="16" />
                         </Button>
-                        <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding DestinationFolderList}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedDestinationFolder}" TabIndex="101" />
+                        <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding DestinationFolderList}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedDestinationFolder}" TabIndex="1" />
                         <TextBlock Style="{StaticResource Header}" Text="{properties:TextBinding ExportImageWindow.Folder}" />
                     </DockPanel>
                 </StackPanel>
 
-                <ScrollViewer Style="{StaticResource NVScrollViewer}" Margin="10,10,0,0" CanContentScroll="False">
+                <ScrollViewer Style="{StaticResource NVScrollViewer}" Margin="10,10,0,0" CanContentScroll="False"
+                        KeyboardNavigation.TabNavigation="Local" KeyboardNavigation.TabIndex="1">
                     <nvp:PropertyInspector Document="{Binding ExportBookDocument}" Margin="0"/>
                 </ScrollViewer>
             </DockPanel>
