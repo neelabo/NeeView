@@ -9,10 +9,12 @@ namespace NeeView
     {
         private readonly Dictionary<string, ICommandAccessor> _map = new();
         private readonly IAccessDiagnostics _accessDiagnostics;
+        private readonly CommandTable _commandTable;
 
 
         public CommandAccessorMap(CommandTable commandTable, IAccessDiagnostics accessDiagnostics)
         {
+            _commandTable = commandTable;
             _accessDiagnostics = accessDiagnostics ?? throw new ArgumentNullException(nameof(accessDiagnostics));
 
             foreach (var item in commandTable)
@@ -38,7 +40,7 @@ namespace NeeView
         {
             get
             {
-                var command = GetCommand(key);
+                var command = GetCommand(key, _commandTable.AlternativeCommands);
                 if (command is ObsoleteCommandAccessor obsoleteCommand)
                 {
                     return _accessDiagnostics.Throw<ICommandAccessor>(new NotSupportedException(obsoleteCommand.CreateObsoleteCommandMessage()));
@@ -55,6 +57,28 @@ namespace NeeView
         internal ICommandAccessor GetCommand(string key)
         {
             return _map[key];
+        }
+
+        internal ICommandAccessor? GetCommand(string key, Dictionary<string, ObsoleteCommandItem> alternatives)
+        {
+            if (_map.TryGetValue(key, out var command))
+            {
+                return command;
+            }
+
+            // try alternative
+            var nameSource = CommandNameSource.Parse(key);
+            if (alternatives.TryGetValue(nameSource.Name, out var alternative))
+            {
+                Debug.Assert(alternative.Alternative is not null);
+                var newName = new CommandNameSource(alternative.Alternative, nameSource.Number).FullName;
+                if (_map.TryGetValue(newName, out command))
+                {
+                    return command;
+                }
+            }
+
+            return null;
         }
 
         internal WordNode CreateWordNode(string name)
