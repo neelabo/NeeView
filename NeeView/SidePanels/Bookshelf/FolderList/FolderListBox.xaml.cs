@@ -175,15 +175,23 @@ namespace NeeView
         /// </summary>
         private void ToggleBookmark_Executed(object? sender, ExecutedRoutedEventArgs e)
         {
-            if (sender is ListBox { SelectedItem: FolderItem item })
+            if (sender is ListBox listBox && listBox.SelectedItem is FolderItem item)
             {
+                var paths = this.ListBox.SelectedItems.Cast<FolderItem>().Select(e => e.EntityPath).ToList();
+
                 if (BookmarkCollection.Current.Contains(item.EntityPath.SimplePath))
                 {
-                    BookmarkCollectionService.Remove(item.EntityPath);
+                    foreach (var path in paths)
+                    {
+                        BookmarkCollectionService.Remove(path);
+                    }
                 }
                 else
                 {
-                    BookmarkCollectionService.Add(item.EntityPath, null, false);
+                    foreach (var path in paths)
+                    {
+                        BookmarkCollectionService.Add(path, null, false);
+                    }
                 }
             }
         }
@@ -1224,6 +1232,11 @@ namespace NeeView
                 return;
             }
 
+            if (this.ListBox.SelectedItem is not FolderItem selectedItem)
+            {
+                return;
+            }
+
             // サブフォルダー読み込みの状態を更新
             var isDefaultRecursive = _vm.FolderCollection != null && _vm.FolderCollection.FolderParameter.IsFolderRecursive;
             item.UpdateIsRecursive(isDefaultRecursive);
@@ -1283,7 +1296,7 @@ namespace NeeView
                 contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.OpenBook"), Command = OpenBookCommand });
                 contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Subfolder"), Command = LoadWithRecursiveCommand, IsChecked = item.IsRecursive });
                 contextMenu.Items.Add(new Separator());
-                contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("Word.Bookmark"), Command = ToggleBookmarkCommand, IsChecked = BookmarkCollection.Current.Contains(item.EntityPath.SimplePath) });
+                contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("Word.Bookmark"), Command = ToggleBookmarkCommand, IsChecked = BookmarkCollection.Current.Contains(selectedItem.EntityPath.SimplePath) });
                 contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.DeleteHistory"), Command = RemoveHistoryCommand });
                 contextMenu.Items.Add(new Separator());
                 contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Explorer"), Command = OpenExplorerCommand });
