@@ -28,6 +28,17 @@ namespace NeeView
             this.CopyContextMenu.CommandBindings.Add(new CommandBinding(CopyCommand, (s, e) => _vm.CopyVersionToClipboard(), (s, e) => e.CanExecute = true));
         }
 
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                this.Close();
+                e.Handled = true;
+                return;
+            }
+
+            base.OnKeyDown(e);
+        }
 
         // from http://gushwell.ldblog.jp/archives/52279481.html
         private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
