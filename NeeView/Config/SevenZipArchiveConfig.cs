@@ -8,7 +8,7 @@ namespace NeeView
     [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class SevenZipArchiveConfig : BindableBase
     {
-        public static FileTypeCollection DefaultSupportFileTypes { get; } = new FileTypeCollection(".7z;.cb7;.cbr;.cbz;.lzh;.rar;.zip");
+        public static FileTypeCollection DefaultSupportFileTypes { get; } = new FileTypeCollection(".7z;.cb7;.cbr;.cbt;.cbz;.lzh;.rar;.zip");
 
 
         [DefaultEquality] private bool _isEnabled = true;
