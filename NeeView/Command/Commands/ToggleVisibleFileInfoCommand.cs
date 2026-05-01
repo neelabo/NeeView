@@ -22,7 +22,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return SidePanelFrame.Current.IsVisibleFileInfo ? TextResources.GetString("ToggleVisibleFileInfoCommand.Off") : TextResources.GetString("ToggleVisibleFileInfoCommand.On");
+            var state = CommandElementTools.GetState(e, SidePanelFrame.Current.GetVisibleFileInfo(e.ByMenu));
+            return GetStateExecuteMessage(state);
         }
 
         [MethodArgument("ToggleCommand.Execute.Remarks")]

@@ -533,57 +533,57 @@ namespace NeeView
         /// <summary>
         /// アドレスバー ON/OFF
         /// </summary>
-        public void SetAddressBarVisible(VisibilityRequest visible)
+        public void SetAddressBarVisible(StateRequest state)
         {
             if (IsHideAddressBar())
             {
                 // 自動非表示のときは AddressBar を表示状態にする
                 Config.Current.MenuBar.IsAddressBarEnabled = true;
-                _visibleAtOnceMessenger.Publish(new MenuVisibleAtOnceMessage(visible));
+                _visibleAtOnceMessenger.Publish(new MenuVisibleAtOnceMessage(state));
             }
             else
             {
-                Config.Current.MenuBar.IsAddressBarEnabled = visible.ToIsVisible(Config.Current.MenuBar.IsAddressBarEnabled);
+                Config.Current.MenuBar.IsAddressBarEnabled = state.ToIsEnabled(Config.Current.MenuBar.IsAddressBarEnabled);
             }
         }
 
         /// <summary>
         /// ページスライダー ON/OFF
         /// </summary>
-        public void SetPageSliderVisible(VisibilityRequest visible)
+        public void SetPageSliderVisible(StateRequest state)
         {
             if (IsHidePageSlider())
             {
                 // 自動非表示のときは Slider を表示状態にする
                 Config.Current.Slider.IsEnabled = true;
-                _visibleAtOnceMessenger.Publish(new StatusVisibleAtOnceMessage(visible, false));
+                _visibleAtOnceMessenger.Publish(new StatusVisibleAtOnceMessage(state, false));
             }
             else
             {
-                Config.Current.Slider.IsEnabled = visible.ToIsVisible(Config.Current.Slider.IsEnabled);
+                Config.Current.Slider.IsEnabled = state.ToIsEnabled(Config.Current.Slider.IsEnabled);
             }
         }
 
         /// <summary>
         /// フィルムストリップON/OFF
         /// </summary>
-        /// <param name="visible"></param>
-        public void SetFilmStripVisible(VisibilityRequest visible)
+        /// <param name="state"></param>
+        public void SetFilmStripVisible(StateRequest state)
         {
             if (CanHidePageSlider)
             {
                 Config.Current.FilmStrip.IsEnabled = true;
                 Config.Current.Slider.IsEnabled = true;
-                _visibleAtOnceMessenger.Publish(new StatusVisibleAtOnceMessage(visible, true));
+                _visibleAtOnceMessenger.Publish(new StatusVisibleAtOnceMessage(state, true));
             }
             else if (IsHideFilmStrip())
             {
                 Config.Current.FilmStrip.IsEnabled = true;
-                _visibleAtOnceMessenger.Publish(new FilmStripVisibleAtOnceMessage(visible, true));
+                _visibleAtOnceMessenger.Publish(new FilmStripVisibleAtOnceMessage(state, true));
             }
             else
             {
-                Config.Current.FilmStrip.IsEnabled = visible.ToIsVisible(Config.Current.FilmStrip.IsEnabled);
+                Config.Current.FilmStrip.IsEnabled = state.ToIsEnabled(Config.Current.FilmStrip.IsEnabled);
                 if (Config.Current.FilmStrip.IsEnabled)
                 {
                     _visibleAtOnceMessenger.Publish(new FilmStripFocusAtOnceMessage());
@@ -596,7 +596,7 @@ namespace NeeView
         /// </summary>
         public void AllPanelHideAtOnce()
         {
-            _visibleAtOnceMessenger.Publish(new AllVisibleAtOnceMessage(VisibilityRequest.Hidden));
+            _visibleAtOnceMessenger.Publish(new AllVisibleAtOnceMessage(StateRequest.Disable));
             SidePanelFrame.Current.VisibleAtOnce("", false);
         }
     }

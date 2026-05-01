@@ -22,7 +22,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return SidePanelFrame.Current.IsVisibleEffectInfo ? TextResources.GetString("ToggleVisibleEffectInfoCommand.Off") : TextResources.GetString("ToggleVisibleEffectInfoCommand.On");
+            var state = CommandElementTools.GetState(e, SidePanelFrame.Current.GetVisibleEffectInfo(e.ByMenu));
+            return GetStateExecuteMessage(state);
         }
 
         [MethodArgument("ToggleCommand.Execute.Remarks")]

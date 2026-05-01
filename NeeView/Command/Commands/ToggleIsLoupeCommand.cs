@@ -20,20 +20,15 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return MainViewComponent.Current.ViewLoupeControl.GetLoupeMode() ? TextResources.GetString("ToggleIsLoupeCommand.Off") : TextResources.GetString("ToggleIsLoupeCommand.On");
+            var state = CommandElementTools.GetState(e, MainViewComponent.Current.ViewLoupeControl.GetLoupeMode());
+            return GetStateExecuteMessage(state);
         }
 
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
-            {
-                MainViewComponent.Current.ViewLoupeControl.SetLoupeMode(Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture));
-            }
-            else
-            {
-                MainViewComponent.Current.ViewLoupeControl.ToggleLoupeMode();
-            }
+            var state = CommandElementTools.GetState(e, MainViewComponent.Current.ViewLoupeControl.GetLoupeMode());
+            MainViewComponent.Current.ViewLoupeControl.SetLoupeMode(state);
         }
     }
 }

@@ -22,7 +22,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return SidePanelFrame.Current.IsVisiblePageList ? TextResources.GetString("ToggleVisiblePageListCommand.Off") : TextResources.GetString("ToggleVisiblePageListCommand.On");
+            var state = CommandElementTools.GetState(e, SidePanelFrame.Current.GetVisiblePageList(e.ByMenu));
+            return GetStateExecuteMessage(state);
         }
 
         [MethodArgument("ToggleCommand.Execute.Remarks")]

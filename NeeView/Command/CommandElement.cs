@@ -44,6 +44,8 @@ namespace NeeView
         public CommandParameter? Parameter { get; private set; }
         public object[] Args { get; private set; }
         public CommandOption Options { get; private set; }
+
+        public bool ByMenu => Options.HasFlag(CommandOption.ByMenu);
     }
 
 
@@ -300,6 +302,12 @@ namespace NeeView
         public string ExecuteMessage(object? sender, CommandArgs args)
         {
             return ExecuteMessage(sender, new CommandContext(this.Parameter, args));
+        }
+
+        protected string GetStateExecuteMessage(bool flag)
+        {
+            var name = CommandTools.TrimMenuKeyword(this.Menu);
+            return name + " " + TextResources.GetString(flag ? "Word.OnState" : "Word.OffState");
         }
 
         // コマンド実行可能判定

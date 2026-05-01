@@ -19,7 +19,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.Panels.IsSideBarEnabled ? TextResources.GetString("ToggleVisibleSideBarCommand.Off") : TextResources.GetString("ToggleVisibleSideBarCommand.On");
+            var state = CommandElementTools.GetState(e, Config.Current.Panels.IsSideBarEnabled);
+            return GetStateExecuteMessage(state);
         }
 
         public override void Execute(object? sender, CommandContext e)

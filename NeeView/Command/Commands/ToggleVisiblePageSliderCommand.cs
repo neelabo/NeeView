@@ -22,29 +22,21 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.Slider.IsEnabled ? TextResources.GetString("ToggleVisiblePageSliderCommand.Off") : TextResources.GetString("ToggleVisiblePageSliderCommand.On");
+            var state = CommandElementTools.GetState(e, Config.Current.Slider.IsEnabled, MainWindow.Current.IsPageSliderVisible);
+            return GetStateExecuteMessage(state);
         }
 
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Options.HasFlag(CommandOption.ByMenu))
+            var state = CommandElementTools.GetState(e, Config.Current.Slider.IsEnabled, MainWindow.Current.IsPageSliderVisible);
+            if (e.ByMenu)
             {
-                Config.Current.Slider.IsEnabled = e.Args.Length > 0
-                    ? Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture)
-                    : !Config.Current.Slider.IsEnabled;
+                Config.Current.Slider.IsEnabled = state;
             }
             else
             {
-                if (e.Args.Length > 0)
-                {
-                    var isVisible = Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture);
-                    MainWindowModel.Current.SetPageSliderVisible(isVisible.ToVisibilityRequest());
-                }
-                else
-                {
-                    MainWindowModel.Current.SetPageSliderVisible(VisibilityRequest.Toggle);
-                }
+                MainWindowModel.Current.SetPageSliderVisible(state.ToStateRequest());
             }
         }
     }

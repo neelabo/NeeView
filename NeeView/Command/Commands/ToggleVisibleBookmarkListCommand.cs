@@ -22,7 +22,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return SidePanelFrame.Current.IsVisibleBookmarkList ? TextResources.GetString("ToggleVisibleBookmarkListCommand.Off") : TextResources.GetString("ToggleVisibleBookmarkListCommand.On");
+            var state = CommandElementTools.GetState(e, SidePanelFrame.Current.GetVisibleBookmarkList(e.ByMenu));
+            return GetStateExecuteMessage(state);
         }
 
         [MethodArgument("ToggleCommand.Execute.Remarks")]

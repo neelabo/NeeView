@@ -1,4 +1,6 @@
-﻿using NeeLaboratory.Generators;
+﻿#define DEBUG_SHOWMESSAGE
+
+using NeeLaboratory.Generators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -394,9 +396,12 @@ namespace NeeView
             var option = (parameter is MenuCommandTag) ? CommandOption.ByMenu : CommandOption.None;
             var commandArgs = new CommandArgs(null, option);
 
-            // 通知
+#if DEBUG && DEBUG_SHOWMESSAGE
+#else
             if (command.IsShowMessage)
+#endif
             {
+                // 通知
                 string message = command.ExecuteMessage(sender, commandParameter, commandArgs);
                 if (!string.IsNullOrEmpty(message))
                 {

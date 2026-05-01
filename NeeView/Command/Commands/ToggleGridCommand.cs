@@ -20,20 +20,15 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.ImageGrid.IsEnabled ? TextResources.GetString("ToggleGridCommand.Off") : TextResources.GetString("ToggleGridCommand.On");
+            var state = CommandElementTools.GetState(e, Config.Current.ImageGrid.IsEnabled);
+            return GetStateExecuteMessage(state);
         }
 
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
-            {
-                Config.Current.ImageGrid.IsEnabled = Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                Config.Current.ImageGrid.IsEnabled = !Config.Current.ImageGrid.IsEnabled;
-            }
+            var state = CommandElementTools.GetState(e, Config.Current.ImageGrid.IsEnabled);
+            Config.Current.ImageGrid.IsEnabled = state;
         }
     }
 }

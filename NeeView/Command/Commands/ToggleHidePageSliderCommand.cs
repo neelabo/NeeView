@@ -19,7 +19,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.Slider.IsHidePageSlider ? TextResources.GetString("ToggleHidePageSliderCommand.Off") : TextResources.GetString("ToggleHidePageSliderCommand.On");
+            var state = CommandElementTools.GetState(e, Config.Current.Slider.IsHidePageSlider);
+            return GetStateExecuteMessage(state);
         }
 
         public override bool CanExecute(object? sender, CommandContext e)

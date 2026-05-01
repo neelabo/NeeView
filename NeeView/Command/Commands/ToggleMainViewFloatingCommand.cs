@@ -20,7 +20,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.MainView.IsFloating ? TextResources.GetString("ToggleMainViewFloatingCommand.Off") : TextResources.GetString("ToggleMainViewFloatingCommand.On");
+            var state = CommandElementTools.GetState(e, Config.Current.MainView.IsFloating);
+            return GetStateExecuteMessage(state);
         }
 
         public override void Execute(object? sender, CommandContext e)

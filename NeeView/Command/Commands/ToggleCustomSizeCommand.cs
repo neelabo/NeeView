@@ -21,7 +21,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.ImageCustomSize.IsEnabled ? TextResources.GetString("ToggleCustomSizeCommand.Off") : TextResources.GetString("ToggleCustomSizeCommand.On");
+            var state = CommandElementTools.GetState(e, Config.Current.ImageCustomSize.IsEnabled);
+            return GetStateExecuteMessage(state);
         }
 
         public override bool CanExecute(object? sender, CommandContext e)
@@ -32,14 +33,8 @@ namespace NeeView
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
-            {
-                Config.Current.ImageCustomSize.IsEnabled = Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                Config.Current.ImageCustomSize.IsEnabled = !Config.Current.ImageCustomSize.IsEnabled;
-            }
+            var state = CommandElementTools.GetState(e, Config.Current.ImageCustomSize.IsEnabled);
+            Config.Current.ImageCustomSize.IsEnabled = state;
         }
     }
 }

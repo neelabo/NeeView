@@ -1,4 +1,5 @@
-﻿using NeeView.Properties;
+﻿using NeeLaboratory.Linq;
+using NeeView.Properties;
 using NeeView.Text.SimpleHtmlBuilder;
 using NeeView.Windows.Property;
 using System;
@@ -252,6 +253,12 @@ namespace NeeView
 
                 foreach (var command in group.OrderBy(e => e.Order))
                 {
+                    var obsoleteAttribute = command.GetType().GetCustomAttribute<ObsoleteAttribute>();
+                    if (obsoleteAttribute is not null)
+                    {
+                        continue;
+                    }
+
                     string argument = "";
                     {
                         var type = command.GetType();
@@ -359,6 +366,10 @@ namespace NeeView
             var commandHost = new CommandHost();
             var root = ScriptNodeTreeBuilder.Create(commandHost, "nv");
 
+            var commandItems = CommandTable.Current.Values
+                .Select(e => CreateScriptMemberAttribute(e))
+                .WhereNotNull();
+
             var nodeItems = root.GetUnitEnumerator(null)
                 .Where(e => e.Node.Obsolete != null || e.Node.Alternative != null)
                 .Select(e => new ScriptMemberAlternative(e.FullName, e.Node.Obsolete, e.Node.Alternative) { AlternativeMessage = e.Alternative });
@@ -368,12 +379,12 @@ namespace NeeView
                 .Where(e => e.HasObsolete || e.HasAlternative)
                 .Select(e => new ScriptMemberAlternative(e.Name, e.ObsoleteAttribute, e.AlternativeAttribute));
 
-            var groups = nodeItems.Concat(classItems)
+            var groups = commandItems.Concat(nodeItems.Concat(classItems))
                 .GroupBy(e => e.Version)
                 .OrderBy(e => e.Key);
 
             // ver.40 and later
-            foreach (var group in groups.Where(e => e.Key >= 40).OrderByDescending(e => e.Key))
+            foreach (var group in groups.Where(e => e.Key >= 40).OrderByDescending(e => e.Key).ToList())
             {
                 builder.Append(CultureInfo.InvariantCulture, $"<h3>Version {group.Key}.0</h3>");
 
@@ -397,6 +408,18 @@ namespace NeeView
             }
 
             return builder;
+        }
+
+        private static ScriptMemberAlternative? CreateScriptMemberAttribute(CommandElement command)
+        {
+            var type = command.GetType();
+            var obsolete = type.GetCustomAttribute<ObsoleteAttribute>();
+            if (obsolete is null)
+            {
+                return null;
+            }
+            var alternative = type.GetCustomAttribute<AlternativeAttribute>();
+            return new ScriptMemberAlternative("nv.Command." + command.Name, obsolete, alternative);
         }
     }
 }

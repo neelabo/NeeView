@@ -19,7 +19,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.Window.IsTopmost ? TextResources.GetString("ToggleTopmostCommand.Off") : TextResources.GetString("ToggleTopmostCommand.On");
+            var state = CommandElementTools.GetState(e, Config.Current.Window.IsTopmost);
+            return GetStateExecuteMessage(state);
         }
 
         public override void Execute(object? sender, CommandContext e)

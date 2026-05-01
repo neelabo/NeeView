@@ -112,26 +112,26 @@ namespace NeeView
         /// </summary>
         private void Model_VisibleAtOnceRequest(object? sender, VisibleAtOnceRequestEventArgs e)
         {
-            VisibleAtOnce(e.Key, e.Visibility);
+            VisibleAtOnce(e.Key, e.State);
         }
 
         /// <summary>
         /// パネルを一度だけ表示
         /// </summary>
-        public void VisibleAtOnce(string key, VisibilityRequest visibility)
+        public void VisibleAtOnce(string key, StateRequest state)
         {
             if (string.IsNullOrEmpty(key))
             {
-                Left.VisibleOnce(visibility);
-                Right.VisibleOnce(visibility);
+                Left.VisibleOnce(state);
+                Right.VisibleOnce(state);
             }
             else if (Left.SelectedItemContains(key))
             {
-                Left.VisibleOnce(visibility);
+                Left.VisibleOnce(state);
             }
             else if (Right.SelectedItemContains(key))
             {
-                Right.VisibleOnce(visibility);
+                Right.VisibleOnce(state);
             }
         }
 

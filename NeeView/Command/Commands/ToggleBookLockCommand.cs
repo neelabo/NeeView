@@ -21,20 +21,15 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return BookHub.Current.IsBookLocked ? TextResources.GetString("ToggleBookLockCommand.Off") : TextResources.GetString("ToggleBookLockCommand.On");
+            var state = CommandElementTools.GetState(e, BookHub.Current.IsBookLocked);
+            return GetStateExecuteMessage(state);
         }
 
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
-            {
-                BookHub.Current.IsBookLocked = Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                BookHub.Current.IsBookLocked = !BookHub.Current.IsBookLocked;
-            }
+            var state = CommandElementTools.GetState(e, BookHub.Current.IsBookLocked);
+            BookHub.Current.IsBookLocked = state;
         }
     }
 }

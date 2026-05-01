@@ -21,7 +21,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return BookSettings.Current.IsSupportedDividePage ? TextResources.GetString("ToggleIsSupportedDividePageCommand.Off") : TextResources.GetString("ToggleIsSupportedDividePageCommand.On");
+            var state = CommandElementTools.GetState(e, BookSettings.Current.IsSupportedDividePage);
+            return GetStateExecuteMessage(state);
         }
 
         public override bool CanExecute(object? sender, CommandContext e)
@@ -32,14 +33,8 @@ namespace NeeView
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
-            {
-                BookSettings.Current.SetIsSupportedDividePage(Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture));
-            }
-            else
-            {
-                BookSettings.Current.ToggleIsSupportedDividePage();
-            }
+            var state = CommandElementTools.GetState(e, BookSettings.Current.IsSupportedDividePage);
+            BookSettings.Current.SetIsSupportedDividePage(state);
         }
     }
 }

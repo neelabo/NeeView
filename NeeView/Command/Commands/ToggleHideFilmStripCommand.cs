@@ -21,7 +21,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.FilmStrip.IsHideFilmStrip ? TextResources.GetString("ToggleHideFilmStripCommand.Off") : TextResources.GetString("ToggleHideFilmStripCommand.On");
+            var state = CommandElementTools.GetState(e, Config.Current.FilmStrip.IsHideFilmStrip);
+            return GetStateExecuteMessage(state);
         }
 
         public override bool CanExecute(object? sender, CommandContext e)
@@ -32,14 +33,8 @@ namespace NeeView
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
-            {
-                Config.Current.FilmStrip.IsHideFilmStrip = Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                Config.Current.FilmStrip.IsHideFilmStrip = !Config.Current.FilmStrip.IsHideFilmStrip;
-            }
+            var state = CommandElementTools.GetState(e, Config.Current.FilmStrip.IsHideFilmStrip);
+            Config.Current.FilmStrip.IsHideFilmStrip = state;
         }
     }
 }

@@ -378,7 +378,7 @@ namespace NeeView.Windows.Controls
 
         private void Description_VisibleOnce(object? sender, VisibleOnceEventArgs e)
         {
-            VisibleOnce(e.Visibility, e.Callback);
+            VisibleOnce(e.State, e.Callback);
         }
 
         /// <summary>
@@ -535,12 +535,12 @@ namespace NeeView.Windows.Controls
         }
 
 
-        public void VisibleOnce(VisibilityRequest visibility, Action<bool>? callback)
+        public void VisibleOnce(StateRequest state, Action<bool>? callback)
         {
             if (!_isAttached) return;
             if (!IsEnabled) return;
 
-            var isVisible = visibility.ToIsVisible(this.AssociatedObject.IsVisible);
+            var isVisible = state.ToIsEnabled(this.AssociatedObject.IsVisible);
 
             SetVisibility(isVisible: isVisible, isVisibleDelay: false, now: true, isForce: true);
             UpdateVisibility();
@@ -603,9 +603,9 @@ namespace NeeView.Windows.Controls
         /// <summary>
         /// 一度だけ表示させる命令をBehaviorに送る
         /// </summary>
-        public void VisibleOnce(VisibilityRequest visibility, Action<bool>? callback = null)
+        public void VisibleOnce(StateRequest state, Action<bool>? callback = null)
         {
-            VisibleOnceCall?.Invoke(this, new VisibleOnceEventArgs(visibility, callback));
+            VisibleOnceCall?.Invoke(this, new VisibleOnceEventArgs(state, callback));
         }
 
         /// <summary>
@@ -623,13 +623,13 @@ namespace NeeView.Windows.Controls
         {
         }
 
-        public VisibleOnceEventArgs(VisibilityRequest visibility, Action<bool>? callback = null)
+        public VisibleOnceEventArgs(StateRequest state, Action<bool>? callback = null)
         {
-            Visibility = visibility;
+            State = state;
             Callback = callback;
         }
 
-        public VisibilityRequest Visibility { get; } = VisibilityRequest.Visible;
+        public StateRequest State { get; } = StateRequest.Enable;
         public Action<bool>? Callback { get; }
 
     }

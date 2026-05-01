@@ -5,7 +5,7 @@ using System.Windows.Data;
 
 namespace NeeView
 {
-    [Obsolete]
+    [Obsolete, Alternative("nv.Command.ToggleHideLeftPanel, ToggleHideRightPanel", 46, ErrorLevel = ScriptErrorLevel.Info)]
     public class ToggleHidePanelCommand : CommandElement
     {
         public ToggleHidePanelCommand()
@@ -21,7 +21,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.Panels.IsHidePanel ? TextResources.GetString("ToggleHidePanelCommand.Off") : TextResources.GetString("ToggleHidePanelCommand.On");
+            var state = CommandElementTools.GetState(e, Config.Current.Panels.IsHidePanel);
+            return GetStateExecuteMessage(state);
         }
 
         public override void Execute(object? sender, CommandContext e)

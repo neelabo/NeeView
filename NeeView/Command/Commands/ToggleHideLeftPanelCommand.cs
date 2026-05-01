@@ -19,7 +19,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.Panels.IsHideLeftPanel ? TextResources.GetString("ToggleHideLeftPanelCommand.Off") : TextResources.GetString("ToggleHideLeftPanelCommand.On");
+            var state = CommandElementTools.GetState(e, Config.Current.Panels.IsHideLeftPanel);
+            return GetStateExecuteMessage(state);
         }
 
         public override void Execute(object? sender, CommandContext e)

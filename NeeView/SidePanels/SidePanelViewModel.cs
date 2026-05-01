@@ -50,7 +50,7 @@ namespace NeeView
                     RaisePropertyChanged(nameof(SelectedItem));
                     if (_dock.SelectedItem != null)
                     {
-                        AutoHideDescription.VisibleOnce(VisibilityRequest.Visible);
+                        AutoHideDescription.VisibleOnce(StateRequest.Enable);
                         IsPanelActive = true;
                     }
                     else
@@ -198,9 +198,9 @@ namespace NeeView
         /// <summary>
         /// 自動非表示機能に対し一時的な表示リクエスト
         /// </summary>
-        public void VisibleOnce(VisibilityRequest visibility)
+        public void VisibleOnce(StateRequest state)
         {
-            AutoHideDescription.VisibleOnce(visibility);
+            AutoHideDescription.VisibleOnce(state);
         }
     }
 

@@ -19,7 +19,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.MenuBar.IsHideMenu ? TextResources.GetString("ToggleHideMenuCommand.Off") : TextResources.GetString("ToggleHideMenuCommand.On");
+            var state = CommandElementTools.GetState(e, Config.Current.MenuBar.IsHideMenu);
+            return GetStateExecuteMessage(state);
         }
 
         public override void Execute(object? sender, CommandContext e)

@@ -96,6 +96,7 @@
                             <!-- アドレスバー -->
                             <local:AddressBarView x:Name="AddressBar" VerticalAlignment="Top"
                                     Visibility="{Binding Source={x:Static local:Config.Current}, Path=MenuBar.IsAddressBarEnabled, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                    IsVisibleChanged="AddressBar_IsVisibleChanged"
                                     IsTabStop="False" />
 
                         </StackPanel>
@@ -109,7 +110,9 @@
                         <!-- スライダー -->
                         <ContentControl x:Name="DockPageSliderSocket" DockPanel.Dock="Bottom" IsTabStop="False">
                             <Grid x:Name="SliderArea">
-                                <local:PageSliderView x:Name="PageSliderView" VerticalAlignment="Bottom" KeyboardNavigation.TabNavigation="Local" TabIndex="2">
+                                <local:PageSliderView x:Name="PageSliderView" VerticalAlignment="Bottom"
+                                        IsVisibleChanged="PageSliderView_IsVisibleChanged"
+                                        KeyboardNavigation.TabNavigation="Local" TabIndex="2">
                                     <local:PageSliderView.Style>
                                         <Style TargetType="local:PageSliderView">
                                             <Style.Triggers>
@@ -127,7 +130,9 @@
 
                         <!-- フィルムストリップ -->
                         <ContentControl x:Name="DockFilmStripSocket" DockPanel.Dock="Bottom" IsTabStop="False">
-                            <local:FilmStripView x:Name="FilmStripArea" IsFocusRequest="{Binding IsFilmStripFocusRequest}"  KeyboardNavigation.TabNavigation="Local" TabIndex="1" />
+                            <local:FilmStripView x:Name="FilmStripArea" IsFocusRequest="{Binding IsFilmStripFocusRequest}"
+                                IsVisibleChanged="FilmStripArea_IsVisibleChanged"
+                                KeyboardNavigation.TabNavigation="Local" TabIndex="1" />
                         </ContentControl>
 
                     </DockPanel>

@@ -238,24 +238,24 @@ namespace NeeView
 
         public void VisibleAtOnce(MenuVisibleAtOnceMessage e)
         {
-            MenuAutoHideDescription.VisibleOnce(e.Visibility);
+            MenuAutoHideDescription.VisibleOnce(e.State);
         }
 
         public void VisibleAtOnce(StatusVisibleAtOnceMessage e)
         {
-            StatusAutoHideDescription.VisibleOnce(e.Visibility, e.FocusFilmStrip ? OnVisibleOnceFilmStrip : null);
+            StatusAutoHideDescription.VisibleOnce(e.State, e.FocusFilmStrip ? OnVisibleOnceFilmStrip : null);
         }
 
         public void VisibleAtOnce(FilmStripVisibleAtOnceMessage e)
         {
-            FilmStripAutoHideDescription.VisibleOnce(e.Visibility, e.FocusFilmStrip ? OnVisibleOnceFilmStrip : null);
+            FilmStripAutoHideDescription.VisibleOnce(e.State, e.FocusFilmStrip ? OnVisibleOnceFilmStrip : null);
         }
 
         public void VisibleAtOnce(AllVisibleAtOnceMessage e)
         {
-            MenuAutoHideDescription.VisibleOnce(e.Visibility);
-            StatusAutoHideDescription.VisibleOnce(e.Visibility);
-            FilmStripAutoHideDescription.VisibleOnce(e.Visibility);
+            MenuAutoHideDescription.VisibleOnce(e.State);
+            StatusAutoHideDescription.VisibleOnce(e.State);
+            FilmStripAutoHideDescription.VisibleOnce(e.State);
         }
 
         private void OnVisibleOnceFilmStrip(bool isVisible)
@@ -290,10 +290,10 @@ namespace NeeView
     }
 
 
-    public record MenuVisibleAtOnceMessage(VisibilityRequest Visibility);
-    public record StatusVisibleAtOnceMessage(VisibilityRequest Visibility, bool FocusFilmStrip);
-    public record FilmStripVisibleAtOnceMessage(VisibilityRequest Visibility, bool FocusFilmStrip);
-    public record AllVisibleAtOnceMessage(VisibilityRequest Visibility);
+    public record MenuVisibleAtOnceMessage(StateRequest State);
+    public record StatusVisibleAtOnceMessage(StateRequest State, bool FocusFilmStrip);
+    public record FilmStripVisibleAtOnceMessage(StateRequest State, bool FocusFilmStrip);
+    public record AllVisibleAtOnceMessage(StateRequest State);
 
     public record FilmStripFocusAtOnceMessage();
 }

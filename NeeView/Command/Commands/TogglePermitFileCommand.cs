@@ -21,20 +21,15 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.System.IsFileWriteAccessEnabled ? TextResources.GetString("TogglePermitFileCommand.Off") : TextResources.GetString("TogglePermitFileCommand.On");
+            var state = CommandElementTools.GetState(e, Config.Current.System.IsFileWriteAccessEnabled);
+            return GetStateExecuteMessage(state);
         }
 
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
-            {
-                Config.Current.System.IsFileWriteAccessEnabled = Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                Config.Current.System.IsFileWriteAccessEnabled = !Config.Current.System.IsFileWriteAccessEnabled;
-            }
+            var state = CommandElementTools.GetState(e, Config.Current.System.IsFileWriteAccessEnabled);
+            Config.Current.System.IsFileWriteAccessEnabled = state;
         }
     }
 }

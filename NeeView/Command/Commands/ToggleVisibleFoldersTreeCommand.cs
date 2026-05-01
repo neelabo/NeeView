@@ -21,7 +21,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return SidePanelFrame.Current.IsVisibleBookshelfFolderTree ? TextResources.GetString("ToggleVisibleFoldersTreeCommand.Off") : TextResources.GetString("ToggleVisibleFoldersTreeCommand.On");
+            var state = CommandElementTools.GetState(e, SidePanelFrame.Current.IsVisibleBookshelfFolderTree);
+            return GetStateExecuteMessage(state);
         }
 
         [MethodArgument("ToggleCommand.Execute.Remarks")]

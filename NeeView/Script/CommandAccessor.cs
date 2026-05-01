@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define DEBUG_SHOWMESSAGE
+
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
@@ -68,6 +70,14 @@ namespace NeeView
             {
                 if (_command.CanExecute(this, context))
                 {
+#if DEBUG && DEBUG_SHOWMESSAGE
+                    // 通知
+                    string message = _command.ExecuteMessage(this, context);
+                    if (!string.IsNullOrEmpty(message))
+                    {
+                        InfoMessage.Current.SetMessage(InfoMessageType.Command, message);
+                    }
+#endif
                     _command.Execute(this, context);
                     return true;
                 }

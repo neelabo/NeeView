@@ -298,14 +298,14 @@ namespace NeeView
         /// </summary>
         public void SetState(MouseInputState state, object? parameter, bool force = false)
         {
+            if (!force && state == State) return;
+            LocalDebug.WriteLine($"MouseState: {state}");
+
             // オートスクロール以外から通常に戻るときは、サブ状態で復元する
-            if (State != MouseInputState.AutoScroll && state == MouseInputState.Normal)
+            if (!force && state == MouseInputState.Normal && State != MouseInputState.AutoScroll)
             {
                 state = SubState;
             }
-
-            if (!force && state == State) return;
-            LocalDebug.WriteLine($"#MouseState: {state}");
 
             var inputOld = _current;
             var inputNew = _mouseInputCollection[state];

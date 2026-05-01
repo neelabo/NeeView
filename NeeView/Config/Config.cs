@@ -143,12 +143,24 @@ namespace NeeView
             set { }
         }
 
-        [Obsolete("no used"), Alternative(null, 46, ScriptErrorLevel.Error)] // ver.46
+        [Obsolete("no used"), Alternative(null, 46, ScriptErrorLevel.Warning)] // ver.46
         [JsonIgnore]
-        public string? Control
+        public ControlConfig Control { get; set; } = new ControlConfig();
+
+        [Obsolete]
+        public class ControlConfig
         {
-            get { return null; }
-            set { }
+            public bool IsSelected
+            {
+                get => false;
+                set { }
+            }
+
+            public bool IsVisible
+            {
+                get => false;
+                set { }
+            }
         }
 
         #endregion
@@ -165,7 +177,6 @@ namespace NeeView
         }
 
         #endregion
-
     }
 }
 

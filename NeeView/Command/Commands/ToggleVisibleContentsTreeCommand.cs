@@ -21,7 +21,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.PageList.IsFolderTreeVisible ? TextResources.GetString("ToggleVisibleContentsTreeCommand.Off") : TextResources.GetString("ToggleVisibleContentsTreeCommand.On");
+            var state = CommandElementTools.GetState(e, Config.Current.PageList.IsFolderTreeVisible);
+            return GetStateExecuteMessage(state);
         }
 
         [MethodArgument("ToggleCommand.Execute.Remarks")]

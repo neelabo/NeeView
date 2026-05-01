@@ -22,7 +22,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return SidePanelFrame.Current.IsVisibleNavigator ? TextResources.GetString("ToggleVisibleNavigatorCommand.Off") : TextResources.GetString("ToggleVisibleNavigatorCommand.On");
+            var state = CommandElementTools.GetState(e, SidePanelFrame.Current.GetVisibleNavigator(e.ByMenu));
+            return GetStateExecuteMessage(state);
         }
 
         [MethodArgument("ToggleCommand.Execute.Remarks")]

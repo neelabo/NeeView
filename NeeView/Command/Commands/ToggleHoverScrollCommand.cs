@@ -21,20 +21,15 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.Mouse.IsHoverScroll ? TextResources.GetString("ToggleHoverScrollCommand.Off") : TextResources.GetString("ToggleHoverScrollCommand.On");
+            var state = CommandElementTools.GetState(e, Config.Current.Mouse.IsHoverScroll);
+            return GetStateExecuteMessage(state);
         }
 
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
-            {
-                Config.Current.Mouse.IsHoverScroll = Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                Config.Current.Mouse.IsHoverScroll = !Config.Current.Mouse.IsHoverScroll;
-            }
+            var state = CommandElementTools.GetState(e, Config.Current.Mouse.IsHoverScroll);
+            Config.Current.Mouse.IsHoverScroll = state;
         }
     }
 }

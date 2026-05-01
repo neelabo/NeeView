@@ -21,7 +21,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return MainViewComponent.Current.ViewPropertyControl.GetAutoRotateForcedLeft() ? TextResources.GetString("ToggleIsAutoRotateForcedLeftCommand.Off") : TextResources.GetString("ToggleIsAutoRotateForcedLeftCommand.On");
+            var state = CommandElementTools.GetState(e, MainViewComponent.Current.ViewPropertyControl.GetAutoRotateForcedLeft());
+            return GetStateExecuteMessage(state);
         }
 
         public override bool CanExecute(object? sender, CommandContext e)
@@ -32,14 +33,8 @@ namespace NeeView
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
-            {
-                MainViewComponent.Current.ViewPropertyControl.SetAutoRotateForcedLeft(Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture));
-            }
-            else
-            {
-                MainViewComponent.Current.ViewPropertyControl.ToggleAutoRotateForcedLeft();
-            }
+            var state = CommandElementTools.GetState(e, MainViewComponent.Current.ViewPropertyControl.GetAutoRotateForcedLeft());
+            MainViewComponent.Current.ViewPropertyControl.SetAutoRotateForcedLeft(state);
         }
     }
 }

@@ -22,7 +22,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.ImageResizeFilter.IsEnabled ? TextResources.GetString("ToggleResizeFilterCommand.Off") : TextResources.GetString("ToggleResizeFilterCommand.On");
+            var state = CommandElementTools.GetState(e, Config.Current.ImageResizeFilter.IsEnabled);
+            return GetStateExecuteMessage(state);
         }
 
         public override bool CanExecute(object? sender, CommandContext e)
@@ -33,14 +34,8 @@ namespace NeeView
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
-            {
-                Config.Current.ImageResizeFilter.IsEnabled = Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                Config.Current.ImageResizeFilter.IsEnabled = !Config.Current.ImageResizeFilter.IsEnabled;
-            }
+            var state = CommandElementTools.GetState(e, Config.Current.ImageResizeFilter.IsEnabled);
+            Config.Current.ImageResizeFilter.IsEnabled = state;
         }
     }
 }

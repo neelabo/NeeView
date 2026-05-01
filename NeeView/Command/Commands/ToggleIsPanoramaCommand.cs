@@ -18,7 +18,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.Book.IsPanorama ? TextResources.GetString("ToggleIsPanoramaCommand.Off") : TextResources.GetString("ToggleIsPanoramaCommand.On");
+            var state = CommandElementTools.GetState(e, Config.Current.Book.IsPanorama);
+            return GetStateExecuteMessage(state);
         }
 
         public override void Execute(object? sender, CommandContext e)

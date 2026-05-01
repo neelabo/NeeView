@@ -240,6 +240,12 @@ namespace NeeView
 
         public WindowController WindowController => _windowController;
 
+        public bool IsFilmStripVisible { get; private set; }
+        
+        public bool IsPageSliderVisible { get; private set; }
+
+        public bool IsAddressBarVisible { get; private set; }
+
 
         #region 初期化処理
 
@@ -646,6 +652,21 @@ namespace NeeView
 
             // ウィンドウ座標の保存
             StoreWindowPlacement();
+        }
+
+        private void FilmStripArea_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            IsFilmStripVisible = (bool)e.NewValue;
+        }
+
+        private void PageSliderView_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            IsPageSliderVisible = (bool)e.NewValue;
+        }
+
+        private void AddressBar_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            IsAddressBarVisible = (bool)e.NewValue;
         }
 
         #endregion

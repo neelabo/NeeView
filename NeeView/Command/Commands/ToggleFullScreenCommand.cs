@@ -22,8 +22,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            var windowStateManager = MainWindow.Current.WindowStateManager;
-            return windowStateManager.IsFullScreen ? TextResources.GetString("ToggleFullScreenCommand.Off") : TextResources.GetString("ToggleFullScreenCommand.On");
+            var state = CommandElementTools.GetState(e, MainWindow.Current.WindowStateManager.IsFullScreen);
+            return GetStateExecuteMessage(state);
         }
 
         public override void Execute(object? sender, CommandContext e)

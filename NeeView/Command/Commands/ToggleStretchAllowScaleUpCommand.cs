@@ -21,7 +21,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return this.Text + (Config.Current.View.AllowStretchScaleUp ? " OFF" : " ");
+            var state = CommandElementTools.GetState(e, Config.Current.View.AllowStretchScaleUp);
+            return GetStateExecuteMessage(state);
         }
 
         public override bool CanExecute(object? sender, CommandContext e)
@@ -32,14 +33,8 @@ namespace NeeView
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
-            {
-                Config.Current.View.AllowStretchScaleUp = Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                Config.Current.View.AllowStretchScaleUp = !Config.Current.View.AllowStretchScaleUp;
-            }
+            var state = CommandElementTools.GetState(e, Config.Current.View.AllowStretchScaleUp);
+            Config.Current.View.AllowStretchScaleUp = state;
         }
     }
 }

@@ -13,6 +13,8 @@
         void ViewRotateLeft(ViewRotateCommandParameter parameter);
         void ViewRotateRight(ViewRotateCommandParameter parameter);
 
+        bool IsFlipHorizontal();
+        bool IsFlipVertical();
         void FlipHorizontal(bool isFlip);
         void FlipVertical(bool isFlip);
         void ToggleFlipHorizontal();

@@ -19,17 +19,17 @@ namespace NeeView
         //    return new Binding(nameof(IViewTransformControl.IsFlipVertical)) { Source = MainViewComponent.Current.ViewTransformControl, Mode = BindingMode.OneWay };
         //}
 
+        public override string ExecuteMessage(object? sender, CommandContext e)
+        {
+            var state = CommandElementTools.GetState(e, MainViewComponent.Current.ViewTransformControl.IsFlipVertical());
+            return GetStateExecuteMessage(state);
+        }
+
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
-            {
-                MainViewComponent.Current.ViewTransformControl.FlipVertical(Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture));
-            }
-            else
-            {
-                MainViewComponent.Current.ViewTransformControl.ToggleFlipVertical();
-            }
+            var state = CommandElementTools.GetState(e, MainViewComponent.Current.ViewTransformControl.IsFlipVertical());
+            MainViewComponent.Current.ViewTransformControl.FlipVertical(state);
         }
     }
 }

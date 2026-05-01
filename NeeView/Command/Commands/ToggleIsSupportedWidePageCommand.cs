@@ -21,7 +21,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return BookSettings.Current.IsSupportedWidePage ? TextResources.GetString("ToggleIsSupportedWidePageCommand.Off") : TextResources.GetString("ToggleIsSupportedWidePageCommand.On");
+            var state = CommandElementTools.GetState(e, BookSettings.Current.IsSupportedWidePage);
+            return GetStateExecuteMessage(state);
         }
 
         public override bool CanExecute(object? sender, CommandContext e)
@@ -32,14 +33,8 @@ namespace NeeView
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
-            {
-                BookSettings.Current.SetIsSupportedWidePage(Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture));
-            }
-            else
-            {
-                BookSettings.Current.ToggleIsSupportedWidePage();
-            }
+            var state = CommandElementTools.GetState(e, BookSettings.Current.IsSupportedWidePage);
+            BookSettings.Current.SetIsSupportedWidePage(state);
         }
     }
 }

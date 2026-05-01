@@ -9,18 +9,18 @@ namespace NeeView
     public class VisibleAtOnceRequestEventArgs : EventArgs
     {
         public VisibleAtOnceRequestEventArgs(string key)
-            : this(key, VisibilityRequest.Visible)
+            : this(key, StateRequest.Enable)
         {
         }
 
-        public VisibleAtOnceRequestEventArgs(string key, VisibilityRequest visibility)
+        public VisibleAtOnceRequestEventArgs(string key, StateRequest state)
         {
             Key = key;
-            Visibility = visibility;
+            State = state;
         }
 
         public string Key { get; init; }
-        public VisibilityRequest Visibility { get; init; }
+        public StateRequest State { get; init; }
     }
 
 
@@ -84,12 +84,17 @@ namespace NeeView
 
         public void VisibleAtOnce(string key, bool isVisible = true)
         {
-            VisibleAtOnceRequest?.Invoke(this, new VisibleAtOnceRequestEventArgs(key, isVisible ? VisibilityRequest.Visible : VisibilityRequest.Hidden));
+            VisibleAtOnceRequest?.Invoke(this, new VisibleAtOnceRequestEventArgs(key, isVisible ? StateRequest.Enable : StateRequest.Disable));
         }
 
         private static bool IsVisiblePanel(string key)
         {
             return CustomLayoutPanelManager.Current.IsPanelSelected(key);
+        }
+
+        private bool GetVisiblePanel(string key, bool byMenu)
+        {
+            return byMenu ? CustomLayoutPanelManager.Current.IsPanelSelected(key) : CustomLayoutPanelManager.Current.IsPanelVisible(key);
         }
 
         private void SetVisiblePanel(string key, bool isVisible, bool isFocus = true)
@@ -114,6 +119,11 @@ namespace NeeView
             set { SetVisiblePanel(nameof(FileInformationPanel), value); }
         }
 
+        public bool GetVisibleFileInfo(bool byMenu)
+        {
+            return GetVisiblePanel(nameof(FileInformationPanel), byMenu);
+        }
+
         // TODO: flushって？
         public void SetVisibleFileInfo(bool isVisible, bool flush)
         {
@@ -132,6 +142,11 @@ namespace NeeView
         {
             get { return IsVisiblePanel(nameof(ImageEffectPanel)); }
             set { SetVisiblePanel(nameof(ImageEffectPanel), value); }
+        }
+
+        public bool GetVisibleEffectInfo(bool byMenu)
+        {
+            return GetVisiblePanel(nameof(ImageEffectPanel), byMenu);
         }
 
         public void SetVisibleEffectInfo(bool isVisible, bool flush)
@@ -153,6 +168,11 @@ namespace NeeView
             set { SetVisiblePanel(nameof(NavigatePanel), value); }
         }
 
+        public bool GetVisibleNavigator(bool byMenu)
+        {
+            return GetVisiblePanel(nameof(NavigatePanel), byMenu);
+        }
+
         public void SetVisibleNavigator(bool isVisible, bool flush)
         {
             SetVisiblePanel(nameof(NavigatePanel), isVisible);
@@ -169,6 +189,11 @@ namespace NeeView
         {
             get { return IsVisiblePanel(nameof(FolderPanel)); }
             set { SetVisiblePanel(nameof(FolderPanel), value); }
+        }
+
+        public bool GetVisibleFolderList(bool byMenu)
+        {
+            return GetVisiblePanel(nameof(FolderPanel), byMenu);
         }
 
         public void SetVisibleFolderList(bool isVisible, bool flush, bool isFocus)
@@ -189,6 +214,11 @@ namespace NeeView
             set { SetVisiblePanel(nameof(PageListPanel), value); }
         }
 
+        public bool GetVisiblePageList(bool byMenu)
+        {
+            return GetVisiblePanel(nameof(PageListPanel), byMenu);
+        }
+
         public void SetVisiblePageList(bool isVisible, bool flush, bool isFocus)
         {
             SetVisiblePanel(nameof(PageListPanel), isVisible, isFocus);
@@ -205,6 +235,11 @@ namespace NeeView
         {
             get { return IsVisiblePanel(nameof(HistoryPanel)); }
             set { SetVisiblePanel(nameof(HistoryPanel), value); }
+        }
+
+        public bool GetVisibleHistoryList(bool byMenu)
+        {
+            return GetVisiblePanel(nameof(HistoryPanel), byMenu);
         }
 
         public void SetVisibleHistoryList(bool isVisible, bool flush, bool isFocus)
@@ -225,6 +260,11 @@ namespace NeeView
             set { SetVisiblePanel(nameof(BookmarkPanel), value); }
         }
 
+        public bool GetVisibleBookmarkList(bool byMenu)
+        {
+            return GetVisiblePanel(nameof(BookmarkPanel), byMenu);
+        }
+
         public void SetVisibleBookmarkList(bool isVisible, bool flush, bool isFocus)
         {
             SetVisiblePanel(nameof(BookmarkPanel), isVisible, isFocus);
@@ -240,6 +280,11 @@ namespace NeeView
         {
             get { return IsVisiblePanel(nameof(PlaylistPanel)); }
             set { SetVisiblePanel(nameof(PlaylistPanel), value); }
+        }
+
+        public bool GetVisiblePlaylist(bool byMenu)
+        {
+            return GetVisiblePanel(nameof(PlaylistPanel), byMenu);
         }
 
         public void SetVisiblePlaylist(bool isVisible, bool flush)

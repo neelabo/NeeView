@@ -22,20 +22,15 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.ImageEffect.IsEnabled ? TextResources.GetString("ToggleEffectCommand.Off") : TextResources.GetString("ToggleEffectCommand.On");
+            var state = CommandElementTools.GetState(e, Config.Current.ImageEffect.IsEnabled);
+            return GetStateExecuteMessage(state);
         }
 
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
-            {
-                Config.Current.ImageEffect.IsEnabled = Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                Config.Current.ImageEffect.IsEnabled = !Config.Current.ImageEffect.IsEnabled;
-            }
+            var state = CommandElementTools.GetState(e, Config.Current.ImageEffect.IsEnabled);
+            Config.Current.ImageEffect.IsEnabled = state;
         }
     }
 }

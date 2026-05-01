@@ -22,7 +22,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return SidePanelFrame.Current.IsVisibleHistoryList ? TextResources.GetString("ToggleVisibleHistoryListCommand.Off") : TextResources.GetString("ToggleVisibleHistoryListCommand.On");
+            var state = CommandElementTools.GetState(e, SidePanelFrame.Current.GetVisibleHistoryList(e.ByMenu));
+            return GetStateExecuteMessage(state);
         }
 
         [MethodArgument("ToggleCommand.Execute.Remarks")]

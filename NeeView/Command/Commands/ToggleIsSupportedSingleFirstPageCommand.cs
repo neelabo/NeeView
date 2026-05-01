@@ -21,7 +21,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.BookSetting.IsSupportedSingleFirstPage ? TextResources.GetString("ToggleIsSupportedSingleFirstPageCommand.Off") : TextResources.GetString("ToggleIsSupportedSingleFirstPageCommand.On");
+            var state = CommandElementTools.GetState(e, Config.Current.BookSetting.IsSupportedSingleFirstPage);
+            return GetStateExecuteMessage(state);
         }
 
         public override bool CanExecute(object? sender, CommandContext e)
@@ -32,14 +33,8 @@ namespace NeeView
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
-            {
-                Config.Current.BookSetting.IsSupportedSingleFirstPage = Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                Config.Current.BookSetting.IsSupportedSingleFirstPage = !Config.Current.BookSetting.IsSupportedSingleFirstPage;
-            }
+            var state = CommandElementTools.GetState(e, Config.Current.BookSetting.IsSupportedSingleFirstPage);
+            Config.Current.BookSetting.IsSupportedSingleFirstPage = state;
         }
     }
 }

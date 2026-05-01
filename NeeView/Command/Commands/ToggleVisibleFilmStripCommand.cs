@@ -22,29 +22,21 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return FilmStrip.Current.IsVisible ? TextResources.GetString("ToggleVisibleFilmStripCommand.Off") : TextResources.GetString("ToggleVisibleFilmStripCommand.On");
+            var state = CommandElementTools.GetState(e, Config.Current.FilmStrip.IsEnabled, MainWindow.Current.IsFilmStripVisible);
+            return GetStateExecuteMessage(state);
         }
 
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Options.HasFlag(CommandOption.ByMenu))
+            var state = CommandElementTools.GetState(e, Config.Current.FilmStrip.IsEnabled, MainWindow.Current.IsFilmStripVisible);
+            if (e.ByMenu)
             {
-                Config.Current.FilmStrip.IsEnabled = e.Args.Length > 0
-                    ? Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture)
-                    : !Config.Current.FilmStrip.IsEnabled;
+                Config.Current.FilmStrip.IsEnabled = state;
             }
             else
             {
-                if (e.Args.Length > 0)
-                {
-                    var isVisible = Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture);
-                    MainWindowModel.Current.SetFilmStripVisible(isVisible.ToVisibilityRequest());
-                }
-                else
-                {
-                    MainWindowModel.Current.SetFilmStripVisible(VisibilityRequest.Toggle);
-                }
+                MainWindowModel.Current.SetFilmStripVisible(state.ToStateRequest());
             }
         }
     }

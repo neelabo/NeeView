@@ -264,6 +264,18 @@ namespace NeeView
         }
 
 
+        public bool IsFlipHorizontal()
+        {
+            var transform = GetDragTransform(Config.Current.View.FlipCenter == DragControlCenter.Cursor);
+            return transform?.IsFlipHorizontal ?? false;
+        }
+
+        public bool IsFlipVertical()
+        {
+            var transform = GetDragTransform(Config.Current.View.FlipCenter == DragControlCenter.Cursor);
+            return transform?.IsFlipVertical ?? false;
+        }
+
         public void FlipHorizontal(bool isFlip)
         {
             var transform = GetDragTransform(Config.Current.View.FlipCenter == DragControlCenter.Cursor);

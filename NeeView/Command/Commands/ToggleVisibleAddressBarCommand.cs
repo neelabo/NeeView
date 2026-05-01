@@ -22,28 +22,20 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.MenuBar.IsAddressBarEnabled ? TextResources.GetString("ToggleVisibleAddressBarCommand.Off") : TextResources.GetString("ToggleVisibleAddressBarCommand.On");
+            var state = CommandElementTools.GetState(e, Config.Current.MenuBar.IsAddressBarEnabled, MainWindow.Current.IsAddressBarVisible);
+            return GetStateExecuteMessage(state);
         }
 
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Options.HasFlag(CommandOption.ByMenu))
+            var state = CommandElementTools.GetState(e, Config.Current.MenuBar.IsAddressBarEnabled, MainWindow.Current.IsAddressBarVisible);
+            if (e.ByMenu)
             {
-                Config.Current.MenuBar.IsAddressBarEnabled = e.Args.Length > 0
-                    ? Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture)
-                    : !Config.Current.MenuBar.IsAddressBarEnabled;
+                Config.Current.MenuBar.IsAddressBarEnabled = state;
             }
             else
             {
-                if (e.Args.Length > 0)
-                {
-                    var isVisible = Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture);
-                    MainWindowModel.Current.SetAddressBarVisible(isVisible.ToVisibilityRequest());
-                }
-                else
-                {
-                    MainWindowModel.Current.SetAddressBarVisible(VisibilityRequest.Toggle);
-                }
+                MainWindowModel.Current.SetAddressBarVisible(state.ToStateRequest());
             }
         }
     }

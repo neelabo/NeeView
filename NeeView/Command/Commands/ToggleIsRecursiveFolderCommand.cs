@@ -21,20 +21,15 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return BookSettings.Current.IsRecursiveFolder ? TextResources.GetString("ToggleIsRecursiveFolderCommand.Off") : TextResources.GetString("ToggleIsRecursiveFolderCommand.On");
+            var state = CommandElementTools.GetState(e, BookSettings.Current.IsRecursiveFolder);
+            return GetStateExecuteMessage(state);
         }
 
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
-            {
-                BookSettings.Current.SetIsRecursiveFolder(Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture));
-            }
-            else
-            {
-                BookSettings.Current.ToggleIsRecursiveFolder();
-            }
+            var state = CommandElementTools.GetState(e, BookSettings.Current.IsRecursiveFolder);
+            BookSettings.Current.SetIsRecursiveFolder(state);
         }
     }
 }

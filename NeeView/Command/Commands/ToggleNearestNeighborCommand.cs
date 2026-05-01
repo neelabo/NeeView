@@ -21,7 +21,8 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.ImageDotKeep.IsEnabled ? TextResources.GetString("ToggleNearestNeighborCommand.Off") : TextResources.GetString("ToggleNearestNeighborCommand.On");
+            var state = CommandElementTools.GetState(e, Config.Current.ImageDotKeep.IsEnabled);
+            return GetStateExecuteMessage(state);
         }
 
         public override bool CanExecute(object? sender, CommandContext e)
@@ -32,14 +33,8 @@ namespace NeeView
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
-            {
-                Config.Current.ImageDotKeep.IsEnabled = Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                Config.Current.ImageDotKeep.IsEnabled = !Config.Current.ImageDotKeep.IsEnabled;
-            }
+            var state = CommandElementTools.GetState(e, Config.Current.ImageDotKeep.IsEnabled);
+            Config.Current.ImageDotKeep.IsEnabled = state;
         }
     }
 }

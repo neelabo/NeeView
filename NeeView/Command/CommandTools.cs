@@ -1,12 +1,17 @@
 ﻿using NeeView.Properties;
 using System;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 
 namespace NeeView
 {
-    public static class CommandTools
+    public static partial class CommandTools
     {
+        [GeneratedRegex(@"\(_[A-Z]\)")]
+        private static partial Regex _menuKeywordRegex { get; }
+
+
         /// <summary>
         /// コマンド有効判定
         /// </summary>
@@ -68,9 +73,23 @@ namespace NeeView
 
             return "(none)";
         }
+
+        /// <summary>
+        /// メニュー文字列に埋め込まれているショートカットキーワードを削除
+        /// </summary>
+        /// <param name="menuText"></param>
+        /// <returns></returns>
+        public static string TrimMenuKeyword(string menuText)
+        {
+            // (_P) -> ""
+            menuText = _menuKeywordRegex.Replace(menuText, "");
+
+            // _ -> ""
+            menuText = menuText.Replace("_", "");
+            menuText = menuText.Trim();
+
+            return menuText;
+        }
+
     }
-
-
-
-
 }

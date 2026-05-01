@@ -21,20 +21,15 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return Config.Current.ImageTrim.IsEnabled ? TextResources.GetString("ToggleTrimCommand.Off") : TextResources.GetString("ToggleTrimCommand.On");
+            var state = CommandElementTools.GetState(e, Config.Current.ImageTrim.IsEnabled);
+            return GetStateExecuteMessage(state);
         }
 
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
-            {
-                Config.Current.ImageTrim.IsEnabled = Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                Config.Current.ImageTrim.IsEnabled = !Config.Current.ImageTrim.IsEnabled;
-            }
+            var state = CommandElementTools.GetState(e, Config.Current.ImageTrim.IsEnabled);
+            Config.Current.ImageTrim.IsEnabled = state;
         }
     }
 }
