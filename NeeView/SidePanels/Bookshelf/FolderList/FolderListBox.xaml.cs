@@ -346,9 +346,16 @@ namespace NeeView
             var collection = new System.Collections.Specialized.StringCollection();
             foreach (var item in items.Where(e => !e.IsEmpty()).Select(e => e.EntityPath.SimplePath).Where(e => new QueryPath(e).Scheme == QueryScheme.File))
             {
-                var entry = await ArchiveEntryUtility.CreateAsync(item, ArchiveHint.None, true, token);
-                var path = await entry.RealizeAsync(token);
-                collection.Add(path);
+                try
+                {
+                    var entry = await ArchiveEntryUtility.CreateAsync(item, ArchiveHint.None, true, token);
+                    var path = await entry.RealizeAsync(token);
+                    collection.Add(path);
+                }
+                catch (FileNotFoundException)
+                {
+                    collection.Add(item);
+                }
             }
 
             if (collection.Count == 0)
