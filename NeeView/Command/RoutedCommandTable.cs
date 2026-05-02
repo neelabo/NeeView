@@ -1,4 +1,4 @@
-﻿#define DEBUG_SHOWMESSAGE
+﻿//#define DEBUG_SHOWMESSAGE
 
 using NeeLaboratory.Generators;
 using System;

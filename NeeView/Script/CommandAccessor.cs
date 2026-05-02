@@ -1,4 +1,4 @@
-﻿#define DEBUG_SHOWMESSAGE
+﻿//#define DEBUG_SHOWMESSAGE
 
 using System;
 using System.Collections.Generic;
