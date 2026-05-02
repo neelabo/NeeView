@@ -21,47 +21,63 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            var state = CommandElementTools.GetState(e, Config.Current.PageList.IsFolderTreeVisible);
+            var state = CommandElementTools.GetState(e, PageListFolderTreeTools.IsVisiblePageListFolderTree);
             return GetStateExecuteMessage(state);
         }
 
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            var focus = !e.Options.HasFlag(CommandOption.ByMenu);
-
             if (e.Args.Length > 0)
             {
-                SetContentsTreeVisible(Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture), focus);
+                PageListFolderTreeTools.IsVisiblePageListFolderTree = Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture);
             }
             else
             {
-                ToggleContentsTreeVisible(focus);
+                PageListFolderTreeTools.ToggleVisiblePageListFolderTree(e.Options.HasFlag(CommandOption.ByMenu));
             }
         }
+    }
 
 
-        private void SetContentsTreeVisible(bool isVisible, bool focus)
+    public static class PageListFolderTreeTools
+    {
+        /// <summary>
+        /// フォルダーツリー表示状態
+        /// </summary>
+        public static bool IsVisiblePageListFolderTree
         {
+            get { return Config.Current.PageList.IsFolderTreeVisible && SidePanelFrame.Current.IsVisiblePageList; }
+            set { SetVisiblePageListFolderTree(false, value); }
+        }
+
+        /// <summary>
+        /// フォルダーツリー表示状態切替
+        /// </summary>
+        public static bool ToggleVisiblePageListFolderTree(bool byMenu)
+        {
+            return SetVisiblePageListFolderTree(byMenu, !IsVisiblePageListFolderTree || !SidePanelFrame.Current.IsVisiblePageList);
+        }
+
+        /// <summary>
+        /// フォルダーツリー表示状設定
+        /// </summary>
+        private static bool SetVisiblePageListFolderTree(bool byMenu, bool isVisible)
+        {
+            //Debug.WriteLine($"{isVisible}, {SidePanelFrame.Current.IsVisiblePageList}");
+
             Config.Current.PageList.IsFolderTreeVisible = isVisible;
 
-            if (isVisible)
+            SidePanelFrame.Current.SetVisiblePageList(true, true, true);
+
+            if (!byMenu && isVisible)
             {
-                // パネル表示
-                SidePanelFrame.Current.SetVisiblePageList(true, true, false);
-
-                if (focus)
-                {
-                    // フォーカス
-                    var panel = (PageListPanel)CustomLayoutPanelManager.Current.GetPanel(nameof(PageListPanel));
-                    panel.Presenter.FocusContentTreeAtOnce();
-                }
+                // フォーカス要求
+                var panel = (PageListPanel)CustomLayoutPanelManager.Current.GetPanel(nameof(PageListPanel));
+                panel.Presenter.FocusContentTreeAtOnce();
             }
-        }
 
-        private void ToggleContentsTreeVisible(bool focus)
-        {
-            SetContentsTreeVisible(!Config.Current.PageList.IsFolderTreeVisible, focus);
+            return Config.Current.PageList.IsFolderTreeVisible;
         }
     }
 }
