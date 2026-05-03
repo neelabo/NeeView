@@ -377,6 +377,14 @@ namespace NeeView
             }
         }
 
+        private void TreeView_IsKeyboardFocusWithinChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (!_vm.IsValid) return;
+            if (_vm.Model is null) return;
+
+            _vm.Model.IsKeyboardFocusWithin = (bool)e.NewValue;
+        }
+
         private void TreeViewItem_Selected(object? sender, RoutedEventArgs e)
         {
         }

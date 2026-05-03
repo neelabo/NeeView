@@ -80,6 +80,7 @@
                   Drop="TreeView_Drop"
                   KeyDown="TreeView_KeyDown"
                   TextInput="TreeView_TextInput"
+                  IsKeyboardFocusWithinChanged="TreeView_IsKeyboardFocusWithinChanged"
                   VirtualizingStackPanel.ScrollUnit="Item"
                   VirtualizingStackPanel.IsVirtualizing="True"
                   VirtualizingStackPanel.VirtualizationMode="Recycling">

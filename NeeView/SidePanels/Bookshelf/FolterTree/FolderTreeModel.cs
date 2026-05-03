@@ -70,6 +70,8 @@ namespace NeeView
 
         public bool IsFocusAtOnce { get; set; }
 
+        public bool IsKeyboardFocusWithin { get; set; }
+
 
         public void SetSelectedItem(ITreeViewNode? node)
         {
@@ -584,8 +586,11 @@ namespace NeeView
                     parent = parent?.Parent;
                 }
 
-                SelectedItem = node;
-                SelectedItemChanged?.Invoke(this, EventArgs.Empty);
+                if (!IsKeyboardFocusWithin)
+                {
+                    SelectedItem = node;
+                    SelectedItemChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
 
