@@ -1968,6 +1968,7 @@ SortOrder.TimeStampDescending=日期↓
 StartUpConfig.IsAutoPlaySlideShow=启动幻灯片播放
 StartUpConfig.IsMultiBootEnabled=允许多重启动
 StartUpConfig.IsOpenLastBook=恢复打开的书籍
+StartUpConfig.IsOpenLastBookmarkFolder=
 StartUpConfig.IsOpenLastFolder=恢复书架位置
 StartUpConfig.IsRestoreFullScreen=恢复全屏状态
 StartUpConfig.IsRestoreSecondWindowPlacement=恢复第二窗口坐标

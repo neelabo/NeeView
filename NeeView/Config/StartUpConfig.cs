@@ -13,6 +13,7 @@ namespace NeeView
         [DefaultEquality] private string? _lastFolderPath;
         [DefaultEquality] private BookMemento? _lastBook;
         [DefaultEquality] private BookshelfFolderMemento? _lastFolder;
+        [DefaultEquality] private BookshelfFolderMemento? _lastBookmarkFolder;
         [DefaultEquality] private bool _isSplashScreenEnabled = true;
         [DefaultEquality] private bool _isMultiBootEnabled;
         [DefaultEquality] private bool _isRestoreWindowPlacement = true;
@@ -20,6 +21,7 @@ namespace NeeView
         [DefaultEquality] private bool _isRestoreFullScreen;
         [DefaultEquality] private bool _isOpenLastBook;
         [DefaultEquality] private bool _isOpenLastFolder;
+        [DefaultEquality] private bool _isOpenLastBookmarkFolder;
         [DefaultEquality] private bool _isAutoPlaySlideShow;
 
 
@@ -79,6 +81,14 @@ namespace NeeView
             set { SetProperty(ref _isOpenLastFolder, value); }
         }
 
+        // 前回開いていたブックマークフォルダーを復元
+        [PropertyMember]
+        public bool IsOpenLastBookmarkFolder
+        {
+            get { return _isOpenLastBookmarkFolder; }
+            set { SetProperty(ref _isOpenLastBookmarkFolder, value); }
+        }
+
         /// <summary>
         /// 起動時にスライドショーを開始する
         /// </summary>
@@ -91,22 +101,6 @@ namespace NeeView
 
 
         #region HiddenParameters
-
-        [Obsolete, PropertyMapIgnore]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string? LastBookPath
-        {
-            get { return IsOpenLastBook ? _lastBookPath : null; }
-            set { SetProperty(ref _lastBookPath, value); }
-        }
-
-        [Obsolete, PropertyMapIgnore]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public string? LastFolderPath
-        {
-            get { return IsOpenLastFolder ? _lastFolderPath : null; }
-            set { SetProperty(ref _lastFolderPath, value); }
-        }
 
         [PropertyMapIgnore]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
@@ -131,6 +125,33 @@ namespace NeeView
             set { SetProperty(ref _lastFolder, value); }
         }
 
+        [PropertyMapIgnore]
+        public BookshelfFolderMemento? LastBookmarkFolder
+        {
+            get { return _lastBookmarkFolder; }
+            set { SetProperty(ref _lastBookmarkFolder, value); }
+        }
+
         #endregion HiddenParameters
+
+        #region Obsolete
+
+        [Obsolete, PropertyMapIgnore]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? LastBookPath
+        {
+            get { return IsOpenLastBook ? _lastBookPath : null; }
+            set { SetProperty(ref _lastBookPath, value); }
+        }
+
+        [Obsolete, PropertyMapIgnore]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? LastFolderPath
+        {
+            get { return IsOpenLastFolder ? _lastFolderPath : null; }
+            set { SetProperty(ref _lastFolderPath, value); }
+        }
+
+        #endregion Obsolete
     }
 }

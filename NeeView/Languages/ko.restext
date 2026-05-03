@@ -1968,6 +1968,7 @@ SortOrder.TimeStampDescending=날짜 ↓
 StartUpConfig.IsAutoPlaySlideShow=슬라이드쇼 재생 시작
 StartUpConfig.IsMultiBootEnabled=다중 실행 허용
 StartUpConfig.IsOpenLastBook=마지막으로 열었던 책 기억
+StartUpConfig.IsOpenLastBookmarkFolder=
 StartUpConfig.IsOpenLastFolder=서랍 경로 기억
 StartUpConfig.IsRestoreFullScreen=전체 화면 상태 기억
 StartUpConfig.IsRestoreSecondWindowPlacement=2개째의 창 위치 기억

@@ -299,9 +299,6 @@ namespace NeeView
             // 最初のブック、フォルダを開く
             new FirstLoader().Load();
 
-            // 最初のブックマークを開く
-            BookmarkFolderList.Current.UpdateItems();
-
             // オプション指定があればフォルダーリスト表示
             if (App.Current.Option.FolderListQuery is not null)
             {

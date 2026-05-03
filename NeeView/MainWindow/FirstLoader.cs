@@ -13,6 +13,7 @@ namespace NeeView
         private FolderProfile? _lastFolder;
         private BookProfile? _book;
         private FolderProfile? _folder;
+        private FolderProfile? _bookmarkFolder;
         private BookLoadOption _bookLoadOptions;
 
         public void Load()
@@ -22,11 +23,13 @@ namespace NeeView
 
             _lastBook = GetLastBookProfile();
             _lastFolder = GetLastFolderProfile();
+            _bookmarkFolder = GetLastBookmarkFolderProfile();
 
             SetBookPlace();
             SetFolderPlace();
             LoadBook();
             LoadFolder();
+            LoadBookmarkFolder();
         }
 
         private static BookProfile? GetLastBookProfile()
@@ -59,6 +62,17 @@ namespace NeeView
             return new FolderProfile(path, Config.Current.StartUp.LastFolder);
         }
 
+        private static FolderProfile? GetLastBookmarkFolderProfile()
+        {
+            var path = Config.Current.StartUp.LastBookmarkFolder?.Path;
+
+            if (!Config.Current.StartUp.IsOpenLastBookmarkFolder || string.IsNullOrEmpty(path))
+            {
+                return null;
+            }
+
+            return new FolderProfile(path, Config.Current.StartUp.LastBookmarkFolder);
+        }
 
         private void SetBookPlace()
         {
@@ -128,6 +142,21 @@ namespace NeeView
             BookshelfFolderList.Current.RequestPlace(new QueryPath(_folder.Path), select, FolderSetPlaceOption.UpdateHistory);
         }
 
+        private void LoadBookmarkFolder()
+        {
+            if (_bookmarkFolder is null)
+            {
+                BookmarkFolderList.Current.RequestPlace(new QueryPath(QueryScheme.Bookmark, null), null, FolderSetPlaceOption.None);
+            }
+            else
+            {
+                var path = _bookmarkFolder.FolderMemento?.Select;
+                var select = path is not null ? new FolderItemPosition(new QueryPath(path)) : null;
+
+                _bookmarkFolder.FolderMemento?.Register();
+                BookmarkFolderList.Current.RequestPlace(new QueryPath(_bookmarkFolder.Path), select, FolderSetPlaceOption.UpdateHistory);
+            }
+        }
 
         /// <summary>
         /// 最初のブックの情報

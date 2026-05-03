@@ -16,7 +16,7 @@
             Seed = parameter?.Seed ?? 0;
         }
 
-        public string Path { get; }
+        public string Path { get; init; }
 
         public string? Select { get; init; }
 

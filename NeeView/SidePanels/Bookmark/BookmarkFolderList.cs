@@ -53,16 +53,6 @@ namespace NeeView
         public override bool SyncBookOnRename => false;
 
 
-        public void UpdateItems()
-        {
-            if (_disposedValue) return;
-
-            if (FolderCollection == null)
-            {
-                RequestPlace(new QueryPath(QueryScheme.Bookmark, null), null, FolderSetPlaceOption.None);
-            }
-        }
-
         public override bool CanMoveToParent()
         {
             if (_disposedValue) return false;
@@ -95,6 +85,18 @@ namespace NeeView
         public TreeListNode<IBookmarkEntry>? GetBookmarkPlace()
         {
             return (FolderCollection as BookmarkFolderCollection)?.BookmarkPlace;
+        }
+
+        public void SaveLastFolderPath()
+        {
+            if (Config.Current.StartUp.IsOpenLastBookmarkFolder && Place is not null)
+            {
+                Config.Current.StartUp.LastBookmarkFolder = new BookshelfFolderMemento(Place, SelectedItem?.TargetPath, FolderCollection?.FolderParameter);
+            }
+            else
+            {
+                Config.Current.StartUp.LastBookmarkFolder = null;
+            }
         }
 
         #region IDisposable support

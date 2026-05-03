@@ -1976,6 +1976,7 @@ SortOrder.TimeStampDescending=Дата↓
 StartUpConfig.IsAutoPlaySlideShow=Начать воспроизведение слайд-шоу
 StartUpConfig.IsMultiBootEnabled=Разрешить несколько запусков
 StartUpConfig.IsOpenLastBook=Восстановить открытую книгу
+StartUpConfig.IsOpenLastBookmarkFolder=
 StartUpConfig.IsOpenLastFolder=Восстановить расположение книжной полки
 StartUpConfig.IsRestoreFullScreen=Восстановить полноэкранное состояние
 StartUpConfig.IsRestoreSecondWindowPlacement=Восстановить координаты второго окна

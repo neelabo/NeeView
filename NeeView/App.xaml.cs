@@ -428,6 +428,7 @@ namespace NeeView
 
                 // 現在の本棚の場所を保存
                 BookshelfFolderList.Current.SaveLastFolderPath();
+                BookmarkFolderList.Current.SaveLastFolderPath();
 
                 // 各種Dispose
                 ApplicationDisposer.Current.Dispose();

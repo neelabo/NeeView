@@ -1976,6 +1976,7 @@ SortOrder.TimeStampDescending=Date↓
 StartUpConfig.IsAutoPlaySlideShow=Start playing slideshow
 StartUpConfig.IsMultiBootEnabled=Allow multiple activations
 StartUpConfig.IsOpenLastBook=Restore an open book
+StartUpConfig.IsOpenLastBookmarkFolder=Restore bookmark folder location
 StartUpConfig.IsOpenLastFolder=Restore bookshelf location
 StartUpConfig.IsRestoreFullScreen=Restore full screen state
 StartUpConfig.IsRestoreSecondWindowPlacement=Restore the second window coordinates

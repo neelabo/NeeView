@@ -1968,6 +1968,7 @@ SortOrder.TimeStampDescending=日付↓
 StartUpConfig.IsAutoPlaySlideShow=スライドショーの再生を開始する
 StartUpConfig.IsMultiBootEnabled=多重起動を許可する
 StartUpConfig.IsOpenLastBook=開いていたブックを復元する
+StartUpConfig.IsOpenLastBookmarkFolder=ブックマーク フォルダーの場所を復元する
 StartUpConfig.IsOpenLastFolder=本棚の場所を復元する
 StartUpConfig.IsRestoreFullScreen=フルスクリーン状態を復元する
 StartUpConfig.IsRestoreSecondWindowPlacement=2 つめのウィンドウ座標の復元
