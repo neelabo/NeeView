@@ -54,6 +54,7 @@ namespace NeeView.PageFrames
             var rawSize = GetRawContentSize();
             var isFileContent = _elements.Any(e => e.Page.Content.IsFileContent);
             _angle = calculator.CalcAutoRotate(rawSize, isFileContent);
+            Debug.Assert(_angle == 0.0 || _angle == 90.0 || _angle == -90.0);
 
             // stretch
             _span = calculator.ContentsSpace;

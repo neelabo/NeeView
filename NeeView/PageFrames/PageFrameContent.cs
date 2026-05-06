@@ -297,7 +297,7 @@ namespace NeeView.PageFrames
 
             foreach ((var viewContent, var element) in _viewContents.Zip(_pageFrame.Elements))
             {
-                viewContent.SetSource(element, CreateElementScale(), isForce);
+                viewContent.SetSource(element, CreateElementScale(), _pageFrame.Angle, isForce);
             }
             UpdateTransform();
             UpdateElementLayout();
@@ -439,7 +439,7 @@ namespace NeeView.PageFrames
 
                 foreach (var viewContent in _viewContents)
                 {
-                    viewContent.SetSource(viewContent.Element, scale, false);
+                    viewContent.SetSource(viewContent.Element, scale, _pageFrame.Angle, false);
                     //viewContent.SetRenderScale(scale);
                 }
             }
@@ -450,7 +450,7 @@ namespace NeeView.PageFrames
             var scale = CreateElementScale();
             foreach (var viewContent in _viewContents)
             {
-                viewContent.SetSource(viewContent.Element, scale, false);
+                viewContent.SetSource(viewContent.Element, scale, _pageFrame.Angle, false);
             }
         }
 

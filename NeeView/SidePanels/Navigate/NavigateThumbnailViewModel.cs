@@ -13,6 +13,7 @@ namespace NeeView
         private readonly PageFrameBoxPresenter _presenter;
         private bool _isEnabled;
         private bool _isVisible;
+        private double _angle;
         private double _rate;
         private double _thumbnailWidth;
         private double _thumbnailHeight = 256.0;
@@ -110,39 +111,60 @@ namespace NeeView
             if (AppState.Instance.IsProcessingBook) return;
 
             var pageFrameContent = _presenter.GetSelectedPageFrameContent();
-            var sourceWidth = pageFrameContent?.GetRawContentRect().Width ?? 0.0;
-            var sourceHeight = pageFrameContent?.GetRawContentRect().Height ?? 0.0;
-
             IsStaticFrame = pageFrameContent?.IsStaticFrame ?? true;
+
+            if (pageFrameContent is null)
+            {
+                ResetThumbnail();
+                return;
+            }
+
+            var sourceWidth = pageFrameContent.GetRawContentRect().Width;
+            var sourceHeight = pageFrameContent.GetRawContentRect().Height;
 
             if (sourceWidth <= 0.0 || sourceHeight <= 0.0 || !IsStaticFrame)
             {
-                this.ThumbnailWidth = 0.0;
-                this.ThumbnailHeight = 0.0;
-                _rate = 0.0;
-
-                MainViewVisualBrush = Brushes.Transparent;
+                ResetThumbnail();
             }
             else
             {
-                var sourceSize = new Size(sourceWidth, sourceHeight);
-                var limitSize = new Size(Math.Max(_canvasSize.Width - 1.0, 0.0), Math.Max(_canvasSize.Height - 1.0, 0.0));
-                var size = sourceSize.Limit(limitSize);
-                this.ThumbnailWidth = size.Width;
-                this.ThumbnailHeight = size.Height;
-                _rate = size.Width / sourceWidth;
-
-                MainViewVisualBrush = new VisualBrush()
-                {
-                    Stretch = Stretch.Uniform,
-                    Visual = _presenter.GetSelectedPageFrameContent()?.ViewElement, // _mainViewComponent.MainView.PageContents,
-                };
-
+                SetThumbnail(pageFrameContent, sourceWidth, sourceHeight);
             }
 
             UpdateViewbox();
         }
 
+        private void ResetThumbnail()
+        {
+            _angle = 0.0;
+            _rate = 0.0;
+
+            this.ThumbnailWidth = 0.0;
+            this.ThumbnailHeight = 0.0;
+
+            MainViewVisualBrush = Brushes.Transparent;
+        }
+
+        private void SetThumbnail(PageFrameContent pageFrameContent, double sourceWidth, double sourceHeight)
+        {
+            _angle = pageFrameContent.PageFrame.Angle;
+            var sourceSize = _angle == 0.0 ? new Size(sourceWidth, sourceHeight) : new Size(sourceHeight, sourceWidth);
+            var limitSize = new Size(Math.Max(_canvasSize.Width - 1.0, 0.0), Math.Max(_canvasSize.Height - 1.0, 0.0));
+            var size = sourceSize.Limit(limitSize);
+            _rate = size.Width / sourceSize.Width;
+
+            this.ThumbnailWidth = size.Width;
+            this.ThumbnailHeight = size.Height;
+
+            MainViewVisualBrush = new VisualBrush()
+            {
+                Stretch = Stretch.Fill,
+                Visual = pageFrameContent.ViewElement,
+                ViewportUnits = BrushMappingMode.Absolute,
+                Viewport = new Rect(0, 0, size.Width, size.Height),
+                RelativeTransform = new RotateTransform(pageFrameContent.PageFrame.Angle, 0.5, 0.5),
+            };
+        }
 
         [MemberNotNull(nameof(_viewboxGeometry))]
         private void InitializeViewbox()
@@ -202,6 +224,9 @@ namespace NeeView
                 transformGroup.Children.Add(new ScaleTransform(2.0, 2.0));
             }
 
+            // 自動回転反映
+            transformGroup.Children.Add(new RotateTransform(_angle));
+
             // キャンバス座標系に変換
             transformGroup.Children.Add(new ScaleTransform(_rate, _rate));
             transformGroup.Children.Add(new TranslateTransform(_canvasSize.Width * 0.5, _canvasSize.Height * 0.5));
@@ -229,26 +254,22 @@ namespace NeeView
             if (transformContext is null) return;
 
             var baseScale = 1.0;
-            var frameAngle = 0.0;
             var pageFrameContent = transformContext.GetPageFrameContent();
             if (pageFrameContent is not null)
             {
                 baseScale = pageFrameContent.BaseScaleTransform.Scale;
-                frameAngle = pageFrameContent.PageFrame.Angle;
             }
 
-            LookAt(transformContext.Transform, baseScale, frameAngle, new Point(x, y));
+            LookAt(transformContext.Transform, baseScale, new Point(x, y));
         }
 
-        private void LookAt(ITransformControl transform, double scale, double angle, Point point)
+        private void LookAt(ITransformControl transform, double scale, Point point)
         {
             var transformGroup = new TransformGroup();
             var scaleX = scale * transform.Scale * (transform.IsFlipHorizontal ? -1.0 : 1.0);
             var scaleY = scale * transform.Scale * (transform.IsFlipVertical ? -1.0 : 1.0);
             transformGroup.Children.Add(new ScaleTransform(scaleX, scaleY));
             transformGroup.Children.Add(new RotateTransform(transform.Angle));
-
-            transformGroup.Children.Add(new RotateTransform(angle));
 
             var pos = transformGroup.Transform(point);
             transform.SetPoint(pos, TimeSpan.Zero);

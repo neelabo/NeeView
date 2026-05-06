@@ -21,6 +21,7 @@ namespace NeeView
         private readonly PageFrameContext _context;
         private PageFrameElement _element;
         private PageFrameElementScale _scale;
+        private double _angle;
         private readonly PageFrameActivity _activity;
         private readonly ViewSource _viewSource;
         private readonly ViewContentSize _viewContentSize;
@@ -132,15 +133,18 @@ namespace NeeView
         /// <param name="scale">表示のスケール情報</param>
         /// <param name="force">強制更新</param>
         /// <exception cref="ArgumentException"></exception>
-        public void SetSource(PageFrameElement element, PageFrameElementScale scale, bool force)
+        public void SetSource(PageFrameElement element, PageFrameElementScale scale, double angle, bool force)
         {
             if (_disposedValue) return;
 
             if (!_element.IsMatch(element)) throw new ArgumentException("Resources do not match");
-            if (!force && _element.Equals(element) && _scale == scale) return;
+            if (!force && _element.Equals(element) && _scale == scale && _angle == angle) return;
+
+            var angleChanged = _angle != angle;
 
             _element = element;
             _scale = scale;
+            _angle = angle;
             _viewContentSize.SetSource(_element, scale);
 
             // 強制更新であれば読み込み前に一度コンテンツ生成をしておく
@@ -150,7 +154,7 @@ namespace NeeView
             }
             else
             {
-                if (UpdateSize())
+                if (UpdateSize() || angleChanged)
                 {
                     ViewContentChanged?.Invoke(this, new ViewContentChangedEventArgs(ViewContentChangedAction.Size, this));
                 }
