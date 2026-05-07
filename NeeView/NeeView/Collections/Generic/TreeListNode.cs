@@ -29,7 +29,7 @@ namespace NeeView.Collections.Generic
         private T _value;
 
         // NOTE: Enumerator をロックできるように旧式のロックオブジェクトを使用する
-        private readonly object _lock = new();
+        private static readonly object _lock = new();
 
 #if DEBUG
         private static int _serialCounter;
