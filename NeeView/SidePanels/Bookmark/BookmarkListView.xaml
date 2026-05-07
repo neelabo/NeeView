@@ -106,6 +106,10 @@
                         ToolTip="{Binding MoveToUpToolTip}">
                         <Image Source="{StaticResource ic_arrow_up_24px_a}" />
                     </Button>
+                    <Button x:Name="SyncButton" Style="{StaticResource FolderListButtonStyle}" Command="{Binding SyncCommand}" TabIndex="1"
+                        ToolTip="{properties:TextBinding Bookshelf.Sync.ToolTip}">
+                        <Image Source="{StaticResource ic_sync_24px_a}" />
+                    </Button>
                     <ComboBox x:Name="FolderOrderComboBox" FontFamily="{DynamicResource ArrowFontFamily}" TabIndex="1"
                           ItemsSource="{Binding FolderOrderList}" SelectedValuePath="Key" DisplayMemberPath="Value" SelectedValue="{Binding FolderCollection.FolderParameter.FolderOrder, Delay=1}"
                           Visibility="{Binding Model.IsFolderOrderEnabled, Converter={StaticResource BooleanToHiddenVisibilityConverter}}">

@@ -217,6 +217,8 @@ namespace NeeView
                 TargetPath = node.CreateQuery(),
                 Length = -1,
                 Attributes = FolderItemAttribute.Directory | FolderItemAttribute.Bookmark,
+                CreationTime = default,
+                LastWriteTime = folder.EntryTime,
                 IsReady = true
             };
         }
@@ -368,6 +370,17 @@ namespace NeeView
 
         public BookmarkFolder BookmarkFolder => (this.Source as TreeListNode<IBookmarkEntry>)?.Value as BookmarkFolder
             ?? throw new InvalidOperationException("Value is not a BookmarkFolder.");
+
+        public override string? GetNote(FolderOrder order)
+        {
+            return order switch
+            {
+                FolderOrder.Path or FolderOrder.PathDescending
+                    => "",
+                _
+                    => LastWriteTime != default ? LastWriteTime.ToFormatString() : ""
+            };
+        }
 
         public override string GetRenameText()
         {

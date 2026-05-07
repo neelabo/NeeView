@@ -105,7 +105,7 @@ namespace NeeView
         [WordNodeMember]
         public void Sync()
         {
-            AppDispatcher.Invoke(() => _model.Sync());
+            AppDispatcher.Invoke(() => _model.SyncAsync());
         }
 
         [WordNodeMember]

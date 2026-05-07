@@ -128,6 +128,12 @@ namespace NeeView
             _model.FolderListConfig.PanelListItemStyle = style;
         }
 
+        [RelayCommand]
+        private async Task Sync()
+        {
+            await _model.SyncAsync();
+        }
+
         #endregion Commands
 
         #region MoreMenu

@@ -187,7 +187,7 @@ namespace NeeView
             return System.Environment.CurrentDirectory;
         }
 
-        public override async void Sync()
+        public override async Task SyncAsync()
         {
             if (_disposedValue) return;
 

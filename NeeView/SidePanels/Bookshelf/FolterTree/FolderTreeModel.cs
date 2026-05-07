@@ -576,21 +576,54 @@ namespace NeeView
                 return;
             }
 
+            SyncTree(path);
+        }
+
+        public void SyncBookmarkFolder(string place, bool isForce)
+        {
+            if (_rootBookmarkFolder is null)
+            {
+                return;
+            }
+
+            if (!isForce && this.SelectedItem is DirectoryNode selectedNode && selectedNode.Path == place)
+            {
+                return;
+            }
+
+            var path = new QueryPath(place);
+            if (path.Scheme == QueryScheme.Bookmark && path.Path is null)
+            {
+                SyncTree(_rootBookmarkFolder);
+            }
+            else
+            {
+                SyncTree(path);
+            }
+        }
+
+        private void SyncTree(QueryPath path)
+        {
             var node = GetDirectoryNode(path, true, true);
             if (node != null)
             {
-                var parent = node.Parent;
-                while (parent != null)
-                {
-                    parent.IsExpanded = true;
-                    parent = parent?.Parent;
-                }
+                SyncTree(node);
+            }
+        }
 
-                if (!IsKeyboardFocusWithin)
-                {
-                    SelectedItem = node;
-                    SelectedItemChanged?.Invoke(this, EventArgs.Empty);
-                }
+        private void SyncTree(ITreeViewNode node)
+        {
+            var parent = node.Parent;
+            while (parent != null)
+            {
+                parent.IsExpanded = true;
+                parent = parent?.Parent;
+            }
+
+            if (!IsKeyboardFocusWithin)
+            {
+                SelectedItem = node;
+                SelectedItemChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 

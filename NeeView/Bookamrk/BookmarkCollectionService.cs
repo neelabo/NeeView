@@ -283,6 +283,23 @@ namespace NeeView
         }
 
         /// <summary>
+        /// 現在開いているフォルダーリストを優先してブックマークを検索する
+        /// </summary>
+        public static TreeListNode<IBookmarkEntry>? FindBookmark(QueryPath query, FolderCollection? folderCollection)
+        {
+            if (folderCollection is BookmarkFolderCollection bookmarkFolderCollection)
+            {
+                var node = bookmarkFolderCollection.BookmarkPlace.FirstOrDefault(e => e.IsEqual(query));
+                if (node != null)
+                {
+                    return node;
+                }
+            }
+
+            return BookmarkCollection.Current.FindNode(query);
+        }
+
+        /// <summary>
         /// 無効なブックマークを削除
         /// </summary>
         /// <returns></returns>

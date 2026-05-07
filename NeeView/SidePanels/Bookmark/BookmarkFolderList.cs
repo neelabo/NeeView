@@ -62,8 +62,60 @@ namespace NeeView
             return parentQuery.Scheme == QueryScheme.Bookmark;
         }
 
-        public override void Sync()
+        public override async Task SyncAsync()
         {
+            if (_disposedValue) return;
+
+            if (!await SyncBookAsync())
+            {
+                await SyncCurrentAsync();
+            }
+
+            if (Place != null)
+            {
+                BookmarkPanel.Current.FolderTreeModel?.SyncBookmarkFolder(Place.SimplePath, true);
+            }
+        }
+
+        private async Task<bool> SyncBookAsync()
+        {
+            var book = BookHub.Current?.GetCurrentBook();
+            var address = book?.Path;
+
+            if (address != null)
+            {
+                // TODO: Queryの求め方はこれでいいのか？
+                var path = new QueryPath(address);
+
+                // ブックマークが存在するパスを求める。
+                var node = BookmarkCollectionService.FindBookmark(path, FolderCollection);
+                if (node is not null)
+                {
+                    var parent = node.CreateQuery().GetParent();
+
+                    SetDirty(); // 強制更新
+                    await SetPlaceAsync(parent, new FolderItemPosition(path), FolderSetPlaceOption.Focus);
+
+                    RaiseSelectedItemChanged(true);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private async Task<bool> SyncCurrentAsync()
+        {
+            if (Place != null)
+            {
+                SetDirty(); // 強制更新
+                await SetPlaceAsync(Place, null, FolderSetPlaceOption.Focus);
+
+                RaiseSelectedItemChanged(true);
+                return true;
+            }
+
+            return false;
         }
 
         public override QueryPath GetFixedHome()

@@ -93,6 +93,12 @@ namespace NeeView
         }
 
         [WordNodeMember]
+        public void Sync()
+        {
+            AppDispatcher.Invoke(() => _model.SyncAsync());
+        }
+
+        [WordNodeMember]
         public void MoveToParent()
         {
             AppDispatcher.Invoke(() => _model.MoveToParent());

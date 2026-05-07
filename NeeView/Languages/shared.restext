@@ -44,6 +44,7 @@ BookmarkPanelAccessor.NewFolder.Name=@Word.Name
 BookmarkPanelAccessor.SearchWord=@Panel.SearchWord
 BookmarkPanelAccessor.SelectedItems=@Panel.SelectedItems
 BookmarkPanelAccessor.Style=@Panel.Style
+BookmarkPanelAccessor.Sync=@Bookshelf.Sync.ToolTip
 BookMementoFilter.IsRecursiveFolder=@BookConfigAccessor.IsRecursiveFolder
 BookMementoFilter.IsSupportedDividePage=@BookConfigAccessor.IsSupportedDividePage
 BookMementoFilter.IsSupportedSingleFirstPage=@BookConfigAccessor.IsSupportedSingleFirstPage

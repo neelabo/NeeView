@@ -1038,7 +1038,7 @@ namespace NeeView
             CloseBookIfNecessary();
         }
 
-        public abstract void Sync();
+        public abstract Task SyncAsync();
 
         protected virtual void CloseBookIfNecessary()
         {
