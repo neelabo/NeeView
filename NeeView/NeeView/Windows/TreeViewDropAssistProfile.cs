@@ -19,6 +19,11 @@ namespace NeeView.Windows
             return true;
         }
 
+        public override bool IsParentFolder(FrameworkElement? item)
+        {
+            return false;
+        }
+
         public override FrameworkElement? ItemHitTest(FrameworkElement itemsControl, Point point)
         {
             Debug.Assert(itemsControl is TreeView);
@@ -30,8 +35,9 @@ namespace NeeView.Windows
         {
             Debug.Assert(itemsControl is TreeView);
             var (item, view, rate) = TreeViewTools.PointToViewItemRate((TreeView)itemsControl, e, orientation);
-            var delta = item is not null && allowInsert ? GetInsertOffset(rate, IsFolder(item)) : 0;
-            return new DropTargetItem(item, view, delta);
+            var delta = item is not null && allowInsert ? GetInsertOffset(rate, IsFolder(item), IsParentFolder(item)) : 0;
+            var isOver = item is not null && IsOver(rate);
+            return new DropTargetItem(item, view, delta, isOver);
         }
     }
 

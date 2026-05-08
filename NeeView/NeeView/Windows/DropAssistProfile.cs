@@ -8,13 +8,22 @@ namespace NeeView.Windows
         public abstract FrameworkElement GetAdornerTarget(FrameworkElement itemsControl);
         public abstract DropTargetItem PointToDropTargetItem(DragEventArgs e, FrameworkElement itemsControl, bool allowInsert, Orientation orientation);
         public abstract bool IsFolder(FrameworkElement? item);
+        public abstract bool IsParentFolder(FrameworkElement? item);
         public abstract FrameworkElement? ItemHitTest(FrameworkElement itemsControl, Point point);
 
         public virtual Rect AdjustElementRect(Rect rect) => rect;
 
-        protected static int GetInsertOffset(double rate, bool isFolder)
+        protected static int GetInsertOffset(double rate, bool isFolder, bool isParentFolder)
         {
-            if (isFolder)
+            if (isParentFolder)
+            {
+                return rate switch
+                {
+                    > 1.0 => +1,
+                    _ => 0
+                };
+            }
+            else if (isFolder)
             {
                 return rate switch
                 {
@@ -31,6 +40,11 @@ namespace NeeView.Windows
                     _ => +1
                 };
             }
+        }
+
+        protected static bool IsOver(double rate)
+        {
+            return 0.0 <= rate && rate <= 1.0;
         }
     }
 }

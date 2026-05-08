@@ -45,5 +45,11 @@ namespace NeeView
             var targetItem = (item as ListBoxItem)?.Content as FolderItem;
             return targetItem is not null && targetItem.Attributes.HasFlag(FolderItemAttribute.Bookmark | FolderItemAttribute.Directory);
         }
+
+        public override bool IsParentFolder(FrameworkElement? item)
+        {
+            var targetItem = (item as ListBoxItem)?.Content as FolderItem;
+            return targetItem is not null && targetItem.Type == FolderItemType.ParentDirectory;
+        }
     }
 }

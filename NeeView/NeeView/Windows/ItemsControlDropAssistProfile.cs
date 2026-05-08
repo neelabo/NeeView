@@ -15,11 +15,17 @@ namespace NeeView.Windows
         {
             Debug.Assert(itemsControl is ItemsControl);
             var (item, rate) = ItemsControlTools.PointToViewItemRate((ItemsControl)itemsControl, e, orientation);
-            var delta = item is not null && allowInsert ? GetInsertOffset(rate, IsFolder(item)) : 0;
-            return new DropTargetItem(item, delta);
+            var delta = item is not null && allowInsert ? GetInsertOffset(rate, IsFolder(item), IsParentFolder(item)) : 0;
+            var isOver = item is not null && IsOver(rate);
+            return new DropTargetItem(item, delta, isOver);
         }
 
         public override bool IsFolder(FrameworkElement? item)
+        {
+            return false;
+        }
+
+        public override bool IsParentFolder(FrameworkElement? item)
         {
             return false;
         }

@@ -67,7 +67,7 @@ namespace NeeView.Windows
             if (e.Handled)
             {
                 Adorner.Visibility = Visibility.Collapsed;
-                return new DropTargetItem(null, 0);
+                return new DropTargetItem();
             }
 
             var target = _profile.PointToDropTargetItem(e, _itemsControl, AllowInsert, Orientation);
@@ -78,7 +78,7 @@ namespace NeeView.Windows
             }
             else if (target.View is not null)
             {
-                var isVisible = SetAdornerShape(target.View, target.Delta, Orientation);
+                var isVisible = SetAdornerShape(target, Orientation);
                 Adorner.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
             }
             else
@@ -113,9 +113,15 @@ namespace NeeView.Windows
             }
         }
 
-        private bool SetAdornerShape(FrameworkElement item, int delta, Orientation orientation)
+        private bool SetAdornerShape(DropTargetItem target, Orientation orientation)
         {
-            switch (delta)
+            var item = target.View;
+            if (item is null)
+            {
+                return false;
+            }
+
+            switch (target.Delta)
             {
                 case -1:
                     if (AllowInsert)
@@ -136,7 +142,7 @@ namespace NeeView.Windows
                     }
 
                 case 0:
-                    if (AllowReceiveItem(item))
+                    if (AllowReceiveItem(target))
                     {
                         SetAdornerShape(item);
                         return true;
@@ -169,13 +175,23 @@ namespace NeeView.Windows
             }
         }
 
-        private bool AllowReceiveItem(FrameworkElement item)
+        private bool AllowReceiveItem(DropTargetItem target)
         {
+            var item = target.View;
+            if (item is null)
+            {
+                return false;
+            }
+
             if (ReceiveItemType == InsertDropItemType.All)
             {
                 return true;
             }
             if (_profile.IsFolder(item))
+            {
+                return ReceiveItemType.HasFlag(InsertDropItemType.Folder);
+            }
+            else if (_profile.IsParentFolder(item) && target.IsOver)
             {
                 return ReceiveItemType.HasFlag(InsertDropItemType.Folder);
             }
@@ -293,15 +309,20 @@ namespace NeeView.Windows
     {
         private FrameworkElement? _view;
 
-        public DropTargetItem(FrameworkElement? item, int delta) : this(item, item, delta)
+        public DropTargetItem()
         {
         }
 
-        public DropTargetItem(FrameworkElement? item, FrameworkElement? view, int delta)
+        public DropTargetItem(FrameworkElement? item, int delta, bool isOver) : this(item, item, delta, isOver)
+        {
+        }
+
+        public DropTargetItem(FrameworkElement? item, FrameworkElement? view, int delta, bool isOver)
         {
             Item = item;
             View = view;
             Delta = delta;
+            IsOver = isOver;
         }
 
         public FrameworkElement? Item { get; init; }
@@ -313,5 +334,6 @@ namespace NeeView.Windows
         }
 
         public int Delta { get; init; }
+        public bool IsOver { get; init; }
     }
 }

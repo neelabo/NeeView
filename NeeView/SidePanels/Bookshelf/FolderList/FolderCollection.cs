@@ -550,11 +550,15 @@ namespace NeeView
                 else if (FolderOrder.IsEntryCategory() || Config.Current.Bookshelf.IsInsertItem)
                 {
                     // 別にリストを作ってソートを実行し、それで挿入位置を決める
-                    var list = Sort(this.Items.Concat(new List<FolderItem>() { item }), CancellationToken.None);
+                    var list = Sort(this.Items.Where(e => e.Type != FolderItemType.ParentDirectory).Concat(new List<FolderItem>() { item }), CancellationToken.None);
                     var index = list.IndexOf(item);
 
                     if (index >= 0)
                     {
+                        if (this.Items.FirstOrDefault()?.Type == FolderItemType.ParentDirectory)
+                        {
+                            index++;
+                        }
                         this.Items.Insert(index, item);
                     }
                     else

@@ -663,6 +663,12 @@ namespace NeeView
                 return;
             }
 
+            if (items.Any(e => e.Type == FolderItemType.ParentDirectory))
+            {
+                e.Cancel = true;
+                return;
+            }
+
             // List<QueryPath>
             e.Data.SetQueryPathCollection(items.Select(x => x.TargetPath));
 
@@ -756,8 +762,7 @@ namespace NeeView
                 return;
             }
 
-            var targetItem = (target.Item as ListBoxItem)?.Content as FolderItem;
-            var bookmarkNode = targetItem?.Source as TreeListNode<IBookmarkEntry>;
+            var bookmarkNode = GetTargetBookmarkNode(target);
             var delta = target.Delta;
             if (bookmarkNode is null)
             {
@@ -792,7 +797,12 @@ namespace NeeView
             {
                 e.Effects = Keyboard.Modifiers == ModifierKeys.Control ? DragDropEffects.Copy : DragDropEffects.Move;
 
-                var destination = ((target.Item as ListBoxItem)?.Content as FolderItem)?.Source as TreeListNode<IBookmarkEntry>;
+                var destination = GetTargetBookmarkNode(target);
+                if (destination is null)
+                {
+                    destination = ((target.Item as ListBoxItem)?.Content as FolderItem)?.Source as TreeListNode<IBookmarkEntry>;
+                }
+
                 if (destination is null)
                 {
                     return _vm.FolderCollection.ValidCount == 0;
@@ -816,6 +826,21 @@ namespace NeeView
             }
 
             return false;
+        }
+
+        private static TreeListNode<IBookmarkEntry>? GetTargetBookmarkNode(DropTargetItem target)
+        {
+            if (target.Item is ListBoxItem listBoxItem && listBoxItem.Content is FolderItem folderItem)
+            {
+                if (folderItem.Type == FolderItemType.ParentDirectory && target.IsOver)
+                {
+                    return BookmarkCollection.Current.FindNode(folderItem.TargetPath);
+                }
+
+                return folderItem.Source as TreeListNode<IBookmarkEntry>;
+            }
+
+            return null;
         }
 
         private List<TreeListNode<IBookmarkEntry>>? GetBookmarkEntryCollection(DragEventArgs e, bool copyMaybe)
@@ -957,7 +982,7 @@ namespace NeeView
             }
         }
 
-        #endregion DragDrop
+#endregion DragDrop
 
 
         private void FolderListBox_Loaded(object? sender, RoutedEventArgs e)

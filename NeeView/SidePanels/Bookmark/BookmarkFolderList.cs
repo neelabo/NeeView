@@ -66,6 +66,8 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
+            FolderCollection?.FolderParameter.Save();
+
             if (!await SyncBookAsync())
             {
                 await SyncCurrentAsync();
