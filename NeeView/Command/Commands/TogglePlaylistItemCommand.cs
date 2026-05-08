@@ -15,7 +15,7 @@ namespace NeeView
             this.IsShowMessage = true;
         }
 
-        public override Binding CreateIsCheckedBinding()
+        public override BindingBase CreateIsCheckedBinding()
         {
             return new Binding(nameof(BookOperation.Current.Playlist.IsMarked)) { Source = BookOperation.Current.Playlist, Mode = BindingMode.OneWay };
         }

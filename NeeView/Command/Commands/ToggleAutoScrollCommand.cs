@@ -13,7 +13,7 @@ namespace NeeView
             this.IsShowMessage = false;
         }
 
-        public override Binding CreateIsCheckedBinding()
+        public override BindingBase CreateIsCheckedBinding()
         {
             return new Binding(nameof(MainViewComponent.Current.ViewAutoScrollControl.IsAutoScrollMode)) { Source = MainViewComponent.Current.ViewAutoScrollControl, Mode = BindingMode.OneWay };
         }

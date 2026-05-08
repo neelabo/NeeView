@@ -17,7 +17,7 @@ namespace NeeView
             this.ParameterSource = new CommandParameterSource(new ToggleBookmarkCommandParameter());
         }
 
-        public override Binding CreateIsCheckedBinding()
+        public override BindingBase CreateIsCheckedBinding()
         {
             return new Binding(nameof(BookOperation.Current.BookControl.IsBookmark)) { Source = BookOperation.Current.BookControl, Mode = BindingMode.OneWay };
         }

@@ -11,7 +11,7 @@ namespace NeeView
             this.Group = TextResources.GetString("CommandGroup.ViewManipulation");
             this.IsShowMessage = false;
         }
-        public override Binding CreateIsCheckedBinding()
+        public override BindingBase CreateIsCheckedBinding()
         {
             return new Binding(nameof(LoupeContext.IsEnabled)) { Mode = BindingMode.OneWay, Source = MainViewComponent.Current.LoupeContext };
         }

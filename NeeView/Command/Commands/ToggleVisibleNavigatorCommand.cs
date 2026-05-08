@@ -15,7 +15,7 @@ namespace NeeView
             this.IsShowMessage = false;
         }
 
-        public override Binding CreateIsCheckedBinding()
+        public override BindingBase CreateIsCheckedBinding()
         {
             return new Binding(nameof(SidePanelFrame.IsVisibleNavigator)) { Source = SidePanelFrame.Current };
         }

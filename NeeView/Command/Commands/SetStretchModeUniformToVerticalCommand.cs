@@ -15,7 +15,7 @@ namespace NeeView
             this.ParameterSource = new CommandParameterSource(new StretchModeCommandParameter());
         }
 
-        public override Binding CreateIsCheckedBinding()
+        public override BindingBase CreateIsCheckedBinding()
         {
             return BindingGenerator.StretchMode(PageStretchMode.UniformToVertical);
         }

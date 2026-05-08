@@ -282,7 +282,7 @@ namespace NeeView
 
 
         // フラグバインディング 
-        public virtual Binding? CreateIsCheckedBinding()
+        public virtual BindingBase? CreateIsCheckedBinding()
         {
             return null;
         }

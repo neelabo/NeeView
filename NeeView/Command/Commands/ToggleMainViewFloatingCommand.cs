@@ -13,7 +13,7 @@ namespace NeeView
             this.ShortCutKey = new ShortcutKey("F12");
         }
 
-        public override Binding CreateIsCheckedBinding()
+        public override BindingBase CreateIsCheckedBinding()
         {
             return new Binding(nameof(MainViewConfig.IsFloating)) { Source = Config.Current.MainView, Mode = BindingMode.OneWay };
         }

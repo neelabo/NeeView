@@ -11,7 +11,7 @@ namespace NeeView
             this.Group = TextResources.GetString("CommandGroup.Effect");
         }
 
-        public override Binding CreateIsCheckedBinding()
+        public override BindingBase CreateIsCheckedBinding()
         {
             return new Binding(nameof(ImageGridConfig.IsEnabled)) { Mode = BindingMode.OneWay, Source = Config.Current.ImageGrid };
         }

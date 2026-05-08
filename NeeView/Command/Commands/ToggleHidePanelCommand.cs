@@ -5,7 +5,6 @@ using System.Windows.Data;
 
 namespace NeeView
 {
-    [Obsolete, Alternative("nv.Command.ToggleHideLeftPanel, ToggleHideRightPanel", 46, ErrorLevel = ScriptErrorLevel.Info)]
     public class ToggleHidePanelCommand : CommandElement
     {
         public ToggleHidePanelCommand()
@@ -14,20 +13,30 @@ namespace NeeView
             this.IsShowMessage = false;
         }
 
-        public override Binding CreateIsCheckedBinding()
+        public override BindingBase CreateIsCheckedBinding()
         {
-            return new Binding(nameof(PanelsConfig.IsHidePanel)) { Source = Config.Current.Panels };
+            var binding = new MultiBinding() { Converter = new MultiBooleanOrConverter() };
+            binding.Bindings.Add(new Binding(nameof(PanelsConfig.IsHideLeftPanel)) { Source = Config.Current.Panels });
+            binding.Bindings.Add(new Binding(nameof(PanelsConfig.IsHideRightPanel)) { Source = Config.Current.Panels });
+            return binding;
         }
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            var state = CommandElementTools.GetState(e, Config.Current.Panels.IsHidePanel);
+            var state = CommandElementTools.GetState(e, IsHidePanel());
             return GetStateExecuteMessage(state);
         }
 
         public override void Execute(object? sender, CommandContext e)
         {
-            Config.Current.Panels.IsHidePanel = !Config.Current.Panels.IsHidePanel;
+            var isHidePanel = IsHidePanel();
+            Config.Current.Panels.IsHideLeftPanel = !isHidePanel;
+            Config.Current.Panels.IsHideRightPanel = !isHidePanel;
+        }
+
+        private bool IsHidePanel()
+        {
+            return Config.Current.Panels.IsHideLeftPanel || Config.Current.Panels.IsHideRightPanel;
         }
     }
 }

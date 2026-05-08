@@ -14,7 +14,7 @@ namespace NeeView
             this.IsShowMessage = true;
         }
 
-        public override Binding CreateIsCheckedBinding()
+        public override BindingBase CreateIsCheckedBinding()
         {
             return BindingGenerator.PageMode(PageMode.WidePage);
         }

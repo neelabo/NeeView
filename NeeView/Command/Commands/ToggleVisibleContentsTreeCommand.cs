@@ -14,7 +14,7 @@ namespace NeeView
             this.IsShowMessage = false;
         }
 
-        public override Binding CreateIsCheckedBinding()
+        public override BindingBase CreateIsCheckedBinding()
         {
             return new Binding(nameof(PageListConfig.IsFolderTreeVisible)) { Source = Config.Current.PageList, Mode = BindingMode.OneWay };
         }
