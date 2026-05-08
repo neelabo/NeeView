@@ -1,4 +1,6 @@
 ﻿using NeeView.Setting;
+using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -149,6 +151,35 @@ namespace NeeView.Windows.Property
             {
                 this.ValueUI.Width = e.NewSize.Width * ColumnRate;
             }
+        }
+
+        private void Root_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (Value is PropertyValue propertyValue)
+            {
+                propertyValue.Click?.Invoke();
+            }
+        }
+    }
+
+
+    public class PropertyValueToClickStyleConverter : IValueConverter
+    {
+        public Style? DefaultStyle { get; set; }
+        public Style? ClickStyle { get; set; }
+
+        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is PropertyValue propertyValue && propertyValue.Click is not null)
+            {
+                return ClickStyle;
+            }
+            return DefaultStyle;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 }

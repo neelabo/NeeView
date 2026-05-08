@@ -10,15 +10,40 @@
 
     <UserControl.Resources>
         <local:PropertyValueTemplateSelector x:Key="PropertyValueTemplateSelector"/>
+
+        <Style x:Key="ClickBorderStyle" TargetType="Border">
+            <EventSetter Event="MouseLeftButtonDown" Handler="Root_MouseLeftButtonDown"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource Control.MouseOver.Background}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <local:PropertyValueToClickStyleConverter x:Key="PropertyValueToClickStyleConverter" ClickStyle="{StaticResource ClickBorderStyle}"/>
+
+        <Style x:Key="NoteTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource Control.GrayText}"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Style.Triggers>
+                <Trigger Property="Text" Value="">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
     </UserControl.Resources>
 
-    <DockPanel x:Name="Root" Margin="0,5">
-        <ContentControl x:Name="ValueUI" DockPanel.Dock="Right" UseLayoutRounding="True" Grid.Column="1" VerticalAlignment="Center" Margin="5,0" IsTabStop="False"
+    <Border x:Name="Root" Style="{Binding Value, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource PropertyValueToClickStyleConverter}}">
+        <DockPanel Margin="5,10,0,10">
+            <ContentControl x:Name="ValueUI" DockPanel.Dock="Right" UseLayoutRounding="True" Grid.Column="1" VerticalAlignment="Center" Margin="5,0" IsTabStop="False"
             Content="{Binding Value, RelativeSource={RelativeSource AncestorType=UserControl}}" ContentTemplateSelector="{StaticResource PropertyValueTemplateSelector}" />
-        <TextBlock UseLayoutRounding="True" MinWidth="50" VerticalAlignment="Center"
-                   Text="{Binding Header, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                   ToolTip="{Binding Tips, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                   TextTrimming="CharacterEllipsis"/>
-    </DockPanel>
-    
+            <StackPanel VerticalAlignment="Center" UseLayoutRounding="True" MinWidth="50">
+                <TextBlock Text="{Binding Header, RelativeSource={RelativeSource AncestorType=UserControl}}" TextTrimming="CharacterEllipsis" />
+                <TextBlock Style="{StaticResource NoteTextBlockStyle}" Text="{Binding Tips, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+            </StackPanel>
+        </DockPanel>
+    </Border>
+
 </UserControl>

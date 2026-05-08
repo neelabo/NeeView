@@ -77,9 +77,11 @@
                     </DockPanel>
                 </StackPanel>
 
-                <ScrollViewer Style="{StaticResource NVScrollViewer}" Margin="10,10,0,0" CanContentScroll="False">
-                    <nwp:PropertyInspector Document="{Binding ExportBookDocument}" Margin="0"/>
-                </ScrollViewer>
+                <Border BorderThickness="0,0,0,1" BorderBrush="{DynamicResource Panel.Splitter}">
+                    <ScrollViewer Style="{StaticResource NVScrollViewer}" Margin="10,10,0,0" CanContentScroll="False">
+                        <nwp:PropertyInspector Document="{Binding ExportBookDocument}" Margin="0"/>
+                    </ScrollViewer>
+                </Border>
             </DockPanel>
         </Border>
 

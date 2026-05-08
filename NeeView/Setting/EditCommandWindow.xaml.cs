@@ -64,14 +64,7 @@ namespace NeeView.Setting
 
         private void EditCommandWindow_Closed(object? sender, EventArgs e)
         {
-            if (this.DialogResult == true)
-            {
-                Flush();
-            }
-            else
-            {
-                CommandTable.Current.RestoreCommandCollection(_memento, false);
-            }
+            Flush();
         }
 
         [MemberNotNull(nameof(_memento), nameof(_key), nameof(Note))]
@@ -151,12 +144,6 @@ namespace NeeView.Setting
         }
 
         private void ButtonOk_Click(object sender, RoutedEventArgs e)
-        {
-            this.DialogResult = true;
-            Close();
-        }
-
-        private void ButtonCancel_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }

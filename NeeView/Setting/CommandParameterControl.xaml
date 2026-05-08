@@ -46,8 +46,10 @@
                         <Setter Property="Foreground" Value="{DynamicResource Window.Foreground}" />
                     </Style>
                 </ScrollViewer.Resources>
-                <nlp:PropertyInspector x:Name="Inspector" Document="{Binding PropertyDocument}" Margin="5" TabIndex="1" KeyboardNavigation.TabNavigation="Local" IsResetButtonVisible="False"
-                        ColumnRate="0.5"/>
+                <nlp:PropertyInspector x:Name="Inspector" Document="{Binding PropertyDocument}" Margin="5" TabIndex="1" KeyboardNavigation.TabNavigation="Local"
+                    IsStretch="True"
+                    IsResetButtonVisible="False"
+                    ColumnRate="0.4"/>
             </ScrollViewer>
 
         </DockPanel>

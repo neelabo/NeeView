@@ -14,16 +14,6 @@ namespace NeeView.Windows.Property
 {
     public abstract class PropertyValue : ObservableObject
     {
-        public virtual string GetValueString()
-        {
-            throw new NotSupportedException();
-        }
-
-        public virtual void SetValueFromString(string value)
-        {
-            throw new NotSupportedException();
-        }
-
         /// <summary>
         /// NoteConverter 用のソース
         /// </summary>
@@ -33,6 +23,22 @@ namespace NeeView.Windows.Property
         /// 表示形式を指定する文字列
         /// </summary>
         public string? VisualType { get; set; }
+
+        /// <summary>
+        /// 項目をクリックしたときのアクション
+        /// </summary>
+        public Action? Click { get; set; }
+
+
+        public virtual string GetValueString()
+        {
+            throw new NotSupportedException();
+        }
+
+        public virtual void SetValueFromString(string value)
+        {
+            throw new NotSupportedException();
+        }
     }
 
 
@@ -106,6 +112,7 @@ namespace NeeView.Windows.Property
     {
         public PropertyValue_Boolean(PropertyMemberElement setter) : base(setter)
         {
+            Click = () => Value = !Value;
         }
 
         public override void SetValueFromString(string value)

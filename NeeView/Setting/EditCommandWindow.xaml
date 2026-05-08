@@ -29,8 +29,7 @@
 
     <DockPanel Margin="5">
         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button x:Name="ButtonOk" Style="{StaticResource ButtonStyle}" Content="{properties:TextBinding Word.OK}" Click="ButtonOk_Click"/>
-            <Button x:Name="ButtonCancel" Style="{StaticResource ButtonStyle}" Content="{properties:TextBinding Word.Cancel}" Click="ButtonCancel_Click"/>
+            <Button x:Name="ButtonOk" Style="{StaticResource ButtonStyle}" Content="{properties:TextBinding Word.Close}" Click="ButtonOk_Click"/>
         </StackPanel>
         <StackPanel x:Name="ReverseNote" DockPanel.Dock="Bottom" Orientation="Horizontal" Visibility="Collapsed" d:Visibility="Visible">
             <Image Source="{StaticResource ic_info_24px}" Width="16" Height="16" Margin="5" VerticalAlignment="Center"/>

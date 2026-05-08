@@ -43,6 +43,7 @@ namespace NeeView.Setting
             if (parameter is not null)
             {
                 _propertyDocument = new PropertyDocument(parameter);
+                _propertyDocument.SetVisualType<PropertyValue_Boolean>(PropertyVisualType.ToggleSwitch);
                 parameter.SubscribePropertyChanged(Parameter_PropertyChanged);
             }
         }

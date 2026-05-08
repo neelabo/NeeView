@@ -229,6 +229,8 @@ namespace NeeView.Windows.Controls
             UpdateBrush();
 
             BaseGrid_MouseMove(sender, e);
+
+            e.Handled = true;
         }
 
         private void BaseGrid_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
