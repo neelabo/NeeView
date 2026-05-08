@@ -17,6 +17,7 @@ _ScriptManual.S1.P3.T31=기본 단축키
 _ScriptManual.S1.P3.T41=기본 마우스 제스처
 _ScriptManual.S1.P3.T51=기본 터치 조작
 _ScriptManual.S1.P3.T61=기본 인수
+_ScriptManual.S1.P3.T71=
 _ScriptManual.S2=명령 스크립트
 _ScriptManual.S2.P1=스크립트 폴더에 스크립트 파일을 배치하면 명령으로 사용 가능합니다. 1파일 1명령이 됩니다.
 _ScriptManual.S2.P1.I1=설정의 [@SettingPage.Command.Main]으로 일반 명령과 같은 단축키를 설정할 수 있습니다.

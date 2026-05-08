@@ -17,6 +17,7 @@ _ScriptManual.S1.P3.T31=Scorciatoie di default
 _ScriptManual.S1.P3.T41=Gesti mouse di default
 _ScriptManual.S1.P3.T51=Operazione tocco di default
 _ScriptManual.S1.P3.T61=
+_ScriptManual.S1.P3.T71=
 _ScriptManual.S2=Comando script
 _ScriptManual.S2.P1=Se il file di script è collocato nella cartella degli script, può essere utilizzato come comando. Un file è un comando.
 _ScriptManual.S2.P1.I1=Le scorciatoie possono essere impostate in "@SettingPage.Command.Main" delle Opzioni come normali comandi.

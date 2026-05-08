@@ -147,6 +147,8 @@ namespace NeeView
                     parameter.Argument = source.Args;
                     StoreDefaultArgs();
                 }
+
+                this.ParameterSource?.ArgsDescription = source.ArgsDescription;
             }
         }
 

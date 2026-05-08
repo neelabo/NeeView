@@ -17,6 +17,7 @@ _ScriptManual.S1.P3.T31=默认快捷键
 _ScriptManual.S1.P3.T41=默认鼠标手势
 _ScriptManual.S1.P3.T51=默认触控操作
 _ScriptManual.S1.P3.T61=默认参数
+_ScriptManual.S1.P3.T71=
 _ScriptManual.S2=命令脚本
 _ScriptManual.S2.P1=存放在脚本文件夹中的脚本文件可以作为命令使用。一个文件一个命令。
 _ScriptManual.S2.P1.I1=快捷键可以像普通命令一样在设置的 "@SettingPage.Command.Main" 中进行设置。

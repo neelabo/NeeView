@@ -35,6 +35,11 @@ namespace NeeView
         /// </remarks>
         public bool Obsolete { get; set; }
 
+        /// <summary>
+        /// ScriptCommand 引数説明
+        /// </summary>
+        public string? ArgsDescription { get; set; }
+
 
         public CommandParameter? GetRaw()
         {

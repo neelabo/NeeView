@@ -35,6 +35,7 @@ namespace NeeView
         public string MouseGesture { get; private set; } = "";
         public string TouchGesture { get; private set; } = "";
         public string Args { get; private set; } = "";
+        public string ArgsDescription { get; private set; } = "";
 
         public static ScriptCommandSource Create(string path)
         {
@@ -89,6 +90,9 @@ namespace NeeView
                             {
                                 case "@args":
                                     source.Args = value;
+                                    break;
+                                case "@argsdescription":
+                                    source.ArgsDescription = value;
                                     break;
                                 case "@description":
                                     source.Remarks = value;

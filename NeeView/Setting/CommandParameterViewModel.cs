@@ -43,6 +43,18 @@ namespace NeeView.Setting
             if (parameter is not null)
             {
                 _propertyDocument = new PropertyDocument(parameter);
+
+                if (_commandElement is ScriptCommand)
+                {
+                    // ScriptCommand の @argsDescription 置き換え
+                    string? argsNode = _commandElement.ParameterSource.ArgsDescription;
+                    if (!string.IsNullOrEmpty(argsNode))
+                    {
+                        var argsParam = _propertyDocument.GetPropertyMember(nameof(ScriptCommandParameter.Argument));
+                        argsParam?.Tips = argsNode;
+                    }
+                }
+
                 _propertyDocument.SetVisualType<PropertyValue_Boolean>(PropertyVisualType.ToggleSwitch);
                 parameter.SubscribePropertyChanged(Parameter_PropertyChanged);
             }

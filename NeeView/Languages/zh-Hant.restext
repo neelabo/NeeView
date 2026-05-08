@@ -17,6 +17,7 @@ _ScriptManual.S1.P3.T31=預設的快速鍵
 _ScriptManual.S1.P3.T41=預設的滑鼠手勢
 _ScriptManual.S1.P3.T51=預設的觸控操作
 _ScriptManual.S1.P3.T61=
+_ScriptManual.S1.P3.T71=
 _ScriptManual.S2=指令腳本
 _ScriptManual.S2.P1=腳本資料夾中配置的腳本檔案可以作為指令使用。 １檔案為１指令。
 _ScriptManual.S2.P1.I1=可以在設定的「@SettingPage.Command.Main」設定快速鍵為一般的指令。

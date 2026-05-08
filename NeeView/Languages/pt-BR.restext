@@ -17,6 +17,7 @@ _ScriptManual.S1.P3.T31=Atalhos padrão
 _ScriptManual.S1.P3.T41=Gestos padrão do mouse
 _ScriptManual.S1.P3.T51=Operação de toque padrão
 _ScriptManual.S1.P3.T61=Argumentos padrão
+_ScriptManual.S1.P3.T71=
 _ScriptManual.S2=Script de comando
 _ScriptManual.S2.P1=se o arquivo de script for colocado na pasta de script, ele poderá ser usado como um comando. Um arquivo é um comando.
 _ScriptManual.S2.P1.I1=Os atalhos podem ser definidos nas "@SettingPage.Command.Main" das Opções como comandos normais.

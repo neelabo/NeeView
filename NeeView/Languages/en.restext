@@ -17,6 +17,7 @@ _ScriptManual.S1.P3.T31=Default shortcuts
 _ScriptManual.S1.P3.T41=Default mouse gestures
 _ScriptManual.S1.P3.T51=Default touch operation
 _ScriptManual.S1.P3.T61=Default arguments
+_ScriptManual.S1.P3.T71=Arguments description
 _ScriptManual.S2=Command script
 _ScriptManual.S2.P1=If the script file is placed in the script folder, it can be used as a command. One file is one command.
 _ScriptManual.S2.P1.I1=Shortcuts can be set in the "@SettingPage.Command.Main" of the Options like normal commands.
