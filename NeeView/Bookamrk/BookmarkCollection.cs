@@ -510,7 +510,7 @@ namespace NeeView
         {
             lock (_lock)
             {
-                foreach (var item in Items.WalkChildren())
+                foreach (var item in Items.WalkChildren().ToList())
                 {
                     if (item.Value is Bookmark bookmark && bookmark.Path == src)
                     {
