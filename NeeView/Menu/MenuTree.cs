@@ -60,7 +60,7 @@ namespace NeeView
         {
             Root.Clear();
 
-            var children = CreateDefault().Root.ToList();
+            var children = CreateDefault().Root.CloneChildren();
             foreach (var node in children)
             {
                 node.RemoveSelf();

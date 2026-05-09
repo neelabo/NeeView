@@ -25,10 +25,10 @@ namespace NeeView
 
         public static List<object> CreateContextMenuItems(TreeListNode<MenuElement> node)
         {
-            var children = node
+            var children = node.WithLock(e => e.Children
                 .Select(e => CreateMenuControl(e, false))
                 .WhereNotNull()
-                .ToList();
+                .ToList());
 
             return children;
         }
@@ -148,7 +148,7 @@ namespace NeeView
             if (node.Value.MenuElementType == MenuElementType.Group)
             {
                 var removes = new List<TreeListNode<MenuElement>>();
-                var isRemoveNone = node.Count(e => e.Value.MenuElementType != MenuElementType.None) > 0;
+                var isRemoveNone = node.WithLock(e => e.Children.Count(e => e.Value.MenuElementType != MenuElementType.None) > 0);
 
                 foreach (var child in node)
                 {

@@ -28,13 +28,13 @@ namespace NeeView
             var node = BookmarkCollection.Current.FindNode(query);
             if (node is null) return new();
 
-            var list = node
+            var list = node.WithLock(e => e.Children
                 .Select(e => e.Value)
                 .OfType<BookmarkFolder>()
                 .Select(e => e.Name)
                 .WhereNotNull()
                 .Select(e => new BreadcrumbToken(query, e, null))
-                .ToList();
+                .ToList());
 
             return list;
         }

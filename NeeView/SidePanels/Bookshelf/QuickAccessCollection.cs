@@ -60,7 +60,7 @@ namespace NeeView
             }
 
             var name = pathTokens.First();
-            var child = node.FirstOrDefault(e => e.Value.Name == name);
+            var child = node.WithLock(e => e.Children.FirstOrDefault(e => e.Value.Name == name));
             if (child != null)
             {
                 return FindNode(child, pathTokens.Skip(1));
@@ -79,7 +79,7 @@ namespace NeeView
         {
             if (parent.Value is not QuickAccessFolder) return null;
 
-            var ignoreNames = parent.Where(e => e.Value is QuickAccessEntry).Select(e => e.Value.Name).WhereNotNull();
+            var ignoreNames = parent.WithLock(e => e.Children.Where(e => e.Value is QuickAccessEntry).Select(e => e.Value.Name).WhereNotNull().ToList());
             var validName = GetValidateFolderName(ignoreNames, name, TextResources.GetString("Word.NewFolder"));
             var node = new TreeListNode<QuickAccessEntry>(new QuickAccessFolder() { Name = validName });
 

@@ -45,12 +45,10 @@ namespace NeeView
 
         private List<FolderItem> CreateFolderItemCollectionRaw(TreeListNode<IBookmarkEntry> root)
         {
-            IEnumerable<TreeListNode<IBookmarkEntry>> collection = _includeSubdirectories ? root.WalkChildren() : root;
-
-            var items = collection
+            var items = root.WithLock(e => (_includeSubdirectories ? e.WalkChildren() : e.Children)
                 .Select(e => CreateFolderItem(e))
                 .WhereNotNull()
-                .ToList();
+                .ToList());
 
             return items;
         }

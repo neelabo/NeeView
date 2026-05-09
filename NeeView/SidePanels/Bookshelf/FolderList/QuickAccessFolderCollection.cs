@@ -33,7 +33,11 @@ namespace NeeView
 
             if (_node is not null)
             {
-                SetItems(_node.Select(e => CreateFolderItem(Place, e)));
+                var children = _node.WithLock(e => e.Children
+                    .Select(e => CreateFolderItem(Place, e))
+                    .ToList());
+
+                SetItems(children);
                 _node.CollectionChanged += Children_CollectionChanged;
             }
         }

@@ -40,10 +40,10 @@ namespace NeeView
 
         protected virtual List<FolderItem> CreateFolderItemCollection(TreeListNode<IBookmarkEntry> root, CancellationToken token)
         {
-            var items = root
+            var items = root.WithLock(e => e.Children
                 .Select(e => CreateFolderItem(e))
                 .WhereNotNull()
-                .ToList();
+                .ToList());
 
             return items;
         }

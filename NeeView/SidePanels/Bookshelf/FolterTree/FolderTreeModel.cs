@@ -246,7 +246,7 @@ namespace NeeView
 
             parent.IsExpanded = true;
 
-            var item = parent.FirstOrDefault(e => e.Value.Path == path);
+            var item = parent.WithLock(e => e.Children.FirstOrDefault(e => e.Value.Path == path));
             if (item is null)
             {
                 item = new TreeListNode<QuickAccessEntry>(new QuickAccess(path));
@@ -442,7 +442,7 @@ namespace NeeView
             var parentNode = item.BookmarkSource;
 
             // TODO: 重複チェックはBookmarkCollectionで行うようにする
-            var node = parentNode.FirstOrDefault(e => e.Value is Bookmark bookmark && bookmark.Path == address);
+            var node = parentNode.WithLock(e => e.Children.FirstOrDefault(e => e.Value is Bookmark bookmark && bookmark.Path == address));
             if (node == null)
             {
                 var unit = BookMementoCollection.Current.Set(address);

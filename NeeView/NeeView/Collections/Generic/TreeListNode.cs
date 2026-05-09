@@ -100,11 +100,14 @@ namespace NeeView.Collections.Generic
         {
             get
             {
-                return HierarchyReverse.Reverse();
+                lock (_lock)
+                {
+                    return HierarchyReverse.Reverse().ToList();
+                }
             }
         }
 
-        public IEnumerable<TreeListNode<T>> HierarchyReverse
+        private IEnumerable<TreeListNode<T>> HierarchyReverse
         {
             get
             {
@@ -222,6 +225,39 @@ namespace NeeView.Collections.Generic
         {
             RoutedValuePropertyChanged?.Invoke(sender, e);
             _parent?.OnRoutedValuePropertyChanged(sender, e);
+        }
+
+        /// <summary>
+        /// lock 操作
+        /// </summary>
+        public void WithLock(Action<TreeListNode<T>> func)
+        {
+            lock (_lock)
+            {
+                func(this);
+            }
+        }
+
+        /// <summary>
+        /// lock 操作
+        /// </summary>
+        public TResult WithLock<TResult>(Func<TreeListNode<T>, TResult> func)
+        {
+            lock (_lock)
+            {
+                return func(this);
+            }
+        }
+
+        /// <summary>
+        /// Children のクローン
+        /// </summary>
+        public List<TreeListNode<T>> CloneChildren()
+        {
+            lock (_lock)
+            {
+                return _children.ToList();
+            }
         }
 
         /// <summary>
@@ -495,13 +531,7 @@ namespace NeeView.Collections.Generic
 
         public IEnumerator<TreeListNode<T>> GetEnumerator()
         {
-            lock (_lock)
-            {
-                foreach (var item in _children)
-                {
-                    yield return item;
-                }
-            }
+            return _children.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -511,16 +541,13 @@ namespace NeeView.Collections.Generic
 
         public IEnumerable<TreeListNode<T>> WalkChildren()
         {
-            lock (_lock)
+            foreach (var child in _children)
             {
-                foreach (var child in _children)
-                {
-                    yield return child;
+                yield return child;
 
-                    foreach (var node in child.WalkChildren())
-                    {
-                        yield return node;
-                    }
+                foreach (var node in child.WalkChildren())
+                {
+                    yield return node;
                 }
             }
         }
