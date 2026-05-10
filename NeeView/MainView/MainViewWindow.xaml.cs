@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using NeeLaboratory.ComponentModel;
-using NeeView.ComponentModel;
 using NeeView.PageFrames;
 using NeeView.Windows;
 using System;
@@ -26,9 +25,9 @@ namespace NeeView
         private readonly WindowProcedure _windowProcedure;
         private readonly WindowController _windowController;
         private RoutedCommandBinding? _routedCommandBinding;
-        private readonly WeakBindableBase<MainViewConfig> _mainViewConfig;
-        private Locker.Key? _referenceSizeLockLey;
+        private Locker.Key? _referenceSizeLocKey;
         private readonly MouseActivate _mouseActivate;
+        private readonly DisposableCollection _disposables = new();
 
         public MainViewWindow()
         {
@@ -47,23 +46,23 @@ namespace NeeView
             _windowController = new MainViewWindowController(this, _windowStateManager);
 
             _routedCommandBinding = new RoutedCommandBinding(this, RoutedCommandTable.Current);
+            _disposables.Add(_routedCommandBinding);
 
-            _mainViewConfig = new WeakBindableBase<MainViewConfig>(Config.Current.MainView);
-
-            _mainViewConfig.SubscribePropertyChanged(nameof(MainViewConfig.IsHideTitleBar), (s, e) =>
+            _disposables.Add(Config.Current.MainView.SubscribePropertyChanged(nameof(MainViewConfig.IsHideTitleBar), (s, e) =>
             {
                 OnPropertyChanged(nameof(IsAutoHide));
                 UpdateCaptionBar();
-            });
+            }));
 
-            _mainViewConfig.SubscribePropertyChanged(nameof(MainViewConfig.IsTopmost), (s, e) =>
+            _disposables.Add(Config.Current.MainView.SubscribePropertyChanged(nameof(MainViewConfig.IsTopmost), (s, e) =>
             {
                 OnPropertyChanged(nameof(IsTopmost));
-            });
+            }));
 
             MenuAutoHideDescription = new MainViewMenuAutoHideDescription(this.CaptionBar);
 
-            _referenceSizeLockLey = PageFrameProfile.ReferenceSizeLocker.Lock();
+            _referenceSizeLocKey = PageFrameProfile.ReferenceSizeLocker.Lock();
+            _disposables.Add(_referenceSizeLocKey);
 
             this.SourceInitialized += MainViewWindow_SourceInitialized;
             this.Loaded += MainViewWindow_Loaded;
@@ -81,6 +80,7 @@ namespace NeeView
             MouseHorizontalWheelService.SubscribeHorizontalWheelEvent(this);
 
             _mouseActivate = new MouseActivate(this);
+            _disposables.Add(_mouseActivate);
         }
 
 
@@ -139,8 +139,12 @@ namespace NeeView
             RestoreWindowResumeState(Config.Current.MainView.LastState);
             RestoreWindowPlacement(placement);
 
-            _referenceSizeLockLey?.Dispose();
-            _referenceSizeLockLey = null;
+            if (_referenceSizeLocKey is not null)
+            {
+                _disposables.Remove(_referenceSizeLocKey);
+                _referenceSizeLocKey.Dispose();
+                _referenceSizeLocKey = null;
+            }
         }
 
         private void MainViewWindow_Loaded(object? sender, RoutedEventArgs e)
@@ -194,13 +198,7 @@ namespace NeeView
 
         private void MainViewWindow_Closed(object? sender, EventArgs e)
         {
-            _mouseActivate.Dispose();
-
-            _routedCommandBinding?.Dispose();
-            _routedCommandBinding = null;
-
-            _referenceSizeLockLey?.Dispose();
-            _referenceSizeLockLey = null;
+            _disposables.Dispose();
         }
 
         private void UpdateCaptionBar()
