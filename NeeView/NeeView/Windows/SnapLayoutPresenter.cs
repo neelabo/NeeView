@@ -69,6 +69,11 @@ namespace NeeView.Windows
 
             if (!IsEnabled) return IntPtr.Zero;
 
+            if (AppState.Current.IsSuspended)
+            {
+                return IntPtr.Zero;
+            }
+
             return (uint)msg switch
             {
                 PInvoke.WM_NCHITTEST

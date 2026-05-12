@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using NeeLaboratory.ComponentModel;
 using NeeView.Properties;
 using NeeView.Windows;
 using System;
@@ -12,12 +13,16 @@ namespace NeeView.Runtime.LayoutPanel
     public partial class LayoutPanelWindow : Window, IDpiScaleProvider
     {
         private readonly DpiScaleProvider _dpiProvider;
+        private readonly DisposableCollection _disposables = new();
 
 
         public LayoutPanelWindow()
         {
             _dpiProvider = new DpiScaleProvider();
             this.DpiChanged += (s, e) => _dpiProvider.SetDipScale(e.NewDpi);
+
+            _disposables.Add(AppState.Current.SubscribePropertyChanged(nameof(AppState.IsHideWindow),
+                (s, e) => AppStateTools.FlushWindowState(this)));
         }
 
 
@@ -55,10 +60,13 @@ namespace NeeView.Runtime.LayoutPanel
 
         protected override void OnClosed(EventArgs e)
         {
+            _disposables.Dispose();
+
             if (LayoutPanel != null)
             {
                 this.LayoutPanelWindowManager?.Closed(LayoutPanel);
             }
+
             base.OnClosed(e);
         }
 

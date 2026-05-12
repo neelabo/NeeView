@@ -19,7 +19,7 @@ namespace NeeView
 
             presenter.ViewContentChanged += (s, e) =>
             {
-                if (AppState.Instance.IsProcessingBook) return;
+                if (AppState.Current.IsProcessingBook) return;
                 if (e.Action < ViewContentChangedAction.ContentLoading) return;
 
                 UpdateTitle(StringFormatChangedAction.ViewContentChanged);

@@ -32,6 +32,23 @@ namespace NeeView.Properties
             _accessor = new TextResourceExpand(new TextResourceWithInputGesture(Resource));
         }
 
+        /// <summary>
+        /// サポートされているCultureを習得
+        /// </summary>
+        public static CultureInfo ValidateCultureInfo(string language)
+        {
+            CultureInfo culture;
+            try
+            {
+                culture = CultureInfo.GetCultureInfo(language);
+            }
+            catch (CultureNotFoundException)
+            {
+                culture = CultureInfo.CurrentCulture;
+            }
+            return LanguageResource.ValidateCultureInfo(culture);
+        }
+
 
         public static void Initialize(CultureInfo culture)
         {

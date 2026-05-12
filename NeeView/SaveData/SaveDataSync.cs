@@ -83,9 +83,32 @@ namespace NeeView
             GC.SuppressFinalize(this);
         }
 
+        public void Suspend()
+        {
+            if (_disposedValue) return;
+
+            _userSettingWatcher.Suspend();
+            _bookmarkWatcher.Suspend();
+            _playlistWatcher.Suspend();
+            _folderConfigWatcher.Suspend();
+            _quickAccessWatcher.Suspend();
+        }
+
+        public void Resume()
+        {
+            if (_disposedValue) return;
+
+            _userSettingWatcher.Resume();
+            _bookmarkWatcher.Resume();
+            _playlistWatcher.Resume();
+            _folderConfigWatcher.Resume();
+            _quickAccessWatcher.Resume();
+        }
 
         public void DisposeWatcher()
         {
+            _quickAccessWatcher.Dispose();
+            _folderConfigWatcher.Dispose();
             _playlistWatcher.Dispose();
             _bookmarkWatcher.Dispose();
             _userSettingWatcher.Dispose();

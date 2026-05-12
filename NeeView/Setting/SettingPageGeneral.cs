@@ -48,6 +48,7 @@ namespace NeeView.Setting
                 ResetAction = () => { } // nop.
             });
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.DateTimeFormat))));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.IsTaskTrayEnabled))));
             this.Items.Add(section);
 
             section = new SettingItemSection(TextResources.GetString("SettingPage.General.FileAccess"));

@@ -194,3 +194,11 @@ DLL: CommunityToolkit.Mvvm.dll
 * Copyright © .NET Foundation and Contributors All rights reserved.
 * URL: [.NET Community Toolkit](https://github.com/CommunityToolkit/dotnet)
 * License: [MIT License ](https://github.com/CommunityToolkit/dotnet/blob/main/License.md)
+
+### H.NotifyIcon
+
+DLL: H.NotifyIcon.dll, H.NotifyIcon.Wpf.dll, H.GeneratedIcons.System.Drawing.dll
+
+* Copyright (c) 2020 havendv
+* URL: [H.NotifyIcon](https://github.com/HavenDV/H.NotifyIcon)
+* License: [MIT License ](https://github.com/HavenDV/H.NotifyIcon/blob/master/LICENSE.md)

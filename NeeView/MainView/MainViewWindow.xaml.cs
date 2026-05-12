@@ -81,6 +81,9 @@ namespace NeeView
 
             _mouseActivate = new MouseActivate(this);
             _disposables.Add(_mouseActivate);
+
+            _disposables.Add(AppState.Current.SubscribePropertyChanged(nameof(AppState.IsHideWindow),
+                (s, e) => AppStateTools.FlushWindowState(this)));
         }
 
 

@@ -40,6 +40,11 @@ namespace NeeView.Windows.Media
 
         private static void CompositionTarget_Rendering(object? sender, EventArgs e)
         {
+            if (AppState.Current.IsSuspended)
+            {
+                return;
+            }
+
             var renderingTime = ((RenderingEventArgs)e).RenderingTime;
             if (renderingTime == _last)
             {

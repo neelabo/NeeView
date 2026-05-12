@@ -30,6 +30,7 @@ namespace NeeView
         private readonly int _tickBase = System.Environment.TickCount;
         private CommandLineOption? _option;
         private MultiBootService? _multiBootService;
+        private readonly AppProcess _appProcess = new();
 
 
         /// <summary>
@@ -66,6 +67,11 @@ namespace NeeView
         /// トレースログは有効？
         /// </summary>
         public bool IsTraceLogEnabled { get; set; }
+
+        /// <summary>
+        /// データ初期化シーケンス
+        /// </summary>
+        public AppSequence Sequence { get; } = new();
 
 
         /// <summary>
@@ -149,6 +155,22 @@ namespace NeeView
             MessageDialog.IsShowInTaskBar = false;
         }
 
+        /// <summary>
+        /// 指定プロセスの終了を待機
+        /// </summary>
+        /// <param name="pid"></param>
+        private static async Task WaitForProcessExitAsync(int pid)
+        {
+            try
+            {
+                var proc = Process.GetProcessById(pid);
+                await proc.WaitForExitAsync();
+            }
+            catch
+            {
+            }
+        }
+
         /// <summary> 
         /// 初期化 
         /// </summary>
@@ -158,20 +180,27 @@ namespace NeeView
 
             this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
+            // コマンドライン引数処理
+            _option = ParseCommandLineOption(e.Args);
+
+            // 待機プロセス指定があれば、そのプロセスの終了を待つ
+            if (_option.WaitProcess is not null && int.TryParse(_option.WaitProcess, out var pid))
+            {
+                await WaitForProcessExitAsync(pid);
+            }
+
             // AnimatedImage ライブラリ初期化
             AnimatedImageChecker.InitializeLibrary();
 
             // APPXデータフォルダ移動 (ver.38)
             Environment.CorrectLocalAppDataFolder();
 
-            // コマンドライン引数処理
-            _option = ParseCommandLineOption(e.Args);
-
             // カレントディレクトリを実行ファイルの場所に変更。ファイルロック回避のため
             System.IO.Directory.SetCurrentDirectory(Environment.AssemblyFolder);
 
             // 多重起動サービス起動
             _multiBootService = new MultiBootService();
+            await _multiBootService.UpdateServerProcess();
 
             // セカンドプロセス判定
             Environment.IsSecondProcess = _multiBootService.IsServerExists;
@@ -194,9 +223,12 @@ namespace NeeView
             // If multiple launches are not possible, send parameters to the main app to terminate.
             if (!CanStart(boot.IsMultiBootEnabled))
             {
-                await _multiBootService.RemoteLoadAsAsync(Option.Values);
+                await _multiBootService.RemoteRestartAsync(e.Args);
                 throw new OperationCanceledException("Already started.");
             }
+
+            // run remote command server
+            AppRemoteCommandServer.Current.Start();
 
             // show splash screen
             ShowSplashScreen(boot);
@@ -231,13 +263,26 @@ namespace NeeView
             InitializeTemporary(Config.Current);
             InitializeImeKey(Config.Current);
             InitializeTheme();
+
+            AppState.Current.Initialize();
+
+            // タスクトレイ起動が指定されているのにタスクトレイが有効でない場合は起動できない
+            if (Option.IsTray == SwitchOption.on && !AppState.Current.IsTaskTrayEnabled)
+            {
+                throw new OperationCanceledException("It cannot be launched because it is already running in the system tray.");
+            }
+        }
+
+        public void SetCommandLineOption(CommandLineOption option)
+        {
+            _option = option;
         }
 
         /// <summary>
         /// コマンドライン引数処理
         /// </summary>
         /// <returns></returns>
-        private CommandLineOption ParseCommandLineOption(string[] args)
+        public CommandLineOption ParseCommandLineOption(string[] args)
         {
             // コマンドライン引数処理
             var option = ParseArguments(args);
@@ -360,7 +405,7 @@ namespace NeeView
         /// </summary>
         public void ShowSplashScreen(BootSetting bootSetting)
         {
-            if (bootSetting.IsSplashScreenEnabled && CanStart(bootSetting.IsMultiBootEnabled) && !this.Option.IsVersion)
+            if (bootSetting.IsSplashScreenEnabled && CanStart(bootSetting.IsMultiBootEnabled) && !this.Option.IsVersion && Option.IsTray != SwitchOption.on)
             {
                 if (_isSplashScreenVisible) return;
                 _isSplashScreenVisible = true;
@@ -396,6 +441,8 @@ namespace NeeView
         {
             Trace.WriteLine("App.Exit:");
             Terminate(true);
+
+            _appProcess.StartProcessIfOrdered();
         }
 
         /// <summary>
@@ -404,6 +451,11 @@ namespace NeeView
         private void Application_SessionEnding(object sender, SessionEndingCancelEventArgs e)
         {
             Trace.WriteLine($"App.SessionEnding: {e.ReasonSessionEnding}");
+
+            // Closing を成功させるために先にタスクトレイを無効化する
+            AppState.Current.Shutdown(runShutdown: false);
+
+            _appProcess.Cancel();
 
             (this.MainWindow as MainWindow)?.FinalizeMainWindow();
 
@@ -417,6 +469,10 @@ namespace NeeView
         {
             if (_isTerminated) return;
             _isTerminated = true;
+
+            AppState.Current.Dispose();
+
+            AppRemoteCommandServer.Current.Dispose();
 
             TerminateUnhandledException();
 
@@ -519,6 +575,16 @@ namespace NeeView
             Shutdown();
         }
 
+
+        /// <summary>
+        /// 再起動
+        /// </summary>
+        /// <param name="args">コマンドライン引数</param>
+        public void Reboot(string[] args)
+        {
+            _appProcess.Order(args);
+            ShutdownWithoutSave();
+        }
 
         #region Develop
 

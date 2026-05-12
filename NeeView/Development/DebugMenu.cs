@@ -107,7 +107,7 @@ namespace NeeView
         // [開発用] RemoteServer停止
         private void MenuItemDevStopRemoteServer_Click(object sender, RoutedEventArgs e)
         {
-            RemoteCommandService.Current.StopServer();
+            AppRemoteCommandServer.Current.Stop();
             MessageBox.Show("Stop RemoteServer");
         }
 

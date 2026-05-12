@@ -161,5 +161,12 @@ namespace NeeView
             return true;
         }
 
+        /// <summary>
+        /// 全廃棄
+        /// </summary>
+        public void Clear()
+        {
+            _collection.Clear();
+        }
     }
 }

@@ -471,6 +471,17 @@ namespace NeeView
                     }
 #endif
 
+                    if (!string.IsNullOrEmpty(logFile))
+                    {
+                        var processIndex = MultiBootService.GetProcessIndex();
+                        if (processIndex > 0)
+                        {
+                            var ext = Path.GetExtension(logFile);
+                            var nameWithoutExt = Path.GetFileNameWithoutExtension(logFile);
+                            logFile = $"{nameWithoutExt}-{processIndex}{ext}";
+                        }
+                    }
+
                     if (string.IsNullOrEmpty(logFile))
                     {
                         _logFile = "";
@@ -487,7 +498,6 @@ namespace NeeView
                 return _logFile;
             }
         }
-
 
         /// <summary>
         /// 環境変数取得

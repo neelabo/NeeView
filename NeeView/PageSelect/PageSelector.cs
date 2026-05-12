@@ -133,7 +133,7 @@ namespace NeeView
 
         private void BookOperation_SelectedRangeChanged(object? sender, PageRangeChangedEventArgs e)
         {
-            if (AppState.Instance.IsProcessingBook) return;
+            if (AppState.Current.IsProcessingBook) return;
 
             RaiseViewContentsChanged(sender, BookOperation.Current.Control.SelectedRange, false);
         }

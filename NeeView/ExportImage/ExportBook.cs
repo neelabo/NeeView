@@ -35,7 +35,7 @@ namespace NeeView
             var currentPage = _operation.ViewPages.FirstOrDefault();
             var isPlayingSlideShow = SlideShow.Current.IsPlayingSlideShow;
 
-            AppState.Instance.IsProcessingBook = true;
+            AppState.Current.IsProcessingBook = true;
 
             // Progress の表示確定のため、少し待つ
             await Task.Delay(50);
@@ -83,7 +83,7 @@ namespace NeeView
                 await AppDispatcher.InvokeAsync(() => _operation.JumpPage(this, currentPage));
 
                 // TODO: Transform の復元
-                AppState.Instance.IsProcessingBook = false;
+                AppState.Current.IsProcessingBook = false;
             }
 
             LocalDebug.WriteLine("done.");

@@ -26,6 +26,7 @@ namespace NeeView
         private string _searchKeyword = "";
         private readonly Searcher _searcher;
         private SearcherFilter _searcherFilter;
+        private bool _isHide;
 
 
         private HistoryList()
@@ -165,6 +166,20 @@ namespace NeeView
         /// </summary>
         public int ViewItemsCount => _collectionViewSource.View is CollectionView collectionView ? collectionView.Count : -1;
 
+        /// <summary>
+        /// 項目非表示
+        /// </summary>
+        public bool IsHide
+        {
+            get { return _isHide; }
+            set
+            {
+                if (SetProperty(ref _isHide, value))
+                {
+                    UpdateFilter();
+                }
+            }
+        }
 
         private void CollectionViewSource_Filter(object sender, FilterEventArgs e)
         {
@@ -187,6 +202,15 @@ namespace NeeView
             if (e.Path is null) return;
 
             AppDispatcher.BeginInvoke(() => SelectedItem = _collectionViewSource.View.Cast<BookHistory>().FirstOrDefault(x => x.Path == e.Path));
+        }
+
+        /// <summary>
+        /// 検索キーワード設定
+        /// </summary>
+        public void SetSearchKeyword(string keyword)
+        {
+            SearchBoxModel.ResetInputKeyword(keyword);
+            SearchKeyword = keyword;
         }
 
         /// <summary>
@@ -235,6 +259,11 @@ namespace NeeView
 
         private bool Filter(BookHistory item)
         {
+            if (_isHide)
+            {
+                return false;
+            }
+
             if (!string.IsNullOrEmpty(FilterPath))
             {
                 if (FilterPath != LoosePath.GetDirectoryName(item.Path)) return false;

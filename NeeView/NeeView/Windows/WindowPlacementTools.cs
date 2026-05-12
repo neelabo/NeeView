@@ -104,8 +104,10 @@ namespace NeeView.Windows
             LocalDebug.WriteLine($"Restore: Placement={placement}");
 
             var hwnd = new WindowInteropHelper(window).Handle;
+
             var raw = ConvertToNativeWindowPlacement(placement);
-            raw.showCmd = SHOW_WINDOW_CMD.SW_HIDE; // 設定のみ
+            raw.showCmd = SHOW_WINDOW_CMD.SW_RESTORE;
+            
             // １度目でウィンドウ位置が反映され表示するディスプレイが決定される
             PInvoke.SetWindowPlacement((HWND)hwnd, raw);
             // ２度目でそのディスプレイDPIがウィンドウサイズに反映される

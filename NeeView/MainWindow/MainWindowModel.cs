@@ -266,73 +266,19 @@ namespace NeeView
             return Config.Current.MenuBar.IsAddressBarEnabled;
         }
 
-        // 起動時処理
         public async Task LoadedAsync()
         {
-            // サイドパネル復元
-            CustomLayoutPanelManager.Current.Restore();
-
-            // Susie起動
-            // TODO: 非同期化できないか？
-            SusiePluginManager.Current.Initialize();
-
-            // 履歴読み込み
-            SaveData.Current.LoadHistory();
-
-            // フォルダー設定読み込み
-            SaveData.Current.LoadFolderConfig();
-
-            // ブックマーク読み込み
-            SaveData.Current.LoadBookmark();
-
-            // クイックアクセス読み込み
-            SaveData.Current.LoadQuickAccess();
-
-            // プレイリスト読み込み
-            PlaylistHub.Current.Initialize();
-
-            // SaveDataSync活動開始
-            SaveDataSync.Current.Initialize();
-
-            // 非同期初期化処理を待機
-            await ProcessJobEngine.Current.WaitPropertyAsync(nameof(ProcessJobEngine.IsBusy), x => x.IsBusy == false);
-
-            // 最初のブック、フォルダを開く
-            new FirstLoader().Load();
-
-            // オプション指定があればフォルダーリスト表示
-            if (App.Current.Option.FolderListQuery is not null)
+            if (App.Current.Option.IsTray == SwitchOption.on)
             {
-                SidePanelFrame.Current.IsVisibleFolderList = true;
+                App.Current.Sequence.InitializeMinimize();
+                MainWindow.Current.Close();
+                return;
             }
 
-            // スライドショーの自動再生
-            if (App.Current.Option.IsSlideShow != null ? App.Current.Option.IsSlideShow == SwitchOption.on : Config.Current.StartUp.IsAutoPlaySlideShow)
-            {
-                SlideShow.Current.Play();
+            using (AppSaveData.Current.UserSettingsLockScope())
+            { 
+                await App.Current.Sequence.InitializeAsync();
             }
-
-            // パネル初期化待機
-            await BookmarkFolderList.Current.WaitAsync(CancellationToken.None);
-            await BookshelfFolderList.Current.WaitAsync(CancellationToken.None);
-
-            // 起動時スクリプトの実行
-            if (App.Current.Option.ScriptQuery is not null)
-            {
-                var path = App.Current.Option.ScriptQuery.ResolvePath().SimplePath;
-                if (!string.IsNullOrEmpty(path))
-                {
-                    ScriptManager.Current.Execute(this, path, null, null);
-                }
-            }
-
-            // Script: OnStartup
-            CommandTable.Current.TryExecute(this, ScriptCommand.EventOnStartup, null, CommandOption.None);
-
-#if DEBUG
-            // [開発用] デバッグアクションの実行
-            DebugCommand.Execute(App.Current.Option.DebugCommand);
-#endif
         }
 
         public void ContentRendered()
@@ -598,5 +544,4 @@ namespace NeeView
             SidePanelFrame.Current.VisibleAtOnce("", false);
         }
     }
-
 }

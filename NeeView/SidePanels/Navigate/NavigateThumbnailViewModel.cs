@@ -108,7 +108,7 @@ namespace NeeView
         {
             if (!_isEnabled) return;
 
-            if (AppState.Instance.IsProcessingBook) return;
+            if (AppState.Current.IsProcessingBook) return;
 
             var pageFrameContent = _presenter.GetSelectedPageFrameContent();
             IsStaticFrame = pageFrameContent?.IsStaticFrame ?? true;

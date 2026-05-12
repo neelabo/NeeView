@@ -1,4 +1,7 @@
-﻿using NeeView.Properties;
+﻿//#define LOCAL_DEBUG
+
+using NeeLaboratory.Generators;
+using NeeView.Properties;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -6,16 +9,15 @@ using System.IO;
 
 namespace NeeView
 {
-    public class SaveData
+    [LocalDebug]
+    public partial class SaveData
     {
         public const string BackupExtension = ".bak";
 
         static SaveData() => Current = new SaveData();
         public static SaveData Current { get; }
 
-        private string? _pagemarkFilenameToDelete;
-        private bool _historyMergeFlag;
-        private DateTime _historyLastWriteTime;
+        private FileStamp _historyFileStamp = new();
         private FileStamp _userSettingFileStamp = new();
         private FileStamp _bookmarkFileStamp = new();
         private FileStamp _folderConfigFileStamp = new();
@@ -112,20 +114,30 @@ namespace NeeView
                 var failedDialog = new LoadFailedFormatDialog("Notice.FailedToLoad", TextResources.GetString("Word.History"));
 
                 var fileInfo = new FileInfo(filename);
-                if (FileIO.Exists(fileInfo))
+                if (!FileIO.Exists(fileInfo))
                 {
-                    BookHistoryCollectionMemento? memento = SafetyLoad(BookHistoryCollectionMemento.Load, HistoryFilePath, failedDialog);
-                    var result = BookHistoryCollection.Current.Restore(memento, true);
-                    _historyLastWriteTime = fileInfo.GetSafeLastWriteTime();
+                    return;
+                }
 
-                    // History から FolderConfig を復元した場合、フォーマット移行を確定させるために保存
-                    if (result.HasFlag(BookHistoryCollection.RestoreResult.RestoreFolderConfig))
+                var fileStamp = FileStamp.Create(filename);
+                if (fileStamp == _historyFileStamp)
+                {
+                    LocalDebug.WriteLine($"Skip since the timestamps are the same.");
+                    return;
+                }
+                _historyFileStamp = fileStamp;
+
+                BookHistoryCollectionMemento? memento = SafetyLoad(BookHistoryCollectionMemento.Load, HistoryFilePath, failedDialog);
+                var result = BookHistoryCollection.Current.Restore(memento, true);
+                LocalDebug.WriteLine($"Loaded: {result}");
+
+                // History から FolderConfig を復元した場合、フォーマット移行を確定させるために保存
+                if (result.HasFlag(BookHistoryCollection.RestoreResult.RestoreFolderConfig))
+                {
+                    SaveDataSync.Current.SaveFolderConfig(true);
+                    if (result.HasFlag(BookHistoryCollection.RestoreResult.RestoreHistory))
                     {
-                        SaveDataSync.Current.SaveFolderConfig(true);
-                        if (result.HasFlag(BookHistoryCollection.RestoreResult.RestoreHistory))
-                        {
-                            SaveDataSync.Current.SaveHistory(true);
-                        }
+                        SaveDataSync.Current.SaveHistory(true);
                     }
                 }
             }
@@ -338,20 +350,25 @@ namespace NeeView
 
             using (ProcessLock.Lock())
             {
-                //Debug.WriteLine("SaveData.SaveHistory(): saving.");
+                LocalDebug.WriteLine("Saving...");
                 var bookHistoryMemento = BookHistoryCollection.Current.CreateMemento();
+                bool isMerged = false;
 
                 try
                 {
-                    // NOTE: 一度マージが発生したらその後は常にマージを行う。負荷が高いのが問題。
+                    // 既に更新されている場合はマージしてから保存する
                     var fileInfo = new FileInfo(HistoryFilePath);
-                    if (FileIO.Exists(fileInfo) && (_historyMergeFlag || fileInfo.GetSafeLastWriteTime() > _historyLastWriteTime))
+                    if (FileIO.Exists(fileInfo))
                     {
-                        //Debug.WriteLine("SaveData.SaveHistory(): merge.");
-                        var failedDialog = new LoadFailedFormatDialog("Notice.FailedToLoad", TextResources.GetString("Word.History"));
-                        var margeMemento = SafetyLoad(BookHistoryCollectionMemento.Load, HistoryFilePath, failedDialog);
-                        bookHistoryMemento.Merge(margeMemento);
-                        _historyMergeFlag = true;
+                        var fileStamp = FileStamp.Create(HistoryFilePath);
+                        if (fileStamp != _historyFileStamp)
+                        {
+                            LocalDebug.WriteLine("Merge.");
+                            var failedDialog = new LoadFailedFormatDialog("Notice.FailedToLoad", TextResources.GetString("Word.History"));
+                            var margeMemento = SafetyLoad(BookHistoryCollectionMemento.Load, HistoryFilePath, failedDialog);
+                            bookHistoryMemento.Merge(margeMemento);
+                            isMerged = true;
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -360,7 +377,12 @@ namespace NeeView
                 }
 
                 SafetySave(bookHistoryMemento.Save, HistoryFilePath, false);
-                _historyLastWriteTime = new FileInfo(HistoryFilePath).GetSafeLastWriteTime();
+                if (!isMerged)
+                {
+                    // 履歴マージされていないときはタイムスタンプ更新
+                    // マージされたときはタイムスタンプを変えないことで保存時に毎回マージされるようにしている
+                    _historyFileStamp = FileStamp.Create(HistoryFilePath);
+                }
             }
         }
 
@@ -406,17 +428,6 @@ namespace NeeView
             {
                 FileIO.DeleteFile(BookmarkFilePath);
             }
-        }
-
-        /// <summary>
-        /// 必要であるならば、古い設定ファイルを削除
-        /// </summary>
-        public void DeleteLegacyPagemark()
-        {
-            if (_pagemarkFilenameToDelete == null) return;
-
-            DeleteLegacyFile(_pagemarkFilenameToDelete);
-            _pagemarkFilenameToDelete = null;
         }
 
         /// <summary>

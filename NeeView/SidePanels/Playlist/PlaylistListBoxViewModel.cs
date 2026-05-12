@@ -19,8 +19,9 @@ namespace NeeView
         private Playlist? _model;
         private ObservableCollection<PlaylistItem>? _items;
         private PlaylistItem? _selectedItem;
-        private Visibility _visibility = Visibility.Hidden;
+        private bool _isVisible;
         private readonly PanelThumbnailItemSize _thumbnailItemSize;
+        private DisposableCollection _modelDisposables = new();
 
         public PlaylistListBoxViewModel()
         {
@@ -77,11 +78,10 @@ namespace NeeView
             set { SetProperty(ref _selectedItem, value); }
         }
 
-
-        public Visibility Visibility
+        public bool IsVisible
         {
-            get { return _visibility; }
-            set { _visibility = value; OnPropertyChanged(); }
+            get { return _isVisible; }
+            set { SetProperty(ref _isVisible, value); }
         }
 
         public bool IsEditable
@@ -137,18 +137,21 @@ namespace NeeView
 
         public void SetModel(Playlist model)
         {
-            // TODO: 購読の解除。今の所Modelのほうが寿命が短いので問題ないが、安全のため。
+            if (_model == model) return;
 
+            _modelDisposables.Dispose();
             _model = model;
 
-            _model.SubscribePropertyChanged(nameof(_model.Items),
-                (s, e) => AppDispatcher.Invoke(() => UpdateItems()));
+            _modelDisposables = new();
 
-            _model.SubscribePropertyChanged(nameof(_model.IsEditable),
-                (s, e) => OnPropertyChanged(nameof(IsEditable)));
+            _modelDisposables.Add(_model.SubscribePropertyChanged(nameof(_model.Items),
+                (s, e) => AppDispatcher.Invoke(() => UpdateItems())));
 
-            _model.SubscribePropertyChanged(nameof(_model.ErrorMessage),
-                (s, e) => OnPropertyChanged(nameof(ErrorMessage)));
+            _modelDisposables.Add(_model.SubscribePropertyChanged(nameof(_model.IsEditable),
+                (s, e) => OnPropertyChanged(nameof(IsEditable))));
+
+            _modelDisposables.Add(_model.SubscribePropertyChanged(nameof(_model.ErrorMessage),
+                (s, e) => OnPropertyChanged(nameof(ErrorMessage))));
 
             UpdateItems();
         }

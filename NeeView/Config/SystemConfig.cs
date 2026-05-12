@@ -44,6 +44,7 @@ namespace NeeView
         [DefaultEquality] private string? _temporaryDirectory;
         [DefaultEquality] private string? _fileManagerFileArgs;
         [DefaultEquality] private string? _fileManagerFolderArgs;
+        [DefaultEquality] private bool _isTaskTrayEnabled;
 
 
         /// <summary>
@@ -326,6 +327,14 @@ namespace NeeView
         {
             get { return _textCopyPolicy; }
             set { SetProperty(ref _textCopyPolicy, value); }
+        }
+
+        // タスクトレイ常駐
+        [PropertyMember]
+        public bool IsTaskTrayEnabled
+        {
+            get { return _isTaskTrayEnabled; }
+            set { SetProperty(ref _isTaskTrayEnabled, value); }
         }
 
         #region HiddenParameters

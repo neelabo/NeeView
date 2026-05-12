@@ -201,7 +201,7 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
-            if (AppState.Instance.IsProcessingBook) return;
+            if (AppState.Current.IsProcessingBook) return;
 
             var now = DateTime.Now;
             var book = e.Book;
@@ -231,7 +231,7 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
-            if (AppState.Instance.IsProcessingBook) return;
+            if (AppState.Current.IsProcessingBook) return;
 
             var now = DateTime.Now;
             var viewedPages = e.Pages.ToList();

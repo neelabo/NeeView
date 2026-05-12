@@ -36,5 +36,10 @@ namespace NeeView
         {
             _commandAccessMap = new CommandAccessorMap(CommandTable.Current, _accessDiagnostics);
         }
+
+        public void Clear()
+        {
+            Values.Clear();
+        }
     }
 }

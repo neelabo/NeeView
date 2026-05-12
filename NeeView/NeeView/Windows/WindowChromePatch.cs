@@ -97,6 +97,11 @@ namespace NeeView.Windows
 
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
+            if (AppState.Current.IsSuspended)
+            {
+                return IntPtr.Zero;
+            }
+
             switch ((uint)msg)
             {
                 case PInvoke.WM_NCCALCSIZE:

@@ -138,6 +138,11 @@ namespace NeeView
 
             private void OnRendering(object? sender, EventArgs e)
             {
+                if (AppState.Current.IsSuspended)
+                {
+                    return;
+                }
+
                 TickSmooth();
             }
 

@@ -216,6 +216,8 @@ namespace NeeView
             this.MainViewPanelRect.PreviewMouseDown += (s, e) => _vm.AllPanelHideAtOnce();
             this.MainViewPanelRect.PreviewMouseWheel += (s, e) => _vm.AllPanelHideAtOnce();
 
+            AppState.Current.SubscribePropertyChanged(nameof(AppState.IsHideWindow), (s, e) => AppStateTools.FlushWindowState(this));
+
             // 開発用初期化
             Debug_Initialize();
 
@@ -252,7 +254,7 @@ namespace NeeView
         /// <summary>
         /// Window状態初期設定 
         /// </summary>
-        private static void InitializeWindowShapeSnap()
+        public static void InitializeWindowShapeSnap()
         {
             var state = Config.Current.Window.State;
 
@@ -369,6 +371,27 @@ namespace NeeView
             }
         }
 
+        // ウィンドウ座標の復元
+        private void InitializeWindowPlace()
+        {
+            if (App.Current.Option.IsTray == SwitchOption.on)
+            {
+                try
+                {
+                    Config.Current.Window.FreezeWindowState = true;
+                    _windowStateManager.SetWindowState(WindowStateEx.Minimized);
+                }
+                finally
+                {
+                    Config.Current.Window.FreezeWindowState = false;
+                }
+            }
+            else
+            {
+                RestoreWindowPlacement();
+            }
+        }
+
         // ウィンドウ座標復元
         public void RestoreWindowPlacement()
         {
@@ -403,6 +426,11 @@ namespace NeeView
         /// </summary>
         private void OnRendering(object? sender, EventArgs e)
         {
+            if (AppState.Current.IsSuspended)
+            {
+                return;
+            }
+
             LayoutFrame();
         }
 
@@ -428,7 +456,7 @@ namespace NeeView
 
             // ウィンドウ座標の復元
             // NOTE: PInvoke.SetWindowPlacement() を呼ぶとLoadedイベントが発生する。WindowPlacementの処理順番に注意
-            RestoreWindowPlacement();
+            InitializeWindowPlace();
 
             Debug.WriteLine($"App.MainWindow.SourceInitialized.Done: {App.Current.Stopwatch.ElapsedMilliseconds}ms");
         }
@@ -598,6 +626,14 @@ namespace NeeView
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (AppState.Current.IsTaskTrayEnabled)
+            {
+                Trace.WriteLine($"Window.Closing Canceled: To Hide.");
+                _ = AppState.Current.SuspendAsync();
+                e.Cancel = true;
+                return;
+            }
+
             Trace.WriteLine($"Window.Closing:");
             FinalizeMainWindow();
         }
@@ -619,6 +655,9 @@ namespace NeeView
             _vm.IsClosing = true;
 
             Trace.WriteLine($"Window.FinalizeMainWindow:");
+
+            // スライドショー停止
+            SlideShow.Current.IsPlayingSlideShow = false;
 
             // ブック読み込み要求無効化
             BookHub.Current.IsEnabled = false;

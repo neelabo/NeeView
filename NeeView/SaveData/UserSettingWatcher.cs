@@ -36,30 +36,21 @@ namespace NeeView
             _disposables.Add(_delayAction);
         }
 
-        private void DataFileWatcher_Changed(object sender, FileSystemEventArgs e)
+
+        public void Suspend()
         {
-            _delayAction.Request(() => LoadUserSetting(), TimeSpan.FromMilliseconds(_delayTime));
+            _watcher.Stop();
         }
 
-        private void LoadUserSetting()
+        public void Resume()
         {
-            if (SaveData.Current.IsLatestUserSettingFileStamp())
-            {
-                return;
-            }
+            var path = App.Current.Option.SettingFilename ?? throw new InvalidOperationException("Setting filename is not specified in the application options.");
+            _watcher.Start(path);
+        }
 
-            LocalDebug.WriteLine($"UserSetting file is updated.");
-            var setting = SaveData.Current.LoadUserSetting(false);
-            try
-            {
-                Config.Current.Window.FreezeWindowState = true;
-                SaveData.Current.SetUserSettingFileStamp(setting.FileStamp);
-                UserSettingTools.Restore(setting);
-            }
-            finally
-            {
-                Config.Current.Window.FreezeWindowState = false;
-            }
+        private void DataFileWatcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            _delayAction.Request(() => AppSaveData.Current.LoadUserSetting(), TimeSpan.FromMilliseconds(_delayTime));
         }
 
         protected virtual void Dispose(bool disposing)

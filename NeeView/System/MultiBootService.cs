@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.IO;
+using NeeView.Collections.Generic;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,17 +11,8 @@ namespace NeeView
 {
     public class MultiBootService
     {
-        private readonly Process _currentProcess;
-        private readonly Process? _serverProcess;
+        private Process? _serverProcess;
 
-
-        public MultiBootService()
-        {
-            _currentProcess = Process.GetCurrentProcess();
-            _serverProcess = GetServerProcess(_currentProcess);
-
-            RemoteCommandService.Current.AddReceiver("LoadAs", LoadAs);
-        }
 
         /// <summary>
         /// サーバの存在チェック
@@ -29,9 +21,18 @@ namespace NeeView
 
 
         /// <summary>
+        /// サーバープロセス更新
+        /// </summary>
+        public async Task UpdateServerProcess()
+        {
+            var currentProcess = Process.GetCurrentProcess();
+            _serverProcess = await GetServerProcess(currentProcess);
+        }
+
+        /// <summary>
         /// サーバープロセスを検索
         /// </summary>
-        private static Process? GetServerProcess(Process currentProcess)
+        private static async Task<Process?> GetServerProcess(Process currentProcess)
         {
             var processName = currentProcess.ProcessName;
             Trace.WriteLine($"GetServerProcess: CurrentProcess: ProcessName={processName}, Id={currentProcess.Id}");
@@ -50,13 +51,32 @@ namespace NeeView
                     }
 #endif
                     // 自身以外のプロセスをターゲットにする
-                    var serverProcess = processes
-                        // ウィンドウハンドルが存在しないものは除外
-                        .Where(p => p.MainWindowHandle != IntPtr.Zero)
+                    var appProcess = processes
+                        // 自身以外のプロセス
+                        .Where(p => p.Id != currentProcess.Id)
                         // 設定により、実行ファイルパスが一致したものに限定
                         .Where(p => !AppSettings.Current.PathProcessGroup || p.MainModule?.FileName == currentProcess.MainModule?.FileName)
-                        // 自身以外の最も若いプロセス
-                        .LastOrDefault((p) => p.Id != currentProcess.Id);
+                        .ToList();
+
+                    var serverProcess = appProcess
+                        // ウィンドウハンドルが存在するもの
+                        .Where(p => p.MainWindowHandle != IntPtr.Zero)
+                        // 最新のもの
+                        .LastOrDefault();
+
+                    if (serverProcess == null)
+                    {
+                        // タスクトレイプロセス選択
+                        foreach (var p in appProcess)
+                        {
+                            var isHideWindowProcess = await AppRemoteCommandClient.Current.IsHideWindowAsync(new RemoteCommandDelivery(p));
+                            if (isHideWindowProcess)
+                            {
+                                serverProcess = p;
+                                break;
+                            }
+                        }
+                    }
 
                     if (serverProcess == null)
                     {
@@ -80,38 +100,58 @@ namespace NeeView
             return null;
         }
 
+
         /// <summary>
-        /// サーバーにパスを送る
+        /// サーバーに起動引数を送る
         /// </summary>
-        public async Task RemoteLoadAsAsync(List<string> files)
+        public async Task RemoteRestartAsync(string[] args)
         {
             if (_serverProcess is null) return;
 
             try
             {
                 ProcessActivator.AppActivate(_serverProcess);
-                await RemoteCommandService.Current.SendAsync(new RemoteCommand("LoadAs", files.ToArray()), new RemoteCommandDelivery(_serverProcess.Id), CancellationToken.None);
+
+                await AppRemoteCommandClient.Current.RestartAsync(new RemoteCommandDelivery(_serverProcess), args);
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
+                Debug.Assert(false, ex.Message);
             }
         }
 
         /// <summary>
-        /// リモートコマンド(LoadAs)
+        /// 複数プロセスのうちの何番目か
         /// </summary>
-        private void LoadAs(RemoteCommand command)
+        /// <returns></returns>
+        public static int GetProcessIndex()
         {
-            try
-            {
-                // パスの指定があれば開く
-                if (command.Args != null && command.Args.Length > 0 && command.Args[0] != null)
-                {
-                    BookHubTools.RequestLoad(this, command.Args, BookLoadOption.FocusOnLoaded, true, null);
-                }
-            }
-            catch { }
+            var currentProcess = Process.GetCurrentProcess();
+
+            var index = Process.GetProcessesByName(currentProcess.ProcessName)
+                .Where(p => p.MainModule?.FileName == currentProcess.MainModule?.FileName)
+                .OrderBy(p => p.StartTime)
+                .FindIndex(p => p.Id == currentProcess.Id);
+
+            return index;
         }
+
+        /// <summary>
+        /// アクティブなプロセスを習得
+        /// </summary>
+        /// <returns></returns>
+        public static Process? GetLatestActiveProcess()
+        {
+            var currentProcess = Process.GetCurrentProcess();
+
+            var appProcess = Process.GetProcessesByName(currentProcess.ProcessName)
+                .Where(p => p.MainModule?.FileName == currentProcess.MainModule?.FileName)
+                .Where(p => p.MainWindowHandle != IntPtr.Zero)
+                .LastOrDefault();
+
+            return appProcess;
+        }
+
     }
 }

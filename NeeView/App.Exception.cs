@@ -93,6 +93,8 @@ namespace NeeView
         /// </summary>
         private void CurrentDomain_UnhandledException(object? sender, UnhandledExceptionEventArgs e)
         {
+            AppState.Current.Dispose();
+
             int count = Interlocked.Increment(ref _exceptionCount);
             if (count >= 2) return;
 

@@ -1,0 +1,24 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:tb="http://www.hardcodet.net/taskbar"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:NeeView">
+
+    <ContextMenu x:Key="SysTrayMenu" x:Shared="false">
+        <MenuItem Header="{Binding ExitApplicationHeader}" Command="{Binding ExitApplicationCommand}" />
+    </ContextMenu>
+
+    <tb:TaskbarIcon x:Key="TaskTrayIcon" x:Shared="false"
+        IconSource="/Resources/App.ico"
+        ToolTipText="NeeView"
+        LeftClickCommand="{Binding ShowWindowCommand}"
+        DoubleClickCommand="{Binding ShowWindowCommand}"
+        ContextMenu="{StaticResource SysTrayMenu}">
+
+        <tb:TaskbarIcon.DataContext>
+            <local:TaskTrayIconViewModel />
+        </tb:TaskbarIcon.DataContext>
+
+    </tb:TaskbarIcon>
+
+</ResourceDictionary>

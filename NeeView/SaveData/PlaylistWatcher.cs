@@ -40,6 +40,20 @@ namespace NeeView
             _disposables.Add(_delayAction);
         }
 
+        public void Suspend()
+        {
+            _watcher.Stop();
+        }
+
+        public void Resume()
+        {
+            Reset();
+
+            // TODO: 最終更新日による処理回避
+            PlaylistHub.Current.Reload(Config.Current.Playlist.CurrentPlaylist);
+        }
+
+
         public void Reset()
         {
             _watcher.Start(Config.Current.Playlist.CurrentPlaylist);

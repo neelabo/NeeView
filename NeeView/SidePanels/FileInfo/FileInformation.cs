@@ -43,7 +43,7 @@ namespace NeeView
 
         private void PageFrameBoxPresenter_ViewContentChanged(object? sender, FrameViewContentChangedEventArgs e)
         {
-            if (AppState.Instance.IsProcessingBook) return;
+            if (AppState.Current.IsProcessingBook) return;
 
             Update(e);
         }

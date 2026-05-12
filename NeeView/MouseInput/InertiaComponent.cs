@@ -45,6 +45,11 @@ namespace NeeView
 
         private void CompositionTarget_Rendering(object? sender, EventArgs e)
         {
+            if (AppState.Current.IsSuspended)
+            {
+                return;
+            }
+
             Update();
         }
 

@@ -90,7 +90,6 @@ namespace NeeView
             _name = null;
         }
 
-
         private void Watcher_Created(object sender, FileSystemEventArgs e)
         {
             if (_disposedValue) return;

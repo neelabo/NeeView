@@ -29,6 +29,7 @@
                 <ResourceDictionary Source="/Styles/Generic.xaml" />
 
                 <ResourceDictionary Source="/BreadcrumbBar/BreadcrumbBarResource.xaml" />
+                <ResourceDictionary Source="/System/TaskTrayIconResource.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
 

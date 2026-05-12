@@ -26,6 +26,17 @@ namespace NeeView
             _disposables.Add(_delayAction);
         }
 
+        public void Suspend()
+        {
+            _watcher.Stop();
+        }
+
+        public void Resume()
+        {
+            Reset();
+            SaveData.Current.LoadFolderConfig();
+        }
+
         public void Reset()
         {
             _watcher.Start(Config.Current.Bookshelf.FolderConfigFilePath);

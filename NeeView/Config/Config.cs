@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using NeeLaboratory.ComponentModel;
 using System;
 using System.Diagnostics;
 using System.Text.Json.Serialization;
@@ -132,6 +133,7 @@ namespace NeeView
 
         [PropertyMapIgnore]
         public PrintModelMemento Print { get; set; } = new PrintModelMemento();
+
 
         #region Obsolete
 

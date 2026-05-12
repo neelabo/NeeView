@@ -171,6 +171,11 @@ namespace NeeView
         // ウィンドウプロシージャ
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
+            if (AppState.Current.IsSuspended)
+            {
+                return IntPtr.Zero;
+            }
+
             try
             {
                 switch ((uint)msg)

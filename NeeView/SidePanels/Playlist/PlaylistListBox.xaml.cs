@@ -725,9 +725,9 @@ namespace NeeView
         // 表示/非表示イベント
         private async void PlaylistListBox_IsVisibleChanged(object? sender, DependencyPropertyChangedEventArgs e)
         {
-            _vm.Visibility = (bool)e.NewValue ? Visibility.Visible : Visibility.Hidden;
+            _vm.IsVisible = (bool)e.NewValue;
 
-            if (_vm.Visibility == Visibility.Visible)
+            if (_vm.IsVisible)
             {
                 ////_vm.UpdateItems();
                 this.ListBox.UpdateLayout();

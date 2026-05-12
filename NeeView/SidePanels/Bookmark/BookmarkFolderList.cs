@@ -1,6 +1,7 @@
 ﻿using NeeLaboratory.ComponentModel;
 using NeeView.Collections.Generic;
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -125,10 +126,14 @@ namespace NeeView
             return new QueryPath(QueryScheme.Bookmark, null, null);
         }
 
-        protected override bool CheckScheme(QueryPath query)
+        protected override QueryPath ValidateScheme(QueryPath query)
         {
-            if (query.Scheme != QueryScheme.Bookmark) throw new NotSupportedException($"need scheme \"{QueryScheme.Bookmark.ToSchemeString()}\"");
-            return true;
+            if (query.Scheme != QueryScheme.Bookmark)
+            {
+                Debug.WriteLine($"need scheme \"{QueryScheme.Bookmark.ToSchemeString()}\"");
+                return new QueryPath(QueryScheme.Bookmark);
+            }
+            return query;
         }
 
         public async Task DeleteInvalidBookmark()

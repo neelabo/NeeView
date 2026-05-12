@@ -455,20 +455,25 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
-            if (!CheckScheme(path))
-            {
-                return;
-            }
+            AppDispatcher.BeginInvoke(async () => await SetPlaceAsync(ValidateScheme(path), select, options));
+        }
 
-            AppDispatcher.BeginInvoke(async () => await SetPlaceAsync(path, select, options));
+        /// <summary>
+        /// フォルダーリストを空にする
+        /// </summary>
+        public void RequestPlaceClear()
+        {
+            if (_disposedValue) return;
+
+            AppDispatcher.BeginInvoke(async () => await SetPlaceAsync(QueryPath.None, null, FolderSetPlaceOption.None));
         }
 
         /// <summary>
         /// パスがサポートしているスキームであるか判定
         /// </summary>
-        protected virtual bool CheckScheme(QueryPath query)
+        protected virtual QueryPath ValidateScheme(QueryPath query)
         {
-            return true;
+            return query;
         }
 
 

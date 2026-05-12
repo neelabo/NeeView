@@ -315,12 +315,12 @@ namespace NeeView.Windows
         /// <param name="placement">状態データ</param>
         public void RestoreWindowPlacement(WindowPlacement placement)
         {
+            WindowPlacementTools.RestoreWindowPlacement(_window, placement);
+
             if (placement.IsFullScreen)
             {
                 ToFullScreen();
             }
-
-            WindowPlacementTools.RestoreWindowPlacement(_window, placement);
         }
     }
 }

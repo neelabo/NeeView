@@ -23,7 +23,11 @@ namespace NeeView
         {
             token.ThrowIfCancellationRequested();
 
-            if (path.Scheme == QueryScheme.Root)
+            if (path.Scheme == QueryScheme.None)
+            {
+                return new DummyFolderCollection();
+            }
+            else if (path.Scheme == QueryScheme.Root)
             {
                 return await CreateRootFolderCollectionAsync(path, isActive, token);
             }

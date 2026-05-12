@@ -55,6 +55,16 @@ namespace NeeView
             BookThumbnailPool.Current.Add(thumbnail);
         }
 
+        public void ClearArchivePage()
+        {
+            if (_archivePage != null)
+            {
+                _archivePage.Thumbnail.Touched -= Thumbnail_Touched;
+                _archivePage.Dispose();
+                _archivePage = null;
+            }
+        }
+
         #endregion
 
         #region IHasPage Support

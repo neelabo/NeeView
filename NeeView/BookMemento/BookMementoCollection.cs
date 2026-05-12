@@ -130,5 +130,16 @@ namespace NeeView
 
             Items = histories.Union(bookmarks).ToDictionary(e => e.Path, e => e);
         }
+
+        /// <summary>
+        /// Thumbnail用のキャッシュをクリアする
+        /// </summary>
+        public void ClearCache()
+        {
+            foreach(var item in Items.Values.ToList())
+            {
+                item.ClearArchivePage();
+            }
+        }
     }
 }

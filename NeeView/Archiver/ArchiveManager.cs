@@ -552,6 +552,10 @@ namespace NeeView
             }
         }
 
+        public void ClearCache()
+        {
+            _cache.Clear();
+        }
 
         [Conditional("DEBUG")]
         public void DumpCache()

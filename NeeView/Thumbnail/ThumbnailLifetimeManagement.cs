@@ -45,6 +45,21 @@ namespace NeeView
             }
         }
 
+        public void Clear()
+        {
+            lock (_lock)
+            {
+                var removes = _map.Keys.ToList();
+
+                foreach (var thumbnail in removes)
+                {
+                    thumbnail.RemoveImageSource();
+                }
+
+                _map.Clear();
+            }
+        }
+
         [Conditional("LOCAL_DEBUG")]
         private void LocalWriteLine(string s)
         {

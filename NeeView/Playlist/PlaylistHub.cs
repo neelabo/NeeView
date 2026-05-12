@@ -31,6 +31,7 @@ namespace NeeView
         private Playlist _playlist = Playlist.Dummy;
         private int _playlistLockCount;
         private bool _isPlaylistDirty;
+        private bool _isHide;
 
         private PlaylistHub()
         {
@@ -68,7 +69,7 @@ namespace NeeView
         {
             get
             {
-                return Config.Current.Playlist.CurrentPlaylist;
+                return IsHide ? "" : Config.Current.Playlist.CurrentPlaylist;
             }
             set
             {
@@ -87,6 +88,18 @@ namespace NeeView
         public string? FilterMessage
         {
             get { return Config.Current.Playlist.IsCurrentBookFilterEnabled ? LoosePath.GetFileName(BookOperation.Current.Address) : null; }
+        }
+
+        public bool IsHide
+        {
+            get { return _isHide; }
+            set
+            {
+                if (SetProperty(ref _isHide, value))
+                {
+                    OnPropertyChanged(nameof(SelectedItem));
+                }
+            }
         }
 
 
@@ -247,6 +260,11 @@ namespace NeeView
 
         private Playlist LoadPlaylist(string path)
         {
+            if (string.IsNullOrEmpty(path))
+            {
+                return Playlist.Dummy;
+            }
+
             bool isCreateNewFile = path != DefaultPlaylist;
             return Playlist.Load(path, isCreateNewFile);
         }

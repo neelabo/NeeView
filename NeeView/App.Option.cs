@@ -78,6 +78,13 @@ namespace NeeView
         [OptionMember(null, "clear-registry", Default = "true", HelpText = "AppOption.ClearRegistry")]
         public bool IsClearRegistry { get; set; }
 
+        [OptionMember(null, "tray", Default = "on", HasParameter = true, HelpText = "AppOption.IsTray")]
+        public SwitchOption? IsTray { get; set; }
+
+        // システム用：非公開パラメーター
+        [OptionMember(null, "wait", HasParameter = true, IsVisible = false)]
+        public string? WaitProcess { get; set; }
+
 #if DEBUG
         [OptionMember(null, "debug", HasParameter = true, RequireParameter = true, IsVisible = false)]
         public string? DebugCommand { get; set; }

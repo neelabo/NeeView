@@ -13,13 +13,13 @@ namespace NeeView
         private PlaylistListBox? _playlistListBox;
 
 
-        public PlaylistPresenter(LazyEx<PlaylistView> playlistView, PlaylistHub playlistModel)
+        public PlaylistPresenter(LazyEx<PlaylistView> playlistView, PlaylistHub playlistHub)
         {
             if (Current != null) throw new InvalidOperationException();
             Current = this;
 
             _playlistView = playlistView;
-            _playlistHub = playlistModel;
+            _playlistHub = playlistHub;
 
             _playlistHub.SubscribePropertyChanged(nameof(PlaylistHub.Playlist),
                 (s, e) => UpdateListBox());
@@ -36,7 +36,7 @@ namespace NeeView
         public PlaylistHub PlaylistHub => _playlistHub;
 
 
-        private void UpdateListBox()
+        public void UpdateListBox()
         {
             if (_playlistHub.Playlist is null) return;
 

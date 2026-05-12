@@ -70,6 +70,11 @@ namespace NeeView
 
         private nint WndProc(nint hwnd, int msg, nint wParam, nint lParam, ref bool handled)
         {
+            if (AppState.Current.IsSuspended)
+            {
+                return IntPtr.Zero;
+            }
+
             if (msg == PInvoke.WM_CLIPBOARDUPDATE)
             {
                 ClipboardChanged?.Invoke(this, EventArgs.Empty);

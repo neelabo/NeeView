@@ -1,65 +1,66 @@
-﻿using System;
-using System.Diagnostics;
+﻿using NeeLaboratory.Generators;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.IO.Pipes;
+using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace NeeLaboratory.IO
 {
-    /// <summary>
-    /// パイプを使って他のプロセスから送られてきたコマンドを受信する
-    /// </summary>
-    public class RemoteCommandServer : IDisposable
+    [LocalDebug]
+    public partial class RemoteCommandServer
     {
-        private readonly CancellationTokenSource _cancellationTokenSource = new();
+        private readonly string _pipeName;
+        private readonly Dictionary<string, Func<byte[], byte[]>> _handlers = new();
+        private readonly JsonSerializerContext _jsonContext;
 
-
-        public RemoteCommandServer()
+        public RemoteCommandServer(string pipeName, JsonSerializerContext jsonContext)
         {
-            var process = Process.GetCurrentProcess();
-            Console.WriteLine(GetPipetName(process));
+            _pipeName = pipeName;
+            _jsonContext = jsonContext;
         }
 
-
-        public EventHandler<RemoteCommandEventArgs>? Called;
-
-
-        public void Start()
+        public void RegisterMethod<TArgs, TResult>(string methodName, Func<TArgs, TResult> handler)
         {
-            Task.Run(ReceiverAsync);
+            _handlers[methodName] = (inputBytes) =>
+            {
+                var jsonTypeInfo = (JsonTypeInfo<TArgs>)_jsonContext.GetTypeInfo(typeof(TArgs))!;
+                var args = JsonSerializer.Deserialize(inputBytes, jsonTypeInfo)!;
+                var result = handler(args);
+                var resultTypeInfo = (JsonTypeInfo<TResult>)_jsonContext.GetTypeInfo(typeof(TResult))!;
+                return JsonSerializer.SerializeToUtf8Bytes(result, resultTypeInfo);
+            };
         }
 
-        public void Stop()
+        public void RegisterMethod<TArgs>(string methodName, Action<TArgs> handler)
         {
-            _cancellationTokenSource.Cancel();
+            _handlers[methodName] = (inputBytes) =>
+            {
+                var jsonTypeInfo = (JsonTypeInfo<TArgs>)_jsonContext.GetTypeInfo(typeof(TArgs))!;
+                var args = JsonSerializer.Deserialize(inputBytes, jsonTypeInfo)!;
+                handler(args);
+                var resultTypeInfo = (JsonTypeInfo<string>)_jsonContext.GetTypeInfo(typeof(string))!;
+                return JsonSerializer.SerializeToUtf8Bytes("OK", resultTypeInfo);
+            };
         }
 
-        public static string GetPipetName(Process process)
+        public async Task StartAsync(CancellationToken ct = default)
         {
-            return process.ProcessName + ".p" + process.Id;
-        }
-
-        private async Task ReceiverAsync()
-        {
-            var pipeName = GetPipetName(Process.GetCurrentProcess());
-
-            while (true)
+            LocalDebug.WriteLine($"Start: {_pipeName}");
+            while (!ct.IsCancellationRequested)
             {
                 try
                 {
-                    using var pipeServer = new NamedPipeServerStream(pipeName, PipeDirection.In);
+                    using var serverStream = new NamedPipeServerStream(_pipeName, PipeDirection.InOut, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous);
+                    await serverStream.WaitForConnectionAsync(ct);
 
-                    await pipeServer.WaitForConnectionAsync(_cancellationTokenSource.Token);
-                    if (pipeServer.IsConnected)
-                    {
-                        var command = await JsonSerializer.DeserializeAsync(pipeServer, RemoteCommandJsonSerializerContext.Default.RemoteCommand, _cancellationTokenSource.Token);
-                        if (command != null && Called != null)
-                        {
-                            ////Debug.WriteLine($"Receive: {command.ID}({string.Join(",", command.Args)})");
-                            Called(this, new RemoteCommandEventArgs(command));
-                        }
-                    }
+                    // Close each request individually (stateless design)
+                    await ProcessRequestAsync(serverStream, ct);
                 }
                 catch (OperationCanceledException)
                 {
@@ -67,50 +68,58 @@ namespace NeeLaboratory.IO
                 }
                 catch (Exception ex)
                 {
-                    // 例外をここで潰してしまうのはどうなんだろう？
-                    Debug.WriteLine($"Remote Server: {ex.Message}");
+                    LocalDebug.WriteLine($"Connection error: {ex.Message}");
                 }
             }
-
-            Debug.WriteLine($"Remote Server: Stopped");
         }
 
-        #region IDisposable Support
-        private bool _disposedValue = false;
-
-        protected virtual void Dispose(bool disposing)
+        private async Task ProcessRequestAsync(NamedPipeServerStream stream, CancellationToken ct)
         {
-            if (!_disposedValue)
+            try
             {
-                if (disposing)
-                {
-                    _cancellationTokenSource.Cancel();
-                    _cancellationTokenSource.Dispose();
-                }
+                byte[] sizeBuffer = new byte[4];
 
-                _disposedValue = true;
+                // read header
+                await stream.ReadExactlyAsync(sizeBuffer, ct);
+                int headerSize = BitConverter.ToInt32(sizeBuffer, 0);
+                if (headerSize > 1024) throw new InvalidDataException("Header too large");
+
+                byte[] headerBuffer = new byte[headerSize];
+                await stream.ReadExactlyAsync(headerBuffer, ct);
+                string methodName = Encoding.UTF8.GetString(headerBuffer);
+
+                // read payload
+                await stream.ReadExactlyAsync(sizeBuffer, ct);
+                int payloadSize = BitConverter.ToInt32(sizeBuffer, 0);
+
+                byte[] payloadBuffer = new byte[payloadSize];
+                await stream.ReadExactlyAsync(payloadBuffer, ct);
+
+                if (_handlers.TryGetValue(methodName, out var handler))
+                {
+                    byte[] responsePayload = handler(payloadBuffer);
+
+                    // result: [1 (Success)][Size][Payload]
+                    await stream.WriteAsync(new byte[] { 1 }, ct);
+                    await stream.WriteAsync(BitConverter.GetBytes(responsePayload.Length), ct);
+                    await stream.WriteAsync(responsePayload, ct);
+                }
+                else
+                {
+                    throw new Exception($"Method '{methodName}' not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                // error: [0 (Failed)][Size][ErrorMessage]
+                byte[] errorBytes = Encoding.UTF8.GetBytes(ex.Message);
+                stream.WriteByte(0);
+                await stream.WriteAsync(BitConverter.GetBytes(errorBytes.Length), ct);
+                await stream.WriteAsync(errorBytes, ct);
             }
         }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        #endregion
     }
 
-
-    /// <summary>
-    /// コマンド呼び出しイベントの引数
-    /// </summary>
-    public class RemoteCommandEventArgs : EventArgs
-    {
-        public RemoteCommandEventArgs(RemoteCommand command)
-        {
-            Command = command;
-        }
-
-        public RemoteCommand Command { get; set; }
-    }
 }
+
+

@@ -10,9 +10,6 @@ namespace NeeView
     /// </summary>
     public class WindowProcedure
     {
-        public delegate IntPtr WindowProcedureFunc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled);
-
-
         private readonly Window _window;
 
         private readonly Dictionary<uint, WindowProcedureFunc> _procedures = new();
@@ -32,6 +29,9 @@ namespace NeeView
                 _window.Loaded += Window_Loaded;
             }
         }
+
+
+        public delegate IntPtr WindowProcedureFunc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled);
 
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -56,6 +56,11 @@ namespace NeeView
 
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
+            if (AppState.Current.IsSuspended)
+            {
+                return IntPtr.Zero;
+            }
+
             if (_procedures.TryGetValue((uint)msg, out var proc))
             {
                 return proc.Invoke(hwnd, msg, wParam, lParam, ref handled);

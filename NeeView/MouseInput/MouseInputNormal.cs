@@ -311,7 +311,7 @@ namespace NeeView
         {
             if (!Config.Current.Mouse.IsHoverScroll) return;
 
-            if (AppState.Instance.IsProcessingBook) return;
+            if (AppState.Current.IsProcessingBook) return;
 
             _hoverTransformControl?.UpdateSelected();
 

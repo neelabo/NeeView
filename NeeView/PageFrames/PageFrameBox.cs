@@ -974,7 +974,7 @@ namespace NeeView.PageFrames
 
             var nextIndex = frameRange.Top(direction.ToSign()).Index + direction.ToSign();
 
-            if (!AppState.Instance.IsProcessingBook)
+            if (!AppState.Current.IsProcessingBook)
             {
                 if (_context.IsLoopPage)
                 {
@@ -1014,7 +1014,7 @@ namespace NeeView.PageFrames
 
             var pos = frameRange.Next(direction.ToSign());
 
-            if (!AppState.Instance.IsProcessingBook)
+            if (!AppState.Current.IsProcessingBook)
             {
                 if (_context.IsLoopPage)
                 {
@@ -1041,7 +1041,7 @@ namespace NeeView.PageFrames
             var position = new PagePosition(SelectedRange.Min.Index + delta, 0);
             var direction = LinkedListDirection.Next;
 
-            if (!AppState.Instance.IsProcessingBook)
+            if (!AppState.Current.IsProcessingBook)
             {
                 if (_context.IsLoopPage)
                 {
@@ -1659,7 +1659,7 @@ namespace NeeView.PageFrames
 
             if (isMedia && !_bookContext.IsMedia) return;
 
-            if (!AppState.Instance.IsProcessingBook)
+            if (!AppState.Current.IsProcessingBook)
             {
                 PageTerminated?.Invoke(sender, new PageTerminatedEventArgs(direction, isMedia));
             }
