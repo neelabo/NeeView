@@ -10,6 +10,7 @@ using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -629,7 +630,7 @@ namespace NeeView
             if (AppState.Current.IsTaskTrayEnabled)
             {
                 Trace.WriteLine($"Window.Closing Canceled: To Hide.");
-                _ = AppState.Current.SuspendAsync();
+                _ = AppState.Current.SuspendAsync(CancellationToken.None);
                 e.Cancel = true;
                 return;
             }

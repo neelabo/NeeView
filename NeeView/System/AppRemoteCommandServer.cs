@@ -57,13 +57,18 @@ namespace NeeView
         }
 
 
-        public async void Restart(string[] args)
+        public void Restart(string[] args)
         {
-            try
+            App.Current.Dispatcher.BeginInvoke(async () =>
             {
-                await AppState.Current.ResumeAsync(args);
-            }
-            catch { }
+                try
+                {
+                    await AppState.Current.ResumeAsync(args, CancellationToken.None);
+                }
+                catch
+                {
+                }
+            });
         }
 
         public bool IsHideWindow(int _)

@@ -5,6 +5,7 @@ using NeeView.Properties;
 using NeeView.Setting;
 using System;
 using System.Runtime;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 
@@ -81,11 +82,11 @@ namespace NeeView
         /// <remarks>
         /// タスクトレイに格納してウィンドウを非表示にする
         /// </remarks>
-        public async Task SuspendAsync()
+        public async Task SuspendAsync(CancellationToken token)
         {
             if (IsHideWindow) return;
 
-            using var scope = _asyncLock.Lock();
+            using var scope = await _asyncLock.LockAsync(token);
 
             // すべての Window を Hide
             IsHideWindow = true;
@@ -124,7 +125,7 @@ namespace NeeView
             HistoryList.Current.IsHide = true;
 
             // 非同期処理もあるのでちょっと待つ
-            await Task.Delay(500);
+            await Task.Delay(200, token);
 
             // 各種メモリキャッシュのクリア
             BookMementoCollection.Current.ClearCache();
@@ -139,7 +140,7 @@ namespace NeeView
             //Temporary.Current.RemoveTempFolder();
 
             // 非同期処理もあるのでちょっと待つ
-            await Task.Delay(500);
+            await Task.Delay(200, token);
 
             // GC
             await GarbageCollectAsync();
@@ -189,7 +190,7 @@ namespace NeeView
 
             if (IsHideWindow)
             {
-                await ResumeAsync([]);
+                await ResumeAsync([], CancellationToken.None);
             }
             else
             {
@@ -201,7 +202,7 @@ namespace NeeView
         /// アプリ再開
         /// </summary>
         /// <param name="args">コマンドライン引数</param>
-        public async Task ResumeAsync(string[] args)
+        public async Task ResumeAsync(string[] args, CancellationToken token)
         {
             var options = App.Current.ParseCommandLineOption(args);
 
@@ -216,7 +217,7 @@ namespace NeeView
             }
             else
             {
-                using var scope = _asyncLock.Lock();
+                using var scope = await _asyncLock.LockAsync(token);
 
                 if (IsCriticalSettingChanged(options))
                 {
