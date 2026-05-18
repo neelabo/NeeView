@@ -33,6 +33,13 @@
                 <Style TargetType="{x:Type TreeViewItem}" BasedOn="{StaticResource NVTreeViewItem}">
                     <Setter Property="IsExpanded" Value="True"/>
                     <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
+                    <Setter Property="ContextMenu">
+                        <Setter.Value>
+                            <ContextMenu/>
+                        </Setter.Value>
+                    </Setter>
+                    <EventSetter Event="ContextMenuOpening" Handler="TreeViewItem_ContextMenuOpening"/>
+                    <EventSetter Event="MouseRightButtonDown" Handler="TreeViewItem_MouseRightButtonDown"/>
                 </Style>
             </TreeView.ItemContainerStyle>
         </TreeView>

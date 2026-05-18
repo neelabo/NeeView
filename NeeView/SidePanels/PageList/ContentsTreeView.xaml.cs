@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using CommunityToolkit.Mvvm.Input;
+using NeeView.Properties;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -59,5 +61,82 @@ namespace NeeView
                 _vm.SelectIndex(node);
             }
         }
+
+        private bool CanOpenFolderBook()
+        {
+            if (this.ContentsTree.SelectedItem is ContentsPageNode node && node.Page is not null)
+            {
+                return !string.IsNullOrEmpty(GetFolderBookPath(node));
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        [RelayCommand(CanExecute = nameof(CanOpenFolderBook))]
+        private void OpenFolderBook()
+        {
+            if (this.ContentsTree.SelectedItem is ContentsPageNode node && node.Page is not null)
+            {
+                var path = GetFolderBookPath(node);
+                if (string.IsNullOrEmpty(path))
+                {
+                    return;
+                }
+                var options = BookSettings.Current.IsRecursiveFolder ? BookLoadOption.Recursive : BookLoadOption.None;
+                BookHub.Current.RequestLoad(this, path, null, BookLoadOption.IsBook | options, true);
+            }
+        }
+
+        private static string? GetFolderBookPath(ContentsPageNode node)
+        {
+            if (node.Page is null)
+            {
+                return null;
+            }
+
+            var page = node.Page;
+            var path = LoosePath.GetDirectoryName(page.EntryName);
+            if (string.IsNullOrEmpty(path))
+            {
+                return null;
+            }
+
+            return LoosePath.Combine(page.BookPath, path);
+        }
+
+        private void TreeViewItem_MouseRightButtonDown(object? sender, MouseButtonEventArgs e)
+        {
+            if (sender is TreeViewItem item)
+            {
+                item.IsSelected = true;
+                e.Handled = true;
+            }
+        }
+
+        private void TreeViewItem_ContextMenuOpening(object? sender, ContextMenuEventArgs e)
+        {
+            if (sender is not TreeViewItem viewItem)
+            {
+                return;
+            }
+
+            if (!viewItem.IsSelected)
+            {
+                return;
+            }
+
+            var contextMenu = viewItem.ContextMenu;
+            contextMenu.Items.Clear();
+
+            contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("Menu.OpenAsBook"), OpenFolderBookCommand));
+        }
+
+        private static MenuItem CreateMenuItem(string header, ICommand command)
+        {
+            return new MenuItem() { Header = header, Command = command };
+        }
+
     }
 }
