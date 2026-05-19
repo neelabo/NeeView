@@ -6,11 +6,13 @@ using System.Linq;
 
 namespace NeeView
 {
-    public class ContentsPageNode : ObservableObject
+    public partial class ContentsPageNode : ObservableObject
     {
         public ContentsPageNode()
         {
         }
+
+        public bool IsRoot { get; set; }
 
         public string Name { get; set; } = "";
 
@@ -18,19 +20,15 @@ namespace NeeView
         public string? Title
         {
             get => field ?? Name;
-            set => field = value;
+            set;
         }
 
         public Page? Page { get; set; }
 
         public List<ContentsPageNode>? Children { get; set; }
 
-        public bool IsSelected
-        {
-            get => field;
-            set => SetProperty(ref field, value);
-        }
-
+        [ObservableProperty]
+        public partial bool IsSelected { get; set; }
 
         private IEnumerable<ContentsPageNode> Walk()
         {

@@ -91,19 +91,26 @@ namespace NeeView
 
         private static string? GetFolderBookPath(ContentsPageNode node)
         {
+            if (node.IsRoot)
+            {
+                return null;
+            }
+
             if (node.Page is null)
             {
                 return null;
             }
 
             var page = node.Page;
-            var path = LoosePath.GetDirectoryName(page.EntryName);
-            if (string.IsNullOrEmpty(path))
+            var archivePath = page.ArchiveEntry.Archive.SystemPath;
+            var folderPath = LoosePath.GetDirectoryName(page.ArchiveEntry.EntryName);
+            var path =  LoosePath.Combine(archivePath, folderPath);
+            if (path == page.BookPath)
             {
                 return null;
             }
 
-            return LoosePath.Combine(page.BookPath, path);
+            return path;
         }
 
         private void TreeViewItem_MouseRightButtonDown(object? sender, MouseButtonEventArgs e)

@@ -35,6 +35,8 @@ namespace NeeView
                 _contentsTree = CreateDefaultContentsTree();
             }
 
+            _contentsTree.IsRoot = true;
+
             return _contentsTree;
         }
 
