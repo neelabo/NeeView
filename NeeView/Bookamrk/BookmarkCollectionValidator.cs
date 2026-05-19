@@ -99,6 +99,19 @@ namespace NeeView
 
 #pragma warning restore CS0612 // 型またはメンバーが旧型式です
 
+            // Always
+            if (self.Nodes is not null)
+            {
+                // UNCパスの正規化登録
+                foreach (var item in self.Nodes.Walk())
+                {
+                    if (item.Path is not null)
+                    {
+                        item.Path = UncPathTools.ConvertPathToNormalized(item.Path);
+                    }
+                }
+            }
+
             return self;
         }
 
