@@ -1,16 +1,19 @@
-﻿namespace NeeView.PageFrames
+﻿using System;
+
+namespace NeeView.PageFrames
 {
 
-    public class PageFrameContainerFactory
+    public class PageFrameContainerFactory : IDisposable
     {
         // TODO: container recycle ... ここではないな
 
-        private PageFrameContext _context;
-        private PageFrameTransformMap _transformMap;
-        private LoupeTransformContext _loupeContext;
-        private ViewContentFactory _viewContentFactory;
-        private BaseScaleTransform _baseScaleTransform;
+        private readonly PageFrameContext _context;
+        private readonly PageFrameTransformMap _transformMap;
+        private readonly LoupeTransformContext _loupeContext;
+        private readonly ViewContentFactory _viewContentFactory;
+        private readonly BaseScaleTransform _baseScaleTransform;
         private readonly ContentSizeCalculator _calculator;
+        private bool _disposedValue;
 
 
         public PageFrameContainerFactory(PageFrameContext context, PageFrameTransformMap transformMap, ViewSourceMap viewSourceMap, LoupeTransformContext loupeContext, BaseScaleTransform baseScaleTransform, ContentSizeCalculator calculator)
@@ -63,5 +66,23 @@
             }
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    _viewContentFactory.Dispose();
+                }
+
+                _disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

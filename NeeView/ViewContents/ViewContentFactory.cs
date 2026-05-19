@@ -1,12 +1,14 @@
 ﻿using NeeView.PageFrames;
+using System;
 
 namespace NeeView
 {
-    public class ViewContentFactory
+    public class ViewContentFactory : IDisposable
     {
         private readonly PageFrameContext _context;
         private readonly ViewSourceMap _viewSourceMap;
         private readonly PageBackgroundSource _backgroundSource;
+        private bool _disposedValue;
 
         public ViewContentFactory(PageFrameContext context, ViewSourceMap viewSourceMap)
         {
@@ -19,6 +21,24 @@ namespace NeeView
         {
             var viewSource = _viewSourceMap.Get(element.Page, element.PagePart, element.PageDataSource);
             return new ViewContent(_context, element, scale, viewSource, activity, _backgroundSource, index);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    _backgroundSource.Dispose();
+                }
+                _disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

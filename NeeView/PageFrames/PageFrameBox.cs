@@ -94,6 +94,7 @@ namespace NeeView.PageFrames
             var baseScaleTransform = new BaseScaleTransform(_context);
             _disposables.Add(baseScaleTransform);
             var containerFactory = new PageFrameContainerFactory(_context, _transformMap, _viewSourceMap, loupeContext, baseScaleTransform, _calculator);
+            _disposables.Add(containerFactory);
             _containers = new PageFrameContainerCollection(_context, frameFactory, containerFactory);
             _disposables.Add(_containers);
             _rectMath = new PageFrameContainerCollectionRectMath(_context, _containers);
@@ -1656,6 +1657,11 @@ namespace NeeView.PageFrames
         public void RaisePageTerminatedEvent(object? sender, int direction, bool isMedia)
         {
             if (_disposedValue) return;
+
+            Debug.WriteLine($"MediaTerminated: direction={direction}, isMedia={isMedia}");
+
+            // TODO: メディアの終端到達、正方向、動画ブックではなく、現在ページが動画ページの場合、このフレームに再生済フラグをつける？
+            // TODO: スライドショー送り判定で、このフラグをチェック、動画ページでありかつリピートでなければ、終端イベントを購読して待つ
 
             if (isMedia && !_bookContext.IsMedia) return;
 
