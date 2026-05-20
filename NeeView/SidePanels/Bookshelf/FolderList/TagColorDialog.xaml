@@ -1,0 +1,31 @@
+﻿<Window x:Class="NeeView.TagColorDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NeeView"
+        xmlns:osc="clr-namespace:OpenSourceControls"
+        xmlns:nwc="clr-namespace:NeeView.Windows.Controls"
+        xmlns:properties="clr-namespace:NeeView.Properties"
+        mc:Ignorable="d"
+        Style="{StaticResource ChromeDialogStyle}" 
+        Title="" Height="180" MinWidth="300"  Width="360" SizeToContent="Height" ResizeMode="NoResize">
+    <Grid>
+        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="10">
+
+            <TextBlock Text="{properties:TextBinding TagColorDialog.Title}" Margin="5"/>
+
+            <DockPanel KeyboardNavigation.TabNavigation="Local" Margin="5,10">
+                <Button x:Name="ResetButton" DockPanel.Dock="Bottom" Style="{StaticResource IconButton}" HorizontalAlignment="Right" Margin="5" Command="{Binding ResetCommand}" TabIndex="3">
+                    <TextBlock Margin="5" Text="{properties:TextBinding Word.Reset}" Foreground="{DynamicResource Control.Accent}" />
+                </Button>
+                <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding Color}" MinWidth="100" BorderThickness="1" VerticalContentAlignment="Center" TabIndex="2"/>
+                <osc:ComboColorPicker SelectedColor="{Binding Color, Mode=TwoWay}" TabIndex="1"/>
+            </DockPanel>
+
+            <Button Style="{StaticResource NVDialogAccentButton}" HorizontalAlignment="Right" Content="{properties:TextBinding Word.OK}"
+                Command="{x:Static SystemCommands.CloseWindowCommand}"/>
+
+        </StackPanel>
+    </Grid>
+</Window>

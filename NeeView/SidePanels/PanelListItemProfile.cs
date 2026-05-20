@@ -41,6 +41,7 @@ namespace NeeView
         private bool _isTextVisible;
         private bool _isTextWrapped;
         private bool _isTextHeightDirty = true;
+        private bool _isTagVisible;
         private double _textHeight;
 
 
@@ -48,7 +49,7 @@ namespace NeeView
         {
         }
 
-        public PanelListItemProfile(PanelListItemImageShape imageShape, int imageWidth, bool isDetailPopupEnabled, bool isImagePopupEnabled, bool isTextVisible, bool isTextWrapped)
+        public PanelListItemProfile(PanelListItemImageShape imageShape, int imageWidth, bool isDetailPopupEnabled, bool isImagePopupEnabled, bool isTextVisible, bool isTextWrapped, bool isTagVisible)
         {
             _imageShape = imageShape;
             _imageWidth = imageWidth;
@@ -56,6 +57,7 @@ namespace NeeView
             _isImagePopupEnabled = isImagePopupEnabled;
             _isTextVisible = isTextVisible;
             _isTextWrapped = isTextWrapped;
+            _isTagVisible = isTagVisible;
 
             UpdateTextHeight();
         }
@@ -125,6 +127,13 @@ namespace NeeView
             }
         }
 
+        [PropertyMember]
+        public bool IsTagVisible
+        {
+            get { return _isTagVisible; }
+            set { SetProperty(ref _isTagVisible, value); }
+        }
+
         #endregion
 
         #region Equals
@@ -141,7 +150,8 @@ namespace NeeView
                 && this.IsDetailPopupEnabled.Equals(other.IsDetailPopupEnabled)
                 && this.IsImagePopupEnabled.Equals(other.IsImagePopupEnabled)
                 && this.IsTextVisible.Equals(other.IsTextVisible)
-                && this.IsTextWrapped.Equals(other.IsTextWrapped));
+                && this.IsTextWrapped.Equals(other.IsTextWrapped)
+                && this.IsTagVisible.Equals(other.IsTagVisible));
         }
 
         public override int GetHashCode()
@@ -153,6 +163,7 @@ namespace NeeView
             hashCode.Add(this.IsImagePopupEnabled.GetHashCode());
             hashCode.Add(this.IsTextVisible.GetHashCode());
             hashCode.Add(this.IsTextWrapped.GetHashCode());
+            hashCode.Add(this.IsTagVisible.GetHashCode());
 
             return hashCode.ToHashCode();
         }
@@ -320,28 +331,28 @@ namespace NeeView
 
     public class NormalItemProfile : PanelListItemProfile
     {
-        public NormalItemProfile() : base(PanelListItemImageShape.Square, 0, true, false, true, false)
+        public NormalItemProfile() : base(PanelListItemImageShape.Square, 0, true, false, true, false, false)
         {
         }
     }
 
     public class ContentItemProfile : PanelListItemProfile
     {
-        public ContentItemProfile() : base(PanelListItemImageShape.Square, 64, true, true, true, false)
+        public ContentItemProfile() : base(PanelListItemImageShape.Square, 64, true, true, true, false, true)
         {
         }
     }
 
     public class BannerItemProfile : PanelListItemProfile
     {
-        public BannerItemProfile() : base(PanelListItemImageShape.Banner, 200, true, false, true, false)
+        public BannerItemProfile() : base(PanelListItemImageShape.Banner, 200, true, false, true, false, false)
         {
         }
     }
 
     public class ThumbnailItemProfile : PanelListItemProfile
     {
-        public ThumbnailItemProfile() : base(PanelListItemImageShape.Original, 128, true, false, true, true)
+        public ThumbnailItemProfile() : base(PanelListItemImageShape.Original, 128, true, false, true, true, false)
         {
         }
     }

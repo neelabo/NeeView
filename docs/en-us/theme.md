@@ -190,3 +190,4 @@ SelectedMark.Foreground | Color of icon indicating current item
 CheckIcon.Foreground | Color of history registered icon
 BookmarkIcon.Foreground | Bookmark icon color
 PlaylistItemIcon.Foreground | Playlist item icon color
+Tag.Background | Background color of tag (v46.0)

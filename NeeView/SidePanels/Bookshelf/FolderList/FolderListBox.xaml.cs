@@ -128,6 +128,7 @@ namespace NeeView
         public static readonly RoutedCommand OpenInPlaylistCommand = new("OpenInPlaylistCommand", typeof(FolderListBox));
         public static readonly RoutedCommand RegenerateThumbnailCommand = new("RegenerateThumbnailCommand", typeof(FolderListBox));
         public static readonly RoutedCommand SetThumbnailCommand = new("SetThumbnailCommand", typeof(FolderListBox));
+        public static readonly RoutedCommand EditTagColorCommand = new("EditTagColorCommand", typeof(FolderListBox));
 
         private static void InitializeCommandStatic()
         {
@@ -160,6 +161,7 @@ namespace NeeView
             this.ListBox.CommandBindings.Add(new CommandBinding(OpenInPlaylistCommand, OpenInPlaylistCommand_Execute));
             this.ListBox.CommandBindings.Add(new CommandBinding(RegenerateThumbnailCommand, RegenerateThumbnailCommand_Execute));
             this.ListBox.CommandBindings.Add(new CommandBinding(SetThumbnailCommand, SetThumbnailCommand_Execute, SetThumbnailCommand_CanExecute));
+            this.ListBox.CommandBindings.Add(new CommandBinding(EditTagColorCommand, EditTagColor_Executed));
         }
 
         /// <summary>
@@ -634,6 +636,18 @@ namespace NeeView
             }
         }
 
+        private void EditTagColor_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (sender is ListBox { SelectedItem: BookmarkFolderFolderItem item })
+            {
+                var vm = new TagColorDialogViewModel(item.BookmarkNode);
+                var dialog = new TagColorDialog(vm);
+                dialog.Owner = Window.GetWindow(this);
+                dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                dialog.ShowDialog();
+            }
+        }
+
         [RelayCommand]
         private void NewFolder()
         {
@@ -644,6 +658,16 @@ namespace NeeView
         private void AddBookmark()
         {
             _vm.Model.AddBookmark();
+        }
+
+        [RelayCommand]
+        private void OpenBookmarkFolder(TagItem tag)
+        {
+            var path = new QueryPath(QueryScheme.Bookmark, tag.Node.Path);
+
+            SidePanelFrame.Current.SetVisibleBookmarkList(true, true, false);
+            var select = tag.SelectedItem is not null ? new FolderItemPosition(tag.SelectedItem) : null;
+            BookmarkFolderList.Current.RequestPlace(path, select, FolderSetPlaceOption.None);
         }
 
         #endregion
@@ -982,7 +1006,7 @@ namespace NeeView
             }
         }
 
-#endregion DragDrop
+        #endregion DragDrop
 
 
         private void FolderListBox_Loaded(object? sender, RoutedEventArgs e)
@@ -1285,6 +1309,7 @@ namespace NeeView
                     contextMenu.Items.Add(new Separator());
                     contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Delete"), Command = RemoveCommand });
                     contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Rename"), Command = RenameCommand });
+                    contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.EditColor"), Command = EditTagColorCommand });
                 }
                 else
                 {
@@ -1320,6 +1345,16 @@ namespace NeeView
                 contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("Word.Bookmark"), Command = ToggleBookmarkCommand, IsChecked = BookmarkCollection.Current.Contains(selectedItem.EntityPath.SimplePath) });
                 contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.DeleteHistory"), Command = RemoveHistoryCommand });
                 contextMenu.Items.Add(new Separator());
+
+                if (item.Tags != null && item.Tags.Count > 0)
+                {
+                    foreach (var tag in item.Tags)
+                    {
+                        contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetFormatString("BookshelfItem.Menu.OpenBookmarkFolder", tag.Name), Command = OpenBookmarkFolderCommand, CommandParameter = tag });
+                    }
+                    contextMenu.Items.Add(new Separator());
+                }
+
                 contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Explorer"), Command = OpenExplorerCommand });
                 contextMenu.Items.Add(ExternalAppCollectionUtility.CreateExternalAppItem(TextResources.GetString("OpenExternalAppAsCommand.Menu"), OpenExternalApp_CanExecute(), OpenExternalAppCommand, OpenExternalAppDialogCommand));
                 contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Cut"), Command = CutCommand });

@@ -1,12 +1,17 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using NeeLaboratory.IO.Search;
 using NeeView.Collections;
+using NeeView.Collections.Generic;
 using NeeView.Properties;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace NeeView
 {
@@ -76,7 +81,7 @@ namespace NeeView
     /// フォルダー情報
     /// フォルダーリストの１項目の情報 
     /// </summary>
-    public abstract class FolderItem : ObservableObject, IHasPage, IHasName, IRenameable, ISearchItem, IPendingItem
+    public abstract partial class FolderItem : ObservableObject, IHasPage, IHasName, IRenameable, ISearchItem, IPendingItem
     {
         private readonly bool _isOverlayEnabled;
 
@@ -195,6 +200,8 @@ namespace NeeView
                 {
                     UpdateOverlay();
                     OnPropertyChanged(nameof(IconOverlay));
+
+                    UpdateTags();
                 }
             }
         }
@@ -222,6 +229,9 @@ namespace NeeView
                 return _iconOverlay;
             }
         }
+
+        [ObservableProperty]
+        public partial List<TagItem>? Tags { get; private set; }
 
         public string? TargetPlace { get; set; }
 
@@ -303,7 +313,7 @@ namespace NeeView
         // TODO: IHasPageなのに nullを返すのはおかしいのでダミーで対応？
         public virtual Page? GetPage() => null;
 
-
+        public bool IsSystem() => (Attributes & FolderItemAttribute.System) == FolderItemAttribute.System;
         public bool IsDrive() => (Attributes & FolderItemAttribute.Drive) == FolderItemAttribute.Drive;
         public bool IsEmpty() => (Attributes & FolderItemAttribute.Empty) == FolderItemAttribute.Empty;
         public bool IsDisable() => IsDirectory && !IsReady;
@@ -361,11 +371,35 @@ namespace NeeView
             }
         }
 
+        public void UpdateTags()
+        {
+            if (this is BookmarkFolderFolderItem item)
+            {
+                Tags = new List<TagItem>() { new TagItem(item.BookmarkNode, null) };
+                return;
+            }
+
+            if (!IsFileSystem())
+            {
+                Tags = null;
+                return;
+            }
+
+            var entries = BookmarkCollection.Current.Collect(EntityPath.SimplePath);
+            Tags = entries
+                .Where(e => e is not null && e.Parent != null &&  e.Parent != BookmarkCollection.Current.Items)
+                .Distinct()
+                .Select(e => new TagItem(e.Parent!, e))
+                .ToList();
+        }
+
         // アイコンオーバーレイの変更を通知
         public void NotifyIconOverlayChanged()
         {
             UpdateOverlay();
             OnPropertyChanged(nameof(IconOverlay));
+
+            UpdateTags();
         }
 
         /// <summary>
@@ -616,7 +650,7 @@ namespace NeeView
         {
             if (!IsFileSystem() && IsDirectory) return null;
 
-            string GetLastWriteTimeString() => (LastWriteTime != default ? LastWriteTime.ToFormatString() + "   " : "");
+            string GetLastWriteTimeString() => (LastWriteTime != default ? LastWriteTime.ToFormatString() + "  " : "");
 
             var note = order switch
             {
@@ -660,5 +694,44 @@ namespace NeeView
         }
 
         public override IThumbnail Thumbnail => _thumbnail;
+    }
+
+
+    public class TagItem : ITagItem
+    {
+        private readonly TreeListNode<IBookmarkEntry> _node;
+        private readonly TreeListNode<IBookmarkEntry>? _selectedItem;
+
+        public TagItem(TreeListNode<IBookmarkEntry> node, TreeListNode<IBookmarkEntry>? selectedItem)
+        {
+            Debug.Assert(selectedItem is null || selectedItem.Parent == node);
+
+            _node = node;
+            _selectedItem = selectedItem;
+        }
+
+
+
+        public TreeListNode<IBookmarkEntry> Node => _node;
+        public TreeListNode<IBookmarkEntry>? SelectedItem => _selectedItem;
+
+        public string Name => _node?.Name ?? "";
+
+        public Brush? Background => GetBackground();
+
+        public override string? ToString()
+        {
+            return Name ?? base.ToString();
+        }
+
+        public Brush? GetBackground()
+        {
+            if (_node.Value is BookmarkFolder { Color: var color } && color is not null)
+            {
+                return new SolidColorBrush(color.Value);
+            }
+
+            return null;
+        }
     }
 }

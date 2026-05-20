@@ -304,7 +304,7 @@ namespace NeeView
             return ExecuteMessage(sender, new CommandContext(this.Parameter, args));
         }
 
-        protected string GetStateExecuteMessage(bool flag)
+        public string GetStateExecuteMessage(bool flag)
         {
             var name = CommandTools.TrimMenuKeyword(this.Menu);
             return name + " " + TextResources.GetString(flag ? "Word.OnState" : "Word.OffState");

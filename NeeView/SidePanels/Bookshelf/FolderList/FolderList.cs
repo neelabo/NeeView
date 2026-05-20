@@ -1087,6 +1087,7 @@ namespace NeeView
 
         #endregion
 
+
         /// <summary>
         /// ブックマークの変更監視
         /// </summary>
@@ -1100,11 +1101,37 @@ namespace NeeView
                 return;
             }
 
-            if (FolderCollection is not BookmarkFolderCollection folderCollection)
+            if (FolderCollection is BookmarkFolderCollection folderCollection)
             {
-                return;
+                BookmarkFolderCollection_BookmarkChanged(folderCollection, e);
             }
 
+            switch (e.Action)
+            {
+                case EntryCollectionChangedAction.Rename:
+                case EntryCollectionChangedAction.Update:
+
+                    // Tag名、色の変更追従
+                    if (e.Item?.Value is BookmarkFolder)
+                    {
+                        RefreshIcon(null);
+                    }
+                    break;
+
+                case EntryCollectionChangedAction.Add:
+                case EntryCollectionChangedAction.Remove:
+
+                    // フォルダーが追加や削除された場合は Tag の再生成
+                    if (e.Item?.Value is BookmarkFolder)
+                    {
+                        RefreshIcon(null);
+                    }
+                    break;
+            }
+        }
+
+        private void BookmarkFolderCollection_BookmarkChanged(BookmarkFolderCollection folderCollection, BookmarkCollectionChangedEventArgs e)
+        { 
             switch (e.Action)
             {
                 case EntryCollectionChangedAction.Remove:
@@ -1356,7 +1383,6 @@ namespace NeeView
 
             return this.FolderCollection.Items.IndexOf(item);
         }
-
 
         /// <summary>
         /// フォルダーアイコンの表示更新

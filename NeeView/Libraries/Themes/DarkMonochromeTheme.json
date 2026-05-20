@@ -113,6 +113,8 @@
     "SelectedMark.Foreground": "Control.Accent",
     "CheckIcon.Foreground": "Window.Foreground",
     "BookmarkIcon.Foreground": "#FFFFA07A",
-    "PlaylistItemIcon.Foreground": "#FFFFA07A"
+    "PlaylistItemIcon.Foreground": "#FFFFA07A",
+
+    "Tag.Background": "#FFA0A0A0"
   }
 }

@@ -43,8 +43,17 @@
             BorderThickness="1">
 
         <StackPanel Margin="10" MinWidth="160" >
+        
             <TextBlock FontWeight="Bold" Text="{Binding TitleText}" Margin="5" />
             <Separator/>
+        
+            <ItemsControl ItemTemplate="{StaticResource TagTemplate}" ItemsSource="{Binding Tags}" Margin="0,5">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
 
             <StackPanel Margin="5">
                 <TextBlock Grid.Row="0" Grid.Column="0" Margin="2" Text="{properties:TextBinding Word.Name}" />
@@ -53,7 +62,7 @@
             </StackPanel>
 
             <StackPanel x:Name="BookmarkFolderSelector" Margin="5">
-                <TextBlock Grid.Row="1" Grid.Column="0" Margin="2" Text="{properties:TextBinding Word.Folder}" />
+                <TextBlock Grid.Row="1" Grid.Column="0" Margin="2" Text="{properties:TextBinding Word.BookmarkFolder}" />
 
                 <Grid Margin="2">
                     <Grid.ColumnDefinitions>
@@ -131,6 +140,7 @@
                         </TreeView>
                     </Border>
                 </StackPanel>
+
 
             </StackPanel>
 

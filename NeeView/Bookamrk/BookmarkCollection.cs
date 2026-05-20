@@ -11,6 +11,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace NeeView
 {
@@ -174,6 +175,15 @@ namespace NeeView
             return Items == node.Root;
         }
 
+        public List<TreeListNode<IBookmarkEntry>> Collect(string path)
+        {
+            if (path == null) return new();
+
+            return Items.WithLock(e => e.WalkChildren()
+                .Where(e => e.Value is Bookmark bookmark && bookmark.Path == path)
+                .ToList());
+        }
+
         public void AddFirst(TreeListNode<IBookmarkEntry> node)
         {
             if (node == null) throw new ArgumentNullException(nameof(node));
@@ -290,7 +300,7 @@ namespace NeeView
             {
                 var ignoreNames = target.WithLock(e => e.Children.Where(e => e.Value is BookmarkFolder).Select(e => e.Value.Name).WhereNotNull().ToList());
                 var validName = GetValidateFolderName(ignoreNames, name, TextResources.GetString("Word.NewFolder"));
-                var node = new TreeListNode<IBookmarkEntry>(new BookmarkFolder(validName, DateTime.Now));
+                var node = new TreeListNode<IBookmarkEntry>(new BookmarkFolder(validName, null, DateTime.Now));
 
                 target.Add(node);
                 target.IsExpanded = true;
@@ -695,6 +705,9 @@ namespace NeeView
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? Path { get; set; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public Color? Color { get; set; }
+
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public DateTime EntryTime { get; set; }
 
@@ -740,6 +753,7 @@ namespace NeeView
             if (source.Value is BookmarkFolder folder)
             {
                 node.Name = folder.Name;
+                node.Color = folder.Color;
                 node.EntryTime = folder.EntryTime;
                 node.Children = new List<BookmarkNode>();
                 foreach (var child in source)
@@ -770,6 +784,7 @@ namespace NeeView
                 var bookmarkFolder = new BookmarkFolder()
                 {
                     Name = source.Name,
+                    Color = source.Color,
                     EntryTime = source.EntryTime
                 };
                 var node = new TreeListNode<IBookmarkEntry>(bookmarkFolder);

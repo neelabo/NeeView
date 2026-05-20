@@ -110,11 +110,25 @@
                 </Style.Triggers>
             </Style>
 
+            <Style x:Key="TagsControlStyle" TargetType="{x:Type ItemsControl}">
+                <Setter Property="ItemsSource" Value="{Binding Tags}" />
+                <Setter Property="Visibility" Value="{Binding ElementName=Root, Path=DataContext.PanelListItemProfile.IsTagVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <Setter Property="ItemTemplate" Value="{StaticResource TagTemplate}" />
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
             <DataTemplate x:Key="NormalTemplate">
-                <DockPanel Style="{StaticResource DetailToolTipDockPanel}" LastChildFill="False" MinHeight="20">
+                <DockPanel Style="{StaticResource DetailToolTipDockPanel}" LastChildFill="True" MinHeight="20">
                     <Rectangle Style="{StaticResource VerticalSelectedStyle}" />
                     <local:FolderListIcon DockPanel.Dock="Right" FolderItem="{Binding}" Margin="1" />
                     <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource NormalNameStyle}" Margin="5,1" Opacity="{Binding PendingCount, Converter={StaticResource PendingCountToOpacityConverter}}" />
+                    <ItemsControl Style="{StaticResource TagsControlStyle}" HorizontalAlignment="Right" />
                 </DockPanel>
             </DataTemplate>
 
@@ -126,14 +140,17 @@
                         <DockPanel Style="{StaticResource DetailToolTipDockPanel}">
                             <local:FolderListIcon DockPanel.Dock="Right" FolderItem="{Binding}" />
                             <StackPanel VerticalAlignment="Center">
-                                <TextBlock Style="{StaticResource NoteTextStyle}">
-                                    <TextBlock.Text>
-                                        <MultiBinding Converter="{StaticResource FolderItemToNoteConverter}">
-                                            <Binding />
-                                            <Binding Path="DataContext.FolderOrder" RelativeSource="{RelativeSource FindAncestor, AncestorType=ListBox}" />
-                                        </MultiBinding>
-                                    </TextBlock.Text>
-                                </TextBlock>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Style="{StaticResource NoteTextStyle}">
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{StaticResource FolderItemToNoteConverter}">
+                                                <Binding />
+                                                <Binding Path="DataContext.FolderOrder" RelativeSource="{RelativeSource FindAncestor, AncestorType=ListBox}" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                    <ItemsControl Style="{StaticResource TagsControlStyle}" />
+                                </StackPanel>
                                 <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource ContentNameStyle}" />
                             </StackPanel>
                         </DockPanel>
@@ -149,7 +166,10 @@
                             <local:FolderListIcon DockPanel.Dock="Right" FolderItem="{Binding}" />
                             <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource BannerNameStyle}" Margin="0" />
                         </DockPanel>
-                        <local:PanelListBannerImage Thumbnail="{Binding Thumbnail}" Opacity="{Binding PendingCount, Converter={StaticResource PendingCountToOpacityConverter}}" />
+                        <Grid>
+                            <local:PanelListBannerImage Thumbnail="{Binding Thumbnail}" Opacity="{Binding PendingCount, Converter={StaticResource PendingCountToOpacityConverter}}" />
+                            <ItemsControl Style="{StaticResource TagsControlStyle}" VerticalAlignment="Bottom" Margin="0,2"/>
+                        </Grid>
                     </DockPanel>
                 </DockPanel>
             </DataTemplate>
@@ -161,6 +181,7 @@
                         <StackPanel Style="{StaticResource OverrideIconStackPanelStyle}">
                             <local:FolderListIcon DockPanel.Dock="Right" FolderItem="{Binding}" VerticalAlignment="Top" IsKeepArea="False" />
                         </StackPanel>
+                        <ItemsControl Style="{StaticResource TagsControlStyle}" VerticalAlignment="Bottom" Margin="0,2"/>
                     </Grid>
                     <Rectangle DockPanel.Dock="Bottom" Style="{StaticResource HorizontalSelectedStyle}" Margin="-5,0,-5,1" />
                     <DockPanel Style="{StaticResource DetailToolTipDockPanel}">

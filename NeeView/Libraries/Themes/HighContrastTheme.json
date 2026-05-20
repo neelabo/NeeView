@@ -113,6 +113,8 @@
     "SelectedMark.Foreground": "#FFFFA500",
     "CheckIcon.Foreground": "#FF90EE90",
     "BookmarkIcon.Foreground": "#FFFFA500",
-    "PlaylistItemIcon.Foreground": "#FFFFA500"
+    "PlaylistItemIcon.Foreground": "#FFFFA500",
+
+    "Tag.Background": "#FF00FF00"
   }
 }

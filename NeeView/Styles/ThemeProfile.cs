@@ -125,6 +125,8 @@ namespace NeeView
             "CheckIcon.Foreground",
             "BookmarkIcon.Foreground",
             "PlaylistItemIcon.Foreground",
+
+            "Tag.Background",
         };
 
         public static Dictionary<string, Color> _defaultColors = new()
@@ -133,6 +135,7 @@ namespace NeeView
             ["Control.AccentText"] = Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF),
             ["Control.Danger"] = Color.FromArgb(0xFF, 0xE8, 0x11, 0x23),
             ["Control.DangerText"] = Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF),
+            ["Tag.Background"] = Color.FromArgb(0xFF, 0xA0, 0xA0, 0xA0),
         };
 
         static ThemeProfile()

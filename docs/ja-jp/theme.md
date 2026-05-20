@@ -190,3 +190,4 @@ SelectedMark.Foreground | 現在項目を示すアイコンの色
 CheckIcon.Foreground | 履歴登録済アイコンの色
 BookmarkIcon.Foreground | ブックマークアイコンの色
 PlaylistItemIcon.Foreground | プレイリスト項目アイコンの色
+Tag.Background | タグの背景色 (v46.0)

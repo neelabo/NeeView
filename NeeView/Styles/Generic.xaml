@@ -817,5 +817,30 @@
 
     <!--#endregion PanelGrid-->
 
+    <!--#region Tag -->
+
+    <local:BackgroundBrushToForegroundBrushConverter x:Key="BackgroundBrushToForegroundBrushConverter" />
+
+    <DataTemplate x:Key="TagTemplate">
+        <Border x:Name="RootBorder" CornerRadius="8" Margin="2,0" VerticalAlignment="Center">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Background" Value="{Binding Background}" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Background}" Value="{x:Null}">
+                            <Setter Property="Background" Value="{DynamicResource Tag.Background}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <TextBlock Text="{Binding Name}" Padding="8,1" Foreground="{Binding ElementName=RootBorder, Path=Background, Converter={StaticResource BackgroundBrushToForegroundBrushConverter}}">
+                <TextBlock.LayoutTransform>
+                    <ScaleTransform ScaleX="0.8" ScaleY="0.8" />
+                </TextBlock.LayoutTransform>
+            </TextBlock>
+        </Border>
+    </DataTemplate>
+
+    <!--#endregion Tag-->
 
 </ResourceDictionary>

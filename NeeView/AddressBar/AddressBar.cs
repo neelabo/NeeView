@@ -1,8 +1,10 @@
 ﻿
 using CommunityToolkit.Mvvm.ComponentModel;
 using NeeLaboratory.ComponentModel;
+using NeeView.Collections.Generic;
 using NeeView.IO;
 using NeeView.Properties;
+using System.Linq;
 
 namespace NeeView
 {
@@ -78,8 +80,6 @@ namespace NeeView
                 return text ?? TextResources.GetString("BookAddressInfo.Invalid");
             }
         }
-
-
 
 
         private void SetAddress(string address)

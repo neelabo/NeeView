@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace NeeView
 {
@@ -217,6 +218,27 @@ namespace NeeView
             }
 
             throw new InvalidOperationException($"Cannot rename node of type {node.Value.GetType().Name}.");
+        }
+
+        /// <summary>
+        /// ブックマークフォルダ―に色を設定
+        /// </summary>
+        public static bool SetColor(TreeListNode<IBookmarkEntry> node, Color? color)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (node.Value is not BookmarkFolder folder)
+            {
+                return false;
+            }
+
+            if (folder.Color == color)
+            {
+                return false;
+            }
+
+            folder.Color = color;
+            BookmarkCollection.Current.RaiseBookmarkChangedEvent(new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Update, node.Parent, node));
+            return true;
         }
 
         /// <summary>

@@ -1,28 +1,28 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.ComponentModel;
+using System.Windows.Media;
 
 namespace NeeView
 {
-    public class BookmarkFolder : ObservableObject, IBookmarkEntry, ICloneable
+    public partial class BookmarkFolder : ObservableObject, IBookmarkEntry, ICloneable
     {
-        private string? _name;
-
         public BookmarkFolder()
         {
         }
 
-        public BookmarkFolder(string name, DateTime entryTime) : this()
+        public BookmarkFolder(string name, Color? color, DateTime entryTime) : this()
         {
             Name = name;
+            Color = color;
             EntryTime = entryTime;
         }
 
-        public string? Name
-        {
-            get { return _name; }
-            set { SetProperty(ref _name, value); }
-        }
+        [ObservableProperty]
+        public partial string? Name { get; set; }
+
+        [ObservableProperty]
+        public partial Color? Color { get; set; }
 
         public DateTime EntryTime { get; set; }
 

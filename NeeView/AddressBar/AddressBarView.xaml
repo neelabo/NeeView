@@ -82,11 +82,11 @@
                         <Image.Style>
                             <Style TargetType="Image">
                                 <Setter Property="Source" Value="{StaticResource ic_crop_original_24px}"/>
-                                <Setter Property="ToolTip" Value="{properties:TextBinding ToggleIsPanoramaCommand.Off}"/>
+                                <Setter Property="ToolTip" Value="{Binding PanoramaOff, Mode=OneTime}"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Config.Book.IsPanorama}" Value="True">
                                         <Setter Property="Source" Value="{StaticResource ic_image_24px}"/>
-                                        <Setter Property="ToolTip" Value="{properties:TextBinding ToggleIsPanoramaCommand.On}"/>
+                                        <Setter Property="ToolTip" Value="{Binding PanoramaOn, Mode=OneTime}"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

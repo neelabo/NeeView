@@ -50,6 +50,9 @@ namespace NeeView
             get { return Config.Current.BookSetting; }
         }
 
+        public string PanoramaOff => CommandTable.Current.GetElement("ToggleIsPanorama").GetStateExecuteMessage(false);
+        public string PanoramaOn => CommandTable.Current.GetElement("ToggleIsPanorama").GetStateExecuteMessage(true);
+
 
         public List<KeyValuePair<int, QueryPath>> GetHistory(int direction, int size)
         {

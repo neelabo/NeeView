@@ -64,6 +64,20 @@ namespace NeeView
 
         public bool SyncBookOnRename => _model.SyncBookOnRename;
 
+        public PanelListItemProfile PanelListItemProfile
+        {
+            get
+            {
+                return _model.FolderListConfig.PanelListItemStyle switch
+                {
+                    PanelListItemStyle.Normal => Config.Current.Panels.NormalItemProfile,
+                    PanelListItemStyle.Content => Config.Current.Panels.ContentItemProfile,
+                    PanelListItemStyle.Banner => Config.Current.Panels.BannerItemProfile,
+                    PanelListItemStyle.Thumbnail => Config.Current.Panels.ThumbnailItemProfile,
+                    _ => throw new InvalidOperationException($"Unsupported  PanelListItemStyle: {_model.FolderListConfig.PanelListItemStyle}"),
+                };
+            }
+        }
 
         [RelayCommand]
         private void ToggleFolderRecursive()

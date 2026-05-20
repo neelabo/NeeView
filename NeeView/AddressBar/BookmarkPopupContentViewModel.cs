@@ -3,9 +3,11 @@ using NeeLaboratory.ComponentModel;
 using NeeView.Collections.Generic;
 using NeeView.Properties;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 
 namespace NeeView
 {
@@ -47,6 +49,8 @@ namespace NeeView
                 TitleText = TextResources.GetString("BookmarkDialog.Add");
                 IsAddButtonVisible = false;
             }
+
+            Tags = CreateTags();
         }
 
 
@@ -84,6 +88,18 @@ namespace NeeView
         public string DeleteButtonText => TextResources.GetString("Word.Remove");
         public bool IsAddButtonVisible { get; }
 
+        public List<TagItem> Tags { get; }
+
+
+        private List<TagItem> CreateTags()
+        {
+            var entries = BookmarkCollection.Current.Collect(_bookPath);
+            return entries
+                .Where(e => e is not null && e.Parent != null && e.Parent != BookmarkCollection.Current.Items)
+                .Distinct()
+                .Select(e => new TagItem(e.Parent!, e))
+                .ToList();
+        }
 
         private void ComboBox_SelectedItemChanged(object? sender, PropertyChangedEventArgs e)
         {
