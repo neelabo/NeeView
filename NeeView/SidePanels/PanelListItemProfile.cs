@@ -331,7 +331,7 @@ namespace NeeView
 
     public class NormalItemProfile : PanelListItemProfile
     {
-        public NormalItemProfile() : base(PanelListItemImageShape.Square, 0, true, false, true, false, false)
+        public NormalItemProfile() : base(PanelListItemImageShape.Square, 0, true, false, true, false, true)
         {
         }
     }
@@ -345,14 +345,14 @@ namespace NeeView
 
     public class BannerItemProfile : PanelListItemProfile
     {
-        public BannerItemProfile() : base(PanelListItemImageShape.Banner, 200, true, false, true, false, false)
+        public BannerItemProfile() : base(PanelListItemImageShape.Banner, 200, true, false, true, false, true)
         {
         }
     }
 
     public class ThumbnailItemProfile : PanelListItemProfile
     {
-        public ThumbnailItemProfile() : base(PanelListItemImageShape.Original, 128, true, false, true, true, false)
+        public ThumbnailItemProfile() : base(PanelListItemImageShape.Original, 128, true, false, true, true, true)
         {
         }
     }
