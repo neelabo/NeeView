@@ -47,7 +47,7 @@ namespace NeeView
             if (parent is null) return;
 
             LocalDebug.WriteLine($"{Path} to {parent.Value.Name}");
-            var node = BookmarkCollectionService.Add(new QueryPath(Path), parent, Name, true);
+            var node = BookmarkCollectionService.Add(new QueryPath(Path), parent, Name, false);
             OpenBookmarkPlace(parent, node);
         }
 
@@ -72,7 +72,15 @@ namespace NeeView
             if (Node is null) return;
 
             LocalDebug.WriteLine($"{Node.Value.Name} from {Node.Parent?.Value.Name}");
-            BookmarkCollectionService.Remove(Node);
+
+            if (Node.Parent == parent)
+            {
+                BookmarkCollectionService.Remove(Node);
+            }
+            else
+            {
+                BookmarkCollectionService.Remove(new QueryPath(Path), parent);
+            }
         }
 
         private void OpenBookmarkPlace(TreeListNode<IBookmarkEntry> place, TreeListNode<IBookmarkEntry>? node)
