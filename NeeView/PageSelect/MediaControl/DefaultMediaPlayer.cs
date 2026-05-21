@@ -53,6 +53,8 @@ namespace NeeView
 
         public event EventHandler? MediaEnded;
 
+        public event EventHandler? MediaEndOfStreamReached;
+
         public event EventHandler? MediaOpened
         {
             add => _player.MediaOpened += value;
@@ -172,6 +174,9 @@ namespace NeeView
         public int PositionChangeInterval => 500;
         public int ScrubbingInterval => 500;
 
+        public int EndOfStreamCount { get; private set; }
+        public bool IsEndOfStreamCountEnabled => true;
+        
         public bool IsDisposed => _disposedValue;
 
 
@@ -309,6 +314,9 @@ namespace NeeView
         private void Player_MediaEnded(object? sender, EventArgs e)
         {
             if (_disposedValue) return;
+
+            EndOfStreamCount++;
+            MediaEndOfStreamReached?.Invoke(this, EventArgs.Empty);
 
             if (_isRepeat)
             {

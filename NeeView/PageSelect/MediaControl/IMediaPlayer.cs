@@ -25,11 +25,14 @@ namespace NeeView
         bool CanControlTracks { get; }
         int PositionChangeInterval { get; }
         int ScrubbingInterval { get; }
+        public int EndOfStreamCount { get; }
+        public bool IsEndOfStreamCountEnabled { get; }
 
         event EventHandler? MediaEnded;
         event EventHandler<ExceptionEventArgs>? MediaFailed;
         event EventHandler? MediaOpened;
         event EventHandler? MediaPlayed;
+        event EventHandler? MediaEndOfStreamReached;
 
         void Play();
         void Pause();

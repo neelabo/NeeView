@@ -103,6 +103,12 @@ namespace NeeView
             remove => _player.MediaPlayed += value;
         }
 
+        public event EventHandler? MediaEndOfStreamReached
+        {
+            add => _player.MediaEndOfStreamReached += value;
+            remove => _player.MediaEndOfStreamReached -= value;
+        }
+
 
         public bool IsActive { get; set; }
 
@@ -241,6 +247,9 @@ namespace NeeView
 
         public int PositionChangeInterval => _player.PositionChangeInterval;
         public int ScrubbingInterval => _player.ScrubbingInterval;
+
+        public int EndOfStreamCount => _player.EndOfStreamCount;
+        public bool IsEndOfStreamCountEnabled => _player.IsEndOfStreamCountEnabled;
 
         public bool IsDisposed => _disposedValue;
 

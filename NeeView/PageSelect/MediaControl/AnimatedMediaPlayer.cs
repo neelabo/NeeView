@@ -38,6 +38,7 @@ namespace NeeView
 
         public event EventHandler? MediaEnded;
         public event EventHandler? MediaPlayed;
+        public event EventHandler? MediaEndOfStreamReached;
 
 #pragma warning disable CS0067
         public event EventHandler? MediaOpened;
@@ -82,10 +83,7 @@ namespace NeeView
             set
             {
                 if (_disposedValue) return;
-                if (SetProperty(ref _isRepeat, value))
-                {
-                    UpdateRepeat();
-                }
+                SetProperty(ref _isRepeat, value);
             }
         }
 
@@ -138,6 +136,9 @@ namespace NeeView
 
         public int PositionChangeInterval => 200;
         public int ScrubbingInterval => 0;
+
+        public int EndOfStreamCount { get; private set; }
+        public bool IsEndOfStreamCountEnabled => true;
 
         public bool IsDisposed => _disposedValue;
 
@@ -232,7 +233,17 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
-            MediaEnded?.Invoke(this, EventArgs.Empty);
+            EndOfStreamCount++;
+            MediaEndOfStreamReached?.Invoke(this, EventArgs.Empty);
+
+            if (_isRepeat)
+            {
+                SetPosition(0.0);
+            }
+            else
+            {
+                MediaEnded?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         private void Player_CurrentFrameChanged(object? sender, EventArgs e)
@@ -282,14 +293,9 @@ namespace NeeView
             if (_player is null) return;
 
             var frame = _player.CurrentFrame;
-            if (_isRepeat)
-            {
-                ImageBehavior.SetRepeatBehavior(_image, RepeatBehavior.Forever);
-            }
-            else
-            {
-                ImageBehavior.SetRepeatBehavior(_image, new RepeatBehavior(1));
-            }
+
+            ImageBehavior.SetRepeatBehavior(_image, new RepeatBehavior(1));
+
             if (IsValidFrame(frame))
             {
                 _player.GotoFrame(frame);

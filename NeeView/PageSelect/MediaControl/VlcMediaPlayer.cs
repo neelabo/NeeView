@@ -43,6 +43,7 @@ namespace NeeView
         private Uri? _uri;
         private AudioInfo? _audioInfo;
         private Locker.Key? _activeLockerKey;
+        private float _oldPosition;
 
         /// <summary>
         /// 再生位置要求
@@ -122,6 +123,7 @@ namespace NeeView
         public event EventHandler? MediaEnded;
         public event EventHandler? MediaPlayed;
         public event EventHandler<ExceptionEventArgs>? MediaFailed;
+        public event EventHandler? MediaEndOfStreamReached;
 
 
         public VlcVideoSourceProvider SourceProvider => _source;
@@ -257,6 +259,7 @@ namespace NeeView
                     Task.Run(() =>
                     {
                         if (_disposedValue) return;
+                        _oldPosition = newPosition;
                         _player.Position = newPosition;
                         if (_player.State == MediaStates.Ended)
                         {
@@ -343,6 +346,9 @@ namespace NeeView
 
         public int PositionChangeInterval => 200;
         public int ScrubbingInterval => 0;
+
+        public int EndOfStreamCount { get; private set; }
+        public bool IsEndOfStreamCountEnabled => IsRepeatCountEnabled();
 
         public bool IsDisposed => _disposedValue;
 
@@ -457,6 +463,7 @@ namespace NeeView
 
                 if (0.0 <= _requestPosition)
                 {
+                    _oldPosition = _requestPosition;
                     _player.Position = _requestPosition;
                 }
             });
@@ -465,6 +472,8 @@ namespace NeeView
         private void Player_EndReached(object? sender, VlcMediaPlayerEndReachedEventArgs e)
         {
             if (_disposedValue) return;
+
+            OnEndOfStream();
 
             OnPropertyChanged(nameof(Position));
             AppDispatcher.BeginInvoke(() => MediaEnded?.Invoke(this, e));
@@ -486,6 +495,54 @@ namespace NeeView
                 //Trace($"RequestPosition.Reset");
                 _requestPosition = float.NegativeInfinity;
             }
+
+            CheckRepeat(e.NewPosition);
+        }
+
+        // リピート値有効判定
+        // Position でリピートを判定しているため、再生時間がないものやあまりに短いものは判別できない可能性があるため、無効化する
+        public bool IsRepeatCountEnabled()
+        {
+            // 再生時間がないものは判別不能
+            if (!Duration.HasTimeSpan)
+            {
+                return false;
+            }
+
+            // あまりに短いものは判別できない可能性があるので除外
+            var minimumDuration = TimeSpan.FromSeconds(2.0);
+            if (Duration.TimeSpan < minimumDuration)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        // リピート判定
+        // repeat モードでは EOF イベントが発生しないため、Position で判定する
+        // Positin は粗い間隔でしか更新されないため注意が必要
+        private void CheckRepeat(float position)
+        {
+            if (_disposedValue) return;
+
+            const float margin = 0.5f;
+
+            var oldPosition = _oldPosition;
+            _oldPosition = position;
+
+            var delta = position - oldPosition;
+
+            if (delta < 0.0f && oldPosition > 1.0f - margin && position < margin)
+            {
+                OnEndOfStream();
+            }
+        }
+
+        private void OnEndOfStream()
+        {
+            EndOfStreamCount++;
+            AppDispatcher.BeginInvoke(() => MediaEndOfStreamReached?.Invoke(this, EventArgs.Empty));
         }
 
         private void Player_AudioVolume(object? sender, VlcMediaPlayerAudioVolumeEventArgs e)

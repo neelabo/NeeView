@@ -61,6 +61,7 @@ namespace NeeView
             _player.MediaOpened += Player_MediaOpened;
             _player.MediaEnded += Player_MediaEnded;
             _player.MediaFailed += Player_MediaFailed;
+            _player.MediaEndOfStreamReached += Player_MediaEndOfStreamReached;
 
             _playTimeTrigger = (int)(Config.Current.History.HistoryEntryPlayTime * 1000.0);
 
@@ -126,6 +127,11 @@ namespace NeeView
         /// 一定の再生時間が経過したら一度だけイベントを発生させる。履歴登録用
         /// </remarks>
         public event EventHandler<PlayTimeElapsedEventArgs>? PlayTimeElapsed;
+
+        /// <summary>
+        /// 再生ストリームが終端に達したときのイベント。リピートでも発生する
+        /// </summary>
+        public event EventHandler? MediaEndOfStreamReached;
 
 
         public IMediaPlayer Player => _player;
@@ -293,6 +299,9 @@ namespace NeeView
             }
         }
 
+        public int EndOfStreamCount => _player.EndOfStreamCount;
+        public bool IsEndOfStreamCountEnabled => _player.IsEndOfStreamCountEnabled;
+
 
         protected virtual void Dispose(bool disposing)
         {
@@ -306,6 +315,7 @@ namespace NeeView
                     _player.MediaFailed -= Player_MediaFailed;
                     _player.MediaOpened -= Player_MediaOpened;
                     _player.MediaEnded -= Player_MediaEnded;
+                    _player.MediaEndOfStreamReached -= Player_MediaEndOfStreamReached;
                 }
 
                 _disposedValue = true;
@@ -375,6 +385,13 @@ namespace NeeView
         {
         }
 
+        private void Player_MediaEndOfStreamReached(object? sender, EventArgs e)
+        {
+            if (_disposedValue) return;
+
+            //Debug.WriteLine($"Repeat: {_player.IsEndOfStreamCountEnabled}, {_player.EndOfStreamCount}");
+            MediaEndOfStreamReached?.Invoke(this, EventArgs.Empty);
+        }
 
         // 通常用タイマー処理
         private void DispatcherTimer_Tick(object? sender, EventArgs e)
