@@ -59,89 +59,68 @@ namespace NeeView
             return new Rect(min, max);
         }
 
-
-        // エリアサイズ内に座標を収める
-        public Point SnapView(Point pos)
-        {
-            return (Point)SnapView((Vector)pos, false);
-        }
-
         /// <summary>
-        ///  エリアサイズ内に座標を収める
+        ///  エリアサイズ内にコンテンツを収める
         /// </summary>
-        /// <param name="pos">コンテンツ中心座標</param>
         /// <param name="centered">範囲内に収まるときは中央に配置</param>
         /// <returns>補正された中心座標</returns>
-        public Vector SnapView(Vector pos, bool centered)
+        private Point SnapView(bool centered)
         {
             const double margin = 1.0;
 
-            // ウィンドウサイズ変更直後はrectのスクリーン座標がおかしい可能性があるのでPositionから計算しなおす
-            var rect = new Rect()
-            {
-                X = pos.X - ContentRect.Width * 0.5 + ViewRect.Width * 0.5,
-                Y = pos.Y - ContentRect.Height * 0.5 + ViewRect.Height * 0.5,
-                Width = ContentRect.Width,
-                Height = ContentRect.Height,
-            };
+            var pos = ContentRect.Center();
 
-            var minX = ViewRect.Width * -0.5 + rect.Width * 0.5;
-            var maxX = minX + ViewRect.Width - rect.Width;
-
-            if (rect.Width <= ViewRect.Width + margin)
+            if (ContentRect.Width <= ViewRect.Width + margin)
             {
                 if (centered)
                 {
-                    pos.X = 0.0;
+                    pos.X = ViewRect.Center().X;
                 }
-                else if (rect.Left < 0)
+                else if (ContentRect.Left < ViewRect.Left)
                 {
-                    pos.X = minX;
+                    pos.X = ViewRect.Left + ContentRect.Width * 0.5;
                 }
-                else if (rect.Right > ViewRect.Width)
+                else if (ContentRect.Right > ViewRect.Right)
                 {
-                    pos.X = maxX;
+                    pos.X = ViewRect.Right - ContentRect.Width * 0.5;
                 }
             }
             else
             {
-                if (rect.Left > 0)
+                if (ContentRect.Left > ViewRect.Left + margin)
                 {
-                    pos.X -= rect.Left;
+                    pos.X = ViewRect.Left + ContentRect.Width * 0.5;
                 }
-                else if (rect.Right < ViewRect.Width)
+                else if (ContentRect.Right  < ViewRect.Right - margin)
                 {
-                    pos.X += ViewRect.Width - rect.Right;
+                    pos.X = ViewRect.Right - ContentRect.Width * 0.5;
                 }
             }
 
-            var minY = ViewRect.Height * -0.5 + rect.Height * 0.5;
-            var maxY = minY + ViewRect.Height - rect.Height;
-
-            if (rect.Height <= ViewRect.Height + margin)
+            if (ContentRect.Height <= ViewRect.Height + margin)
             {
                 if (centered)
                 {
-                    pos.Y = 0.0;
+                    pos.Y = ViewRect.Center().Y;
                 }
-                else if (rect.Top < 0)
+                else if (ContentRect.Top < ViewRect.Top)
                 {
-                    pos.Y = minY;
+                    pos.Y = ViewRect.Top + ContentRect.Height * 0.5;
                 }
-                else if (rect.Bottom > ViewRect.Height)
+                else if (ContentRect.Bottom > ViewRect.Bottom)
                 {
-                    pos.Y = maxY;
+                    pos.Y = ViewRect.Bottom - ContentRect.Height * 0.5;
                 }
             }
             else
             {
-                if (rect.Top > 0)
+                if (ContentRect.Top > ViewRect.Top + margin)
                 {
-                    pos.Y = minY;
+                    pos.Y = ViewRect.Top + ContentRect.Height * 0.5;
                 }
-                else if (rect.Bottom < ViewRect.Height)
+                else if (ContentRect.Bottom < ViewRect.Bottom - margin)
                 {
-                    pos.Y = maxY;
+                    pos.Y = ViewRect.Bottom - ContentRect.Height * 0.5;
                 }
             }
 
@@ -164,19 +143,18 @@ namespace NeeView
             return delta;
         }
 
-        public Point GetAlignmentCenter(HorizontalAlignment horizontal, VerticalAlignment vertical, bool snap)
+        private Point GetAlignmentCenter(HorizontalAlignment horizontal, VerticalAlignment vertical, bool snap)
         {
-            Point p0 = ContentRect.Center();
             Point p1 = default;
-            Point p2 = SnapView(p0);
+            Point p2 = SnapView(false);
 
             if (snap || ContentRect.Width > ViewRect.Width)
             {
                 p1.X = horizontal switch
                 {
-                    HorizontalAlignment.Left => (ContentRect.Width - ViewRect.Width) * 0.5,
-                    HorizontalAlignment.Right => (ContentRect.Width - ViewRect.Width) * -0.5,
-                    _ => 0.0,
+                    HorizontalAlignment.Left => ViewRect.Left + ContentRect.Width * 0.5,
+                    HorizontalAlignment.Right => ViewRect.Right - ContentRect.Width * 0.5,
+                    _ => ViewRect.Left + ViewRect.Width * 0.5
                 };
             }
             else
@@ -188,9 +166,9 @@ namespace NeeView
             {
                 p1.Y = vertical switch
                 {
-                    VerticalAlignment.Top => (ContentRect.Height - ViewRect.Height) * 0.5,
-                    VerticalAlignment.Bottom => (ContentRect.Height - ViewRect.Height) * -0.5,
-                    _ => 0,
+                    VerticalAlignment.Top => ViewRect.Top + ContentRect.Height * 0.5,
+                    VerticalAlignment.Bottom => ViewRect.Bottom - ContentRect.Height * 0.5,
+                    _ => ViewRect.Top + ViewRect.Height * 0.5
                 };
             }
             else
