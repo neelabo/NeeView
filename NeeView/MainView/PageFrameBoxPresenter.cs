@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Animation;
 
 namespace NeeView
 {
@@ -618,6 +619,16 @@ namespace NeeView
         public void ScrollToPreset(HorizontalAlignment horizontal, VerticalAlignment vertical, bool snap)
         {
             ValidBox()?.ScrollToPreset(horizontal, vertical, snap);
+        }
+
+        public void ScrollToPreset(HorizontalAlignment horizontal, VerticalAlignment vertical, bool snap, double ms, IEasingFunction? easeX, IEasingFunction? easeY)
+        {
+            ValidBox()?.ScrollToPreset(horizontal, vertical, snap, TimeSpan.FromMilliseconds(ms), easeX, easeY);
+        }
+
+        public void CancelScroll()
+        {
+            ValidBox()?.CancelScroll();
         }
 
         public void ResetTransform()

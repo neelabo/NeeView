@@ -3,12 +3,13 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
-using NeeView.Properties;
+using NeeView.PageFrames;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Timers;
+using System.Windows;
 
 namespace NeeView
 {
@@ -84,11 +85,15 @@ namespace NeeView
 
         private void SlideShowConfig_SlideShowIntervalPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
+            if (!_isPlayingSlideShow) return;
+
             ResetTimer();
         }
 
         private void PageFrameBoxPresenter_ViewPageChanged(object? sender, ViewPageChangedEventArgs e)
         {
+            if (!_isPlayingSlideShow) return;
+
             if (!Config.Current.SlideShow.IsPrioritizeTime)
             {
                 LocalDebug.WriteLine($"ViewPageChanged: {string.Join(",", e.Pages.Select(e => e.Index.ToString()))}");
@@ -102,6 +107,8 @@ namespace NeeView
 
         private void BookOperation_BookChanged(object? sender, BookChangedEventArgs e)
         {
+            if (!_isPlayingSlideShow) return;
+
             if (e.Book is null)
             {
                 IsPlayingSlideShow = false;
@@ -169,6 +176,8 @@ namespace NeeView
             }
 
             LocalDebug.WriteLine($"Count = {_count}, Interval = {_timer.Interval:F1} ms");
+
+            SetScroll(_timer.Interval);
         }
 
         /// <summary>
@@ -189,6 +198,8 @@ namespace NeeView
         private void StopTimer()
         {
             ResetWaitAnimation();
+
+            CancelScroll();
 
             _timer.Stop();
             Played?.Invoke(this, new SlideShowPlayedEventArgs(false, 0.0));
@@ -301,9 +312,30 @@ namespace NeeView
             if (_isMoving)
             {
                 Stop();
-                InfoMessage.Current.SetMessage(InfoMessageType.Notify, TextResources.GetString("ToggleSlideShowCommand.Off"));
+                var message = CommandTable.Current.GetElement("ToggleSlideShow").GetStateExecuteMessage(false);
+                InfoMessage.Current.SetMessage(InfoMessageType.Notify, message);
             }
         }
+
+        private void SetScroll(double milliseconds)
+        {
+            if (!Config.Current.SlideShow.IsAutoScroll) return;
+
+            AppDispatcher.BeginInvoke(() =>
+            {
+                var horizontal = Config.Current.BookSetting.BookReadOrder == PageReadOrder.LeftToRight ? HorizontalAlignment.Right : HorizontalAlignment.Left;
+                PageFrameBoxPresenter.Current.ScrollToPreset(horizontal, VerticalAlignment.Bottom, false, milliseconds, EaseTools.LinearEase, EaseTools.LinearEase);
+            });
+        }
+
+        private void CancelScroll()
+        {
+            AppDispatcher.BeginInvoke(() =>
+            {
+                PageFrameBoxPresenter.Current.CancelScroll();
+            });
+        }
+
 
         #region IDisposable Support
         private bool _disposedValue = false;

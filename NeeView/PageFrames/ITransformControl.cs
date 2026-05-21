@@ -23,6 +23,7 @@ namespace NeeView.PageFrames
     public interface IPointControl : ITransformControlObject
     {
         public Point Point { get; }
+        public Point ViewPoint => Point;
         public void SetPoint(Point value, TimeSpan span);
         public void SetPoint(Point value, TimeSpan span, IEasingFunction? easeX, IEasingFunction? easeY);
         public void AddPoint(Vector value, TimeSpan span)

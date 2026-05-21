@@ -14,6 +14,7 @@ namespace NeeView
         [DefaultEquality] private bool _isTimerVisible;
         [DefaultEquality] private bool _isPrioritizeTime;
         [DefaultEquality] private bool _isWaitAnimation;
+        [DefaultEquality] private bool _isAutoScroll = true;
 
         /// <summary>
         /// スライドショーの表示間隔(秒)
@@ -73,6 +74,16 @@ namespace NeeView
         {
             get { return _isWaitAnimation; }
             set { SetProperty(ref _isWaitAnimation, value); }
+        }
+
+        /// <summary>
+        /// 自動スクロール
+        /// </summary>
+        [PropertyMember]
+        public bool IsAutoScroll
+        {
+            get { return _isAutoScroll; }
+            set { SetProperty(ref _isAutoScroll, value); }
         }
     }
 }

@@ -26,6 +26,7 @@ namespace NeeView.PageFrames
 
 
         public Point Point => _scrollViewer.Point;
+        public Point ViewPoint => _scrollViewer.ViewPoint;
 
         public Rect ViewRect => _viewBox.Rect;
         public Rect CanvasRect => _rectMath.GetContainersRect(_viewBox.Rect);

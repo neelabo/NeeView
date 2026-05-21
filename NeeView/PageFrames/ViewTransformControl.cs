@@ -23,6 +23,7 @@ namespace NeeView.PageFrames
         public double Scale => _container.Transform.Scale;
         public double Angle => _container.Transform.Angle;
         public Point Point => _viewContext.Point;
+        public Point ViewPoint => _viewContext.ViewPoint;
         public bool IsFlipHorizontal => _container.Transform.IsFlipHorizontal;
         public bool IsFlipVertical => _container.Transform.IsFlipVertical;
 

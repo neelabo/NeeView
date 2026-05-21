@@ -19,6 +19,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace NeeView.PageFrames
 {
@@ -1180,6 +1181,11 @@ namespace NeeView.PageFrames
         /// </summary>
         public void ScrollToPreset(HorizontalAlignment horizontal, VerticalAlignment vertical, bool snap)
         {
+            ScrollToPreset(horizontal, vertical, snap, _context.ScrollDuration, null, null);
+        } 
+
+        public void ScrollToPreset(HorizontalAlignment horizontal, VerticalAlignment vertical, bool snap, TimeSpan span, IEasingFunction? easeX, IEasingFunction? easeY)
+        {
             if (_disposedValue) return;
             if (!_bookContext.IsEnabled) return;
 
@@ -1192,7 +1198,7 @@ namespace NeeView.PageFrames
             var area = new DragArea(viewRect, contentRect);
             var delta = area.SnapAlignment(horizontal, vertical, snap);
 
-            AddPosition(delta.X, delta.Y, _context.ScrollDuration);
+            AddPosition(delta.X, delta.Y, span, easeX, easeY);
         }
 
 
@@ -1245,7 +1251,7 @@ namespace NeeView.PageFrames
         // TODO: now 引数はどうなのか？
         // - NScroll の時間パラメータ
         // - 連続判定によるカーブ指定
-        private void AddPosition(double dx, double dy, TimeSpan span)
+        private void AddPosition(double dx, double dy, TimeSpan span, IEasingFunction? easeX = null, IEasingFunction? easeY = null)
         {
             if (_disposedValue) return;
             if (!_bookContext.IsEnabled) return;
@@ -1258,11 +1264,30 @@ namespace NeeView.PageFrames
             var transform = _transformControlFactory.Create(node.Value);
 
             var delta = new Vector(dx, dy);
-            transform.SetPoint(transform.Point + delta, span);
+            transform.SetPoint(transform.Point + delta, span, easeX, easeY);
 
             _selected.SetAuto();
             AssertSelectedExists();
             ResetSnapAnchor();
+        }
+
+        /// <summary>
+        /// スクロールキャンセル
+        /// </summary>
+        public void CancelScroll()
+        {
+            if (_disposedValue) return;
+            if (!_bookContext.IsEnabled) return;
+
+            var node = _selected.Node;
+            AssertSelectedExists();
+            if (node?.Value.Content is not PageFrameContent) return;
+
+            SetControlContainer(node);
+            var transform = _transformControlFactory.Create(node.Value);
+
+            var pos = transform.ViewPoint;
+            transform.SetPoint(pos, TimeSpan.Zero);
         }
 
         /// <summary>
