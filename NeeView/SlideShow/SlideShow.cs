@@ -6,6 +6,7 @@ using NeeLaboratory.Generators;
 using NeeView.Properties;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Timers;
 
@@ -28,6 +29,8 @@ namespace NeeView
         private bool _isMoving;
         private int _startTickCount;
         private int _count;
+        private MediaPlayerOperator? _mediaPlayer;
+        private readonly System.Threading.Lock _lock = new();
 
 
         private SlideShow()
@@ -90,6 +93,10 @@ namespace NeeView
             {
                 LocalDebug.WriteLine($"ViewPageChanged: {string.Join(",", e.Pages.Select(e => e.Index.ToString()))}");
                 ResetTimer();
+            }
+            else
+            {
+                Debug.Assert(_mediaPlayer is null);
             }
         }
 
@@ -181,6 +188,8 @@ namespace NeeView
         /// </summary>
         private void StopTimer()
         {
+            ResetWaitAnimation();
+
             _timer.Stop();
             Played?.Invoke(this, new SlideShowPlayedEventArgs(false, 0.0));
         }
@@ -191,8 +200,10 @@ namespace NeeView
         public void ResetTimer()
         {
             if (_disposedValue) return;
-            if (!_timer.Enabled) return;
 
+            ResetWaitAnimation();
+
+            if (!_timer.Enabled) return;
             ResetTimerInner();
             Played?.Invoke(this, new SlideShowPlayedEventArgs(_isPlayingSlideShow, _timer.Interval));
         }
@@ -214,13 +225,62 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
+            if (_mediaPlayer is not null)
+            {
+                LocalDebug.WriteLine("Wait Media EOF...");
+                return;
+            }
+
+            var player = MediaPlayerOperator.PageMediaOperator;
+            if (player is not null
+                && Config.Current.SlideShow.IsWaitAnimation && !Config.Current.SlideShow.IsPrioritizeTime
+                && player.IsEndOfStreamCountEnabled && player.EndOfStreamCount == 0)
+            {
+                SetWaitAnimation(player);
+            }
+            else
+            {
+                MoveNext();
+            }
+        }
+
+        private void SetWaitAnimation(MediaPlayerOperator mediaPlayer)
+        {
+            ResetWaitAnimation();
+
+            lock (_lock)
+            {
+                _mediaPlayer = mediaPlayer;
+                _mediaPlayer.MediaEndOfStreamReached += MediaPlayer_MediaEndOfStreamReached;
+            }
+        }
+
+        private void ResetWaitAnimation()
+        {
+            if (_mediaPlayer is null) return;
+
+            lock (_lock)
+            {
+                _mediaPlayer.MediaEndOfStreamReached -= MediaPlayer_MediaEndOfStreamReached;
+                _mediaPlayer = null;
+            }
+        }
+
+        private void MediaPlayer_MediaEndOfStreamReached(object? sender, EventArgs e)
+        {
+            ResetWaitAnimation();
+            MoveNext();
+        }
+
+        private void MoveNext()
+        {
             AppDispatcher.BeginInvoke(() =>
             {
                 // ページ移動
                 try
                 {
                     _isMoving = true;
-                    BookOperation.Current.Control.MoveNext(sender);
+                    BookOperation.Current.Control.MoveNext(this);
                 }
                 finally
                 {

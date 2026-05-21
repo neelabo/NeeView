@@ -13,6 +13,7 @@ namespace NeeView
         [DefaultEquality] private bool _isSlideShowByLoop = true;
         [DefaultEquality] private bool _isTimerVisible;
         [DefaultEquality] private bool _isPrioritizeTime;
+        [DefaultEquality] private bool _isWaitAnimation;
 
         /// <summary>
         /// スライドショーの表示間隔(秒)
@@ -62,6 +63,16 @@ namespace NeeView
         {
             get { return _isPrioritizeTime; }
             set { SetProperty(ref _isPrioritizeTime, value); }
+        }
+
+        /// <summary>
+        /// アニメーション完了を待機する
+        /// </summary>
+        [PropertyMember]
+        public bool IsWaitAnimation
+        {
+            get { return _isWaitAnimation; }
+            set { SetProperty(ref _isWaitAnimation, value); }
         }
     }
 }
