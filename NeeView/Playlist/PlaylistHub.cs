@@ -73,7 +73,7 @@ namespace NeeView
             }
             set
             {
-                if (Config.Current.Playlist.CurrentPlaylist != value)
+                if (SelectedItem != value)
                 {
                     Config.Current.Playlist.CurrentPlaylist = value;
                 }
