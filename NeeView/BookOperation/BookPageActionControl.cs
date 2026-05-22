@@ -384,6 +384,8 @@ namespace NeeView
         {
             if (CanExport())
             {
+                SlideShow.Current.Stop();
+
                 try
                 {
                     var parameter = Config.Current.Book.ExportImageParameter;

@@ -401,36 +401,28 @@ namespace NeeView
         {
             if (!CanExportBook()) return;
 
-            // スライドショーを一時停止
-            var isPlayingSlideShow = SlideShow.Current.IsPlaying;
+            // スライドショーを停止
             SlideShow.Current.Stop();
 
             var parameter = Config.Current.Book.ExportBookParameter;
 
-            try
+            var bookName = _book.Source.IsDirectory ? LoosePath.GetFileName(_book.Path) : LoosePath.GetFileNameWithoutExtension(_book.Path);
+
+            var dialog = new ExportBookDialog(parameter, bookName);
+            dialog.Owner = MainViewComponent.Current.GetWindow();
+            dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            var result = dialog.ShowDialog();
+            if (result != true)
             {
-                var bookName = _book.Source.IsDirectory ? LoosePath.GetFileName(_book.Path) : LoosePath.GetFileNameWithoutExtension(_book.Path);
-
-                var dialog = new ExportBookDialog(parameter, bookName);
-                dialog.Owner = MainViewComponent.Current.GetWindow();
-                dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                var result = dialog.ShowDialog();
-                if (result != true)
-                {
-                    return;
-                }
-
-                Debug.Assert(parameter.ExportFolder == LoosePath.GetDirectoryName(dialog.FileName), "Export folder must be the same as the book folder.");
-
-                var progress = new Progress<ProgressInfo>();
-                var exporter = new ExportBook(BookOperation.Current, progress);
-                var progressDialog = new ProgressDialog(MainWindow.Current, progress) { CanCancel = true };
-                progressDialog.ShowDialog(token => Task.Run(() => exporter.RunAsync(dialog.FileName, parameter, true, token), token));
+                return;
             }
-            finally
-            {
-                SlideShow.Current.SetPlaying(isPlayingSlideShow);
-            }
+
+            Debug.Assert(parameter.ExportFolder == LoosePath.GetDirectoryName(dialog.FileName), "Export folder must be the same as the book folder.");
+
+            var progress = new Progress<ProgressInfo>();
+            var exporter = new ExportBook(BookOperation.Current, progress);
+            var progressDialog = new ProgressDialog(MainWindow.Current, progress) { CanCancel = true };
+            progressDialog.ShowDialog(token => Task.Run(() => exporter.RunAsync(dialog.FileName, parameter, true, token), token));
         }
     }
 
