@@ -781,6 +781,14 @@ namespace NeeView
             }
         }
 
+        public void ClearCache()
+        {
+            foreach(var item in CloneItems())
+            {
+                item.ClearArchivePage();
+            }
+        }
+
 
         #region Save
 

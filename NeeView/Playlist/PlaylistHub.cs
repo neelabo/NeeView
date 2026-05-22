@@ -332,6 +332,7 @@ namespace NeeView
             if (_playlist == value) return;
 
             DetachPlaylistEvents(_playlist);
+            _playlist.ClearCache();
             _playlist = value;
             AttachPlaylistEvents(_playlist);
 

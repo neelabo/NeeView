@@ -176,6 +176,16 @@ namespace NeeView
             return ArchivePage;
         }
 
+        public void ClearArchivePage()
+        {
+            if (_archivePage != null)
+            {
+                _archivePage.Thumbnail.Touched -= Thumbnail_Touched;
+                _archivePage.Dispose();
+                _archivePage = null;
+            }
+        }
+
         private static string ValidPath(string path)
         {
             // 動画名が重複するパスを修正する
