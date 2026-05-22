@@ -103,7 +103,7 @@ namespace NeeView
             SettingWindow.Current?.Cancel();
 
             // スライドショー停止
-            SlideShow.Current.IsPlayingSlideShow = false;
+            SlideShow.Current.Stop();
 
             // 設定ファイル監視の一時停止
             SaveDataSync.Current.Suspend();

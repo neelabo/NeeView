@@ -33,7 +33,7 @@ namespace NeeView
             LocalDebug.WriteLine("start...");
 
             var currentPage = _operation.ViewPages.FirstOrDefault();
-            var isPlayingSlideShow = SlideShow.Current.IsPlayingSlideShow;
+            var isPlayingSlideShow = SlideShow.Current.IsPlaying;
 
             AppState.Current.IsProcessingBook = true;
 

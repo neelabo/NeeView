@@ -69,7 +69,7 @@ namespace NeeView
             BookHub.Current.IsEnabled = false;
 
             // スライドショー停止
-            SlideShow.Current.PauseSlideShow();
+            SlideShow.Current.Suspend();
 
             try
             {
@@ -113,7 +113,7 @@ namespace NeeView
                 BookHub.Current.IsEnabled = true;
 
                 // スライドショー再開
-                SlideShow.Current.ResumeSlideShow();
+                SlideShow.Current.Resume();
             }
         }
     }

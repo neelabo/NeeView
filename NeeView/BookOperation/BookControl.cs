@@ -402,8 +402,8 @@ namespace NeeView
             if (!CanExportBook()) return;
 
             // スライドショーを一時停止
-            var isPlayingSlideShow = SlideShow.Current.IsPlayingSlideShow;
-            SlideShow.Current.IsPlayingSlideShow = false;
+            var isPlayingSlideShow = SlideShow.Current.IsPlaying;
+            SlideShow.Current.Stop();
 
             var parameter = Config.Current.Book.ExportBookParameter;
 
@@ -429,7 +429,7 @@ namespace NeeView
             }
             finally
             {
-                SlideShow.Current.IsPlayingSlideShow = isPlayingSlideShow;
+                SlideShow.Current.SetPlaying(isPlayingSlideShow);
             }
         }
     }

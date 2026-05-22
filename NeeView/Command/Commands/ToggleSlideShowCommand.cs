@@ -15,20 +15,20 @@ namespace NeeView
 
         public override BindingBase CreateIsCheckedBinding()
         {
-            return new Binding(nameof(SlideShow.IsPlayingSlideShow)) { Source = SlideShow.Current };
+            return new Binding(nameof(SlideShow.IsPlaying)) { Source = SlideShow.Current };
         }
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            var state = CommandElementTools.GetState(e, SlideShow.Current.IsPlayingSlideShow);
+            var state = CommandElementTools.GetState(e, SlideShow.Current.IsPlaying);
             return GetStateExecuteMessage(state);
         }
 
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            var state = CommandElementTools.GetState(e, SlideShow.Current.IsPlayingSlideShow);
-            SlideShow.Current.IsPlayingSlideShow = state;
+            var state = CommandElementTools.GetState(e, SlideShow.Current.IsPlaying);
+            SlideShow.Current.SetPlaying(state);
         }
     }
 }

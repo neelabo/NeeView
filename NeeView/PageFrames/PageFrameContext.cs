@@ -47,6 +47,7 @@ namespace NeeView.PageFrames
             _disposables.Add(_config.Book.SubscribePropertyChanged(BookConfig_PropertyChanged));
             _disposables.Add(_config.View.SubscribePropertyChanged(ViewConfig_PropertyChanged));
             _disposables.Add(_config.System.SubscribePropertyChanged(SystemConfig_PropertyChanged));
+            _disposables.Add(_config.SlideShow.SubscribePropertyChanged(SlideShowConfig_PropertyChanged));
             _disposables.Add(_bookSetting.SubscribePropertyChanged((s, e) => AppDispatcher.BeginInvoke(() => BookSetting_PropertyChanged(s, e))));
             _disposables.Add(_frameProfile.SubscribePropertyChanged(FrameProfile_PropertyChanged));
             _disposables.Add(ImageResizeFilterConfig.SubscribePropertyChanged((s, e) => OnPropertyChanged(nameof(ImageResizeFilterConfig))));
@@ -55,8 +56,9 @@ namespace NeeView.PageFrames
             _disposables.Add(ImageDotKeepConfig.SubscribePropertyChanged((s, e) => OnPropertyChanged(nameof(ImageDotKeepConfig))));
             _disposables.Add(_config.Image.Standard.SubscribePropertyChanged(nameof(ImageStandardConfig.IsAspectRatioEnabled), (s, e) => OnPropertyChanged(nameof(IsAspectRatioEnabled))));
             _disposables.Add(() => _viewScrollContext.Clear());
-        }
 
+            _disposables.Add(Config.Current.SlideShow.SubscribePropertyChanged(nameof(SlideShow.IsPlaying), SlideShowIsPlayngChanged));
+        }
 
         [Subscribable]
         public event EventHandler<SizeChangedEventArgs>? SizeChanging;
@@ -82,10 +84,11 @@ namespace NeeView.PageFrames
         public bool IsInsertDummyPage => _config.Book.IsInsertDummyPage;
         public bool IsInsertDummyFirstPage => _config.Book.IsInsertDummyPage && _config.Book.IsInsertDummyFirstPage;
         public bool IsInsertDummyLastPage => _config.Book.IsInsertDummyPage && _config.Book.IsInsertDummyLastPage;
-        public bool IsLoopPage => !_isMediaBook && _config.Book.PageEndAction == PageEndAction.SeamlessLoop;
-        public bool CanPrioritizePageMove => _config.Book.IsPrioritizePageMove && !SlideShow.Current.IsPlayingSlideShow;
+        public PageEndAction PageEndAction => SlideShow.Current.IsPlaying ? _config.SlideShow.PageEndAction : _config.Book.PageEndAction;
+        public bool IsLoopPage => !_isMediaBook && PageEndAction == PageEndAction.SeamlessLoop;
+        public bool CanPrioritizePageMove => _config.Book.IsPrioritizePageMove && !SlideShow.Current.IsPlaying;
         public bool IsReadyToPageMove => _config.Book.IsReadyToPageMove && !_config.Book.IsPanorama;
-        public bool IsNotifyPageLoop => _config.Book.IsNotifyPageLoop && !SlideShow.Current.IsPlayingSlideShow;
+        public bool IsNotifyPageLoop => _config.Book.IsNotifyPageLoop && !SlideShow.Current.IsPlaying;
         public bool IsStaticWidePage => _config.Book.IsStaticWidePage && _bookSetting.PageMode == PageMode.WidePage;
         public WidePageStretch WidePageStretch => _config.Book.WidePageStretch;
         public WidePageVerticalAlignment WidePageVerticalAlignment => _config.Book.WidePageVerticalAlignment;
@@ -207,6 +210,7 @@ namespace NeeView.PageFrames
                     break;
 
                 case nameof(BookConfig.PageEndAction):
+                    OnPropertyChanged(nameof(PageEndAction));
                     OnPropertyChanged(nameof(IsLoopPage));
                     break;
 
@@ -220,6 +224,17 @@ namespace NeeView.PageFrames
 
                 case nameof(BookConfig.WidePageVerticalAlignment):
                     OnPropertyChanged(nameof(WidePageVerticalAlignment));
+                    break;
+            }
+        }
+
+        private void SlideShowConfig_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(SlideShowConfig.PageEndAction):
+                    OnPropertyChanged(nameof(PageEndAction));
+                    OnPropertyChanged(nameof(IsLoopPage));
                     break;
             }
         }
@@ -337,7 +352,6 @@ namespace NeeView.PageFrames
             }
         }
 
-
         private void FrameProfile_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -362,6 +376,11 @@ namespace NeeView.PageFrames
             }
         }
 
+        private void SlideShowIsPlayngChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(PageEndAction));
+            OnPropertyChanged(nameof(IsLoopPage));
+        }
 
 
         public void SetCanvasSize(object sender, SizeChangedEventArgs e)

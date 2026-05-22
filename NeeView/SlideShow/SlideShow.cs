@@ -24,10 +24,9 @@ namespace NeeView
 
         private readonly Timer _timer;
 
-        private bool _isPlayingSlideShow;
-        private bool _isPlayingSlideShowMemento;
+        private bool _isPlaying;
+        private bool _isPause;
         private readonly DisposableCollection _disposables = new();
-        private bool _isMoving;
         private int _startTickCount;
         private int _count;
         private MediaPlayerOperator? _mediaPlayer;
@@ -59,17 +58,22 @@ namespace NeeView
         /// <summary>
         /// スライドショー再生状態
         /// </summary>
-        public bool IsPlayingSlideShow
+        public bool IsPlaying
         {
-            get { return _isPlayingSlideShow; }
+            get { return _isPlaying; }
             set
             {
                 if (_disposedValue) return;
 
-                if (_isPlayingSlideShow != value)
+                if (value)
                 {
-                    _isPlayingSlideShow = value;
-                    if (_isPlayingSlideShow)
+                    _isPause = false;
+                }
+
+                if (_isPlaying != value)
+                {
+                    _isPlaying = value;
+                    if (_isPlaying)
                     {
                         StartTimer();
                     }
@@ -85,14 +89,14 @@ namespace NeeView
 
         private void SlideShowConfig_SlideShowIntervalPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (!_isPlayingSlideShow) return;
+            if (!_isPlaying) return;
 
             ResetTimer();
         }
 
         private void PageFrameBoxPresenter_ViewPageChanged(object? sender, ViewPageChangedEventArgs e)
         {
-            if (!_isPlayingSlideShow) return;
+            if (!_isPlaying) return;
 
             if (!Config.Current.SlideShow.IsPrioritizeTime)
             {
@@ -107,11 +111,11 @@ namespace NeeView
 
         private void BookOperation_BookChanged(object? sender, BookChangedEventArgs e)
         {
-            if (!_isPlayingSlideShow) return;
+            if (!_isPlaying) return;
 
             if (e.Book is null)
             {
-                IsPlayingSlideShow = false;
+                Stop();
             }
             else if (!Config.Current.SlideShow.IsPrioritizeTime)
             {
@@ -119,45 +123,40 @@ namespace NeeView
             }
         }
 
+        public void SetPlaying(bool isPlaying)
+        {
+            IsPlaying = isPlaying;
+        }
+
         public void Play()
         {
-            IsPlayingSlideShow = true;
+            IsPlaying = true;
         }
 
         public void Stop()
         {
-            IsPlayingSlideShow = false;
-        }
-
-        /// <summary>
-        /// スライドショー再生/停止切り替え
-        /// </summary>
-        public void TogglePlayingSlideShow()
-        {
-            if (_disposedValue) return;
-
-            this.IsPlayingSlideShow = !this.IsPlayingSlideShow;
+            IsPlaying = false;
         }
 
         /// <summary>
         /// 一時停止
         /// </summary>
-        public void PauseSlideShow()
+        public void Suspend()
         {
             if (_disposedValue) return;
 
-            _isPlayingSlideShowMemento = IsPlayingSlideShow;
-            IsPlayingSlideShow = false;
+            _isPause = true;
+            Played?.Invoke(this, new SlideShowPlayedEventArgs(_isPlaying, 0.0));
         }
 
         /// <summary>
         /// 再開
         /// </summary>
-        public void ResumeSlideShow()
+        public void Resume()
         {
             if (_disposedValue) return;
 
-            IsPlayingSlideShow = _isPlayingSlideShowMemento;
+            _isPause = false;
         }
 
         private void UpdateTimerInterval()
@@ -189,7 +188,7 @@ namespace NeeView
 
             ResetTimerInner();
             _timer.Start();
-            Played?.Invoke(this, new SlideShowPlayedEventArgs(_isPlayingSlideShow, _timer.Interval));
+            Played?.Invoke(this, new SlideShowPlayedEventArgs(_isPlaying, _timer.Interval));
         }
 
         /// <summary>
@@ -216,7 +215,7 @@ namespace NeeView
 
             if (!_timer.Enabled) return;
             ResetTimerInner();
-            Played?.Invoke(this, new SlideShowPlayedEventArgs(_isPlayingSlideShow, _timer.Interval));
+            Played?.Invoke(this, new SlideShowPlayedEventArgs(_isPlaying, _timer.Interval));
         }
 
         /// <summary>
@@ -235,6 +234,11 @@ namespace NeeView
         private void Timer_Tick(object? sender, ElapsedEventArgs e)
         {
             if (_disposedValue) return;
+
+            if (_isPause)
+            {
+                return;
+            }
 
             if (_mediaPlayer is not null)
             {
@@ -288,33 +292,12 @@ namespace NeeView
             AppDispatcher.BeginInvoke(() =>
             {
                 // ページ移動
-                try
-                {
-                    _isMoving = true;
-                    BookOperation.Current.Control.MoveNext(this);
-                }
-                finally
-                {
-                    _isMoving = false;
-                }
+                BookOperation.Current.Control.MoveNext(this);
             });
 
             _count++;
             UpdateTimerInterval();
-            Played?.Invoke(this, new SlideShowPlayedEventArgs(_isPlayingSlideShow, _timer.Interval));
-        }
-
-        /// <summary>
-        /// ページ終端挙動
-        /// </summary>
-        public void PageEndAction()
-        {
-            if (_isMoving)
-            {
-                Stop();
-                var message = CommandTable.Current.GetElement("ToggleSlideShow").GetStateExecuteMessage(false);
-                InfoMessage.Current.SetMessage(InfoMessageType.Notify, message);
-            }
+            Played?.Invoke(this, new SlideShowPlayedEventArgs(_isPlaying, _timer.Interval));
         }
 
         private void SetScroll(double milliseconds)

@@ -51,35 +51,31 @@ namespace NeeView
         {
             if (_pageTerminating > 0) return;
 
-            // TODO ここでSlideShowを参照しているが、引数で渡すべきでは？
-            if (SlideShow.Current.IsPlayingSlideShow && Config.Current.SlideShow.IsSlideShowByLoop)
+            var pageEndAction = SlideShow.Current.IsPlaying
+                ? Config.Current.SlideShow.PageEndAction
+                : Config.Current.Book.PageEndAction;
+
+            switch (pageEndAction)
             {
-                _control.MoveToFirst(sender);
-            }
-            else
-            {
-                switch (Config.Current.Book.PageEndAction)
-                {
-                    case PageEndAction.NextBook:
-                        PageEndAction_NextBook(sender, e);
-                        break;
+                case PageEndAction.NextBook:
+                    PageEndAction_NextBook(sender, e);
+                    break;
 
-                    case PageEndAction.Loop:
-                        PageEndAction_Loop(sender, e);
-                        break;
+                case PageEndAction.Loop:
+                    PageEndAction_Loop(sender, e);
+                    break;
 
-                    case PageEndAction.SeamlessLoop:
-                        // nop.
-                        break;
+                case PageEndAction.SeamlessLoop:
+                    // nop.
+                    break;
 
-                    case PageEndAction.Dialog:
-                        PageEndAction_Dialog(sender, e);
-                        break;
+                case PageEndAction.Dialog:
+                    PageEndAction_Dialog(sender, e);
+                    break;
 
-                    default:
-                        PageEndAction_None(sender, e, true);
-                        break;
-                }
+                default:
+                    PageEndAction_None(sender, e, true);
+                    break;
             }
         }
 
@@ -124,10 +120,12 @@ namespace NeeView
 
         private void PageEndAction_None(object? sender, PageTerminatedEventArgs e, bool notify)
         {
-            if (SlideShow.Current.IsPlayingSlideShow)
+            if (SlideShow.Current.IsPlaying)
             {
                 // スライドショー解除
-                SlideShow.Current.PageEndAction();
+                SlideShow.Current.Stop();
+                var message = CommandTable.Current.GetElement("ToggleSlideShow").GetStateExecuteMessage(false);
+                InfoMessage.Current.SetMessage(InfoMessageType.Notify, message);
             }
 
             // 通知。本の場合のみ処理。メディアでは不要
@@ -149,6 +147,7 @@ namespace NeeView
         private void PageEndAction_Dialog(object? sender, PageTerminatedEventArgs e)
         {
             Interlocked.Increment(ref _pageTerminating);
+            SlideShow.Current.Suspend();
 
             AppDispatcher.BeginInvoke(() =>
             {
@@ -159,6 +158,7 @@ namespace NeeView
                 finally
                 {
                     Interlocked.Decrement(ref _pageTerminating);
+                    SlideShow.Current.Resume();
                 }
             });
         }

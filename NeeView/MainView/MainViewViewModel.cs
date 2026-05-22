@@ -119,7 +119,7 @@ namespace NeeView
         {
             ////Debug.WriteLine($"IsBusy: {BookHub.Current.IsLoading}, {BookOperation.Current.IsBusy}, {ContentRebuild.Current.IsBusy}");
             //this.BusyVisibility = Config.Current.Notice.IsBusyMarkEnabled && (BookHub.Current.IsLoading || BookOperation.Current.BookControl.IsBusy || _viewComponent.ContentRebuild.IsBusy) && !SlideShow.Current.IsPlayingSlideShow ? Visibility.Visible : Visibility.Collapsed;
-            this.BusyVisibility = Config.Current.Notice.IsBusyMarkEnabled && (_presenter.IsLoading || BookOperation.Current.BookControl.IsBusy) && !SlideShow.Current.IsPlayingSlideShow ? Visibility.Visible : Visibility.Collapsed;
+            this.BusyVisibility = Config.Current.Notice.IsBusyMarkEnabled && (_presenter.IsLoading || BookOperation.Current.BookControl.IsBusy) && !SlideShow.Current.IsPlaying ? Visibility.Visible : Visibility.Collapsed;
         }
 
 

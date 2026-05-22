@@ -658,7 +658,7 @@ namespace NeeView
             Trace.WriteLine($"Window.FinalizeMainWindow:");
 
             // スライドショー停止
-            SlideShow.Current.IsPlayingSlideShow = false;
+            SlideShow.Current.Stop();
 
             // ブック読み込み要求無効化
             BookHub.Current.IsEnabled = false;

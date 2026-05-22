@@ -50,7 +50,7 @@ namespace NeeView
             this.Unloaded += MainView_Unloaded;
             this.DataContextChanged += MainView_DataContextChanged;
 
-            _disposables.Add(SlideShow.Current.SubscribePropertyChanged(nameof(SlideShow.IsPlayingSlideShow), SlideShow_IsPlayingSlideShowPropertyChanged));
+            _disposables.Add(SlideShow.Current.SubscribePropertyChanged(nameof(SlideShow.IsPlaying), SlideShow_IsPlayingSlideShowPropertyChanged));
             _disposables.Add(SlideShow.Current.SubscribePlayed(SlideShow_Played));
 
             _disposables.Add(Config.Current.SlideShow.SubscribePropertyChanged(nameof(SlideShowConfig.IsTimerVisible), SlideShowConfig_IsTimerVisiblePropertyChanged));
@@ -158,7 +158,7 @@ namespace NeeView
 
         private void UpdateSlideShowTimerVisibility()
         {
-            this.SlideShowTimer.Visibility = (SlideShow.Current.IsPlayingSlideShow && Config.Current.SlideShow.IsTimerVisible) ? Visibility.Visible : Visibility.Collapsed;
+            this.SlideShowTimer.Visibility = (SlideShow.Current.IsPlaying && Config.Current.SlideShow.IsTimerVisible) ? Visibility.Visible : Visibility.Collapsed;
         }
 
 

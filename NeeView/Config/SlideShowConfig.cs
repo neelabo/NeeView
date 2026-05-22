@@ -2,6 +2,7 @@
 using Generator.Equals;
 using NeeView.Windows.Property;
 using System;
+using System.Text.Json.Serialization;
 
 namespace NeeView
 {
@@ -10,7 +11,7 @@ namespace NeeView
     {
         [DefaultEquality] private double _slideShowInterval = 5.0;
         [DefaultEquality] private bool _isCancelSlideByMouseMove = true;
-        [DefaultEquality] private bool _isSlideShowByLoop = true;
+        [DefaultEquality] private PageEndAction _pageEndAction = PageEndAction.Loop;
         [DefaultEquality] private bool _isTimerVisible;
         [DefaultEquality] private bool _isPrioritizeTime;
         [DefaultEquality] private bool _isWaitAnimation;
@@ -37,13 +38,13 @@ namespace NeeView
         }
 
         /// <summary>
-        /// ループ再生フラグ
+        /// ページ終端でのアクション
         /// </summary>
         [PropertyMember]
-        public bool IsSlideShowByLoop
+        public PageEndAction PageEndAction
         {
-            get { return _isSlideShowByLoop; }
-            set { SetProperty(ref _isSlideShowByLoop, value); }
+            get { return _pageEndAction; }
+            set { SetProperty(ref _pageEndAction, value); }
         }
 
         /// <summary>
@@ -85,5 +86,20 @@ namespace NeeView
             get { return _isAutoScroll; }
             set { SetProperty(ref _isAutoScroll, value); }
         }
+
+        #region Obsolete
+
+        /// <summary>
+        /// ループ再生フラグ
+        /// </summary>
+        [Obsolete, Alternative(nameof(PageEndAction), 46, ScriptErrorLevel.Warning)] // v46.0
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public bool IsSlideShowByLoop
+        {
+            get { return PageEndAction == PageEndAction.Loop; }
+            set { PageEndAction = value ? PageEndAction.Loop : PageEndAction.None; }
+        }
+
+        #endregion Obsolete
     }
 }

@@ -13,7 +13,7 @@ namespace NeeView.Setting
         public SettingPageSlideshow() : base(TextResources.GetString("SettingPage.Slideshow"))
         {
             var section = new SettingItemSection(TextResources.GetString("SettingPage.Slideshow"));
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.IsSlideShowByLoop))));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.PageEndAction))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.IsCancelSlideByMouseMove))));
             section.Children.Add(new SettingItemIndexValue<double>(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.SlideShowInterval)), new SlideShowInterval(), true));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.IsPrioritizeTime))));
