@@ -9,13 +9,26 @@ namespace NeeView
     [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class SlideShowConfig : ObservableObject
     {
+        private static readonly string _defaultNextPageCommandName = CommandElementTools.CreateCommandName(nameof(NextPageCommand));
+
+        [DefaultEquality] private string _nextPageCommandName = _defaultNextPageCommandName;
         [DefaultEquality] private double _slideShowInterval = 5.0;
-        [DefaultEquality] private bool _isCancelSlideByMouseMove = true;
+        [DefaultEquality] private bool _isCancelSlideByMouseMove;
         [DefaultEquality] private PageEndAction _pageEndAction = PageEndAction.Loop;
         [DefaultEquality] private bool _isTimerVisible;
         [DefaultEquality] private bool _isPrioritizeTime;
         [DefaultEquality] private bool _isWaitAnimation;
         [DefaultEquality] private bool _isAutoScroll = true;
+
+        /// <summary>
+        /// ページ送りコマンド名
+        /// </summary>
+        [PropertyStrings]
+        public string NextPageCommandName
+        {
+            get { return _nextPageCommandName; }
+            set { SetProperty(ref _nextPageCommandName, value); }
+        }
 
         /// <summary>
         /// スライドショーの表示間隔(秒)
@@ -101,5 +114,10 @@ namespace NeeView
         }
 
         #endregion Obsolete
+
+        public void ResetNextPageCommandName()
+        {
+            NextPageCommandName = _defaultNextPageCommandName;
+        }
     }
 }

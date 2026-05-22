@@ -1,15 +1,12 @@
 ﻿using NeeView.Windows;
 using System;
+using System.Diagnostics;
 using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace NeeView
 {
     public static partial class CommandElementTools
     {
-        [GeneratedRegex(@"Command$")]
-        private static partial Regex _termCommandRegex { get; }
-
         /// <summary>
         /// コマンド名をクラスタイプから生成
         /// </summary>
@@ -28,7 +25,18 @@ namespace NeeView
         /// <returns></returns>
         public static string CreateCommandName(Type type)
         {
-            return _termCommandRegex.Replace(type.Name, "");
+            return CreateCommandName(type.Name);
+        }
+
+        /// <summary>
+        /// コマンド名をクラス名から生成
+        /// </summary>
+        /// <param name="className"></param>
+        /// <returns></returns>
+        public static string CreateCommandName(string className)
+        {
+            Debug.Assert(className.EndsWith("Command"));
+            return className[..^"Command".Length];
         }
 
         /// <summary>

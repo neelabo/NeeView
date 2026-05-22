@@ -291,8 +291,17 @@ namespace NeeView
         {
             AppDispatcher.BeginInvoke(() =>
             {
-                // ページ移動
-                BookOperation.Current.Control.MoveNext(this);
+                var command = CommandTable.Current.GetElement(Config.Current.SlideShow.NextPageCommandName);
+                if (command == CommandElement.None)
+                {
+                    Config.Current.SlideShow.ResetNextPageCommandName();
+                    command = CommandTable.Current.GetElement(Config.Current.SlideShow.NextPageCommandName);
+                }
+
+                if (command.CanExecute(this, CommandArgs.Empty))
+                {
+                    command.Execute(this, CommandArgs.Empty);
+                }
             });
 
             _count++;
