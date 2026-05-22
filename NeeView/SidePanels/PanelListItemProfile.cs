@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Generator.Equals;
 using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System;
@@ -28,20 +29,21 @@ namespace NeeView
     /// <summary>
     /// リスト項目の表示形式
     /// </summary>
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class PanelListItemProfile : ObservableObject
     {
         private static Rect _rectDefault = new(0, 0, 1, 1);
         private static Rect _rectBanner = new(0, 0, 1, 0.6);
         private static readonly SolidColorBrush _brushBanner = new(Color.FromArgb(0x20, 0x99, 0x99, 0x99));
 
-        private PanelListItemImageShape _imageShape;
-        private int _imageWidth;
-        private bool _isDetailPopupEnabled = true;
-        private bool _isImagePopupEnabled;
-        private bool _isTextVisible;
-        private bool _isTextWrapped;
+        [DefaultEquality] private PanelListItemImageShape _imageShape;
+        [DefaultEquality] private int _imageWidth;
+        [DefaultEquality] private bool _isDetailPopupEnabled = true;
+        [DefaultEquality] private bool _isImagePopupEnabled;
+        [DefaultEquality] private bool _isTextVisible;
+        [DefaultEquality] private bool _isTextWrapped;
+        [DefaultEquality] private bool _isTagVisible;
         private bool _isTextHeightDirty = true;
-        private bool _isTagVisible;
         private double _textHeight;
 
 
@@ -135,41 +137,6 @@ namespace NeeView
         }
 
         #endregion
-
-        #region Equals
-
-        // NOTE: TextHeight の値は遅延生成されるため、標準の比較では一致しない
-        // TODO: TextHeight は別の場所で管理すべきかも？
-
-        public virtual bool Equals(PanelListItemProfile? other)
-        {
-            if (other is null) return false;
-
-            return (this.ImageShape.Equals(other.ImageShape)
-                && this.ImageWidth.Equals(other.ImageWidth)
-                && this.IsDetailPopupEnabled.Equals(other.IsDetailPopupEnabled)
-                && this.IsImagePopupEnabled.Equals(other.IsImagePopupEnabled)
-                && this.IsTextVisible.Equals(other.IsTextVisible)
-                && this.IsTextWrapped.Equals(other.IsTextWrapped)
-                && this.IsTagVisible.Equals(other.IsTagVisible));
-        }
-
-        public override int GetHashCode()
-        {
-            HashCode hashCode = new();
-            hashCode.Add(this.ImageShape.GetHashCode());
-            hashCode.Add(this.ImageWidth.GetHashCode());
-            hashCode.Add(this.IsDetailPopupEnabled.GetHashCode());
-            hashCode.Add(this.IsImagePopupEnabled.GetHashCode());
-            hashCode.Add(this.IsTextVisible.GetHashCode());
-            hashCode.Add(this.IsTextWrapped.GetHashCode());
-            hashCode.Add(this.IsTagVisible.GetHashCode());
-
-            return hashCode.ToHashCode();
-        }
-
-        #endregion Equals
-
 
         #region Obsolete
 
