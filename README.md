@@ -2,6 +2,10 @@
 
 **[NeeView Portal Site (English/日本語)](https://neelabo.github.io/NeeView)**
 
+> [!WARNING]
+> The only official NeeView website is `neelabo.github.io/NeeView`.  
+> Any other sites featuring NeeView as their main content may be imposters and are dangerous.
+
 ### Screenshot
 ![Screenshot](docs/assets/images/NeeView42.en-us.jpg)
 
