@@ -34,6 +34,7 @@ namespace NeeView
         [DefaultEquality] private bool _isKeepFlipBooks;
         [DefaultEquality] private bool _isKeepPageTransform;
         [DefaultEquality] private double _scrollDuration = 0.2;
+        [DefaultEquality] private PageMoveType _pageMoveType;
         [DefaultEquality] private double _pageMoveDuration = 0.0;
         [DefaultEquality] private AutoRotatePolicy _autoRotatePolicy = AutoRotatePolicy.FitToViewArea;
 
@@ -229,13 +230,20 @@ namespace NeeView
             set { SetProperty(ref _isKeepPageTransform, value); }
         }
 
-
         // スクロール時間 (秒)
         [PropertyRange(0.0, 1.0, TickFrequency = 0.1, IsEditable = true, HasDecimalPoint = true)]
         public double ScrollDuration
         {
             get { return _scrollDuration; }
             set { SetProperty(ref _scrollDuration, AppMath.Round(value)); }
+        }
+
+        // ページ移動タイプ
+        [PropertyMember]
+        public PageMoveType PageMoveType
+        {
+            get { return _pageMoveType; }
+            set { SetProperty(ref _pageMoveType, value); }
         }
 
         // ページ変更時間(秒)
@@ -443,4 +451,11 @@ namespace NeeView
         /// </summary>
         ToPortrait,
     }
+
+    public enum PageMoveType
+    {
+        Scroll,
+        Fade,
+    }
+
 }

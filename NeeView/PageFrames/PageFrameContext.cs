@@ -21,7 +21,7 @@ namespace NeeView.PageFrames
         private readonly Config _config;
         private readonly BookSettingConfig _bookSetting;
         private readonly PageFrameProfile _frameProfile;
-        private double _loupeScale;
+        private readonly SlideShow _slideshow;
         private readonly DisposableCollection _disposables = new();
         private bool _disposedValue;
         private readonly BooleanLockValue _isSnapAnchor = new();
@@ -38,11 +38,12 @@ namespace NeeView.PageFrames
             _viewScrollContext = shareContext.ViewScrollContext;
             _isMediaBook = isMediaBook;
             _bookSetting = _config.BookSetting;
+            _slideshow = SlideShow.Current;
 
             _frameProfile = new PageFrameProfile(_config);
             _disposables.Add(_frameProfile);
 
-            _loupeScale = _config.Loupe.DefaultScale;
+            LoupeScale = _config.Loupe.DefaultScale;
 
             _disposables.Add(_config.Book.SubscribePropertyChanged(BookConfig_PropertyChanged));
             _disposables.Add(_config.View.SubscribePropertyChanged(ViewConfig_PropertyChanged));
@@ -56,8 +57,10 @@ namespace NeeView.PageFrames
             _disposables.Add(ImageDotKeepConfig.SubscribePropertyChanged((s, e) => OnPropertyChanged(nameof(ImageDotKeepConfig))));
             _disposables.Add(_config.Image.Standard.SubscribePropertyChanged(nameof(ImageStandardConfig.IsAspectRatioEnabled), (s, e) => OnPropertyChanged(nameof(IsAspectRatioEnabled))));
             _disposables.Add(() => _viewScrollContext.Clear());
+            _disposables.Add(_slideshow.SubscribePropertyChanged(nameof(SlideShow.IsPlaying), SlideShowIsPlayngChanged));
 
-            _disposables.Add(Config.Current.SlideShow.SubscribePropertyChanged(nameof(SlideShow.IsPlaying), SlideShowIsPlayngChanged));
+            UpdatePageEndAction();
+            UpdatePageChangeType();
         }
 
         [Subscribable]
@@ -84,11 +87,14 @@ namespace NeeView.PageFrames
         public bool IsInsertDummyPage => _config.Book.IsInsertDummyPage;
         public bool IsInsertDummyFirstPage => _config.Book.IsInsertDummyPage && _config.Book.IsInsertDummyFirstPage;
         public bool IsInsertDummyLastPage => _config.Book.IsInsertDummyPage && _config.Book.IsInsertDummyLastPage;
-        public PageEndAction PageEndAction => SlideShow.Current.IsPlaying ? _config.SlideShow.PageEndAction : _config.Book.PageEndAction;
+
+        [ObservableProperty, NotifyPropertyChangedFor(nameof(IsLoopPage))]
+        public partial PageEndAction PageEndAction { get; private set; }
+
         public bool IsLoopPage => !_isMediaBook && PageEndAction == PageEndAction.SeamlessLoop;
-        public bool CanPrioritizePageMove => _config.Book.IsPrioritizePageMove && !SlideShow.Current.IsPlaying;
+        public bool CanPrioritizePageMove => _config.Book.IsPrioritizePageMove && !_slideshow.IsPlaying;
         public bool IsReadyToPageMove => _config.Book.IsReadyToPageMove && !_config.Book.IsPanorama;
-        public bool IsNotifyPageLoop => _config.Book.IsNotifyPageLoop && !SlideShow.Current.IsPlaying;
+        public bool IsNotifyPageLoop => _config.Book.IsNotifyPageLoop && !_slideshow.IsPlaying;
         public bool IsStaticWidePage => _config.Book.IsStaticWidePage && _bookSetting.PageMode == PageMode.WidePage;
         public WidePageStretch WidePageStretch => _config.Book.WidePageStretch;
         public WidePageVerticalAlignment WidePageVerticalAlignment => _config.Book.WidePageVerticalAlignment;
@@ -131,17 +137,15 @@ namespace NeeView.PageFrames
         public ImageDotKeepConfig ImageDotKeepConfig => _config.ImageDotKeep;
         public bool IsAspectRatioEnabled => _config.Image.Standard.IsAspectRatioEnabled;
 
-
         public TimeSpan ScrollDuration => TimeSpan.FromSeconds(_config.View.ScrollDuration);
-        public TimeSpan PageChangeDuration => _config.Book.IsPanorama ? ScrollDuration : TimeSpan.FromSeconds(_config.View.PageMoveDuration);
 
+        [ObservableProperty]
+        public partial PageMoveType PageChangeType { get; private set; }
 
-        public double LoupeScale
-        {
-            get { return _loupeScale; }
-            set { SetProperty(ref _loupeScale, value); }
-        }
+        public TimeSpan PageChangeDuration => _config.Book.IsPanorama ? ScrollDuration : TimeSpan.FromSeconds(_slideshow.IsPlaying ? _config.SlideShow.PageMoveDuration : _config.View.PageMoveDuration);
 
+        [ObservableProperty]
+        public partial double LoupeScale { get; private set; }
 
         public BooleanLockValue IsSnapAnchor => _isSnapAnchor;
 
@@ -167,6 +171,15 @@ namespace NeeView.PageFrames
             GC.SuppressFinalize(this);
         }
 
+        private void UpdatePageEndAction()
+        {
+            PageEndAction = _slideshow.IsPlaying ? _config.SlideShow.PageEndAction : _config.Book.PageEndAction;
+        }
+
+        private void UpdatePageChangeType()
+        {
+            PageChangeType = _config.Book.IsPanorama ? PageMoveType.Scroll : _slideshow.IsPlaying ? _config.SlideShow.PageMoveType : _config.View.PageMoveType;
+        }
 
         private void BookConfig_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
@@ -176,6 +189,7 @@ namespace NeeView.PageFrames
                     OnPropertyChanged(nameof(IsPanorama));
                     OnPropertyChanged(nameof(StretchMode));
                     OnPropertyChanged(nameof(IsReadyToPageMove));
+                    UpdatePageChangeType();
                     break;
 
                 case nameof(BookConfig.Orientation):
@@ -210,8 +224,7 @@ namespace NeeView.PageFrames
                     break;
 
                 case nameof(BookConfig.PageEndAction):
-                    OnPropertyChanged(nameof(PageEndAction));
-                    OnPropertyChanged(nameof(IsLoopPage));
+                    UpdatePageEndAction();
                     break;
 
                 case nameof(BookConfig.IsReadyToPageMove):
@@ -233,8 +246,11 @@ namespace NeeView.PageFrames
             switch (e.PropertyName)
             {
                 case nameof(SlideShowConfig.PageEndAction):
-                    OnPropertyChanged(nameof(PageEndAction));
-                    OnPropertyChanged(nameof(IsLoopPage));
+                    UpdatePageEndAction();
+                    break;
+
+                case nameof(SlideShowConfig.PageMoveType):
+                    UpdatePageChangeType();
                     break;
             }
         }
@@ -282,6 +298,10 @@ namespace NeeView.PageFrames
 
                 case nameof(ViewConfig.AutoRotatePolicy):
                     OnPropertyChanged(nameof(AutoRotatePolicy));
+                    break;
+
+                case nameof(ViewConfig.PageMoveType):
+                    UpdatePageChangeType();
                     break;
             }
 
@@ -378,8 +398,8 @@ namespace NeeView.PageFrames
 
         private void SlideShowIsPlayngChanged(object? sender, PropertyChangedEventArgs e)
         {
-            OnPropertyChanged(nameof(PageEndAction));
-            OnPropertyChanged(nameof(IsLoopPage));
+            UpdatePageEndAction();
+            UpdatePageChangeType();
         }
 
 

@@ -108,7 +108,6 @@ namespace NeeView.PageFrames
             _disposables.Add(_viewBox);
             _cleaner = new PageFrameContainerCleaner(_context, _containers);
             _filler = new PageFrameContainerFiller(_context, _bookContext, _containers, _rectMath);
-            _visiblePageWatcher = new PageFrameContainerVisiblePageWatcher(_context, _viewBox, _rectMath, _layout);
 
             var effectGrid = new Grid() { Name = "EffectLayer" };
             effectGrid.Loaded += (s, e) => ((Grid)s).SetBinding(Grid.EffectProperty, new Binding(nameof(ImageEffect.Effect)) { Source = ImageEffect.Current });
@@ -131,6 +130,8 @@ namespace NeeView.PageFrames
                 (s, e) => _bookContext.SelectedRange = _selected.PageRange));
             _disposables.Add(_selected.SubscribeViewContentChanged(
                  (s, e) => ViewContentChanged?.Invoke(this, e)));
+
+            _visiblePageWatcher = new PageFrameContainerVisiblePageWatcher(_context, _viewBox, _rectMath, _layout, _selected);
 
             _disposables.Add(_scrollViewer.SubscribeSizeChanged(_context.SetCanvasSize));
             _disposables.Add(_containers.SubscribeCollectionChanged(ContainerCollection_CollectionChanged));
@@ -480,6 +481,7 @@ namespace NeeView.PageFrames
             // 選択コンテナ配置初期化
             if (resetLayout)
             {
+                UpdateFrameOpacity(node);
                 node.Value.ResetLayout();
             }
 
@@ -612,6 +614,7 @@ namespace NeeView.PageFrames
                     break;
 
                 case nameof(Context.FrameOrientation):
+                case nameof(Context.PageChangeType):
                     UpdateContainers(PageFrameDirtyLevel.Moderate, TransformMask.None, true, true);
                     break;
 
@@ -829,16 +832,18 @@ namespace NeeView.PageFrames
             }
 
             _filler.FillContainersWhenAligned(_viewBox.Rect, next, direction);
-            _layout.Layout();
-            _layout.Flush();
-            _containers.Anchor.Set(next, direction);
 
             _context.SetAutoStretchTarget(next.Value.FrameRange);
             _selected.Set(next, true);
 
+            _layout.Layout();
+            _layout.Flush();
+            _containers.Anchor.Set(next, direction);
+
             AssertSelectedExists();
+            UpdateFrameOpacity(next);
             ScrollToViewOrigin(next, direction);
-            Cleanup();
+            Cleanup(next);
 
             _scrollLock.SetLock(_context.ViewConfig.IsMoveLockStart);
             SetSnapAnchor();
@@ -1182,7 +1187,7 @@ namespace NeeView.PageFrames
         public void ScrollToPreset(HorizontalAlignment horizontal, VerticalAlignment vertical, bool snap)
         {
             ScrollToPreset(horizontal, vertical, snap, _context.ScrollDuration, null, null);
-        } 
+        }
 
         public void ScrollToPreset(HorizontalAlignment horizontal, VerticalAlignment vertical, bool snap, TimeSpan span, IEasingFunction? easeX, IEasingFunction? easeY)
         {
@@ -1361,6 +1366,27 @@ namespace NeeView.PageFrames
             _layout.Layout(anchor);
         }
 
+        /// <summary>
+        /// 表示ノードを指定した Cleanup
+        /// </summary>
+        /// <remarks>
+        /// フェードページ遷移のときに専用のCleanupを実行する
+        /// </remarks>
+        /// <param name="node"></param>
+        private void Cleanup(LinkedListNode<PageFrameContainer> node)
+        {
+            if (_context.PageChangeType == PageMoveType.Fade)
+            {
+                // 対象とその前後以外のコンテナを削除
+                _cleaner.CleanupFixed(node);
+            }
+            else
+            {
+                // 表示範囲外のコンテナを削除
+                Cleanup();
+            }
+        }
+
         private void Cleanup(bool isUpdateSelected)
         {
             Cleanup();
@@ -1371,6 +1397,9 @@ namespace NeeView.PageFrames
             }
         }
 
+        /// <summary>
+        /// 表示範囲外のコンテナを削除
+        /// </summary>
         private void Cleanup()
         {
             _cleaner.Cleanup(_viewBox.ViewingRect);
@@ -1584,6 +1613,23 @@ namespace NeeView.PageFrames
             }
 
             LocalDebug.WriteLine($"{_pageFrameAlignment}");
+        }
+
+        /// <summary>
+        /// コンテナのフェード設定
+        /// </summary>
+        /// <param name="node"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void UpdateFrameOpacity(LinkedListNode<PageFrameContainer> node)
+        {
+            if (_context.PageChangeType == PageMoveType.Fade)
+            {
+                _containers.Fade(node);
+            }
+            else
+            {
+                _containers.ResetFade();
+            }
         }
 
         /// <summary>

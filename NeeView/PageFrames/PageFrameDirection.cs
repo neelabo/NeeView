@@ -7,6 +7,7 @@ namespace NeeView.PageFrames
     /// </summary>
     public enum PageFrameDirection
     {
+        None,
         Left,
         Up,
         Right,
@@ -20,6 +21,7 @@ namespace NeeView.PageFrames
         {
             return self switch
             {
+                PageFrameDirection.None => PageFrameDirection.None,
                 PageFrameDirection.Left => PageFrameDirection.Right,
                 PageFrameDirection.Up => PageFrameDirection.Down,
                 PageFrameDirection.Right => PageFrameDirection.Left,
@@ -32,6 +34,7 @@ namespace NeeView.PageFrames
         {
             return self switch
             {
+                PageFrameDirection.None => PageFrameDirection.None,
                 PageFrameDirection.Left => PageFrameDirection.Up,
                 PageFrameDirection.Up => PageFrameDirection.Left,
                 PageFrameDirection.Right => PageFrameDirection.Down,

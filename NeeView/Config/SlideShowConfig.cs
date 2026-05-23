@@ -14,11 +14,13 @@ namespace NeeView
         [DefaultEquality] private string _nextPageCommandName = _defaultNextPageCommandName;
         [DefaultEquality] private double _slideShowInterval = 5.0;
         [DefaultEquality] private bool _isCancelSlideByMouseMove;
-        [DefaultEquality] private PageEndAction _pageEndAction = PageEndAction.Loop;
         [DefaultEquality] private bool _isTimerVisible;
         [DefaultEquality] private bool _isPrioritizeTime;
         [DefaultEquality] private bool _isWaitAnimation;
         [DefaultEquality] private bool _isAutoScroll = true;
+        [DefaultEquality] private PageEndAction _pageEndAction = PageEndAction.Loop;
+        [DefaultEquality] private PageMoveType _pageMoveType = PageMoveType.Fade;
+        [DefaultEquality] private double _pageMoveDuration = 0.5;
 
         /// <summary>
         /// ページ送りコマンド名
@@ -48,16 +50,6 @@ namespace NeeView
         {
             get { return _isCancelSlideByMouseMove; }
             set { SetProperty(ref _isCancelSlideByMouseMove, value); }
-        }
-
-        /// <summary>
-        /// ページ終端でのアクション
-        /// </summary>
-        [PropertyMember]
-        public PageEndAction PageEndAction
-        {
-            get { return _pageEndAction; }
-            set { SetProperty(ref _pageEndAction, value); }
         }
 
         /// <summary>
@@ -98,6 +90,45 @@ namespace NeeView
         {
             get { return _isAutoScroll; }
             set { SetProperty(ref _isAutoScroll, value); }
+        }
+
+        /// <summary>
+        /// ページ終端でのアクション
+        /// </summary>
+        /// <remarks>
+        /// BookConfig.PageMoveType を override する
+        /// </remarks>
+        [PropertyMember]
+        public PageEndAction PageEndAction
+        {
+            get { return _pageEndAction; }
+            set { SetProperty(ref _pageEndAction, value); }
+        }
+
+        /// <summary>
+        /// ページ移動タイプ
+        /// </summary>
+        /// <remarks>
+        /// ViewConfig.PageMoveType を override する
+        /// </remarks>
+        [PropertyMember]
+        public PageMoveType PageMoveType
+        {
+            get { return _pageMoveType; }
+            set { SetProperty(ref _pageMoveType, value); }
+        }
+
+        /// <summary>
+        /// ページ変更時間(秒)
+        /// </summary>
+        /// <remarks>
+        /// ViewConfig.PageMoveDuration を override する
+        /// </remarks>
+        [PropertyRange(0.0, 1.0, TickFrequency = 0.1, IsEditable = true, HasDecimalPoint = true)]
+        public double PageMoveDuration
+        {
+            get { return _pageMoveDuration; }
+            set { SetProperty(ref _pageMoveDuration, AppMath.Round(value)); }
         }
 
         #region Obsolete

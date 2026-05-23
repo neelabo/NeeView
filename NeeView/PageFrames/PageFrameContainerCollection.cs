@@ -133,6 +133,28 @@ namespace NeeView.PageFrames
         public PageFrameContainer LastTerminate => _lastTerminateNode.Value;
 
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    foreach (var container in _containers)
+                    {
+                        container.Dispose();
+                    }
+                }
+                _disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+
         public IEnumerator<PageFrameContainer> GetEnumerator()
         {
             return ((IEnumerable<PageFrameContainer>)_containers).GetEnumerator();
@@ -573,27 +595,31 @@ namespace NeeView.PageFrames
                 : node.Value.Identifier < Anchor.Container.Identifier ? LinkedListDirection.Previous : LinkedListDirection.Next;
         }
 
-        protected virtual void Dispose(bool disposing)
+        public void ResetFade()
         {
-            if (!_disposedValue)
+            var containers = Collect<PageFrameContent>().ToList();
+
+            foreach (var element in containers)
             {
-                if (disposing)
-                {
-                    foreach (var container in _containers)
-                    {
-                        container.Dispose();
-                    }
-                }
-                _disposedValue = true;
+                element.ResetFade();
             }
         }
 
-        public void Dispose()
+        public void Fade(LinkedListNode<PageFrameContainer> node)
         {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
+            var containers = Collect<PageFrameContent>().ToList();
+
+            foreach (var element in containers)
+            {
+                if (element == node.Value)
+                {
+                    element.FadeIn(_context.PageChangeDuration);
+                }
+                else
+                {
+                    element.FadeOut(_context.PageChangeDuration);
+                }
+            }
         }
     }
-
-
 }

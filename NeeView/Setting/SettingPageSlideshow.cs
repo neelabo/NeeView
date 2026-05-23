@@ -14,19 +14,24 @@ namespace NeeView.Setting
     {
         public SettingPageSlideshow() : base(TextResources.GetString("SettingPage.Slideshow"))
         {
+            this.Items = new List<SettingItem>();
+
             var section = new SettingItemSection(TextResources.GetString("SettingPage.Slideshow"));
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.PageEndAction))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.IsCancelSlideByMouseMove))));
             section.Children.Add(new SettingItemIndexValue<double>(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.SlideShowInterval)), new SlideShowInterval(), true));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.IsPrioritizeTime))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.IsWaitAnimation))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.IsTimerVisible))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.IsAutoScroll))));
-
             var commandMap = GetNextPageCommandDictionary();
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.NextPageCommandName), new PropertyMemberElementOptions() { StringMap = commandMap })));
+            this.Items.Add(section);
 
-            this.Items = new List<SettingItem>() { section };
+            section = new SettingItemSection(TextResources.GetString("SettingPage.Slideshow.Override"));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.PageEndAction))));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.PageMoveType))));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.PageMoveDuration))));
+            this.Items.Add(section);
         }
 
         // TODO: CommandTalbe 変更のたびに再生成が必要

@@ -72,8 +72,8 @@ namespace NeeView.PageFrames
         /// </summary>
         private LinkedListNode<PageFrameContainer>? GetViewCenterContainer(Rect viewRect, IReadOnlyList<LinkedListNode<PageFrameContainer>> nodes)
         {
-            var node = nodes.FirstOrDefault(e => _math.GetConflict(e.Value.Rect, viewRect).IsCentered())
-                ?? nodes.MinBy(e => GetCenterDistance(e.Value));
+            var node = nodes.Where(e => e.Value.IsHitTestVisible).FirstOrDefault(e => _math.GetConflict(e.Value.Rect, viewRect).IsCentered())
+                ?? nodes.Where(e => e.Value.IsHitTestVisible).MinBy(e => GetCenterDistance(e.Value));
 
             return node;
 
@@ -90,8 +90,8 @@ namespace NeeView.PageFrames
         /// </summary>
         private LinkedListNode<PageFrameContainer>? GetViewMinContainer(Rect viewRect, IReadOnlyList<LinkedListNode<PageFrameContainer>> nodes)
         {
-            var node = nodes.Where(e => _math.GetConflict(e.Value.Rect, viewRect).IsConflict()).MinBy(e => GerDistance(e.Value))
-                ?? nodes.MinBy(e => GerDistance(e.Value));
+            var node = nodes.Where(e => e.Value.IsHitTestVisible).Where(e => _math.GetConflict(e.Value.Rect, viewRect).IsConflict()).MinBy(e => GerDistance(e.Value))
+                ?? nodes.Where(e => e.Value.IsHitTestVisible).MinBy(e => GerDistance(e.Value));
 
             return node;
 
@@ -109,8 +109,8 @@ namespace NeeView.PageFrames
         /// <returns></returns>
         private LinkedListNode<PageFrameContainer>? GetViewMaxContainer(Rect viewRect, IReadOnlyList<LinkedListNode<PageFrameContainer>> nodes)
         {
-            var node = nodes.Where(e => _math.GetConflict(e.Value.Rect, viewRect).IsConflict()).MinBy(e => GerDistance(e.Value))
-                ?? nodes.MinBy(e => GerDistance(e.Value));
+            var node = nodes.Where(e => e.Value.IsHitTestVisible).Where(e => _math.GetConflict(e.Value.Rect, viewRect).IsConflict()).MinBy(e => GerDistance(e.Value))
+                ?? nodes.Where(e => e.Value.IsHitTestVisible).MinBy(e => GerDistance(e.Value));
 
             return node;
 

@@ -81,14 +81,20 @@ namespace NeeView.PageFrames
         {
             if (referenceElement is null) return;
 
-            //Debug.Assert(element != _anchor.Value);
+            // NOTE: フェードページ遷移のときには同じ場所にコンテナを配置する
 
-            var layoutDirection = _context.FrameOrientation == PageFrameOrientation.Horizontal
-                ? (_context.ReadOrder == PageReadOrder.LeftToRight ? direction : direction.Reverse()) == LinkedListDirection.Previous ? PageFrameDirection.Left : PageFrameDirection.Right
-                : direction == LinkedListDirection.Previous ? PageFrameDirection.Up : PageFrameDirection.Down;
+            var layoutDirection = _context.PageChangeType == PageMoveType.Fade
+                ? PageFrameDirection.None
+                : _context.FrameOrientation == PageFrameOrientation.Horizontal
+                    ? (_context.ReadOrder == PageReadOrder.LeftToRight ? direction : direction.Reverse()) == LinkedListDirection.Previous ? PageFrameDirection.Left : PageFrameDirection.Right
+                    : direction == LinkedListDirection.Previous ? PageFrameDirection.Up : PageFrameDirection.Down;
 
             switch (layoutDirection)
             {
+                case PageFrameDirection.None:
+                    element.X = referenceElement.X;
+                    element.Y = referenceElement.Y;
+                    break;
                 case PageFrameDirection.Left:
                     element.X = referenceElement.X - element.Width - _context.FrameMargin;
                     element.Y = -element.Height * 0.5;

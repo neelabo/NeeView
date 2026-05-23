@@ -90,6 +90,19 @@ namespace NeeView.PageFrames
                 node = next;
             }
         }
+
+        /// <summary>
+        /// 対象とその前後以外のコンテナを削除
+        /// </summary>
+        /// <remarks>
+        /// フェードページ遷移用
+        /// </remarks>
+        /// <param name="node"></param>
+        public void CleanupFixed(LinkedListNode<PageFrameContainer> node)
+        {
+            RemoveContainers(node.Next?.Next, LinkedListDirection.Next);
+            RemoveContainers(node.Previous?.Previous, LinkedListDirection.Previous);
+        }
     }
 
 }

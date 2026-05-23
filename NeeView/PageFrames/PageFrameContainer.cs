@@ -56,6 +56,7 @@ namespace NeeView.PageFrames
         private readonly ViewScrollContext _viewScrollContext;
         private readonly ContentControl _contentControl;
         private IPageFrameContent _content;
+        private DoubleAnimation? _fadeAnime;
 
 #if DEBUG
         private readonly TextBlock _textBlock;
@@ -108,6 +109,7 @@ namespace NeeView.PageFrames
                 if (disposing)
                 {
                     DetachContent();
+                    CancelFadeAnime();
                 }
 
                 _disposedValue = true;
@@ -567,6 +569,71 @@ namespace NeeView.PageFrames
         private bool IsViewSourceLoaded()
         {
             return _content is PageFrameContent content ? content.ViewContents.All(e => e.ViewSource.IsLoaded) : true;
+        }
+
+        public void ResetFade()
+        {
+            CancelFadeAnime();
+            this.IsHitTestVisible = true;
+            this.Visibility = Visibility.Visible;
+            this.Opacity = 1.0;
+        }
+
+        private void CancelFadeAnime()
+        {
+            if (_fadeAnime is null) return;
+
+            this.BeginAnimation(FrameworkElement.OpacityProperty, null);
+            _fadeAnime.Completed -= FadeOut_Completed;
+            _fadeAnime = null;
+        }
+
+        public void FadeIn(TimeSpan duration)
+        {
+            this.IsHitTestVisible = true;
+
+            this.Visibility = Visibility.Visible;
+
+            if (duration == TimeSpan.Zero)
+            {
+                CancelFadeAnime();
+                this.Opacity = 1.0;
+                return;
+            }
+
+            CancelFadeAnime();
+            _fadeAnime = new DoubleAnimation(0.0, 1.0, duration);
+            this.BeginAnimation(FrameworkElement.OpacityProperty, _fadeAnime);
+        }
+
+        public void FadeOut(TimeSpan duration)
+        {
+            this.IsHitTestVisible = false;
+
+            if (this.Visibility == Visibility.Collapsed)
+            {
+                return;
+            }
+
+            if (duration == TimeSpan.Zero)
+            {
+                this.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            CancelFadeAnime();
+            _fadeAnime = new DoubleAnimation(0.0, duration);
+            _fadeAnime.Completed += FadeOut_Completed;
+            this.BeginAnimation(FrameworkElement.OpacityProperty, _fadeAnime);
+        }
+
+        private void FadeOut_Completed(object? sender, EventArgs e)
+        {
+            Debug.Assert(this.IsHitTestVisible == false);
+            if (this.IsHitTestVisible == false)
+            {
+                this.Visibility = Visibility.Collapsed;
+            }
         }
     }
 

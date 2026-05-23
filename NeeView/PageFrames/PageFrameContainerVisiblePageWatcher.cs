@@ -16,17 +16,18 @@ namespace NeeView.PageFrames
         private readonly PageFrameContainerViewBox _viewBox;
         private readonly PageFrameContainerCollectionRectMath _collectionRectMath;
         private readonly PageFrameContainerLayout _layout;
+        private readonly SelectedContainer _selected;
         private List<PageFrameContainer> _visibleContainers = new();
         private PageRange _viewRange;
         private List<Page> _viewPages = new();
 
-
-        public PageFrameContainerVisiblePageWatcher(PageFrameContext context, PageFrameContainerViewBox viewBox, PageFrameContainerCollectionRectMath collectionRectMath, PageFrameContainerLayout layout)
+        public PageFrameContainerVisiblePageWatcher(PageFrameContext context, PageFrameContainerViewBox viewBox, PageFrameContainerCollectionRectMath collectionRectMath, PageFrameContainerLayout layout, SelectedContainer selected)
         {
             _context = context;
             _viewBox = viewBox;
             _collectionRectMath = collectionRectMath;
             _layout = layout;
+            _selected = selected;
 
             // TODO: Dispose
             _layout.LayoutChanged += Layout_LayoutChanged;
@@ -75,7 +76,9 @@ namespace NeeView.PageFrames
             // もし不連続になる場合、画面中心から遠い不連続コンテナを除外する
             if (!IsContinued(visibleContainers))
             {
-                visibleContainers = SelectContainerGroup(CollectContainerGroup(visibleContainers), _viewBox.Rect);
+                // NOTE: フェードのときは座標が同じなので距離で判別できない。なので選択ノードで判別する
+                var next = (_context.PageChangeType == PageMoveType.Fade) ? _selected.Node.Value : null;
+                visibleContainers = SelectContainerGroup(CollectContainerGroup(visibleContainers), _viewBox.Rect, next);
                 Debug.Assert(IsContinued(visibleContainers));
             }
 
@@ -135,11 +138,23 @@ namespace NeeView.PageFrames
             return groups;
         }
 
-        private List<PageFrameContainer> SelectContainerGroup(List<List<PageFrameContainer>> groups, Rect viewRect)
+        private List<PageFrameContainer> SelectContainerGroup(List<List<PageFrameContainer>> groups, Rect viewRect, PageFrameContainer? target)
         {
             Debug.Assert(groups.Any());
+
+            List<PageFrameContainer>? containers;
+
+            if (target is not null)
+            {
+                containers = groups.FirstOrDefault(e => e.Contains(target));
+                if (containers is not null)
+                {
+                    return containers;
+                }
+            }
+
             var viewCenter = viewRect.Center();
-            var containers = groups
+            containers = groups
                 .Select(e => (group: e, length: e.Aggregate(double.PositiveInfinity, (result, e) => Math.Min((e.Center - viewCenter).LengthSquared, result))))
                 .MinBy(e => e.length).group;
             return containers;
