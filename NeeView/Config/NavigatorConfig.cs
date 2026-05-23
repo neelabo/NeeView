@@ -10,6 +10,7 @@ namespace NeeView
         [DefaultEquality] private bool _isVisibleThumbnail;
         [DefaultEquality] private double _thumbnailHeight = 256.0;
         [DefaultEquality] private bool _isVisibleControlBar;
+        [DefaultEquality] private bool _isVisibleSlideShow;
 
         [PropertyMember]
         public bool IsVisibleThumbnail
@@ -32,7 +33,12 @@ namespace NeeView
             set { SetProperty(ref _isVisibleControlBar, value); }
         }
 
-
+        [PropertyMember]
+        public bool IsVisibleSlideShow
+        {
+            get { return _isVisibleSlideShow; }
+            set { SetProperty(ref _isVisibleSlideShow, value); }
+        }
     }
 }
 

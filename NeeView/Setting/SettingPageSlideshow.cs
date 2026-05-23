@@ -12,13 +12,13 @@ namespace NeeView.Setting
     /// </summary>
     public class SettingPageSlideshow : SettingPage
     {
-        public SettingPageSlideshow() : base(TextResources.GetString("SettingPage.Slideshow"))
+        public SettingPageSlideshow() : base(TextResources.GetString("SettingPage.SlideShow"))
         {
             this.Items = new List<SettingItem>();
 
-            var section = new SettingItemSection(TextResources.GetString("SettingPage.Slideshow"));
+            var section = new SettingItemSection(TextResources.GetString("SettingPage.SlideShow"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.IsCancelSlideByMouseMove))));
-            section.Children.Add(new SettingItemIndexValue<double>(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.SlideShowInterval)), new SlideShowInterval(), true));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.SlideShowInterval))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.IsPrioritizeTime))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.IsWaitAnimation))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.IsTimerVisible))));
@@ -27,7 +27,7 @@ namespace NeeView.Setting
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.NextPageCommandName), new PropertyMemberElementOptions() { StringMap = commandMap })));
             this.Items.Add(section);
 
-            section = new SettingItemSection(TextResources.GetString("SettingPage.Slideshow.Override"));
+            section = new SettingItemSection(TextResources.GetString("SettingPage.SlideShow.Override"), TextResources.GetString("SettingPage.SlideShow.Override.Remarks"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.PageEndAction))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.PageMoveType))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.PageMoveDuration))));
@@ -55,36 +55,5 @@ namespace NeeView.Setting
             };
         }
 
-
-        #region IndexValue
-
-        /// <summary>
-        /// スライドショー インターバルテーブル
-        /// </summary>
-        public class SlideShowInterval : IndexDoubleValue
-        {
-            private static readonly List<double> _values = new()
-            {
-                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30, 45, 60, 90, 120, 180, 240, 300
-            };
-
-            public SlideShowInterval() : base(_values)
-            {
-                IsValueSyncIndex = false;
-            }
-
-            public SlideShowInterval(double value) : base(_values)
-            {
-                IsValueSyncIndex = false;
-                Value = value;
-            }
-
-            protected override string GetValueString(double value)
-            {
-                return $"{value} {TextResources.GetString("Word.Sec")}";
-            }
-        }
-
-        #endregion
     }
 }

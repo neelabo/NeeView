@@ -38,6 +38,8 @@ namespace NeeView
 
         public Config Config => Config.Current;
 
+        public SlideShow SlideShow => SlideShow.Current;
+
         public bool IsLoading => _isLoading.Value;
 
         public Dictionary<string, RoutedUICommand> BookCommands

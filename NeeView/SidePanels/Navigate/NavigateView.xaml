@@ -283,6 +283,28 @@
 
                         </Separator>
 
+                        <StackPanel Visibility="{Binding IsVisibleSlideShow, Converter={StaticResource BooleanToVisibilityConverter}}" >
+                            <DockPanel LastChildFill="False" Margin="0,5">
+                                <TextBlock Text="{properties:TextBinding Word.SlideShow}" VerticalAlignment="Center" />
+                            </DockPanel>
+                            <StackPanel Margin="10,5,0,5">
+                                <DockPanel Margin="0,5">
+                                    <nvc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding SlideShow.IsPlaying}" Margin="10,0,0,0" VerticalAlignment="Center" />
+                                    <TextBlock Text="{properties:TextBinding Word.Play}" VerticalAlignment="Center" />
+                                </DockPanel>
+                                <DockPanel Margin="0,5">
+                                    <nvc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding SlideShowConfig.IsTimerVisible}" Margin="10,0,0,0" VerticalAlignment="Center" />
+                                    <TextBlock Text="{properties:TextBinding SlideShowConfig.IsTimerVisible}" VerticalAlignment="Center" />
+                                </DockPanel>
+                                <DockPanel Margin="0,2" KeyboardNavigation.TabNavigation="Local">
+                                    <nvc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding SlideShowInterval, StringFormat={}{0:F1}}" Width="70" VerticalAlignment="Center" Margin="5,0,0,0"
+                                            ValueDeltaChanged="SlideShowInterval_ValueDelta" TabIndex="2" />
+                                    <Slider Value="{Binding SlideShowInterval}" Minimum="0.1" Maximum="30.0" TickFrequency="0.1" IsSnapToTickEnabled="True" VerticalAlignment="Center" TabIndex="1" />
+                                </DockPanel>
+                            </StackPanel>
+                            <Separator />
+                        </StackPanel>
+
                         <StackPanel>
                             <DockPanel LastChildFill="False" Margin="0,5">
                                 <TextBlock Text="{properties:TextBinding Navigator.Stretch}" VerticalAlignment="Center" />

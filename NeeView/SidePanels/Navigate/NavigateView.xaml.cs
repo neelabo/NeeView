@@ -60,6 +60,11 @@ namespace NeeView
             _vm.AddAngleTick(e.Delta);
         }
 
+        private void SlideShowInterval_ValueDelta(object? sender, ValueDeltaEventArgs e)
+        {
+            _vm.AddSlideShowIntervalTick(e.Delta);
+        }
+
 
         public void FocusAtOnce()
         {

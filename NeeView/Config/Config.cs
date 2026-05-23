@@ -93,7 +93,7 @@ namespace NeeView
 
         public ThumbnailConfig Thumbnail { get; set; } = new ThumbnailConfig();
 
-        [PropertyMapLabel("SettingPage.Slideshow")]
+        [PropertyMapLabel("SettingPage.SlideShow")]
         public SlideShowConfig SlideShow { get; set; } = new SlideShowConfig();
 
         public ImageEffectConfig ImageEffect { get; set; } = new ImageEffectConfig();

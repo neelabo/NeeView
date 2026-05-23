@@ -167,7 +167,7 @@
                             <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource BannerNameStyle}" Margin="0" />
                         </DockPanel>
                         <Grid>
-                            <local:PanelListBannerImage Thumbnail="{Binding Thumbnail}" Opacity="{Binding PendingCount, Converter={StaticResource PendingCountToOpacityConverter}}" />
+                            <local:PanelListBannerImage Thumbnail="{Binding Thumbnail}" HorizontalAlignment="Left" Opacity="{Binding PendingCount, Converter={StaticResource PendingCountToOpacityConverter}}" />
                             <ItemsControl Style="{StaticResource TagsControlStyle}" VerticalAlignment="Bottom" Margin="0,2"/>
                         </Grid>
                     </DockPanel>

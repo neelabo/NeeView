@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NeeLaboratory;
+using NeeLaboratory.ComponentModel;
 using NeeView.Properties;
 using System;
 using System.Collections.Generic;
@@ -28,8 +29,15 @@ namespace NeeView
             Config.Current.Navigator.PropertyChanged += NavigatorConfig_PropertyChanged;
 
             MoreMenuDescription = new NavigateMoreMenuDescription();
+
+            Config.Current.SlideShow.SubscribePropertyChanged(nameof(SlideShowConfig.SlideShowInterval), (s, e) =>
+            {
+                OnPropertyChanged(nameof(SlideShowInterval));
+            });
         }
 
+        public SlideShowConfig SlideShowConfig => Config.Current.SlideShow;
+        public SlideShow SlideShow => SlideShow.Current;
 
         public bool IsVisibleThumbnail
         {
@@ -45,6 +53,17 @@ namespace NeeView
         public bool IsVisibleControlBar
         {
             get => Config.Current.Navigator.IsVisibleControlBar;
+        }
+
+        public bool IsVisibleSlideShow
+        {
+            get => Config.Current.Navigator.IsVisibleSlideShow;
+        }
+
+        public double SlideShowInterval
+        {
+            get => Config.Current.SlideShow.SlideShowInterval;
+            set => Config.Current.SlideShow.SlideShowInterval = value;
         }
 
         public double Angle
@@ -345,6 +364,10 @@ namespace NeeView
                 case nameof(NavigatorConfig.IsVisibleControlBar):
                     OnPropertyChanged(nameof(IsVisibleControlBar));
                     break;
+
+                case nameof(NavigatorConfig.IsVisibleSlideShow):
+                    OnPropertyChanged(nameof(IsVisibleSlideShow));
+                    break;
             }
         }
 
@@ -366,6 +389,11 @@ namespace NeeView
             Angle = MathUtility.Snap(Angle + delta * tick, tick);
         }
 
+        public void AddSlideShowIntervalTick(int delta)
+        {
+            var tick = 1.0;
+            SlideShowInterval = MathUtility.Snap(SlideShowInterval + delta * tick, tick);
+        }
 
 
         #region MoreMenu
@@ -379,6 +407,7 @@ namespace NeeView
                 var menu = new ContextMenu();
                 menu.Items.Add(CreateCheckMenuItem(TextResources.GetString("Navigator.MoreMenu.IsVisibleThumbnail"), new Binding(nameof(NavigatorConfig.IsVisibleThumbnail)) { Source = Config.Current.Navigator }));
                 menu.Items.Add(CreateCheckMenuItem(TextResources.GetString("Navigator.MoreMenu.IsVisibleControlBar"), new Binding(nameof(NavigatorConfig.IsVisibleControlBar)) { Source = Config.Current.Navigator }));
+                menu.Items.Add(CreateCheckMenuItem(TextResources.GetString("Navigator.MoreMenu.IsVisibleSlideShow"), new Binding(nameof(NavigatorConfig.IsVisibleSlideShow)) { Source = Config.Current.Navigator }));
                 return menu;
             }
         }

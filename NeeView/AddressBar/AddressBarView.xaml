@@ -60,6 +60,22 @@
 
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" UseLayoutRounding="True">
 
+                <Button Style="{StaticResource AddressIconButton}" Command="{Binding BookCommands[ToggleSlideShow]}" TabIndex="20">
+                    <Image>
+                        <Image.Style>
+                            <Style TargetType="Image">
+                                <Setter Property="Source" Value="{StaticResource ic_slideshow_24px}"/>
+                                <Setter Property="ToolTip" Value="{properties:TextBinding Word.SlideShow}"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SlideShow.IsPlaying}" Value="True">
+                                        <Setter Property="Source" Value="{StaticResource ic_pause_24px}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                </Button>
+
                 <Button Style="{StaticResource AddressIconButton}" Command="{Binding BookCommands[TogglePageOrientation]}" TabIndex="20">
                     <Image>
                         <Image.Style>

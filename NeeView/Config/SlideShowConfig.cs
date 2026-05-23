@@ -35,7 +35,7 @@ namespace NeeView
         /// <summary>
         /// スライドショーの表示間隔(秒)
         /// </summary>
-        [PropertyMember(HasDecimalPoint = true)]
+        [PropertyRange(0.1, 30.0, TickFrequency = 0.1, IsEditable = true, HasDecimalPoint = true)]
         public double SlideShowInterval
         {
             get { return _slideShowInterval; }
@@ -96,7 +96,7 @@ namespace NeeView
         /// ページ終端でのアクション
         /// </summary>
         /// <remarks>
-        /// BookConfig.PageMoveType を override する
+        /// BookConfig.PageEndAction を override する
         /// </remarks>
         [PropertyMember]
         public PageEndAction PageEndAction
