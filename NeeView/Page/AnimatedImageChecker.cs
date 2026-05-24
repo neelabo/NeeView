@@ -39,20 +39,36 @@ namespace NeeView
 
         public static bool IsGif(Stream stream)
         {
-            stream.Seek(0, SeekOrigin.Begin);
-            var signature = new byte[6].AsSpan();
-            _ = stream.Read(signature);
-            if (signature.SequenceEqual(_gif89aSignature)) return true;
-            if (signature.SequenceEqual(_gif87aSignature)) return true;
-            return false;
+            try
+            {
+                stream.Seek(0, SeekOrigin.Begin);
+                var signature = new byte[6].AsSpan();
+                _ = stream.Read(signature);
+                if (signature.SequenceEqual(_gif89aSignature)) return true;
+                if (signature.SequenceEqual(_gif87aSignature)) return true;
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return false;
+            }
         }
 
         public static bool IsPng(Stream stream)
         {
-            stream.Seek(0, SeekOrigin.Begin);
-            var signature = new byte[8].AsSpan();
-            _ = stream.Read(signature);
-            return signature.SequenceEqual(_pngSignature);
+            try
+            {
+                stream.Seek(0, SeekOrigin.Begin);
+                var signature = new byte[8].AsSpan();
+                _ = stream.Read(signature);
+                return signature.SequenceEqual(_pngSignature);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return false;
+            }
         }
 
         public static bool IsWebp(Stream stream)
@@ -60,18 +76,26 @@ namespace NeeView
             // WebP signature
             // "RIFF" [4 bytes chunksize] "WEBP"
 
-            stream.Seek(0, SeekOrigin.Begin);
-            var reader = new BinaryReader(stream);
-            if (reader.ReadInt32() != _webpHeaderRIFF)
+            try
             {
+                stream.Seek(0, SeekOrigin.Begin);
+                var reader = new BinaryReader(stream);
+                if (reader.ReadInt32() != _webpHeaderRIFF)
+                {
+                    return false;
+                }
+                _ = reader.ReadInt32(); // skip file size
+                if (reader.ReadInt32() != _webpHeaderWEBP)
+                {
+                    return false;
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
                 return false;
             }
-            _ = reader.ReadInt32(); // skip file size
-            if (reader.ReadInt32() != _webpHeaderWEBP)
-            {
-                return false;
-            }
-            return true;
         }
 
         /// <summary>
