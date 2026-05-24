@@ -291,5 +291,13 @@ namespace NeeView
                 App.Current.Shutdown();
             }
         }
+
+        /// <summary>
+        /// メインウィンドウをアクティブ化
+        /// </summary>
+        public void ActivateMainWindow()
+        {
+            App.Current.Dispatcher.BeginInvoke(() => App.Current.MainWindow?.Activate());
+        }
     }
 }

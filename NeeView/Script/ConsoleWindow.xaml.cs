@@ -19,6 +19,8 @@ namespace NeeView
         private void ConsoleWindow_Closed(object? sender, System.EventArgs e)
         {
             this.Console.Dispose();
+
+            AppState.Current.ActivateMainWindow();
         }
     }
 }

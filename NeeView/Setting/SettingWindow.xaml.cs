@@ -79,14 +79,15 @@ namespace NeeView.Setting
             }
         }
 
-        private void SettingWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+        private void SettingWindow_Closing(object? sender, CancelEventArgs e)
         {
-            // 設定を閉じるとメインウィンドウが背後に隠れてしまう現象を抑制
-            MainWindow.Current?.Activate();
         }
 
         private void SettingWindow_Closed(object? sender, EventArgs e)
         {
+            // 設定を閉じるとメインウィンドウが背後に隠れてしまう現象を抑制
+            AppState.Current.ActivateMainWindow();
+
             if (_vm is null) return;
 
             if (this.AllowSave)

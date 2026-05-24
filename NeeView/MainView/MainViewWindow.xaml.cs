@@ -196,12 +196,16 @@ namespace NeeView
             {
                 SystemCommands.MinimizeWindow(this);
                 e.Cancel = true;
+
+                AppState.Current.ActivateMainWindow();
             }
         }
 
         private void MainViewWindow_Closed(object? sender, EventArgs e)
         {
             _disposables.Dispose();
+
+            AppState.Current.ActivateMainWindow();
         }
 
         private void UpdateCaptionBar()
