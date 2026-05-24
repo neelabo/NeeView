@@ -128,7 +128,7 @@ namespace NeeView
         public double PageMoveDuration
         {
             get { return _pageMoveDuration; }
-            set { SetProperty(ref _pageMoveDuration, AppMath.Round(value)); }
+            set { SetProperty(ref _pageMoveDuration, AppMath.Round(Math.Max(value, 0.0))); }
         }
 
         #region Obsolete

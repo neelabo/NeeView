@@ -178,7 +178,14 @@ namespace NeeView.PageFrames
 
         private void UpdatePageChangeType()
         {
-            PageChangeType = _config.Book.IsPanorama ? PageMoveType.Scroll : _slideshow.IsPlaying ? _config.SlideShow.PageMoveType : _config.View.PageMoveType;
+            if (PageChangeDuration == TimeSpan.Zero)
+            {
+                PageChangeType = PageMoveType.Scroll;
+            }
+            else
+            {
+                PageChangeType = _config.Book.IsPanorama ? PageMoveType.Scroll : _slideshow.IsPlaying ? _config.SlideShow.PageMoveType : _config.View.PageMoveType;
+            }
         }
 
         private void BookConfig_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -250,6 +257,7 @@ namespace NeeView.PageFrames
                     break;
 
                 case nameof(SlideShowConfig.PageMoveType):
+                case nameof(SlideShowConfig.PageMoveDuration):
                     UpdatePageChangeType();
                     break;
             }
@@ -301,6 +309,7 @@ namespace NeeView.PageFrames
                     break;
 
                 case nameof(ViewConfig.PageMoveType):
+                case nameof(ViewConfig.PageMoveDuration):
                     UpdatePageChangeType();
                     break;
             }
