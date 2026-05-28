@@ -190,6 +190,9 @@ namespace NeeView.PageFrames
 
         public bool IsStaticFrame => _context.IsStaticFrame;
 
+        public HorizontalAlignment HorizontalOrigin { get; set; } = HorizontalAlignment.Center;
+        public VerticalAlignment VerticalOrigin { get; set; } = VerticalAlignment.Center;
+
 
         protected virtual void Dispose(bool disposing)
         {

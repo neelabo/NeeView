@@ -81,6 +81,8 @@ namespace NeeView
         public void DoPoint(Point point, TimeSpan span)
         {
             _context.Transform.SetPoint(point, span);
+
+            AdjustPosition(span);
         }
 
         /// <summary>
@@ -91,11 +93,15 @@ namespace NeeView
         public void DoMove(Vector delta, TimeSpan span)
         {
             _context.Transform.AddPoint(delta, span);
+
+            AdjustPosition(span);
         }
 
         public void DoMove(Vector delta, TimeSpan span, IEasingFunction? easeX, IEasingFunction? easeY)
         {
             _context.Transform.AddPoint(delta, span, easeX, easeY);
+
+            AdjustPosition(span);
         }
 
         /// <summary>
@@ -106,6 +112,8 @@ namespace NeeView
         public void DoInertia(Vector velocity, double acceleration)
         {
             _context.Transform.InertiaPoint(velocity, acceleration);
+
+            AdjustPosition(TimeSpan.Zero);
         }
 
         /// <summary>
@@ -136,6 +144,8 @@ namespace NeeView
                 default:
                     throw new ArgumentException("Not support ScaleType", nameof(scaleType));
             }
+
+            AdjustPosition(TimeSpan.Zero);
         }
 
         /// <summary>
@@ -144,7 +154,7 @@ namespace NeeView
         /// <param name="scale">新しいスケール</param>
         /// <param name="span">変化時間</param>
         /// <param name="withTransform">座標も更新する</param>
-        public void DoScale(double scale, TimeSpan span, bool withTransform = true)
+        private void DoScale(double scale, TimeSpan span, bool withTransform = true)
         {
             scale = GetSnapScale(scale);
 
@@ -163,7 +173,7 @@ namespace NeeView
         /// <param name="scale">新しいスケール</param>
         /// <param name="span">時間変化</param>
         /// <param name="withTransform">座標も更新する</param>
-        public void DoBaseScale(double scale, TimeSpan span, bool withTransform = true)
+        private void DoBaseScale(double scale, TimeSpan span, bool withTransform = true)
         {
             scale = GetSnapScale(scale);
 
@@ -225,6 +235,8 @@ namespace NeeView
             var delta = p1 - p0;
             var pos = _context.StartPoint + delta;
             _context.Transform.SetPoint(pos, span);
+
+            AdjustPosition(span);
         }
 
         // 反転実行
@@ -251,6 +263,8 @@ namespace NeeView
                     _context.Transform.SetAngle(_context.StartAngle, span);
                     _context.Transform.SetPoint(_context.StartPoint, span);
                 }
+
+                AdjustPosition(span);
             }
         }
 
@@ -278,7 +292,38 @@ namespace NeeView
                     _context.Transform.SetAngle(_context.StartAngle, span);
                     _context.Transform.SetPoint(_context.StartPoint, span);
                 }
+
+                AdjustPosition(span);
             }
+        }
+
+        /// <summary>
+        /// 必要であれば座標を中央に補正する
+        /// </summary>
+        /// <param name="span"></param>
+        private void AdjustPosition(TimeSpan span)
+        {
+            if (Config.Current.Book.IsPanorama) return;
+            if (Config.Current.View.MovementConstraint < MovementConstraint.SnapToCenter) return;
+
+            var pos = GetSnapCenterPoint(Point);
+            if (pos != Point)
+            {
+                _context.Transform.SetPoint(pos, span);
+            }
+        }
+
+        /// <summary>
+        /// センター補正した座標を習得
+        /// </summary>
+        public Point GetSnapCenterPoint(Point point)
+        {
+            if (_context.Transform is not ICenterTransform transform)
+            {
+                return point;
+            }
+
+            return transform.GetSnapCenterPoint(point);
         }
 
     }

@@ -26,10 +26,8 @@ namespace NeeView
                 new AngleSliderDragAction(),
                 new ScaleDragAction(),
                 new ScaleSliderDragAction(),
-                new ScaleSliderCenteredDragAction(),
                 new BaseScaleDragAction(),
                 new BaseScaleSliderDragAction(),
-                new BaseScaleSliderCenteredDragAction(),
                 new FlipHorizontalDragAction(),
                 new FlipVerticalDragAction(),
                 new MoveDragAction(),
@@ -38,9 +36,6 @@ namespace NeeView
                 new WindowMoveDragAction(),
 
                 new GestureDragAction(GestureDragActionName),
-
-                //new LoupeDragAction(),
-                //new HoverDragAction(),
             };
 
             _elements = list.ToDictionary(e => e.Name);

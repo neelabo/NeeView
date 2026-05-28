@@ -7,7 +7,7 @@ namespace NeeView.PageFrames
 {
 
     // TODO: ページ移動とPointの初期化問題
-    public class ContentTransformControl : ITransformControl, IRevisePositionDelta
+    public class ContentTransformControl : ITransformControl, IRevisePositionDelta, ICenterTransform
     {
         private readonly PageFrameContext _context;
         private readonly PageFrameContainer _container;
@@ -97,7 +97,7 @@ namespace NeeView.PageFrames
         {
             var contentRect = _container.GetContentRect();
 
-            if (_context.ViewConfig.IsLimitMove)
+            if (_context.ViewConfig.MovementConstraint.IsLimited)
             {
                 // scroll lock
                 _scrollLock.Update(contentRect, _containerRect);
@@ -114,7 +114,7 @@ namespace NeeView.PageFrames
 
         private HitData GetScrollLockHit(Point start, Vector delta)
         {
-            if (!_context.ViewConfig.IsLimitMove) return new HitData(start, delta);
+            if (!_context.ViewConfig.MovementConstraint.IsLimited) return new HitData(start, delta);
 
             var contentRect = _container.GetContentRect(start);
             _scrollLock.Update(contentRect, _containerRect);
@@ -123,13 +123,12 @@ namespace NeeView.PageFrames
 
         private HitData GetAreaLimitHit(Point start, Vector delta)
         {
-            if (!_context.ViewConfig.IsLimitMove) return new HitData(start, delta);
+            if (!_context.ViewConfig.MovementConstraint.IsLimited) return new HitData(start, delta);
 
             var contentRect = _container.GetContentRect(start);
             var areaLimit = new ScrollAreaLimit(contentRect, _containerRect);
             return areaLimit.HitTest(start, delta);
         }
-
 
         public void SnapView()
         {
@@ -139,6 +138,62 @@ namespace NeeView.PageFrames
 
             var areaLimit = new ScrollAreaLimit(contentRect, _containerRect);
             _container.SetPoint(areaLimit.SnapView(false), TimeSpan.Zero);
+        }
+
+        /// <summary>
+        /// センター補正した座標を習得
+        /// </summary>
+        /// <param name="pos">元のコンテンツ座標</param>
+        /// <returns>補正されたコンテンツ座標</returns>
+        public Point GetSnapCenterPoint(Point pos)
+        {
+            if (_container.Content is not PageFrameContent pageFrameContent)
+            {
+                return pos;
+            }
+
+            var contentRect = _container.GetContentRect();
+            var viewRect = _containerRect;
+
+            if (contentRect.Width < viewRect.Width)
+            {
+                var horizontalOrigin = Config.Current.View.ViewHorizontalOrigin.IsCenter ? HorizontalAlignment.Center : pageFrameContent.HorizontalOrigin;
+                pos.X = horizontalOrigin switch
+                {
+                    HorizontalAlignment.Left => viewRect.Left + contentRect.Width * 0.5,
+                    HorizontalAlignment.Right => viewRect.Right - contentRect.Width * 0.5,
+                    _ => viewRect.Left + viewRect.Width * 0.5,
+                };
+            }
+            else if (contentRect.Left > viewRect.Left)
+            {
+                pos.X = viewRect.Left + contentRect.Width * 0.5;
+            }
+            else if (contentRect.Right < viewRect.Right)
+            {
+                pos.X = viewRect.Right - contentRect.Width * 0.5;
+            }
+
+            if (contentRect.Height < viewRect.Height)
+            {
+                var verticalOrigin = Config.Current.View.ViewVerticalOrigin.IsCenter ? VerticalAlignment.Center : pageFrameContent.VerticalOrigin;
+                pos.Y = verticalOrigin switch
+                {
+                    VerticalAlignment.Top => viewRect.Top + contentRect.Height * 0.5,
+                    VerticalAlignment.Bottom => viewRect.Bottom - contentRect.Height * 0.5,
+                    _ => viewRect.Top + viewRect.Height * 0.5,
+                };
+            }
+            else if (contentRect.Top > viewRect.Top)
+            {
+                pos.Y = viewRect.Top + contentRect.Height * 0.5;
+            }
+            else if (contentRect.Bottom < viewRect.Bottom)
+            {
+                pos.Y = viewRect.Bottom - contentRect.Height * 0.5;
+            }
+
+            return pos;
         }
     }
 }

@@ -170,7 +170,7 @@ namespace NeeView.PageFrames
         public void ApplyAreaLimit(Point c0, Point c1)
         {
             if (!_isAreaLimitEnabled) return;
-            if (!_context.ViewConfig.IsLimitMove) return;
+            if (!_context.ViewConfig.MovementConstraint.IsLimited) return;
 
             var vp = ViewPoint;
             var p0 = new Point(vp.X + c0.X, vp.Y + c0.Y);

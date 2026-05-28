@@ -218,6 +218,8 @@ namespace NeeView
             }
 
             // ver 46.0
+
+            // v46.0-Alpha.1
             if (self.Format.CompareTo(new FormatVersion(Environment.SolutionName, VersionNumber.Ver46_Alpha1)) <= 0)
             {
                 self.Config.System.FileManagerFileArgs = StringFormatTools.ValidatePlaceholder(self.Config.System.FileManagerFileArgs, "File");
@@ -261,6 +263,7 @@ namespace NeeView
                 }
             }
 
+            // v46.0-Alpha.2
             if (self.Format.CompareTo(new FormatVersion(Environment.SolutionName, VersionNumber.Ver46_Alpha2)) <= 0)
             {
                 self.Config.FilmStrip.IsHideFilmStripInAutoHideMode = self.Config.Slider.IsHidePageSliderInAutoHideMode;
@@ -269,6 +272,21 @@ namespace NeeView
                 self.ContextMenu?.ValidateRename(CommandNameValidator.RenameMap_46_0_0);
             }
 
+            // v46.0-Alpha.4
+            if (self.Format.CompareTo(new FormatVersion(Environment.SolutionName, VersionNumber.Ver46_Alpha4)) <= 0)
+            {
+                self.Config.View.MovementConstraint = self.Config.View.IsLimitMove
+                    ? self.Config.View.IsMoveLockStart
+                        ? MovementConstraint.LockUntilResized
+                        : MovementConstraint.LimitToScreen
+                    : MovementConstraint.None;
+
+                if (self.DragActions != null)
+                {
+                    ReplaceDragAction(self.DragActions, "ScaleSliderCentered", typeof(ScaleSliderDragAction));
+                    ReplaceDragAction(self.DragActions, "BaseScaleSliderCentered", typeof(BaseScaleSliderDragAction));
+                }
+            }
 
             // NOTE: ver.99 (バージョン変更処理テスト)
 #if false
@@ -323,6 +341,41 @@ namespace NeeView
             return commands.Values
                 .SelectMany(e => e.ShortCutKey?.Gestures ?? Enumerable.Empty<InputGestureSource>())
                 .Contains(gesture);
+        }
+
+        /// <summary>
+        /// DragAction 置き換え
+        /// </summary>
+        /// <remarks>
+        /// キーが未設定な場合のみキーを引き継ぐ
+        /// </remarks>
+        /// <param name="dragActions">DragAction コレクション</param>
+        /// <param name="sourceDragActionName">削除するアクション名</param>
+        /// <param name="destinationDragActionType">キーを置き換えるアクションの型</param>
+        private static void ReplaceDragAction(DragActionCollection dragActions, string sourceDragActionName, Type destinationDragActionType)
+        {
+            if (dragActions.TryGetValue(sourceDragActionName, out var sourceDragAction))
+            {
+                if (sourceDragAction.MouseButton is not null)
+                {
+                    var defaultDragKey = ((DragAction)Activator.CreateInstance(destinationDragActionType)!).DragKey;
+
+                    if (dragActions.TryGetValue(DragActionTools.CreateName(destinationDragActionType), out var destinationDragAction))
+                    {
+                        var dragKey = destinationDragAction.MouseButton ?? defaultDragKey;
+                        if (dragKey == DragKey.Empty)
+                        {
+                            destinationDragAction.MouseButton = sourceDragAction.MouseButton;
+                        }
+                    }
+                    else if (defaultDragKey == DragKey.Empty)
+                    {
+                        dragActions.Add(DragActionTools.CreateName(destinationDragActionType), new DragActionMemento() { MouseButton = sourceDragAction.MouseButton });
+                    }
+                }
+
+                dragActions.Remove(sourceDragActionName);
+            }
         }
 
 #pragma warning restore CS0612, CS0618 // 型またはメンバーが旧型式です

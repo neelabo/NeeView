@@ -85,36 +85,68 @@ namespace NeeView.PageFrames
         public void SetPoint(Point value, TimeSpan span, IEasingFunction? easeX, IEasingFunction? easeY)
         {
             _source?.SetPoint(value, span, easeX, easeY);
+
+            AdjustPosition(span);
         }
 
         public void SetAngle(double value, TimeSpan span)
         {
             _source?.SetAngle(value, span);
+
+            AdjustPosition(span);
         }
 
         public void SetFlipHorizontal(bool value, TimeSpan span)
         {
             _source?.SetFlipHorizontal(value, span);
+
+            AdjustPosition(span);
         }
 
         public void SetFlipVertical(bool value, TimeSpan span)
         {
             _source?.SetFlipVertical(value, span);
+
+            AdjustPosition(span);
         }
 
         public void SetScale(double value, TimeSpan span, TransformTrigger trigger = TransformTrigger.None)
         {
             _source?.SetScale(value, span, trigger);
+
+            AdjustPosition(span);
         }
 
         public void SnapView()
         {
             _presenter.Stretch(false);
         }
+
+        /// <summary>
+        /// 必要であれば座標を中央に補正する
+        /// </summary>
+        private void AdjustPosition(TimeSpan span)
+        {
+            if (Config.Current.Book.IsPanorama) return;
+            if (Config.Current.View.MovementConstraint < MovementConstraint.SnapToCenter) return;
+
+            var transform = GetDragTransform(false);
+            if (transform is null) return;
+
+            var p0 = Point;
+            var p1 = transform.GetSnapCenterPoint(p0);
+            if (p0 != p1)
+            {
+                _source?.SetPoint(p1, span);
+            }
+        }
+
+        private DragTransform? GetDragTransform(bool isPointed)
+        {
+            var context = _presenter.CreateContentDragTransformContext(isPointed);
+            if (context is null) return null;
+            return new DragTransform(context);
+        }
+
     }
-
-
-
-
-
 }

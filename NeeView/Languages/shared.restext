@@ -570,3 +570,4 @@ WindowChromeFrame.None=@Word.None
 WindowConfig.State=@WindowStateEx
 WindowSettingTitle=@Word.Settings
 WindowStateEx.FullScreen=@Word.FullScreen
+MovementConstraint.None=@Word.None

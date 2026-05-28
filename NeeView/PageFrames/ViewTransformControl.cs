@@ -94,7 +94,7 @@ namespace NeeView.PageFrames
         {
             var canvasRect = _viewContext.CanvasRect;
 
-            if (_context.ViewConfig.IsLimitMove)
+            if (_context.ViewConfig.MovementConstraint.IsLimited)
             {
                 // scroll lock
                 _scrollLock.Update(canvasRect, _viewContext.ViewRect);
@@ -111,7 +111,7 @@ namespace NeeView.PageFrames
 
         private HitData GetScrollLockHit(Point start, Vector delta)
         {
-            if (!_context.ViewConfig.IsLimitMove) return new HitData(start, delta);
+            if (!_context.ViewConfig.MovementConstraint.IsLimited) return new HitData(start, delta);
 
             var canvasRect = _viewContext.CanvasRect;
             _scrollLock.Update(canvasRect, _viewContext.ViewRect);
@@ -120,7 +120,7 @@ namespace NeeView.PageFrames
 
         private HitData GetAreaLimitHit(Point start, Vector delta)
         {
-            if (!_context.ViewConfig.IsLimitMove) return new HitData(start, delta);
+            if (!_context.ViewConfig.MovementConstraint.IsLimited) return new HitData(start, delta);
 
             var canvasRect = _viewContext.CanvasRect;
 

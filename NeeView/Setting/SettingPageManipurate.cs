@@ -17,8 +17,7 @@ namespace NeeView.Setting
             var centerEnumMapWithoutAuto = typeof(DragControlCenter).VisibleAliasNameDictionary().Where(e => (DragControlCenter)e.Key != DragControlCenter.Auto).ToDictionary();
 
             var section = new SettingItemSection(TextResources.GetString("SettingPage.Manipulate.GeneralViewOperation"));
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.View, nameof(ViewConfig.IsLimitMove))));
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.View, nameof(ViewConfig.IsMoveLockStart))));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.View, nameof(ViewConfig.MovementConstraint))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.View, nameof(ViewConfig.ViewHorizontalOrigin))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.View, nameof(ViewConfig.ViewVerticalOrigin))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.View, nameof(ViewConfig.RotateCenter), new PropertyMemberElementOptions() { EnumMap = centerEnumMapWithoutAuto })));

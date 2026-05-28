@@ -845,7 +845,7 @@ namespace NeeView.PageFrames
             ScrollToViewOrigin(next, direction);
             Cleanup(next);
 
-            _scrollLock.SetLock(_context.ViewConfig.IsMoveLockStart);
+            _scrollLock.SetLock(_context.ViewConfig.MovementConstraint.IsLockStart);
             SetSnapAnchor();
 
             if (flush || _context.IsAutoStretch)
@@ -913,6 +913,10 @@ namespace NeeView.PageFrames
 
             // reset scale center
             AutoCenterContext.ResetScaleCenter(horizontalAlignment, verticalAlignment);
+
+            // memory origin in PageFrameContent
+            pageFrameContent.HorizontalOrigin = horizontalAlignment;
+            pageFrameContent.VerticalOrigin = verticalAlignment;
 
             // scroll content
             point.X = -point.X; // コンテンツ座標系に補正する

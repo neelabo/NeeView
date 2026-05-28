@@ -14,8 +14,7 @@ namespace NeeView
         [DefaultEquality] private bool _allowStretchScaleUp = true;
         [DefaultEquality] private bool _allowStretchScaleDown = true;
         [DefaultEquality] private bool _allowFileContentAutoRotate;
-        [DefaultEquality] private bool _isLimitMove = true;
-        [DefaultEquality] private bool _isMoveLockStart = true;
+        [DefaultEquality] private MovementConstraint _movementConstraint = MovementConstraint.LockUntilResized;
         [DefaultEquality] private DragControlCenter _rotateCenter;
         [DefaultEquality] private DragControlCenter _scaleCenter;
         [DefaultEquality] private DragControlCenter _flipCenter;
@@ -146,20 +145,12 @@ namespace NeeView
             set { SetProperty(ref _angleFrequency, AppMath.Round(value)); }
         }
 
-        // ウィンドウ枠内の移動に制限する
+        // 移動制限モード
         [PropertyMember]
-        public bool IsLimitMove
+        public MovementConstraint MovementConstraint
         {
-            get { return _isLimitMove; }
-            set { SetProperty(ref _isLimitMove, value); }
-        }
-
-        // 移動ロック状態で開始する
-        [PropertyMember]
-        public bool IsMoveLockStart
-        {
-            get { return _isMoveLockStart; }
-            set { SetProperty(ref _isMoveLockStart, value); }
+            get { return _movementConstraint; }
+            set { SetProperty(ref _movementConstraint, value); }
         }
 
         // スケールモード
@@ -360,6 +351,26 @@ namespace NeeView
             set { if (_bookSetting is not null) _bookSetting.BaseScale = value; }
         }
 
+        // ウィンドウ枠内の移動に制限する
+        [Obsolete("no used"), Alternative(nameof(MovementConstraint), 46, ScriptErrorLevel.Warning)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public bool IsLimitMove
+        {
+            get { return MovementConstraint.IsLimited; }
+            set { }
+        }
+
+        // 移動ロック状態で開始する
+        [Obsolete("no used"), Alternative(nameof(MovementConstraint), 46, ScriptErrorLevel.Warning)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public bool IsMoveLockStart
+        {
+            get { return MovementConstraint.IsLockStart; }
+            set { }
+        }
+
+        #endregion
+
         /// <summary>
         /// AutoRotate プロパティを外部情報に依存させる
         /// </summary>
@@ -368,9 +379,6 @@ namespace NeeView
         {
             _bookSetting = bookSetting;
         }
-
-        #endregion
-
 
         /// <summary>
         /// ストレッチモード設定
@@ -411,51 +419,4 @@ namespace NeeView
         /// </summary>
         DirectionDependentAndTop,
     }
-
-    public enum ViewHorizontalOrigin
-    {
-        Center,
-        Left,
-        Right,
-        DirectionDependent,
-        CenterOrLeft,
-        CenterOrRight,
-        CenterOrDirectionDependent,
-    }
-
-    public enum ViewVerticalOrigin
-    {
-        Center,
-        Top,
-        Bottom,
-        DirectionDependent,
-        CenterOrTop,
-        CenterOrBottom,
-        CenterOrDirectionDependent,
-    }
-
-    public enum AutoRotatePolicy
-    {
-        /// <summary>
-        /// 表示領域に合わせる
-        /// </summary>
-        FitToViewArea,
-
-        /// <summary>
-        /// 横長にする
-        /// </summary>
-        ToLandscape,
-
-        /// <summary>
-        /// 縦長にする
-        /// </summary>
-        ToPortrait,
-    }
-
-    public enum PageMoveType
-    {
-        Scroll,
-        Fade,
-    }
-
 }
