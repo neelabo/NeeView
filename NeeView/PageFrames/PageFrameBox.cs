@@ -470,7 +470,16 @@ namespace NeeView.PageFrames
 
             // アンカーを選択コンテナにする
             var node = _selected.Node;
-            _containers.Anchor.Set(node);
+            if (resetLayout)
+            {
+                // レイアウトをリセットするときは方向もリセット
+                var direction = _selected.Page == _bookContext.Last ? LinkedListDirection.Previous : LinkedListDirection.Next;
+                _containers.Anchor.Set(node, direction);
+            }
+            else
+            {
+                _containers.Anchor.Set(node);
+            }
 
             // コンテナにダーティーフラグを設定
             _containers.SetDirty(dirtyLevel);
