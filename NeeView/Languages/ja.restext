@@ -1272,7 +1272,6 @@ Navigator.StretchAllowScaleDown=縮小を許可
 Navigator.StretchAllowScaleUp=拡大を許可
 Navigator.Title=ナビゲーター
 NavigatorConfig.IsVisibleControlBar=ナビゲーター パネルにコントロール バーを表示
-NavigatorConfig.IsVisibleSlideShow=スライドショー コントロールを表示する
 NavigatorConfig.IsVisibleThumbnail=サムネイルを表示する
 NavigatorConfig.ThumbnailHeight=サムネイル エリアの高さ
 NavigatorPanelAccessor=ナビゲーター パネルのアクセサ

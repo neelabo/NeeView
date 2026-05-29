@@ -1279,7 +1279,6 @@ Navigator.StretchAllowScaleDown=Allow stretch scale down
 Navigator.StretchAllowScaleUp=Allow stretch scale up
 Navigator.Title=Navigator
 NavigatorConfig.IsVisibleControlBar=Control bar in the navigator panel
-NavigatorConfig.IsVisibleSlideShow=Show slideshow control
 NavigatorConfig.IsVisibleThumbnail=Show thumbnail
 NavigatorConfig.ThumbnailHeight=Thumbnail area height
 NavigatorPanelAccessor=Navigator panel accessor

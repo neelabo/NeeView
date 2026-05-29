@@ -283,16 +283,13 @@
 
                         </Separator>
 
-                        <StackPanel Visibility="{Binding IsVisibleSlideShow, Converter={StaticResource BooleanToVisibilityConverter}}" >
-                            <DockPanel LastChildFill="False" Margin="0,5">
+                        <StackPanel>
+                            <DockPanel Margin="0,5">
+                                <nvc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding SlideShow.IsPlaying}" Margin="10,0,0,0" VerticalAlignment="Center" />
                                 <TextBlock Text="{properties:TextBinding Word.SlideShow}" VerticalAlignment="Center" />
                             </DockPanel>
-                            <StackPanel Margin="10,5,0,5">
-                                <DockPanel Margin="0,5">
-                                    <nvc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding SlideShow.IsPlaying}" Margin="10,0,0,0" VerticalAlignment="Center" />
-                                    <TextBlock Text="{properties:TextBinding Word.Play}" VerticalAlignment="Center" />
-                                </DockPanel>
-                                <DockPanel Margin="0,5">
+                            <StackPanel Margin="10,5,0,5" Visibility="{Binding SlideShow.IsPlaying, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <DockPanel Margin="0,2">
                                     <nvc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding SlideShowConfig.IsTimerVisible}" Margin="10,0,0,0" VerticalAlignment="Center" />
                                     <TextBlock Text="{properties:TextBinding SlideShowConfig.IsTimerVisible}" VerticalAlignment="Center" />
                                 </DockPanel>
@@ -302,8 +299,9 @@
                                     <Slider Value="{Binding SlideShowInterval}" Minimum="0.1" Maximum="30.0" TickFrequency="0.1" IsSnapToTickEnabled="True" VerticalAlignment="Center" TabIndex="1" />
                                 </DockPanel>
                             </StackPanel>
-                            <Separator />
                         </StackPanel>
+
+                        <Separator />
 
                         <StackPanel>
                             <DockPanel LastChildFill="False" Margin="0,5">

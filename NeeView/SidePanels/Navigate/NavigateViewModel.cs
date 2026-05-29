@@ -55,11 +55,6 @@ namespace NeeView
             get => Config.Current.Navigator.IsVisibleControlBar;
         }
 
-        public bool IsVisibleSlideShow
-        {
-            get => Config.Current.Navigator.IsVisibleSlideShow;
-        }
-
         public double SlideShowInterval
         {
             get => Config.Current.SlideShow.SlideShowInterval;
@@ -364,10 +359,6 @@ namespace NeeView
                 case nameof(NavigatorConfig.IsVisibleControlBar):
                     OnPropertyChanged(nameof(IsVisibleControlBar));
                     break;
-
-                case nameof(NavigatorConfig.IsVisibleSlideShow):
-                    OnPropertyChanged(nameof(IsVisibleSlideShow));
-                    break;
             }
         }
 
@@ -407,7 +398,6 @@ namespace NeeView
                 var menu = new ContextMenu();
                 menu.Items.Add(CreateCheckMenuItem(TextResources.GetString("Navigator.MoreMenu.IsVisibleThumbnail"), new Binding(nameof(NavigatorConfig.IsVisibleThumbnail)) { Source = Config.Current.Navigator }));
                 menu.Items.Add(CreateCheckMenuItem(TextResources.GetString("Navigator.MoreMenu.IsVisibleControlBar"), new Binding(nameof(NavigatorConfig.IsVisibleControlBar)) { Source = Config.Current.Navigator }));
-                menu.Items.Add(CreateCheckMenuItem(TextResources.GetString("Navigator.MoreMenu.IsVisibleSlideShow"), new Binding(nameof(NavigatorConfig.IsVisibleSlideShow)) { Source = Config.Current.Navigator }));
                 return menu;
             }
         }

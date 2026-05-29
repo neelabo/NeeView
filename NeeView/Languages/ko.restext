@@ -1272,7 +1272,6 @@ Navigator.StretchAllowScaleDown=축소 허용
 Navigator.StretchAllowScaleUp=확대 허용
 Navigator.Title=네비게이터
 NavigatorConfig.IsVisibleControlBar=네비게이터 패널에 컨트롤 바 표시
-NavigatorConfig.IsVisibleSlideShow=
 NavigatorConfig.IsVisibleThumbnail=썸네일 표시
 NavigatorConfig.ThumbnailHeight=썸네일 영역 높이
 NavigatorPanelAccessor=네비게이터 패널 접근자

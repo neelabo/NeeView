@@ -285,7 +285,6 @@ MoveToFolderAsCommandParameter.MultiPagePolicy=@GeneralCommandParameter.MultiPag
 Navigator.Angle=@Word.Rotation
 Navigator.FlipHorizontal=@Word.FlipHorizontal
 Navigator.FlipVertical=@Word.FlipVertical
-Navigator.MoreMenu.IsVisibleSlideShow=@Word.SlideShow
 Navigator.MoreMenu.IsVisibleThumbnail=@Word.Thumbnail
 Navigator.Stretch=@Word.Stretch
 Navigator.StretchScale=@Word.BaseScale

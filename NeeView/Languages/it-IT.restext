@@ -1285,7 +1285,6 @@ Navigator.StretchAllowScaleDown=Adatta alla finestra riducendo
 Navigator.StretchAllowScaleUp=Adatta alla finestra ingrandendo
 Navigator.Title=Navigatore
 NavigatorConfig.IsVisibleControlBar=Barra di controllo nel pannello navigazione
-NavigatorConfig.IsVisibleSlideShow=
 NavigatorConfig.IsVisibleThumbnail=Mostra miniatura
 NavigatorConfig.ThumbnailHeight=Altezza area miniatura
 NavigatorPanelAccessor=Navigator panel accessor

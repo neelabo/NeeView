@@ -1272,7 +1272,6 @@ Navigator.StretchAllowScaleDown=允許縮小
 Navigator.StretchAllowScaleUp=允許放大
 Navigator.Title=導覽
 NavigatorConfig.IsVisibleControlBar=
-NavigatorConfig.IsVisibleSlideShow=
 NavigatorConfig.IsVisibleThumbnail=顯示縮圖
 NavigatorConfig.ThumbnailHeight=縮圖區域的高度
 NavigatorPanelAccessor=導覽面板存取器

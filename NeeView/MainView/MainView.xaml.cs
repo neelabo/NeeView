@@ -138,10 +138,9 @@ namespace NeeView
         {
             //Debug.WriteLine($"## SlideShow: {e.IsPlaying}, {e.IntervalMilliseconds:f0}");
 
-            var isVisible = e.IsPlaying && Config.Current.SlideShow.IsTimerVisible;
             AppDispatcher.BeginInvoke(() =>
             {
-                var ani = isVisible ? new DoubleAnimation(1.0, 0.0, TimeSpan.FromMilliseconds(e.IntervalMilliseconds)) : null;
+                var ani = e.IsPlaying ? new DoubleAnimation(1.0, 0.0, TimeSpan.FromMilliseconds(e.IntervalMilliseconds)) : null;
                 this.SlideShowTimer.BeginAnimation(SimpleProgressBar.ValueProperty, ani, HandoffBehavior.SnapshotAndReplace);
             });
         }

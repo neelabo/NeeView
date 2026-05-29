@@ -1279,7 +1279,6 @@ Navigator.StretchAllowScaleDown=Permitir reducción escala estiramiento
 Navigator.StretchAllowScaleUp=Permitir aumento escala estiramiento
 Navigator.Title=Navegador
 NavigatorConfig.IsVisibleControlBar=Barra de control en panel navegador
-NavigatorConfig.IsVisibleSlideShow=
 NavigatorConfig.IsVisibleThumbnail=Mostrar miniatura
 NavigatorConfig.ThumbnailHeight=Altura área miniatura
 NavigatorPanelAccessor=Acceso a panel navegador
