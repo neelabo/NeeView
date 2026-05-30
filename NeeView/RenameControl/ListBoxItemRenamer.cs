@@ -36,12 +36,14 @@ namespace NeeView
         {
             if (_toolTipService is null) return;
             _toolTipService.IsToolTipEnabled = false;
+            HoverPreviewService.Current.IsEnabled = false;
         }
 
         protected virtual void EndRename()
         {
             if (_toolTipService is null) return;
             _toolTipService.IsToolTipEnabled = true;
+            HoverPreviewService.Current.IsEnabled = true;
         }
 
         public async Task RenameAsync(TItem item)

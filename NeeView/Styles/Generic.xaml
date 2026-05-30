@@ -55,8 +55,7 @@
                         <Rectangle HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderOptions.BitmapScalingMode="HighQuality" UseLayoutRounding="True"
                                 Width="{TemplateBinding Width}"
                                 Height="{TemplateBinding Height}"
-                                ToolTipService.Placement="Left"
-                                ToolTipService.IsEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsUniqueImage, Converter={StaticResource ContentProfileToolTopEnableConverter}}">
+                                local:HoverPreview.IsEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsUniqueImage, Converter={StaticResource ContentProfileToolTopEnableConverter}}">
                             <Rectangle.Fill>
                                 <ImageBrush ImageSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.ImageSource, Converter={StaticResource ImageSourceToThumbnailConverter}}"
                                     Stretch="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsNormalImage, Converter={StaticResource BooleanToContentStretchConverter}}"
@@ -64,9 +63,9 @@
                                     AlignmentY="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsNormalImage, Converter={StaticResource BooleanToContentAlignmentYConverter}}">
                                 </ImageBrush>
                             </Rectangle.Fill>
-                            <Rectangle.ToolTip>
+                            <local:HoverPreview.Content>
                                 <Image Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.ImageSource}" />
-                            </Rectangle.ToolTip>
+                            </local:HoverPreview.Content>
                         </Rectangle>
                     </Grid>
                 </ControlTemplate>
@@ -92,7 +91,7 @@
                         <Rectangle HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderOptions.BitmapScalingMode="HighQuality" UseLayoutRounding="True"
                                 Width="{TemplateBinding Width}"
                                 Height="{TemplateBinding Height}"
-                                ToolTipService.IsEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsUniqueImage, Converter={StaticResource BannerProfileToolTopEnableConverter}}">
+                                local:HoverPreview.IsEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsUniqueImage, Converter={StaticResource BannerProfileToolTopEnableConverter}}">
                             <Rectangle.Fill>
                                 <ImageBrush ImageSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.ImageSource, Converter={StaticResource ImageSourceToThumbnailConverter}}"
                                     Stretch="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsNormalImage, Converter={StaticResource BooleanToBannerStretchConverter}}"
@@ -100,9 +99,9 @@
                                     AlignmentY="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsNormalImage, Converter={StaticResource BooleanToBannerAlignmentYConverter}}">
                                 </ImageBrush>
                             </Rectangle.Fill>
-                            <Rectangle.ToolTip>
+                            <local:HoverPreview.Content>
                                 <Image Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.ImageSource}" />
-                            </Rectangle.ToolTip>
+                            </local:HoverPreview.Content>
                         </Rectangle>
                     </Grid>
                 </ControlTemplate>
@@ -127,7 +126,7 @@
                         <Rectangle HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderOptions.BitmapScalingMode="HighQuality" UseLayoutRounding="True"
                                 Width="{TemplateBinding Width}"
                                 Height="{TemplateBinding Height}"
-                                ToolTipService.IsEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsUniqueImage, Converter={StaticResource ThumbnailProfileToolTopEnableConverter}}">
+                                local:HoverPreview.IsEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsUniqueImage, Converter={StaticResource ThumbnailProfileToolTopEnableConverter}}">
                             <Rectangle.Fill>
                                 <ImageBrush x:Name="PART_ImageBrush" ImageSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.ImageSource, Converter={StaticResource ImageSourceToThumbnailConverter}}"
                                         Stretch="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsNormalImage, Converter={StaticResource BooleanToThumbnailStretchConverter}}"
@@ -135,9 +134,9 @@
                                         AlignmentY="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.IsNormalImage, Converter={StaticResource BooleanToThumbnailAlignmentYConverter}}">
                                 </ImageBrush>
                             </Rectangle.Fill>
-                            <Rectangle.ToolTip>
+                            <local:HoverPreview.Content>
                                 <Image Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Thumbnail.ImageSource}" />
-                            </Rectangle.ToolTip>
+                            </local:HoverPreview.Content>
                         </Rectangle>
                     </Grid>
                 </ControlTemplate>
