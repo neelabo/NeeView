@@ -20,6 +20,8 @@ namespace NeeView.Setting
             InitializeComponent();
 
             this.Loaded += MouseDragSettingWindow_Loaded;
+            this.Closing += MouseDragSettingWindow_Closing;
+            this.Closed += MouseDragSettingWindow_Closed;
             this.KeyDown += MouseDragSettingWindow_KeyDown;
 
             _memento = DragActionTable.Current.CreateDragActionCollection(false);
@@ -56,6 +58,18 @@ namespace NeeView.Setting
             this.OkButton.Focus();
         }
 
+        private void MouseDragSettingWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+        {
+            this.MouseGesture.Decide();
+            DragActionTable.Current.RestoreDragActionCollection(_memento);
+
+            this.DialogResult = true;
+        }
+
+        private void MouseDragSettingWindow_Closed(object? sender, System.EventArgs e)
+        {
+        }
+
         private void MouseDragSettingWindow_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Escape && Keyboard.Modifiers == ModifierKeys.None)
@@ -65,18 +79,7 @@ namespace NeeView.Setting
             }
         }
 
-
-
         private void OkButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.MouseGesture.Decide();
-            DragActionTable.Current.RestoreDragActionCollection(_memento);
-
-            this.DialogResult = true;
-            this.Close();
-        }
-
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }

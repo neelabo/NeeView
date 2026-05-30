@@ -21,6 +21,7 @@ namespace NeeView.Setting
             _defaultParameter = (DragActionParameter?)Activator.CreateInstance(parameter.GetType());
 
             _propertyDocument = new PropertyDocument(parameter);
+            _propertyDocument.SetVisualType<PropertyValue_Boolean>(PropertyVisualType.ToggleSwitch);
         }
 
 

@@ -19,8 +19,7 @@
         <DockPanel Margin="10">
 
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button x:Name="OkButton" Content="{properties:TextBinding Word.OK}" Click="OkButton_Click" TabIndex="10" />
-                <Button x:Name="CancelButton" Content="{properties:TextBinding Word.Cancel}" Click="CancelButton_Click" TabIndex="10" />
+                <Button x:Name="OkButton" Content="{properties:TextBinding Word.Close}" Click="OkButton_Click" TabIndex="10" />
             </StackPanel>
 
             <TabControl>
