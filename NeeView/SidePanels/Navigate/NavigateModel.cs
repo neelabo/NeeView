@@ -68,6 +68,11 @@ namespace NeeView
 
         public MediaControl MediaControl => _mediaControl;
 
+        public double BaseScale
+        {
+            get => _dragTransform.BaseScale;
+            set => _dragTransform.SetBaseScale(value);
+        }
 
         public double Angle
         {
@@ -151,6 +156,9 @@ namespace NeeView
                     OnPropertyChanged("");
                     break;
 
+                case nameof(NavigateTransformControl.BaseScale):
+                    OnPropertyChanged(nameof(BaseScale));
+                    break;
                 case nameof(NavigateTransformControl.Angle):
                     OnPropertyChanged(nameof(Angle));
                     break;

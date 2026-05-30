@@ -189,14 +189,14 @@ namespace NeeView
 
         public double BaseScale
         {
-            get => Config.Current.BookSetting.BaseScale * 100.0;
-            set => Config.Current.BookSetting.BaseScale = value / 100.0;
+            get => _model.BaseScale * 100.0;
+            set => _model.BaseScale = value / 100.0;
         }
 
         public double SliderBaseScale
         {
-            get => Config.Current.BookSetting.BaseScale * 100.0;
-            set => Config.Current.BookSetting.BaseScale = MathUtility.Snap(value, SliderBaseScale, 100.0, 10.0) / 100.0;
+            get => _model.BaseScale * 100.0;
+            set => _model.BaseScale = MathUtility.Snap(value, SliderBaseScale, 100.0, 10.0) / 100.0;
         }
 
 

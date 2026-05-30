@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using NeeLaboratory.ComponentModel;
 using System;
 using System.Diagnostics;
 using System.Windows;
@@ -16,6 +17,9 @@ namespace NeeView.PageFrames
             _presenter = presenter;
             _presenter.SelectedRangeChanged += (s, e) => UpdateSource();
 
+            Config.Current.BookSetting.SubscribePropertyChanged(nameof(BookSettingConfig.BaseScale),
+                (s, e) => OnPropertyChanged(nameof(BaseScale)));
+
             UpdateSource();
         }
 
@@ -28,6 +32,8 @@ namespace NeeView.PageFrames
         public bool IsFlipHorizontal => _source?.IsFlipHorizontal ?? false;
 
         public bool IsFlipVertical => _source?.IsFlipVertical ?? false;
+
+        public double BaseScale => Config.Current.BookSetting.BaseScale;
 
 
         private void UpdateSource()
@@ -115,6 +121,13 @@ namespace NeeView.PageFrames
             _source?.SetScale(value, span, trigger);
 
             AdjustPosition(span);
+        }
+
+        public void SetBaseScale(double value)
+        {
+            Config.Current.BookSetting.BaseScale = value;
+
+            AdjustPosition(TimeSpan.Zero);
         }
 
         public void SnapView()
