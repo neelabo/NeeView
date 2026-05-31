@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -24,7 +25,15 @@ namespace NeeView
 
         public MouseSequence(string s)
         {
-            Gestures = ConvertStringToMouseGestureDirectionList(s);
+            try
+            {
+                Gestures = ConvertStringToMouseGestureDirectionList(s);
+            }
+            catch
+            {
+                Debug.WriteLine($"Invalid mouse gesture: {s}");
+                Gestures = new();
+            }
         }
 
         public MouseSequence(IEnumerable<MouseDirection> directions)

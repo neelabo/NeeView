@@ -1,5 +1,8 @@
-﻿using NeeView.Properties;
+﻿using NeeLaboratory.Text;
+using NeeView.Properties;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace NeeView
@@ -16,7 +19,7 @@ namespace NeeView
         [GeneratedRegex(@"^\s*/{2,}")]
         private static partial Regex _regexCommentLine { get; }
 
-        [GeneratedRegex(@"^\s*/{2,}\s*(@\w+)\s+(.+)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+        [GeneratedRegex(@"^\s*/{2,}\s*(@\w+)(.*)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
         private static partial Regex _regexDocComment { get; }
 
 
@@ -74,6 +77,14 @@ namespace NeeView
 
             using (var reader = new StreamReader(path))
             {
+                var args = new List<string>();
+                var argsDescriotion = new StringBuilder();
+                var description = new StringBuilder();
+                var mouseGesture = new List<string>();
+                var name = "";
+                var shortcutKey = new List<string>();
+                var touchGesture = new List<string>();
+
                 bool isComment = false;
                 string? line;
                 while ((line = reader?.ReadLine()) != null)
@@ -89,25 +100,40 @@ namespace NeeView
                             switch (key)
                             {
                                 case "@args":
-                                    source.Args = value;
+                                    if (!string.IsNullOrEmpty(value))
+                                    {
+                                        args.Add(value);
+                                    }
                                     break;
                                 case "@argsdescription":
-                                    source.ArgsDescription = value;
+                                    argsDescriotion.AppendLine(value.Unescape());
                                     break;
                                 case "@description":
-                                    source.Remarks = value;
+                                    description.AppendLine(value.Unescape());
                                     break;
                                 case "@mousegesture":
-                                    source.MouseGesture = value;
+                                    if (!string.IsNullOrEmpty(value))
+                                    {
+                                        mouseGesture.Add(value);
+                                    }
                                     break;
                                 case "@name":
-                                    source.Text = value;
+                                    if (!string.IsNullOrEmpty(value) && string.IsNullOrEmpty(name))
+                                    {
+                                        name = value;
+                                    }
                                     break;
                                 case "@shortcutkey":
-                                    source.ShortCutKey = value;
+                                    if (!string.IsNullOrEmpty(value))
+                                    {
+                                        shortcutKey.Add(value);
+                                    }
                                     break;
                                 case "@touchgesture":
-                                    source.TouchGesture = value;
+                                    if (!string.IsNullOrEmpty(value))
+                                    {
+                                        touchGesture.Add(value);
+                                    }
                                     break;
                             }
                         }
@@ -117,6 +143,25 @@ namespace NeeView
                         break;
                     }
                 }
+
+                if (!string.IsNullOrEmpty(name))
+                {
+                    source.Text = name;
+                }
+
+                var remarks = description.ToString().Trim();
+                if (!string.IsNullOrEmpty(remarks))
+                {
+                    source.Remarks = remarks;
+                }
+
+                source.Args = string.Join(' ', args);
+
+                source.ArgsDescription = argsDescriotion.ToString().Trim();
+
+                source.ShortCutKey = string.Join(',', shortcutKey);
+                source.MouseGesture = string.Concat(mouseGesture);
+                source.TouchGesture = string.Join(',', touchGesture);
             }
 
             return source;

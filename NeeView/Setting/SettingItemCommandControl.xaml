@@ -212,7 +212,7 @@
                             <GridViewColumn Header="{properties:TextBinding CommandList.Header.Description}">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Command.Remarks, Mode=OneTime}" />
+                                        <TextBlock Text="{Binding Command.RemarksOneLine, Mode=OneTime}" />
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>

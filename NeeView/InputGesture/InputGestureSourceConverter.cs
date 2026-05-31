@@ -33,8 +33,11 @@ namespace NeeView
         {
             try
             {
-                var gesture = _keyGestureConverter.ConvertFromString(source) as InputGestureSource;
-                if (gesture is not null) return gesture;
+                var gesture = _keyGestureConverter.ConvertFromString(source) as KeyGestureSource;
+                if (gesture is not null && gesture.Key != System.Windows.Input.Key.None)
+                {
+                    return gesture;
+                }
             }
             catch (Exception e)
             {

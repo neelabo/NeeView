@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -20,7 +21,15 @@ namespace NeeView
 
         public TouchGesture(string s)
         {
-            Areas = ConvertToTouchAreasFromString(s);
+            try
+            {
+                Areas = ConvertToTouchAreasFromString(s);
+            }
+            catch
+            {
+                Debug.WriteLine($"Invalid touch gesture: {s}");
+                Areas = new();
+            }
         }
 
         public TouchGesture(IEnumerable<TouchArea> areas)
@@ -58,7 +67,7 @@ namespace NeeView
             var list = new List<TouchArea>();
             if (!string.IsNullOrWhiteSpace(s))
             {
-                foreach (var key in s.Split(','))
+                foreach (var key in s.Split([',', ' '], StringSplitOptions.RemoveEmptyEntries))
                 {
                     var areas = _touchAreaConverter.ConvertFromString(key);
                     if (areas is not null)

@@ -51,6 +51,25 @@ namespace NeeView.Windows.Property
             }
         }
 
+
+        public Orientation Orientation
+        {
+            get { return (Orientation)GetValue(OrientationProperty); }
+            set { SetValue(OrientationProperty, value); }
+        }
+
+        public static readonly DependencyProperty OrientationProperty =
+            DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(PropertyControl), new PropertyMetadata(Orientation.Horizontal, OrientationProperty_Changed));
+
+        private static void OrientationProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is PropertyControl control)
+            {
+                control.Update();
+            }
+        }
+
+
         public double ColumnRate
         {
             get { return (double)GetValue(ColumnRateProperty); }
@@ -123,9 +142,22 @@ namespace NeeView.Windows.Property
         private void Update()
         {
             this.Root.SizeChanged -= Root_SizeChanged;
+
             if (Value == null) return;
 
-            var isStretch = IsStretch;
+            if (Orientation == Orientation.Horizontal)
+            {
+                this.ValueUI.Margin = new Thickness(5.0, 0.0, 5.0, 0.0);
+                DockPanel.SetDock(this.ValueUI, Dock.Right);
+            }
+            else
+            {
+                this.ValueUI.Margin = new Thickness(0.0, 5.0, 0.0, 5.0);
+                DockPanel.SetDock(this.ValueUI, Dock.Bottom);
+            }
+
+            var isStretch = Orientation == Orientation.Horizontal ? IsStretch : false;
+
             if (Value is PropertyValue_Boolean booleanValue)
             {
                 if (booleanValue.VisualType == PropertyVisualType.ToggleSwitch)

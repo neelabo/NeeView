@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
+using System.Windows;
 
 namespace NeeView
 {
@@ -14,6 +15,9 @@ namespace NeeView
 
         public SystemLockMonitor()
         {
+#if DEBUG
+            if (Application.Current is null) return;
+#endif
             if (!App.Current.IsTraceLogEnabled) return;
 
             _stopwatch = Stopwatch.StartNew();
@@ -23,6 +27,9 @@ namespace NeeView
         {
             if (_stopwatch is null) return;
 
+#if DEBUG
+            if (Application.Current is null) return;
+#endif
             if (!App.Current.IsTraceLogEnabled) return;
 
             _stopwatch.Stop();

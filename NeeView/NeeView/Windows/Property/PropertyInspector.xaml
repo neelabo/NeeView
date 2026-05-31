@@ -26,6 +26,7 @@
 
                 <DataTemplate DataType="{x:Type local:PropertyMemberElement}">
                     <local:PropertyControl Header="{Binding Name}" Value="{Binding TypeValue}" Tips="{Binding Tips}"
+                        Orientation="{Binding Orientation}"
                         IsStretch="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=IsStretch}"
                         ColumnRate="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=ColumnRate}"
                         VisibilityValue="{Binding Options.VisibilityValue}"/>

@@ -1,5 +1,6 @@
 ﻿using NeeLaboratory.Generators;
 using NeeLaboratory.IO.Search;
+using NeeLaboratory.Text;
 using NeeView.Properties;
 using System;
 using System.Collections.Generic;
@@ -160,6 +161,9 @@ namespace NeeView
             get { return _remarksText ?? ""; }
             set { _remarksText = string.IsNullOrEmpty(value) ? null : value; }
         }
+
+        // コマンド説明 (1行)
+        public virtual string RemarksOneLine => Remarks.ToOneLine();
 
         /// <summary>
         /// 入力情報が変更されたフラグ。

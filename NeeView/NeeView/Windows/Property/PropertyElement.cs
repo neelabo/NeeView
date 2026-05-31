@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace NeeView.Windows.Property
@@ -143,6 +144,7 @@ namespace NeeView.Windows.Property
         public string? EmptyMessage { get; set; }
         public PropertyMemberElementOptions Options { get; set; }
         public PropertyValue TypeValue { get; set; }
+        public Orientation Orientation { get; set; } = Orientation.Horizontal;
 
 
         [MemberNotNull(nameof(_info), nameof(Source), nameof(Name), nameof(Options))]

@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Buffers;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -10,6 +13,9 @@ namespace NeeLaboratory.Text
     {
         [GeneratedRegex(@"[\r\n]+")]
         private static partial Regex _newLineRegex { get; }
+
+        private static readonly SearchValues<char> _lineBreaks = SearchValues.Create(['\r', '\n']);
+
 
         private enum UnescapeState
         {
@@ -118,7 +124,80 @@ namespace NeeLaboratory.Text
                 isEscaped = false;
             }
         }
+
+        /// <summary>
+        /// 先頭行を習得
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string FirstLine(this string s)
+        {
+            if (string.IsNullOrEmpty(s)) return s;
+
+            using (var reader = new StringReader(s))
+            {
+                return reader.ReadLine() ?? string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// 改行を削除して１行に変換する
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string ToOneLine(this string s)
+        {
+            if (string.IsNullOrEmpty(s)) return s;
+
+            ReadOnlySpan<char> source = s.AsSpan();
+
+            int firstLook = source.IndexOfAny(_lineBreaks);
+
+            if (firstLook == -1)
+            {
+                return s;
+            }
+
+            // CRLF ペアが出力長を 1 つ縮めるので、CRLF の数を数えて確定長を計算する
+            int crlfCount = 0;
+            for (int i = firstLook; i + 1 < s.Length; i++)
+            {
+                if (s[i] == '\r' && s[i + 1] == '\n') crlfCount++;
+            }
+            int exactLength = s.Length - crlfCount;
+
+            return string.Create(exactLength, (s, firstLook), (dest, state) =>
+            {
+                var src = state.s;
+                int first = state.Item2;
+
+                // 最初の部分を一括コピー
+                src.AsSpan(0, first).CopyTo(dest);
+
+                const char replaceChar = ' ';
+                int destIndex = first;
+                for (int srcIndex = first; srcIndex < src.Length; srcIndex++)
+                {
+                    char c = src[srcIndex];
+                    if (c == '\r')
+                    {
+                        if (srcIndex + 1 < src.Length && src[srcIndex + 1] == '\n') srcIndex++;
+                        dest[destIndex++] = replaceChar;
+                    }
+                    else if (c == '\n')
+                    {
+                        dest[destIndex++] = replaceChar;
+                    }
+                    else
+                    {
+                        dest[destIndex++] = c;
+                    }
+                }
+            });
+        }
+
     }
+
 
     /// <summary>
     /// 文字と、その文字がエスケープされているかどうかを表す構造体

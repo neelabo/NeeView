@@ -73,7 +73,7 @@ namespace NeeView
             var list = new List<InputGestureSource>();
             if (!string.IsNullOrWhiteSpace(s))
             {
-                foreach (var key in s.Split(','))
+                foreach (var key in s.Split([',', ' '], StringSplitOptions.RemoveEmptyEntries))
                 {
                     var inputGesture = InputGestureSourceConverter.ConvertFromString(key);
                     if (inputGesture != null)
