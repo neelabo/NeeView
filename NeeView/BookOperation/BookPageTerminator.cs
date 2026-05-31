@@ -109,13 +109,26 @@ namespace NeeView
             {
                 if (e.Direction < 0)
                 {
-                    await BookshelfFolderList.Current.PrevFolder(false, Config.Current.Book.ResetNextBookPage ? BookLoadOption.LastPage : BookLoadOption.None);
+                    await BookshelfFolderList.Current.PrevFolder(false, CreateNextBookLoadOption(BookLoadOption.LastPage));
                 }
                 else
                 {
-                    await BookshelfFolderList.Current.NextFolder(false, Config.Current.Book.ResetNextBookPage ? BookLoadOption.FirstPage : BookLoadOption.None);
+                    await BookshelfFolderList.Current.NextFolder(false, CreateNextBookLoadOption(BookLoadOption.FirstPage));
                 }
             });
+        }
+
+        private BookLoadOption CreateNextBookLoadOption(BookLoadOption optionWhenContinue)
+        {
+            return Config.Current.Book.ResetNextBookPageMode switch
+            {
+                ResetNextBookPageMode.Reset
+                    => BookLoadOption.FirstPage,
+                ResetNextBookPageMode.Continue
+                    => optionWhenContinue,
+                _
+                    => BookLoadOption.None,
+            };
         }
 
         private void PageEndAction_None(object? sender, PageTerminatedEventArgs e, bool notify)

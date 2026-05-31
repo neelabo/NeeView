@@ -21,7 +21,7 @@ namespace NeeView
         [DefaultEquality] private double _wideRatio = 1.0;
         [DefaultEquality] private StringCollection _excludeRegexes = (StringCollection)DefaultExcludeRegexes.Clone();
         [DefaultEquality] private PageEndAction _pageEndAction;
-        [DefaultEquality] private bool _resetNextBookPage = true;
+        [DefaultEquality] private ResetNextBookPageMode _resetNextBookPageMode = ResetNextBookPageMode.Continue;
         [DefaultEquality] private bool _isPrioritizeBookMove = false;
         [DefaultEquality] private bool _isPrioritizePageMove = true;
         [DefaultEquality] private bool _isReadyToPageMove;
@@ -140,7 +140,9 @@ namespace NeeView
             set { SetProperty(ref _isReadyToPageMove, value); }
         }
 
-        // ページ終端でのアクション
+        /// <summary>
+        /// ページ終端でのアクション
+        /// </summary>
         [PropertyMember]
         public PageEndAction PageEndAction
         {
@@ -148,11 +150,14 @@ namespace NeeView
             set { SetProperty(ref _pageEndAction, value); }
         }
 
+        /// <summary>
+        /// ページ終端移動でのブックページ初期化
+        /// </summary>
         [PropertyMember]
-        public bool ResetNextBookPage
+        public ResetNextBookPageMode ResetNextBookPageMode
         {
-            get { return _resetNextBookPage; }
-            set { SetProperty(ref _resetNextBookPage, value); }
+            get { return _resetNextBookPageMode; }
+            set { SetProperty(ref _resetNextBookPageMode, value); }
         }
 
         [PropertyMember]
@@ -356,6 +361,14 @@ namespace NeeView
                 if (value is null) return;
                 ExcludeRegexes = new StringCollection(value.Items.Select(e => $"^{Regex.Escape(e)}$"));
             }
+        }
+
+        [Obsolete, Alternative(nameof(ResetNextBookPageMode), 46, ScriptErrorLevel.Warning)] // v46.0
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public bool ResetNextBookPage
+        {
+            get { return ResetNextBookPageMode != ResetNextBookPageMode.None; }
+            set { ResetNextBookPageMode = value ? ResetNextBookPageMode.Continue : ResetNextBookPageMode.None; }
         }
 
         #endregion
