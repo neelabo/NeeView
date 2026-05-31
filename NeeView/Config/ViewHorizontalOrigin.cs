@@ -6,9 +6,11 @@
         Left,
         Right,
         DirectionDependent,
+        BindingDirectionDependent,
         CenterOrLeft,
         CenterOrRight,
         CenterOrDirectionDependent,
+        CenterOrBindingDirectionDependent,
     }
 
     public static class ViewHorizontalOriginExtensions
@@ -21,6 +23,7 @@
                 ViewHorizontalOrigin.CenterOrLeft => true,
                 ViewHorizontalOrigin.CenterOrRight => true,
                 ViewHorizontalOrigin.CenterOrDirectionDependent => true,
+                ViewHorizontalOrigin.CenterOrBindingDirectionDependent => true,
                 _ => false
             };
         }

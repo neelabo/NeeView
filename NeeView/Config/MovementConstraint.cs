@@ -21,9 +21,9 @@
         LockUntilResized,
 
         /// <summary>
-        /// 中央寄せ
+        /// スナップ
         /// </summary>
-        SnapToCenter,
+        Snap,
     }
 
 

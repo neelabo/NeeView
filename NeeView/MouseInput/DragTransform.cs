@@ -298,15 +298,15 @@ namespace NeeView
         }
 
         /// <summary>
-        /// 必要であれば座標を中央に補正する
+        /// 必要であれば座標を補正する
         /// </summary>
         /// <param name="span"></param>
         private void AdjustPosition(TimeSpan span)
         {
             if (Config.Current.Book.IsPanorama) return;
-            if (Config.Current.View.MovementConstraint < MovementConstraint.SnapToCenter) return;
+            if (Config.Current.View.MovementConstraint < MovementConstraint.Snap) return;
 
-            var pos = GetSnapCenterPoint(Point);
+            var pos = GetSnapPoint(Point);
             if (pos != Point)
             {
                 _context.Transform.SetPoint(pos, span);
@@ -314,16 +314,16 @@ namespace NeeView
         }
 
         /// <summary>
-        /// センター補正した座標を習得
+        /// スナップ補正した座標を習得
         /// </summary>
-        public Point GetSnapCenterPoint(Point point)
+        public Point GetSnapPoint(Point point)
         {
             if (_context.Transform is not ICenterTransform transform)
             {
                 return point;
             }
 
-            return transform.GetSnapCenterPoint(point);
+            return transform.GetSnapPoint(point);
         }
 
     }

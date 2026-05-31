@@ -141,11 +141,11 @@ namespace NeeView.PageFrames
         }
 
         /// <summary>
-        /// センター補正した座標を習得
+        /// スナップ補正した座標を習得
         /// </summary>
         /// <param name="pos">元のコンテンツ座標</param>
         /// <returns>補正されたコンテンツ座標</returns>
-        public Point GetSnapCenterPoint(Point pos)
+        public Point GetSnapPoint(Point pos)
         {
             if (_container.Content is not PageFrameContent pageFrameContent)
             {

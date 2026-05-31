@@ -136,18 +136,18 @@ namespace NeeView.PageFrames
         }
 
         /// <summary>
-        /// 必要であれば座標を中央に補正する
+        /// 必要であれば座標を補正する
         /// </summary>
         private void AdjustPosition(TimeSpan span)
         {
             if (Config.Current.Book.IsPanorama) return;
-            if (Config.Current.View.MovementConstraint < MovementConstraint.SnapToCenter) return;
+            if (Config.Current.View.MovementConstraint < MovementConstraint.Snap) return;
 
             var transform = GetDragTransform(false);
             if (transform is null) return;
 
             var p0 = Point;
-            var p1 = transform.GetSnapCenterPoint(p0);
+            var p1 = transform.GetSnapPoint(p0);
             if (p0 != p1)
             {
                 _source?.SetPoint(p1, span);

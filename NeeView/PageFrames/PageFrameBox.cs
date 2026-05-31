@@ -944,9 +944,11 @@ namespace NeeView.PageFrames
                 ViewHorizontalOrigin.Left => HorizontalAlignment.Left,
                 ViewHorizontalOrigin.Right => HorizontalAlignment.Right,
                 ViewHorizontalOrigin.DirectionDependent => math.GetHorizontalAlignment(dir),
+                ViewHorizontalOrigin.BindingDirectionDependent => _context.ReadOrder == PageReadOrder.LeftToRight ? HorizontalAlignment.Left : HorizontalAlignment.Right,
                 ViewHorizontalOrigin.CenterOrLeft => math.ContainsHorizontal() ? HorizontalAlignment.Center : HorizontalAlignment.Left,
                 ViewHorizontalOrigin.CenterOrRight => math.ContainsHorizontal() ? HorizontalAlignment.Center : HorizontalAlignment.Right,
                 ViewHorizontalOrigin.CenterOrDirectionDependent => math.ContainsHorizontal() ? HorizontalAlignment.Center : math.GetHorizontalAlignment(dir),
+                ViewHorizontalOrigin.CenterOrBindingDirectionDependent => math.ContainsHorizontal() ? HorizontalAlignment.Center : _context.ReadOrder == PageReadOrder.LeftToRight ? HorizontalAlignment.Left : HorizontalAlignment.Right,
                 _ => throw new InvalidEnumArgumentException(nameof(origin), (int)origin, typeof(ViewHorizontalOrigin)),
             };
         }
@@ -1604,9 +1606,11 @@ namespace NeeView.PageFrames
                     ViewHorizontalOrigin.Left => _context.ReadOrder == PageReadOrder.LeftToRight ? PageFrameAlignment.Min : PageFrameAlignment.Max,
                     ViewHorizontalOrigin.Right => _context.ReadOrder == PageReadOrder.LeftToRight ? PageFrameAlignment.Max : PageFrameAlignment.Min,
                     ViewHorizontalOrigin.DirectionDependent => direction == LinkedListDirection.Next ? PageFrameAlignment.Min : PageFrameAlignment.Max,
+                    ViewHorizontalOrigin.BindingDirectionDependent => PageFrameAlignment.Min,
                     ViewHorizontalOrigin.CenterOrLeft => PageFrameAlignment.Center,
                     ViewHorizontalOrigin.CenterOrRight => PageFrameAlignment.Center,
                     ViewHorizontalOrigin.CenterOrDirectionDependent => PageFrameAlignment.Center,
+                    ViewHorizontalOrigin.CenterOrBindingDirectionDependent => PageFrameAlignment.Center,
                     _ => throw new InvalidEnumArgumentException(nameof(horizontalOrigin), (int)horizontalOrigin, typeof(ViewHorizontalOrigin)),
                 };
             }

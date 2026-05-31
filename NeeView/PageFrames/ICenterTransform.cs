@@ -4,6 +4,6 @@ namespace NeeView.PageFrames
 {
     public interface ICenterTransform
     {
-        Point GetSnapCenterPoint(Point pos);
+        Point GetSnapPoint(Point pos);
     }
 }
