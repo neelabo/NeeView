@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NeeView.Setting"
         xmlns:nv="clr-namespace:NeeView"
+        xmlns:nwp="clr-namespace:NeeView.Windows.Property"
         xmlns:properties="clr-namespace:NeeView.Properties"
         mc:Ignorable="d"
         Style="{StaticResource ChromeDialogStyle}"
@@ -43,8 +44,10 @@
                     </Grid>
                 </TabItem.Header>
                 <DockPanel Margin="10,20">
-                    <CheckBox DockPanel.Dock="Top" Content="{properties:TextBinding EditCommandWindow.Visible}" IsChecked="{Binding IsShowMessage}"
-                            FocusVisualStyle="{StaticResource NVBorderFocusVisual}" />
+                    <nwp:PropertyInspector x:Name="GeneralInspector" DockPanel.Dock="Top" Document="{Binding GeneralDocument}" KeyboardNavigation.TabNavigation="Local"
+                        IsStretch="True"
+                        IsResetButtonVisible="False"
+                        ColumnRate="0.4"/>
                     <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
                         <TextBlock Text="{properties:TextBinding EditCommandWindow.Remarks}" FontWeight="Bold"/>
                         <TextBlock Text="{Binding Note}" Margin="0,5,0,20" TextWrapping="Wrap"/>

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NeeView.Properties;
+using NeeView.Windows.Property;
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -26,6 +27,7 @@ namespace NeeView.Setting
     [INotifyPropertyChanged]
     public partial class EditCommandWindow : Window
     {
+        private readonly PropertyDocument _generalDocument;
         private CommandCollection _memento;
         private string _key;
         private bool _isShowMessage;
@@ -36,6 +38,10 @@ namespace NeeView.Setting
             InitializeComponent();
             this.DataContext = this;
 
+            _generalDocument = new PropertyDocument();
+            _generalDocument.AddProperty(PropertyMemberElement.Create(this, nameof(IsShowMessage)));
+            _generalDocument.SetVisualType<PropertyValue_Boolean>(PropertyVisualType.ToggleSwitch);
+
             MouseHorizontalWheelService.SubscribeHorizontalWheelEvent(this);
 
             this.Loaded += EditCommandWindow_Loaded;
@@ -45,6 +51,7 @@ namespace NeeView.Setting
         }
 
 
+        [PropertyMember(Name = "EditCommandWindow.Visible")]
         public bool IsShowMessage
         {
             get => _isShowMessage;
@@ -54,6 +61,8 @@ namespace NeeView.Setting
         public string CommandName => _key;
 
         public string Note { get; private set; }
+
+        public PropertyDocument GeneralDocument => _generalDocument;
 
 
         private void EditCommandWindow_Loaded(object? sender, RoutedEventArgs e)
