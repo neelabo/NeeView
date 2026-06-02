@@ -22,13 +22,15 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            var state = CommandElementTools.GetState(e, MainWindow.Current.WindowStateManager.IsFullScreen);
+            var state = CommandElementTools.GetState(e, MainViewComponent.Current.ViewWindowControl.IsFullScreen);
             return GetStateExecuteMessage(state);
         }
 
+        [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            MainViewComponent.Current.ViewWindowControl.ToggleWindowFullScreen(sender);
+            var state = CommandElementTools.GetState(e, MainViewComponent.Current.ViewWindowControl.IsFullScreen);
+            MainViewComponent.Current.ViewWindowControl.SetWindowFullScreen(sender, state);
         }
     }
 }

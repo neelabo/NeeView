@@ -1,19 +1,25 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿//#define LOCAL_DEBUG
+
+using CommunityToolkit.Mvvm.ComponentModel;
+using NeeLaboratory.Generators;
 using NeeView.Windows.Controls;
 using System;
+using System.Diagnostics;
 using System.Windows;
 
 namespace NeeView.Windows
 {
+    [LocalDebug]
     public partial class WindowStateManager : ObservableObject
     {
         private readonly Window _window;
         private WindowStateEx _previousState;
         private WindowStateEx _currentState;
-        private WindowStateEx _resumeState;
-        private bool _isFullScreenMode;
-        private bool _isFullScreen;
+        private WindowStateEx _resumeState = WindowStateEx.Normal;
+        private WindowStateEx _minimizeResumeState = WindowStateEx.Normal;
+        private Rect _restoreBounds;
         private bool _isProgress;
+        private WindowPlacement _windowPlacement = new();
 
 
         public WindowStateManager(Window window)
@@ -23,39 +29,40 @@ namespace NeeView.Windows
             Update();
         }
 
-
-        public event EventHandler<WindowStateExChangedEventArgs>? StateChanged;
+        public event EventHandler? StateChanged;
         public event EventHandler<WindowStateExChangedEventArgs>? StateEditing;
         public event EventHandler<WindowStateExChangedEventArgs>? StateEdited;
 
 
-        public WindowState WindowState => _window.WindowState;
-        public WindowStateEx CurrentState => _currentState;
-        public WindowStateEx PreviousState => _previousState;
+        public WindowStateEx CurrentState
+        {
+            get => _currentState;
+            set => SetWindowState(value);
+        }
+
+        public WindowStateEx PreviousState
+        {
+            get => _previousState;
+        }
+
+        /// <summary>
+        /// EX状態を解除したときに戻る状態 (Normal or Maximize)
+        /// </summary>
         public WindowStateEx ResumeState
         {
             get => _resumeState;
             set => _resumeState = value;
         }
-        public bool IsFullScreen
-        {
-            get { return _isFullScreen; }
-            private set { SetProperty(ref _isFullScreen, value); }
-        }
 
-        public double MaximizedChromeBorderThickness { get; set; } = 8.0;
+        /// <summary>
+        /// 通常ウィンドウの復元論理座標
+        /// </summary>
+        public Rect RestoreBounds => _restoreBounds;
 
+        public bool IsFullScreen => _currentState == WindowStateEx.FullScreen;
 
-        private void UpdateIsFullScreen()
-        {
-            IsFullScreen = _isFullScreenMode && _window.WindowState == WindowState.Maximized;
-        }
+        public bool IsFullDesktop => _currentState == WindowStateEx.FullDesktop;
 
-        private void SetFullScreenMode(bool isEnabled)
-        {
-            _isFullScreenMode = isEnabled;
-            UpdateIsFullScreen();
-        }
 
         private void Window_StateChanged(object? sender, EventArgs e)
         {
@@ -66,15 +73,13 @@ namespace NeeView.Windows
 
         public void Update()
         {
-            UpdateIsFullScreen();
-
             switch (_window.WindowState)
             {
                 case WindowState.Minimized:
                     ToMinimize();
                     break;
                 case WindowState.Normal:
-                    ToNormalize();
+                    ToNormalizeMaybe();
                     break;
                 case WindowState.Maximized:
                     ToMaximizeMaybe();
@@ -82,23 +87,6 @@ namespace NeeView.Windows
             }
         }
 
-        public WindowStateEx GetWindowState()
-        {
-            if (IsFullScreen)
-            {
-                return WindowStateEx.FullScreen;
-            }
-            else
-            {
-                return _window.WindowState switch
-                {
-                    WindowState.Minimized => WindowStateEx.Minimized,
-                    WindowState.Maximized => WindowStateEx.Maximized,
-                    WindowState.Normal => WindowStateEx.Normal,
-                    _ => throw new NotSupportedException(),
-                };
-            }
-        }
 
         public void SetWindowState(WindowStateEx state)
         {
@@ -119,6 +107,9 @@ namespace NeeView.Windows
                 case WindowStateEx.FullScreen:
                     ToFullScreen();
                     break;
+                case WindowStateEx.FullDesktop:
+                    ToFullDesktop();
+                    break;
             }
         }
 
@@ -126,16 +117,26 @@ namespace NeeView.Windows
         {
             StateEditing?.Invoke(this, editArgs);
             _isProgress = true;
+
+            switch (_currentState)
+            {
+                case WindowStateEx.Normal:
+                    FromNormalize();
+                    break;
+                case WindowStateEx.FullDesktop:
+                    FromFullDesktop();
+                    break;
+            }
         }
 
         private void EndEdit(WindowStateExChangedEventArgs editArgs)
         {
-            var nowState = GetWindowState();
-            if (nowState != _currentState)
+            var newState = editArgs.NewState;
+            if (newState != _currentState)
             {
                 _previousState = _currentState;
-                _currentState = nowState;
-                StateChanged?.Invoke(this, new WindowStateExChangedEventArgs(_previousState, _currentState));
+                _currentState = newState;
+                StateChanged?.Invoke(this, EventArgs.Empty);
             }
 
             _isProgress = false;
@@ -150,11 +151,21 @@ namespace NeeView.Windows
             var editArgs = new WindowStateExChangedEventArgs(_currentState, WindowStateEx.Minimized);
             BeginEdit(editArgs);
 
-            //_window.ResizeMode = ResizeMode.CanResize;
-            //_window.WindowStyle = WindowStyle.None;
             _window.WindowState = WindowState.Minimized;
 
             EndEdit(editArgs);
+        }
+
+        public void ToNormalizeMaybe()
+        {
+            if (_currentState == WindowStateEx.FullDesktop || (_currentState == WindowStateEx.Minimized && _minimizeResumeState == WindowStateEx.FullDesktop))
+            {
+                ToFullDesktop();
+            }
+            else
+            {
+                ToNormalize();
+            }
         }
 
         public void ToNormalize()
@@ -164,8 +175,8 @@ namespace NeeView.Windows
             var editArgs = new WindowStateExChangedEventArgs(_currentState, WindowStateEx.Normal);
             BeginEdit(editArgs);
 
-            SetFullScreenMode(false);
             _resumeState = WindowStateEx.Normal;
+            _minimizeResumeState = WindowStateEx.Normal;
 
             _window.ResizeMode = ResizeMode.CanResize;
             _window.WindowStyle = WindowStyle.SingleBorderWindow;
@@ -174,11 +185,28 @@ namespace NeeView.Windows
             EndEdit(editArgs);
         }
 
+        private void FromNormalize()
+        {
+            if (_currentState != WindowStateEx.Normal) return;
+
+            // 通常ウィンドウサイズの保存
+            _restoreBounds = _window.RestoreBounds;
+            LocalDebug.WriteLine($"RestoreBounds: {_restoreBounds}");
+
+            // 通常ウィンドウの状態を保存
+            _windowPlacement = WindowPlacementTools.StoreWindowPlacement(_window, Config.Current.Window.IsRestoreAeroSnapPlacement);
+        }
+
         public void ToMaximizeMaybe()
         {
-            if (_isFullScreenMode)
+            if (_currentState == WindowStateEx.FullScreen || (_currentState == WindowStateEx.Minimized && _minimizeResumeState == WindowStateEx.FullScreen))
             {
                 ToFullScreen();
+            }
+            else if (_currentState == WindowStateEx.Minimized && _minimizeResumeState == WindowStateEx.FullDesktop)
+            {
+                //  直前が Maximized の FullDesktop の最小化状態の復帰で Mazimized で復元されてしまう現象の対処
+                ToFullDesktop();
             }
             else
             {
@@ -193,8 +221,9 @@ namespace NeeView.Windows
             var editArgs = new WindowStateExChangedEventArgs(_currentState, WindowStateEx.Maximized);
             BeginEdit(editArgs);
 
-            SetFullScreenMode(false);
             _resumeState = WindowStateEx.Maximized;
+            _minimizeResumeState = WindowStateEx.Maximized;
+
             _window.ResizeMode = ResizeMode.CanResize;
             if (CurrentState == WindowStateEx.FullScreen && Windows11Tools.IsWindows11OrGreater)
             {
@@ -208,12 +237,15 @@ namespace NeeView.Windows
             EndEdit(editArgs);
         }
 
+
         public void ToFullScreen()
         {
             if (_isProgress) return;
 
             var editArgs = new WindowStateExChangedEventArgs(_currentState, WindowStateEx.FullScreen);
             BeginEdit(editArgs);
+
+            _minimizeResumeState = WindowStateEx.FullScreen;
 
             // NOTE: Windowsショートカットによる移動ができなくなるので、タブレットに限定する
             if (WindowParameters.IsTabletMode)
@@ -229,16 +261,47 @@ namespace NeeView.Windows
             _window.WindowStyle = WindowStyle.None;
             _window.WindowState = WindowState.Maximized;
 
-            SetFullScreenMode(true);
-
             WindowChromePatch.ResetMaximizedWindowSize(_window, true);
 
             EndEdit(editArgs);
         }
 
+
+        public void ToFullDesktop()
+        {
+            // タブレットモードでは無効
+            if (WindowParameters.IsTabletMode) return;
+
+            if (_isProgress) return;
+
+            var editArgs = new WindowStateExChangedEventArgs(_currentState, WindowStateEx.FullDesktop);
+            BeginEdit(editArgs);
+
+            _minimizeResumeState = WindowStateEx.FullDesktop;
+
+            _window.WindowState = WindowState.Normal;
+            _window.WindowStyle = WindowStyle.None;
+            _window.ResizeMode = ResizeMode.CanMinimize;
+
+            _window.Left = SystemParameters.VirtualScreenLeft;
+            _window.Top = SystemParameters.VirtualScreenTop;
+            _window.Width = SystemParameters.VirtualScreenWidth;
+            _window.Height = SystemParameters.VirtualScreenHeight;
+
+            EndEdit(editArgs);
+        }
+
+        private void FromFullDesktop()
+        {
+            if (_currentState != WindowStateEx.FullDesktop) return;
+
+            // 通常ウィンドウサイズの復元
+            RestoreWindowPlacement(_windowPlacement);
+        }
+
         public void ToggleMinimize()
         {
-            if (_window.WindowState != WindowState.Minimized)
+            if (_currentState != WindowStateEx.Minimized)
             {
                 SystemCommands.MinimizeWindow(_window);
             }
@@ -250,16 +313,27 @@ namespace NeeView.Windows
 
         public void ToggleMaximize()
         {
-            if (_window.WindowState != WindowState.Maximized)
+            if (_currentState != WindowStateEx.Maximized)
             {
-                SystemCommands.MaximizeWindow(_window);
+                ToMaximize();
             }
             else
             {
-                SystemCommands.RestoreWindow(_window);
+                ToNormalize();
             }
         }
 
+        public void SetFullScreen(bool isFullScreen)
+        {
+            if (isFullScreen)
+            {
+                ToFullScreen();
+            }
+            else
+            {
+                ReleaseFullScreen();
+            }
+        }
 
         public void ToggleFullScreen()
         {
@@ -287,15 +361,43 @@ namespace NeeView.Windows
             }
         }
 
-        public void SetFullScreen(bool isFullScreen)
+        public void SetFullDesktop(bool isFullDesktop)
         {
-            if (isFullScreen)
+            if (isFullDesktop)
             {
-                ToFullScreen();
+                ToFullDesktop();
             }
             else
             {
-                ReleaseFullScreen();
+                ReleaseFullDesktop();
+            }
+        }
+
+        public void ToggleFullDesktop()
+        {
+            if (WindowParameters.IsTabletMode) return;
+
+            if (IsFullDesktop)
+            {
+                ReleaseFullDesktop();
+            }
+            else
+            {
+                ToFullDesktop();
+            }
+        }
+
+        public void ReleaseFullDesktop()
+        {
+            if (!IsFullDesktop) return;
+
+            if (_resumeState == WindowStateEx.Maximized || WindowParameters.IsTabletMode)
+            {
+                ToMaximize();
+            }
+            else
+            {
+                ToNormalize();
             }
         }
 
@@ -306,7 +408,14 @@ namespace NeeView.Windows
         /// <returns></returns>
         public WindowPlacement StoreWindowPlacement(bool withAeroSnap)
         {
-            return WindowPlacementTools.StoreWindowPlacement(_window, withAeroSnap).WithIsFullScreen(IsFullScreen);
+            // フルデスクトップの場合は直前の復元情報を返す
+            if (_currentState == WindowStateEx.FullDesktop || (_currentState == WindowStateEx.Minimized && _minimizeResumeState == WindowStateEx.FullDesktop))
+            {
+                return _windowPlacement;
+            }
+
+            Debug.Assert(_currentState != WindowStateEx.FullDesktop);
+            return WindowPlacementTools.StoreWindowPlacement(_window, withAeroSnap).WithState(_currentState);
         }
 
         /// <summary>
@@ -317,10 +426,19 @@ namespace NeeView.Windows
         {
             WindowPlacementTools.RestoreWindowPlacement(_window, placement);
 
-            if (placement.IsFullScreen)
+            // 特殊状態復元
+            switch (placement.WindowStateEx)
             {
-                ToFullScreen();
+                case WindowStateEx.FullScreen:
+                    ToFullScreen();
+                    break;
+                case WindowStateEx.FullDesktop:
+                    ToFullDesktop();
+                    break;
             }
+
+            // 復元情報更新
+            _windowPlacement = placement.WithState(WindowStateEx.Normal);
         }
     }
 }

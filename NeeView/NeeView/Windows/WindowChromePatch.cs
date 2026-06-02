@@ -3,6 +3,7 @@
 using NeeLaboratory.Generators;
 using NeeView.Win32.Extensions;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -25,6 +26,7 @@ namespace NeeView.Windows
         private readonly WindowChrome _windowChrome;
         private readonly Thickness _resizeBorderThickness;
         private Thickness _windowBorderThickness;
+        private readonly DependencyPropertyDescriptor _descriptor;
 
         public WindowChromePatch(Window window, WindowChrome windowChrome)
         {
@@ -44,14 +46,40 @@ namespace NeeView.Windows
             {
                 _window.SourceInitialized += (s, e) => AddHook();
             }
+
+            _descriptor = DependencyPropertyDescriptor.FromProperty(Window.ResizeModeProperty, typeof(Window));
+            _descriptor.AddValueChanged(_window, Window_ResizeModeChanged);
+
+            _window.Closed += Window_Closed;
+        }
+
+        private void Window_Closed(object? sender, EventArgs e)
+        {
+            _descriptor.RemoveValueChanged(_window, Window_ResizeModeChanged);
+        }
+
+        private void Window_ResizeModeChanged(object? sender, EventArgs e)
+        {
+            UpdateResizeBorderThickness();
         }
 
         private void Window_StateChanged(object? sender, EventArgs e)
         {
             UpdateWindowBorder();
 
-            // NOTE: タブレットモードでのフルスクリーン時に画面端のカーソル座標が取得できなくなる現象の対策として ResizeBorderThickness を 0 にする。
-            _windowChrome.ResizeBorderThickness = _window.WindowState == WindowState.Maximized ? new Thickness(0) : _resizeBorderThickness;
+            UpdateResizeBorderThickness();
+        }
+
+        private void UpdateResizeBorderThickness()
+        {
+            if (_window.WindowState == WindowState.Maximized || _window.ResizeMode != ResizeMode.CanResize)
+            {
+                _windowChrome.ResizeBorderThickness = new Thickness(0);
+            }
+            else
+            {
+                _windowChrome.ResizeBorderThickness = _resizeBorderThickness;
+            }
         }
 
         private void UpdateWindowBorder()
@@ -284,6 +312,5 @@ namespace NeeView.Windows
                 PInvoke.SetWindowPos((HWND)hWnd, default, rect.left, rect.top, rect.Width, rect.Height, SET_WINDOW_POS_FLAGS.SWP_NOZORDER);
             }
         }
-
     }
 }

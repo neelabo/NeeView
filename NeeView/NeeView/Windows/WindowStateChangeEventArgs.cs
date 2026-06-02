@@ -5,7 +5,7 @@ namespace NeeView.Windows
 {
     public class WindowStateChangeEventArgs : EventArgs
     {
-        public WindowStateChangeEventArgs(Window window, WindowState oldState, WindowState newState)
+        public WindowStateChangeEventArgs(Window window, WindowStateEx oldState, WindowStateEx newState)
         {
             Window = window;
             OldState = oldState;
@@ -13,8 +13,8 @@ namespace NeeView.Windows
         }
 
         public Window Window { get; set; }
-        public WindowState OldState { get; set; }
-        public WindowState NewState { get; set; }
+        public WindowStateEx OldState { get; set; }
+        public WindowStateEx NewState { get; set; }
     }
 
 }

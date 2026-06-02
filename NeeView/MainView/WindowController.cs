@@ -29,6 +29,9 @@ namespace NeeView
             set => _window.Topmost = value;
         }
 
+        public bool IsFullScreen => _windowStateManager.IsFullScreen;
+        public bool IsFullDesktop => _windowStateManager.IsFullDesktop;
+
 
         public void ToggleMinimize()
         {
@@ -45,9 +48,19 @@ namespace NeeView
             _windowStateManager.ToggleFullScreen();
         }
 
+        public void ToggleFullDesktop()
+        {
+            _windowStateManager.ToggleFullDesktop();
+        }
+
         public void SetFullScreen(bool isFullScreen)
         {
             _windowStateManager.SetFullScreen(isFullScreen);
+        }
+
+        public void SetFullDesktop(bool isFullDesktop)
+        {
+            _windowStateManager.SetFullDesktop(isFullDesktop);
         }
 
         public void ToggleTopmost()

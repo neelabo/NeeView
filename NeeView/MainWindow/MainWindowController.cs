@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using NeeLaboratory.ComponentModel;
 using NeeView.Windows;
+using System;
 using System.ComponentModel;
 using System.Windows;
 
@@ -38,6 +39,9 @@ namespace NeeView
 
             Config.Current.Window.SubscribePropertyChanged(nameof(WindowConfig.IsAutoHideInFullScreen),
                 (s, e) => UpdatePanelHideMode());
+
+            Config.Current.Window.SubscribePropertyChanged(nameof(WindowConfig.IsAutoHideInFullDesktop),
+                (s, e) => UpdatePanelHideMode());
         }
 
 
@@ -54,9 +58,9 @@ namespace NeeView
         }
 
 
-        private void WindowStateManager_StateChanged(object? sender, WindowStateExChangedEventArgs e)
+        private void WindowStateManager_StateChanged(object? sender, EventArgs e)
         {
-            Config.Current.Window.State = e.NewState;
+            Config.Current.Window.State = _manager.CurrentState;
             UpdatePanelHideMode();
 
             CommandTable.Current.TryExecute(this, ScriptCommand.EventOnWindowStateChanged, null, CommandOption.None);
@@ -69,6 +73,7 @@ namespace NeeView
                 WindowStateEx.Normal => Config.Current.Window.IsAutoHideInNormal,
                 WindowStateEx.Maximized => Config.Current.Window.IsAutoHideInMaximized,
                 WindowStateEx.FullScreen => Config.Current.Window.IsAutoHideInFullScreen,
+                WindowStateEx.FullDesktop => Config.Current.Window.IsAutoHideInFullDesktop,
                 _ => false,
             };
         }

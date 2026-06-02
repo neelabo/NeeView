@@ -16,5 +16,8 @@
 
         [AliasName]
         FullScreen,
+
+        [AliasName]
+        FullDesktop,
     }
 }

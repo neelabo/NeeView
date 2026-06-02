@@ -49,10 +49,10 @@ namespace NeeView
             // ウィンドウ移動
             public void DragWindowMove(Point start, Point end)
             {
-                var window = Window.GetWindow(Context.Sender);
+                var window = WindowEx.GetWindow(Context.Sender);
                 if (window is null) return;
 
-                if (window.WindowState == WindowState.Normal)
+                if (window.WindowState == WindowStateEx.Normal)
                 {
                     var pos = PointToLogicalScreen(Context.Sender, end) - _startPointFromWindow;
                     window.Left = pos.X;

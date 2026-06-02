@@ -5,6 +5,9 @@
         private readonly MainViewComponent _viewComponent;
         private readonly WindowStateController _windowStateController;
 
+        public bool IsFullScreen => _windowStateController.IsFullScreen;
+        public bool IsFullDesktop => _windowStateController.IsFullDesktop;
+
         public ViewWindowControl(MainViewComponent viewComponent)
         {
             _viewComponent = viewComponent;
@@ -30,10 +33,20 @@
         {
             _windowStateController.ToggleFullScreen(sender);
         }
+        
+        public void ToggleWindowFullDesktop(object? sender)
+        {
+            _windowStateController.ToggleFullDesktop(sender);
+        }
 
-        public void SetFullScreen(object? sender, bool isFullScreen)
+        public void SetWindowFullScreen(object? sender, bool isFullScreen)
         {
             _windowStateController.SetFullScreen(sender, isFullScreen);
+        }
+
+        public void SetWindowFullDesktop(object? sender, bool isFullDesktop)
+        {
+            _windowStateController.SetFullDesktop(sender, isFullDesktop);
         }
 
         public void StretchWindow()

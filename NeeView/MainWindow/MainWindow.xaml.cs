@@ -261,7 +261,7 @@ namespace NeeView
 
             if (Config.Current.Window.WindowPlacement != null)
             {
-                state = Config.Current.Window.WindowPlacement.GetWindowStateEx();
+                state = Config.Current.Window.WindowPlacement.WindowStateEx;
             }
 
             if (App.Current.Option.IsResetPlacement == SwitchOption.on)
@@ -320,7 +320,14 @@ namespace NeeView
         /// <param name="e"></param>
         private void RestoreWindowCommand_Execute(object sender, ExecutedRoutedEventArgs e)
         {
-            SystemCommands.RestoreWindow(this);
+            if (_windowStateManager.CurrentState == WindowStateEx.FullDesktop)
+            {
+                _windowStateManager.SetWindowState(WindowStateEx.Normal);
+            }
+            else
+            {
+                SystemCommands.RestoreWindow(this);
+            }
         }
 
         /// <summary>
@@ -357,7 +364,7 @@ namespace NeeView
             {
                 if (Config.Current.StartUp.IsRestoreWindowPlacement)
                 {
-                    Config.Current.Window.LastState = _windowStateManager.IsFullScreen ? _windowStateManager.ResumeState : WindowStateEx.Normal;
+                    Config.Current.Window.LastState = _windowStateManager.CurrentState.IsExtend ? _windowStateManager.ResumeState : WindowStateEx.Normal;
                     Config.Current.Window.WindowPlacement = _windowStateManager.StoreWindowPlacement(Config.Current.Window.IsRestoreAeroSnapPlacement);
                 }
                 else
@@ -407,7 +414,7 @@ namespace NeeView
 
             if (placement != null && placement.IsValid())
             {
-                placement = placement.WithState(state.ToWindowState(), state.IsFullScreen());
+                placement = placement.WithState(state);
 
                 _windowStateManager.ResumeState = Config.Current.Window.LastState;
                 _windowStateManager.RestoreWindowPlacement(placement);

@@ -134,6 +134,7 @@ namespace NeeView
         public static VersionNumber Ver46_Alpha2 { get; } = new(46, 0, 4134);
         public static VersionNumber Ver46_Alpha3 { get; } = new(46, 0, 4175);
         public static VersionNumber Ver46_Alpha4 { get; } = new(46, 0, 4176);
+        public static VersionNumber Ver46_Alpha5 { get; } = new(46, 0, 4209);
 
 #if DEBUG
         public static bool __IsDebugMode__ { get; } = true;

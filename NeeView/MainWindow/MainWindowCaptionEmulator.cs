@@ -16,7 +16,7 @@ namespace NeeView
 
         protected override void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (!Config.Current.Window.IsCaptionEmulateInFullScreen && this.WindowStateManager?.IsFullScreen == true) return;
+            if (!Config.Current.Window.IsCaptionEmulateInFullScreen && this.WindowStateManager?.CurrentState.IsExtend == true) return;
 
             base.OnMouseLeftButtonDown(sender, e);
         }

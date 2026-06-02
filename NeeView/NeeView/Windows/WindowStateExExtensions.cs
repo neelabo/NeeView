@@ -4,22 +4,22 @@ namespace NeeView.Windows
 {
     public static class WindowStateExExtensions
     {
-        public static WindowState ToWindowState(this WindowStateEx self)
+        extension(WindowStateEx self)
         {
-            return self switch
-            {
-                WindowStateEx.Minimized
-                    => WindowState.Minimized,
-                WindowStateEx.Maximized or WindowStateEx.FullScreen
-                    => WindowState.Maximized,
-                _
-                    => WindowState.Normal,
-            };
-        }
+            public bool IsExtend => self == WindowStateEx.FullScreen || self == WindowStateEx.FullDesktop;
 
-        public static bool IsFullScreen(this WindowStateEx self)
-        {
-            return self == WindowStateEx.FullScreen;
+            public WindowState ToWindowState()
+            {
+                return self switch
+                {
+                    WindowStateEx.Minimized
+                        => WindowState.Minimized,
+                    WindowStateEx.Maximized or WindowStateEx.FullScreen
+                        => WindowState.Maximized,
+                    _
+                        => WindowState.Normal,
+                };
+            }
         }
     }
 }

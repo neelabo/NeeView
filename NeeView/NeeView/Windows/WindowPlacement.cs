@@ -19,33 +19,27 @@ namespace NeeView.Windows
         }
 
         public WindowPlacement(WindowState windowState, int left, int top, int width, int height)
+            : this(windowState.ToWindowStateEx(), left, top, width, height)
         {
-            WindowState = windowState;
+        }
+
+        public WindowPlacement(WindowStateEx windowStateEx, int left, int top, int width, int height) 
+        {
+            WindowStateEx = windowStateEx == WindowStateEx.None ? WindowStateEx.Normal : windowStateEx;
             Left = left;
             Top = top;
             Width = width;
             Height = height;
         }
 
-        public WindowPlacement(WindowState windowState, int left, int top, int width, int height, bool isFullScreen) : this(windowState, left, top, width, height)
-        {
-            IsFullScreen = isFullScreen;
 
-            if (isFullScreen)
-            {
-                WindowState = WindowState.Maximized;
-            }
-        }
+        public WindowStateEx WindowStateEx { get; private set; }
+        public WindowState WindowState => WindowStateEx.ToWindowState();
 
-
-        public WindowState WindowState { get; private set; }
         public int Left { get; private set; }
         public int Top { get; private set; }
         public int Width { get; private set; }
         public int Height { get; private set; }
-
-        public bool IsFullScreen { get; private set; }
-
         public int Right => Left + Width;
         public int Bottom => Top + Height;
 
@@ -55,32 +49,14 @@ namespace NeeView.Windows
             return Width > 0 || Height > 0;
         }
 
-        public WindowPlacement WithIsFullScreen(bool isFullScreen)
+        public WindowPlacement WithState(WindowStateEx state)
         {
-            return new WindowPlacement(this.WindowState, this.Left, this.Top, this.Width, this.Height, isFullScreen);
-        }
-
-        public WindowPlacement WithState(WindowState state)
-        {
-            var isFullScreen = state == WindowState.Maximized && this.IsFullScreen;
-            return new WindowPlacement(state, this.Left, this.Top, this.Width, this.Height, isFullScreen);
-        }
-
-        public WindowPlacement WithState(WindowState state, bool isFullScreen)
-        {
-            isFullScreen = state == WindowState.Maximized && isFullScreen;
-            return new WindowPlacement(state, this.Left, this.Top, this.Width, this.Height, isFullScreen);
-        }
-
-        public WindowStateEx GetWindowStateEx()
-        {
-            return WindowState.ToWindowStateEx(IsFullScreen);
+            return new WindowPlacement(state, this.Left, this.Top, this.Width, this.Height);
         }
 
         public override string ToString()
         {
-            var state = IsFullScreen ? "FullScreen" : WindowState.ToString();
-            return $"{state},{Left},{Top},{Width},{Height}";
+            return $"{WindowStateEx},{Left},{Top},{Width},{Height}";
         }
 
         public static WindowPlacement Parse(string s)
@@ -94,26 +70,14 @@ namespace NeeView.Windows
                 return WindowPlacement.None;
             }
 
-            bool isFullScreen;
-            WindowState windowState;
-            if (tokens[0] == "FullScreen")
-            {
-                windowState = WindowState.Maximized;
-                isFullScreen = true;
-            }
-            else
-            {
-                windowState = (WindowState)(Enum.Parse(typeof(WindowState), tokens[0]));
-                isFullScreen = false;
-            }
+            var windowStateEx = Enum.Parse<WindowStateEx>(tokens[0]);
 
             var placement = new WindowPlacement(
-                windowState,
+                windowStateEx,
                 int.Parse(tokens[1], CultureInfo.InvariantCulture),
                 int.Parse(tokens[2], CultureInfo.InvariantCulture),
                 int.Parse(tokens[3], CultureInfo.InvariantCulture),
-                int.Parse(tokens[4], CultureInfo.InvariantCulture),
-                isFullScreen);
+                int.Parse(tokens[4], CultureInfo.InvariantCulture));
 
             return placement;
         }

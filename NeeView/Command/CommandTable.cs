@@ -189,6 +189,7 @@ namespace NeeView
                 new ToggleFullScreenCommand(),
                 new SetFullScreenCommand(),
                 new CancelFullScreenCommand(),
+                new ToggleFullDesktopCommand(),
                 new ToggleWindowMinimizeCommand(),
                 new ToggleWindowMaximizeCommand(),
                 new ShowHiddenPanelsCommand(),

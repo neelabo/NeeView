@@ -21,7 +21,8 @@ namespace NeeView
         normal,
         min,
         max,
-        full
+        full,
+        desktop,
     }
 
     public static class WindowStateOptionExtensions
@@ -34,6 +35,7 @@ namespace NeeView
                 WindowStateOption.min => WindowStateEx.Minimized,
                 WindowStateOption.max => WindowStateEx.Maximized,
                 WindowStateOption.full => WindowStateEx.FullScreen,
+                WindowStateOption.desktop => WindowStateEx.FullDesktop,
                 _ => WindowStateEx.None,
             };
         }

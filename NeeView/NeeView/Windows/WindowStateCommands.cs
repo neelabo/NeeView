@@ -6,10 +6,12 @@ namespace NeeView.Windows
     public class WindowStateCommands
     {
         private readonly Window _window;
+        private readonly WindowEx _windowEx;
 
         public WindowStateCommands(Window window)
         {
             _window = window;
+            _windowEx = new WindowEx(window);
         }
 
 
@@ -29,7 +31,14 @@ namespace NeeView.Windows
 
         private void RestoreWindowCommand_Execute(object? sender, ExecutedRoutedEventArgs e)
         {
-            SystemCommands.RestoreWindow(_window);
+            if (_windowEx.WindowState == WindowStateEx.FullDesktop)
+            {
+                _windowEx.WindowState = WindowStateEx.Normal;
+            }
+            else
+            {
+                SystemCommands.RestoreWindow(_window);
+            }
         }
 
         private void MaximizeWindowCommand_Execute(object? sender, ExecutedRoutedEventArgs e)

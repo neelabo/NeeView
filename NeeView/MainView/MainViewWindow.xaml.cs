@@ -136,7 +136,7 @@ namespace NeeView
             var placement = Config.Current.MainView.WindowPlacement;
             if (placement.IsValid() && placement.WindowState == WindowState.Minimized)
             {
-                placement = placement.WithState(WindowState.Normal);
+                placement = placement.WithState(WindowStateEx.Normal);
             }
 
             RestoreWindowResumeState(Config.Current.MainView.LastState);
@@ -210,7 +210,7 @@ namespace NeeView
 
         private void UpdateCaptionBar()
         {
-            if (Config.Current.MainView.IsHideTitleBar || _windowStateManager.IsFullScreen)
+            if (Config.Current.MainView.IsHideTitleBar || _windowStateManager.CurrentState.IsExtend)
             {
                 this.CanHideMenu = true;
                 Grid.SetRow(this.CaptionBar, 1);
@@ -229,7 +229,7 @@ namespace NeeView
 
         public WindowStateEx StoreWindowResumeState()
         {
-            return _windowStateManager.IsFullScreen ? _windowStateManager.ResumeState : WindowStateEx.Normal;
+            return _windowStateManager.CurrentState.IsExtend ? _windowStateManager.ResumeState : WindowStateEx.Normal;
         }
 
         public void RestoreWindowResumeState(WindowStateEx state)

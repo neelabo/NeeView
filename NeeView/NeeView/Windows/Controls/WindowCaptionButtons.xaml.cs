@@ -10,7 +10,7 @@ namespace NeeView.Windows.Controls
         private readonly SolidColorBrush _defaultButtonBackground = Brushes.Transparent;
         private readonly SolidColorBrush _mouseOverButtonBackground = new(Color.FromArgb(0x66, 0x88, 0x88, 0x88));
         private readonly SolidColorBrush _pressedButtonBackground = new(Color.FromArgb(0x88, 0x88, 0x88, 0x88));
-        private Window? _window;
+        private WindowEx? _window;
 
 
         public WindowCaptionButtons()
@@ -78,15 +78,15 @@ namespace NeeView.Windows.Controls
         {
             if (window == null) return;
 
-            if (_window != null)
+            if (_window is not null)
             {
                 _window.StateChanged -= Window_StateChanged;
-                WindowChromeTools.GetSource(_window)?.SetMaximizeButtonSource(null);
+                WindowChromeTools.GetSource(_window.Window)?.SetMaximizeButtonSource(null);
             }
 
-            _window = window;
+            _window = new WindowEx(window);
             _window.StateChanged += Window_StateChanged;
-            WindowChromeTools.GetSource(_window)?.SetMaximizeButtonSource(this);
+            WindowChromeTools.GetSource(_window.Window)?.SetMaximizeButtonSource(this);
 
             Window_StateChanged(this, EventArgs.Empty);
         }
@@ -107,7 +107,7 @@ namespace NeeView.Windows.Controls
         {
             if (_window == null) return;
 
-            if (_window.WindowState == WindowState.Maximized)
+            if (_window.WindowState == WindowStateEx.Maximized || _window.WindowState.IsExtend)
             {
                 //this.Root.Margin = new Thickness(0, 0, 2, 0);
                 this.CaptionRestoreButton.Visibility = Visibility.Visible;

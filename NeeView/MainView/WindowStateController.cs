@@ -15,6 +15,9 @@ namespace NeeView
             _defaultController = defaultController;
         }
 
+        public bool IsFullScreen => GetWindowController(null).IsFullScreen;
+        public bool IsFullDesktop => GetWindowController(null).IsFullDesktop;
+
         public void ToggleMinimize(object? sender)
         {
             GetWindowController(sender)?.ToggleMinimize();
@@ -30,9 +33,19 @@ namespace NeeView
             GetWindowController(sender)?.ToggleFullScreen();
         }
 
+        public void ToggleFullDesktop(object? sender)
+        {
+            GetWindowController(sender)?.ToggleFullDesktop();
+        }
+
         public void SetFullScreen(object? sender, bool isFullScreen)
         {
             GetWindowController(sender).SetFullScreen(isFullScreen);
+        }
+
+        public void SetFullDesktop(object? sender, bool isFullDesktop)
+        {
+            GetWindowController(sender).SetFullDesktop(isFullDesktop);
         }
 
         public void ToggleTopmost(object? sender)

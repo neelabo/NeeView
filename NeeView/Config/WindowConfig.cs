@@ -17,7 +17,8 @@ namespace NeeView
         [DefaultEquality] private bool _isAeroSnapPlacementEnabled = true;
         [DefaultEquality] private bool _isAutoHideInNormal = false;
         [DefaultEquality] private bool _isAutoHideInMaximized = false;
-        [DefaultEquality] private bool _IsAutoHideInFullScreen = true;
+        [DefaultEquality] private bool _isAutoHideInFullScreen = true;
+        [DefaultEquality] private bool _isAutoHideInFullDesktop = true;
         [DefaultEquality] private bool _isAutoHideScrollBar = true;
 
 
@@ -85,8 +86,15 @@ namespace NeeView
         [PropertyMember]
         public bool IsAutoHideInFullScreen
         {
-            get { return _IsAutoHideInFullScreen; }
-            set { SetProperty(ref _IsAutoHideInFullScreen, value); }
+            get { return _isAutoHideInFullScreen; }
+            set { SetProperty(ref _isAutoHideInFullScreen, value); }
+        }
+
+        [PropertyMember]
+        public bool IsAutoHideInFullDesktop
+        {
+            get { return _isAutoHideInFullDesktop; }
+            set { SetProperty(ref _isAutoHideInFullDesktop, value); }
         }
 
         [PropertyMember]

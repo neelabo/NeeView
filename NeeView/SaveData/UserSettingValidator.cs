@@ -288,6 +288,17 @@ namespace NeeView
                 }
             }
 
+            // v46.0-Alpha.5
+            if (self.Format.CompareTo(new FormatVersion(Environment.SolutionName, VersionNumber.Ver46_Alpha5)) <= 0)
+            {
+                self.Config.Window.IsAutoHideInFullDesktop = self.Config.Window.IsAutoHideInFullScreen;
+
+                if (self.Commands != null)
+                {
+                    ResolveCommandShortCutKeyConflicts(self.Commands, new ToggleFullDesktopCommand());
+                }
+            }
+
             // NOTE: ver.99 (バージョン変更処理テスト)
 #if false
             if (self.Format.CompareTo(new FormatVersion(Environment.SolutionName, 99, 0, 0)) < 0)

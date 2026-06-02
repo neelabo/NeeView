@@ -10,7 +10,7 @@ namespace NeeView.Windows
     /// </summary>
     public class WindowCaptionEmulator : IDisposable
     {
-        private readonly Window _window;
+        private readonly WindowEx _window;
         private readonly FrameworkElement _target;
         private bool _isDrag;
         private Point _dragStartPoint;
@@ -18,7 +18,7 @@ namespace NeeView.Windows
 
         public WindowCaptionEmulator(Window window, FrameworkElement target)
         {
-            _window = window;
+            _window = new WindowEx(window);
             _target = target;
 
             _target.MouseLeftButtonDown += OnMouseLeftButtonDown;
@@ -31,7 +31,7 @@ namespace NeeView.Windows
 
         public bool IsMaximizeEnabled { get; set; } = true;
 
-        public Window Window => _window;
+        public Window Window => _window.Window;
 
 
         protected virtual void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -43,20 +43,22 @@ namespace NeeView.Windows
             {
                 switch (_window.WindowState)
                 {
-                    case WindowState.Normal:
-                        _window.WindowState = WindowState.Maximized;
+                    case WindowStateEx.Normal:
+                        _window.WindowState = WindowStateEx.Maximized;
                         break;
-                    case WindowState.Maximized:
-                        _window.WindowState = WindowState.Normal;
+                    case WindowStateEx.Maximized:
+                    case WindowStateEx.FullScreen:
+                    case WindowStateEx.FullDesktop:
+                        _window.WindowState = WindowStateEx.Normal;
                         break;
                 }
                 return;
             }
 
-            else if (_window.WindowState == WindowState.Maximized)
+            else if (_window.WindowState == WindowStateEx.Maximized || _window.WindowState.IsExtend)
             {
                 _isDrag = true;
-                _dragStartPoint = e.GetPosition(_window);
+                _dragStartPoint = e.GetPosition(_window.Window);
                 return;
             }
 
@@ -83,23 +85,23 @@ namespace NeeView.Windows
                 return;
             }
 
-            var pos = e.GetPosition(_window);
+            var pos = e.GetPosition(_window.Window);
             var dx = Math.Abs(pos.X - _dragStartPoint.X);
             var dy = Math.Abs(pos.Y - _dragStartPoint.Y);
             if (dx > SystemParameters.MinimumHorizontalDragDistance || dy > SystemParameters.MinimumVerticalDragDistance)
             {
                 _isDrag = false;
 
-                double percentHorizontal = e.GetPosition(_window).X / _window.ActualWidth;
+                double percentHorizontal = e.GetPosition(_window.Window).X / _window.ActualWidth;
                 double targetHorizontal = _window.RestoreBounds.Width * percentHorizontal;
 
-                var cursor = Windows.CursorInfo.GetNowScreenPosition(_window);
+                var cursor = Windows.CursorInfo.GetNowScreenPosition(_window.Window);
+
+                var args = new WindowStateChangeEventArgs(_window.Window, _window.WindowState, WindowStateEx.Normal);
+                OnWindowStateChange(this, args);
+                _window.WindowState = WindowStateEx.Normal;
                 _window.Left = cursor.X - targetHorizontal;
                 _window.Top = cursor.Y - 8;
-
-                var args = new WindowStateChangeEventArgs(_window, _window.WindowState, WindowState.Normal);
-                OnWindowStateChange(this, args);
-                _window.WindowState = WindowState.Normal;
                 OnWindowStateChanged(this, args);
 
                 WindowDragMove();

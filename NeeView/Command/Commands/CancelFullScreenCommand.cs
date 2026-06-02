@@ -12,7 +12,7 @@ namespace NeeView
 
         public override void Execute(object? sender, CommandContext e)
         {
-            MainViewComponent.Current.ViewWindowControl.SetFullScreen(sender, false);
+            MainViewComponent.Current.ViewWindowControl.SetWindowFullScreen(sender, false);
         }
     }
 }

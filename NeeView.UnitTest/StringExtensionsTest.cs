@@ -61,7 +61,9 @@ namespace NeeView.UnitTest
             string? nil = null;
 
             Assert.Equal(string.Empty, empty.ToOneLine());
+#pragma warning disable CS8604 // Null 参照引数の可能性があります。
             Assert.Null(nil.ToOneLine());
+#pragma warning restore CS8604 // Null 参照引数の可能性があります。
         }
     }
 }
