@@ -151,6 +151,11 @@ namespace NeeView.PageFrames
 
         public PageRange AutoStretchTarget => _autoStretchTarget;
 
+        public bool IsPlaying => _slideshow.IsPlaying;
+
+        public bool IsAutoScroll => _slideshow.IsPlaying && _config.SlideShow.IsAutoScroll;
+
+        public TimeSpan AutoScrollDuration => IsAutoScroll ? TimeSpan.FromMilliseconds(_slideshow.Interval) : TimeSpan.Zero;
 
         protected virtual void Dispose(bool disposing)
         {
@@ -409,6 +414,7 @@ namespace NeeView.PageFrames
         {
             UpdatePageEndAction();
             UpdatePageChangeType();
+            OnPropertyChanged(nameof(IsPlaying));
         }
 
 

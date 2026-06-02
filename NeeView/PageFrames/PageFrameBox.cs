@@ -634,8 +634,9 @@ namespace NeeView.PageFrames
                     UpdateContainers(PageFrameDirtyLevel.Heavy, TransformMask.Point, true, true);
                     break;
 
+                case nameof(Context.IsPlaying):
                 case nameof(Context.IsLoopPage):
-                    MoveToNormalPosition();
+                    MoveToNormalPosition(); // NOTE: 位置を変えないページ移動の挙動にもなる
                     break;
 
                 case nameof(Context.IsIgnoreImageDpi):
@@ -1674,6 +1675,24 @@ namespace NeeView.PageFrames
 
             // scroll content
             ScrollContentToOrigin(node, horizontalOrigin, verticalOrigin, direction);
+
+            // auto scroll
+            if (node == _selected.Node)
+            {
+                AutoScroll();
+            }
+        }
+
+        /// <summary>
+        /// スライドショー用自動スクロール
+        /// </summary>
+        private void AutoScroll()
+        {
+            if (_context.IsAutoScroll && _context.AutoScrollDuration > TimeSpan.FromMilliseconds(100))
+            {
+                var horizontal = Config.Current.BookSetting.BookReadOrder == PageReadOrder.LeftToRight ? HorizontalAlignment.Right : HorizontalAlignment.Left;
+                ScrollToPreset(horizontal, VerticalAlignment.Bottom, false, _context.AutoScrollDuration, EaseTools.LinearEase, EaseTools.LinearEase);
+            }
         }
 
 

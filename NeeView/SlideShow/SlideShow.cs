@@ -86,6 +86,8 @@ namespace NeeView
             }
         }
 
+        public double Interval => _isPlaying ? _timer.Interval : Config.Current.SlideShow.SlideShowInterval * 1000.0;
+
 
         private void SlideShowConfig_SlideShowIntervalPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
@@ -175,8 +177,6 @@ namespace NeeView
             }
 
             LocalDebug.WriteLine($"Count = {_count}, Interval = {_timer.Interval:F1} ms");
-
-            SetScroll(_timer.Interval);
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace NeeView
         {
             ResetWaitAnimation();
 
-            CancelScroll();
+            AppDispatcher.BeginInvoke(CancelScroll);
 
             _timer.Stop();
             Played?.Invoke(this, new SlideShowPlayedEventArgs(false, 0.0));
@@ -309,23 +309,11 @@ namespace NeeView
             Played?.Invoke(this, new SlideShowPlayedEventArgs(_isPlaying, _timer.Interval));
         }
 
-        private void SetScroll(double milliseconds)
+        public void CancelScroll()
         {
-            if (!Config.Current.SlideShow.IsAutoScroll) return;
+            if (_disposedValue) return;
 
-            AppDispatcher.BeginInvoke(() =>
-            {
-                var horizontal = Config.Current.BookSetting.BookReadOrder == PageReadOrder.LeftToRight ? HorizontalAlignment.Right : HorizontalAlignment.Left;
-                PageFrameBoxPresenter.Current.ScrollToPreset(horizontal, VerticalAlignment.Bottom, false, milliseconds, EaseTools.LinearEase, EaseTools.LinearEase);
-            });
-        }
-
-        private void CancelScroll()
-        {
-            AppDispatcher.BeginInvoke(() =>
-            {
-                PageFrameBoxPresenter.Current.CancelScroll();
-            });
+            PageFrameBoxPresenter.Current.CancelScroll();
         }
 
 

@@ -24,21 +24,31 @@ namespace NeeView
 
         private void Element_PreviewKeyDown(object sender, KeyEventArgs e)
         {
+            if (!_slideShow.IsPlaying) return;
+
             _slideShow.ResetTimer();
         }
 
         private void Element_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
+            if (!_slideShow.IsPlaying) return;
+
             _slideShow.ResetTimer();
+            _slideShow.CancelScroll();
         }
 
         private void Element_MouseHorizontalWheelChanged(object sender, MouseWheelEventArgs e)
         {
+            if (!_slideShow.IsPlaying) return;
+
             _slideShow.ResetTimer();
+            _slideShow.CancelScroll();
         }
 
         private void Element_PreviewMouseMove(object sender, MouseEventArgs e)
         {
+            if (!_slideShow.IsPlaying) return;
+
             if (Config.Current.SlideShow.IsCancelSlideByMouseMove)
             {
                 _slideShow.ResetTimer();
@@ -47,7 +57,10 @@ namespace NeeView
 
         private void Element_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (!_slideShow.IsPlaying) return;
+
             _slideShow.ResetTimer();
+            _slideShow.CancelScroll();
         }
 
         protected virtual void Dispose(bool disposing)
