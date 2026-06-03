@@ -3,13 +3,11 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
-using NeeView.PageFrames;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Timers;
-using System.Windows;
 
 namespace NeeView
 {
@@ -39,8 +37,6 @@ namespace NeeView
             _timer = new Timer();
             _timer.AutoReset = true;
             _timer.Elapsed += Timer_Tick;
-
-            _disposables.Add(Config.Current.SlideShow.SubscribePropertyChanged(nameof(SlideShowConfig.SlideShowInterval), SlideShowConfig_SlideShowIntervalPropertyChanged));
 
             _disposables.Add(BookOperation.Current.SubscribeBookChanged(BookOperation_BookChanged));
 
@@ -88,13 +84,6 @@ namespace NeeView
 
         public double Interval => _isPlaying ? _timer.Interval : Config.Current.SlideShow.SlideShowInterval * 1000.0;
 
-
-        private void SlideShowConfig_SlideShowIntervalPropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            if (!_isPlaying) return;
-
-            ResetTimer();
-        }
 
         private void PageFrameBoxPresenter_ViewPageChanged(object? sender, ViewPageChangedEventArgs e)
         {
@@ -158,6 +147,7 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
+            ResetTimer();
             _isPause = false;
         }
 

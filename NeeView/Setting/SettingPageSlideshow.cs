@@ -16,15 +16,16 @@ namespace NeeView.Setting
         {
             this.Items = new List<SettingItem>();
 
+            var commandMap = GetNextPageCommandDictionary();
+
             var section = new SettingItemSection(TextResources.GetString("SettingPage.SlideShow"));
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.IsCancelSlideByMouseMove))));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.IsTimerVisible))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.SlideShowInterval))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.IsPrioritizeTime))));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.TimerResetGesture))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.IsWaitAnimation))));
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.IsTimerVisible))));
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.IsAutoScroll))));
-            var commandMap = GetNextPageCommandDictionary();
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.NextPageCommandName), new PropertyMemberElementOptions() { StringMap = commandMap })));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.SlideShow, nameof(SlideShowConfig.IsAutoScroll))));
             this.Items.Add(section);
 
             section = new SettingItemSection(TextResources.GetString("SettingPage.SlideShow.Override"), TextResources.GetString("SettingPage.SlideShow.Override.Remarks"));

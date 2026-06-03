@@ -13,7 +13,7 @@ namespace NeeView
 
         [DefaultEquality] private string _nextPageCommandName = _defaultNextPageCommandName;
         [DefaultEquality] private double _slideShowInterval = 5.0;
-        [DefaultEquality] private bool _isCancelSlideByMouseMove;
+        [DefaultEquality] private SlideShowTimerResetGesture _timerResetGesture = SlideShowTimerResetGesture.InputAction;
         [DefaultEquality] private bool _isTimerVisible;
         [DefaultEquality] private bool _isPrioritizeTime;
         [DefaultEquality] private bool _isWaitAnimation;
@@ -43,13 +43,13 @@ namespace NeeView
         }
 
         /// <summary>
-        /// カーソルでスライドを止める.
+        /// タイマーリセット操作
         /// </summary>
         [PropertyMember]
-        public bool IsCancelSlideByMouseMove
+        public SlideShowTimerResetGesture TimerResetGesture
         {
-            get { return _isCancelSlideByMouseMove; }
-            set { SetProperty(ref _isCancelSlideByMouseMove, value); }
+            get { return _timerResetGesture; }
+            set { SetProperty(ref _timerResetGesture, value); }
         }
 
         /// <summary>
@@ -144,6 +144,17 @@ namespace NeeView
             set { PageEndAction = value ? PageEndAction.Loop : PageEndAction.None; }
         }
 
+        /// <summary>
+        /// カーソルでスライドを止める.
+        /// </summary>
+        [Obsolete, Alternative(nameof(TimerResetGesture), 46, ScriptErrorLevel.Warning)] // v46.0
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public bool IsCancelSlideByMouseMove
+        {
+            get { return TimerResetGesture == SlideShowTimerResetGesture.MouseMove; }
+            set { TimerResetGesture = SlideShowTimerResetGesture.MouseMove; }
+        }
+
         #endregion Obsolete
 
         public void ResetNextPageCommandName()
@@ -151,4 +162,21 @@ namespace NeeView
             NextPageCommandName = _defaultNextPageCommandName;
         }
     }
+
+
+    public enum SlideShowTimerResetGesture
+    {
+        None,
+
+        /// <summary>
+        /// キー入力やマウス操作
+        /// </summary>
+        InputAction,
+
+        /// <summary>
+        /// マウス移動
+        /// </summary>
+        MouseMove,
+    }
+
 }
