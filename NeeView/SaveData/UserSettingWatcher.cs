@@ -50,7 +50,8 @@ namespace NeeView
 
         private void DataFileWatcher_Changed(object sender, FileSystemEventArgs e)
         {
-            _delayAction.Request(() => AppSaveData.Current.LoadUserSetting(), TimeSpan.FromMilliseconds(_delayTime));
+            var options = UserSettingLoadOption.KeepBookSettings | UserSettingLoadOption.KeepPanelLayout;
+            _delayAction.Request(() => AppSaveData.Current.LoadUserSetting(options), TimeSpan.FromMilliseconds(_delayTime));
         }
 
         protected virtual void Dispose(bool disposing)

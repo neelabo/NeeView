@@ -54,7 +54,7 @@ namespace NeeView
             return new FlagScope(e => _isUserSettingsLocked = e);
         }
 
-        public void LoadUserSetting()
+        public void LoadUserSetting(UserSettingLoadOption options = UserSettingLoadOption.None)
         {
             if (_isUserSettingsLocked)
             {
@@ -72,7 +72,7 @@ namespace NeeView
             {
                 Config.Current.Window.FreezeWindowState = true;
                 SaveData.Current.SetUserSettingFileStamp(setting.FileStamp);
-                UserSettingTools.Restore(setting);
+                UserSettingTools.Restore(setting, options);
             }
             finally
             {

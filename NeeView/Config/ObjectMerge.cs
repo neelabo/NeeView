@@ -9,6 +9,7 @@ namespace NeeView
     public class ObjectMergeOption
     {
         public bool IsIgnoreEnabled { get; set; } = true;
+        public Func<Type, PropertyInfo, bool>? IsIgnoreProperty { get; internal set; }
     }
 
     [LocalDebug]
@@ -45,6 +46,10 @@ namespace NeeView
                 else if (options.IsIgnoreEnabled && property.GetCustomAttribute(typeof(ObjectMergeIgnoreAttribute)) != null)
                 {
                     LocalDebug.WriteLine($"Merge: {property.Name} is ignore");
+                }
+                else if (options.IsIgnoreEnabled && options.IsIgnoreProperty?.Invoke(type, property) == true)
+                {
+                    LocalDebug.WriteLine($"Merge: {property.Name} is ignore by option");
                 }
                 else if (property.GetSetMethod(false) == null)
                 {

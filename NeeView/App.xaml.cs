@@ -242,7 +242,7 @@ namespace NeeView
             // ensure UserSetting
             setting ??= CreateUserSetting(settingResource);
             SaveData.Current.SetUserSettingFileStamp(setting.FileStamp);
-            UserSettingTools.Restore(setting, replaceConfig: true);
+            UserSettingTools.Restore(setting, UserSettingLoadOption.ReplaceConfig);
 
             // fix language
             if (_option.Language is null)

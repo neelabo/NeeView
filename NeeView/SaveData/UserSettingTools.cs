@@ -120,26 +120,29 @@ namespace NeeView
             return JsonSerializer.Deserialize<UserSetting>(stream, GetDeserializeOptions())?.Validate();
         }
 
-        public static void Restore(UserSetting setting, bool replaceConfig = false)
+        public static void Restore(UserSetting setting, UserSettingLoadOption options = UserSettingLoadOption.None)
         {
             if (setting == null) return;
 
             // コンフィグ反映
             if (setting.Config != null)
             {
-                if (replaceConfig)
+                if (options.HasFlag(UserSettingLoadOption.ReplaceConfig))
                 {
                     Config.SetCurrent(setting.Config);
                     UserSettingFormat = setting.Format;
                 }
                 else
                 {
-                    ObjectMerge.Merge(Config.Current, setting.Config);
+                    ObjectMerge.Merge(Config.Current, setting.Config, CreateConfigMergeOption(options));
                 }
             }
 
-            // レイアウト反映
-            CustomLayoutPanelManager.RestoreMaybe();
+            if (!options.HasFlag(UserSettingLoadOption.KeepPanelLayout))
+            {
+                // レイアウト反映
+                CustomLayoutPanelManager.RestoreMaybe();
+            }
 
             // コマンド設定反映
             CommandTable.Current.RestoreCommandCollection(setting.Commands, true);
@@ -153,6 +156,41 @@ namespace NeeView
             // SusiePlugins反映
             SusiePluginManager.Current.RestoreSusiePluginCollection(setting.SusiePlugins);
         }
+
+        /// <summary>
+        /// Configマージ用オプションの作成
+        /// </summary>
+        private static ObjectMergeOption CreateConfigMergeOption(UserSettingLoadOption options)
+        {
+            var mergeOption = new ObjectMergeOption();
+
+            if (options.HasKeepFlags())
+            {
+                mergeOption.IsIgnoreProperty = IsIgnoreProperty;
+            }
+
+            return mergeOption;
+
+            bool IsIgnoreProperty(Type type, System.Reflection.PropertyInfo property)
+            {
+                if (options.HasFlag(UserSettingLoadOption.KeepBookSettings))
+                {
+                    if (type == typeof(Config) && property.Name == nameof(Config.BookSetting))
+                    {
+                        return true;
+                    }
+                }
+                if (options.HasFlag(UserSettingLoadOption.KeepPanelLayout))
+                {
+                    if (type == typeof(PanelsConfig) && property.Name == nameof(PanelsConfig.Layout))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
 
         /// <summary>
         /// 設定デシリアライズ用オプション
@@ -348,6 +386,24 @@ namespace NeeView
             options.Converters.Add(new DiffJsonConverter<ToggleBookmarkCommandParameter>());
 
             return options;
+        }
+    }
+
+
+    [Flags]
+    public enum UserSettingLoadOption
+    {
+        None = 0,
+        ReplaceConfig = 1 << 0,
+        KeepBookSettings = 1 << 1,
+        KeepPanelLayout = 1 << 2,
+    }
+
+    public static class UserSettingLoadOptionExtensions
+    {
+        public static bool HasKeepFlags(this UserSettingLoadOption value)
+        {
+            return (value & (UserSettingLoadOption.KeepBookSettings | UserSettingLoadOption.KeepPanelLayout)) != UserSettingLoadOption.None;
         }
     }
 }
