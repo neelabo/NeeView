@@ -99,6 +99,7 @@ namespace NeeView.PageFrames
         public WidePageStretch WidePageStretch => _config.Book.WidePageStretch;
         public WidePageVerticalAlignment WidePageVerticalAlignment => _config.Book.WidePageVerticalAlignment;
 
+        public double ViewOriginCenterRate => _config.View.ViewOriginCenterRatio;
         public bool AllowFileContentAutoRotate => _config.View.AllowFileContentAutoRotate;
         public bool AllowEnlarge => _config.View.AllowStretchScaleUp;
         public bool AllowReduce => _config.View.AllowStretchScaleDown;

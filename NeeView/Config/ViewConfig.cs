@@ -24,6 +24,7 @@ namespace NeeView
         [DefaultEquality] private bool _isKeepFlip;
         [DefaultEquality] private ViewHorizontalOrigin _viewHorizontalOrigin = ViewHorizontalOrigin.CenterOrDirectionDependent;
         [DefaultEquality] private ViewVerticalOrigin _viewVerticalOrigin = ViewVerticalOrigin.CenterOrDirectionDependent;
+        [DefaultEquality] private double _viewOriginCenterRatio = 1.0;
         [DefaultEquality] private double _angleFrequency = 0;
         [DefaultEquality] private bool _isBaseScaleEnabled = true;
         [DefaultEquality] private bool _isRotateStretchEnabled = true;
@@ -135,6 +136,14 @@ namespace NeeView
         {
             get { return _viewVerticalOrigin; }
             set { SetProperty(ref _viewVerticalOrigin, value); }
+        }
+
+        // 開始位置を中央とみなすサイズの割合
+        [PropertyRange(1.0, 2.0, TickFrequency = 0.1, IsEditable = true)]
+        public double ViewOriginCenterRatio
+        {
+            get { return _viewOriginCenterRatio; }
+            set { SetProperty(ref _viewOriginCenterRatio, AppMath.Round(value)); }
         }
 
         // 回転スナップ。0で無効
