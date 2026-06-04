@@ -297,6 +297,7 @@ BookSettingSelectMode.Default=Default
 BookSettingSelectMode.RestoreOrContinue=Restore, else continue
 BookSettingSelectMode.RestoreOrDefault=Restore, else default
 BookSettingSelectMode.RestoreOrDefaultReset=Restore, else default, clear last page
+Bookshelf.HistoryDeleteAllDialog.Message=Delete all history for this location. Are you sure?
 Bookshelf.Home.Menu.Set=Set current location as home
 Bookshelf.Home.ToolTip=Go to Home
 Bookshelf.MoreMenu.ClearHistory=Delete all history of the current location

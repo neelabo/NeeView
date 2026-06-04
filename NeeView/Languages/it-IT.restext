@@ -297,6 +297,7 @@ BookSettingSelectMode.Default=Default
 BookSettingSelectMode.RestoreOrContinue=Ripristina, altrimenti continua
 BookSettingSelectMode.RestoreOrDefault=Ripristina, altrimenti default
 BookSettingSelectMode.RestoreOrDefaultReset=Ripristina, altrimenti default, pulisci ultima pagina
+Bookshelf.HistoryDeleteAllDialog.Message=
 Bookshelf.Home.Menu.Set=Imposta questo come casa
 Bookshelf.Home.ToolTip=Vai a Casa
 Bookshelf.MoreMenu.ClearHistory=Cancella tutta la cronologia di questo posto

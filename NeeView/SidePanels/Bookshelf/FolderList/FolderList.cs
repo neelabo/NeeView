@@ -663,13 +663,21 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
-            var items = _folderCollection?.Items.Select(e => e.TargetPath.SimplePath).Where(e => e != null);
-            if (items is not null)
-            {
-                BookHistoryCollection.Current.Remove(items);
-            }
+            var dialog = new MessageDialog(TextResources.GetString("BookshelfItem.Menu.DeleteHistory"), TextResources.GetString("Bookshelf.HistoryDeleteAllDialog.Message"));
+            dialog.Commands.Add(UICommands.Delete);
+            dialog.Commands.Add(UICommands.Cancel);
 
-            RefreshIcon(null);
+            var result = dialog.ShowDialog();
+            if (result.IsPossible)
+            {
+                var items = _folderCollection?.Items.Select(e => e.TargetPath.SimplePath).Where(e => e != null);
+                if (items is not null)
+                {
+                    BookHistoryCollection.Current.Remove(items);
+                }
+
+                RefreshIcon(null);
+            }
         }
 
         #region MoveFolder

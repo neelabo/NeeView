@@ -295,6 +295,7 @@ BookSettingSelectMode.Default=既定
 BookSettingSelectMode.RestoreOrContinue=復元、できなければ継続
 BookSettingSelectMode.RestoreOrDefault=復元、できなければ既定
 BookSettingSelectMode.RestoreOrDefaultReset=復元、できなければ既定、最終ページをクリア
+Bookshelf.HistoryDeleteAllDialog.Message=この場所のすべての履歴を削除します。よろしいですか？
 Bookshelf.Home.Menu.Set=現在の場所をホームに設定する
 Bookshelf.Home.ToolTip=ホームに移動
 Bookshelf.MoreMenu.ClearHistory=現在の場所の履歴をすべて削除

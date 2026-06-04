@@ -297,6 +297,7 @@ BookSettingSelectMode.Default=Predeterminado
 BookSettingSelectMode.RestoreOrContinue=Restaurar, si no continuar
 BookSettingSelectMode.RestoreOrDefault=Restaurar, si no predeterminado
 BookSettingSelectMode.RestoreOrDefaultReset=Restaurar, si no predeterminado, limpiar última página
+Bookshelf.HistoryDeleteAllDialog.Message=
 Bookshelf.Home.Menu.Set=Establecer ubicación actual como inicio
 Bookshelf.Home.ToolTip=Ir a Inicio
 Bookshelf.MoreMenu.ClearHistory=Eliminar todo el historial de la ubicación actual

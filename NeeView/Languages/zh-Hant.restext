@@ -295,6 +295,7 @@ BookSettingSelectMode.Default=預設
 BookSettingSelectMode.RestoreOrContinue=還原，無法還原則繼續
 BookSettingSelectMode.RestoreOrDefault=還原，無法還原則預設
 BookSettingSelectMode.RestoreOrDefaultReset=還原，無法還原則預設，清除最後的頁面
+Bookshelf.HistoryDeleteAllDialog.Message=
 Bookshelf.Home.Menu.Set=將這個位置設定為主頁
 Bookshelf.Home.ToolTip=移動到主頁
 Bookshelf.MoreMenu.ClearHistory=刪除這個位置所有的歷史記錄

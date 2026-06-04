@@ -295,6 +295,7 @@ BookSettingSelectMode.Default=기본값
 BookSettingSelectMode.RestoreOrContinue=복원 (불가능 시 유지)
 BookSettingSelectMode.RestoreOrDefault=복원 (불가능 시 기본값)
 BookSettingSelectMode.RestoreOrDefaultReset=복원 (불가능 시 기본값, 끝 페이지 지우기)
+Bookshelf.HistoryDeleteAllDialog.Message=
 Bookshelf.Home.Menu.Set=이 경로를 홈으로 설정
 Bookshelf.Home.ToolTip=홈으로 이동
 Bookshelf.MoreMenu.ClearHistory=이 경로의 모든 내역 삭제

@@ -297,6 +297,7 @@ BookSettingSelectMode.Default=По умолчанию
 BookSettingSelectMode.RestoreOrContinue=Восстановить, иначе продолжить
 BookSettingSelectMode.RestoreOrDefault=Восстановить, иначе по умолчанию
 BookSettingSelectMode.RestoreOrDefaultReset=Восстановить, иначе по умолчанию, сбросив последнюю страницу
+Bookshelf.HistoryDeleteAllDialog.Message=
 Bookshelf.Home.Menu.Set=Сделать это место домашним
 Bookshelf.Home.ToolTip=Перейти домой
 Bookshelf.MoreMenu.ClearHistory=Удалить всю историю для этого места
