@@ -338,7 +338,7 @@ namespace NeeView
             {
                 this.ListBox.UpdateLayout();
 
-                _thumbnailLoader?.Load();
+                _thumbnailLoader?.Load(true);
             });
         }
 

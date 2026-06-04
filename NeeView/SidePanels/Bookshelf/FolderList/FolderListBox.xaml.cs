@@ -598,7 +598,7 @@ namespace NeeView
                 item.ClearThumbnailCache();
             }
 
-            _thumbnailLoader?.Load();
+            _thumbnailLoader?.Load(true);
         }
 
         private void SetThumbnailCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -632,7 +632,7 @@ namespace NeeView
                 }
                 // サムネイル更新
                 item.ClearThumbnailCache();
-                _thumbnailLoader?.Load();
+                _thumbnailLoader?.Load(true);
             }
         }
 

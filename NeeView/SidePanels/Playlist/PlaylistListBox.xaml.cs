@@ -750,7 +750,7 @@ namespace NeeView
             AppDispatcher.BeginInvoke(() =>
             {
                 this.ListBox.UpdateLayout();
-                _thumbnailLoader?.Load();
+                _thumbnailLoader?.Load(true);
             });
         }
 
