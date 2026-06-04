@@ -125,6 +125,32 @@ namespace NeeView
             return config?.Parameter ?? new();
         }
 
+        public bool IsFolderRecursive(QueryPath query)
+        {
+            var parameter = GetFolderParameter(query);
+            return parameter.IsFolderRecursive ?? GetDefaultFolderRecursive(query);
+        }
+
+        public bool GetDefaultFolderRecursive(QueryPath query)
+        {
+            while (true)
+            {
+                query = query.GetParent();
+                if (string.IsNullOrEmpty(query.Path))
+                {
+                    return false;
+                }
+
+                var place = query.SimplePath;
+
+                var config = GetFolderConfig(place);
+                if (config?.Parameter is not null && config.Parameter.IsFolderRecursive.HasValue)
+                {
+                    return config.Parameter.IsFolderRecursive.Value;
+                }
+            }
+        }
+
         /// <summary>
         /// 名前変更を反映
         /// </summary>

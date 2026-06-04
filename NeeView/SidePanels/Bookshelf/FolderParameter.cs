@@ -11,7 +11,7 @@ namespace NeeView
     {
         // TODO: Path to QueryPath
 
-        private string _path;
+        private readonly string _path;
         private FolderOrder _folderOrder;
         private bool _isFolderRecursive;
         private int _seed;
@@ -140,7 +140,7 @@ namespace NeeView
             var memento = new FolderParameterMemento()
             {
                 FolderOrder = this.FolderOrder,
-                IsFolderRecursive = this.IsFolderRecursive,
+                IsFolderRecursive = this.IsFolderRecursive == FolderConfigCollection.Current.GetDefaultFolderRecursive(new QueryPath(_path)) ? null : this.IsFolderRecursive,
                 Seed = this.Seed,
             };
             return memento;
@@ -152,7 +152,7 @@ namespace NeeView
 
             // プロパティで設定するとSave()されてしまうのを回避
             _folderOrder = FolderParameter.GetFolderOrder(_path, memento.FolderOrder);
-            _isFolderRecursive = memento.IsFolderRecursive;
+            _isFolderRecursive = memento.IsFolderRecursive is null ? FolderConfigCollection.Current.GetDefaultFolderRecursive(new QueryPath(_path)) : memento.IsFolderRecursive.Value;
             _seed = GenerateRandomSeed(_folderOrder, memento.Seed);
             OnPropertyChanged("");
         }
@@ -170,17 +170,18 @@ namespace NeeView
         {
         }
 
-        public FolderParameterMemento(FolderOrder folderOrder, bool isFolderRecursive, int seed)
+        public FolderParameterMemento(FolderOrder folderOrder, bool? isFolderRecursive, int seed)
         {
             FolderOrder = folderOrder;
             IsFolderRecursive = isFolderRecursive;
             Seed = folderOrder == NeeView.FolderOrder.Random ? seed : 0;
         }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public FolderOrder? FolderOrder { get; init; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public bool IsFolderRecursive { get; init; }
+        public bool? IsFolderRecursive { get; init; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public int Seed { get; init; }

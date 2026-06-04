@@ -82,8 +82,7 @@ namespace NeeView
         /// </summary>
         public static bool IsFolderRecursive(QueryPath query)
         {
-            var memento = FolderConfigCollection.Current.GetFolderParameter(query);
-            return memento.IsFolderRecursive;
+            return FolderConfigCollection.Current.IsFolderRecursive(query);
         }
 
         /// <summary>
