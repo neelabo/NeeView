@@ -237,6 +237,41 @@ namespace NeeView
             }
         }
 
+        /// <summary>
+        /// キャッシュ書き出し、無効アイテムの削除、バキューム
+        /// </summary>
+        public int CleanupHeavy(CancellationToken token)
+        {
+            if (_disposedValue) return 0;
+            if (!IsEnabled) return 0;
+
+            // キャッシュ吐き出し、キャッシュリミット適用
+            Cleanup();
+
+            var thumbnailCache = ThumbnailCacheTable;
+            if (thumbnailCache is null) return 0;
+
+            // 無効なパスを収集
+            var keys = thumbnailCache.CollectKeys();
+            var removes = new List<string>();
+            foreach (var key in keys)
+            {
+                token.ThrowIfCancellationRequested();
+                if (!ArchivePath.Exists(key))
+                {
+                    removes.Add(key);
+                }
+            }
+
+            // 無効なパスを削除
+            thumbnailCache.Delete(removes);
+
+            // DBバキューム
+            Vacuum();
+
+            return removes.Count;
+        }
+
 
         #region IDisposable Support
         private bool _disposedValue = false;

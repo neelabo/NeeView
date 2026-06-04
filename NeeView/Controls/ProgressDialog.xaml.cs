@@ -2,6 +2,7 @@
 using NeeView.Properties;
 using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,24 +13,24 @@ namespace NeeView
     [INotifyPropertyChanged]
     public partial class ProgressDialog : Window
     {
-        private readonly Progress<ProgressInfo> _progress;
+        private readonly Progress<ProgressInfo>? _progress;
         private readonly CancellationTokenSource _tokenSource = new();
         private string _caption = "";
-        private string _message = "";
+        private string _message = TextResources.GetString("Word.Processing");
         private double _progressValue = 0.0;
         private bool _canCancel;
         private bool _canceled;
         private bool _closed;
 
-        public ProgressDialog() : this(null, new Progress<ProgressInfo>())
+        public ProgressDialog() : this(null, null)
         {
         }
 
-        public ProgressDialog(Window? owner) : this(owner, new Progress<ProgressInfo>())
+        public ProgressDialog(Window? owner) : this(owner, null)
         {
         }
 
-        public ProgressDialog(Window? owner, Progress<ProgressInfo> progress)
+        public ProgressDialog(Window? owner, Progress<ProgressInfo>? progress)
         {
             if (owner is not null)
             {
@@ -42,19 +43,26 @@ namespace NeeView
             this.DataContext = this;
 
             _progress = progress;
-            _progress.ProgressChanged += (s, e) =>
+
+            if (_progress is not null)
             {
-                if (_canceled) return;
-                ProgressValue = e.Value;
-                Message = e.Text;
-            };
+                this.ProgressBar.Visibility = Visibility.Visible;
+                this.ProgressRing.Visibility = Visibility.Collapsed;
+
+                _progress.ProgressChanged += Progress_ProgressChanged;
+            }
+            else
+            {
+                this.ProgressBar.Visibility = Visibility.Collapsed;
+                this.ProgressRing.Visibility = Visibility.Visible;
+            }
         }
 
 
         public event EventHandler? Canceled;
 
 
-        public IProgress<ProgressInfo> Progress => _progress;
+        public IProgress<ProgressInfo>? Progress => _progress;
 
         public CancellationToken CancellationToken => _tokenSource.Token;
 
@@ -83,6 +91,33 @@ namespace NeeView
             set { SetProperty(ref _canCancel, value); }
         }
 
+        public AggregateException? Exception { get; private set; }
+
+        public ProgressDialogResult Result { get; private set; }
+
+
+        private void Progress_ProgressChanged(object? sender, ProgressInfo e)
+        {
+            if (_canceled) return;
+            ProgressValue = e.Value;
+            Message = e.Text;
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            if (_progress is not null)
+            {
+                _progress.ProgressChanged -= Progress_ProgressChanged;
+            }
+
+            base.OnClosed(e);
+        }
+
         protected override void OnKeyDown(KeyEventArgs e)
         {
             if (_canCancel && e.Key == Key.Escape)
@@ -107,7 +142,10 @@ namespace NeeView
 
             this.CancelButton.IsEnabled = false;
             this.Message = TextResources.GetString("Word.Canceling");
-            this.ProgressBar.Visibility = Visibility.Hidden;
+            if (this.ProgressBar.Visibility == Visibility.Visible)
+            {
+                this.ProgressBar.Visibility = Visibility.Hidden;
+            }
 
             _tokenSource.Cancel();
             Canceled?.Invoke(this, EventArgs.Empty);
@@ -121,28 +159,53 @@ namespace NeeView
             base.Close();
         }
 
-        public bool? ShowDialog(Task task)
+        public ProgressDialogResult ShowDialog(Task task)
         {
-            if (_closed) return false;
+            if (_closed) return Result;
 
             task.ContinueWith(t => this.Dispatcher.Invoke(async () =>
             {
-                if (_canceled)
+                Exception = t.Exception;
+
+                bool isActuallyCanceled = t.IsCanceled || (t.IsFaulted && t.Exception.Flatten().InnerExceptions.Any(e => e is OperationCanceledException));
+
+                if (_canceled || isActuallyCanceled)
                 {
                     await Task.Delay(1000);
+                    Result = ProgressDialogResult.Canceled;
+                }
+                else if (t.IsFaulted)
+                {
+                    DialogResult = false;
+                    Result = ProgressDialogResult.Faulted;
+                }
+                else
+                {
+                    DialogResult = true;
+                    Result = ProgressDialogResult.Completed;
                 }
                 Close();
             }));
 
-            return ShowDialog();
+            ShowDialog();
+            return Result;
         }
 
-        public bool? ShowDialog(Func<CancellationToken, Task> createTask)
+        public ProgressDialogResult ShowDialog(Func<CancellationToken, Task> createTask)
         {
-            if (_closed) return false;
+            if (_closed) return Result;
 
             return ShowDialog(createTask(_tokenSource.Token));
         }
+    }
+
+
+    public enum ProgressDialogResult
+    {
+        None,
+        Completed,
+        Canceled,
+        Faulted,
     }
 
 

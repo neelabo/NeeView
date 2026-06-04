@@ -210,5 +210,60 @@ namespace NeeView
                 transaction.Commit();
             }
         }
+
+        /// <summary>
+        /// キー リスト習得
+        /// </summary>
+        internal List<string> CollectKeys()
+        {
+            if (_db.Connection is null) return new();
+
+            var keys = new List<string>();
+
+            using (SQLiteCommand command = _db.Connection.CreateCommand())
+            {
+                command.CommandText = "SELECT key FROM thumbs";
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string key = reader.GetString(0);
+                        keys.Add(key);
+                    }
+                }
+            }
+
+            return keys;
+        }
+
+        /// <summary>
+        /// キー リストで削除
+        /// </summary>
+        /// <param name="keys">キー リスト</param>
+        internal void Delete(List<string> keys)
+        {
+            if (_db.Connection is null) return;
+            if (keys.Count == 0) return;
+
+            using (var transaction = _db.Connection.BeginTransaction())
+            {
+                var command = _db.Connection.CreateCommand();
+                command.CommandText = "DELETE FROM thumbs WHERE key = @key";
+
+                var keyParam = command.CreateParameter();
+                keyParam.ParameterName = "@key";
+                command.Parameters.Add(keyParam);
+
+                foreach (var key in keys)
+                {
+                    keyParam.Value = key;
+                    command.ExecuteNonQuery();
+                }
+
+                transaction.Commit();
+            }
+        }
+
     }
 }

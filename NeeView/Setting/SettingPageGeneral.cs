@@ -6,6 +6,8 @@ using NeeView.Windows;
 using NeeView.Windows.Property;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
@@ -244,26 +246,64 @@ namespace NeeView.Setting
         [RelayCommand]
         private void RemoveCache(UIElement? element)
         {
-            try
-            {
-                ThumbnailCache.Current.Remove();
+            Debug.Assert(element != null);
+            var owner = element is not null ? Window.GetWindow(element) : null;
 
-                var dialog = new MessageDialog(TextResources.GetString("CacheDeletedDialog.Title"), "");
-                if (element != null)
-                {
-                    dialog.Owner = Window.GetWindow(element);
-                }
-                dialog.ShowDialog();
-            }
-            catch (Exception ex)
+            var dialog = new MessageDialog(TextResources.GetString("CacheDeletedDialog.Title"), "");
+            dialog.Owner = owner;
+
+            var deleteAllUICommand = new UICommand("CacheDeletedDialog.DeleteAll") { IsPossible = true };
+            var clearInvalidUICommand = new UICommand("CacheDeletedDialog.ClearInvalid") { IsPossible = true };
+            dialog.Commands.Add(deleteAllUICommand);
+            dialog.Commands.Add(clearInvalidUICommand);
+            dialog.Commands.Add(UICommands.Cancel);
+
+            var result = dialog.ShowDialog();
+            if (!result.IsPossible)
             {
-                var dialog = new MessageDialog(TextResources.GetString("CacheDeletedFailedDialog.Title"), ex.Message);
-                if (element != null)
-                {
-                    dialog.Owner = Window.GetWindow(element);
-                }
+                return;
+            }
+
+            string message = "";
+            ProgressDialog progressDialog;
+            if (result.Command == deleteAllUICommand)
+            {
+                progressDialog = new ProgressDialog(owner, null);
+                progressDialog.ShowDialog(token => Task.Run(() => ThumbnailCache.Current.Remove(), token));
+            }
+            else if (result.Command == clearInvalidUICommand)
+            {
+                int removeCount = 0;
+                progressDialog = new ProgressDialog(owner, null) { CanCancel = true };
+                progressDialog.ShowDialog(token => Task.Run(() => { removeCount = ThumbnailCache.Current.CleanupHeavy(token); }, token));
+                message = TextResources.GetFormatString("Message.DeleteItems", removeCount);
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
+
+            string? caption = null;
+            switch (progressDialog.Result)
+            {
+                case ProgressDialogResult.Completed:
+                    caption = TextResources.GetString("Message.DeleteSuccess");
+                    break;
+                case ProgressDialogResult.Faulted:
+                    caption = TextResources.GetString("Message.DeleteFailed");
+                    message = progressDialog.Exception?.Message ?? new InvalidOperationException().Message;
+                    break;
+            }
+
+            if (caption is not null)
+            {
+                dialog = new MessageDialog(caption, message);
+                dialog.Owner = owner;
                 dialog.ShowDialog();
             }
+
+            // なぜか非アクティブになってしまうウィンドウをアクティブ化
+            owner?.Activate();
         }
 
 

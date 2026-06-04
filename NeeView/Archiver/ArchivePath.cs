@@ -37,6 +37,29 @@ namespace NeeView
         public bool IsArchivePath => SystemPathLength > 0;
 
 
+        /// <summary>
+        /// アーカイブパス有効判定
+        /// </summary>
+        /// <remarks>
+        /// ファイルかディレクトリの存在、もしくは親パスのいずれかがファイルであるか。
+        /// アーカイブファイル内のエントリ実在チェックは行わない。
+        /// </remarks>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static bool Exists(string path)
+        {
+            Debug.Assert(System.IO.Path.IsPathFullyQualified(path));
+
+            if (FileIO.EntryExists(path))
+            {
+                return true;
+            }
+            else
+            {
+                return GetSystemPathLength(path) > 0;
+            }
+        }
+
         public static ArchivePath Create(string path)
         {
             Debug.Assert(System.IO.Path.IsPathFullyQualified(path));
