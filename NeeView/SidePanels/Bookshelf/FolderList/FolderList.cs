@@ -663,7 +663,7 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
-            var dialog = new MessageDialog(TextResources.GetString("BookshelfItem.Menu.DeleteHistory"), TextResources.GetString("Bookshelf.HistoryDeleteAllDialog.Message"));
+            var dialog = new MessageDialog(TextResources.GetString("ClearHistoryInPlaceCommand"), TextResources.GetString("Bookshelf.HistoryDeleteAllDialog.Message"));
             dialog.Commands.Add(UICommands.Delete);
             dialog.Commands.Add(UICommands.Cancel);
 
