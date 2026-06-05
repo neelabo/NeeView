@@ -285,13 +285,11 @@
                             <Setter Property="ItemTemplate" Value="{StaticResource ThumbnailTemplate}"/>
                             <Setter Property="ItemContainerStyle" Value="{StaticResource ListBoxItemThumbnailStyle}" />
                             <Setter Property="FixHomeAndEndKeyBehavior" Value="True"/>
+                            <Setter Property="MouseWheelSpeedRate" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.MouseWheelSpeedRate}"/>
                             <Setter Property="ItemsPanel">
                                 <Setter.Value>
                                     <ItemsPanelTemplate>
-                                        <vwp:VirtualizingWrapPanel IsItemsHost="True"
-                                                                   ItemSize="{Binding ThumbnailItemSize}"
-                                                                   MouseWheelDelta="{Binding Source={x:Static local:Config.Current}, Path=Panels.MouseWheelDelta}"
-                                                                   />
+                                        <vwp:VirtualizingWrapPanel IsItemsHost="True" ItemSize="{Binding ThumbnailItemSize}" />
                                     </ItemsPanelTemplate>
                                 </Setter.Value>
                             </Setter>

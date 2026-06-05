@@ -9,6 +9,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace NeeView
 {
@@ -22,6 +23,8 @@ namespace NeeView
         private readonly PageThumbnailJobClient _jobClient;
         private readonly ConstDelayAction _delayAction = new(200);
         private List<Page> _pages = [];
+        private double _oldVerticalOffset;
+
 
         public ListBoxThumbnailLoader(IPageListPanel panelListBox, PageThumbnailJobClient jobClient)
         {
@@ -32,7 +35,10 @@ namespace NeeView
             _panel.PageCollectionListBox.IsVisibleChanged += ListBox_IsVisibleChanged;
             _panel.PageCollectionListBox.AddHandler(ScrollViewer.ScrollChangedEvent, new ScrollChangedEventHandler(ListBox_ScrollChanged));
             ((INotifyCollectionChanged)_panel.PageCollectionListBox.Items).CollectionChanged += ListBox_CollectionChanged;
+
+            _panel.PageCollectionListBox.PreviewMouseWheel += ListBox_PreviewMouseWheel;
         }
+
 
         private void ListBox_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
@@ -51,8 +57,16 @@ namespace NeeView
             Load();
         }
 
+        private void ListBox_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            LocalDebug.WriteLine($"{System.Environment.TickCount}: MouseWheel={e.Delta}");
+        }
+
         public void ListBox_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
+            LocalDebug.WriteLine($"{System.Environment.TickCount}: VerticalOffset={e.VerticalOffset}, Delta={e.VerticalOffset - _oldVerticalOffset}");
+            _oldVerticalOffset = e.VerticalOffset;
+
             Load();
         }
 

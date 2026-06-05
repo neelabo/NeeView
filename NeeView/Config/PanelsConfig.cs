@@ -4,7 +4,6 @@ using NeeView.Runtime.LayoutPanel;
 using NeeView.Windows.Property;
 using System;
 using System.Text.Json.Serialization;
-using System.Windows;
 
 namespace NeeView
 {
@@ -138,13 +137,7 @@ namespace NeeView
         public double MouseWheelSpeedRate
         {
             get { return _mouseWheelSpeedRate; }
-            set
-            {
-                if (SetProperty(ref _mouseWheelSpeedRate, AppMath.Round(Math.Max(value, 0.1))))
-                {
-                    OnPropertyChanged(nameof(MouseWheelDelta));
-                }
-            }
+            set { SetProperty(ref _mouseWheelSpeedRate, AppMath.Round(Math.Max(value, 0.1))); }
         }
 
         /// <summary>
@@ -197,13 +190,6 @@ namespace NeeView
 
 
         #region HiddenParameters
-
-        [PropertyMapIgnore]
-        [ObjectMergeIgnore]
-        public double MouseWheelDelta
-        {
-            get => MouseWheelSpeedRate * SystemParameters.ScrollHeight * SystemParameters.WheelScrollLines;
-        }
 
         [PropertyMapIgnore]
         [ObjectMergeIgnore]

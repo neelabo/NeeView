@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeView.Windows.Media;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -13,6 +14,9 @@ namespace NeeView.Windows
     public class ListBoxExtended : ListBox, ITextSearchCollection
     {
         private readonly SimpleTextSearch _textSearch = new();
+
+        private const double _scrollLineDelta = 16.0;
+        internal static double MouseWheelDelta => SystemParameters.WheelScrollLines * _scrollLineDelta;
 
 
         public ListBoxExtended()
@@ -42,8 +46,60 @@ namespace NeeView.Windows
         public static readonly DependencyProperty FixHomeAndEndKeyBehaviorProperty =
             DependencyProperty.Register(nameof(FixHomeAndEndKeyBehavior), typeof(bool), typeof(ListBoxExtended), new PropertyMetadata(false));
 
+        public Orientation MouseWheelScrollOrientation
+        {
+            get { return (Orientation)GetValue(MouseWheelScrollOrientationProperty); }
+            set { SetValue(MouseWheelScrollOrientationProperty, value); }
+        }
+
+        public static readonly DependencyProperty MouseWheelScrollOrientationProperty =
+            DependencyProperty.Register(nameof(MouseWheelScrollOrientation), typeof(Orientation), typeof(ListBoxExtended), new PropertyMetadata(Orientation.Vertical));
+
+        public double MouseWheelSpeedRate
+        {
+            get { return (double)GetValue(MouseWheelSpeedRateProperty); }
+            set { SetValue(MouseWheelSpeedRateProperty, value); }
+        }
+
+        public static readonly DependencyProperty MouseWheelSpeedRateProperty =
+            DependencyProperty.Register(nameof(MouseWheelSpeedRate), typeof(double), typeof(ListBoxExtended), new PropertyMetadata(1.0));
+
+
         public int ItemsCount => this.Items is not null ? this.Items.Count : 0;
 
+
+        protected override void OnPreviewMouseWheel(MouseWheelEventArgs e)
+        {
+            // 仮想化かつスクロール単位がPixelでない場合はデフォルト処理
+            if (!VirtualizingPanel.GetIsVirtualizing(this) || VirtualizingPanel.GetScrollUnit(this) != ScrollUnit.Pixel)
+            {
+                base.OnPreviewMouseWheel(e);
+                return;
+            }
+
+            e.Handled = true;
+
+            if (this.Items.Count == 0)
+            {
+                return;
+            }
+
+            ScrollViewer? scrollViewer = VisualTreeUtility.FindVisualChild<ScrollViewer>(this);
+            if (scrollViewer == null)
+            {
+                return;
+            }
+
+            double scrollAmount = (e.Delta / 120.0) * MouseWheelDelta * MouseWheelSpeedRate;
+            if (MouseWheelScrollOrientation == Orientation.Vertical)
+            {
+                scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - scrollAmount);
+            }
+            else
+            {
+                scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - scrollAmount);
+            }
+        }
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
