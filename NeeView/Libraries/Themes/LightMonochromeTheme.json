@@ -27,7 +27,7 @@
     "Item.Selected.Background": "#18000000",
     "Item.Selected.Border": "",
     "Item.Inactive.Background": "#00000000",
-    "Item.Inactive.Border": "#FFC0C0C0",
+    "Item.Inactive.Border": "#FFAAAAAA",
 
     "Button.Background": "#FFD0D0D0",
     "Button.Foreground": "Window.Foreground",

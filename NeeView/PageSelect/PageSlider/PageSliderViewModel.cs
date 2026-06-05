@@ -51,18 +51,25 @@ namespace NeeView
 
         public void MouseWheel(object? sender, MouseWheelEventArgs e)
         {
-            int turn = _mouseWheelDelta.NotchCount(e);
-            if (turn == 0) return;
-
-            for (int i = 0; i < Math.Abs(turn); ++i)
+            if (Config.Current.Slider.MouseWheelAction == SliderMouseWheelAction.CommandDependent)
             {
-                if (turn < 0)
+                MainViewComponent.Current.MouseInput.RaiseMouseWheelChanged(sender, e);
+            }
+            else
+            {
+                int turn = _mouseWheelDelta.NotchCount(e);
+                if (turn == 0) return;
+
+                for (int i = 0; i < Math.Abs(turn); ++i)
                 {
-                    BookOperation.Current.Control.MoveNext(this);
-                }
-                else
-                {
-                    BookOperation.Current.Control.MovePrev(this);
+                    if (turn < 0)
+                    {
+                        BookOperation.Current.Control.MoveNext(this);
+                    }
+                    else
+                    {
+                        BookOperation.Current.Control.MovePrev(this);
+                    }
                 }
             }
         }

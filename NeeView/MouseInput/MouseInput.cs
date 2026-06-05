@@ -249,6 +249,17 @@ namespace NeeView
             }
         }
 
+
+        /// <summary>
+        /// マウスホイールイベントを外部から発生させる
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        public void RaiseMouseWheelChanged(object? sender, MouseWheelEventArgs args)
+        {
+            MouseWheelChanged?.Invoke(sender, args);
+        }
+
         /// <summary>
         /// マウスクリック
         /// </summary>

@@ -17,7 +17,7 @@ namespace NeeView
         [DefaultEquality] private bool _isSelectedCenter;
         [DefaultEquality] private bool _isManipulationBoundaryFeedbackEnabled = true;
         [DefaultEquality] private bool _isVisiblePlaylistMark;
-        [DefaultEquality] private bool _isWheelMovePage;
+        [DefaultEquality] private FilmStripMouseWheelAction _mouseWheelAction = FilmStripMouseWheelAction.MoveSelection;
         [DefaultEquality] private bool _isDetailPopupEnabled = true;
 
 
@@ -102,13 +102,13 @@ namespace NeeView
         }
 
         /// <summary>
-        /// ホイール操作でページ移動
+        /// マウスホイール挙動
         /// </summary>
         [PropertyMember]
-        public bool IsWheelMovePage
+        public FilmStripMouseWheelAction MouseWheelAction
         {
-            get { return _isWheelMovePage; }
-            set { SetProperty(ref _isWheelMovePage, value); }
+            get { return _mouseWheelAction; }
+            set { SetProperty(ref _mouseWheelAction, value); }
         }
 
         /// <summary>
@@ -140,7 +140,37 @@ namespace NeeView
             set { ImageWidth = (int)value; }
         }
 
+        /// <summary>
+        /// ホイール操作でページ移動
+        /// </summary>
+        [Obsolete, Alternative(nameof(MouseWheelAction), 46, ScriptErrorLevel.Warning)] // v46.0
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public bool IsWheelMovePage
+        {
+            get { return MouseWheelAction == FilmStripMouseWheelAction.MovePage; }
+            set { MouseWheelAction = value ? FilmStripMouseWheelAction.MovePage : FilmStripMouseWheelAction.MoveSelection; }
+        }
+
         #endregion
+    }
+
+
+    public enum FilmStripMouseWheelAction
+    {
+        /// <summary>
+        /// 選択移動
+        /// </summary>
+        MoveSelection,
+
+        /// <summary>
+        /// ページ移動
+        /// </summary>
+        MovePage,
+
+        /// <summary>
+        /// コマンド依存
+        /// </summary>
+        CommandDependent,
     }
 }
 

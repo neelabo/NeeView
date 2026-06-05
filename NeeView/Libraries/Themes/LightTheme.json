@@ -26,8 +26,8 @@
     "Item.MouseOver.Border": "Control.Accent/0.65",
     "Item.Selected.Background": "Control.Accent/0.25",
     "Item.Selected.Border": "Control.Accent",
-    "Item.Inactive.Background": "#3DDADADA",
-    "Item.Inactive.Border": "#FFDADADA",
+    "Item.Inactive.Background": "#3DAAAAAA",
+    "Item.Inactive.Border": "#FFAAAAAA",
 
     "Button.Background": "#FFD0D0D0",
     "Button.Foreground": "Window.Foreground",

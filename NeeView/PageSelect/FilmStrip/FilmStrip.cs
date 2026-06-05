@@ -48,6 +48,8 @@ namespace NeeView
         private readonly DisposableCollection _disposables = new();
         private readonly ConstDelayAction _delayAction = new(200);
         private List<Page> _pages = [];
+        private readonly MouseWheelDelta _mouseWheelDelta = new();
+
 
         private FilmStrip()
         {
@@ -250,21 +252,31 @@ namespace NeeView
         }
 
 
-        public void MoveWheel(int delta, bool isDirectionReverse)
+        public void MoveWheel(object sender, MouseWheelEventArgs e)
         {
-            if (Config.Current.FilmStrip.IsWheelMovePage)
+            var delta = -_mouseWheelDelta.NotchCount(e);
+
+            switch (Config.Current.FilmStrip.MouseWheelAction)
             {
-                MovePage(delta);
-            }
-            else
-            {
-                MoveSelectedIndex(delta, isDirectionReverse);
+                default:
+                case FilmStripMouseWheelAction.MoveSelection:
+                    MoveSelectedIndex(delta, PageSlider.Current.IsSliderDirectionReversed);
+                    break;
+
+                case FilmStripMouseWheelAction.MovePage:
+                    MovePage(delta);
+                    break;
+
+                case FilmStripMouseWheelAction.CommandDependent:
+                    MainViewComponent.Current.MouseInput.RaiseMouseWheelChanged(sender, e);
+                    break;
             }
         }
 
         private void MoveSelectedIndex(int delta, bool isDirectionReverse)
         {
             if (_disposedValue) return;
+            if (delta == 0) return;
             if (SelectedIndex < 0) return;
 
             if (isDirectionReverse)
@@ -297,6 +309,7 @@ namespace NeeView
         private void MovePage(int delta)
         {
             if (_disposedValue) return;
+            if (delta == 0) return;
 
             for (int i = 0; i < Math.Abs(delta); ++i)
             {

@@ -91,6 +91,8 @@ namespace NeeView
             if (_vm is null) return;
 
             _vm.MouseWheel(sender, e);
+
+            e.Handled = true;
         }
 
         private void PageSlider_PreviewMouseLeftButtonDown(object? sender, MouseButtonEventArgs e)

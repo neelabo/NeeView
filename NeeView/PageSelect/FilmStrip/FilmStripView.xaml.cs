@@ -98,8 +98,6 @@ namespace NeeView
         // サムネイル更新要求を拒否する
         private bool _isFrozen;
 
-        private readonly MouseWheelDelta _mouseWheelDelta = new();
-
         // SelectionChanged での変更を識別するための前回選択インデックス
         private int _lastSelectedIndex = -1;
 
@@ -547,11 +545,9 @@ namespace NeeView
         private void FilmStripBox_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (_vm is null) return;
-            int delta = -_mouseWheelDelta.NotchCount(e);
-            if (delta != 0)
-            {
-                _vm.MoveWheel(delta, PageSlider.Current.IsSliderDirectionReversed);
-            }
+
+            _vm.MoveWheel(sender, e);
+
             e.Handled = true;
         }
 

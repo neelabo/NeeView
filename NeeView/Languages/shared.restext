@@ -577,3 +577,6 @@ WindowConfig.State=@WindowStateEx
 WindowSettingTitle=@Word.Settings
 WindowStateEx.FullDesktop=@Word.FullDesktop
 WindowStateEx.FullScreen=@Word.FullScreen
+SliderConfig.MouseWheelAction=@FilmStripConfig.MouseWheelAction
+SliderMouseWheelAction.MovePage=@FilmStripMouseWheelAction.MovePage
+SliderMouseWheelAction.CommandDependent=@FilmStripMouseWheelAction.CommandDependent

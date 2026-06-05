@@ -21,7 +21,7 @@ namespace NeeView
         [DefaultEquality] private bool _isEnabled = true;
         [DefaultEquality] private bool _isVisiblePlaylistMark = true;
         [DefaultEquality] private double _thickness = 25.0;
-
+        [DefaultEquality] private SliderMouseWheelAction _mouseWheelAction;
 
         [JsonIgnore]
         [PropertyMapReadOnly]
@@ -125,6 +125,16 @@ namespace NeeView
             set { SetProperty(ref _isSyncPageMode, value); }
         }
 
+        /// <summary>
+        /// マウスホイール挙動
+        /// </summary>
+        [PropertyMember]
+        public SliderMouseWheelAction MouseWheelAction
+        {
+            get { return _mouseWheelAction; }
+            set { SetProperty(ref _mouseWheelAction, value); }
+        }
+
 
         #region Obsolete
 
@@ -137,5 +147,19 @@ namespace NeeView
         }
 
         #endregion Obsoletet
+    }
+
+
+    public enum SliderMouseWheelAction
+    {
+        /// <summary>
+        /// ページ移動
+        /// </summary>
+        MovePage,
+
+        /// <summary>
+        /// コマンド依存
+        /// </summary>
+        CommandDependent,
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
+using System.Windows.Input;
 
 namespace NeeView
 {
@@ -42,9 +43,9 @@ namespace NeeView
         public FilmStripItemDetailToolTip DetailToolTip { get; }
 
 
-        public void MoveWheel(int delta, bool isDirectionReverse)
+        public void MoveWheel(object sender, MouseWheelEventArgs e)
         {
-            _model.MoveWheel(delta, isDirectionReverse);
+            _model.MoveWheel(sender, e);
         }
 
         public void MoveSelectedIndex(int delta)
