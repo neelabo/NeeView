@@ -49,14 +49,17 @@ namespace NeeView.Setting
         [RelayCommand]
         private void RemoveHistory(UIElement? element)
         {
-            BookHistoryCollection.Current.Clear();
-
-            var dialog = new MessageDialog(TextResources.GetString("HistoryDeletedDialog.Title"), "");
-            if (element != null)
+            var dialog = new MessageDialog(TextResources.GetString("HistoryDeleteAllDialog.Title"), TextResources.GetString("HistoryDeleteAllDialog.Message"));
+            dialog.Owner = element is not null ? Window.GetWindow(element) : null;
+            dialog.Commands.Add(UICommands.Delete);
+            dialog.Commands.Add(UICommands.Cancel);
+            var answer = dialog.ShowDialog();
+            if (answer.Command != UICommands.Delete)
             {
-                dialog.Owner = Window.GetWindow(element);
+                return;
             }
-            dialog.ShowDialog();
+
+            BookHistoryCollection.Current.Clear();
         }
 
         #endregion
