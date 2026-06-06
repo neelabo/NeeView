@@ -1061,7 +1061,14 @@ namespace NeeView.PageFrames
             if (_disposedValue) return;
             if (!_bookContext.IsEnabled) return;
 
-            var position = new PagePosition(SelectedRange.Min.Index + delta, 0);
+            var index = SelectedRange.Min.Index + delta;
+            var normalizeIndex = _bookContext.NormalizeIndex(index);
+            var normalizeCycle = _bookContext.NormalizeCycle(index);
+            var normalizeAlignmentIndex = BookTools.WidwPageAlignment(normalizeIndex);
+            var fixedIndex = (_bookContext.LastIndex - _bookContext.FirstIndex + 1) * normalizeCycle + normalizeAlignmentIndex;
+            //Debug.WriteLine($"Alignment: {index} -> {fixedIndex}");
+
+            var position = new PagePosition(fixedIndex, 0);
             var direction = LinkedListDirection.Next;
 
             if (!AppState.Current.IsProcessingBook)

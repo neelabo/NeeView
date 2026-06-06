@@ -143,6 +143,11 @@ namespace NeeView.PageFrames
             return _accessor.NormalizeIndex(index);
         }
 
+        public int NormalizeCycle(int index)
+        {
+            return _accessor.NormalizeCycle(index);
+        }
+
         public PagePosition ClampPosition(PagePosition position)
         {
             return _accessor.ClampPosition(position);

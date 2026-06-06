@@ -43,6 +43,11 @@ namespace NeeView
             return Pages.Any() ? MathUtility.NormalizeLoopRange(index, FirstIndex, LastIndex) : -1;
         }
 
+        public int NormalizeCycle(int index)
+        {
+            return Pages.Any() ? MathUtility.CycleLoopRange(index, FirstIndex, LastIndex) : 0;
+        }
+
         public PagePosition NormalizePosition(PagePosition position)
         {
             return Pages.Any() ? new PagePosition(NormalizeIndex(position.Index), position.Part) : PagePosition.Empty;

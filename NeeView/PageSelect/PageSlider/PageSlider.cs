@@ -135,17 +135,7 @@ namespace NeeView
             }
 
             // ２ページアライメント
-            if (Config.Current.Book.IsStaticWidePage)
-            {
-                if (PageSelector.IsSupportedSingleFirstPage)
-                {
-                    return ((value - 1) & ~1) + 1;
-                }
-                else
-                {
-                    return (value & ~1);
-                }
-            }
+            value = BookTools.WidwPageAlignment(value);
 
             // スライダーの移動量をページモードに従う
             if (Config.Current.Slider.IsSyncPageMode)

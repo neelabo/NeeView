@@ -16,6 +16,23 @@ namespace NeeView
         {
             return !string.IsNullOrWhiteSpace(path) && !path.StartsWith(Temporary.Current.TempDirectory, StringComparison.Ordinal);
         }
+
+        public static int WidwPageAlignment(int value)
+        {
+            if (!Config.Current.Book.IsStaticWidePage)
+            {
+                return value;
+            }
+
+            if (Config.Current.BookSetting.IsSupportedSingleFirstPage)
+            {
+                return ((value - 1) & ~1) + 1;
+            }
+            else
+            {
+                return (value & ~1);
+            }
+        }
     }
 
 
