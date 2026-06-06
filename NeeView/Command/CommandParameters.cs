@@ -60,6 +60,7 @@ namespace NeeView
         public static Type[] KnownTypes { get; set; } = new Type[]
         {
             typeof(ReversibleCommandParameter),
+            typeof(ToggleCommandParameter),
             typeof(MoveSizePageCommandParameter),
             typeof(TogglePageModeCommandParameter),
             typeof(ToggleStretchModeCommandParameter),

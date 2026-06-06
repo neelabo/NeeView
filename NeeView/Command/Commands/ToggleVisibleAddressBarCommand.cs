@@ -11,6 +11,8 @@ namespace NeeView
         {
             this.Group = TextResources.GetString("CommandGroup.Window");
             this.IsShowMessage = false;
+
+            this.ParameterSource = new CommandParameterSource(new ToggleCommandParameter());
         }
 
         public override BindingBase CreateIsCheckedBinding()
@@ -24,6 +26,7 @@ namespace NeeView
             return GetStateExecuteMessage(state);
         }
 
+        [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
             var state = CommandElementTools.GetState(e, Config.Current.MenuBar.IsAddressBarEnabled, MainWindow.Current.IsAddressBarVisible);

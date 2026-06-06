@@ -9,6 +9,8 @@ namespace NeeView
         public ToggleGridCommand()
         {
             this.Group = TextResources.GetString("CommandGroup.Effect");
+
+            this.ParameterSource = new CommandParameterSource(new ToggleCommandParameter());
         }
 
         public override BindingBase CreateIsCheckedBinding()

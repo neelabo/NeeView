@@ -10,6 +10,8 @@ namespace NeeView
         {
             this.Group = TextResources.GetString("CommandGroup.BookMove");
             this.IsShowMessage = true;
+
+            this.ParameterSource = new CommandParameterSource(new ToggleCommandParameter());
         }
 
         public override BindingBase CreateIsCheckedBinding()

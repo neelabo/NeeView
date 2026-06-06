@@ -13,6 +13,8 @@ namespace NeeView
             this.Group = TextResources.GetString("CommandGroup.Panel");
             this.ShortCutKey = new ShortcutKey("D");
             this.IsShowMessage = false;
+
+            this.ParameterSource = new CommandParameterSource(new ToggleCommandParameter());
         }
 
         public override BindingBase CreateIsCheckedBinding()
@@ -29,9 +31,11 @@ namespace NeeView
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
+            var toggleMode = CommandTools.GetToggleMode(e);
+
+            if (toggleMode != ToggleMode.Toggle)
             {
-                SidePanelFrame.Current.SetVisibleBookmarkList(Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture), true, true);
+                SidePanelFrame.Current.SetVisibleBookmarkList(toggleMode == ToggleMode.On, true, true);
             }
             else
             {

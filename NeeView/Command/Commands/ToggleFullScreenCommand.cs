@@ -12,6 +12,8 @@ namespace NeeView
             this.ShortCutKey = new ShortcutKey("F11");
             this.MouseGesture = new MouseSequence("U");
             this.IsShowMessage = false;
+
+            this.ParameterSource = new CommandParameterSource(new ToggleCommandParameter());
         }
 
         public override BindingBase CreateIsCheckedBinding()

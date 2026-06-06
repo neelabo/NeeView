@@ -11,6 +11,8 @@ namespace NeeView
             this.Group = TextResources.GetString("CommandGroup.Effect");
             this.ShortCutKey = new ShortcutKey("Ctrl+E");
             this.IsShowMessage = true;
+
+            this.ParameterSource = new CommandParameterSource(new ToggleCommandParameter());
         }
 
         public override BindingBase CreateIsCheckedBinding()

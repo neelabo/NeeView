@@ -3,8 +3,8 @@ using NeeView.Windows.Property;
 
 namespace NeeView
 {
-    [Equatable(Explicit = true)]
-    public partial class ToggleBookmarkCommandParameter : CommandParameter
+    [Equatable(Explicit = false)]
+    public partial class ToggleBookmarkCommandParameter : ToggleCommandParameter
     {
         [DefaultEquality] private string? _folder;
 

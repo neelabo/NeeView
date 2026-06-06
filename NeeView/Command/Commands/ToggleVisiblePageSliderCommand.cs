@@ -11,6 +11,8 @@ namespace NeeView
         {
             this.Group = TextResources.GetString("CommandGroup.Window");
             this.IsShowMessage = false;
+
+            this.ParameterSource = new CommandParameterSource(new ToggleCommandParameter());
         }
 
         public override BindingBase CreateIsCheckedBinding()

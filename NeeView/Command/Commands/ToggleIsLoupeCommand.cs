@@ -10,7 +10,10 @@ namespace NeeView
         {
             this.Group = TextResources.GetString("CommandGroup.ViewManipulation");
             this.IsShowMessage = false;
+
+            this.ParameterSource = new CommandParameterSource(new ToggleCommandParameter());
         }
+
         public override BindingBase CreateIsCheckedBinding()
         {
             return new Binding(nameof(LoupeContext.IsEnabled)) { Mode = BindingMode.OneWay, Source = MainViewComponent.Current.LoupeContext };

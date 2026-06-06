@@ -9,6 +9,8 @@ namespace NeeView
         {
             this.Group = TextResources.GetString("CommandGroup.ViewManipulation");
             this.IsShowMessage = false;
+
+            this.ParameterSource = new CommandParameterSource(new ToggleCommandParameter());
         }
 
         // NOTE: パノラマモードでかつカーソル位置の画像に対する操作の場合、フラグが確定できないためメニュー用のフラグ表示は無効にした

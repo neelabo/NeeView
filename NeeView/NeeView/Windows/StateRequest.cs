@@ -1,4 +1,6 @@
-﻿namespace NeeView.Windows
+﻿using System;
+
+namespace NeeView.Windows
 {
     public enum StateRequest
     {
@@ -23,6 +25,17 @@
         public static StateRequest ToStateRequest(this bool isEnabled)
         {
             return isEnabled ? StateRequest.Enable : StateRequest.Disable;
+        }
+
+        public static StateRequest ToStateRequest(this ToggleMode toggleMode)
+        {
+            return toggleMode switch
+            {
+                ToggleMode.Toggle => StateRequest.Toggle,
+                ToggleMode.On => StateRequest.Enable,
+                ToggleMode.Off => StateRequest.Disable,
+                _ => throw new ArgumentOutOfRangeException(nameof(toggleMode)),
+            };
         }
     }
 

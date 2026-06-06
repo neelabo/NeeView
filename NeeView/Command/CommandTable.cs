@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 // TODO: コマンド引数にコマンドパラメータを渡せないだろうか。（現状メニュー呼び出しであることを示すタグが指定されることが有る)
@@ -442,6 +443,27 @@ namespace NeeView
                 new ObsoleteCommandItem("NextPagemarkInBook", "NextPlaylistItemInBook", 39),
             };
             ObsoleteCommands = obsoleteCommands.ToDictionary(e => e.Obsolete);
+
+#if DEBUG
+            // check toggle commands
+            {
+                foreach (var element in _elements)
+                {
+                    if (HasToggleArgs(element.Value.GetType()))
+                    {
+                        //Debug.WriteLine($"Check {element.Key}");
+                        Debug.Assert(element.Value.Parameter is ToggleCommandParameter);
+                    }
+                }
+
+                static bool HasToggleArgs(Type type)
+                {
+                    var method = type.GetMethod(nameof(CommandElement.Execute), [typeof(object), typeof(CommandContext)]);
+                    var methodAttribute = method?.GetCustomAttribute(typeof(MethodArgumentAttribute)) as MethodArgumentAttribute;
+                    return methodAttribute?.Note == "ToggleCommand.Execute.Remarks";
+                }
+            }
+#endif
         }
 
         #endregion

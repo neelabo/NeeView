@@ -46,14 +46,7 @@ namespace NeeView
         /// <returns></returns>
         public static StateRequest GetStateRequest(CommandContext e)
         {
-            if (e.Args.Length > 0)
-            {
-                return Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture).ToStateRequest();
-            }
-            else
-            {
-                return StateRequest.Toggle;
-            }
+            return CommandTools.GetToggleMode(e).ToStateRequest();
         }
 
         public static bool GetState(CommandContext e)

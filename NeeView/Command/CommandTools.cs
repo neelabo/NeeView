@@ -91,5 +91,24 @@ namespace NeeView
             return menuText;
         }
 
+        /// <summary>
+        /// CommandContextからトグルモード取得
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public static ToggleMode GetToggleMode(CommandContext context)
+        {
+            if (context.Args.Length > 0)
+            {
+                return Convert.ToBoolean(context.Args[0], CultureInfo.InvariantCulture) ? ToggleMode.On : ToggleMode.Off;
+            }
+
+            if (!context.ByMenu && context.Parameter is ToggleCommandParameter parameter)
+            {
+                return parameter.ToggleMode;
+            }
+
+            return ToggleMode.Toggle;
+        }
     }
 }

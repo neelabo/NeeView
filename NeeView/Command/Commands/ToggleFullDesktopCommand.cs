@@ -12,6 +12,8 @@ namespace NeeView
             this.Group = TextResources.GetString("CommandGroup.Window");
             this.ShortCutKey = new ShortcutKey("Shift+F11");
             this.IsShowMessage = false;
+
+            this.ParameterSource = new CommandParameterSource(new ToggleCommandParameter());
         }
 
         public override BindingBase CreateIsCheckedBinding()

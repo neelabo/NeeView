@@ -580,3 +580,6 @@ WindowStateEx.FullScreen=@Word.FullScreen
 SliderConfig.MouseWheelAction=@FilmStripConfig.MouseWheelAction
 SliderMouseWheelAction.MovePage=@FilmStripMouseWheelAction.MovePage
 SliderMouseWheelAction.CommandDependent=@FilmStripMouseWheelAction.CommandDependent
+ToggleMode.On=@Word.OnState
+ToggleMode.Off=@Word.OffState
+ToggleMode.Toggle=@Word.Toggle

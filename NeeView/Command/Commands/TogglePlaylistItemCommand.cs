@@ -13,6 +13,8 @@ namespace NeeView
             this.Group = TextResources.GetString("CommandGroup.Playlist");
             this.ShortCutKey = new ShortcutKey("Ctrl+M");
             this.IsShowMessage = true;
+
+            this.ParameterSource = new CommandParameterSource(new ToggleCommandParameter());
         }
 
         public override BindingBase CreateIsCheckedBinding()
@@ -22,7 +24,15 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return BookOperation.Current.Playlist.IsMarked ? TextResources.GetString("TogglePlaylistItemCommand.Off") : TextResources.GetString("TogglePlaylistItemCommand.On");
+            var toggleMode = CommandTools.GetToggleMode(e);
+
+            return toggleMode switch
+            {
+                ToggleMode.Toggle => BookOperation.Current.Playlist.IsMarked ? TextResources.GetString("TogglePlaylistItemCommand.Off") : TextResources.GetString("TogglePlaylistItemCommand.On"),
+                ToggleMode.On => TextResources.GetString("TogglePlaylistItemCommand.On"),
+                ToggleMode.Off => TextResources.GetString("TogglePlaylistItemCommand.Off"),
+                _ => ""
+            };
         }
 
         public override bool CanExecute(object? sender, CommandContext e)
@@ -33,9 +43,11 @@ namespace NeeView
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
+            var toggleMode = CommandTools.GetToggleMode(e);
+
+            if (toggleMode != ToggleMode.Toggle)
             {
-                BookOperation.Current.Playlist.SetMark(Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture));
+                BookOperation.Current.Playlist.SetMark(toggleMode == ToggleMode.On);
             }
             else
             {

@@ -24,7 +24,15 @@ namespace NeeView
 
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
-            return BookOperation.Current.BookControl.IsBookmarkOn(GetFolderPath(e)) ? TextResources.GetString("ToggleBookmarkCommand.Off") : TextResources.GetString("ToggleBookmarkCommand.On");
+            var toggleMode = CommandTools.GetToggleMode(e);
+
+            return toggleMode switch
+            {
+                ToggleMode.Toggle => BookOperation.Current.BookControl.IsBookmarkOn(GetFolderPath(e)) ? TextResources.GetString("ToggleBookmarkCommand.Off") : TextResources.GetString("ToggleBookmarkCommand.On"),
+                ToggleMode.On => TextResources.GetString("ToggleBookmarkCommand.On"),
+                ToggleMode.Off => TextResources.GetString("ToggleBookmarkCommand.Off"),
+                _ => ""
+            };
         }
 
         public override bool CanExecute(object? sender, CommandContext e)
@@ -35,9 +43,11 @@ namespace NeeView
         [MethodArgument("ToggleCommand.Execute.Remarks")]
         public override void Execute(object? sender, CommandContext e)
         {
-            if (e.Args.Length > 0)
+            var toggleMode = CommandTools.GetToggleMode(e);
+
+            if (toggleMode != ToggleMode.Toggle)
             {
-                BookOperation.Current.BookControl.SetBookmark(Convert.ToBoolean(e.Args[0], CultureInfo.InvariantCulture), GetFolderPath(e));
+                BookOperation.Current.BookControl.SetBookmark(toggleMode == ToggleMode.On, GetFolderPath(e));
             }
             else
             {
