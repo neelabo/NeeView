@@ -19,6 +19,11 @@ namespace NeeView
         /// </summary>
         public bool IsServerExists => _serverProcess != null;
 
+        /// <summary>
+        /// サーバーはバックグラウンドプロセス？
+        /// </summary>
+        public bool IsServerBackground => _serverProcess != null && _serverProcess.MainWindowHandle == IntPtr.Zero;
+
 
         /// <summary>
         /// サーバープロセス更新

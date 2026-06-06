@@ -243,6 +243,14 @@ namespace NeeView
                     MainWindow.Current.RestoreWindowPlacement();
                     IsHideWindow = false;
 
+                    // 白フラッシュをなるべく目立たなくする処置
+                    MainWindow.Current.Root.Visibility = System.Windows.Visibility.Collapsed;
+                    await Task.Delay(100); // 描写を回す
+                    await Dispatcher.Yield(DispatcherPriority.Render);
+                    await Dispatcher.Yield(DispatcherPriority.Render);
+                    MainWindow.Current.Activate();
+                    MainWindow.Current.Root.Visibility = System.Windows.Visibility.Visible;
+
                     await App.Current.Sequence.ResumeAsync();
                 }
             }

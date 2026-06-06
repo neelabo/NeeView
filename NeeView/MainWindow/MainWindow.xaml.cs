@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -54,6 +55,8 @@ namespace NeeView
 
             InitializeComponent();
             WindowChromeTools.SetWindowChromeSource(this);
+
+            this.Root.Visibility = Visibility.Collapsed;
 
             // TextBox の ContextMenu のスタイルを変更する ... やりすぎ？
             // ThemeProfile.InitializeEditorContextMenuStyle(this);
@@ -514,6 +517,9 @@ namespace NeeView
         private async void MainWindow_ContentRendered(object sender, EventArgs e)
         {
             Debug.WriteLine($"App.MainWindow.ContentRendered: {App.Current.Stopwatch.ElapsedMilliseconds}ms");
+
+            await Task.Delay(100);
+            this.Root.Visibility = Visibility.Visible;
 
             await _vm.ContentRenderedAsync();
 

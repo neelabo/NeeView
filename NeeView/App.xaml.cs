@@ -427,9 +427,22 @@ namespace NeeView
         /// </summary>
         private bool CanStart(bool isMultiBootEnabled)
         {
-            if (_multiBootService is null) return false;
+            if (_multiBootService is null)
+            {
+                return false;
+            }
 
-            return !_multiBootService.IsServerExists || (Option.IsNewWindow != null ? Option.IsNewWindow == SwitchOption.on : isMultiBootEnabled);
+            if (!_multiBootService.IsServerExists)
+            {
+                return true;
+            }
+
+            if (_multiBootService.IsServerBackground)
+            {
+                return false;
+            }
+
+            return Option.IsNewWindow != null ? Option.IsNewWindow == SwitchOption.on : isMultiBootEnabled;
         }
 
         /// <summary>
