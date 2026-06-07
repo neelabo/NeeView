@@ -691,7 +691,7 @@ namespace NeeView
                 {
                     menuItem.Items.Add(new MenuItem()
                     {
-                        Header = System.IO.Path.GetFileNameWithoutExtension(path),
+                        Header = MenuItemTools.EscapeMenuItemString(System.IO.Path.GetFileNameWithoutExtension(path)),
                         Command = MoveToAnotherCommand,
                         CommandParameter = path
                     });
