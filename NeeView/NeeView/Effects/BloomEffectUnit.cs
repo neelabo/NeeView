@@ -4,6 +4,7 @@ using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System;
 using System.ComponentModel;
+using System.Windows.Data;
 using System.Windows.Media.Effects;
 
 namespace NeeView.Effects
@@ -71,20 +72,11 @@ namespace NeeView.Effects
         {
             _source = source;
 
-            _source.SubscribePropertyChanged(nameof(BloomEffectUnit.BaseIntensity),
-                (s, e) => _effect.BaseIntensity = _source.BaseIntensity);
-
-            _source.SubscribePropertyChanged(nameof(BloomEffectUnit.BaseSaturation),
-                (s, e) => _effect.BaseSaturation = _source.BaseSaturation);
-
-            _source.SubscribePropertyChanged(nameof(BloomEffectUnit.BloomIntensity),
-                (s, e) => _effect.BloomIntensity = _source.BloomIntensity);
-
-            _source.SubscribePropertyChanged(nameof(BloomEffectUnit.BloomSaturation),
-                (s, e) => _effect.BloomSaturation = _source.BloomSaturation);
-
-            _source.SubscribePropertyChanged(nameof(BloomEffectUnit.Threshold),
-                (s, e) => _effect.Threshold = _source.Threshold);
+            BindingOperations.SetBinding(_effect, BloomEffect.BaseIntensityProperty, new Binding(nameof(BloomEffectUnit.BaseIntensity)) { Source = _source });
+            BindingOperations.SetBinding(_effect, BloomEffect.BaseSaturationProperty, new Binding(nameof(BloomEffectUnit.BaseSaturation)) { Source = _source });
+            BindingOperations.SetBinding(_effect, BloomEffect.BloomIntensityProperty, new Binding(nameof(BloomEffectUnit.BloomIntensity)) { Source = _source });
+            BindingOperations.SetBinding(_effect, BloomEffect.BloomSaturationProperty, new Binding(nameof(BloomEffectUnit.BloomSaturation)) { Source = _source });
+            BindingOperations.SetBinding(_effect, BloomEffect.ThresholdProperty, new Binding(nameof(BloomEffectUnit.Threshold)) { Source = _source });
 
             _source.RaisePropertyChangedAll();
         }

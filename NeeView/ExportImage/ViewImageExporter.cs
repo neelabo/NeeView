@@ -40,6 +40,17 @@ namespace NeeView
                 grid.Children.Add(backgroundFront);
             }
 
+            // effect layers
+            var border = new Border();
+            grid.Children.Add(border);
+            foreach (var layer in _source.EffectLayers.Where(e => e.Effect is not null))
+            {
+                var child = new Border();
+                child.Effect = EffectUnitExtensions.CreateEffectAdapter(layer.Effect)?.Effect;
+                border.Child = child;
+                border = child;
+            }
+
             var viewRect = _source.PageFrameContent.GetRawContentRect();
 
             var rectangle = new Rectangle();
@@ -49,10 +60,9 @@ namespace NeeView
             brush.Stretch = Stretch.None;
             rectangle.Fill = brush;
             rectangle.LayoutTransform = _source.ViewTransform;
-            rectangle.Effect = _source.ViewEffect;
             rectangle.UseLayoutRounding = true;
             rectangle.SnapsToDevicePixels = true;
-            grid.Children.Add(rectangle);
+            border.Child = rectangle;
 
             // 描画サイズ取得
             var rect = new Rect(0, 0, rectangle.Width, rectangle.Height);

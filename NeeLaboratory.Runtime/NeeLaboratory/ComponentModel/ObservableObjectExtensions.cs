@@ -14,7 +14,7 @@ namespace NeeLaboratory.ComponentModel
         static ObservableObjectExtensions()
         {
             var type = typeof(ObservableObject);
-                        
+
             var expressions = new List<Expression>();
             var parameter = Expression.Parameter(type, "obj");
 

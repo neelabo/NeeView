@@ -6,7 +6,7 @@ namespace NeeView.Effects
 {
     public class HsvEffect : ShaderEffect
     {
-        private static readonly PixelShader _pixelShader = new()
+        private readonly PixelShader _pixelShader = new()
         {
             UriSource = Tools.MakePackUri(typeof(HsvEffect).Assembly, "NeeView/Effects/Shaders/HsvEffect.ps")
         };
@@ -29,7 +29,6 @@ namespace NeeView.Effects
         }
 
 
-        //
         public static readonly DependencyProperty HueProperty = DependencyProperty.Register("Hue", typeof(double), typeof(HsvEffect), new UIPropertyMetadata(0.0, PixelShaderConstantCallback(0)));
         public double Hue
         {
@@ -37,7 +36,6 @@ namespace NeeView.Effects
             set { SetValue(HueProperty, value); }
         }
 
-        //
         public static readonly DependencyProperty SaturationProperty = DependencyProperty.Register("Saturation", typeof(double), typeof(HsvEffect), new UIPropertyMetadata(0.0, PixelShaderConstantCallback(1)));
         public double Saturation
         {
@@ -45,7 +43,6 @@ namespace NeeView.Effects
             set { SetValue(SaturationProperty, value); }
         }
 
-        //
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(double), typeof(HsvEffect), new UIPropertyMetadata(0.0, PixelShaderConstantCallback(2)));
         public double Value
         {

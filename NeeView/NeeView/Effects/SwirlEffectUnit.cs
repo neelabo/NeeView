@@ -1,9 +1,9 @@
 ﻿using Generator.Equals;
 using Microsoft.Expression.Media.Effects;
-using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Media.Effects;
 
 namespace NeeView.Effects
@@ -44,11 +44,8 @@ namespace NeeView.Effects
         {
             _source = source;
 
-            _source.SubscribePropertyChanged(nameof(SwirlEffectUnit.Center),
-                (s, e) => _effect.Center = _source.Center);
-
-            _source.SubscribePropertyChanged(nameof(SwirlEffectUnit.TwistAmount),
-                (s, e) => _effect.TwistAmount = _source.TwistAmount);
+            BindingOperations.SetBinding(_effect, SwirlEffect.CenterProperty, new Binding(nameof(SwirlEffectUnit.Center)) { Source = _source });
+            BindingOperations.SetBinding(_effect, SwirlEffect.TwistAmountProperty, new Binding(nameof(SwirlEffectUnit.TwistAmount)) { Source = _source });
 
             _source.RaisePropertyChangedAll();
         }

@@ -102,5 +102,15 @@ namespace NeeView
             return state.ToIsEnabled(current);
         }
     }
+
+
+    public static class ClassTools
+    {
+        public static string CreateName(string className, string postfix)
+        {
+            Debug.Assert(className.EndsWith(postfix));
+            return className[..^postfix.Length];
+        }
+    }
 }
 

@@ -1,8 +1,8 @@
 ﻿using Generator.Equals;
 using Microsoft.Expression.Media.Effects;
-using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System.ComponentModel;
+using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 
@@ -62,17 +62,10 @@ namespace NeeView.Effects
         {
             _source = source;
 
-            _source.SubscribePropertyChanged(nameof(ColorToneEffectUnit.DarkColor),
-                (s, e) => _effect.DarkColor = _source.DarkColor);
-
-            _source.SubscribePropertyChanged(nameof(ColorToneEffectUnit.LightColor),
-                (s, e) => _effect.LightColor = _source.LightColor);
-
-            _source.SubscribePropertyChanged(nameof(ColorToneEffectUnit.ToneAmount),
-                (s, e) => _effect.ToneAmount = _source.ToneAmount);
-
-            _source.SubscribePropertyChanged(nameof(ColorToneEffectUnit.Desaturation),
-                (s, e) => _effect.Desaturation = _source.Desaturation);
+            BindingOperations.SetBinding(_effect, ColorToneEffect.DarkColorProperty, new Binding(nameof(ColorToneEffectUnit.DarkColor)) { Source = _source });
+            BindingOperations.SetBinding(_effect, ColorToneEffect.LightColorProperty, new Binding(nameof(ColorToneEffectUnit.LightColor)) { Source = _source });
+            BindingOperations.SetBinding(_effect, ColorToneEffect.ToneAmountProperty, new Binding(nameof(ColorToneEffectUnit.ToneAmount)) { Source = _source });
+            BindingOperations.SetBinding(_effect, ColorToneEffect.DesaturationProperty, new Binding(nameof(ColorToneEffectUnit.Desaturation)) { Source = _source });
 
             _source.RaisePropertyChangedAll();
         }

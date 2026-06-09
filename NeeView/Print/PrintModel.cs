@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using NeeLaboratory;
 using NeeView.Media.Imaging;
+using NeeView.PageFrames;
 using NeeView.Properties;
 using System;
 using System.Collections.Generic;
@@ -425,13 +426,24 @@ namespace NeeView
                 }
             }
 
-            var gridEffect = new Grid();
-            gridEffect.Name = "GridEffect";
-            gridEffect.Effect = isEffect ? _context.ViewEffect : null;
-            gridEffect.Children.Add(gridClip);
+            // effect layers
+            var effectLayerRoot = new Border();
+            var effectLayer = effectLayerRoot;
+            if (isEffect)
+            {
+                foreach (var layer in _context.EffectLayers.Where(e => e.Effect is not null))
+                {
+                    var child = new Border();
+                    child.Effect = EffectUnitExtensions.CreateEffectAdapter(layer.Effect)?.Effect;
+                    effectLayer.Child = child;
+                    effectLayer = child;
+                }
+            }
+            effectLayer.Child = gridClip;
+
 
             var viewbox = new Viewbox();
-            viewbox.Child = gridEffect;
+            viewbox.Child = effectLayerRoot;
             viewbox.HorizontalAlignment = HorizontalAlignment;
             viewbox.VerticalAlignment = VerticalAlignment;
 

@@ -6,7 +6,7 @@ namespace NeeView.Effects
 {
     public class ColorSelectEffect : ShaderEffect
     {
-        private static readonly PixelShader _pixelShader = new()
+        private readonly PixelShader _pixelShader = new()
         {
             UriSource = Tools.MakePackUri(typeof(ColorSelectEffect).Assembly, "NeeView/Effects/Shaders/ColorSelectEffect.ps")
         };
@@ -29,7 +29,6 @@ namespace NeeView.Effects
         }
 
 
-        //
         public static readonly DependencyProperty HueProperty = DependencyProperty.Register("Hue", typeof(double), typeof(ColorSelectEffect), new UIPropertyMetadata(0.0, PixelShaderConstantCallback(0)));
         public double Hue
         {
@@ -37,7 +36,6 @@ namespace NeeView.Effects
             set { SetValue(HueProperty, value); }
         }
 
-        //
         public static readonly DependencyProperty RangeProperty = DependencyProperty.Register("Range", typeof(double), typeof(ColorSelectEffect), new UIPropertyMetadata(0.1, PixelShaderConstantCallback(1)));
         public double Range
         {
@@ -45,7 +43,6 @@ namespace NeeView.Effects
             set { SetValue(RangeProperty, value); }
         }
 
-        //
         public static readonly DependencyProperty CurveProperty = DependencyProperty.Register("Curve", typeof(double), typeof(ColorSelectEffect), new UIPropertyMetadata(1.0, PixelShaderConstantCallback(2)));
         public double Curve
         {

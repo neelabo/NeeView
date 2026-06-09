@@ -1,7 +1,7 @@
 ﻿using Generator.Equals;
-using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System.ComponentModel;
+using System.Windows.Data;
 using System.Windows.Media.Effects;
 
 namespace NeeView.Effects
@@ -33,8 +33,7 @@ namespace NeeView.Effects
         {
             _source = source;
 
-            _source.SubscribePropertyChanged(nameof(BlurEffectUnit.Radius),
-                (s, e) => _effect.Radius = _source.Radius);
+            BindingOperations.SetBinding(_effect, BlurEffect.RadiusProperty, new Binding(nameof(BlurEffectUnit.Radius)) { Source = _source });
 
             _source.RaisePropertyChangedAll();
         }

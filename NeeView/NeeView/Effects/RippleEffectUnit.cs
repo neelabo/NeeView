@@ -1,9 +1,9 @@
 ﻿using Generator.Equals;
 using Microsoft.Expression.Media.Effects;
-using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Media.Effects;
 
 namespace NeeView.Effects
@@ -62,17 +62,10 @@ namespace NeeView.Effects
         {
             _source = source;
 
-            _source.SubscribePropertyChanged(nameof(RippleEffectUnit.Center),
-                (s, e) => _effect.Center = _source.Center);
-
-            _source.SubscribePropertyChanged(nameof(RippleEffectUnit.Frequency),
-                (s, e) => _effect.Frequency = _source.Frequency);
-
-            _source.SubscribePropertyChanged(nameof(RippleEffectUnit.Magnitude),
-                (s, e) => _effect.Magnitude = _source.Magnitude);
-
-            _source.SubscribePropertyChanged(nameof(RippleEffectUnit.Phase),
-                (s, e) => _effect.Phase = _source.Phase);
+            BindingOperations.SetBinding(_effect, RippleEffect.CenterProperty, new Binding(nameof(RippleEffectUnit.Center)) { Source = _source });
+            BindingOperations.SetBinding(_effect, RippleEffect.FrequencyProperty, new Binding(nameof(RippleEffectUnit.Frequency)) { Source = _source });
+            BindingOperations.SetBinding(_effect, RippleEffect.MagnitudeProperty, new Binding(nameof(RippleEffectUnit.Magnitude)) { Source = _source });
+            BindingOperations.SetBinding(_effect, RippleEffect.PhaseProperty, new Binding(nameof(RippleEffectUnit.Phase)) { Source = _source });
 
             _source.RaisePropertyChangedAll();
         }

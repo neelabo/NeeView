@@ -293,6 +293,11 @@ namespace NeeView
             {
                 self.Config.Window.IsAutoHideInFullDesktop = self.Config.Window.IsAutoHideInFullScreen;
 
+                self.Config.ImageEffect.Layers = new EffectLayerCollection() { new EffectLayer() {
+                        Effect = self.Config.ImageEffect.Caches.Get(self.Config.ImageEffect.EffectTypeLegacy.ToType())
+                    }
+                };
+
                 if (self.Commands != null)
                 {
                     ResolveCommandShortCutKeyConflicts(self.Commands, new ToggleFullDesktopCommand());
@@ -310,6 +315,7 @@ namespace NeeView
 
             return self;
         }
+
 
         /// <summary>
         /// CommandCollection に含まれているショートカットキーと衝突しないように新しいコマンドを登録する

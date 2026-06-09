@@ -1,8 +1,8 @@
 ﻿using Generator.Equals;
 using Microsoft.Expression.Media.Effects;
-using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System.ComponentModel;
+using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 
@@ -35,8 +35,7 @@ namespace NeeView.Effects
         {
             _source = source;
 
-            _source.SubscribePropertyChanged(nameof(MonochromeEffectUnit.Color),
-                (s, e) => _effect.Color = _source.Color);
+            BindingOperations.SetBinding(_effect, MonochromeEffect.ColorProperty, new Binding(nameof(MonochromeEffectUnit.Color)) { Source = _source });
 
             _source.RaisePropertyChangedAll();
         }

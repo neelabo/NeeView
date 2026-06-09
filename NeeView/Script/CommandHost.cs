@@ -48,6 +48,7 @@ namespace NeeView
             DestinationFolderCollection = new DestinationFolderCollectionAccessor();
             SusiePluginCollection = new SusiePluginCollectionAccessor();
             MainView = new MainViewPanelAccessor();
+            ImageEffect = new ImageEffectAccessor();
             Debug = new DebugAccessor();
         }
 
@@ -117,6 +118,10 @@ namespace NeeView
         {
             get { return new WindowAccessor(new MainWindowProxy()); }
         }
+
+        [WordNodeMember]
+        public ImageEffectAccessor ImageEffect { get; }
+
 
 #if DEBUG
         [WordNodeMember(IsEnabled = false)]

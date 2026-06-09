@@ -1,6 +1,7 @@
 ﻿//#define LOCAL_DEBUG
 using NeeLaboratory.Generators;
 using System;
+using System.Collections;
 using System.Linq;
 using System.Reflection;
 
@@ -65,7 +66,26 @@ namespace NeeView
                 }
                 else if (property.PropertyType.GetInterfaces().Contains(typeof(System.Collections.ICollection)))
                 {
-                    throw new NotImplementedException();
+                    if (property.PropertyType.GetInterfaces().Contains(typeof(System.Collections.IList)))
+                    {
+                        var listA1 = property.GetValue(a1) as IList;
+                        var listA2 = property.GetValue(a2) as IList;
+
+                        if (listA1 is null || listA2 is null)
+                        {
+                            throw new NotSupportedException("List instance is null");
+                        }
+
+                        listA1.Clear();
+                        foreach (var item in listA2)
+                        {
+                            listA1.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
                 }
                 else
                 {

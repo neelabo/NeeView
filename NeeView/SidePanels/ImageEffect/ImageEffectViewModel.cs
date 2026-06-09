@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using NeeView.Collections.ObjectModel;
 using NeeView.Effects;
 using NeeView.Windows.Property;
 using System.Collections.Generic;
@@ -8,12 +10,10 @@ namespace NeeView
     /// <summary>
     /// ImageEffect : ViewModel
     /// </summary>
-    public class ImageEffectViewModel : ObservableObject
+    public partial class ImageEffectViewModel : ObservableObject
     {
-        public ImageEffectViewModel(ImageEffect model)
+        public ImageEffectViewModel()
         {
-            _model = model;
-
             this.UnsharpMaskProfile = new PropertyDocument(Config.Current.ImageResizeFilter.UnsharpMask);
 
             this.CustomSizeProfile = new PropertyDocument(Config.Current.ImageCustomSize);
@@ -25,18 +25,13 @@ namespace NeeView
             this.GridLineProfile = new PropertyDocument(Config.Current.ImageGrid);
             this.GridLineProfile.SetVisualType<PropertyValue_Boolean>(PropertyVisualType.ToggleSwitch);
             this.GridLineProfile.SetVisualType<PropertyValue_Color>(PropertyVisualType.ComboColorPicker);
+
+            EffectLayers = new(Config.Current.ImageEffect.Layers, e => new EffectLayerDocument(e));
+            EffectLayers.CollectionChanged += (s, e) => UpdateCanExecute();
+
+            UpdateCanExecute();
         }
 
-
-        /// <summary>
-        /// Model property.
-        /// </summary>
-        private ImageEffect _model;
-        public ImageEffect Model
-        {
-            get { return _model; }
-            set { SetProperty(ref _model, value); }
-        }
 
         // PictureProfile
         public PictureProfile PictureProfile => PictureProfile.Current;
@@ -51,6 +46,8 @@ namespace NeeView
 
         public Dictionary<EffectType, string> EffectTypeList { get; } = AliasNameExtensions.GetAliasNameDictionary<EffectType>();
 
+        public ObservableCollectionSync<EffectLayer, EffectLayerDocument> EffectLayers { get; set; }
+
 
         public void ResetValue()
         {
@@ -64,6 +61,20 @@ namespace NeeView
             }
         }
 
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(AddEffectLayerCommand))]
+        public partial bool CanAddEffectLayer { get; private set; }
+
+        private void UpdateCanExecute()
+        {
+            CanAddEffectLayer = Config.Current.ImageEffect.Layers.CanCreateNew();
+        }
+
+        [RelayCommand(CanExecute = nameof(CanAddEffectLayer))]
+        public void AddEffectLayer()
+        {
+            Config.Current.ImageEffect.Layers.CreateNew();
+        }
     }
 
 }

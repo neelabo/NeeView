@@ -308,6 +308,8 @@ namespace NeeView
 
             options.Converters.Add(new DiffJsonConverter<ImageEffectConfig>());
 
+            options.Converters.Add(new DiffJsonConverter<EffectLayer>());
+
             options.Converters.Add(new DiffJsonConverter<LevelEffectUnit>());
             options.Converters.Add(new DiffJsonConverter<HsvEffectUnit>());
             options.Converters.Add(new DiffJsonConverter<ColorSelectEffectUnit>());
@@ -359,6 +361,8 @@ namespace NeeView
             options.Converters.Add(new DiffJsonConverter<ExportBookParameter>());
 
             options.Converters.Add(new DiffJsonConverter<ReversibleCommandParameter>());
+            options.Converters.Add(new DiffJsonConverter<ToggleCommandParameter>());
+
             options.Converters.Add(new DiffJsonConverter<MoveSizePageCommandParameter>());
             options.Converters.Add(new DiffJsonConverter<TogglePageModeCommandParameter>());
             options.Converters.Add(new DiffJsonConverter<ToggleStretchModeCommandParameter>());

@@ -65,12 +65,6 @@ namespace NeeView
 
         public PageFrameBoxPresenter PageFrameBoxPresenter => _presenter;
 
-        //public ContentCanvas ContentCanvas => _viewComponent.ContentCanvas;
-
-        //public ContentCanvasBrush ContentCanvasBrush => _viewComponent.ContentCanvasBrush;
-
-        public ImageEffect ImageEffect => ImageEffect.Current;
-
         public WindowTitle WindowTitle => WindowTitle.Current;
 
         public InfoMessage InfoMessage => InfoMessage.Current;

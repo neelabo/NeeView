@@ -109,11 +109,9 @@ namespace NeeView.PageFrames
             _cleaner = new PageFrameContainerCleaner(_context, _containers);
             _filler = new PageFrameContainerFiller(_context, _bookContext, _containers, _rectMath);
 
-            var effectGrid = new Grid() { Name = "EffectLayer" };
-            effectGrid.Loaded += (s, e) => ((Grid)s).SetBinding(Grid.EffectProperty, new Binding(nameof(ImageEffect.Effect)) { Source = ImageEffect.Current });
-            effectGrid.Unloaded += (s, e) => BindingOperations.ClearBinding((Grid)s, Grid.EffectProperty);
-            effectGrid.Children.Add(_scrollViewer);
-            this.Children.Add(effectGrid);
+            var effectPane = new EffectPanel(Config.Current.ImageEffect.Layers, _scrollViewer);
+            _disposables.Add(effectPane);
+            this.Children.Add(effectPane);
 
             var gridLine = new GridLine(ImageGridTarget.Screen) { Name = "ScreenGridLine" };
             _disposables.Add(gridLine);

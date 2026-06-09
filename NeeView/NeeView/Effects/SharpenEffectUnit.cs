@@ -1,8 +1,8 @@
 ﻿using Generator.Equals;
 using Microsoft.Expression.Media.Effects;
-using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System.ComponentModel;
+using System.Windows.Data;
 using System.Windows.Media.Effects;
 
 namespace NeeView.Effects
@@ -44,11 +44,8 @@ namespace NeeView.Effects
         {
             _source = source;
 
-            _source.SubscribePropertyChanged(nameof(SharpenEffectUnit.Amount),
-                (s, e) => _effect.Amount = _source.Amount);
-
-            _source.SubscribePropertyChanged(nameof(SharpenEffectUnit.Height),
-                (s, e) => _effect.Height = _source.Height * 0.001);
+            BindingOperations.SetBinding(_effect, SharpenEffect.AmountProperty, new Binding(nameof(SharpenEffectUnit.Amount)) { Source = _source });
+            BindingOperations.SetBinding(_effect, SharpenEffect.HeightProperty, new Binding(nameof(SharpenEffectUnit.Height)) { Source = _source, Converter = new DoubleConstMulConverter() { Coefficient = 0.001 } });
 
             _source.RaisePropertyChangedAll();
         }

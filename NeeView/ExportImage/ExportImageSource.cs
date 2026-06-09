@@ -8,20 +8,6 @@ namespace NeeView
 {
     public class ExportImageSource : IExportPageSource
     {
-#if false
-        public ExportImageSource(PageFrameContent pageFrameContent, string bookAddress, List<Page> pages, FrameworkElement view, Brush? background, Brush? backgroundFront, Transform viewTransform, Effect? viewEffect)
-        {
-            PageFrameContent = pageFrameContent;
-            BookAddress = bookAddress;
-            Pages = pages;
-            View = view;
-            Background = background;
-            BackgroundFront = backgroundFront;
-            ViewTransform = viewTransform;
-            ViewEffect = viewEffect;
-        }
-#endif
-
         public required PageFrameContent PageFrameContent { get; init; }
 
         public required string BookAddress { get; init; }
@@ -40,7 +26,7 @@ namespace NeeView
 
         public required Transform ViewTransform { get; init; }
 
-        public required Effect? ViewEffect { get; init; }
+        public required EffectLayerCollection EffectLayers { get; init; }
 
     }
 

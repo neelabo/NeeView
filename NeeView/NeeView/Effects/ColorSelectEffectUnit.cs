@@ -1,7 +1,7 @@
 ﻿using Generator.Equals;
-using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System.ComponentModel;
+using System.Windows.Data;
 using System.Windows.Media.Effects;
 
 namespace NeeView.Effects
@@ -51,14 +51,9 @@ namespace NeeView.Effects
         {
             _source = source;
 
-            _source.SubscribePropertyChanged(nameof(ColorSelectEffectUnit.Hue),
-                (s, e) => _effect.Hue = _source.Hue);
-
-            _source.SubscribePropertyChanged(nameof(ColorSelectEffectUnit.Range),
-                (s, e) => _effect.Range = _source.Range);
-
-            _source.SubscribePropertyChanged(nameof(ColorSelectEffectUnit.Curve),
-                (s, e) => _effect.Curve = _source.Curve);
+            BindingOperations.SetBinding(_effect, ColorSelectEffect.HueProperty, new Binding(nameof(ColorSelectEffectUnit.Hue)) { Source = _source });
+            BindingOperations.SetBinding(_effect, ColorSelectEffect.RangeProperty, new Binding(nameof(ColorSelectEffectUnit.Range)) { Source = _source });
+            BindingOperations.SetBinding(_effect, ColorSelectEffect.CurveProperty, new Binding(nameof(ColorSelectEffectUnit.Curve)) { Source = _source });
 
             _source.RaisePropertyChangedAll();
         }

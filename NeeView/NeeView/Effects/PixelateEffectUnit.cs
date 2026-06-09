@@ -1,8 +1,8 @@
 ﻿using Generator.Equals;
 using Microsoft.Expression.Media.Effects;
-using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System.ComponentModel;
+using System.Windows.Data;
 using System.Windows.Media.Effects;
 
 namespace NeeView.Effects
@@ -34,8 +34,7 @@ namespace NeeView.Effects
         {
             _source = source;
 
-            _source.SubscribePropertyChanged(nameof(PixelateEffectUnit.Pixelation),
-                (s, e) => _effect.Pixelation = _source.Pixelation);
+            BindingOperations.SetBinding(_effect, PixelateEffect.PixelationProperty, new Binding(nameof(PixelateEffectUnit.Pixelation)) { Source = _source });
 
             _source.RaisePropertyChangedAll();
         }

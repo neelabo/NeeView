@@ -1,9 +1,9 @@
 ﻿using Generator.Equals;
-using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System;
 using System.ComponentModel;
 using System.Text.Json.Serialization;
+using System.Windows.Data;
 using System.Windows.Media.Effects;
 
 namespace NeeView.Effects
@@ -104,20 +104,11 @@ namespace NeeView.Effects
         {
             _source = source;
 
-            _source.SubscribePropertyChanged(nameof(LevelEffectUnit.Black),
-                (s, e) => _effect.Black = _source.Black);
-
-            _source.SubscribePropertyChanged(nameof(LevelEffectUnit.White),
-                (s, e) => _effect.White = _source.White);
-
-            _source.SubscribePropertyChanged(nameof(LevelEffectUnit.Center),
-                (s, e) => _effect.Center = _source.Center);
-
-            _source.SubscribePropertyChanged(nameof(LevelEffectUnit.Minimum),
-                (s, e) => _effect.Minimum = _source.Minimum);
-
-            _source.SubscribePropertyChanged(nameof(LevelEffectUnit.Maximum),
-                (s, e) => _effect.Maximum = _source.Maximum);
+            BindingOperations.SetBinding(_effect, LevelEffect.BlackProperty, new Binding(nameof(LevelEffectUnit.Black)) { Source = _source });
+            BindingOperations.SetBinding(_effect, LevelEffect.WhiteProperty, new Binding(nameof(LevelEffectUnit.White)) { Source = _source });
+            BindingOperations.SetBinding(_effect, LevelEffect.CenterProperty, new Binding(nameof(LevelEffectUnit.Center)) { Source = _source });
+            BindingOperations.SetBinding(_effect, LevelEffect.MinimumProperty, new Binding(nameof(LevelEffectUnit.Minimum)) { Source = _source });
+            BindingOperations.SetBinding(_effect, LevelEffect.MaximumProperty, new Binding(nameof(LevelEffectUnit.Maximum)) { Source = _source });
 
             _source.RaisePropertyChangedAll();
         }

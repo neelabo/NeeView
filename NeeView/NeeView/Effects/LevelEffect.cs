@@ -6,7 +6,7 @@ namespace NeeView.Effects
 {
     public class LevelEffect : ShaderEffect
     {
-        private static readonly PixelShader _pixelShader = new()
+        private readonly PixelShader _pixelShader = new()
         {
             UriSource = Tools.MakePackUri(typeof(LevelEffect).Assembly, "NeeView/Effects/Shaders/LevelEffect.ps")
         };

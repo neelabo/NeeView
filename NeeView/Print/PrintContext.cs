@@ -11,7 +11,7 @@ namespace NeeView
     /// </summary>
     public class PrintContext
     {
-        public PrintContext(PageFrameContent pageFrameContent, ViewContent? mainContent, IEnumerable<ViewContent> contents, FrameworkElement view, Transform viewTransform, double viewWidth, double viewHeight, Effect? viewEffect, Brush? background, Brush? backgroundFront)
+        public PrintContext(PageFrameContent pageFrameContent, ViewContent? mainContent, IEnumerable<ViewContent> contents, FrameworkElement view, Transform viewTransform, double viewWidth, double viewHeight, EffectLayerCollection effectLayers, Brush? background, Brush? backgroundFront)
         {
             PageFrameContent = pageFrameContent;
             MainContent = mainContent;
@@ -20,7 +20,7 @@ namespace NeeView
             ViewTransform = viewTransform;
             ViewWidth = viewWidth;
             ViewHeight = viewHeight;
-            ViewEffect = viewEffect;
+            EffectLayers = effectLayers;
             Background = background;
             BackgroundFront = backgroundFront;
         }
@@ -68,7 +68,7 @@ namespace NeeView
         /// <summary>
         /// エフェクト
         /// </summary>
-        public Effect? ViewEffect { get; set; }
+        public EffectLayerCollection EffectLayers { get; set; }
 
         /// <summary>
         /// 背景ブラシ

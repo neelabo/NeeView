@@ -112,7 +112,6 @@ namespace NeeView
         public WindowTitle WindowTitle => WindowTitle.Current;
         public PageTitle PageTitle => PageTitle.Current;
         public FilmStrip FilmStrip => FilmStrip.Current;
-        public ImageEffect ImageEffect => ImageEffect.Current;
         public MouseInput MouseInput => _viewComponent.MouseInput;
         public InfoMessage InfoMessage => InfoMessage.Current;
         public SidePanelFrame SidePanel => SidePanelFrame.Current;

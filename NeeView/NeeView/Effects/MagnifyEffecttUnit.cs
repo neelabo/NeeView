@@ -1,9 +1,9 @@
 ﻿using Generator.Equals;
 using Microsoft.Expression.Media.Effects;
-using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Media.Effects;
 
 namespace NeeView.Effects
@@ -64,17 +64,10 @@ namespace NeeView.Effects
         {
             _source = source;
 
-            _source.SubscribePropertyChanged(nameof(MagnifyEffectUnit.Center),
-                (s, e) => _effect.Center = _source.Center);
-
-            _source.SubscribePropertyChanged(nameof(MagnifyEffectUnit.Amount),
-                (s, e) => _effect.Amount = _source.Amount);
-
-            _source.SubscribePropertyChanged(nameof(MagnifyEffectUnit.InnerRadius),
-                (s, e) => _effect.InnerRadius = _source.InnerRadius);
-
-            _source.SubscribePropertyChanged(nameof(MagnifyEffectUnit.OuterRadius),
-                (s, e) => _effect.OuterRadius = _source.OuterRadius);
+            BindingOperations.SetBinding(_effect, MagnifyEffect.CenterProperty, new Binding(nameof(MagnifyEffectUnit.Center)) { Source = _source });
+            BindingOperations.SetBinding(_effect, MagnifyEffect.AmountProperty, new Binding(nameof(MagnifyEffectUnit.Amount)) { Source = _source });
+            BindingOperations.SetBinding(_effect, MagnifyEffect.InnerRadiusProperty, new Binding(nameof(MagnifyEffectUnit.InnerRadius)) { Source = _source });
+            BindingOperations.SetBinding(_effect, MagnifyEffect.OuterRadiusProperty, new Binding(nameof(MagnifyEffectUnit.OuterRadius)) { Source = _source });
 
             _source.RaisePropertyChangedAll();
         }

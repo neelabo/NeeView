@@ -20,7 +20,7 @@ namespace NeeView
                 nameof(HistoryPanel) => new HistoryPanel(HistoryList.Current),
                 nameof(FileInformationPanel) => new FileInformationPanel(FileInformation.Current),
                 nameof(NavigatePanel) => new NavigatePanel(NavigateModel.Current),
-                nameof(ImageEffectPanel) => new ImageEffectPanel(ImageEffect.Current),
+                nameof(ImageEffectPanel) => new ImageEffectPanel(),
                 nameof(BookmarkPanel) => new BookmarkPanel(BookmarkFolderList.Current),
                 nameof(PageListPanel) => new PageListPanel(PageList.Current),
                 nameof(PlaylistPanel) => new PlaylistPanel(PlaylistHub.Current),

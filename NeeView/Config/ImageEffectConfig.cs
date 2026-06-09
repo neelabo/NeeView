@@ -2,15 +2,17 @@
 using Generator.Equals;
 using NeeView.Effects;
 using NeeView.Windows.Property;
+using System;
+using System.Text.Json.Serialization;
 
 namespace NeeView
 {
-    [Equatable(Explicit = false, IgnoreInheritedMembers = true)]
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class ImageEffectConfig : ObservableObject
     {
-        private bool _isEnabled;
-        private EffectType _effectType = EffectType.Level;
-        private bool _isHsvMode;
+        [DefaultEquality] private bool _isEnabled;
+        [DefaultEquality] private bool _isHsvMode;
+        [DefaultEquality] private EffectLayerCollection _layers = new EffectLayerCollection() { new EffectLayer() };
 
         /// <summary>
         /// エフェクト有効
@@ -23,16 +25,6 @@ namespace NeeView
         }
 
         /// <summary>
-        /// 適用するエフェクトの種類
-        /// </summary>
-        [PropertyMember]
-        public EffectType EffectType
-        {
-            get { return _effectType; }
-            set { SetProperty(ref _effectType, value); }
-        }
-
-        /// <summary>
         /// 色をHSV表示
         /// </summary>
         [PropertyMember]
@@ -42,43 +34,143 @@ namespace NeeView
             set { SetProperty(ref _isHsvMode, value); }
         }
 
-        [PropertyMapLabel("EffectType.Level")]
-        public LevelEffectUnit LevelEffect { get; set; } = new LevelEffectUnit();
+        /// <summary>
+        /// エフェクトレイヤー
+        /// </summary>
+        [PropertyMapIgnore]
+        public EffectLayerCollection Layers
+        {
+            get { return _layers; }
+            set { SetProperty(ref _layers, value); }
+        }
 
-        [PropertyMapLabel("EffectType.Hsv")]
-        public HsvEffectUnit HsvEffect { get; set; } = new HsvEffectUnit();
+        /// <summary>
+        /// エフェクトキャッシュ
+        /// </summary>
+        [PropertyMapIgnore]
+        [ObjectMergeReferenceCopy]
+        public EffectUnitCache Caches { get; set; } = new();
 
-        [PropertyMapLabel("EffectType.ColorSelect")]
-        public ColorSelectEffectUnit ColorSelectEffect { get; set; } = new ColorSelectEffectUnit();
 
-        [PropertyMapLabel("EffectType.Blur")]
-        public BlurEffectUnit BlurEffect { get; set; } = new BlurEffectUnit();
+        #region Obsolete
 
-        [PropertyMapLabel("EffectType.Bloom")]
-        public BloomEffectUnit BloomEffect { get; set; } = new BloomEffectUnit();
+        [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
+        [JsonIgnore]
+        public EffectType EffectType
+        {
+            get { return Layers[0].EffectType; }
+            set { Layers[0].EffectType = value; }
+        }
 
-        [PropertyMapLabel("EffectType.Monochrome")]
-        public MonochromeEffectUnit MonochromeEffect { get; set; } = new MonochromeEffectUnit();
+        [Obsolete]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        [JsonPropertyName("EffectType")]
+        public EffectType EffectTypeLegacy { get; set; }
 
-        [PropertyMapLabel("EffectType.ColorTone")]
-        public ColorToneEffectUnit ColorToneEffect { get; set; } = new ColorToneEffectUnit();
+        [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public LevelEffectUnit LevelEffect
+        {
+            get => new();
+            set => Caches.Add(value);
+        }
 
-        [PropertyMapLabel("EffectType.Sharpen")]
-        public SharpenEffectUnit SharpenEffect { get; set; } = new SharpenEffectUnit();
+        [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public HsvEffectUnit HsvEffect
+        {
+            get => new();
+            set => Caches.Add(value);
+        }
 
-        [PropertyMapLabel("EffectType.Embossed")]
-        public EmbossedEffectUnit EmbossedEffect { get; set; } = new EmbossedEffectUnit();
+        [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public ColorSelectEffectUnit ColorSelectEffect
+        {
+            get => new();
+            set => Caches.Add(value);
+        }
 
-        [PropertyMapLabel("EffectType.Pixelate")]
-        public PixelateEffectUnit PixelateEffect { get; set; } = new PixelateEffectUnit();
+        [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public BlurEffectUnit BlurEffect
+        {
+            get => new();
+            set => Caches.Add(value);
+        }
 
-        [PropertyMapLabel("EffectType.Magnify")]
-        public MagnifyEffectUnit MagnifyEffect { get; set; } = new MagnifyEffectUnit();
+        [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public BloomEffectUnit BloomEffect
+        {
+            get => new();
+            set => Caches.Add(value);
+        }
 
-        [PropertyMapLabel("EffectType.Ripple")]
-        public RippleEffectUnit RippleEffect { get; set; } = new RippleEffectUnit();
+        [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public MonochromeEffectUnit MonochromeEffect
+        {
+            get => new();
+            set => Caches.Add(value);
+        }
 
-        [PropertyMapLabel("EffectType.Swirl")]
-        public SwirlEffectUnit SwirlEffect { get; set; } = new SwirlEffectUnit();
+        [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public ColorToneEffectUnit ColorToneEffect
+        {
+            get => new();
+            set => Caches.Add(value);
+        }
+
+        [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public SharpenEffectUnit SharpenEffect
+        {
+            get => new();
+            set => Caches.Add(value);
+        }
+
+        [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public EmbossedEffectUnit EmbossedEffect
+        {
+            get => new();
+            set => Caches.Add(value);
+        }
+
+        [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public PixelateEffectUnit PixelateEffect
+        {
+            get => new();
+            set => Caches.Add(value);
+        }
+
+        [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public MagnifyEffectUnit MagnifyEffect
+        {
+            get => new();
+            set => Caches.Add(value);
+        }
+
+        [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public RippleEffectUnit RippleEffect
+        {
+            get => new();
+            set => Caches.Add(value);
+        }
+
+        [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public SwirlEffectUnit SwirlEffect
+        {
+            get => new();
+            set => Caches.Add(value);
+        }
+
+        #endregion
     }
 }

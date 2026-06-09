@@ -1,8 +1,8 @@
 ﻿using Generator.Equals;
 using Microsoft.Expression.Media.Effects;
-using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System.ComponentModel;
+using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 
@@ -53,14 +53,9 @@ namespace NeeView.Effects
         {
             _source = source;
 
-            _source.SubscribePropertyChanged(nameof(EmbossedEffectUnit.Color),
-                (s, e) => _effect.Color = _source.Color);
-
-            _source.SubscribePropertyChanged(nameof(EmbossedEffectUnit.Amount),
-                (s, e) => _effect.Amount = _source.Amount);
-
-            _source.SubscribePropertyChanged(nameof(EmbossedEffectUnit.Height),
-                (s, e) => _effect.Height = _source.Height * 0.001);
+            BindingOperations.SetBinding(_effect, EmbossedEffect.ColorProperty, new Binding(nameof(EmbossedEffectUnit.Color)) { Source = _source });
+            BindingOperations.SetBinding(_effect, EmbossedEffect.AmountProperty, new Binding(nameof(EmbossedEffectUnit.Amount)) { Source = _source });
+            BindingOperations.SetBinding(_effect, EmbossedEffect.HeightProperty, new Binding(nameof(EmbossedEffectUnit.Height)) { Source = _source, Converter = new DoubleConstMulConverter() { Coefficient = 0.001 } });
 
             _source.RaisePropertyChangedAll();
         }

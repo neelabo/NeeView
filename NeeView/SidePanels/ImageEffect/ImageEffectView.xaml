@@ -8,6 +8,7 @@
         <ResourceDictionary>
 
             <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/PanelIcons.xaml"/>
                 <ResourceDictionary Source="/NeeView/Windows/Property/PropertyValueTemplateDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
@@ -20,6 +21,15 @@
                 </DrawingImage.Drawing>
             </DrawingImage>
 
+            <DrawingImage x:Key="ic_clear_24px_b2">
+                <DrawingImage.Drawing>
+                    <DrawingGroup>
+                        <GeometryDrawing Brush="Transparent" Geometry="{StaticResource g_rect24x24}" />
+                        <GeometryDrawing Brush="{DynamicResource Control.Accent}" Pen="{x:Null}" Geometry="{StaticResource g_clear_24px}" />
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
+
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
             <DataTemplate DataType="{x:Type nvp:PropertyValue_Boolean}">
@@ -27,6 +37,16 @@
             </DataTemplate>
 
             <Style TargetType="Button" BasedOn="{StaticResource IconButton}">
+            </Style>
+
+            <Style x:Key="NavigateButtonStyle" TargetType="Button" BasedOn="{StaticResource IconButton}">
+                <Setter Property="Width" Value="28" />
+                <Setter Property="MinHeight" Value="{DynamicResource FontIconSize}" />
+            </Style>
+
+            <Style x:Key="NavigateRepeatButtonStyle" TargetType="RepeatButton" BasedOn="{StaticResource IconRepeatButton}">
+                <Setter Property="Width" Value="28" />
+                <Setter Property="MinHeight" Value="{DynamicResource FontIconSize}" />
             </Style>
 
             <Style TargetType="nvc:EnterTriggerTextBox" BasedOn="{StaticResource NVEnterTriggerTextBox}">
@@ -133,31 +153,75 @@
                 <Separator />
 
                 <DockPanel Margin="0,5">
-                    <nvc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding Source={x:Static local:Config.Current}, Path=ImageEffect.IsEnabled}"
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                        <Button Style="{StaticResource NavigateButtonStyle}" HorizontalAlignment="Left" Command="{Binding AddEffectLayerCommand}"
+                                Visibility="{Binding Source={x:Static local:Config.Current}, Path=ImageEffect.IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <Image Source="{StaticResource ic_add_24px_a}" />
+                        </Button>
+                        <nvc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding Source={x:Static local:Config.Current}, Path=ImageEffect.IsEnabled}"
                             VerticalAlignment="Center" />
+                    </StackPanel>
                     <TextBlock Text="{properties:TextBinding Effect.Effect}" VerticalAlignment="Center" />
                 </DockPanel>
 
                 <StackPanel Visibility="{Binding Source={x:Static local:Config.Current}, Path=ImageEffect.IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <DockPanel Margin="0,5">
-                        <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding EffectTypeList}" DisplayMemberPath="Value" SelectedValuePath="Key"
-                                SelectedValue="{Binding Source={x:Static local:Config.Current}, Path=ImageEffect.EffectType}" />
-                        <TextBlock Text="{properties:TextBinding Effect.EffectType}" VerticalAlignment="Center" />
-                    </DockPanel>
-                    <Grid Margin="0,10">
-                        <nvp:PropertyInspector x:Name="inspector" Document="{Binding Model.EffectParameters}" IsResetButtonVisible="True"
-                                IsHsvMode="{Binding Source={x:Static local:Config.Current}, Path=ImageEffect.IsHsvMode}">
-                            <nvp:PropertyInspector.Style>
-                                <Style TargetType="nvp:PropertyInspector">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Model.EffectParameters}" Value="{x:Null}">
-                                            <Setter Property="Visibility" Value="Collapsed" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </nvp:PropertyInspector.Style>
-                        </nvp:PropertyInspector>
-                    </Grid>
+
+                    <ItemsControl ItemsSource="{Binding EffectLayers}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+
+                                    <DockPanel x:Name="LayerHeader" Margin="0,0,0,10" LastChildFill="True" Background="Transparent" KeyboardNavigation.TabNavigation="Local" >
+                                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" KeyboardNavigation.TabIndex="3">
+                                            <StackPanel.Style>
+                                                <Style TargetType="StackPanel">
+                                                    <Setter Property="Visibility" Value="Hidden"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=DockPanel}, Path=IsMouseOver}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </StackPanel.Style>
+                                            <Button DockPanel.Dock="Right" Style="{StaticResource NavigateButtonStyle}" Command="{Binding MoveUpCommand}">
+                                                <Image Source="{StaticResource ic_keyboard_arrow_up_24px}" />
+                                            </Button>
+                                            <Button DockPanel.Dock="Right" Style="{StaticResource NavigateButtonStyle}" Command="{Binding MoveDownCommand}">
+                                                <Image Source="{StaticResource ic_keyboard_arrow_down_24px}" />
+                                            </Button>
+                                            <Button DockPanel.Dock="Right" Style="{StaticResource NavigateButtonStyle}" Command="{Binding DeleteCommand}">
+                                                <Image Source="{StaticResource ic_clear_24px_b2}" />
+                                            </Button>
+                                        </StackPanel>
+
+                                        <CheckBox DockPanel.Dock="Left" IsChecked="{Binding IsEnabled}" VerticalAlignment="Center" Width="22" TabIndex="1" />
+                                        <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding EffectTypeList}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding EffectType}" TabIndex="2" />
+
+                                    </DockPanel>
+
+                                    <nvp:PropertyInspector x:Name="inspector" Document="{Binding EffectParameters}" IsResetButtonVisible="True"
+                                                    IsHsvMode="{Binding Source={x:Static local:Config.Current}, Path=ImageEffect.IsHsvMode}">
+                                        <nvp:PropertyInspector.Style>
+                                            <Style TargetType="nvp:PropertyInspector">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding EffectParameters}" Value="{x:Null}">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsEnabled}" Value="False">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </nvp:PropertyInspector.Style>
+                                    </nvp:PropertyInspector>
+                                    <Separator/>
+
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+
+                    </ItemsControl>
+
                 </StackPanel>
             </StackPanel>
 

@@ -1,7 +1,7 @@
 ﻿using Generator.Equals;
-using NeeLaboratory.ComponentModel;
 using NeeView.Windows.Property;
 using System.ComponentModel;
+using System.Windows.Data;
 using System.Windows.Media.Effects;
 
 namespace NeeView.Effects
@@ -51,14 +51,9 @@ namespace NeeView.Effects
         {
             _source = source;
 
-            _source.SubscribePropertyChanged(nameof(HsvEffectUnit.Hue),
-                (s, e) => _effect.Hue = _source.Hue);
-
-            _source.SubscribePropertyChanged(nameof(HsvEffectUnit.Saturation),
-                (s, e) => _effect.Saturation = _source.Saturation);
-
-            _source.SubscribePropertyChanged(nameof(HsvEffectUnit.Value),
-                (s, e) => _effect.Value = _source.Value);
+            BindingOperations.SetBinding(_effect, HsvEffect.HueProperty, new Binding(nameof(HsvEffectUnit.Hue)) { Source = _source });
+            BindingOperations.SetBinding(_effect, HsvEffect.SaturationProperty, new Binding(nameof(HsvEffectUnit.Saturation)) { Source = _source });
+            BindingOperations.SetBinding(_effect, HsvEffect.ValueProperty, new Binding(nameof(HsvEffectUnit.Value)) { Source = _source });
 
             _source.RaisePropertyChangedAll();
         }

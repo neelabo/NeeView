@@ -14,9 +14,9 @@ namespace NeeView
     {
         private readonly Lazy<FrameworkElement> _view;
 
-        public ImageEffectPanel(ImageEffect model)
+        public ImageEffectPanel()
         {
-            _view = new(() => new ImageEffectView(model));
+            _view = new(() => new ImageEffectView());
 
             Icon = App.Current.MainWindow.Resources["pic_toy_24px"] as ImageSource
                 ?? throw new InvalidOperationException("Cannot found resource");
