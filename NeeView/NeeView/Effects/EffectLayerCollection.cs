@@ -6,6 +6,8 @@ namespace NeeView
 {
     public class EffectLayerCollection : ObservableCollection<EffectLayer>, IEquatable<EffectLayerCollection>
     {
+        private const int MaxLayerCount = 10;
+
         #region IEquatable
 
         // NOTE: DiffJsonConverter 用。限定的な条件でのみ成立
@@ -36,7 +38,7 @@ namespace NeeView
 
         public bool CanCreateNew()
         {
-            return this.Count < 5;
+            return this.Count < MaxLayerCount;
         }
 
         public bool CanMoveUp(EffectLayer layer)
