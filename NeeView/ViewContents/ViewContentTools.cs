@@ -4,8 +4,10 @@ using NeeLaboratory.Generators;
 using NeeView.PageFrames;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
 
 namespace NeeView
@@ -77,14 +79,14 @@ namespace NeeView
             if (scalingMode is not null)
             {
                 LocalDebug.WriteLine($"XX: Force {scalingMode.Value}: {pixelSize:f0} / {imageSize:f0}");
-                RenderOptions.SetBitmapScalingMode(element, scalingMode.Value);
+                SetBitmapScalingMode(element, scalingMode.Value);
                 element.SnapsToDevicePixels = scalingMode.Value == BitmapScalingMode.NearestNeighbor;
             }
             // 画像サイズがビッタリの場合はドットバイドットになるような設定
             else if (contentSize.IsRightAngle && SizeEquals(contentSize.PixelSize, pixelSize, 1.1))
             {
                 LocalDebug.WriteLine($"OO: NearestNeighbor: {pixelSize:f0} /{imageSize:f0}");
-                RenderOptions.SetBitmapScalingMode(element, BitmapScalingMode.NearestNeighbor);
+                SetBitmapScalingMode(element, BitmapScalingMode.NearestNeighbor);
                 element.SnapsToDevicePixels = true;
             }
             // DotKeep mode
@@ -92,17 +94,27 @@ namespace NeeView
             else if (Config.Current.ImageDotKeep.IsImageDotKeep(contentSize.PixelSize, pixelSize))
             {
                 LocalDebug.WriteLine($"XX: NearestNeighbor: {pixelSize:f0} / {imageSize:f0} != request {contentSize.PixelSize:f0}");
-                RenderOptions.SetBitmapScalingMode(element, BitmapScalingMode.NearestNeighbor);
+                SetBitmapScalingMode(element, BitmapScalingMode.NearestNeighbor);
                 element.SnapsToDevicePixels = true;
             }
             else
             {
                 LocalDebug.WriteLine($"XX: Fantastic: {pixelSize:f0} / {imageSize:f0} != request {contentSize.PixelSize:f0}");
-                RenderOptions.SetBitmapScalingMode(element, BitmapScalingMode.Fant);
+                SetBitmapScalingMode(element, BitmapScalingMode.Fant);
                 element.SnapsToDevicePixels = false;
             }
         }
 
+        private static void SetBitmapScalingMode(UIElement element, BitmapScalingMode mode)
+        {
+            // スライドショー オートスクロール中は Fant にする
+            var binding = new Binding(nameof(SlideShow.IsPlayingAutoScroll))
+            {
+                Source = SlideShow.Current,
+                Converter = new BooleanToBitmapScalingModeConverter() { FalseValue = mode }
+            };
+            BindingOperations.SetBinding(element, RenderOptions.BitmapScalingModeProperty, binding);
+        }
 
         private static Size GetRenderPixelSize(UIElement element, Size imageSize)
         {
@@ -132,4 +144,24 @@ namespace NeeView
         }
     }
 
+
+    public class BooleanToBitmapScalingModeConverter : IValueConverter
+    {
+        public BitmapScalingMode TrueValue { get; set; } = BitmapScalingMode.Fant;
+        public BitmapScalingMode FalseValue { get; set; } = BitmapScalingMode.Fant;
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool boolValue)
+            {
+                return boolValue ? TrueValue : FalseValue;
+            }
+            return FalseValue;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

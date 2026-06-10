@@ -4,7 +4,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Timers;
@@ -42,6 +41,9 @@ namespace NeeView
 
             _disposables.Add(PageFrameBoxPresenter.Current.SubscribeViewPageChanged(PageFrameBoxPresenter_ViewPageChanged));
 
+            _disposables.Add(Config.Current.SlideShow.SubscribePropertyChanged(nameof(SlideShowConfig.IsAutoScroll),
+                (s, e) => OnPropertyChanged(nameof(IsPlayingAutoScroll))));
+
             // アプリ終了前の開放予約
             ApplicationDisposer.Current.Add(this);
         }
@@ -78,9 +80,12 @@ namespace NeeView
                         StopTimer();
                     }
                     OnPropertyChanged();
+                    OnPropertyChanged(nameof(IsPlayingAutoScroll));
                 }
             }
         }
+
+        public bool IsPlayingAutoScroll => _isPlaying && Config.Current.SlideShow.IsAutoScroll;
 
         public double Interval => _isPlaying ? _timer.Interval : Config.Current.SlideShow.SlideShowInterval * 1000.0;
 
