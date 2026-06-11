@@ -592,3 +592,5 @@ WindowConfig.State=@WindowStateEx
 WindowSettingTitle=@Word.Settings
 WindowStateEx.FullDesktop=@Word.FullDesktop
 WindowStateEx.FullScreen=@Word.FullScreen
+Playlist.MoreMenu.New=@Menu.New
+CommandListItem.Menu.Clone=@Menu.Clone

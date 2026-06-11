@@ -21,7 +21,7 @@ namespace NeeView
     /// <typeparam name="T"></typeparam>
     public class DiffJsonConverter<T> : JsonConverter<T>, IDiffJsonConverter<T>, IDiffJsonConverter where T : new()
     {
-        private sealed record PropMeta(string JsonName, Type PropertyType, Func<T, object?> Getter, Action<T, object?> Setter);
+        private sealed record PropMeta(string JsonName, Type PropertyType, Func<T, object?> Getter, Action<T, object?> Setter, IDefaultable? Defaultable);
 
         private static readonly PropMeta[] _props = BuildProps();
         private static readonly Dictionary<string, PropMeta> _map = _props.ToDictionary(p => p.JsonName, StringComparer.Ordinal);
@@ -54,7 +54,11 @@ namespace NeeView
                     var setExp = Expression.Call(inst2, p.SetMethod!, valCast);
                     var setter = Expression.Lambda<Action<T, object?>>(setExp, inst2, val).Compile();
 
-                    return new PropMeta(jsonName, p.PropertyType, getter, setter);
+                    // defaultable
+                    var defAttr = p.GetCustomAttribute<DiffJsonDefaultAttribute>(false) ?? p.PropertyType.GetCustomAttribute<DiffJsonDefaultAttribute>(false);
+                    var defaultable = defAttr?.CreateDefaultable();
+
+                    return new PropMeta(jsonName, p.PropertyType, getter, setter, defaultable);
                 })
                 .ToArray();
         }
@@ -138,7 +142,7 @@ namespace NeeView
                 var current = prop.Getter(value!);
                 var def = prop.Getter(defaultValue);
 
-                if (!Equals(current, def))
+                if (prop.Defaultable is null ? !Equals(current, def) : !prop.Defaultable.IsDefault(current))
                 {
                     writer.WritePropertyName(prop.JsonName);
                     JsonSerializer.Serialize(writer, current, prop.PropertyType, options);
@@ -205,4 +209,28 @@ namespace NeeView
         void WriteInnerNoDiff(Utf8JsonWriter writer, object value, JsonSerializerOptions options);
     }
 
+
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class)]
+    public class DiffJsonDefaultAttribute : Attribute
+    {
+        public DiffJsonDefaultAttribute(Type defaultableType)
+        {
+            Debug.Assert(defaultableType.IsAssignableTo(typeof(IDefaultable)));
+
+            DefaultableType = defaultableType;
+        }
+
+        public Type DefaultableType { get; }
+
+        public IDefaultable CreateDefaultable()
+        {
+            return (IDefaultable)Activator.CreateInstance(DefaultableType)!;
+        }
+    }
+
+
+    public interface IDefaultable
+    {
+        bool IsDefault(object? obj);
+    }
 }

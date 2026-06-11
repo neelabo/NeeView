@@ -46,7 +46,7 @@ namespace NeeView
 
         public void AddCache()
         {
-            Config.Current.ImageEffect.Caches.Add(Effect);
+            Config.Current.ImageEffectCache.Add(Effect);
         }
 
         public void Reset()
@@ -67,7 +67,7 @@ namespace NeeView
             }
             else
             {
-                return Config.Current.ImageEffect.Caches.Get(type);
+                return Config.Current.ImageEffectCache.Get(type);
             }
         }
     }

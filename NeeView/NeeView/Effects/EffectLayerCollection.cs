@@ -94,7 +94,7 @@ namespace NeeView
             if (!CanDelete(layer)) return;
 
             this.Remove(layer);
-            Config.Current.ImageEffect.Caches.Add(layer.Effect);
+            Config.Current.ImageEffectCache.Add(layer.Effect);
         }
     }
 }

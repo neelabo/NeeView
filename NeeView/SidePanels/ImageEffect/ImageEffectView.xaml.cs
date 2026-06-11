@@ -1,5 +1,7 @@
-﻿using NeeView.Effects;
+﻿using NeeView.Windows.Media;
+using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -17,6 +19,9 @@ namespace NeeView
             InitializeComponent();
 
             _vm = new ImageEffectViewModel();
+            _vm.RenameProfileRequested += ViewModel_RenameRequest;
+            _vm.DeleteConfirmRequested += ViewModel_DeleteConfirmRequested;
+
             this.DataContext = _vm;
 
             this.IsVisibleChanged += ImageEffectView_IsVisibleChanged;
@@ -56,5 +61,54 @@ namespace NeeView
                 _isFocusRequest = true;
             }
         }
+
+        private async void ViewModel_RenameRequest(object? sender, EventArgs e)
+        {
+            var comboBox = this.EffectProfileComboBox;
+            comboBox.UpdateLayout();
+
+            var textBlock = VisualTreeUtility.FindVisualChild<TextBlock>(comboBox, "FileNameTextBlock");
+            if (textBlock is null) return;
+
+            var rename = new EffectProfileRenameControl(new RenameControlSource(comboBox, textBlock), Rename);
+            await rename.ShowAsync();
+
+            bool Rename(string name)
+            {
+                return _vm.RenameProfile(name);
+            }
+        }
+
+        private void ViewModel_DeleteConfirmRequested(object? sender, DeleteConfirmEventArgs e)
+        {
+            var dialog = new MessageDialog(e.Caption, e.Message);
+            dialog.Owner = Window.GetWindow(this);
+            dialog.Commands.Add(UICommands.Delete);
+            dialog.Commands.Add(UICommands.Cancel);
+            var result = dialog.ShowDialog();
+            e.DialogResult = result.IsPossible;
+        }
     }
+
+
+    public class EffectProfileRenameControl : RenameControl
+    {
+        private readonly Func<string, bool> _renameFunc;
+
+        public EffectProfileRenameControl(RenameControlSource source, Func<string, bool> renameFunc) : base(source)
+        {
+            _renameFunc = renameFunc;
+            this.IsInvalidSeparatorChars = true;
+            this.IsInvalidFileNameChars = true;
+        }
+
+        protected override async Task<bool> OnRenameAsync(string oldValue, string newValue)
+        {
+            if (oldValue == newValue) return true;
+
+            var result = _renameFunc(newValue);
+            return result;
+        }
+    }
+
 }

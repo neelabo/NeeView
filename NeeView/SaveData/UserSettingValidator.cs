@@ -294,9 +294,13 @@ namespace NeeView
                 self.Config.Window.IsAutoHideInFullDesktop = self.Config.Window.IsAutoHideInFullScreen;
 
                 self.Config.ImageEffect.Layers = new EffectLayerCollection() { new EffectLayer() {
-                        Effect = self.Config.ImageEffect.Caches.Get(self.Config.ImageEffect.EffectTypeLegacy.ToType())
+                        Effect = self.Config.ImageEffectCache.Get(self.Config.ImageEffect.EffectTypeLegacy.ToType())
                     }
                 };
+
+                var effectProfile = new EffectProfile();
+                effectProfile.Store(self.Config);
+                self.Config.EffectProfiles.Profiles = [effectProfile];
 
                 if (self.Commands != null)
                 {

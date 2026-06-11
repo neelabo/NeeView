@@ -29,6 +29,7 @@ namespace NeeView
         public Config()
         {
             View.SetBookSettingSource(BookSetting);
+            ImageEffect.SetCacheSource(ImageEffectCache);
         }
 
         public SystemConfig System { get; set; } = new SystemConfig();
@@ -96,19 +97,31 @@ namespace NeeView
         [PropertyMapLabel("SettingPage.SlideShow")]
         public SlideShowConfig SlideShow { get; set; } = new SlideShowConfig();
 
+        public EffectProfileCollectionConfig EffectProfiles { get; set; } = new EffectProfileCollectionConfig();
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
         public ImageEffectConfig ImageEffect { get; set; } = new ImageEffectConfig();
 
+        [PropertyMapIgnore]
+        [ObjectMergeReferenceCopy]
+        public EffectUnitCache ImageEffectCache { get; set; } = new();
+
         [PropertyMapLabel("Effect.CustomSize")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
         public ImageCustomSizeConfig ImageCustomSize { get; set; } = new ImageCustomSizeConfig();
 
         [PropertyMapLabel("Effect.Trim")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
         public ImageTrimConfig ImageTrim { get; set; } = new ImageTrimConfig();
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
         public ImageDotKeepConfig ImageDotKeep { get; set; } = new ImageDotKeepConfig();
 
         [PropertyMapLabel("Effect.Grid")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
         public ImageGridConfig ImageGrid { get; set; } = new ImageGridConfig();
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
         public ImageResizeFilterConfig ImageResizeFilter { get; set; } = new ImageResizeFilterConfig();
 
         public ViewConfig View { get; set; } = new ViewConfig();

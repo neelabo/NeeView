@@ -24,6 +24,7 @@ namespace NeeView
             MainViewManager.Current.Store();
             CustomLayoutPanelManager.Current.Store();
             PictureProfile.Current.StoreFileTypeToDiff();
+            EffectProfileCollection.Current.Store();
 
             var settings = new UserSetting()
             {
@@ -136,6 +137,8 @@ namespace NeeView
                 {
                     ObjectMerge.Merge(Config.Current, setting.Config, CreateConfigMergeOption(options));
                 }
+
+                EffectProfileCollection.Current.ResolveSelectedProfile();
             }
 
             if (!options.HasFlag(UserSettingLoadOption.KeepPanelLayout))
@@ -324,6 +327,8 @@ namespace NeeView
             options.Converters.Add(new DiffJsonConverter<RippleEffectUnit>());
             options.Converters.Add(new DiffJsonConverter<SwirlEffectUnit>());
 
+            options.Converters.Add(new DiffJsonConverter<EffectProfile>());
+            options.Converters.Add(new DiffJsonConverter<EffectProfileCollectionConfig>());
             options.Converters.Add(new DiffJsonConverter<ImageCustomSizeConfig>());
             options.Converters.Add(new DiffJsonConverter<ImageTrimConfig>());
             options.Converters.Add(new DiffJsonConverter<ImageDotKeepConfig>());
