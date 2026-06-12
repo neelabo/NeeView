@@ -199,5 +199,24 @@ namespace NeeView
 
             profile.Name = CreateUniqueName(name);
         }
+
+        public void SetSelectedId(int id)
+        {
+            if (!Profiles.Any(e => e.Id == id)) return;
+
+            _config.SelectedId = id;
+        }
+
+        public EffectProfile? GetNext(int offset)
+        {
+            Debug.Assert(-1 <= offset && offset <= 1);
+
+            var current = SelectedProfile;
+            if (current is null) return null;
+
+            var index = Profiles.IndexOf(current);
+            var next = (index + offset + Profiles.Count) % Profiles.Count;
+            return Profiles[next];
+        }
     }
 }

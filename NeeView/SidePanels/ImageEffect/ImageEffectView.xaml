@@ -76,7 +76,7 @@
 
             <CollectionViewSource x:Key="ProfilesViewSource" Source="{Binding Path=Profiles}" IsLiveSortingRequested="True">
                 <CollectionViewSource.SortDescriptions>
-                    <scm:SortDescription PropertyName="Name" />
+                    <scm:SortDescription />
                 </CollectionViewSource.SortDescriptions>
             </CollectionViewSource>
 
@@ -94,7 +94,7 @@
                     VerticalAlignment="Center" TabIndex="1">
                 <ComboBox.Resources>
                     <DataTemplate DataType="{x:Type local:EffectProfile}">
-                        <TextBlock x:Name="FileNameTextBlock" Text="{Binding Name}"/>
+                        <TextBlock x:Name="FileNameTextBlock" Text="{Binding DisplayName}"/>
                     </DataTemplate>
                 </ComboBox.Resources>
                 <ComboBox.InputBindings>

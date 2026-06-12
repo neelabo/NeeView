@@ -28,7 +28,7 @@ namespace NeeView
 
                 return x.IdCounter == def.IdCounter
                     && x.SelectedId == def.SelectedId
-                    && x.Profiles.SequenceEqual(def.Profiles, new EffectProfileComparer());
+                    && x.Profiles.SequenceEqual(def.Profiles, new EffectProfileEqualityComparer());
             }
         }
     }

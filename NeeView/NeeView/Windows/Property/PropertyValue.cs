@@ -162,6 +162,58 @@ namespace NeeView.Windows.Property
     }
 
 
+    public class PropertyValue_IntegerMap : PropertyValue<int>
+    {
+        private readonly Func<KeyValuePairList<int, string>>? _getMap;
+        private KeyValuePairList<int, string> _map;
+
+
+        public KeyValuePairList<int, string> Map
+        {
+            get { return _map; }
+            set { SetProperty(ref _map, value); }
+        }
+
+
+        public int SelectedValue
+        {
+            get { return Value; }
+            set { Value = value; }
+        }
+
+        public PropertyValue_IntegerMap(PropertyMemberElement setter, IEnumerable<int>? values, IKeyValueListGenerator<int>? generator) : base(setter)
+        {
+            _getMap = setter.Options?.GetIntegerMapFunc;
+            if (_getMap is null && generator is not null)
+            {
+                _getMap = () => generator.CreateMap();
+            }
+            
+            _map = _getMap?.Invoke()
+                ?? setter.Options?.IntegerMap
+                ?? values?.ToKeyValuePairList(e => e, e => e.ToString())
+                ?? new KeyValuePairList<int, string>();
+
+            Setter.ValueChanged += (s, e) =>
+            {
+                OnPropertyChanged(nameof(SelectedValue));
+            };
+        }
+
+        public override void SetValueFromString(string value)
+        {
+            Value = int.Parse(value);
+        }
+
+        public void UpdateMap()
+        {
+            if (_getMap != null)
+            {
+                this.Map = _getMap.Invoke();
+            }
+        }
+    }
+
     public class PropertyValue_StringMap : PropertyValue<string>
     {
         private readonly Func<KeyValuePairList<string, string>>? _getMap;

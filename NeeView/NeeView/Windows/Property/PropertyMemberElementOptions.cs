@@ -25,6 +25,16 @@ namespace NeeView.Windows.Property
         public Dictionary<Enum, string>? EnumMap { get; set; }
 
         /// <summary>
+        /// Integerでの選択項目指定
+        /// </summary>
+        public KeyValuePairList<int, string>? IntegerMap { get; set; }
+
+        /// <summary>
+        /// Integerでの選択項目取得
+        /// </summary>
+        public Func<KeyValuePairList<int, string>>? GetIntegerMapFunc { get; set; }
+
+        /// <summary>
         /// Stringsでの選択項目指定
         /// </summary>
         public KeyValuePairList<string, string>? StringMap { get; set; }

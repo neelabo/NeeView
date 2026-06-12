@@ -82,6 +82,15 @@
         <ComboBox ItemsSource="{Binding Map}" SelectedValuePath="Key" DisplayMemberPath="Value" SelectedValue="{Binding SelectedValue}"/>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type local:PropertyValue_IntegerMap}">
+        <ComboBox ItemsSource="{Binding Map}" SelectedValuePath="Key" DisplayMemberPath="Value" SelectedValue="{Binding SelectedValue}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="DropDownOpened">
+                    <i:CallMethodAction TargetObject="{Binding .}" MethodName="UpdateMap" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </ComboBox>
+    </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:PropertyValue_StringMap}">
         <ComboBox ItemsSource="{Binding Map}" SelectedValuePath="Key" DisplayMemberPath="Value" SelectedValue="{Binding SelectedValue}">

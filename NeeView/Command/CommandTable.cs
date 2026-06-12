@@ -312,6 +312,9 @@ namespace NeeView
                 new PrevPlaylistItemInBookCommand(),
                 new NextPlaylistItemInBookCommand(),
 
+                new SetEffectProfileCommand(),
+                new NextEffectProfileCommand(),
+                new PrevEffectProfileCommand(),
                 new ToggleCustomSizeCommand(),
                 new ToggleTrimCommand(),
                 new ToggleResizeFilterCommand(),

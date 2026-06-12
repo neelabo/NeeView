@@ -1,15 +1,16 @@
-﻿#define LOCAL_DEBUG
+﻿//#define LOCAL_DEBUG
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using NeeLaboratory.Generators;
 using NeeView.Properties;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace NeeView
 {
     [LocalDebug]
-    public partial class EffectProfile : ObservableObject
+    public partial class EffectProfile : ObservableObject, IComparable, IComparable<EffectProfile>
     {
         public static string DefaultName => TextResources.GetString("Word.Profile") + " 1";
 
@@ -25,7 +26,9 @@ namespace NeeView
         public int Id { get; set; } = 0;
 
         [ObservableProperty]
-        public partial string Name { get; set; } = "Default";
+        [NotifyPropertyChangedFor(nameof(DisplayName))]
+        public partial string Name { get; set; } = "";
+        public string DisplayName => string.IsNullOrEmpty(Name) ? TextResources.GetString("Word.Default") : Name;
 
         public ImageCustomSizeConfig ImageCustomSize { get; set; } = new();
         public ImageTrimConfig ImageTrim { get; set; } = new();
@@ -80,10 +83,38 @@ namespace NeeView
         {
             return $"{Id}: {Name}";
         }
+
+        #region IComparable
+
+        public int CompareTo(EffectProfile? other)
+        {
+            if (other == null)
+            {
+                return 1;
+            }
+
+            if (other.Id == 0)
+            {
+                return this.Id == 0 ? 0 : 1;
+            }
+            else if (this.Id == 0)
+            {
+                return -1;
+            }
+
+            return this.Name.CompareTo(other.Name);
+        }
+
+        public int CompareTo(object? obj)
+        {
+            return CompareTo(obj as EffectProfile);
+        }
+
+        #endregion IComparable
     }
 
 
-    public class EffectProfileComparer : IEqualityComparer<EffectProfile>
+    public class EffectProfileEqualityComparer : IEqualityComparer<EffectProfile>
     {
         public bool Equals(EffectProfile? x, EffectProfile? y)
         {
@@ -95,7 +126,7 @@ namespace NeeView
 
         public int GetHashCode([DisallowNull] EffectProfile obj)
         {
-            var hashCode = new global::System.HashCode();
+            var hashCode = new HashCode();
 
             hashCode.Add(obj.GetType());
             hashCode.Add(obj.Id);

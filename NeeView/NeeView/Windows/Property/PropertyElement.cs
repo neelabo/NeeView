@@ -119,6 +119,10 @@ namespace NeeView.Windows.Property
                         InitializeByPathAttribute(pathAttribute);
                         break;
 
+                    case PropertyIntegersAttribute integersAttribute:
+                        InitializeByIntegersAttribute(integersAttribute);
+                        break;
+
                     case PropertyStringsAttribute stringsAttribute:
                         InitializeByStringsAttribute(stringsAttribute);
                         break;
@@ -326,6 +330,18 @@ namespace NeeView.Windows.Property
             this.TypeValue = typeCode switch
             {
                 TypeCode.String => new PropertyValue_FilePath(this, attribute.FileDialogType, attribute.Filter, attribute.Note, attribute.DefaultFileName),
+                _ => throw new NotSupportedException(),
+            };
+        }
+
+
+        [MemberNotNull(nameof(TypeValue))]
+        private void InitializeByIntegersAttribute(PropertyIntegersAttribute attribute)
+        {
+            TypeCode typeCode = Type.GetTypeCode(_info.PropertyType);
+            this.TypeValue = typeCode switch
+            {
+                TypeCode.Int32 => new PropertyValue_IntegerMap(this, attribute.Integers, attribute.GetMapGenerator()),
                 _ => throw new NotSupportedException(),
             };
         }

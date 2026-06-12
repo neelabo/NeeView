@@ -1,4 +1,5 @@
-﻿using NeeView.Properties;
+﻿using NeeLaboratory.Collection;
+using NeeView.Properties;
 using NeeView.Windows.Controls;
 using System;
 using System.Reflection;
@@ -84,6 +85,27 @@ namespace NeeView.Windows.Property
         }
     }
 
+    [AttributeUsage(AttributeTargets.Property)]
+    public class PropertyIntegersAttribute : PropertyMemberAttribute
+    {
+        public int[]? Integers;
+        public Type? MapGenerator;
+
+        public PropertyIntegersAttribute() : base()
+        {
+        }
+
+        public IKeyValueListGenerator<int>? GetMapGenerator()
+        {
+            if (MapGenerator is null) return null;
+            return Activator.CreateInstance(MapGenerator) as IKeyValueListGenerator<int> ?? throw new InvalidOperationException($"Invalid type: {MapGenerator.FullName}");
+        }
+    }
+
+    public interface IKeyValueListGenerator<T>
+    {
+        KeyValuePairList<T, string> CreateMap();
+    }
 
     [AttributeUsage(AttributeTargets.Property)]
     public class PropertyStringsAttribute : PropertyMemberAttribute

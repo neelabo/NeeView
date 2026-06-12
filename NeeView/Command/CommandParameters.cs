@@ -88,6 +88,7 @@ namespace NeeView
             typeof(MoveBookToFolderAsCommandParameter),
             typeof(ToggleBookmarkCommandParameter),
             typeof(MoveMediaPositionCommandParameter),
+            typeof(SetEffectProfileCommandParameter),
         };
 
         static JsonCommandParameterConverter()
