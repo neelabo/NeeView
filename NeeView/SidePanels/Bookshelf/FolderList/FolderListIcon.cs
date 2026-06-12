@@ -24,16 +24,6 @@ namespace NeeView
             DependencyProperty.Register("FolderItem", typeof(FolderItem), typeof(FolderListIcon), new PropertyMetadata(null));
 
 
-        public bool IsKeepArea
-        {
-            get { return (bool)GetValue(IsKeepAreaProperty); }
-            set { SetValue(IsKeepAreaProperty, value); }
-        }
-
-        public static readonly DependencyProperty IsKeepAreaProperty =
-            DependencyProperty.Register("IsKeepArea", typeof(bool), typeof(FolderListIcon), new PropertyMetadata(false));
-
-
         public ImageSource? UnlinkedIcon
         {
             get { return (ImageSource)GetValue(UnlinkedIconProperty); }
@@ -72,6 +62,24 @@ namespace NeeView
 
         public static readonly DependencyProperty PlaylistIconProperty =
             DependencyProperty.Register("PlaylistIcon", typeof(ImageSource), typeof(FolderListIcon), new PropertyMetadata(null));
+    }
+
+
+    public partial class FolderMarkIcon : Control
+    {
+        static FolderMarkIcon()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(FolderMarkIcon), new FrameworkPropertyMetadata(typeof(FolderMarkIcon)));
+        }
+
+        public FolderItem? FolderItem
+        {
+            get { return (FolderItem)GetValue(FolderItemProperty); }
+            set { SetValue(FolderItemProperty, value); }
+        }
+
+        public static readonly DependencyProperty FolderItemProperty =
+            DependencyProperty.Register("FolderItem", typeof(FolderItem), typeof(FolderMarkIcon), new PropertyMetadata(null));
     }
 
 
@@ -116,6 +124,27 @@ namespace NeeView
             }
 
             return null;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class FolderItemToFolderListIconVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is FolderItem folderItem)
+            {
+                if (folderItem.IsUnlinked || folderItem.IsDirectory || folderItem.IsLink || folderItem.IsPlaylist)
+                {
+                    return Visibility.Visible;
+                }
+            }
+
+            return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

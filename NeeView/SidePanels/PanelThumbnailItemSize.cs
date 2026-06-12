@@ -128,6 +128,7 @@ namespace NeeView
                 case nameof(_profile.ShapeHeight):
                 case nameof(_profile.IsTextVisible):
                 case nameof(_profile.TextHeight):
+                case nameof(_profile.IsIconOverlay):
                     Update();
                     break;
             }
@@ -140,8 +141,11 @@ namespace NeeView
 
         private Size GetItemSize()
         {
+            var iconHeight = _profile.IsIconOverlay ? 0.0 : (IconSize.Height + 2.0);
+            var textHeight = _profile.IsTextVisible ? Math.Max(_profile.TextHeight, iconHeight) : iconHeight;
+
             var width = Math.Max(_profile.ShapeWidth, IconSize.Width) + Margin * 2.0;
-            var height = Math.Max(_profile.ShapeHeight, IconSize.Height) + SelectHeight + (_profile.IsTextVisible ? Math.Max(_profile.TextHeight, IconSize.Height) : 0.0) + Margin * 2.0;
+            var height = Math.Max(_profile.ShapeHeight, IconSize.Height + 2.0) + SelectHeight + textHeight + Margin * 2.0;
             var size = new Size(width, height);
             LocalDebug.WriteLine($"Thumbnail: {size:F2}");
             Debug.Assert(double.IsNormal(size.Width));

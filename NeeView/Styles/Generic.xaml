@@ -151,6 +151,7 @@
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <local:FolderItemIconOverlayToVisibilityConverter x:Key="FolderItemIconOverlayToVisibilityConverter"/>
     <local:FolderItemIconOverlayToImageSourceConverter x:Key="FolderItemIconOverlayToImageSourceConverter"/>
+    <local:FolderItemToFolderListIconVisibilityConverter x:Key="FolderItemToFolderListIconVisibilityConverter"/>
 
     <Style TargetType="{x:Type local:FolderListIcon}">
         <Setter Property="Focusable" Value="False"/>
@@ -162,26 +163,36 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:FolderListIcon}">
-                    <DockPanel Height="20" LastChildFill="False">
-                        <Grid DockPanel.Dock="Right" Width="18" Height="18" Margin="2,0,0,0" Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FolderItem.IsUnlinked, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <DockPanel Height="20" LastChildFill="False" Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FolderItem, Converter={StaticResource FolderItemToFolderListIconVisibilityConverter}}">
+                        <Border x:Name="PART_Unlink" DockPanel.Dock="Right" Width="18" Height="18" Margin="2,0,0,0" Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FolderItem.IsUnlinked, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Image Source="{TemplateBinding UnlinkedIcon}" Width="16" Height="16" Margin="0,0,0,0"/>
-                        </Grid>
-                        <Grid x:Name="PART_Folder" DockPanel.Dock="Right">
-                            <Grid x:Name="PART_Spacer" Width="18" Height="18" Margin="2,0,0,0" Visibility="{TemplateBinding IsKeepArea, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                            <Grid Width="18" Height="18" Margin="2,0,0,0" Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FolderItem.IsDirectory, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        </Border>
+                        <Grid x:Name="PART_Folder">
+                            <Border Width="18" Height="18" Margin="2,0,0,0" Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FolderItem.IsDirectory, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <Image Source="{TemplateBinding FolderIcon}" Width="18" Height="18"/>
-                            </Grid>
-                            <Grid Width="18" Height="18" Margin="2,0,0,0" Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FolderItem.IsLink, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            </Border>
+                            <Border Width="18" Height="18" Margin="2,0,0,0" Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FolderItem.IsLink, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <Image Source="{TemplateBinding LinkIcon}" Width="10" Height="10" Margin="0,2,4,2"/>
-                            </Grid>
-                            <Grid Width="18" Height="18" Margin="2,0,0,2" Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FolderItem.IsPlaylist, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            </Border>
+                            <Border Width="18" Height="18" Margin="2,0,0,2" Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FolderItem.IsPlaylist, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <Image Source="{TemplateBinding PlaylistIcon}" Width="16" Height="16" Margin="0,0,0,0"/>
-                            </Grid>
-                        </Grid>
-                        <Grid Width="18" Height="18" Margin="2,0,0,0" Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FolderItem.IconOverlay, Converter={StaticResource FolderItemIconOverlayToVisibilityConverter}}" >
-                            <Image VerticalAlignment="Center" HorizontalAlignment="Center" Width="14" Height="14" Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FolderItem.IconOverlay, Converter={StaticResource FolderItemIconOverlayToImageSourceConverter}}"/>
+                            </Border>
                         </Grid>
                     </DockPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type local:FolderMarkIcon}">
+        <Setter Property="Focusable" Value="False"/>
+        <Setter Property="Height" Value="20"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:FolderMarkIcon}">
+                    <Border x:Name="PART_Mark" Width="18" Height="20" Margin="2,0,0,0" Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FolderItem.IconOverlay, Converter={StaticResource FolderItemIconOverlayToVisibilityConverter}}" >
+                        <Image VerticalAlignment="Center" HorizontalAlignment="Center" Width="14" Height="14" Source="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=FolderItem.IconOverlay, Converter={StaticResource FolderItemIconOverlayToImageSourceConverter}}"/>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -821,23 +832,25 @@
     <local:BackgroundBrushToForegroundBrushConverter x:Key="BackgroundBrushToForegroundBrushConverter" />
 
     <DataTemplate x:Key="TagTemplate">
-        <Border x:Name="RootBorder" CornerRadius="8" Margin="2,0" VerticalAlignment="Center">
-            <Border.Style>
-                <Style TargetType="Border">
-                    <Setter Property="Background" Value="{Binding Background}" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding Background}" Value="{x:Null}">
-                            <Setter Property="Background" Value="{DynamicResource Tag.Background}" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
-            <TextBlock Text="{Binding Name}" Padding="8,1" Foreground="{Binding ElementName=RootBorder, Path=Background, Converter={StaticResource BackgroundBrushToForegroundBrushConverter}}">
+        <Grid Margin="2,0" VerticalAlignment="Center" HorizontalAlignment="Left">
+            <Border x:Name="RootBorder" CornerRadius="8" Opacity="{Binding RelativeSource={RelativeSource AncestorType=local:TagItemsControl}, Path=ItemOpacity}">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Background" Value="{Binding Background}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Background}" Value="{x:Null}">
+                                <Setter Property="Background" Value="{DynamicResource Tag.Background}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+            </Border>
+            <TextBlock Text="{Binding Name}" Padding="8,1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{Binding ElementName=RootBorder, Path=Background, Converter={StaticResource BackgroundBrushToForegroundBrushConverter}}">
                 <TextBlock.LayoutTransform>
                     <ScaleTransform ScaleX="0.8" ScaleY="0.8" />
                 </TextBlock.LayoutTransform>
             </TextBlock>
-        </Border>
+        </Grid>
     </DataTemplate>
 
     <!--#endregion Tag-->

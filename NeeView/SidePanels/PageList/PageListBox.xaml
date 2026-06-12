@@ -50,6 +50,9 @@
         <local:BrushAlphaToVisibilityConverter x:Key="BrushAlphaToVisibilityConverter" />
         <local:PendingCountToOpacityConverter x:Key="PendingCountToOpacityConverter" />
         <local:ArchivePageToFolderImageSourceConverter x:Key="ArchivePageToFolderImageSourceConverter" FolderImageSource="{StaticResource fic_folder}" FolderZipImageSource="{StaticResource fic_folder_zip}" FolderMediaImageSource="{StaticResource fic_folder_media}"/>
+        <local:BrushOpacityConverter x:Key="BrushOpacityConverter" />
+
+        <nw:BindingProxy x:Key="PanelBackgroundProxy" Data="{DynamicResource Panel.Background}" />
 
         <Style x:Key="NameStyle" TargetType="TextBlock">
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
@@ -80,6 +83,7 @@
         </Style>
 
         <Style x:Key="ThumbnailNameStyle" TargetType="TextBlock" BasedOn="{StaticResource NameStyle}">
+            <Setter Property="Visibility" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.IsTextVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
             <Setter Property="TextWrapping" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.IsTextWrapped, Converter={StaticResource BooleanToTextWrappingConverter}}"/>
             <Setter Property="Height" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.TextHeight}"/>
         </Style>
@@ -151,10 +155,16 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="ThumbnailIconOverlayBorderStyle" TargetType="{x:Type Border}">
+            <Setter Property="Visibility" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.IsIconOverlay, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <Setter Property="Background" Value="{Binding Source={StaticResource PanelBackgroundProxy}, Path=Data, Converter={StaticResource BrushOpacityConverter}, ConverterParameter=0.5}"/>
+        </Style>
+
+        <Style x:Key="ThumbnailIconDockPanelStyle" TargetType="{x:Type DockPanel}" BasedOn="{StaticResource DetailToolTipDockPanel}">
+            <Setter Property="Visibility" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.IsIconOverlay, Converter={StaticResource BooleanToInverseVisibilityConverter}}"/>
+        </Style>
 
         <Style x:Key="ThumbnailTextDockPanelStyle" TargetType="{x:Type DockPanel}" BasedOn="{StaticResource DetailToolTipDockPanel}">
-            <Setter Property="Visibility" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.IsTextVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            <Setter Property="MinHeight" Value="18"/>
         </Style>
 
         <DataTemplate x:Key="NormalTemplate">
@@ -201,15 +211,19 @@
             <StackPanel Style="{StaticResource DetailToolTipBasePanel}" Margin="5" Width="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.ShapeWidth}">
                 <Grid>
                     <local:PanelListThumbnailImage Thumbnail="{Binding Thumbnail}" Opacity="{Binding PendingCount, Converter={StaticResource PendingCountToOpacityConverter}}" />
-                    <StackPanel Style="{StaticResource OverrideIconStackPanelStyle}">
-                        <Image DockPanel.Dock="Right" Style="{StaticResource PageMarkStyle}" VerticalAlignment="Top"/>
-                        <Image DockPanel.Dock="Right" Style="{StaticResource FolderIconStyle}" VerticalAlignment="Top"/>
-                    </StackPanel>
+                    <Border Style="{StaticResource ThumbnailIconOverlayBorderStyle}" VerticalAlignment="Bottom" HorizontalAlignment="Right" CornerRadius="3,0,0,0">
+                        <Image DockPanel.Dock="Right" Style="{StaticResource FolderIconStyle}" VerticalAlignment="Top" Margin="2,2,0,0"/>
+                    </Border>
+                    <Border Style="{StaticResource ThumbnailIconOverlayBorderStyle}" VerticalAlignment="Top" HorizontalAlignment="Right" CornerRadius="0,0,0,3">
+                        <Image DockPanel.Dock="Right" Style="{StaticResource PageMarkStyle}" VerticalAlignment="Top" Margin="2,0,0,2"/>
+                    </Border>
                 </Grid>
                 <Rectangle DockPanel.Dock="Bottom" Style="{StaticResource HorizontalSelectedStyle}" Margin="-5,0,-5,2"/>
                 <DockPanel Style="{StaticResource ThumbnailTextDockPanelStyle}">
-                    <Image DockPanel.Dock="Right" Style="{StaticResource FolderIconStyle}" VerticalAlignment="Top"/>
-                    <Image DockPanel.Dock="Right" Style="{StaticResource PageMarkStyle}" VerticalAlignment="Top"/>
+                    <DockPanel DockPanel.Dock="Right" Style="{StaticResource ThumbnailIconDockPanelStyle}">
+                        <Image DockPanel.Dock="Right" Style="{StaticResource FolderIconStyle}" VerticalAlignment="Top"/>
+                        <Image DockPanel.Dock="Right" Style="{StaticResource PageMarkStyle}" VerticalAlignment="Top"/>
+                    </DockPanel>
                     <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource ThumbnailNameStyle}" HorizontalAlignment="Center"/>
                 </DockPanel>
             </StackPanel>

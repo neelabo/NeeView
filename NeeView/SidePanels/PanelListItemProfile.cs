@@ -43,6 +43,7 @@ namespace NeeView
         [DefaultEquality] private bool _isTextVisible;
         [DefaultEquality] private bool _isTextWrapped;
         [DefaultEquality] private bool _isTagVisible;
+        [DefaultEquality] private bool _isIconOverlay;
         private bool _isTextHeightDirty = true;
         private double _textHeight;
 
@@ -51,7 +52,7 @@ namespace NeeView
         {
         }
 
-        public PanelListItemProfile(PanelListItemImageShape imageShape, int imageWidth, bool isDetailPopupEnabled, bool isImagePopupEnabled, bool isTextVisible, bool isTextWrapped, bool isTagVisible)
+        public PanelListItemProfile(PanelListItemImageShape imageShape, int imageWidth, bool isDetailPopupEnabled, bool isImagePopupEnabled, bool isTextVisible, bool isTextWrapped, bool isTagVisible, bool isIconOverlay)
         {
             _imageShape = imageShape;
             _imageWidth = imageWidth;
@@ -60,6 +61,7 @@ namespace NeeView
             _isTextVisible = isTextVisible;
             _isTextWrapped = isTextWrapped;
             _isTagVisible = isTagVisible;
+            _isIconOverlay = isIconOverlay;
 
             UpdateTextHeight();
         }
@@ -134,6 +136,13 @@ namespace NeeView
         {
             get { return _isTagVisible; }
             set { SetProperty(ref _isTagVisible, value); }
+        }
+
+        [PropertyMember]
+        public bool IsIconOverlay
+        {
+            get { return _isIconOverlay; }
+            set { SetProperty(ref _isIconOverlay, value); }
         }
 
         #endregion
@@ -298,28 +307,28 @@ namespace NeeView
 
     public class NormalItemProfile : PanelListItemProfile
     {
-        public NormalItemProfile() : base(PanelListItemImageShape.Square, 0, true, false, true, false, true)
+        public NormalItemProfile() : base(PanelListItemImageShape.Square, 0, true, false, true, false, true, false)
         {
         }
     }
 
     public class ContentItemProfile : PanelListItemProfile
     {
-        public ContentItemProfile() : base(PanelListItemImageShape.Square, 64, true, true, true, false, true)
+        public ContentItemProfile() : base(PanelListItemImageShape.Square, 64, true, true, true, false, true, false)
         {
         }
     }
 
     public class BannerItemProfile : PanelListItemProfile
     {
-        public BannerItemProfile() : base(PanelListItemImageShape.Banner, 200, true, false, true, false, true)
+        public BannerItemProfile() : base(PanelListItemImageShape.Banner, 200, true, false, true, false, true, false)
         {
         }
     }
 
     public class ThumbnailItemProfile : PanelListItemProfile
     {
-        public ThumbnailItemProfile() : base(PanelListItemImageShape.Original, 128, true, false, true, true, true)
+        public ThumbnailItemProfile() : base(PanelListItemImageShape.Original, 128, true, false, true, true, true, false)
         {
         }
     }
