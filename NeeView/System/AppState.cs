@@ -139,10 +139,11 @@ namespace NeeView
             // テンポラリファイル破棄？
             //Temporary.Current.RemoveTempFolder();
 
-            // 非同期処理もあるのでちょっと待つ
-            await Task.Delay(200, token);
+            // Root 要素から非表示
+            MainWindow.Current.Root.Visibility = System.Windows.Visibility.Collapsed;
 
-            // GC
+            // 非同期処理もあるのでちょっと待ってからGC
+            await Task.Delay(200, token);
             await GarbageCollectAsync();
         }
 
@@ -238,20 +239,23 @@ namespace NeeView
                     // WinProc イベント購読再開
                     IsSuspended = false;
 
+                    // 白フラッシュをなるべく目立たなくするため、最小化して Hide 解除
+                    MainWindow.Current.Root.Visibility = System.Windows.Visibility.Collapsed;
+                    MainWindow.Current.WindowState = System.Windows.WindowState.Minimized;
+                    IsHideWindow = false;
+                    
+                    // 描写を回して WindowChrome 描写反映を待つ
+                    await Task.Delay(100);
+
                     // Window 座標を復元
                     MainWindow.InitializeWindowShapeSnap();
                     MainWindow.Current.RestoreWindowPlacement();
-                    IsHideWindow = false;
 
-                    // 白フラッシュをなるべく目立たなくする処置
-                    MainWindow.Current.Root.Visibility = System.Windows.Visibility.Collapsed;
-                    await Task.Delay(100); // 描写を回す
-                    await Dispatcher.Yield(DispatcherPriority.Render);
-                    await Dispatcher.Yield(DispatcherPriority.Render);
                     MainWindow.Current.Activate();
-                    MainWindow.Current.Root.Visibility = System.Windows.Visibility.Visible;
 
                     await App.Current.Sequence.ResumeAsync();
+
+                    MainWindow.Current.Root.Visibility = System.Windows.Visibility.Visible;
                 }
             }
         }

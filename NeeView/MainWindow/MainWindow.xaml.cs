@@ -640,7 +640,9 @@ namespace NeeView
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (AppState.Current.IsTaskTrayEnabled)
+            // タスクトレイ常駐の場合は終了キャンセル
+            // ただし Shift キーがおされている場合はそのまま終了する
+            if (AppState.Current.IsTaskTrayEnabled && (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.None)
             {
                 Trace.WriteLine($"Window.Closing Canceled: To Hide.");
                 _ = AppState.Current.SuspendAsync(CancellationToken.None);
