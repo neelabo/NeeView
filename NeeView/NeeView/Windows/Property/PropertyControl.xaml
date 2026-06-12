@@ -13,6 +13,7 @@
 
         <Style x:Key="ClickBorderStyle" TargetType="Border">
             <EventSetter Event="MouseLeftButtonDown" Handler="Root_MouseLeftButtonDown"/>
+            <Setter Property="Background" Value="Transparent"/>
             <Setter Property="CornerRadius" Value="4"/>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">

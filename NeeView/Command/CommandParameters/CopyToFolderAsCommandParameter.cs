@@ -23,7 +23,7 @@ namespace NeeView
         /// <summary>
         /// 選択されたフォルダーの番号。0 は未選択
         /// </summary>
-        [PropertyMember(NoteConverter = typeof(IntToDestinationFolderString))]
+        [PropertyIntegers(MapGenerator = typeof(DestinationFolderMapGenerator))]
         public int Index
         {
             get { return _index; }

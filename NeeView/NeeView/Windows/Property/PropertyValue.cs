@@ -27,7 +27,7 @@ namespace NeeView.Windows.Property
         /// <summary>
         /// 項目をクリックしたときのアクション
         /// </summary>
-        public Action? Click { get; set; }
+        public Action<RoutedEventArgs>? Click { get; set; }
 
 
         public virtual string GetValueString()
@@ -112,7 +112,13 @@ namespace NeeView.Windows.Property
     {
         public PropertyValue_Boolean(PropertyMemberElement setter) : base(setter)
         {
-            Click = () => Value = !Value;
+            Click = ClickAction;
+        }
+        
+        private void ClickAction(RoutedEventArgs e)
+        {
+            Value = !Value;
+            e.Handled = true; 
         }
 
         public override void SetValueFromString(string value)
@@ -166,6 +172,7 @@ namespace NeeView.Windows.Property
     {
         private readonly Func<KeyValuePairList<int, string>>? _getMap;
         private KeyValuePairList<int, string> _map;
+        private bool _isComboBoxOpen;
 
 
         public KeyValuePairList<int, string> Map
@@ -174,11 +181,16 @@ namespace NeeView.Windows.Property
             set { SetProperty(ref _map, value); }
         }
 
-
         public int SelectedValue
         {
             get { return Value; }
             set { Value = value; }
+        }
+
+        public bool IsComboBoxOpen
+        {
+            get { return _isComboBoxOpen; }
+            set { SetProperty(ref _isComboBoxOpen, value); }
         }
 
         public PropertyValue_IntegerMap(PropertyMemberElement setter, IEnumerable<int>? values, IKeyValueListGenerator<int>? generator) : base(setter)
@@ -198,6 +210,17 @@ namespace NeeView.Windows.Property
             {
                 OnPropertyChanged(nameof(SelectedValue));
             };
+
+            Click = ClickAction;
+        }
+
+        private void ClickAction(RoutedEventArgs e)
+        {
+            if (!IsComboBoxOpen)
+            {
+                IsComboBoxOpen = true;
+                e.Handled = true;
+            }
         }
 
         public override void SetValueFromString(string value)
@@ -218,6 +241,7 @@ namespace NeeView.Windows.Property
     {
         private readonly Func<KeyValuePairList<string, string>>? _getMap;
         private KeyValuePairList<string, string> _map;
+        private bool _isComboBoxOpen;
 
 
         public KeyValuePairList<string, string> Map
@@ -226,11 +250,16 @@ namespace NeeView.Windows.Property
             set { SetProperty(ref _map, value); }
         }
 
-
         public string? SelectedValue
         {
             get { return (string?)Value; }
             set { Value = value; }
+        }
+
+        public bool IsComboBoxOpen
+        {
+            get { return _isComboBoxOpen; }
+            set { SetProperty(ref _isComboBoxOpen, value); }
         }
 
         public PropertyValue_StringMap(PropertyMemberElement setter, IEnumerable<string>? strings) : base(setter)
@@ -245,6 +274,17 @@ namespace NeeView.Windows.Property
             {
                 OnPropertyChanged(nameof(SelectedValue));
             };
+
+            Click = ClickAction;
+        }
+
+        private void ClickAction(RoutedEventArgs e)
+        {
+            if (!IsComboBoxOpen)
+            {
+                IsComboBoxOpen = true;
+                e.Handled = true;
+            }
         }
 
         public override void SetValueFromString(string value)
@@ -299,6 +339,7 @@ namespace NeeView.Windows.Property
     public class PropertyValue_Enum : PropertyValue<object>
     {
         private readonly Type _type;
+        private bool _isComboBoxOpen;
 
         public Dictionary<Enum, string> Map { get; private set; }
 
@@ -306,6 +347,12 @@ namespace NeeView.Windows.Property
         {
             get { return Value is null ? Map.Keys.First() : (Enum)Value; }
             set { Value = value; }
+        }
+
+        public bool IsComboBoxOpen
+        {
+            get { return _isComboBoxOpen; }
+            set { SetProperty(ref _isComboBoxOpen, value); }
         }
 
         public PropertyValue_Enum(PropertyMemberElement setter, Type enumType) : base(setter)
@@ -317,6 +364,17 @@ namespace NeeView.Windows.Property
             {
                 OnPropertyChanged(nameof(SelectedValue));
             };
+
+            Click = ClickAction;
+        }
+
+        private void ClickAction(RoutedEventArgs e)
+        {
+            if (!IsComboBoxOpen)
+            {
+                IsComboBoxOpen = true;
+                e.Handled = true;
+            }
         }
 
         public override void SetValueFromString(string value)

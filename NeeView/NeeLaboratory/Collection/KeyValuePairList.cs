@@ -30,5 +30,10 @@ namespace NeeLaboratory.Collection
             }
             return list;
         }
+
+        public static KeyValuePairList<TKey, TElement> ToKeyValuePairList<TKey, TElement>(this IEnumerable<KeyValuePair<TKey, TElement>> source)
+        {
+            return new KeyValuePairList<TKey, TElement>(source);
+        }
     }
 }

@@ -79,11 +79,11 @@
 
 
     <DataTemplate DataType="{x:Type local:PropertyValue_Enum}">
-        <ComboBox ItemsSource="{Binding Map}" SelectedValuePath="Key" DisplayMemberPath="Value" SelectedValue="{Binding SelectedValue}"/>
+        <ComboBox ItemsSource="{Binding Map}" SelectedValuePath="Key" DisplayMemberPath="Value" SelectedValue="{Binding SelectedValue}" IsDropDownOpen="{Binding IsComboBoxOpen, Mode=TwoWay}" />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:PropertyValue_IntegerMap}">
-        <ComboBox ItemsSource="{Binding Map}" SelectedValuePath="Key" DisplayMemberPath="Value" SelectedValue="{Binding SelectedValue}">
+        <ComboBox ItemsSource="{Binding Map}" SelectedValuePath="Key" DisplayMemberPath="Value" SelectedValue="{Binding SelectedValue}" IsDropDownOpen="{Binding IsComboBoxOpen, Mode=TwoWay}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="DropDownOpened">
                     <i:CallMethodAction TargetObject="{Binding .}" MethodName="UpdateMap" />
@@ -93,7 +93,7 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:PropertyValue_StringMap}">
-        <ComboBox ItemsSource="{Binding Map}" SelectedValuePath="Key" DisplayMemberPath="Value" SelectedValue="{Binding SelectedValue}">
+        <ComboBox ItemsSource="{Binding Map}" SelectedValuePath="Key" DisplayMemberPath="Value" SelectedValue="{Binding SelectedValue}" IsDropDownOpen="{Binding IsComboBoxOpen, Mode=TwoWay}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="DropDownOpened">
                     <i:CallMethodAction TargetObject="{Binding .}" MethodName="UpdateMap" />

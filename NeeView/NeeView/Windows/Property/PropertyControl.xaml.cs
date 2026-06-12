@@ -189,7 +189,7 @@ namespace NeeView.Windows.Property
         {
             if (Value is PropertyValue propertyValue)
             {
-                propertyValue.Click?.Invoke();
+                propertyValue.Click?.Invoke(e);
             }
         }
     }

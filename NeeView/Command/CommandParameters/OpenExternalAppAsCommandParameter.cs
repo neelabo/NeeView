@@ -24,7 +24,7 @@ namespace NeeView
         /// <summary>
         /// 選択された外部アプリの番号。0 は未選択
         /// </summary>
-        [PropertyMember(NoteConverter = typeof(IntToExternalAppString))]
+        [PropertyIntegers(MapGenerator = typeof(ExternalAppMapGenerator))]
         public int Index
         {
             get { return _index; }
