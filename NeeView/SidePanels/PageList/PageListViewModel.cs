@@ -87,7 +87,7 @@ namespace NeeView
         [RelayCommand(CanExecute = nameof(CanMoveToUp))]
         private void MoveToUp()
         {
-            _pageList.CanMoveToParent();
+            _pageList.MoveToParent();
         }
 
         [RelayCommand]
