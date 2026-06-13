@@ -1011,7 +1011,9 @@ namespace NeeView
 
             if (path is null) return;
 
-            await this.SetPlaceAsync(path, null, FolderSetPlaceOption.Focus | FolderSetPlaceOption.UpdateHistory);
+            var select = (path == Place?.GetParent()) ? new FolderItemPosition(Place) : null;
+            
+            await this.SetPlaceAsync(path, select, FolderSetPlaceOption.Focus | FolderSetPlaceOption.UpdateHistory);
 
             CloseBookIfNecessary();
         }
