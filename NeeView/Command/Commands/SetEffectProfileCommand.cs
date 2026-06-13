@@ -18,7 +18,7 @@ namespace NeeView
         {
             var parameter = e.Parameter.Cast<SetEffectProfileCommandParameter>();
             var profile = EffectProfileCollection.Current.Profiles.FirstOrDefault(e => e.Id == parameter.Id);
-            return TextResources.GetString("Word.EffectProfile") + ": " + (profile?.Name ?? parameter.Id.ToString());
+            return TextResources.GetString("Word.EffectProfile") + ": " + (profile?.DisplayName ?? "");
         }
 
         public override bool CanExecute(object? sender, CommandContext e)

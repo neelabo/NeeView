@@ -18,7 +18,7 @@ namespace NeeView
         public override string ExecuteMessage(object? sender, CommandContext e)
         {
             var profile = GetNextEffectProfile();
-            return TextResources.GetString("Word.EffectProfile") + ": " + profile?.Name;
+            return TextResources.GetString("Word.EffectProfile") + ": " + profile?.DisplayName;
         }
 
         public override bool CanExecute(object? sender, CommandContext e)
