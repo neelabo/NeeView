@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:nv="clr-namespace:NeeView"
-                    xmlns:nvc="clr-namespace:NeeView.Windows.Controls" 
+                    xmlns:nwc="clr-namespace:NeeView.Windows.Controls" 
                     xmlns:osc="clr-namespace:OpenSourceControls"
                     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                     xmlns:local="clr-namespace:NeeView.Windows.Property">
@@ -25,44 +25,44 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:PropertyValue_String}">
-        <nvc:TextBoxWithMessage Text="{Binding Value, Mode=TwoWay}" EmptyMessage="{Binding EmptyMessage}"/>
+        <nwc:TextBoxWithMessage Text="{Binding Value, Mode=TwoWay}" EmptyMessage="{Binding EmptyMessage}"/>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:PropertyValue_StringRegex}">
-        <nvc:TextBoxWithMessage EmptyMessage="{Binding EmptyMessage}" Validation.ErrorTemplate="{StaticResource NVValidationTemplate}">
-            <nvc:TextBoxWithMessage.Text>
+        <nwc:TextBoxWithMessage EmptyMessage="{Binding EmptyMessage}" Validation.ErrorTemplate="{StaticResource NVValidationTemplate}">
+            <nwc:TextBoxWithMessage.Text>
                 <Binding Path="Value" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
                         <local:RegexValidationRule />
                     </Binding.ValidationRules>
                 </Binding>
-            </nvc:TextBoxWithMessage.Text>
-        </nvc:TextBoxWithMessage>
+            </nwc:TextBoxWithMessage.Text>
+        </nwc:TextBoxWithMessage>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:PropertyValue_Integer}">
-        <nvc:EnterTriggerTextBox Text="{Binding Value}"/>
+        <nwc:EnterTriggerTextBox Text="{Binding Value}"/>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:PropertyValue_IntegerRange}">
         <DockPanel KeyboardNavigation.TabNavigation="Local">
-            <nvc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding Value}" Slider="{Binding ElementName=InnerSlider}" Width="70" VerticalAlignment="Center" Margin="5,0,0,0" TabIndex="2"/>
+            <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding Value}" Slider="{Binding ElementName=InnerSlider}" Width="70" VerticalAlignment="Center" Margin="5,0,0,0" TabIndex="2"/>
             <Slider x:Name="InnerSlider" Value="{Binding Range.Value}" Minimum="{Binding Range.Minimum}" Maximum="{Binding Range.Maximum}" SmallChange="{Binding Range.SmallChange}" LargeChange="{Binding Range.LargeChange}"
                     TickFrequency="{Binding Range.TickFrequency}" IsSnapToTickEnabled="True" VerticalAlignment="Center" TabIndex="1"/>
         </DockPanel>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:PropertyValue_Double}">
-        <nvc:EnterTriggerTextBox Text="{Binding Value, StringFormat={}{0:0.#####}}" />
+        <nwc:EnterTriggerTextBox Text="{Binding Value, StringFormat={}{0:0.#####}}" />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:PropertyValue_DoubleFloat}">
-        <nvc:EnterTriggerTextBox Text="{Binding Value, StringFormat={}{0:0.0####}}" />
+        <nwc:EnterTriggerTextBox Text="{Binding Value, StringFormat={}{0:0.0####}}" />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:PropertyValue_DoubleRange}">
         <DockPanel KeyboardNavigation.TabNavigation="Local">
-            <nvc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding Value, StringFormat={}{0:0.#####}}" Slider="{Binding ElementName=InnerSlider}" Width="70" VerticalAlignment="Center" Margin="5,0,0,0" TabIndex="2"/>
+            <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding Value, StringFormat={}{0:0.#####}}" Slider="{Binding ElementName=InnerSlider}" Width="70" VerticalAlignment="Center" Margin="5,0,0,0" TabIndex="2"/>
             <Slider x:Name="InnerSlider" Value="{Binding Range.Value}" Minimum="{Binding Range.Minimum}" Maximum="{Binding Range.Maximum}" SmallChange="{Binding Range.SmallChange}" LargeChange="{Binding Range.LargeChange}"
                     TickFrequency="{Binding Range.TickFrequency}" IsSnapToTickEnabled="True" VerticalAlignment="Center" TabIndex="1"/>
         </DockPanel>
@@ -70,7 +70,7 @@
 
     <DataTemplate DataType="{x:Type local:PropertyValue_Percent}">
         <DockPanel KeyboardNavigation.TabNavigation="Local">
-            <nvc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding Value, Converter={StaticResource DoubleToPercentStringConverter}}" Slider="{Binding ElementName=InnerSlider}" Width="70"
+            <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding Value, Converter={StaticResource DoubleToPercentStringConverter}}" Slider="{Binding ElementName=InnerSlider}" Width="70"
                     VerticalAlignment="Center" Margin="5,0,0,0" TabIndex="2" />
             <Slider x:Name="InnerSlider" Value="{Binding Range.Value}" Minimum="{Binding Range.Minimum}" Maximum="{Binding Range.Maximum}" SmallChange="{Binding Range.SmallChange}"
                     LargeChange="{Binding Range.LargeChange}" TickFrequency="{Binding Range.TickFrequency}" IsSnapToTickEnabled="True" VerticalAlignment="Center" TabIndex="1" />
@@ -103,30 +103,30 @@
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:PropertyValue_Point}">
-        <nvc:PointInspector Point="{Binding Value, Mode=TwoWay}"/>
+        <nwc:PointInspector Point="{Binding Value, Mode=TwoWay}"/>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:PropertyValue_Size}">
-        <nvc:SizeInspector Size="{Binding Value, Mode=TwoWay}"/>
+        <nwc:SizeInspector Size="{Binding Value, Mode=TwoWay}"/>
     </DataTemplate>
 
     <!-- TODO: IsHsvModeの参照の一般化 -->
     <DataTemplate DataType="{x:Type local:PropertyValue_Color}">
-        <nvc:ColorPicker Color="{Binding Value, Mode=TwoWay}" IsHsvMode="{Binding IsHsvMode, RelativeSource={RelativeSource AncestorType=UserControl,AncestorLevel=2}}"/>
+        <nwc:ColorPicker Color="{Binding Value, Mode=TwoWay}" IsHsvMode="{Binding IsHsvMode, RelativeSource={RelativeSource AncestorType=UserControl,AncestorLevel=2}}"/>
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:PropertyValue_FilePath}">
-        <nvc:FileNameBox Text="{Binding Value, Mode=TwoWay}" DefaultText="{Binding DefaultFileName}" Filter="{Binding Filter}" FileDialogType="{Binding FileDialogType}" Note="{Binding Note}"/>
+        <nwc:FileNameBox Text="{Binding Value, Mode=TwoWay}" DefaultText="{Binding DefaultFileName}" Filter="{Binding Filter}" FileDialogType="{Binding FileDialogType}" Note="{Binding Note}"/>
     </DataTemplate>
 
 
     <DataTemplate x:Key="PropertyValue_Boolean_ToggleSwitch">
-        <nvc:ToggleSwitch IsChecked="{Binding Value}" Height="30" HorizontalAlignment="Right" VerticalAlignment="Center" />
+        <nwc:ToggleSwitch IsChecked="{Binding Value}" Height="30" HorizontalAlignment="Right" VerticalAlignment="Center" />
     </DataTemplate>
 
     <DataTemplate x:Key="PropertyValue_Color_ComboColorPicker">
         <DockPanel KeyboardNavigation.TabNavigation="Local">
-            <nvc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding Value}" MinWidth="100" BorderThickness="1" VerticalContentAlignment="Center" TabIndex="2"/>
+            <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding Value}" MinWidth="100" BorderThickness="1" VerticalContentAlignment="Center" TabIndex="2"/>
             <osc:ComboColorPicker SelectedColor="{Binding Value, Mode=TwoWay}" TabIndex="1"/>
         </DockPanel>
     </DataTemplate>

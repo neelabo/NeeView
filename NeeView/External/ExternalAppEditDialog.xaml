@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NeeView"
-        xmlns:nvc="clr-namespace:NeeView.Windows.Controls"
+        xmlns:nwc="clr-namespace:NeeView.Windows.Controls"
         xmlns:properties="clr-namespace:NeeView.Properties"
         mc:Ignorable="d"
         Style="{StaticResource ChromeDialogStyle}" ResizeMode="NoResize"
@@ -58,13 +58,13 @@
             <TextBox Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Text="{Binding Name}" />
 
             <TextBlock Grid.Column="0" Grid.Row="1" Style="{StaticResource HeaderStyle}" Text="{properties:TextBinding OpenExternalAppCommandParameter.Command}" />
-            <nvc:FileNameBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Text="{Binding Command, Mode=TwoWay}" FileDialogType="OpenFile" Filter="EXE|*.exe|All|*.*" />
+            <nwc:FileNameBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Text="{Binding Command, Mode=TwoWay}" FileDialogType="OpenFile" Filter="EXE|*.exe|All|*.*" />
 
             <TextBlock Grid.Column="0" Grid.Row="2" Style="{StaticResource HeaderStyle}" Text="{properties:TextBinding OpenExternalAppCommandParameter.Parameter}" />
             <TextBox Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Text="{Binding Model.Parameter}" />
 
             <TextBlock Grid.Column="0" Grid.Row="3" Style="{StaticResource HeaderStyle}" Text="{properties:TextBinding OpenExternalAppCommandParameter.WorkingDirectory}" />
-            <nvc:FileNameBox Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" Text="{Binding Model.WorkingDirectory, Mode=TwoWay}" FileDialogType="Directory" />
+            <nwc:FileNameBox Grid.Column="1" Grid.Row="3" VerticalAlignment="Center" Text="{Binding Model.WorkingDirectory, Mode=TwoWay}" FileDialogType="Directory" />
 
             <TextBlock Grid.Column="0" Grid.Row="4" Style="{StaticResource HeaderStyle}" Text="{properties:TextBinding OpenExternalAppCommandParameter.ArchivePolicy}" />
             <ComboBox Grid.Column="1" Grid.Row="4" VerticalAlignment="Center" ItemsSource="{Binding ArchivePolicyList}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{Binding Model.ArchivePolicy}" />

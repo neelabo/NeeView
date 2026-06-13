@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NeeView"
-        xmlns:nvc="clr-namespace:NeeView.Windows.Controls"
+        xmlns:nwc="clr-namespace:NeeView.Windows.Controls"
         xmlns:properties="clr-namespace:NeeView.Properties"
         mc:Ignorable="d"
         Style="{StaticResource ChromeDialogStyle}"
@@ -40,7 +40,7 @@
             <TextBox Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Text="{Binding Name}" />
 
             <TextBlock Grid.Column="0" Grid.Row="1" Text="{properties:TextBinding Word.Path}" MinWidth="60" VerticalAlignment="Center" Margin="10" />
-            <nvc:FileNameBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Text="{Binding Path, Mode=TwoWay}" FileDialogType="Directory"
+            <nwc:FileNameBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Text="{Binding Path, Mode=TwoWay}" FileDialogType="Directory"
                     Note="{properties:TextBinding DestinationFolderEditDialog.Path.Remarks}" />
         </Grid>
 

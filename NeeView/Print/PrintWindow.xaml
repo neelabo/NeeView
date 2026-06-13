@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NeeView"
         xmlns:properties="clr-namespace:NeeView.Properties"
-        xmlns:nvc="clr-namespace:NeeView.Windows.Controls"
+        xmlns:nwc="clr-namespace:NeeView.Windows.Controls"
         mc:Ignorable="d"
         IsHitTestVisible="{Binding IsEnabled}"
         Style="{StaticResource ChromeWindowStyle}"
@@ -31,7 +31,7 @@
             <Setter Property="Background" Value="Transparent" />
         </Style>
 
-        <Style TargetType="nvc:EnterTriggerTextBox" BasedOn="{StaticResource {x:Type TextBox}}" />
+        <Style TargetType="nwc:EnterTriggerTextBox" BasedOn="{StaticResource {x:Type TextBox}}" />
 
         <Style x:Key="BoxHeader" TargetType="TextBlock">
             <Setter Property="MinWidth" Value="40" />
@@ -116,19 +116,19 @@
                                         <UniformGrid Columns="2" Rows="2" Margin="20,0,0,0">
                                             <DockPanel>
                                                 <TextBlock Style="{StaticResource BoxHeader}" Text="{properties:TextBinding Word.Left}" />
-                                                <nvc:EnterTriggerTextBox Text="{Binding MarginLeft}" Margin="2" TabIndex="2" />
+                                                <nwc:EnterTriggerTextBox Text="{Binding MarginLeft}" Margin="2" TabIndex="2" />
                                             </DockPanel>
                                             <DockPanel>
                                                 <TextBlock Style="{StaticResource BoxHeader}" Text="{properties:TextBinding Word.Right}" />
-                                                <nvc:EnterTriggerTextBox Text="{Binding MarginRight}" Margin="2" TabIndex="2" />
+                                                <nwc:EnterTriggerTextBox Text="{Binding MarginRight}" Margin="2" TabIndex="2" />
                                             </DockPanel>
                                             <DockPanel>
                                                 <TextBlock Style="{StaticResource BoxHeader}" Text="{properties:TextBinding Word.Up}" />
-                                                <nvc:EnterTriggerTextBox Text="{Binding MarginTop}" Margin="2" TabIndex="2" />
+                                                <nwc:EnterTriggerTextBox Text="{Binding MarginTop}" Margin="2" TabIndex="2" />
                                             </DockPanel>
                                             <DockPanel>
                                                 <TextBlock Style="{StaticResource BoxHeader}" Text="{properties:TextBinding Word.Down}" />
-                                                <nvc:EnterTriggerTextBox Text="{Binding MarginBottom}" Margin="2" TabIndex="2" />
+                                                <nwc:EnterTriggerTextBox Text="{Binding MarginBottom}" Margin="2" TabIndex="2" />
                                             </DockPanel>
                                         </UniformGrid>
 
@@ -137,11 +137,11 @@
                                             <UniformGrid Columns="2" Margin="20,0,0,0">
                                                 <DockPanel>
                                                     <TextBlock Style="{StaticResource BoxHeader}" Text="{properties:TextBinding PrintWindow.Column}" />
-                                                    <nvc:EnterTriggerTextBox Text="{Binding Model.Columns}" Margin="2" TabIndex="2" />
+                                                    <nwc:EnterTriggerTextBox Text="{Binding Model.Columns}" Margin="2" TabIndex="2" />
                                                 </DockPanel>
                                                 <DockPanel>
                                                     <TextBlock Style="{StaticResource BoxHeader}" Text="{properties:TextBinding PrintWindow.Row}" />
-                                                    <nvc:EnterTriggerTextBox Text="{Binding Model.Rows}" Margin="2" TabIndex="2" />
+                                                    <nwc:EnterTriggerTextBox Text="{Binding Model.Rows}" Margin="2" TabIndex="2" />
                                                 </DockPanel>
                                             </UniformGrid>
                                             <Button x:Name="ResetButton" Style="{StaticResource IconButton}" HorizontalAlignment="Right" Margin="0,20,0,0" Command="{Binding ResetCommand}" TabIndex="2">

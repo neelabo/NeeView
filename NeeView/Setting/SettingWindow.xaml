@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NeeView.Setting"
         xmlns:nv="clr-namespace:NeeView"
-        xmlns:nvp="clr-namespace:NeeView.Windows.Property"
-        xmlns:nvc="clr-namespace:NeeView.Windows.Controls"
-        xmlns:nvd="clr-namespace:NeeView.Windows.Data"
+        xmlns:nwp="clr-namespace:NeeView.Windows.Property"
+        xmlns:nwc="clr-namespace:NeeView.Windows.Controls"
+        xmlns:nwd="clr-namespace:NeeView.Windows.Data"
         xmlns:osc="clr-namespace:OpenSourceControls"
         xmlns:properties="clr-namespace:NeeView.Properties"
         mc:Ignorable="d"
@@ -28,16 +28,16 @@
 
 
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-            <nvd:NotBoolToVisiblityConverter x:Key="NotBoolToVisiblityConverter" />
+            <nwd:NotBoolToVisiblityConverter x:Key="NotBoolToVisiblityConverter" />
             <nv:BooleanToVisibilityConverter x:Key="NotBoolToHideVisiblityConverter" True="Hidden" False="Visible" />
             <nv:DoubleToPercentStringConverter x:Key="DoubleToPercentStringConverter" />
             <nv:DoubleToPercentMessageFontSizeStringConverter x:Key="DoubleToPercentMessageFontSizeStringConverter" />
             <nv:DoubleToPercentMenuFontSizeStringConverter x:Key="DoubleToPercentMenuFontSizeStringConverter" />
-            <nvd:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
+            <nwd:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter" />
 
-            <Style TargetType="{x:Type nvc:FormattedTextBox}" BasedOn="{StaticResource NVTextBox}" />
+            <Style TargetType="{x:Type nwc:FormattedTextBox}" BasedOn="{StaticResource NVTextBox}" />
 
-            <Style TargetType="{x:Type nvc:DragCompletedTriggerSlider}" BasedOn="{StaticResource NVSlider}" />
+            <Style TargetType="{x:Type nwc:DragCompletedTriggerSlider}" BasedOn="{StaticResource NVSlider}" />
 
             <Style x:Key="DisableStyle" TargetType="FrameworkElement">
                 <Style.Triggers>
@@ -53,9 +53,9 @@
                 <Setter Property="Foreground" Value="{DynamicResource Control.GrayText}" />
             </Style>
 
-            <DataTemplate DataType="{x:Type nvp:PropertyValue_Boolean}">
+            <DataTemplate DataType="{x:Type nwp:PropertyValue_Boolean}">
                 <StackPanel Orientation="Horizontal" Style="{StaticResource DisableStyle}">
-                    <nvc:ToggleSwitch IsChecked="{Binding Value}" MinHeight="20" HorizontalAlignment="Left" ShowState="True" />
+                    <nwc:ToggleSwitch IsChecked="{Binding Value}" MinHeight="20" HorizontalAlignment="Left" ShowState="True" />
                 </StackPanel>
             </DataTemplate>
 
@@ -63,14 +63,14 @@
                 <StackPanel>
                     <StackPanel>
                         <Grid Visibility="{Binding Range.IsEditable, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <nvc:EnterTriggerTextBox Text="{Binding Path=Value}" />
+                            <nwc:EnterTriggerTextBox Text="{Binding Path=Value}" />
                             <TextBox Text="{Binding ElementName=RangeSlider, Path=Value}"
                                     Visibility="{Binding ElementName=RangeSlider, Path=IsMouseCaptureWithin, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         </Grid>
                         <local:FormattedTextBlock Value="{Binding ElementName=RangeSlider, Path=Value}" Format="{Binding Range.Format}"
                                 Visibility="{Binding Range.IsEditable, Converter={StaticResource NotBoolToVisiblityConverter}}" />
                     </StackPanel>
-                    <nvc:DragCompletedTriggerSlider x:Name="RangeSlider" Value="{Binding Value, UpdateSourceTrigger=Explicit}" Minimum="{Binding Range.Minimum}" Maximum="{Binding Range.Maximum}"
+                    <nwc:DragCompletedTriggerSlider x:Name="RangeSlider" Value="{Binding Value, UpdateSourceTrigger=Explicit}" Minimum="{Binding Range.Minimum}" Maximum="{Binding Range.Maximum}"
                             SmallChange="{Binding Range.SmallChange}" LargeChange="{Binding Range.LargeChange}" TickFrequency="{Binding Range.TickFrequency}" IsSnapToTickEnabled="True"
                             Margin="0,5,0,0" />
                 </StackPanel>
@@ -78,10 +78,10 @@
 
             <DataTemplate x:Key="EditableRangeValueDataTemplate">
                 <StackPanel>
-                    <nvc:SliderValueTextBox Value="{Binding Path=Value}" SubValue="{Binding ElementName=RangeSlider, Path=Value}" Format="{Binding Range.Format}"
+                    <nwc:SliderValueTextBox Value="{Binding Path=Value}" SubValue="{Binding ElementName=RangeSlider, Path=Value}" Format="{Binding Range.Format}"
                             Converter="{Binding Range.Converter}" FormatConverter="{Binding Range.FormatConverter}"
                             IsSubValueEnabled="{Binding ElementName=RangeSlider, Path=IsMouseCaptureWithin}" />
-                    <nvc:DragCompletedTriggerSlider x:Name="RangeSlider" Value="{Binding Value, UpdateSourceTrigger=Explicit}" Minimum="{Binding Range.Minimum}" Maximum="{Binding Range.Maximum}"
+                    <nwc:DragCompletedTriggerSlider x:Name="RangeSlider" Value="{Binding Value, UpdateSourceTrigger=Explicit}" Minimum="{Binding Range.Minimum}" Maximum="{Binding Range.Maximum}"
                             SmallChange="{Binding Range.SmallChange}" LargeChange="{Binding Range.LargeChange}" TickFrequency="{Binding Range.TickFrequency}" IsSnapToTickEnabled="True"
                             Margin="0,5,0,0" VerticalAlignment="Center" />
                 </StackPanel>
@@ -92,7 +92,7 @@
                     <StackPanel>
                         <Grid Visibility="{Binding Range.IsEditable, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Grid Visibility="{Binding ElementName=RangeSlider, Path=IsMouseCaptureWithin, Converter={StaticResource NotBoolToVisiblityConverter}}">
-                                <nvc:EnterTriggerTextBox Text="{Binding Path=Value, Converter={StaticResource DoubleToPercentMessageFontSizeStringConverter}}"/>
+                                <nwc:EnterTriggerTextBox Text="{Binding Path=Value, Converter={StaticResource DoubleToPercentMessageFontSizeStringConverter}}"/>
                                 <TextBlock Style="{StaticResource AppendTextBlockStyle}" Text="{Binding Path=Value, Converter={StaticResource DoubleToPercentMessageFontSizeStringConverter}, ConverterParameter=pt}" />
                             </Grid>
                             <Grid Visibility="{Binding ElementName=RangeSlider, Path=IsMouseCaptureWithin, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -105,7 +105,7 @@
                             <TextBlock Style="{StaticResource AppendTextBlockStyle}" Text="{Binding ElementName=RangeSlider, Path=Value, Converter={StaticResource DoubleToPercentMessageFontSizeStringConverter}, ConverterParameter=pt}" />
                         </Grid>
                     </StackPanel>
-                    <nvc:DragCompletedTriggerSlider x:Name="RangeSlider" Value="{Binding Value, UpdateSourceTrigger=Explicit}" Minimum="{Binding Range.Minimum}" Maximum="{Binding Range.Maximum}"
+                    <nwc:DragCompletedTriggerSlider x:Name="RangeSlider" Value="{Binding Value, UpdateSourceTrigger=Explicit}" Minimum="{Binding Range.Minimum}" Maximum="{Binding Range.Maximum}"
                             SmallChange="{Binding Range.SmallChange}" LargeChange="{Binding Range.LargeChange}" TickFrequency="{Binding Range.TickFrequency}" IsSnapToTickEnabled="True"
                             Margin="0,5,0,0" />
                 </StackPanel>
@@ -116,7 +116,7 @@
                     <StackPanel>
                         <Grid Visibility="{Binding Range.IsEditable, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Grid Visibility="{Binding ElementName=RangeSlider, Path=IsMouseCaptureWithin, Converter={StaticResource NotBoolToVisiblityConverter}}">
-                                <nvc:EnterTriggerTextBox Text="{Binding Path=Value, Converter={StaticResource DoubleToPercentMenuFontSizeStringConverter}}"/>
+                                <nwc:EnterTriggerTextBox Text="{Binding Path=Value, Converter={StaticResource DoubleToPercentMenuFontSizeStringConverter}}"/>
                                 <TextBlock Style="{StaticResource AppendTextBlockStyle}" Text="{Binding Path=Value, Converter={StaticResource DoubleToPercentMenuFontSizeStringConverter}, ConverterParameter=pt}" />
                             </Grid>
                             <Grid Visibility="{Binding ElementName=RangeSlider, Path=IsMouseCaptureWithin, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -129,7 +129,7 @@
                             <TextBlock Style="{StaticResource AppendTextBlockStyle}" Text="{Binding ElementName=RangeSlider, Path=Value, Converter={StaticResource DoubleToPercentMenuFontSizeStringConverter}, ConverterParameter=pt}" />
                         </Grid>
                     </StackPanel>
-                    <nvc:DragCompletedTriggerSlider x:Name="RangeSlider" Value="{Binding Value, UpdateSourceTrigger=Explicit}" Minimum="{Binding Range.Minimum}" Maximum="{Binding Range.Maximum}"
+                    <nwc:DragCompletedTriggerSlider x:Name="RangeSlider" Value="{Binding Value, UpdateSourceTrigger=Explicit}" Minimum="{Binding Range.Minimum}" Maximum="{Binding Range.Maximum}"
                             SmallChange="{Binding Range.SmallChange}" LargeChange="{Binding Range.LargeChange}" TickFrequency="{Binding Range.TickFrequency}" IsSnapToTickEnabled="True"
                             Margin="0,5,0,0" />
                 </StackPanel>
@@ -139,7 +139,7 @@
                 <StackPanel>
                     <StackPanel>
                         <Grid Visibility="{Binding Range.IsEditable, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <nvc:EnterTriggerTextBox Text="{Binding Path=Value, Converter={StaticResource DoubleToPercentStringConverter}}"
+                            <nwc:EnterTriggerTextBox Text="{Binding Path=Value, Converter={StaticResource DoubleToPercentStringConverter}}"
                                     Visibility="{Binding ElementName=RangeSlider, Path=IsMouseCaptureWithin, Converter={StaticResource NotBoolToVisiblityConverter}}"/>
                             <TextBox Text="{Binding ElementName=RangeSlider, Path=Value, Converter={StaticResource DoubleToPercentStringConverter}}"
                                     Visibility="{Binding ElementName=RangeSlider, Path=IsMouseCaptureWithin, Converter={StaticResource BooleanToVisibilityConverter}}" />
@@ -147,54 +147,54 @@
                         <TextBlock Text="{Binding ElementName=RangeSlider, Path=Value, Converter={StaticResource DoubleToPercentStringConverter}}"
                                 Visibility="{Binding Range.IsEditable, Converter={StaticResource NotBoolToVisiblityConverter}}" />
                     </StackPanel>
-                    <nvc:DragCompletedTriggerSlider x:Name="RangeSlider" Value="{Binding Value, UpdateSourceTrigger=Explicit}" Minimum="{Binding Range.Minimum}" Maximum="{Binding Range.Maximum}"
+                    <nwc:DragCompletedTriggerSlider x:Name="RangeSlider" Value="{Binding Value, UpdateSourceTrigger=Explicit}" Minimum="{Binding Range.Minimum}" Maximum="{Binding Range.Maximum}"
                             SmallChange="{Binding Range.SmallChange}" LargeChange="{Binding Range.LargeChange}" TickFrequency="{Binding Range.TickFrequency}" IsSnapToTickEnabled="True"
                             Margin="0,5,0,0" />
                 </StackPanel>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type nvp:PropertyValue_IntegerRange}">
+            <DataTemplate DataType="{x:Type nwp:PropertyValue_IntegerRange}">
                 <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RangeValueDataTemplate}" IsTabStop="False" />
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type nvp:PropertyValue_EditableIntegerRange}">
+            <DataTemplate DataType="{x:Type nwp:PropertyValue_EditableIntegerRange}">
                 <ContentControl Content="{Binding}" ContentTemplate="{StaticResource EditableRangeValueDataTemplate}" IsTabStop="False" />
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type nvp:PropertyValue_DoubleRange}">
+            <DataTemplate DataType="{x:Type nwp:PropertyValue_DoubleRange}">
                 <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RangeValueDataTemplate}" IsTabStop="False" />
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type nvp:PropertyValue_EditableDoubleRange}">
+            <DataTemplate DataType="{x:Type nwp:PropertyValue_EditableDoubleRange}">
                 <ContentControl Content="{Binding}" ContentTemplate="{StaticResource EditableRangeValueDataTemplate}" IsTabStop="False" />
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type nvp:PropertyValue_PercentMessageFontSize}">
+            <DataTemplate DataType="{x:Type nwp:PropertyValue_PercentMessageFontSize}">
                 <ContentControl Content="{Binding}" ContentTemplate="{StaticResource PercentMessageFontSizeValueDataTemplate}" IsTabStop="False" />
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type nvp:PropertyValue_PercentMenuFontSize}">
+            <DataTemplate DataType="{x:Type nwp:PropertyValue_PercentMenuFontSize}">
                 <ContentControl Content="{Binding}" ContentTemplate="{StaticResource PercentMenuFontSizeValueDataTemplate}" IsTabStop="False" />
             </DataTemplate>
             
-            <DataTemplate DataType="{x:Type nvp:PropertyValue_Percent}">
+            <DataTemplate DataType="{x:Type nwp:PropertyValue_Percent}">
                 <ContentControl Content="{Binding}" ContentTemplate="{StaticResource PercentValueDataTemplate}" IsTabStop="False" />
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type nvp:PropertyValue_Color}">
+            <DataTemplate DataType="{x:Type nwp:PropertyValue_Color}">
                 <DockPanel>
-                    <nvc:EnterTriggerTextBox Text="{Binding Value}" MinWidth="100" BorderThickness="1,1,1,1" Padding="0,0,2,0" VerticalContentAlignment="Center" />
+                    <nwc:EnterTriggerTextBox Text="{Binding Value}" MinWidth="100" BorderThickness="1,1,1,1" Padding="0,0,2,0" VerticalContentAlignment="Center" />
                     <osc:ComboColorPicker SelectedColor="{Binding Value, Mode=TwoWay}" />
                 </DockPanel>
             </DataTemplate>
 
 
-            <DataTemplate DataType="{x:Type nvp:PropertyTitleElement}">
+            <DataTemplate DataType="{x:Type nwp:PropertyTitleElement}">
                 <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0,10,0,5" />
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type nvp:PropertyMemberElement}">
-                <nvp:PropertyControl Header="{Binding Name}" Value="{Binding TypeValue}" Tips="{Binding Tips}"
+            <DataTemplate DataType="{x:Type nwp:PropertyMemberElement}">
+                <nwp:PropertyControl Header="{Binding Name}" Value="{Binding TypeValue}" Tips="{Binding Tips}"
                         ColumnRate="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=ColumnRate}" />
             </DataTemplate>
 

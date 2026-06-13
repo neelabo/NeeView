@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NeeView.Setting"
         xmlns:nv="clr-namespace:NeeView"
-        xmlns:nvp="clr-namespace:NeeView.Windows.Property"
-        xmlns:nvc="clr-namespace:NeeView.Windows.Controls"
-        xmlns:nvd="clr-namespace:NeeView.Windows.Data"
+        xmlns:nwp="clr-namespace:NeeView.Windows.Property"
+        xmlns:nwc="clr-namespace:NeeView.Windows.Controls"
+        xmlns:nwd="clr-namespace:NeeView.Windows.Data"
         xmlns:osc="clr-namespace:OpenSourceControls"
         xmlns:properties="clr-namespace:NeeView.Properties"
         mc:Ignorable="d"
@@ -32,18 +32,18 @@
                 </Style.Triggers>
             </Style>
 
-            <DataTemplate DataType="{x:Type nvp:PropertyValue_Boolean}">
+            <DataTemplate DataType="{x:Type nwp:PropertyValue_Boolean}">
                 <StackPanel Orientation="Horizontal" Style="{StaticResource DisableStyle}">
-                    <nvc:ToggleSwitch IsChecked="{Binding Value}" Height="20" HorizontalAlignment="Left" ShowState="True"/>
+                    <nwc:ToggleSwitch IsChecked="{Binding Value}" Height="20" HorizontalAlignment="Left" ShowState="True"/>
                 </StackPanel>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type nvp:PropertyTitleElement}">
+            <DataTemplate DataType="{x:Type nwp:PropertyTitleElement}">
                 <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0,10,0,5" />
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type nvp:PropertyMemberElement}">
-                <nvp:PropertyControl Header="{Binding Name}" Value="{Binding TypeValue}" Tips="{Binding Tips}"
+            <DataTemplate DataType="{x:Type nwp:PropertyMemberElement}">
+                <nwp:PropertyControl Header="{Binding Name}" Value="{Binding TypeValue}" Tips="{Binding Tips}"
                         ColumnRate="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=ColumnRate}" />
             </DataTemplate>
 

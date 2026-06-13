@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:NeeView"
-             xmlns:nvp="clr-namespace:NeeView.Windows.Property"
-             xmlns:nvc="clr-namespace:NeeView.Windows.Controls"
+             xmlns:nwp="clr-namespace:NeeView.Windows.Property"
+             xmlns:nwc="clr-namespace:NeeView.Windows.Controls"
              xmlns:properties="clr-namespace:NeeView.Properties"
              mc:Ignorable="d"
              d:DesignHeight="800" d:DesignWidth="300" MinWidth="200"
@@ -186,14 +186,14 @@
             <local:BooleanReverseConverter x:Key="BooleanReverseConverter"/>
             <local:DoubleToGridLengthConverter x:Key="DoubleToGridLengthConverter" />
 
-            <DataTemplate DataType="{x:Type nvp:PropertyValue_Boolean}">
+            <DataTemplate DataType="{x:Type nwp:PropertyValue_Boolean}">
                 <CheckBox IsChecked="{Binding Value}" Content="{Binding Value}" />
             </DataTemplate>
 
 
             <Style TargetType="Button" BasedOn="{StaticResource IconButton}" />
 
-            <Style TargetType="nvc:EnterTriggerTextBox" BasedOn="{StaticResource NVEnterTriggerTextBox}">
+            <Style TargetType="nwc:EnterTriggerTextBox" BasedOn="{StaticResource NVEnterTriggerTextBox}">
                 <EventSetter Event="KeyDown" Handler="Control_KeyDown_IgnoreSingleKeyGesture" />
             </Style>
 
@@ -285,16 +285,16 @@
 
                         <StackPanel>
                             <DockPanel Margin="0,5">
-                                <nvc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding SlideShow.IsPlaying}" Margin="10,0,0,0" VerticalAlignment="Center" />
+                                <nwc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding SlideShow.IsPlaying}" Margin="10,0,0,0" VerticalAlignment="Center" />
                                 <TextBlock Text="{properties:TextBinding Word.SlideShow}" VerticalAlignment="Center" />
                             </DockPanel>
                             <StackPanel Margin="10,5,0,5" Visibility="{Binding SlideShow.IsPlaying, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <DockPanel Margin="0,2">
-                                    <nvc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding SlideShowConfig.IsTimerVisible}" Margin="10,0,0,0" VerticalAlignment="Center" />
+                                    <nwc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding SlideShowConfig.IsTimerVisible}" Margin="10,0,0,0" VerticalAlignment="Center" />
                                     <TextBlock Text="{properties:TextBinding SlideShowConfig.IsTimerVisible}" VerticalAlignment="Center" />
                                 </DockPanel>
                                 <DockPanel Margin="0,2" KeyboardNavigation.TabNavigation="Local">
-                                    <nvc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding SlideShowInterval, StringFormat={}{0:F1}}" Width="70" VerticalAlignment="Center" Margin="5,0,0,0"
+                                    <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding SlideShowInterval, StringFormat={}{0:F1}}" Width="70" VerticalAlignment="Center" Margin="5,0,0,0"
                                             ValueDeltaChanged="SlideShowInterval_ValueDelta" TabIndex="2" />
                                     <Slider Value="{Binding SlideShowInterval}" Minimum="0.1" Maximum="30.0" TickFrequency="0.1" IsSnapToTickEnabled="True" VerticalAlignment="Center" TabIndex="1" />
                                 </DockPanel>
@@ -323,11 +323,11 @@
                             </DockPanel>
                             <StackPanel Margin="10,0,0,0">
                                 <DockPanel Margin="0,5">
-                                    <nvc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding IsBaseScaleEnabled}" Margin="10,0,0,0" VerticalAlignment="Center" />
+                                    <nwc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding IsBaseScaleEnabled}" Margin="10,0,0,0" VerticalAlignment="Center" />
                                     <TextBlock Text="{properties:TextBinding Navigator.StretchScale}" VerticalAlignment="Center" />
                                 </DockPanel>
                                 <DockPanel Margin="0,2" Visibility="{Binding IsBaseScaleEnabled, Converter={StaticResource BooleanToVisibilityConverter}}" KeyboardNavigation.TabNavigation="Local">
-                                    <nvc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding BaseScale, StringFormat={}{0:F0}}" Width="70" VerticalAlignment="Center" Margin="5,0,0,0"
+                                    <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding BaseScale, StringFormat={}{0:F0}}" Width="70" VerticalAlignment="Center" Margin="5,0,0,0"
                                             ValueDeltaChanged="BaseScale_ValueDelta" TabIndex="2" />
                                     <Slider Value="{Binding SliderBaseScale}" Minimum="10.0" Maximum="190.0" VerticalAlignment="Center" TabIndex="1" />
                                 </DockPanel>
@@ -342,7 +342,7 @@
                             </DockPanel>
                             <StackPanel Margin="10,5,0,5">
                                 <DockPanel Margin="0,2" KeyboardNavigation.TabNavigation="Local">
-                                    <nvc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding Angle, StringFormat={}{0:F0}}" Width="70" VerticalAlignment="Center" Margin="5,0,0,0"
+                                    <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding Angle, StringFormat={}{0:F0}}" Width="70" VerticalAlignment="Center" Margin="5,0,0,0"
                                             ValueDeltaChanged="Angle_ValueDelta" TabIndex="2" />
                                     <Slider Value="{Binding SliderAngle}" Minimum="-180.0" Maximum="180.0" TickFrequency="1.0" SmallChange="1.0" LargeChange="45.0" VerticalAlignment="Center" TabIndex="1" />
                                 </DockPanel>
@@ -393,7 +393,7 @@
                             </DockPanel>
                             <StackPanel Margin="10,5,0,5">
                                 <DockPanel Margin="0,2" KeyboardNavigation.TabNavigation="Local">
-                                    <nvc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding Scale, StringFormat={}{0:F0}}" Width="70" VerticalAlignment="Center" Margin="5,0,0,0"
+                                    <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding Scale, StringFormat={}{0:F0}}" Width="70" VerticalAlignment="Center" Margin="5,0,0,0"
                                             ValueDeltaChanged="Scale_ValueDelta" TabIndex="2" />
                                     <Slider Value="{Binding ScaleLog}" Minimum="-5.0" Maximum="5.0" VerticalAlignment="Center" TabIndex="1" />
                                 </DockPanel>

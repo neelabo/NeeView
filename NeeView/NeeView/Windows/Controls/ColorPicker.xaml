@@ -5,7 +5,7 @@
              xmlns:local="clr-namespace:NeeView.Windows.Controls"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
-             xmlns:nvc="clr-namespace:NeeView.Windows.Controls"
+             xmlns:nwc="clr-namespace:NeeView.Windows.Controls"
              d:DesignHeight="300"
              d:DesignWidth="300"
              mc:Ignorable="d">
@@ -36,7 +36,7 @@
                         <SolidColorBrush Color="{Binding Color}" />
                     </Border.Background>
                 </Border>
-                <nvc:EnterTriggerTextBox Grid.Column="2"
+                <nwc:EnterTriggerTextBox Grid.Column="2"
                          DockPanel.Dock="Right"
                          Text="{Binding Color, Converter={StaticResource ColorToStringConverter}}" />
 
@@ -45,21 +45,21 @@
             <StackPanel Visibility="{Binding IsRgbVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <DockPanel Margin="0,0,0,5" KeyboardNavigation.TabNavigation="Local">
                     <TextBlock Width="16" Text="R" />
-                    <nvc:EnterTriggerTextBox DockPanel.Dock="Right"
+                    <nwc:EnterTriggerTextBox DockPanel.Dock="Right"
                              Width="70"
                              Text="{Binding R}" Slider="{Binding ElementName=SliderR}" />
                     <Slider x:Name="SliderR" Value="{Binding R}" Minimum="0" Maximum="255" TickFrequency="1" Margin="5,0" TabIndex="1" />
                 </DockPanel>
                 <DockPanel Margin="0,0,0,5" KeyboardNavigation.TabNavigation="Local">
                     <TextBlock Width="16" Text="G" />
-                    <nvc:EnterTriggerTextBox DockPanel.Dock="Right"
+                    <nwc:EnterTriggerTextBox DockPanel.Dock="Right"
                              Width="70"
                              Text="{Binding G}" Slider="{Binding ElementName=SliderG}" />
                     <Slider x:Name="SliderG" Value="{Binding G}" Minimum="0" Maximum="255" TickFrequency="1" Margin="5,0" TabIndex="1" />
                 </DockPanel>
                 <DockPanel Margin="0,0,0,5" KeyboardNavigation.TabNavigation="Local">
                     <TextBlock Width="16" Text="B" />
-                    <nvc:EnterTriggerTextBox DockPanel.Dock="Right"
+                    <nwc:EnterTriggerTextBox DockPanel.Dock="Right"
                              Width="70"
                              Text="{Binding B}" Slider="{Binding ElementName=SliderB}" />
                     <Slider x:Name="SliderB" Value="{Binding B}" Minimum="0" Maximum="255" TickFrequency="1"  Margin="5,0" TabIndex="1"/>
@@ -69,21 +69,21 @@
             <StackPanel Visibility="{Binding IsHsvVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <DockPanel Margin="0,0,0,5" KeyboardNavigation.TabNavigation="Local">
                     <TextBlock Width="16" Text="H" />
-                    <nvc:EnterTriggerTextBox DockPanel.Dock="Right"
+                    <nwc:EnterTriggerTextBox DockPanel.Dock="Right"
                              Width="70"
                              Text="{Binding H}" Slider="{Binding ElementName=SliderH}" />
                     <Slider x:Name="SliderH" Value="{Binding H}" Minimum="0" Maximum="360" TickFrequency="1" Margin="5,0" TabIndex="1"/>
                 </DockPanel>
                 <DockPanel Margin="0,0,0,5" KeyboardNavigation.TabNavigation="Local">
                     <TextBlock Width="16" Text="S" />
-                    <nvc:EnterTriggerTextBox DockPanel.Dock="Right"
+                    <nwc:EnterTriggerTextBox DockPanel.Dock="Right"
                              Width="70"
                              Text="{Binding S, StringFormat={}{0:0.00}}" Slider="{Binding ElementName=SliderS}" />
                     <Slider x:Name="SliderS" Value="{Binding S}" Minimum="0" Maximum="1" TickFrequency="0.01" Margin="5,0" TabIndex="1"/>
                 </DockPanel>
                 <DockPanel Margin="0,0,0,5" KeyboardNavigation.TabNavigation="Local">
                     <TextBlock Width="16" Text="V" />
-                    <nvc:EnterTriggerTextBox DockPanel.Dock="Right"
+                    <nwc:EnterTriggerTextBox DockPanel.Dock="Right"
                              Width="70"
                              Text="{Binding V, StringFormat={}{0:0.00}}" Slider="{Binding ElementName=SliderV}" />
                     <Slider x:Name="SliderV" Value="{Binding V}" Minimum="0" Maximum="1" TickFrequency="0.01" Margin="5,0" TabIndex="1"/>

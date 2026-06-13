@@ -6,8 +6,8 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
     xmlns:local="clr-namespace:NeeView"
-    xmlns:nvp="clr-namespace:NeeView.Windows.Property"
-    xmlns:nvc="clr-namespace:NeeView.Windows.Controls"
+    xmlns:nwp="clr-namespace:NeeView.Windows.Property"
+    xmlns:nwc="clr-namespace:NeeView.Windows.Controls"
     xmlns:properties="clr-namespace:NeeView.Properties"
     mc:Ignorable="d" 
     d:DesignHeight="800" d:DesignWidth="300"
@@ -48,7 +48,7 @@
 
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
-            <DataTemplate DataType="{x:Type nvp:PropertyValue_Boolean}">
+            <DataTemplate DataType="{x:Type nwp:PropertyValue_Boolean}">
                 <CheckBox IsChecked="{Binding Value}" Content="{Binding Value}" />
             </DataTemplate>
 
@@ -65,7 +65,7 @@
                 <Setter Property="MinHeight" Value="{DynamicResource FontIconSize}" />
             </Style>
 
-            <Style TargetType="nvc:EnterTriggerTextBox" BasedOn="{StaticResource NVEnterTriggerTextBox}">
+            <Style TargetType="nwc:EnterTriggerTextBox" BasedOn="{StaticResource NVEnterTriggerTextBox}">
                 <EventSetter Event="KeyDown" Handler="Control_KeyDown_IgnoreSingleKeyGesture" />
             </Style>
 
@@ -111,7 +111,7 @@
                 <Separator />
 
                 <DockPanel Margin="0,5">
-                    <nvc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding Source={x:Static local:Config.Current}, Path=ImageCustomSize.IsEnabled}"
+                    <nwc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding Source={x:Static local:Config.Current}, Path=ImageCustomSize.IsEnabled}"
                             VerticalAlignment="Center" />
                     <TextBlock Text="{properties:TextBinding Effect.CustomSize}" VerticalAlignment="Center" />
                 </DockPanel>
@@ -122,25 +122,25 @@
                             <Setter Property="HorizontalAlignment" Value="Right" />
                         </Style>
                     </StackPanel.Resources>
-                    <nvp:PropertyInspector Document="{Binding CustomSizeProfile}" IsResetButtonVisible="False" />
+                    <nwp:PropertyInspector Document="{Binding CustomSizeProfile}" IsResetButtonVisible="False" />
                 </StackPanel>
 
                 <Separator />
 
                 <DockPanel Margin="0,5">
-                    <nvc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding Source={x:Static local:Config.Current}, Path=ImageTrim.IsEnabled}"
+                    <nwc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding Source={x:Static local:Config.Current}, Path=ImageTrim.IsEnabled}"
                             VerticalAlignment="Center" />
                     <TextBlock Text="{properties:TextBinding Effect.Trim}" VerticalAlignment="Center" />
                 </DockPanel>
 
                 <StackPanel Margin="10,0,0,5" Visibility="{Binding Source={x:Static local:Config.Current}, Path=ImageTrim.IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <nvp:PropertyInspector Document="{Binding TrimProfile}" IsResetButtonVisible="False" />
+                    <nwp:PropertyInspector Document="{Binding TrimProfile}" IsResetButtonVisible="False" />
                 </StackPanel>
 
                 <Separator />
 
                 <DockPanel Margin="0,5">
-                    <nvc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding Source={x:Static local:Config.Current}, Path=ImageDotKeep.IsEnabled}"
+                    <nwc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding Source={x:Static local:Config.Current}, Path=ImageDotKeep.IsEnabled}"
                             VerticalAlignment="Center" />
                     <TextBlock Text="{properties:TextBinding Effect.KeepDot}" VerticalAlignment="Center" />
                 </DockPanel>
@@ -148,7 +148,7 @@
                 <Separator />
 
                 <DockPanel Margin="0,5">
-                    <nvc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding Source={x:Static local:Config.Current}, Path=ImageResizeFilter.IsEnabled}"
+                    <nwc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding Source={x:Static local:Config.Current}, Path=ImageResizeFilter.IsEnabled}"
                             VerticalAlignment="Center" />
                     <TextBlock Text="{properties:TextBinding Effect.ResizeFilter}" VerticalAlignment="Center" />
                 </DockPanel>
@@ -162,14 +162,14 @@
                     </DockPanel>
 
                     <DockPanel Margin="0,5">
-                        <nvc:ToggleSwitch DockPanel.Dock="Right"
+                        <nwc:ToggleSwitch DockPanel.Dock="Right"
                                 IsChecked="{Binding Source={x:Static local:Config.Current}, Path=ImageResizeFilter.IsUnsharpMaskEnabled}" VerticalAlignment="Center" />
                         <TextBlock Text="{properties:TextBinding Effect.ResizeUnsharp}" VerticalAlignment="Center" />
                     </DockPanel>
 
                     <Grid Margin="10,0,0,10"
                             Visibility="{Binding Source={x:Static local:Config.Current}, Path=ImageResizeFilter.IsUnsharpMaskEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <nvp:PropertyInspector x:Name="inspectorF" Document="{Binding UnsharpMaskProfile}" IsResetButtonVisible="False" />
+                        <nwp:PropertyInspector x:Name="inspectorF" Document="{Binding UnsharpMaskProfile}" IsResetButtonVisible="False" />
                     </Grid>
 
                     <Button x:Name="ResetButton" Style="{StaticResource IconButton}" HorizontalAlignment="Right" Margin="5" Click="Reset">
@@ -181,13 +181,13 @@
                 <Separator />
 
                 <DockPanel Margin="0,5">
-                    <nvc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding Source={x:Static local:Config.Current}, Path=ImageGrid.IsEnabled}"
+                    <nwc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding Source={x:Static local:Config.Current}, Path=ImageGrid.IsEnabled}"
                             VerticalAlignment="Center" />
                     <TextBlock Text="{properties:TextBinding Effect.Grid}" VerticalAlignment="Center" />
                 </DockPanel>
 
                 <StackPanel Margin="10,0,0,5" Visibility="{Binding Source={x:Static local:Config.Current}, Path=ImageGrid.IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <nvp:PropertyInspector Document="{Binding GridLineProfile}" IsResetButtonVisible="True" />
+                    <nwp:PropertyInspector Document="{Binding GridLineProfile}" IsResetButtonVisible="True" />
                 </StackPanel>
 
                 <Separator />
@@ -198,7 +198,7 @@
                                 Visibility="{Binding Source={x:Static local:Config.Current}, Path=ImageEffect.IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <Image Source="{StaticResource ic_add_24px_a}" />
                         </Button>
-                        <nvc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding Source={x:Static local:Config.Current}, Path=ImageEffect.IsEnabled}"
+                        <nwc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding Source={x:Static local:Config.Current}, Path=ImageEffect.IsEnabled}"
                             VerticalAlignment="Center" />
                     </StackPanel>
                     <TextBlock Text="{properties:TextBinding Effect.Effect}" VerticalAlignment="Center" />
@@ -239,10 +239,10 @@
 
                                     </DockPanel>
 
-                                    <nvp:PropertyInspector x:Name="inspector" Document="{Binding EffectParameters}" IsResetButtonVisible="True"
+                                    <nwp:PropertyInspector x:Name="inspector" Document="{Binding EffectParameters}" IsResetButtonVisible="True"
                                                     IsHsvMode="{Binding Source={x:Static local:Config.Current}, Path=ImageEffect.IsHsvMode}">
-                                        <nvp:PropertyInspector.Style>
-                                            <Style TargetType="nvp:PropertyInspector">
+                                        <nwp:PropertyInspector.Style>
+                                            <Style TargetType="nwp:PropertyInspector">
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding EffectParameters}" Value="{x:Null}">
                                                         <Setter Property="Visibility" Value="Collapsed" />
@@ -252,8 +252,8 @@
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
-                                        </nvp:PropertyInspector.Style>
-                                    </nvp:PropertyInspector>
+                                        </nwp:PropertyInspector.Style>
+                                    </nwp:PropertyInspector>
                                     <Separator/>
 
                                 </StackPanel>

@@ -5,7 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:local="clr-namespace:NeeView"
     xmlns:nw="clr-namespace:NeeView.Windows" 
-    xmlns:nvp="clr-namespace:NeeView.Windows.Property"
+    xmlns:nwp="clr-namespace:NeeView.Windows.Property"
     xmlns:nwc="clr-namespace:NeeView.Windows.Controls"
     xmlns:properties="clr-namespace:NeeView.Properties" 
     mc:Ignorable="d"
@@ -42,7 +42,7 @@
                 <Setter Property="Background" Value="Transparent" />
             </Style>
 
-            <Style TargetType="{x:Type nvp:PropertyInspector}">
+            <Style TargetType="{x:Type nwp:PropertyInspector}">
                 <Setter Property="IsResetButtonVisible" Value="False"/>
                 <Setter Property="IsStretch" Value="False"/>
                 <Setter Property="ColumnRate" Value="0.5"/>
@@ -74,7 +74,7 @@
 
                 <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Margin="10,0"
                         KeyboardNavigation.TabNavigation="Local" KeyboardNavigation.TabIndex="2">
-                    <nvp:PropertyInspector Document="{Binding ExportBookTypeDocument}" Margin="0" />
+                    <nwp:PropertyInspector Document="{Binding ExportBookTypeDocument}" Margin="0" />
                     <DockPanel KeyboardNavigation.TabNavigation="Local" >
                         <Button x:Name="DestinationFolderOptionButton" DockPanel.Dock="Right" Style="{StaticResource IconButton}" Padding="5,0" Click="DestinationFolderOptionButton_Click" TabIndex="2">
                             <Image Source="{StaticResource ic_setting_24px_a}" Width="16" Height="16" />
@@ -87,7 +87,7 @@
                 <Border BorderThickness="0,0,0,1" BorderBrush="{DynamicResource Panel.Splitter}">
                     <ScrollViewer Style="{StaticResource NVScrollViewer}" Margin="10,10,0,0" CanContentScroll="False"
                             KeyboardNavigation.TabNavigation="Local" KeyboardNavigation.TabIndex="1">
-                        <nvp:PropertyInspector Document="{Binding ExportBookDocument}" Margin="0"/>
+                        <nwp:PropertyInspector Document="{Binding ExportBookDocument}" Margin="0"/>
                     </ScrollViewer>
                 </Border>
             </DockPanel>
