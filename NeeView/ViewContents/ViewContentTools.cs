@@ -82,18 +82,18 @@ namespace NeeView
                 SetBitmapScalingMode(element, scalingMode.Value);
                 element.SnapsToDevicePixels = scalingMode.Value == BitmapScalingMode.NearestNeighbor;
             }
-            // 画像サイズがビッタリの場合はドットバイドットになるような設定
-            else if (contentSize.IsRightAngle && SizeEquals(contentSize.PixelSize, pixelSize, 1.1))
-            {
-                LocalDebug.WriteLine($"OO: NearestNeighbor: {pixelSize:f0} /{imageSize:f0}");
-                SetBitmapScalingMode(element, BitmapScalingMode.NearestNeighbor);
-                element.SnapsToDevicePixels = true;
-            }
             // DotKeep mode
             // TODO: Config.Current参照はよろしくない
             else if (Config.Current.ImageDotKeep.IsImageDotKeep(contentSize.PixelSize, pixelSize))
             {
                 LocalDebug.WriteLine($"XX: NearestNeighbor: {pixelSize:f0} / {imageSize:f0} != request {contentSize.PixelSize:f0}");
+                SetBitmapScalingMode(element, BitmapScalingMode.NearestNeighbor, BitmapScalingMode.NearestNeighbor);
+                element.SnapsToDevicePixels = true;
+            }
+            // 画像サイズがビッタリの場合はドットバイドットになるような設定
+            else if (contentSize.IsRightAngle && SizeEquals(contentSize.PixelSize, pixelSize, 1.1))
+            {
+                LocalDebug.WriteLine($"OO: NearestNeighbor: {pixelSize:f0} /{imageSize:f0}");
                 SetBitmapScalingMode(element, BitmapScalingMode.NearestNeighbor);
                 element.SnapsToDevicePixels = true;
             }
@@ -105,13 +105,13 @@ namespace NeeView
             }
         }
 
-        private static void SetBitmapScalingMode(UIElement element, BitmapScalingMode mode)
+        private static void SetBitmapScalingMode(UIElement element, BitmapScalingMode mode, BitmapScalingMode modePlaying = BitmapScalingMode.Fant)
         {
             // スライドショー オートスクロール中は Fant にする
             var binding = new Binding(nameof(SlideShow.IsPlayingAutoScroll))
             {
                 Source = SlideShow.Current,
-                Converter = new BooleanToBitmapScalingModeConverter() { FalseValue = mode }
+                Converter = new BooleanToBitmapScalingModeConverter() { FalseValue = mode, TrueValue = modePlaying }
             };
             BindingOperations.SetBinding(element, RenderOptions.BitmapScalingModeProperty, binding);
         }
