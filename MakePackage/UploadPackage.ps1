@@ -242,9 +242,6 @@ It is intended to give you a preview of features that will be available in a fut
 This version runs on .NET $dotNetVersion.
 
 See also: [About Alpha Version](https://neelabo.github.io/NeeView/package-alpha.html)
-
-> [!NOTE]
-> Alpha is the same as what was previously called Canary.
 "@
 
 $beta_body = @"
