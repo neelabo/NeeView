@@ -68,6 +68,7 @@ namespace NeeView
                 {
                     if (property.PropertyType.GetInterfaces().Contains(typeof(System.Collections.IList)))
                     {
+                        // NOTE: かなり限定的な実装になっているので、必要に応じて拡張する
                         var listA1 = property.GetValue(a1) as IList;
                         var listA2 = property.GetValue(a2) as IList;
 
@@ -79,7 +80,10 @@ namespace NeeView
                         listA1.Clear();
                         foreach (var item in listA2)
                         {
-                            listA1.Add(item);
+                            var itemType = item.GetType();
+                            var newItem = Activator.CreateInstance(itemType)!;
+                            Merge(newItem, item, options);
+                            listA1.Add(newItem);
                         }
                     }
                     else

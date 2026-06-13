@@ -81,7 +81,7 @@ namespace NeeView
 
         public override string ToString()
         {
-            return $"{Id}: {Name}";
+            return $"{Id}: {DisplayName}";
         }
 
         #region IComparable

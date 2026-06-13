@@ -111,7 +111,7 @@ namespace NeeView
         public void Clone()
         {
             var id = CreateUniqueId();
-            var profile = new EffectProfile(id) { Name = CreateUniqueName(SelectedProfile?.Name) };
+            var profile = new EffectProfile(id) { Name = CreateUniqueName(SelectedProfile?.DisplayName) };
             profile.Store(Config.Current);
             Profiles.Add(profile);
             SelectedProfile = profile;
@@ -133,7 +133,6 @@ namespace NeeView
         {
             name ??= EffectProfile.DefaultName;
 
-            var names = Profiles.Select(e => e.Name).ToList();
             if (!ContainsName(name))
             {
                 return name;
@@ -160,7 +159,7 @@ namespace NeeView
 
         private bool ContainsName(string name)
         {
-            return Profiles.Any(e => e.Name.Equals(name, StringComparison.Ordinal));
+            return Profiles.Any(e => e.DisplayName.Equals(name, StringComparison.Ordinal));
         }
 
         public bool CanDelete(EffectProfile? profile)
