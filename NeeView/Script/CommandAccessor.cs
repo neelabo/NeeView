@@ -65,20 +65,20 @@ namespace NeeView
         public bool Execute(params object[] args)
         {
             var parameter = _command.CreateOverwriteCommandParameter(_patch, _accessDiagnostics);
-            var context = new CommandContext(parameter, args, CommandOption.None);
+            var commandArgs = new CommandArgs(args, CommandOption.None);
             return AppDispatcher.Invoke(() =>
             {
-                if (_command.CanExecute(this, context))
+                if (_command.CanExecute(this, parameter, commandArgs, false))
                 {
 #if DEBUG && DEBUG_SHOWMESSAGE
                     // 通知
-                    string message = _command.ExecuteMessage(this, context);
+                    string message = _command.ExecuteMessage(this, parameter, commandArgs, false);
                     if (!string.IsNullOrEmpty(message))
                     {
                         InfoMessage.Current.SetMessage(InfoMessageType.Command, message);
                     }
 #endif
-                    _command.Execute(this, context);
+                    _command.Execute(this, parameter, commandArgs, false);
                     return true;
                 }
                 else

@@ -971,9 +971,9 @@ namespace NeeView
 
             // TODO: コマンドKeyはクラス名から生成するように
             var command = CommandTable.Current.GetElement("ClearHistoryInPlace");
-            if (command.CanExecute(this, CommandArgs.Empty))
+            if (command.CanExecute(this, CommandArgs.Empty, false))
             {
-                command.Execute(this, CommandArgs.Empty);
+                command.Execute(this, CommandArgs.Empty, false);
             }
         }
 

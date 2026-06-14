@@ -278,6 +278,7 @@ BookMementoFilter.PageMode=单页显示/双页显示
 BookPageCollectMode.All=所有文件
 BookPageCollectMode.Image=图像文件
 BookPageCollectMode.ImageAndBook=图像文件与文件夹
+BookSettingConfig.BookReadOrder.WelcomeRemarks=页面跳转命令是基于 "@PageReadOrder.RightToLeft" 配置的。如果滑块方向为 "@SliderDirection.LeftToRight"，则对应的命令将会互换。
 BookSettingConfig.IsRecursiveFolder.Remarks=由于要搜索待打开文件夹下的所有内容，根据打开位置的不同负载可能会变得很高。
 BookSettingConfig.Page=页面位置
 BookSettingConfig.PageMode=页面显示模式

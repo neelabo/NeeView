@@ -278,6 +278,7 @@ BookMementoFilter.PageMode=한 쪽 보기 / 두 쪽 보기
 BookPageCollectMode.All=모든 파일
 BookPageCollectMode.Image=이미지
 BookPageCollectMode.ImageAndBook=사진 폴더
+BookSettingConfig.BookReadOrder.WelcomeRemarks=페이지 이동 명령은 "@PageReadOrder.RightToLeft"를 기준으로 설정되어 있습니다. 슬라이더 방향이 "@SliderDirection.LeftToRight"인 경우, 해당 명령이 서로 바뀌어 적용됩니다.
 BookSettingConfig.IsRecursiveFolder.Remarks=하위 폴더를 전부 검색하므로 경로에 따라서 부하가 심할 수 있습니다.
 BookSettingConfig.Page=페이지 위치
 BookSettingConfig.PageMode=페이지 표시

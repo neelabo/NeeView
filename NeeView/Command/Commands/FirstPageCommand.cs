@@ -9,7 +9,7 @@ namespace NeeView
             this.Group = TextResources.GetString("CommandGroup.Move");
             this.ShortCutKey = new ShortcutKey("Ctrl+Right");
             this.MouseGesture = new MouseSequence("UR");
-            this.IsShowMessage = true;
+            this.IsShowMessage = false;
             this.PairPartner = "LastPage";
 
             this.ParameterSource = new CommandParameterSource(new ReversibleCommandParameter());

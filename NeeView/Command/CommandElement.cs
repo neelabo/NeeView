@@ -297,15 +297,18 @@ namespace NeeView
             return Text;
         }
 
-        public string ExecuteMessage(object? sender, CommandParameter? parameter, CommandArgs args)
+        public string ExecuteMessage(object? sender, CommandArgs args, bool allowReverse)
         {
-            Debug.Assert(parameter?.GetType() == this.Parameter?.GetType());
-            return ExecuteMessage(sender, new CommandContext(parameter, args));
+            return ExecuteMessage(sender, null, args, allowReverse);
         }
 
-        public string ExecuteMessage(object? sender, CommandArgs args)
+        public string ExecuteMessage(object? sender, CommandParameter? parameter, CommandArgs args, bool allowReverse)
         {
-            return ExecuteMessage(sender, new CommandContext(this.Parameter, args));
+            Debug.Assert(parameter is null || parameter?.GetType() == this.Parameter?.GetType());
+
+            var command = CommandTools.ResolveCommand(this, allowReverse);
+            parameter ??= command.Parameter;
+            return command.ExecuteMessage(sender, new CommandContext(parameter, args));
         }
 
         public string GetStateExecuteMessage(bool flag)
@@ -320,23 +323,35 @@ namespace NeeView
             return true;
         }
 
-        public bool CanExecute(object? sender, CommandArgs args)
+        public bool CanExecute(object? sender, CommandArgs args, bool allowReverse)
         {
-            return CanExecute(sender, new CommandContext(this.Parameter, args));
+            return CanExecute(sender, null, args, allowReverse);
+        }
+
+        public bool CanExecute(object? sender, CommandParameter? parameter, CommandArgs args, bool allowReverse)
+        {
+            Debug.Assert(parameter is null || parameter?.GetType() == this.Parameter?.GetType());
+
+            var command = CommandTools.ResolveCommand(this, allowReverse);
+            parameter ??= command.Parameter;
+            return command.CanExecute(sender, new CommandContext(parameter, args));
         }
 
         // コマンド実行
         public abstract void Execute(object? sender, CommandContext args);
 
-        public void Execute(object? sender, CommandParameter? parameter, CommandArgs args)
+        public void Execute(object? sender, CommandArgs args, bool allowReverse)
         {
-            Debug.Assert(parameter?.GetType() == this.Parameter?.GetType());
-            Execute(sender, new CommandContext(parameter, args));
+            Execute(sender, null, args, allowReverse);
         }
 
-        public void Execute(object? sender, CommandArgs args)
+        public void Execute(object? sender, CommandParameter? parameter, CommandArgs args, bool allowReverse)
         {
-            Execute(sender, new CommandContext(this.Parameter, args));
+            Debug.Assert(parameter is null || parameter?.GetType() == this.Parameter?.GetType());
+
+            var command = CommandTools.ResolveCommand(this, allowReverse);
+            parameter ??= command.Parameter;
+            command.Execute(sender, new CommandContext(parameter, args));
         }
 
         // 一時コマンドパラメーター作成

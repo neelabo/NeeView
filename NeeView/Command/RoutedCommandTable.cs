@@ -352,7 +352,7 @@ namespace NeeView
         }
 
         // ホイールの回転数に応じたコマンド実行
-        private void WheelCommandExecute(object? sender, MouseWheelEventArgs arg, MouseWheelDelta wheelDelta, MouseWheelDeltaOption wheelOptions, RoutedUICommand command, bool allowFlip)
+        private void WheelCommandExecute(object? sender, MouseWheelEventArgs arg, MouseWheelDelta wheelDelta, MouseWheelDeltaOption wheelOptions, RoutedUICommand command, bool allowReverse)
         {
             if (_disposedValue) return;
 
@@ -360,7 +360,7 @@ namespace NeeView
             if (turn > 0)
             {
                 // Debug.WriteLine($"WheelCommand: {turn}({arg.Delta})");
-                var param = new CommandParameterArgs(null, allowFlip);
+                var param = new CommandParameterArgs(null, allowReverse);
                 for (int i = 0; i < turn; i++)
                 {
                     command.Execute(param, (sender as IInputElement) ?? MainWindow.Current);
@@ -379,19 +379,11 @@ namespace NeeView
         {
             if (_disposedValue) return;
 
-            bool allowFlip = (parameter is CommandParameterArgs args)
-                ? args.AllowFlip
+            bool allowReverse = (parameter is CommandParameterArgs args)
+                ? args.AllowReverse
                 : (parameter != MenuCommandTag.Tag);
 
-            var commandName = GetFixedCommandName(name, allowFlip);
-            var command = CommandTable.Current.GetElement(commandName);
-            var commandParameter = command.Parameter;
-
-            // ペアコマンドの場合はペア元のコマンドパラメータを使用する
-            if (commandName != name)
-            {
-                commandParameter = CommandTable.Current.GetElement(name).Parameter;
-            }
+            var command = CommandTable.Current.GetElement(name);
 
             var option = (parameter is MenuCommandTag) ? CommandOption.ByMenu : CommandOption.None;
             var commandArgs = new CommandArgs(null, option);
@@ -402,7 +394,7 @@ namespace NeeView
 #endif
             {
                 // 通知
-                string message = command.ExecuteMessage(sender, commandParameter, commandArgs);
+                string message = command.ExecuteMessage(sender, commandArgs, allowReverse);
                 if (!string.IsNullOrEmpty(message))
                 {
                     InfoMessage.Current.SetMessage(InfoMessageType.Command, message);
@@ -410,53 +402,8 @@ namespace NeeView
             }
 
             // 実行
-            command.Execute(sender, commandParameter, commandArgs);
+            command.Execute(sender, commandArgs, allowReverse);
         }
-
-        // スライダー方向によって移動コマンドを入れ替える
-        private static string GetFixedCommandName(string name, bool allowFlip)
-        {
-            if (allowFlip && Config.Current.Command.IsReversePageMove && MainWindowModel.Current.IsLeftToRightSlider())
-            {
-                CommandTable.Current.TryGetValue(name, out var command);
-                if (command != null && command.PairPartner != null)
-                {
-                    if (command.Parameter is ReversibleCommandParameter reversibleCommandParameter)
-                    {
-                        return reversibleCommandParameter.IsReverse ? command.PairPartner : name;
-                    }
-                    else
-                    {
-                        return command.PairPartner;
-                    }
-                }
-                else
-                {
-                    return name;
-                }
-            }
-            else
-            {
-                return name;
-            }
-        }
-
-        public CommandElement? GetFixedCommandElement(string commandName, bool allowRecursive)
-        {
-            if (_disposedValue) return null;
-
-            CommandTable.Current.TryGetValue(GetFixedCommandName(commandName, allowRecursive), out CommandElement? command);
-            return command;
-        }
-
-        public RoutedUICommand? GetFixedRoutedCommand(string commandName, bool allowRecursive)
-        {
-            if (_disposedValue) return null;
-
-            this.Commands.TryGetValue(GetFixedCommandName(commandName, allowRecursive), out RoutedUICommand? command);
-            return command;
-        }
-
 
 
         protected void ThrowIfDisposed()

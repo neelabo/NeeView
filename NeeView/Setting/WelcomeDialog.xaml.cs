@@ -59,10 +59,12 @@ namespace NeeView.Setting
             };
             Debug.Assert(Enum.GetNames(typeof(PageReadOrder)).Length == pageReadOrder.Count);
 
+            var pageReadOrderRemarks = TextResources.GetString("BookSettingConfig.BookReadOrder.WelcomeRemarks");
+
             this.Items = new List<SettingItem>();
             var group = new SettingItemGroup();
             group.Children.Add(new SettingItemContent(TextResources.GetString("CommandResetWindow.ResetType.Title"), _commandResetControl) { IsStretch = true });
-            group.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.BookSettingDefault, nameof(BookSettingConfig.BookReadOrder), new PropertyMemberElementOptions() { EnumMap = pageReadOrder })));
+            group.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.BookSettingDefault, nameof(BookSettingConfig.BookReadOrder), new PropertyMemberElementOptions() { EnumMap = pageReadOrder, Tips = pageReadOrderRemarks })));
             group.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.System, nameof(SystemConfig.IsFileWriteAccessEnabled))));
             this.Items.Add(group);
         }

@@ -15,6 +15,11 @@ namespace NeeView.Windows.Property
         public string? Name { get; set; }
 
         /// <summary>
+        /// 説明(上書き用)
+        /// </summary>
+        public string? Tips { get; set; }
+
+        /// <summary>
         /// 空欄時に表示する文字列
         /// </summary>
         public string? EmptyValue { get; set; }

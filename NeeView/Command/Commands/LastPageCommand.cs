@@ -9,7 +9,7 @@ namespace NeeView
             this.Group = TextResources.GetString("CommandGroup.Move");
             this.ShortCutKey = new ShortcutKey("Ctrl+Left");
             this.MouseGesture = new MouseSequence("UL");
-            this.IsShowMessage = true;
+            this.IsShowMessage = false;
             this.PairPartner = "FirstPage";
 
             // FirstPage

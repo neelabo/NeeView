@@ -7,7 +7,7 @@ namespace NeeView
         public PrevFolderPageCommand()
         {
             this.Group = TextResources.GetString("CommandGroup.Move");
-            this.IsShowMessage = true;
+            this.IsShowMessage = false;
             this.PairPartner = "NextFolderPage";
 
             this.ParameterSource = new CommandParameterSource(new ReversibleCommandParameter());

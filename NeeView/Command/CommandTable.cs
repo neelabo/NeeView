@@ -627,9 +627,9 @@ namespace NeeView
             if (_elements.TryGetValue(commandName, out CommandElement? command))
             {
                 var arguments = new CommandArgs(args, option);
-                if (command.CanExecute(sender, arguments))
+                if (command.CanExecute(sender, arguments, false))
                 {
-                    command.Execute(sender, arguments);
+                    command.Execute(sender, arguments, false);
                 }
             }
 

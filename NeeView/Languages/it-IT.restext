@@ -280,6 +280,7 @@ BookMementoFilter.PageMode=Modalità dimensione pagina
 BookPageCollectMode.All=Tutti i file
 BookPageCollectMode.Image=File immagini
 BookPageCollectMode.ImageAndBook=File immagini e cartelle
+BookSettingConfig.BookReadOrder.WelcomeRemarks=I comandi di navigazione della pagina sono configurati in base a "@PageReadOrder.RightToLeft". Se la direzione dello slider è "@SliderDirection.LeftToRight", i comandi corrispondenti verranno invertiti.
 BookSettingConfig.IsRecursiveFolder.Remarks=Dato che cerca tutto sotto la cartella da aprire, il carico può essere alto a seconda della posizione dove è aperto.
 BookSettingConfig.Page=Posizione pagina
 BookSettingConfig.PageMode=Modalità dimensione pagina

@@ -156,7 +156,7 @@ namespace NeeView.Windows.Property
         {
             Source = source;
             Name = options.Name ?? PropertyMemberAttributeExtensions.GetPropertyName(info, attribute) ?? info.Name;
-            Tips = PropertyMemberAttributeExtensions.GetPropertyTips(info, attribute);
+            Tips = options.Tips ?? PropertyMemberAttributeExtensions.GetPropertyTips(info, attribute);
             IsVisible = attribute == null || attribute.IsVisible;
             EmptyMessage = attribute?.EmptyMessage;
             Options = options;

@@ -278,6 +278,7 @@ BookMementoFilter.PageMode=1 頁面顯示 / 2 頁面顯示
 BookPageCollectMode.All=全部檔案
 BookPageCollectMode.Image=圖像
 BookPageCollectMode.ImageAndBook=圖像與資料夾
+BookSettingConfig.BookReadOrder.WelcomeRemarks=頁面移動指令是基於 "@PageReadOrder.RightToLeft" 配置的。如果滑塊方向為 "@SliderDirection.LeftToRight"，則對應的指令將會互換。
 BookSettingConfig.IsRecursiveFolder.Remarks=由於會搜尋開啟資料夾下的全部內容，因此依照開啟位置的不同可能會有較高的負擔。
 BookSettingConfig.Page=頁面位置
 BookSettingConfig.PageMode=頁面顯示

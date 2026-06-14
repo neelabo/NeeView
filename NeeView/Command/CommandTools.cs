@@ -110,5 +110,48 @@ namespace NeeView
 
             return ToggleMode.Toggle;
         }
+
+        /// <summary>
+        /// 反転情報を解決したコマンドを返す
+        /// </summary>
+        /// <param name="command">元のコマンド</param>
+        /// <param name="allowReverse">反転許可</param>
+        /// <returns>反転が有効な場合はペアコマンド、そうでない場合は元のコマンド</returns>
+        public static CommandElement ResolveCommand(CommandElement command,  bool allowReverse)
+        {
+            if (!allowReverse)
+            {
+                return command;
+            }
+
+            if (command.PairPartner is null)
+            {
+                return command;
+            }
+
+            if (command.Parameter is not ReversibleCommandParameter reversibleParameter || !reversibleParameter.IsReverse)
+            {
+                return command;
+            }
+
+            if (!IsCommandReversed())
+            {
+                return command;
+            }
+
+            if (CommandTable.Current.TryGetValue(command.PairPartner, out var pairCommand))
+            {
+                return pairCommand;
+            }
+
+            throw new InvalidOperationException($"Cannot get PairPartner: {command.PairPartner}");
+        }
+
+        /// <summary>
+        /// コマンド反転が必要な状況か
+        /// </summary>
+        /// <returns>コマンド反転許可かつページスライダーが右向きならば真</returns>
+        public static bool IsCommandReversed() => Config.Current.Command.IsReversePageMove && MainWindowModel.Current.IsLeftToRightSlider();
+
     }
 }

@@ -15,10 +15,8 @@ namespace NeeView
             {
                 if (item.Command is RoutedCommand command)
                 {
-                    var fixedCommand = RoutedCommandTable.Current.GetFixedRoutedCommand(command.Name, true) ?? command;
-
                     string text = "";
-                    foreach (InputGesture gesture in fixedCommand.InputGestures)
+                    foreach (InputGesture gesture in command.InputGestures)
                     {
                         // キーショートカットのみ対応
                         if (gesture is KeyGesture or KeyExGesture)

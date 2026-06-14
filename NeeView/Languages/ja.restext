@@ -278,6 +278,7 @@ BookMementoFilter.PageMode=1 ページ表示 / 2 ページ表示
 BookPageCollectMode.All=すべてのファイル
 BookPageCollectMode.Image=画像
 BookPageCollectMode.ImageAndBook=画像とフォルダー
+BookSettingConfig.BookReadOrder.WelcomeRemarks=ページ移動コマンドは "@PageReadOrder.RightToLeft" に基づいて設定されています。 スライダー方向が "@SliderDirection.LeftToRight" の場合、対応するコマンドが入れ替わります。
 BookSettingConfig.IsRecursiveFolder.Remarks=開くフォルダー以下をすべて検索するため、開く場所によっては負荷が高くなることがあります。
 BookSettingConfig.Page=ページ位置
 BookSettingConfig.PageMode=ページ表示

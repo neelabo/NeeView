@@ -280,6 +280,7 @@ BookMementoFilter.PageMode=Modo do Tamanho da Página
 BookPageCollectMode.All=Todos os arquivos
 BookPageCollectMode.Image=Arquivos de imagem
 BookPageCollectMode.ImageAndBook=Pastas e arquivos de imagens
+BookSettingConfig.BookReadOrder.WelcomeRemarks=Os comandos de navegação de página são configurados com base em "@PageReadOrder.RightToLeft". Se a direção do controle deslizante for "@SliderDirection.LeftToRight", os comandos correspondentes serão invertidos.
 BookSettingConfig.IsRecursiveFolder.Remarks=Como pesquisa tudo na pasta a ser aberta, a carga pode ser alta dependendo do local onde for aberto.
 BookSettingConfig.Page=Posição da página
 BookSettingConfig.PageMode=Modo do Tamanho da Página

@@ -84,7 +84,7 @@ namespace NeeView
             var gesture = sequence.GetDisplayString();
 
             var commandName = GetCommand(sequence);
-            var commandText = RoutedCommandTable.Current.GetFixedRoutedCommand(commandName, true)?.Text;
+            var commandText = string.IsNullOrEmpty(commandName) ? null : CommandTools.ResolveCommand(CommandTable.Current.GetElement(commandName), true).Text;
 
             if (string.IsNullOrEmpty(gesture) && string.IsNullOrEmpty(commandText)) return;
 

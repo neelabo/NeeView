@@ -293,9 +293,9 @@ namespace NeeView
                     command = CommandTable.Current.GetElement(Config.Current.SlideShow.NextPageCommandName);
                 }
 
-                if (command.CanExecute(this, CommandArgs.Empty))
+                if (command.CanExecute(this, CommandArgs.Empty, false))
                 {
-                    command.Execute(this, CommandArgs.Empty);
+                    command.Execute(this, CommandArgs.Empty, false);
                 }
             });
 

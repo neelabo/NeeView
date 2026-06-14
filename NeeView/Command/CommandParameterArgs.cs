@@ -8,20 +8,14 @@
         public CommandParameterArgs(object? param)
         {
             Parameter = param;
-            AllowFlip = true;
+            AllowReverse = true;
         }
 
-        public CommandParameterArgs(object? param, bool allowRecursive)
+        public CommandParameterArgs(object? param, bool allowReverse)
         {
             Parameter = param;
-            AllowFlip = allowRecursive;
+            AllowReverse = allowReverse;
         }
-
-
-        /// <summary>
-        /// 標準パラメータ
-        /// </summary>
-        ////public static CommandParameterArgs Null { get; } = new CommandParameterArgs(null);
 
         /// <summary>
         /// パラメータ本体
@@ -31,7 +25,7 @@
         /// <summary>
         /// スライダー方向でのコマンド入れ替え許可
         /// </summary>
-        public bool AllowFlip { get; set; }
+        public bool AllowReverse { get; set; }
 
 
         public static CommandParameterArgs Create(object param)
