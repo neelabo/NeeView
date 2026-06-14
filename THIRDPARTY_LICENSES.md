@@ -107,11 +107,11 @@ DLL: Jint.dll
 * URL: [Jint](https://github.com/sebastienros/jint)
 * License: [BSD 2-Clause License](https://github.com/sebastienros/jint/blob/dev/LICENSE.txt)
 
-DLL: Esprima.dll
+DLL: Acornima.dll
 
-* Copyright (c) Sebastien Ros. All rights reserved.
-* URL: [Esprima .NET](https://github.com/sebastienros/esprima-dotnet)
-* License: [BSD 3-Clause License](https://github.com/sebastienros/esprima-dotnet/blob/dev/LICENSE.txt)
+* Copyright (c) Adam Simon. All rights reserved.
+* URL: [Esprima .NET](https://github.com/adams85/acornima)
+* License: [BSD 3-Clause License](https://github.com/adams85/acornima/blob/master/LICENSE)
 
 ### MetadataExtractor
 
