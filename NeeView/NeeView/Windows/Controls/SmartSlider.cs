@@ -19,6 +19,7 @@ namespace NeeView.Windows.Controls
 
         private Track? _track;
         private Thumb? _thumb;
+        private double _trackValue;
 
 
         public SmartSlider()
@@ -192,11 +193,20 @@ namespace NeeView.Windows.Controls
 
         protected double TrackValue
         {
-            get { return _track?.Value ?? 0.0; }
+            get { return _track?.Value ?? _trackValue; }
             set
             {
-                if (_track is null) return;
-                if (!IsDoubleFinite(value)) return;
+                if (!IsDoubleFinite(value))
+                {
+                    return;
+                }
+
+                _trackValue = value;
+                
+                if (_track is null)
+                {
+                    return;
+                }
 
                 var newValue = Math.Max(this.Minimum, Math.Min(this.Maximum, value));
                 if (_track.Value != newValue)
@@ -258,7 +268,13 @@ namespace NeeView.Windows.Controls
             _track = this.GetTemplateChild("PART_Track") as Track ?? throw new InvalidOperationException();
             _thumb = this.GetTemplateChild("PART_Thumb") as Thumb ?? throw new InvalidOperationException();
 
+            _track.Minimum = Minimum;
+            _track.Maximum = Maximum;
+            _track.IsDirectionReversed = IsDirectionReversed;
+            _track.InvalidateVisual();
             _track.PreviewMouseLeftButtonDown += Track_MouseLeftButtonDown;
+
+            TrackValue = _trackValue;
 
             _thumb.PreviewMouseLeftButtonDown += Thumb_MouseLeftButtonDown;
             _thumb.DragStarted += Thumb_DragStarted;

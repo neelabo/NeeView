@@ -56,8 +56,6 @@ namespace NeeView
             InitializeComponent();
             WindowChromeTools.SetWindowChromeSource(this);
 
-            this.Root.Visibility = Visibility.Collapsed;
-
             // TextBox の ContextMenu のスタイルを変更する ... やりすぎ？
             // ThemeProfile.InitializeEditorContextMenuStyle(this);
 
@@ -517,9 +515,6 @@ namespace NeeView
         private async void MainWindow_ContentRendered(object sender, EventArgs e)
         {
             Debug.WriteLine($"App.MainWindow.ContentRendered: {App.Current.Stopwatch.ElapsedMilliseconds}ms");
-
-            await Task.Delay(100);
-            this.Root.Visibility = Visibility.Visible;
 
             await _vm.ContentRenderedAsync();
 
