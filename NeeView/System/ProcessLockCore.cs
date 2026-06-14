@@ -23,9 +23,18 @@ namespace NeeView
 
         public IDisposable Lock()
         {
-            if (_mutex.WaitOne(_timeout) != true)
+            try
             {
-                throw new TimeoutException("Cannot sync with other NeeViews. There may be a problem with NeeView already running.");
+                if (_mutex.WaitOne(_timeout) != true)
+                {
+                    throw new TimeoutException("Cannot sync with other NeeViews. There may be a problem with NeeView already running.");
+                }
+            }
+            catch (AbandonedMutexException ex)
+            {
+                // あるスレッドが、解放せずに終了して別のスレッドが破棄した Mutex を取得したときにスローされる例外
+                // この例外が発生しても WaitOne は成功している 
+                Debug.WriteLine(ex.Message);
             }
 
             return new Handler(_mutex);

@@ -1,5 +1,6 @@
 ﻿using H.NotifyIcon;
 using System;
+using System.Diagnostics;
 using System.Threading;
 
 namespace NeeView;
@@ -43,7 +44,18 @@ public partial class TaskTray : IDisposable
 
         if (_notifyIcon is not null) return;
 
-        if (_mutex.WaitOne(0))
+        var isOwner = false;
+        try
+        {
+            isOwner = _mutex.WaitOne(0);
+        }
+        catch (AbandonedMutexException ex)
+        {
+            Debug.WriteLine(ex.Message);
+            isOwner = true;
+        }
+
+        if (isOwner)
         {
             _notifyIcon = CreateTaskbarIcon();
             _notifyIcon.ForceCreate(enablesEfficiencyMode: false);
