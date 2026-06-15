@@ -47,13 +47,13 @@
             <TextBlock FontWeight="Bold" Text="{Binding TitleText}" Margin="5" />
             <Separator/>
         
-            <ItemsControl ItemTemplate="{StaticResource TagTemplate}" ItemsSource="{Binding Tags}" Margin="0,5">
-                <ItemsControl.ItemsPanel>
+            <local:TagItemsControl ItemTemplate="{StaticResource TagTemplate}" ItemsSource="{Binding Tags}" Margin="0,5">
+                <local:TagItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Horizontal"/>
                     </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
+                </local:TagItemsControl.ItemsPanel>
+            </local:TagItemsControl>
 
             <StackPanel Margin="5">
                 <TextBlock Grid.Row="0" Grid.Column="0" Margin="2" Text="{properties:TextBinding Word.Name}" />
