@@ -151,7 +151,10 @@ namespace NeeView
         /// コマンド反転が必要な状況か
         /// </summary>
         /// <returns>コマンド反転許可かつページスライダーが右向きならば真</returns>
-        public static bool IsCommandReversed() => Config.Current.Command.IsReversePageMove && MainWindowModel.Current.IsLeftToRightSlider();
-
+        public static bool IsCommandReversed()
+        {
+            return Config.Current.Command.IsReversePageMove
+                && MainWindowModel.Current.IsLeftToRightSlider() != (Config.Current.Command.PresetPageReadOrder != PageReadOrder.RightToLeft);
+        }
     }
 }

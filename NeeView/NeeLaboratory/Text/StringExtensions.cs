@@ -196,6 +196,27 @@ namespace NeeLaboratory.Text
             });
         }
 
+        /// <summary>
+        /// 相互置き換え
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="wordA">置換文字列A</param>
+        /// <param name="wordB">置換文字列B</param>
+        /// <param name="placeHolder">保持用ダミー文字列。絶対にマッチしない文字列でなければいけない</param>
+        /// <returns></returns>
+        public static string ReplaceSwap(this string s, string wordA, string wordB, string? placeHolder = null)
+        {
+            if (string.IsNullOrEmpty(s)) return s;
+
+            placeHolder ??= Guid.NewGuid().ToString();
+
+            var pattern = Regex.Escape(wordA) + '|' + Regex.Escape(wordB);
+            var replaced = Regex.Replace(s, pattern, m => m.Value == wordA ? placeHolder : wordA);
+            replaced = replaced.Replace(placeHolder, wordB);
+
+            return replaced;
+        }
+
     }
 
 

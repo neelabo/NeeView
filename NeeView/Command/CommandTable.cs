@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using NeeLaboratory.Generators;
+using NeeLaboratory.Text;
 using NeeView.Properties;
 using System;
 using System.Collections;
@@ -34,6 +35,9 @@ namespace NeeView
 
 
         private Dictionary<string, CommandElement> _elements;
+        private Dictionary<string, string> _pairs;
+        private CommandCollection _baseCollection;
+        private DefaultCommandCollection _defaultCollection;
 
 
         private CommandTable()
@@ -50,8 +54,6 @@ namespace NeeView
         [Subscribable]
         public event EventHandler<CommandChangedEventArgs>? Changed;
 
-
-        public CommandCollection DefaultMemento { get; private set; }
 
         public int ChangeCount { get; private set; }
 
@@ -97,7 +99,7 @@ namespace NeeView
         /// <summary>
         /// コマンドテーブル初期化
         /// </summary>
-        [MemberNotNull(nameof(_elements), nameof(DefaultMemento), nameof(AlternativeCommands), nameof(ObsoleteCommands))]
+        [MemberNotNull(nameof(_elements), nameof(_pairs), nameof(_baseCollection), nameof(_defaultCollection), nameof(AlternativeCommands), nameof(ObsoleteCommands))]
         private void InitializeCommandTable()
         {
 #pragma warning disable CS0612 // 型またはメンバーが旧型式です
@@ -394,14 +396,6 @@ namespace NeeView
             _elements["ViewBaseScaleDown"].SetShare(_elements["ViewBaseScaleUp"]);
             _elements["ViewRotateRight"].SetShare(_elements["ViewRotateLeft"]);
 
-            // TODO: pair...
-
-            // デフォルト設定の生成
-            foreach (var element in _elements.Values)
-            {
-                element.CreateDefaultMemento();
-            }
-
 #if DEBUG
             // PairPartner 整合性チェック
             foreach (var element in _elements)
@@ -417,13 +411,33 @@ namespace NeeView
             }
 #endif
 
+            // PairPartner 情報収集
+            _pairs = new();
+            foreach (var element in _elements)
+            {
+                if (element.Value.PairPartner != null)
+                {
+                    if (!_pairs.ContainsKey(element.Value.PairPartner))
+                    {
+                        _pairs.Add(element.Key, element.Value.PairPartner);
+                    }
+                }
+            }
+
+            // コマンド毎のデフォルト設定の生成
+            foreach (var element in _elements.Values)
+            {
+                element.CreateDefaultMemento();
+            }
+
             // デフォルト設定として記憶
             var collection = new CommandCollection();
             foreach (var element in _elements)
             {
                 collection.Add(element.Key, element.Value.DefaultMemento);
             }
-            DefaultMemento = collection;
+            _baseCollection = collection;
+            _defaultCollection = new DefaultCommandCollection(InputScheme.TypeA, PageReadOrder.RightToLeft, _baseCollection);
 
             // 廃棄されたコマンドの情報。代替コマンドあり。
             var alternativeCommands = new List<ObsoleteCommandItem>()
@@ -587,41 +601,114 @@ namespace NeeView
         }
 
         /// <summary>
+        /// コマンドセットをリセット
+        /// </summary>
+        /// <param name="inputScheme"></param>
+        /// <param name="pageReadOrder"></param>
+        public void ResetCommandCollection(InputScheme inputScheme, PageReadOrder pageReadOrder)
+        {
+            Config.Current.Command.PresetInputScheme = inputScheme;
+            Config.Current.Command.PresetPageReadOrder = pageReadOrder;
+
+            var defaultMemento = GetDefaultMemento();
+            RestoreCommandCollection(defaultMemento, true);
+        }
+
+        /// <summary>
+        /// デフォルトコマンドセットを取得
+        /// </summary>
+        private CommandCollection GetDefaultMemento()
+        {
+            var inputScheme = Config.Current.Command.PresetInputScheme;
+            var pageReadOrder = Config.Current.Command.PresetPageReadOrder;
+
+            // プロパティが異なる場合は再生成
+            if (_defaultCollection is null || _defaultCollection.InputScheme != inputScheme || _defaultCollection.PageReadOrder != pageReadOrder)
+            {
+                var memento = CreateDefaultMemento(inputScheme, pageReadOrder);
+                _defaultCollection = new DefaultCommandCollection(inputScheme, pageReadOrder, memento);
+                UpdateDefaultCommandElement(memento);
+            }
+
+            return _defaultCollection.CommandCollection;
+        }
+
+        /// <summary>
+        /// CommandElement が保持するでフォルド設定を更新
+        /// </summary>
+        /// <param name="defaultMemento"></param>
+        private void UpdateDefaultCommandElement(CommandCollection defaultMemento)
+        {
+            foreach (var item in defaultMemento)
+            {
+                GetElement(item.Key).SetDefaultMemento(item.Value);
+            }
+        }
+
+        /// <summary>
         /// 初期設定生成
         /// </summary>
-        /// <param name="type">入力スキーム</param>
+        /// <param name="inputScheme">入力スキーム</param>
+        /// <param name="pageReadOrder">ページを開く方向</param>
         /// <returns></returns>
-        public static CommandCollection CreateDefaultMemento(InputScheme type)
+        private CommandCollection CreateDefaultMemento(InputScheme inputScheme, PageReadOrder pageReadOrder)
         {
-            var memento = CommandTable.Current.DefaultMemento.Clone();
+            if (inputScheme == InputScheme.TypeA && pageReadOrder == PageReadOrder.RightToLeft)
+            {
+                return _baseCollection;
+            }
 
-            // Type.M
-            switch (type)
+            var memento = _baseCollection.Clone();
+
+            switch (inputScheme)
             {
                 case InputScheme.TypeA: // default
                     break;
 
                 case InputScheme.TypeB: // wheel page, right click context menu
-                    memento["NextScrollPage"].ShortCutKey = ShortcutKey.Empty;
-                    memento["PrevScrollPage"].ShortCutKey = ShortcutKey.Empty;
-                    memento["NextPage"].ShortCutKey = new ShortcutKey("Left,WheelDown");
-                    memento["PrevPage"].ShortCutKey = new ShortcutKey("Right,WheelUp");
-                    memento["OpenContextMenu"].ShortCutKey = new ShortcutKey("RightClick");
+                    memento["NextScrollPage"].ShortCutKey = "";
+                    memento["PrevScrollPage"].ShortCutKey = "";
+                    memento["NextPage"].ShortCutKey = "Left,WheelDown";
+                    memento["PrevPage"].ShortCutKey = "Right,WheelUp";
+                    memento["OpenContextMenu"].ShortCutKey = "RightClick";
                     break;
 
                 case InputScheme.TypeC: // click page
-                    memento["NextScrollPage"].ShortCutKey = ShortcutKey.Empty;
-                    memento["PrevScrollPage"].ShortCutKey = ShortcutKey.Empty;
-                    memento["NextPage"].ShortCutKey = new ShortcutKey("Left,LeftClick");
-                    memento["PrevPage"].ShortCutKey = new ShortcutKey("Right,RightClick");
-                    memento["ViewScrollUp"].ShortCutKey = new ShortcutKey("WheelUp");
-                    memento["ViewScrollDown"].ShortCutKey = new ShortcutKey("WheelDown");
+                    memento["NextScrollPage"].ShortCutKey = "";
+                    memento["PrevScrollPage"].ShortCutKey = "";
+                    memento["NextPage"].ShortCutKey = "Left,LeftClick";
+                    memento["PrevPage"].ShortCutKey = "Right,RightClick";
+                    memento["ViewScrollUp"].ShortCutKey = "WheelUp";
+                    memento["ViewScrollDown"].ShortCutKey = "WheelDown";
                     break;
             }
 
+            if (pageReadOrder != PageReadOrder.RightToLeft)
+            {
+                // ページ移動コマンドのキー操作入れ替え
+                foreach (var pair in _pairs)
+                {
+                    var shortCutKey = memento[pair.Key].ShortCutKey;
+                    memento[pair.Key].ShortCutKey = ReplaceSwapWheelGesture(memento[pair.Value].ShortCutKey);
+                    memento[pair.Value].ShortCutKey = ReplaceSwapWheelGesture(shortCutKey);
+
+                    var mouseGesture = memento[pair.Key].MouseGesture;
+                    memento[pair.Key].MouseGesture = memento[pair.Value].MouseGesture;
+                    memento[pair.Value].MouseGesture = mouseGesture;
+                }
+            }
+
             return memento;
+
+            static string? ReplaceSwapWheelGesture(string? s)
+            {
+                return s?.ReplaceSwap("WheelUp", "WheelDown", "****");
+            }
         }
 
+        /// <summary>
+        /// コマンド実行
+        /// </summary>
         public bool TryExecute(object sender, string commandName, object[]? args, CommandOption option)
         {
             if (_elements.TryGetValue(commandName, out CommandElement? command))
@@ -781,6 +868,9 @@ namespace NeeView
 
         public CommandCollection CreateCommandCollectionMemento(bool trim)
         {
+            // デフォルト値の更新
+            _ = GetDefaultMemento();
+
             var collection = new CommandCollection();
             foreach (var item in _elements)
             {
@@ -802,12 +892,13 @@ namespace NeeView
 
         public void RestoreCommandCollection(CommandCollection? collection, bool cleanup)
         {
-            if (collection == null) return;
+            collection ??= new();
 
             ScriptManager.Current.UpdateScriptCommands(isForce: false, isReplace: false);
 
             // collection は差分の可能性がるので、不足分をデフォルトから補完する
-            var reconstruct = collection.UnionBy(DefaultMemento, e => e.Key);
+            var defaultMemento = GetDefaultMemento();
+            var reconstruct = collection.UnionBy(defaultMemento, e => e.Key);
 
             foreach (var pair in reconstruct)
             {
@@ -851,12 +942,8 @@ namespace NeeView
             Changed?.Invoke(this, new CommandChangedEventArgs(false));
         }
 
-        public void RestoreCommandCollection(InputScheme inputScheme)
-        {
-            RestoreCommandCollection(CreateDefaultMemento(inputScheme), true);
-        }
 
-        #endregion
+        #endregion Memento CommmandCollection
     }
 
 
@@ -874,5 +961,25 @@ namespace NeeView
             }
             return clone;
         }
+    }
+
+    /// <summary>
+    /// 属性つきコマンドコレクション
+    /// </summary>
+    /// <remarks>
+    /// 既定のコマンドコレクションに使われます
+    /// </remarks>
+    public class DefaultCommandCollection  
+    {
+        public DefaultCommandCollection(InputScheme inputScheme, PageReadOrder pageReadOrder, CommandCollection commandCollection)
+        {
+            InputScheme = inputScheme;
+            PageReadOrder = pageReadOrder;
+            CommandCollection = commandCollection;
+        }
+
+        public InputScheme InputScheme { get;  }
+        public PageReadOrder PageReadOrder { get;  }
+        public CommandCollection CommandCollection { get;  }
     }
 }

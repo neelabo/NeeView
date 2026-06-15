@@ -270,7 +270,9 @@ namespace NeeView.Setting
             if (result == true)
             {
                 ScriptManager.Current.UpdateScriptCommands(isForce: true, isReplace: true);
-                CommandTable.Current.RestoreCommandCollection(dialog.InputScheme);
+
+                Config.Current.BookSettingDefault.BookReadOrder = dialog.PageReadOrder;
+                CommandTable.Current.ResetCommandCollection(dialog.InputScheme, dialog.PageReadOrder);
             }
         }
 

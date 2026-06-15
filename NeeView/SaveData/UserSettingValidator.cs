@@ -106,12 +106,12 @@ namespace NeeView
                 if (self.Commands != null)
                 {
                     // メインビューウィンドウ切り替えコマンドにショートカットキーF12を設定
-                    var gestureF12 = new KeyGestureSource(Key.F12);
+                    var gestureF12 = "F12";
                     if (self.Commands.TryGetValue("ToggleMainViewFloating", out var toggleMainViewFloating)
-                        && ShortcutKey.IsNullOrEmpty(toggleMainViewFloating.ShortCutKey)
+                        && string.IsNullOrEmpty(toggleMainViewFloating.ShortCutKey)
                         && !ContainsShortcutGesture(self.Commands, gestureF12))
                     {
-                        toggleMainViewFloating.ShortCutKey = new ShortcutKey(new List<InputGestureSource>() { gestureF12 });
+                        toggleMainViewFloating.ShortCutKey = gestureF12;
                     }
                 }
 
@@ -346,7 +346,7 @@ namespace NeeView
         {
             if (shortCutKey.IsEmpty) return ShortcutKey.Empty;
 
-            return new ShortcutKey(shortCutKey.Gestures.Where(e => !ContainsShortcutGesture(commands, e)));
+            return new ShortcutKey(shortCutKey.Gestures.Where(e => !ContainsShortcutGesture(commands, e.GetDisplayString())));
         }
 
         /// <summary>
@@ -355,14 +355,20 @@ namespace NeeView
         /// <param name="commands"></param>
         /// <param name="gesture">判定するショートカットキー</param>
         /// <returns></returns>
-        private static bool ContainsShortcutGesture(CommandCollection commands, InputGestureSource gesture)
+        private static bool ContainsShortcutGesture(CommandCollection commands, string gesture)
         {
             if (commands is null) return false;
             if (gesture is null) return false;
 
             return commands.Values
-                .SelectMany(e => e.ShortCutKey?.Gestures ?? Enumerable.Empty<InputGestureSource>())
-                .Contains(gesture);
+                .Any(e => ContainsGesture(e, gesture));
+
+
+            bool ContainsGesture(CommandElementMemento command, string gesture)
+            {
+                if (string.IsNullOrEmpty(command.ShortCutKey)) return false;
+                return command.ShortCutKey.Split(',').Any(e => e == gesture);
+            }
         }
 
         /// <summary>

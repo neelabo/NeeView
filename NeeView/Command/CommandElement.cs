@@ -489,9 +489,9 @@ namespace NeeView
 
             var memento = new CommandElementMemento();
 
-            memento.ShortCutKey = ShortCutKey;
-            memento.TouchGesture = TouchGesture;
-            memento.MouseGesture = MouseGesture;
+            memento.ShortCutKey = ShortCutKey.ToString();
+            memento.TouchGesture = TouchGesture.ToString();
+            memento.MouseGesture = MouseGesture.ToString();
             memento.IsShowMessage = IsShowMessage;
             memento.Parameter = Parameter?.Clone() as CommandParameter;
 
@@ -540,9 +540,9 @@ namespace NeeView
                 return;
             }
 
-            ShortCutKey = memento.ShortCutKey ?? _default.ShortCutKey ?? throw new InvalidOperationException();
-            TouchGesture = memento.TouchGesture ?? _default.TouchGesture ?? throw new InvalidOperationException();
-            MouseGesture = memento.MouseGesture ?? _default.MouseGesture ?? throw new InvalidOperationException();
+            ShortCutKey = ShortcutKey.Parse(memento.ShortCutKey ?? _default.ShortCutKey ?? throw new InvalidOperationException());
+            TouchGesture = TouchGesture.Parse(memento.TouchGesture ?? _default.TouchGesture ?? throw new InvalidOperationException());
+            MouseGesture = MouseSequence.Parse(memento.MouseGesture ?? _default.MouseGesture ?? throw new InvalidOperationException());
             IsShowMessage = memento.IsShowMessage ?? _default.IsShowMessage ?? throw new InvalidOperationException();
 
             // 共有コマンドでない場合、コマンドパラメーターを復元する
@@ -565,9 +565,9 @@ namespace NeeView
                 throw new ArgumentNullException(nameof(memento));
             }
 
-            ShortCutKey = memento.ShortCutKey ?? throw new InvalidOperationException();
-            TouchGesture = memento.TouchGesture ?? throw new InvalidOperationException();
-            MouseGesture = memento.MouseGesture ?? throw new InvalidOperationException();
+            ShortCutKey = ShortcutKey.Parse(memento.ShortCutKey ?? throw new InvalidOperationException());
+            TouchGesture = TouchGesture.Parse(memento.TouchGesture ?? throw new InvalidOperationException());
+            MouseGesture = MouseSequence.Parse(memento.MouseGesture ?? throw new InvalidOperationException());
             IsShowMessage = memento.IsShowMessage ?? throw new InvalidOperationException();
 
             if (Share is null)
@@ -627,13 +627,13 @@ namespace NeeView
     public class CommandElementMemento : ICloneable
     {
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public ShortcutKey? ShortCutKey { get; set; }
+        public string? ShortCutKey { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public TouchGesture? TouchGesture { get; set; }
+        public string? TouchGesture { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public MouseSequence? MouseGesture { get; set; }
+        public string? MouseGesture { get; set; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public bool? IsShowMessage { get; set; }

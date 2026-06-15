@@ -1,6 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 
 namespace NeeView.Setting
@@ -10,22 +8,23 @@ namespace NeeView.Setting
     /// </summary>
     public partial class CommandResetWindow : Window
     {
-        private readonly CommandResetWindowViewModel _vm;
+        private SettingPageInputScheme _page;
 
 
         public CommandResetWindow()
         {
             InitializeComponent();
 
-            _vm = new CommandResetWindowViewModel();
-            this.DataContext = _vm;
-
             this.Loaded += CommandResetWindow_Loaded;
             this.KeyDown += CommandResetWindow_KeyDown;
+
+            _page = new SettingPageInputScheme("InputScheme");
+            this.PageContent.Content = _page.Content;
         }
 
 
-        public InputScheme InputScheme => _vm.InputScheme;
+        public InputScheme InputScheme => _page.InputScheme;
+        public PageReadOrder PageReadOrder => _page.PageReadOrder;
 
 
         private void CommandResetWindow_KeyDown(object sender, KeyEventArgs e)
@@ -41,36 +40,17 @@ namespace NeeView.Setting
         {
             this.OkButton.Focus();
         }
-    }
 
-
-    public partial class CommandResetWindowViewModel : ObservableObject
-    {
-        private InputScheme _inputScheme;
-
-        public InputScheme InputScheme
+        private void OkButton_Click(object sender, RoutedEventArgs e)
         {
-            get { return _inputScheme; }
-            set { SetProperty(ref _inputScheme, value); }
+            DialogResult = true;
+            Close();
         }
 
-
-        [RelayCommand]
-        private void Ok(Window? window)
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            if (window is null) return;
-
-            window.DialogResult = true;
-            window.Close();
-        }
-
-        [RelayCommand]
-        private void Cancel(Window? window)
-        {
-            if (window is null) return;
-
-            window.DialogResult = false;
-            window.Close();
+            DialogResult = false;
+            Close();
         }
     }
 }

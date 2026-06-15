@@ -4,6 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NeeView.Setting"
+        xmlns:nwp="clr-namespace:NeeView.Windows.Property"
+        xmlns:nwc="clr-namespace:NeeView.Windows.Controls"
         xmlns:properties="clr-namespace:NeeView.Properties"
         mc:Ignorable="d"
         Style="{StaticResource ChromeDialogStyle}"
@@ -15,8 +17,24 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/SettingTheme.xaml" />
+                <ResourceDictionary Source="/NeeView/Windows/Property/PropertyValueTemplateDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            
+
+            <DataTemplate DataType="{x:Type nwp:PropertyValue_Boolean}">
+                <StackPanel Orientation="Horizontal" Style="{StaticResource DisableStyle}">
+                    <nwc:ToggleSwitch IsChecked="{Binding Value}" Height="20" HorizontalAlignment="Left" ShowState="True"/>
+                </StackPanel>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type nwp:PropertyTitleElement}">
+                <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0,10,0,5" />
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type nwp:PropertyMemberElement}">
+                <nwp:PropertyControl Header="{Binding Name}" Value="{Binding TypeValue}" Tips="{Binding Tips}"
+                        ColumnRate="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=ColumnRate}" />
+            </DataTemplate>
+
             <Style x:Key="ButtonStyle" TargetType="Button" BasedOn="{StaticResource NVButton}">
                 <Setter Property="FocusVisualStyle" Value="{StaticResource NVBorderFocusVisual}" />
                 <Setter Property="MinWidth" Value="80"/>
@@ -29,18 +47,21 @@
     <Grid>
         <DockPanel Margin="5">
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
-                <Button x:Name="OkButton" Style="{StaticResource ButtonStyle}" Content="{properties:TextBinding Word.OK}" Command="{Binding OkCommand}" CommandParameter="{Binding ElementName=MyWindow}"/>
-                <Button x:Name="CancelButton" Style="{StaticResource ButtonStyle}" Content="{properties:TextBinding Word.Cancel}" Command="{Binding CancelCommand}" CommandParameter="{Binding ElementName=MyWindow}"/>
+                <Button x:Name="OkButton" Style="{StaticResource ButtonStyle}" Content="{properties:TextBinding Word.OK}" Click="OkButton_Click"/>
+                <Button x:Name="CancelButton" Style="{StaticResource ButtonStyle}" Content="{properties:TextBinding Word.Cancel}" Click="CancelButton_Click" />
             </StackPanel>
             <DockPanel Margin="0">
                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10">
                     <Image Source="{StaticResource ic_warning_48px}" Width="20" Height="20" Margin="5"/>
                     <TextBlock Text="{properties:TextBinding CommandResetWindow.Message}" VerticalAlignment="Center"/>
                 </StackPanel>
+                <!--
                 <StackPanel HorizontalAlignment="Center">
                     <TextBlock Text="{properties:TextBinding CommandResetWindow.ResetType.Title}" Margin="5"/>
                     <local:CommandResetControl InputScheme="{Binding InputScheme}" Margin="5" />
                 </StackPanel>
+                -->
+                <ContentControl x:Name="PageContent" IsTabStop="False" />
             </DockPanel>
         </DockPanel>
     </Grid>

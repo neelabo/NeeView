@@ -7,11 +7,28 @@ namespace NeeView
     [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class CommandConfig : ObservableObject
     {
+        [DefaultEquality] private InputScheme _presetInputScheme;
+        [DefaultEquality] private PageReadOrder _presetPageReadOrder;
         [DefaultEquality] private bool _isAccessKeyEnabled = true;
         [DefaultEquality] private bool _isReversePageMove = true;
         [DefaultEquality] private bool _isReversePageMoveWheel;
         [DefaultEquality] private bool _isReversePageMoveHorizontalWheel = true;
         [DefaultEquality] private bool _isHorizontalWheelLimitedOnce = true;
+
+
+        [PropertyMapIgnore]
+        public InputScheme PresetInputScheme
+        {
+            get { return _presetInputScheme; }
+            set { SetProperty(ref _presetInputScheme, value); }
+        }
+
+        [PropertyMapIgnore]
+        public PageReadOrder PresetPageReadOrder
+        {
+            get { return _presetPageReadOrder; }
+            set { SetProperty(ref _presetPageReadOrder, value); }
+        }
 
         [PropertyMember]
         public bool IsAccessKeyEnabled

@@ -46,7 +46,7 @@ namespace NeeView
                 File.WriteAllText(Path.Combine(Environment.UserDataPath, $"MainMenu.{culture}.html"), mainMenu);
 
                 var memento = CommandTable.Current.CreateCommandCollectionMemento(false);
-                CommandTable.Current.RestoreCommandCollection(InputScheme.TypeA);
+                CommandTable.Current.ResetCommandCollection(InputScheme.TypeA, PageReadOrder.RightToLeft);
                 var commandList = CommandTable.Current.CreateCommandListHelp(true);
                 File.WriteAllText(Path.Combine(Environment.UserDataPath, $"CommandList.{culture}.html"), commandList);
                 CommandTable.Current.RestoreCommandCollection(memento, true);

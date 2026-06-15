@@ -1,4 +1,5 @@
-﻿using NeeView.Properties;
+﻿using NeeView.Collections.Generic;
+using NeeView.Properties;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,14 +11,20 @@ namespace NeeView.Setting
     /// </summary>
     public partial class CommandResetControl : UserControl
     {
-        public CommandResetControl()
+        public CommandResetControl() : this(InputScheme.TypeA)
+        {
+        }
+
+        public CommandResetControl(InputScheme inputScheme)
         {
             InitializeComponent();
+
+            InputScheme = inputScheme;
 
             this.Root.DataContext = this;
             this.Root.ItemsSource = InputSchemeList;
             this.Root.SelectionChanged += Root_SelectionChanged;
-            this.Root.SelectedIndex = 0;
+            this.Root.SelectedIndex = InputSchemeList.FindIndex<InputSchemeText>(e => e.Scheme == InputScheme);
         }
 
         public List<InputSchemeText> InputSchemeList { get; } = new List<InputSchemeText>
