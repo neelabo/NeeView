@@ -23,6 +23,11 @@ namespace NeeView
         {
             ApplicationDisposer.Current.Add(this);
 
+            _disposables.Add(Config.Current.System.SubscribePropertyChanged(nameof(SystemConfig.IsParentDirectoryVisible), async (s, e) =>
+            {
+                await RefreshAsync(true, true);
+            }));
+
             _disposables.Add(Config.Current.Bookmark.SubscribePropertyChanged(nameof(BookmarkConfig.IsSyncBookshelfEnabled), (s, e) =>
             {
                 OnPropertyChanged(nameof(IsSyncBookshelfEnabled));

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NeeView
@@ -288,20 +289,27 @@ namespace NeeView
     public static class DriveReadyMap
     {
         private static readonly Dictionary<string, bool> _driveReadyMap = new();
+        private static readonly Lock _lock = new();
 
         public static bool IsDriveReady(string driveName)
         {
-            if (_driveReadyMap.TryGetValue(driveName, out bool isReady))
+            lock (_lock)
             {
-                return isReady;
-            }
+                if (_driveReadyMap.TryGetValue(driveName, out bool isReady))
+                {
+                    return isReady;
+                }
 
-            return true;
+                return true;
+            }
         }
 
         public static void SetDriveReady(string driveName, bool isReady)
         {
-            _driveReadyMap[driveName] = isReady;
+            lock (_lock)
+            {
+                _driveReadyMap[driveName] = isReady;
+            }
         }
     }
 }

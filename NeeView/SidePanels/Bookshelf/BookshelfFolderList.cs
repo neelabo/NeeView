@@ -31,6 +31,11 @@ namespace NeeView
                 await RefreshAsync(true, true);
             }));
 
+            _disposables.Add(Config.Current.System.SubscribePropertyChanged(nameof(SystemConfig.IsParentDirectoryVisible), async (s, e) =>
+            {
+                await RefreshAsync(true, true);
+            }));
+
             _disposables.Add(Config.Current.Bookshelf.SubscribePropertyChanged(nameof(BookshelfConfig.FolderSortOrder), async (s, e) =>
             {
                 await RefreshAsync(true, true);
