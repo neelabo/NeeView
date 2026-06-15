@@ -50,87 +50,120 @@ namespace NeeView
         }
     }
 
+
     /// <summary>
-    /// JsonConverter for CommandParameter.
-    /// Support polymorphism.
+    /// CommandParameter の PolymorphicDiffJsonConverter
     /// </summary>
-    public sealed class JsonCommandParameterConverter : JsonConverter<CommandParameter>
+    public sealed class JsonCommandParameterConverter : PolymorphicDiffJsonConverter<CommandParameter>
     {
-        // NOTE: need add polymorphism class type.
-        public static Type[] KnownTypes { get; set; } = new Type[]
-        {
-            typeof(ReversibleCommandParameter),
-            typeof(ToggleCommandParameter),
-            typeof(MoveSizePageCommandParameter),
-            typeof(TogglePageModeCommandParameter),
-            typeof(ToggleStretchModeCommandParameter),
-            typeof(StretchModeCommandParameter),
-            typeof(ViewScrollCommandParameter),
-            typeof(ViewPresetScrollCommandParameter),
-            typeof(ViewScaleCommandParameter),
-            typeof(ViewRotateCommandParameter),
-            typeof(MovePlaylistItemInBookCommandParameter),
-            typeof(ScrollPageCommandParameter),
-            typeof(FocusMainViewCommandParameter),
-            typeof(ExportImageAsCommandParameter),
-            typeof(ExportImageCommandParameter),
-            typeof(OpenExternalAppCommandParameter),
-            typeof(OpenExternalAppAsCommandParameter),
-            typeof(OpenBookExternalAppAsCommandParameter),
-            typeof(CopyFileCommandParameter),
-            typeof(ViewScrollNTypeCommandParameter),
-            typeof(ScriptCommandParameter),
-            typeof(ImportBackupCommandParameter),
-            typeof(ExportBackupCommandParameter),
-            typeof(CopyToFolderAsCommandParameter),
-            typeof(MoveToFolderAsCommandParameter),
-            typeof(CopyBookToFolderAsCommandParameter),
-            typeof(MoveBookToFolderAsCommandParameter),
-            typeof(ToggleBookmarkCommandParameter),
-            typeof(MoveMediaPositionCommandParameter),
-            typeof(SetEffectProfileCommandParameter),
-        };
+        private const string _typeNamePostfix = "CommandParameter";
+
+        private readonly static JsonDerivedTypeData[] _knownTypes =
+        [
+            new(typeof(ReversibleCommandParameter)),
+            new(typeof(ToggleCommandParameter)),
+            new(typeof(MoveSizePageCommandParameter)),
+            new(typeof(TogglePageModeCommandParameter)),
+            new(typeof(ToggleStretchModeCommandParameter)),
+            new(typeof(StretchModeCommandParameter)),
+            new(typeof(ViewScrollCommandParameter)),
+            new(typeof(ViewPresetScrollCommandParameter)),
+            new(typeof(ViewScaleCommandParameter)),
+            new(typeof(ViewRotateCommandParameter)),
+            new(typeof(MovePlaylistItemInBookCommandParameter)),
+            new(typeof(ScrollPageCommandParameter)),
+            new(typeof(FocusMainViewCommandParameter)),
+            new(typeof(ExportImageAsCommandParameter)),
+            new(typeof(ExportImageCommandParameter)),
+            new(typeof(OpenExternalAppCommandParameter)),
+            new(typeof(OpenExternalAppAsCommandParameter)),
+            new(typeof(OpenBookExternalAppAsCommandParameter)),
+            new(typeof(CopyFileCommandParameter)),
+            new(typeof(ViewScrollNTypeCommandParameter)),
+            new(typeof(ScriptCommandParameter)),
+            new(typeof(ImportBackupCommandParameter)),
+            new(typeof(ExportBackupCommandParameter)),
+            new(typeof(CopyToFolderAsCommandParameter)),
+            new(typeof(MoveToFolderAsCommandParameter)),
+            new(typeof(CopyBookToFolderAsCommandParameter)),
+            new(typeof(MoveBookToFolderAsCommandParameter)),
+            new(typeof(ToggleBookmarkCommandParameter)),
+            new(typeof(MoveMediaPositionCommandParameter)),
+            new(typeof(SetEffectProfileCommandParameter)),
+        ];
 
         static JsonCommandParameterConverter()
         {
-            CheckAllClassHasEquals();
+            Initialize(_knownTypes, ToTypeName);
         }
 
-        // すべてのクラスが Equals を実装しているかチェック（デバッグ用）
-        [Conditional("DEBUG")]
-        private static void CheckAllClassHasEquals()
+        public JsonCommandParameterConverter()
         {
-            foreach (var type in KnownTypes)
-            {
-                NVDebug.CheckHasEqualsMethod(type);
-            }
+            IsTrimEnabled = AppSettings.Current.TrimSaveData;
+        }
+
+        private static string ToTypeName(JsonDerivedTypeData data)
+        {
+            return data.TypeDiscriminator ?? ClassTools.CreateName(data.DerivedType.Name, _typeNamePostfix);
+        }
+
+        public static bool ContainsKnownType(Type type)
+        {
+            return _knownTypes.Select(e => e.DerivedType).Contains(type);
         }
 
         public override CommandParameter? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (reader.TokenType != JsonTokenType.StartObject)
             {
-                throw new JsonException();
+                throw new JsonException("Expected StartObject");
             }
 
-            if (!reader.Read() || reader.TokenType != JsonTokenType.PropertyName || reader.GetString() != "Type")
+            reader.Read();
+
+            if (reader.TokenType != JsonTokenType.PropertyName)
             {
-                throw new JsonException();
+                throw new JsonException("Json polymorphism format exception");
             }
 
-            if (!reader.Read() || reader.TokenType != JsonTokenType.String)
-            {
-                throw new JsonException();
-            }
+            var typePropertyName = reader.GetString();
+
+            reader.Read();
+
             var typeString = reader.GetString();
 
+            CommandParameter? result;
+
+            if (typePropertyName == "$type")
+            {
+                result = ReadBody(ref reader, Type, options, typeString);
+            }
+            else if (typePropertyName == "Type")
+            {
+                result = ReadLegacy(ref reader, Type, options, typeString);
+            }
+            else
+            {
+                throw new JsonException("Json polymorphism format exception");
+            }
+
+            if (reader.TokenType != JsonTokenType.EndObject)
+            {
+                throw new JsonException("Expected EndObject");
+            }
+
+            return result;
+        }
+
+        private CommandParameter? ReadLegacy(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options, string? typeString)
+        {
             // Typo ver.41
             if (typeString == "MovePlaylsitItemInBookCommandParameter")
             {
                 typeString = "MovePlaylistItemInBookCommandParameter";
             }
 
-            Type? type = KnownTypes.FirstOrDefault(e => e.Name == typeString);
+            Type? type = _knownTypes.Select(e => e.DerivedType).FirstOrDefault(e => e.Name == typeString);
             Debug.Assert(type != null, $"Not support type: {typeString}");
 
             if (!reader.Read() || reader.GetString() != "Value")
@@ -149,7 +182,8 @@ namespace NeeView
             }
             else
             {
-                SkipBlock(ref reader);
+                Debug.WriteLine($"Not support type: {typeString}");
+                reader.Skip();
                 instance = null;
             }
 
@@ -160,50 +194,6 @@ namespace NeeView
 
             return instance as CommandParameter;
         }
-
-        private static void SkipBlock(ref Utf8JsonReader reader)
-        {
-            if (reader.TokenType == JsonTokenType.StartObject || reader.TokenType == JsonTokenType.StartArray)
-            {
-                int depth = reader.CurrentDepth;
-                do
-                {
-                    bool result = reader.Read();
-                    if (!result)
-                    {
-                        throw new JsonException();
-                    }
-                }
-                while (depth < reader.CurrentDepth);
-            }
-            else
-            {
-                throw new JsonException($"Unexpected TokenType: {reader.TokenType}");
-            }
-        }
-
-        public override void Write(Utf8JsonWriter writer, CommandParameter value, JsonSerializerOptions options)
-        {
-
-            var type = value.GetType();
-            Debug.Assert(KnownTypes.Contains(type));
-
-            var def = Activator.CreateInstance(type) as CommandParameter ?? throw new InvalidOperationException();
-
-            if (AppSettings.Current.TrimSaveData && value.Equals(def))
-            {
-                //Debug.WriteLine($"{type} is default.");
-                writer.WriteNullValue();
-            }
-            else
-            {
-                writer.WriteStartObject();
-                writer.WriteString("Type", type.Name);
-                writer.WritePropertyName("Value");
-                JsonSerializer.Serialize(writer, value, type, options);
-                writer.WriteEndObject();
-            }
-
-        }
     }
+
 }

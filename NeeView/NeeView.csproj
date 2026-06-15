@@ -39,7 +39,7 @@
   <ItemGroup>
     <PackageReference Include="bblanchon.PDFium.Win32" Version="149.0.7825" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
-    <PackageReference Include="Generator.Equals" Version="4.0.0" />
+    <PackageReference Include="Generator.Equals" Version="3.3.0" />
     <PackageReference Include="H.NotifyIcon.Wpf" Version="2.4.1" />
     <PackageReference Include="Jint" Version="4.9.3" />
     <PackageReference Include="MetadataExtractor" Version="2.9.3" />

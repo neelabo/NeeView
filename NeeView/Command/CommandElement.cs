@@ -495,7 +495,7 @@ namespace NeeView
             memento.IsShowMessage = IsShowMessage;
             memento.Parameter = Parameter?.Clone() as CommandParameter;
 
-            Debug.Assert(Parameter == null || JsonCommandParameterConverter.KnownTypes.Contains(Parameter.GetType()));
+            Debug.Assert(Parameter == null || JsonCommandParameterConverter.ContainsKnownType(Parameter.GetType()));
 
             if (trim)
             {

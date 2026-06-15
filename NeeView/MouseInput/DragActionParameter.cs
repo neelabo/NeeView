@@ -81,56 +81,87 @@ namespace NeeView
     }
 
 
-
     /// <summary>
-    /// JsonConverter for DragActionParameter.
-    /// Support polymorphism.
+    /// DragActionParameter の PolymorphicDiffJsonConverter
     /// </summary>
-    public sealed class JsonDragActionParameterConverter : JsonConverter<DragActionParameter>
+    public sealed class JsonDragActionParameterConverter : PolymorphicDiffJsonConverter<DragActionParameter>
     {
-        // NOTE: need add polymorphism class type.
-        public static Type[] KnownTypes { get; set; } = new Type[]
-        {
-            typeof(MoveScaleDragActionParameter),
-            typeof(MoveDragActionParameter),
-            typeof(SensitiveDragActionParameter),
-        };
+        private const string _typeNamePostfix = "DragActionParameter";
+
+        private readonly static JsonDerivedTypeData[] _knownTypes =
+        [
+            new(typeof(MoveScaleDragActionParameter)),
+            new(typeof(MoveDragActionParameter)),
+            new(typeof(SensitiveDragActionParameter)),
+        ];
 
         static JsonDragActionParameterConverter()
         {
-            CheckAllClassHasEquals();
+            Initialize(_knownTypes, ToTypeName);
         }
 
-        // すべてのクラスが Equals を実装しているかチェック（デバッグ用）
-        [Conditional("DEBUG")]
-        private static void CheckAllClassHasEquals()
+        public JsonDragActionParameterConverter()
         {
-            foreach (var type in KnownTypes)
-            {
-                NVDebug.CheckHasEqualsMethod(type);
-            }
+            IsTrimEnabled = AppSettings.Current.TrimSaveData;
+        }
+
+        private static string ToTypeName(JsonDerivedTypeData data)
+        {
+            return data.TypeDiscriminator ?? ClassTools.CreateName(data.DerivedType.Name, _typeNamePostfix);
+        }
+
+        public static bool ContainsKnownType(Type type)
+        {
+            return _knownTypes.Select(e => e.DerivedType).Contains(type);
         }
 
         public override DragActionParameter? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (reader.TokenType != JsonTokenType.StartObject)
             {
-                throw new JsonException();
+                throw new JsonException("Expected StartObject");
             }
 
-            if (!reader.Read() || reader.TokenType != JsonTokenType.PropertyName || reader.GetString() != "Type")
+            reader.Read();
+
+            if (reader.TokenType != JsonTokenType.PropertyName)
             {
-                throw new JsonException();
+                throw new JsonException("Json polymorphism format exception");
             }
 
-            if (!reader.Read() || reader.TokenType != JsonTokenType.String)
-            {
-                throw new JsonException();
-            }
+            var typePropertyName = reader.GetString();
+
+            reader.Read();
+
             var typeString = reader.GetString();
 
-            Type? type = KnownTypes.FirstOrDefault(e => e.Name == typeString);
-            Debug.Assert(type != null);
+            DragActionParameter? result;
+
+            if (typePropertyName == "$type")
+            {
+                result = ReadBody(ref reader, Type, options, typeString);
+            }
+            else if (typePropertyName == "Type")
+            {
+                result = ReadLegacy(ref reader, Type, options, typeString);
+            }
+            else
+            {
+                throw new JsonException("Json polymorphism format exception");
+            }
+
+            if (reader.TokenType != JsonTokenType.EndObject)
+            {
+                throw new JsonException("Expected EndObject");
+            }
+
+            return result;
+        }
+
+        private DragActionParameter? ReadLegacy(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options, string? typeString)
+        {
+            Type? type = _knownTypes.Select(e => e.DerivedType).FirstOrDefault(e => e.Name == typeString);
+            Debug.Assert(type != null, $"Not support type: {typeString}");
 
             if (!reader.Read() || reader.GetString() != "Value")
             {
@@ -148,7 +179,7 @@ namespace NeeView
             }
             else
             {
-                Debug.WriteLine($"Nor support type: {typeString}");
+                Debug.WriteLine($"Not support type: {typeString}");
                 reader.Skip();
                 instance = null;
             }
@@ -158,22 +189,8 @@ namespace NeeView
                 throw new JsonException();
             }
 
-            return (DragActionParameter?)instance;
-        }
-
-        public override void Write(Utf8JsonWriter writer, DragActionParameter value, JsonSerializerOptions options)
-        {
-            var type = value.GetType();
-            Debug.Assert(KnownTypes.Contains(type));
-
-            writer.WriteStartObject();
-
-            writer.WriteString("Type", type.Name);
-
-            writer.WritePropertyName("Value");
-            JsonSerializer.Serialize(writer, value, type, options);
-
-            writer.WriteEndObject();
+            return instance as DragActionParameter;
         }
     }
+
 }

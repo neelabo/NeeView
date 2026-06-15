@@ -67,6 +67,19 @@ namespace NeeView
             reader.Read();
 
             var typeString = reader.GetString();
+
+            var result = ReadBody(ref reader, Type, options, typeString);
+
+            if (reader.TokenType != JsonTokenType.EndObject)
+            {
+                throw new JsonException("Expected EndObject");
+            }
+
+            return result;
+        }
+
+        protected T? ReadBody(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options, string? typeString)
+        {
             if (typeString is null)
             {
                 throw new JsonException("Expected String");
@@ -83,11 +96,6 @@ namespace NeeView
             reader.Read();
 
             var result = converter.ReadInner(ref reader, type, options);
-
-            if (reader.TokenType != JsonTokenType.EndObject)
-            {
-                throw new JsonException("Expected EndObject");
-            }
 
             return result as T;
         }
