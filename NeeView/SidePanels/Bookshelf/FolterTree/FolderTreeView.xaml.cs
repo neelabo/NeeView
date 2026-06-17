@@ -116,6 +116,10 @@ namespace NeeView
                         }
                     }
                     break;
+
+                case BookmarkFolderNode bookmarkFolder:
+                    BookmarkFolderTools.ShowPropertyDialog(Window.GetWindow(this), bookmarkFolder.BookmarkSource);
+                    break;
             }
         }
 
@@ -443,6 +447,8 @@ namespace NeeView
                     contextMenu.Items.Add(new Separator());
                     contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.Delete"), RemoveCommand, Key.Delete.ToString()));
                     contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.Rename"), RenameCommand, Key.F2.ToString()));
+                    contextMenu.Items.Add(new Separator());
+                    contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.Property"), OpenPropertyCommand));
                     break;
 
                 default:

@@ -114,11 +114,11 @@ namespace NeeView.Windows.Property
         {
             Click = ClickAction;
         }
-        
+
         private void ClickAction(RoutedEventArgs e)
         {
             Value = !Value;
-            e.Handled = true; 
+            e.Handled = true;
         }
 
         public override void SetValueFromString(string value)
@@ -200,7 +200,7 @@ namespace NeeView.Windows.Property
             {
                 _getMap = () => generator.CreateMap();
             }
-            
+
             _map = _getMap?.Invoke()
                 ?? setter.Options?.IntegerMap
                 ?? values?.ToKeyValuePairList(e => e, e => e.ToString())
@@ -399,9 +399,12 @@ namespace NeeView.Windows.Property
 
     public class PropertyValue_Color : PropertyValue<Color>
     {
-        public PropertyValue_Color(PropertyMemberElement setter) : base(setter)
+        public PropertyValue_Color(PropertyMemberElement setter, Color? defaultColor = null) : base(setter)
         {
+            DefaultColor = defaultColor;
         }
+
+        public Color? DefaultColor { get;  }
 
         public override void SetValueFromString(string value)
         {
@@ -409,6 +412,12 @@ namespace NeeView.Windows.Property
         }
     }
 
+    public class PropertyValue_ColorPicker : PropertyValue_Color
+    {
+        public PropertyValue_ColorPicker(PropertyMemberElement setter, Color? defaultColor) : base(setter, defaultColor)
+        {
+        }
+    }
 
     public class PropertyValue_Size : PropertyValue<Size>
     {

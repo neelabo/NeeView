@@ -277,7 +277,7 @@ namespace NeeView
                 }
             }
 
-            BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Replace));
+            BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Reset));
 
             return unlinkedCount;
         }
@@ -578,7 +578,7 @@ namespace NeeView
             if (!isForce && bookmark.Unit.Memento.IsEquals(memento)) return;
 
             bookmark.Unit.Memento = memento;
-            BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Update, node.Parent, node));
+            BookmarkChanged?.Invoke(this, new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Replace, node.Parent, node));
         }
 
         #region Memento

@@ -127,6 +127,10 @@ namespace NeeView.Windows.Property
                         InitializeByStringsAttribute(stringsAttribute);
                         break;
 
+                    case  PropertyColorAttribute colorAttribute:
+                        InitializeByColorAttribute(colorAttribute);
+                        break;
+
                     default:
                         InitializeByDefaultAttribute(attribute);
                         break;
@@ -357,6 +361,20 @@ namespace NeeView.Windows.Property
             };
         }
 
+        [MemberNotNull(nameof(TypeValue))]
+        private void InitializeByColorAttribute(PropertyColorAttribute colorAttribute)
+        {
+            if (_info.PropertyType != typeof(Color)) throw new NotSupportedException();
+
+            if (colorAttribute.IsColorPicker)
+            {
+                this.TypeValue = new PropertyValue_ColorPicker(this, colorAttribute.GetDefaultColor());
+            }
+            else
+            {
+                this.TypeValue = new PropertyValue_Color(this, colorAttribute.GetDefaultColor());
+            }
+        }
 
         private static object? GetDefaultValue(object source, PropertyInfo info)
         {

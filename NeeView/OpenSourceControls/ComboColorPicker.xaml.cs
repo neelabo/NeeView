@@ -19,6 +19,36 @@ namespace OpenSourceControls
 
     public partial class ComboColorPicker : UserControl
     {
+        private bool _hasDefaultColor;
+
+        // Todo: should this be disposed somewhere?
+
+        public ComboColorPicker()
+        {
+            InitializeComponent();
+
+            InitializeColors();
+        }
+
+        #region Events
+        public static readonly RoutedEvent ColorChangedEvent =
+            EventManager.RegisterRoutedEvent("ColorChanged", RoutingStrategy.Bubble,
+                typeof(RoutedPropertyChangedEventHandler<Color>), typeof(ComboColorPicker));
+
+        public event RoutedPropertyChangedEventHandler<Color> ColorChanged
+        {
+            add { AddHandler(ColorChangedEvent, value); }
+            remove { RemoveHandler(ColorChangedEvent, value); }
+        }
+
+        protected virtual void OnColorChanged(Color oldValue, Color newValue)
+        {
+            var args = new RoutedPropertyChangedEventArgs<Color>(oldValue, newValue);
+            args.RoutedEvent = ComboColorPicker.ColorChangedEvent;
+            RaiseEvent(args);
+        }
+        #endregion
+
         #region Dependency properties
         public Color SelectedColor
         {
@@ -86,37 +116,27 @@ namespace OpenSourceControls
             if (cp.SelectedColor != newBrush.Color)
                 cp.SelectedColor = newBrush.Color;
         }
-        #endregion
 
-        #region Events
-        public static readonly RoutedEvent ColorChangedEvent =
-            EventManager.RegisterRoutedEvent("ColorChanged", RoutingStrategy.Bubble,
-                typeof(RoutedPropertyChangedEventHandler<Color>), typeof(ComboColorPicker));
-
-        public event RoutedPropertyChangedEventHandler<Color> ColorChanged
+        public Color? DefaultColor
         {
-            add { AddHandler(ColorChangedEvent, value); }
-            remove { RemoveHandler(ColorChangedEvent, value); }
+            get { return (Color?)GetValue(DefaultColorProperty); }
+            set { SetValue(DefaultColorProperty, value); }
         }
 
-        protected virtual void OnColorChanged(Color oldValue, Color newValue)
+        // Using a DependencyProperty as the backing store for DefaultColor.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DefaultColorProperty =
+            DependencyProperty.Register(nameof(DefaultColor), typeof(Color?), typeof(ComboColorPicker), new PropertyMetadata(null, OnDefaultColorChanged));
+
+        private static void OnDefaultColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var args = new RoutedPropertyChangedEventArgs<Color>(oldValue, newValue);
-            args.RoutedEvent = ComboColorPicker.ColorChangedEvent;
-            RaiseEvent(args);
+            if (d is not ComboColorPicker cp) return;
+            var defaultColor = (Color?)e.NewValue;
+            cp.SetDefaultColor(defaultColor);
         }
         #endregion
 
-        static readonly Brush _CheckerBrush = CreateCheckerBrush();
-        public static Brush CheckerBrush { get { return _CheckerBrush; } }
-        // Todo: should this be disposed somewhere?
+        public static Brush CheckerBrush { get; } = CreateCheckerBrush();
 
-        public ComboColorPicker()
-        {
-            InitializeComponent();
-
-            InitializeColors();
-        }
 
         public void InitializeColors()
         {
@@ -161,13 +181,31 @@ namespace OpenSourceControls
             ColorList1.SelectedValuePath = "Color";
         }
 
+        private void SetDefaultColor(Color? defaultColor)
+        {
+            if (defaultColor == null) return;
 
-        private void AddColor(Color color, string name)
+            var cvm = new ColorViewModel() { Color = defaultColor.Value, Name = "Default" };
+
+            if (_hasDefaultColor)
+            {
+                ColorList1.Items[0] = cvm;
+            }
+            else
+            {
+                ColorList1.Items.Insert(0, cvm);
+                ColorList1.Items.Insert(1, new SeparatorWithColorProperty());
+                _hasDefaultColor = true;
+            }
+        }
+
+        private ColorViewModel AddColor(Color color, string name)
         {
             if (!name.StartsWith("#", StringComparison.Ordinal))
                 name = NiceName(name);
             var cvm = new ColorViewModel() { Color = color, Name = name };
             ColorList1.Items.Add(cvm);
+            return cvm;
         }
 
         private static string NiceName(string name)
@@ -210,8 +248,8 @@ namespace OpenSourceControls
 
             return checkerBrush;
         }
-
     }
+
 
     public class ColorViewModel
     {

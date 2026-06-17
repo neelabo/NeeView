@@ -11,7 +11,6 @@ namespace NeeView
         Move,
         Reset,
         Rename,
-        Update,
     }
 
     public class BookmarkCollectionChangedEventArgs : EventArgs

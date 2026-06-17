@@ -31,7 +31,7 @@ namespace NeeView
             set { SetProperty(ref _target, value); }
         }
 
-        [PropertyMember, DefaultValue(typeof(Color), "#80808080")]
+        [PropertyColor(true), DefaultValue(typeof(Color), "#80808080")]
         public Color Color
         {
             get { return _color; }

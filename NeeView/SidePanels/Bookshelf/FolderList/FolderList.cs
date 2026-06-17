@@ -121,10 +121,9 @@ namespace NeeView
                     switch (e.Action)
                     {
                         case EntryCollectionChangedAction.Reset:
-                        case EntryCollectionChangedAction.Replace:
                             RefreshIcon(null);
                             break;
-                        case EntryCollectionChangedAction.Update:
+                        case EntryCollectionChangedAction.Replace:
                             break;
                         default:
                             if (e.Item?.Value is Bookmark bookmark)
@@ -1118,7 +1117,7 @@ namespace NeeView
             switch (e.Action)
             {
                 case EntryCollectionChangedAction.Rename:
-                case EntryCollectionChangedAction.Update:
+                case EntryCollectionChangedAction.Replace:
 
                     // Tag名、色の変更追従
                     if (e.Item?.Value is BookmarkFolder)

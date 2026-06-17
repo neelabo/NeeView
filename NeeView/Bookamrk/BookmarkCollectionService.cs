@@ -237,7 +237,7 @@ namespace NeeView
             }
 
             folder.Color = color;
-            BookmarkCollection.Current.RaiseBookmarkChangedEvent(new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Update, node.Parent, node));
+            BookmarkCollection.Current.RaiseBookmarkChangedEvent(new BookmarkCollectionChangedEventArgs(EntryCollectionChangedAction.Replace, node.Parent, node));
             return true;
         }
 

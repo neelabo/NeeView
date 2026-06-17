@@ -182,9 +182,9 @@
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type nwp:PropertyValue_Color}">
-                <DockPanel>
-                    <nwc:EnterTriggerTextBox Text="{Binding Value}" MinWidth="100" BorderThickness="1,1,1,1" Padding="0,0,2,0" VerticalContentAlignment="Center" />
-                    <osc:ComboColorPicker SelectedColor="{Binding Value, Mode=TwoWay}" />
+                <DockPanel KeyboardNavigation.TabNavigation="Local">
+                    <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding Value}" MinWidth="100" BorderThickness="1,1,1,1" Padding="0,0,2,0" VerticalContentAlignment="Center" TabIndex="2" />
+                    <osc:ComboColorPicker SelectedColor="{Binding Value, Mode=TwoWay}" TabIndex="1" />
                 </DockPanel>
             </DataTemplate>
 

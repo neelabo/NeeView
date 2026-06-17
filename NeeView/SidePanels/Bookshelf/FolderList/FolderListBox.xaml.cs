@@ -1,9 +1,11 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Linq;
 using NeeView.Collections.Generic;
 using NeeView.Properties;
 using NeeView.Windows;
+using NeeView.Windows.Property;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,6 +18,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace NeeView
 {
@@ -128,7 +131,8 @@ namespace NeeView
         public static readonly RoutedCommand OpenInPlaylistCommand = new("OpenInPlaylistCommand", typeof(FolderListBox));
         public static readonly RoutedCommand RegenerateThumbnailCommand = new("RegenerateThumbnailCommand", typeof(FolderListBox));
         public static readonly RoutedCommand SetThumbnailCommand = new("SetThumbnailCommand", typeof(FolderListBox));
-        public static readonly RoutedCommand EditTagColorCommand = new("EditTagColorCommand", typeof(FolderListBox));
+        public static readonly RoutedCommand BookmarkFolderPropertyCommand = new("BookmarkFolderPropertyCommand", typeof(FolderListBox));
+        public static readonly RoutedCommand BookmarkPropertyCommand = new("BookmarkPropertyCommand", typeof(FolderListBox));
 
         private static void InitializeCommandStatic()
         {
@@ -161,7 +165,8 @@ namespace NeeView
             this.ListBox.CommandBindings.Add(new CommandBinding(OpenInPlaylistCommand, OpenInPlaylistCommand_Execute));
             this.ListBox.CommandBindings.Add(new CommandBinding(RegenerateThumbnailCommand, RegenerateThumbnailCommand_Execute));
             this.ListBox.CommandBindings.Add(new CommandBinding(SetThumbnailCommand, SetThumbnailCommand_Execute, SetThumbnailCommand_CanExecute));
-            this.ListBox.CommandBindings.Add(new CommandBinding(EditTagColorCommand, EditTagColor_Executed));
+            this.ListBox.CommandBindings.Add(new CommandBinding(BookmarkFolderPropertyCommand, BookmarkFolderPropertyCommand_Executed));
+            this.ListBox.CommandBindings.Add(new CommandBinding(BookmarkPropertyCommand, BookmarkPropertyCommand_Executed));
         }
 
         /// <summary>
@@ -636,17 +641,22 @@ namespace NeeView
             }
         }
 
-        private void EditTagColor_Executed(object sender, ExecutedRoutedEventArgs e)
+        private void BookmarkFolderPropertyCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             if (sender is ListBox { SelectedItem: BookmarkFolderFolderItem item })
             {
-                var vm = new TagColorDialogViewModel(item.BookmarkNode);
-                var dialog = new TagColorDialog(vm);
-                dialog.Owner = Window.GetWindow(this);
-                dialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                dialog.ShowDialog();
+                BookmarkFolderTools.ShowPropertyDialog(Window.GetWindow(this), item.BookmarkNode);
             }
         }
+
+        private void BookmarkPropertyCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (sender is ListBox { SelectedItem: BookmarkFolderItem item })
+            {
+                BookmarkTools.ShowPropertyDialog(Window.GetWindow(this), item.BookmarkNode);
+            }
+        }
+
 
         [RelayCommand]
         private void NewFolder()
@@ -670,7 +680,7 @@ namespace NeeView
             BookmarkFolderList.Current.RequestPlace(path, select, FolderSetPlaceOption.None);
         }
 
-        #endregion
+#endregion
 
         #region DragDrop
 
@@ -1309,7 +1319,8 @@ namespace NeeView
                     contextMenu.Items.Add(new Separator());
                     contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Delete"), Command = RemoveCommand });
                     contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Rename"), Command = RenameCommand });
-                    contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.EditColor"), Command = EditTagColorCommand });
+                    contextMenu.Items.Add(new Separator());
+                    contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("Menu.Property"), Command = BookmarkFolderPropertyCommand });
                 }
                 else
                 {
@@ -1324,6 +1335,9 @@ namespace NeeView
                     contextMenu.Items.Add(new Separator());
                     contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.DeleteBookmark"), Command = RemoveCommand });
                     contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Rename"), Command = RenameCommand });
+                    // NOTE: BookmarkProperty は現状名前の変更だけなので無効
+                    //contextMenu.Items.Add(new Separator());
+                    //contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("Menu.Property"), Command = BookmarkPropertyCommand });
                 }
             }
             else if (item.Attributes.HasFlag(FolderItemAttribute.Empty))
@@ -1456,4 +1470,8 @@ namespace NeeView
             throw new NotImplementedException();
         }
     }
+
+
+
+
 }

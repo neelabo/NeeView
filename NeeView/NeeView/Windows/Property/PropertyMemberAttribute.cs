@@ -3,6 +3,7 @@ using NeeView.Properties;
 using NeeView.Windows.Controls;
 using System;
 using System.Reflection;
+using System.Windows.Media;
 
 namespace NeeView.Windows.Property
 {
@@ -116,6 +117,40 @@ namespace NeeView.Windows.Property
         {
         }
     }
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public class PropertyColorAttribute : PropertyMemberAttribute
+    {
+        public bool IsColorPicker;
+        public Color? DefaultColor;
+        public Type? DefaultColorFactory;
+
+        public PropertyColorAttribute(bool isColorPicker = false)
+        { 
+            IsColorPicker = isColorPicker;
+        }
+
+        public Color? GetDefaultColor()
+        {
+            if (DefaultColor.HasValue)
+            {
+                return DefaultColor;
+            }
+        
+            if (DefaultColorFactory is not null)
+            {
+                return (Activator.CreateInstance(DefaultColorFactory) as IColorFactory)?.CreateColor();
+            }
+
+            return null;
+        }
+    }
+
+    public interface IColorFactory
+    {
+        public Color CreateColor();
+    }
+
 
     public static class PropertyMemberAttributeExtensions
     {

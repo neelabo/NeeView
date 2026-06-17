@@ -16,13 +16,6 @@ namespace NeeView.Windows.Property
                     return element.FindResource("PropertyValue_Boolean_ToggleSwitch") as DataTemplate;
                 }
             }
-            else if (item is PropertyValue_Color colorValue)
-            {
-                if (colorValue.VisualType == PropertyVisualType.ComboColorPicker)
-                {
-                    return element.FindResource("PropertyValue_Color_ComboColorPicker") as DataTemplate;
-                }
-            }
 
             return null;
         }

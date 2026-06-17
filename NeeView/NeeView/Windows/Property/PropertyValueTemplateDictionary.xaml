@@ -115,6 +115,13 @@
         <nwc:ColorPicker Color="{Binding Value, Mode=TwoWay}" IsHsvMode="{Binding IsHsvMode, RelativeSource={RelativeSource AncestorType=UserControl,AncestorLevel=2}}"/>
     </DataTemplate>
 
+    <DataTemplate DataType="{x:Type local:PropertyValue_ColorPicker}">
+        <DockPanel KeyboardNavigation.TabNavigation="Local">
+            <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding Value}" MinWidth="100" BorderThickness="1" VerticalContentAlignment="Center" TabIndex="2"/>
+            <osc:ComboColorPicker SelectedColor="{Binding Value, Mode=TwoWay}" DefaultColor="{Binding DefaultColor}" TabIndex="1"/>
+        </DockPanel>
+    </DataTemplate>
+
     <DataTemplate DataType="{x:Type local:PropertyValue_FilePath}">
         <nwc:FileNameBox Text="{Binding Value, Mode=TwoWay}" DefaultText="{Binding DefaultFileName}" Filter="{Binding Filter}" FileDialogType="{Binding FileDialogType}" Note="{Binding Note}"/>
     </DataTemplate>
@@ -124,12 +131,6 @@
         <nwc:ToggleSwitch IsChecked="{Binding Value}" Height="30" HorizontalAlignment="Right" VerticalAlignment="Center" />
     </DataTemplate>
 
-    <DataTemplate x:Key="PropertyValue_Color_ComboColorPicker">
-        <DockPanel KeyboardNavigation.TabNavigation="Local">
-            <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding Value}" MinWidth="100" BorderThickness="1" VerticalContentAlignment="Center" TabIndex="2"/>
-            <osc:ComboColorPicker SelectedColor="{Binding Value, Mode=TwoWay}" TabIndex="1"/>
-        </DockPanel>
-    </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:PropertyValue_PropertyValueWithNote}">
         <StackPanel>

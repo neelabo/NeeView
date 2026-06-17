@@ -31,7 +31,6 @@ namespace NeeView
 
             this.GridLineProfile = new PropertyDocument(Config.Current.ImageGrid);
             this.GridLineProfile.SetVisualType<PropertyValue_Boolean>(PropertyVisualType.ToggleSwitch);
-            this.GridLineProfile.SetVisualType<PropertyValue_Color>(PropertyVisualType.ComboColorPicker);
 
             EffectLayers = new(Config.Current.ImageEffect.Layers, e => new EffectLayerDocument(e));
             EffectLayers.CollectionChanged += (s, e) => UpdateCanExecute();

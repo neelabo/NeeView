@@ -215,6 +215,7 @@ FilmStripConfig.IsDetailPopupEnabled=@PanelListItemProfile.IsDetailPopupEnabled
 FolderListConfig.PanelListItemStyle=@PanelListItemStyle
 FolderTree.Menu.Delete=@Menu.Delete
 FolderTree.Menu.Explorer=@Menu.Explorer
+FolderTree.Menu.Property=@Menu.Property
 FolderTree.Menu.RefreshFolder=@Word.ReLoad
 FolderTree.Menu.Rename=@Menu.Rename
 FontsConfig.FontName=@Word.Font
