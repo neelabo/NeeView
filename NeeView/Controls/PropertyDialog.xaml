@@ -9,13 +9,11 @@
         xmlns:properties="clr-namespace:NeeView.Properties"
         mc:Ignorable="d"
         Style="{StaticResource ChromeDialogStyle}"
+        Title="{properties:TextBinding Word.Property}"
         Width="512" SizeToContent="Height" >
 
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/TextBoxIcons.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
             <Style x:Key="ButtonStyle" TargetType="Button" BasedOn="{StaticResource NVDialogButton}" />
         </ResourceDictionary>
     </Window.Resources>

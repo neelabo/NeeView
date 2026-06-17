@@ -21,7 +21,6 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/SettingTheme.xaml" />
-                <ResourceDictionary Source="/NeeView/Windows/Property/PropertyValueTemplateDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="DisableStyle" TargetType="FrameworkElement">

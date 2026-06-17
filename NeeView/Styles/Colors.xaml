@@ -112,5 +112,6 @@
     <SolidColorBrush x:Key="CheckIcon.Foreground" Color="#FF90EE90" />
     <SolidColorBrush x:Key="BookmarkIcon.Foreground" Color="#FFFFA500" />
     <SolidColorBrush x:Key="PlaylistItemIcon.Foreground" Color="#FFFFA500" />
+    <SolidColorBrush x:Key="Tag.Background" Color="#FFA0A0A0" />
 
 </ResourceDictionary>

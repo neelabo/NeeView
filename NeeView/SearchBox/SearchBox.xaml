@@ -10,10 +10,6 @@
     <UserControl.Resources>
         <ResourceDictionary>
 
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/PanelIcons.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-
             <DrawingImage x:Key="ic_search_24px_g">
                 <DrawingImage.Drawing>
                     <GeometryDrawing Brush="{DynamicResource Control.GrayText}" Pen="{x:Null}" Geometry="{StaticResource g_search_24px}" />
@@ -75,7 +71,7 @@
             </Image>
             <Button x:Name="ClearSearchButton" DockPanel.Dock="Right" VerticalAlignment="Center" Style="{StaticResource FolderListButtonStyle}" Width="24" Click="ClearSearchButton_Click"
                                 TabIndex="3" Visibility="{Binding ElementName=SearchBoxComboBox, Path=Text, Converter={StaticResource StringNullOrWhiteSpaceToVisibilityConverter}}">
-                <Image Source="{StaticResource ic_clear_24px_a}" />
+                <Image Style="{StaticResource ClearIconImageStyle}" />
             </Button>
             <ComboBox x:Name="SearchBoxComboBox" Text="{Binding Text, UpdateSourceTrigger=Explicit}" TabIndex="1" TextBoxBase.TextChanged="SearchBox_TextChanged"
                                 MinHeight="{DynamicResource FontIconSize}"
@@ -90,7 +86,7 @@
                                     Height="{Binding ActualHeight, ElementName=HistoryText}"
                                     Visibility="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ComboBoxItem}, Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
                                     Command="{x:Static local:SearchBox.DeleteAction}" CommandParameter="{Binding}">
-                                <Image Source="{StaticResource ic_clear_24px_a}"  />
+                                <Image Style="{StaticResource ClearIconImageStyle}" />
                             </Button>
                             <TextBlock x:Name="HistoryText" Padding="8,2" Text="{Binding}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" MaxWidth="{Binding ElementName=SearchBoxComboBox, Path=ActualWidth}" MinWidth="200" />
                         </DockPanel>

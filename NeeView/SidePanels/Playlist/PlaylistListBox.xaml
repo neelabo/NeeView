@@ -16,10 +16,6 @@
     <UserControl.Resources>
         <ResourceDictionary>
 
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/PanelIcons.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-
             <Pen x:Key="pen_folder" Brush="{DynamicResource Panel.Foreground}" Thickness="1.25"/>
 
             <DrawingImage x:Key="fic_folder">
@@ -264,7 +260,7 @@
     <DockPanel x:Name="Root" KeyboardNavigation.TabNavigation="Local">
         <DockPanel DockPanel.Dock="Top" LastChildFill="False">
             <Button x:Name="AddButton" Style="{StaticResource IconButtonStyle}" Command="{x:Static local:PlaylistListBox.AddCommand}" IsEnabled="{Binding IsAddButtonEnabled}" TabIndex="1">
-                <Image Source="{StaticResource ic_add_24px_a}" />
+                <Image Style="{StaticResource AddIconImageStyle}" />
                 <Button.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="{properties:TextBinding Playlist.FirstIn}" IsChecked="{Binding IsFirstIn}" IsCheckable="True" />

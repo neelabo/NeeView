@@ -24,39 +24,14 @@
     <!-- https://www.onlinewebfonts.com/icon/35498 -->
     <DrawingImage x:Key="ic_lightning">
         <DrawingImage.Drawing>
-            <GeometryDrawing Brush="{DynamicResource Panel.Foreground}" Pen="{x:Null}">
-                <GeometryDrawing.Geometry>
-                    <PathGeometry FillRule="Nonzero" Figures="M749.5,10L189,567.2L396.9,567.2L237.1,990L811,432.7L603.1,432.7z" />
-                </GeometryDrawing.Geometry>
-            </GeometryDrawing>
+            <GeometryDrawing Brush="{DynamicResource Panel.Foreground}" Pen="{x:Null}" Geometry="{StaticResource g_lightning}" />
         </DrawingImage.Drawing>
     </DrawingImage>
 
     <!-- https://www.onlinewebfonts.com/icon/97722 -->
     <DrawingImage x:Key="ic_bookshelf">
         <DrawingImage.Drawing>
-            <DrawingGroup Opacity="1">
-                <DrawingGroup.Children>
-                    <GeometryDrawing Brush="{DynamicResource Panel.Foreground}" Pen="{x:Null}">
-                        <GeometryDrawing.Geometry>
-                            <PathGeometry FillRule="Nonzero"
-                                    Figures="M213.3,949.9C213.3,969.1,197.7,984.7,178.5,984.7L44.8,984.7C25.6,984.7,10,969.1,10,949.9L10,251.9C10,232.7,25.6,217.1,44.8,217.1L178.5,217.1C197.7,217.1,213.3,232.7,213.3,251.9L213.3,949.9 213.3,949.9z" />
-                        </GeometryDrawing.Geometry>
-                    </GeometryDrawing>
-                    <GeometryDrawing Brush="{DynamicResource Panel.Foreground}" Pen="{x:Null}">
-                        <GeometryDrawing.Geometry>
-                            <PathGeometry FillRule="Nonzero"
-                                    Figures="M479.5,949.9C479.5,969.1,463.9,984.7,444.7,984.7L294.1,984.7C274.9,984.7,259.3,969.1,259.3,949.9L259.3,50.1C259.3,30.9,274.9,15.3,294.1,15.3L444.7,15.3C463.9,15.3,479.5,30.9,479.5,50.1L479.5,949.9z" />
-                        </GeometryDrawing.Geometry>
-                    </GeometryDrawing>
-                    <GeometryDrawing Brush="{DynamicResource Panel.Foreground}" Pen="{x:Null}">
-                        <GeometryDrawing.Geometry>
-                            <PathGeometry FillRule="Nonzero"
-                                    Figures="M987.9,894.9C994.5,912.9,985.2,932.9,967.2,939.5L849.3,982.6C831.3,989.2,811.3,979.9,804.7,961.9L526,199C519.4,181,528.7,161,546.7,154.4L664.6,111.3C682.6,104.7,702.6,114,709.2,132L987.9,894.9z" />
-                        </GeometryDrawing.Geometry>
-                    </GeometryDrawing>
-                </DrawingGroup.Children>
-            </DrawingGroup>
+            <GeometryDrawing Brush="{DynamicResource Panel.Foreground}" Pen="{x:Null}" Geometry="{StaticResource g_bookshelf}" />
         </DrawingImage.Drawing>
     </DrawingImage>
 

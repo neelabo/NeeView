@@ -13,12 +13,6 @@
     <UserControl.Resources>
         <ResourceDictionary>
 
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/ArrowIcons.xaml"/>
-                <ResourceDictionary Source="/Styles/PanelIcons.xaml" />
-                <ResourceDictionary Source="/Styles/MoreButtonIcons.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-
             <DrawingImage x:Key="ic_photo_library_24px">
                 <DrawingImage.Drawing>
                     <DrawingGroup>
@@ -90,7 +84,7 @@
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Top">
                     <Button x:Name="IndexTreeButton" DockPanel.Dock="Right" Style="{StaticResource FolderListButtonStyle}" TabIndex="2" ToolTip="{properties:TextBinding Word.TableOfContents}"
                         Command="{Binding ToggleVisibleFoldersTreeCommand}">
-                        <Image Source="{StaticResource ic_toc_a}" />
+                        <Image Style="{StaticResource TocIconImageStyle}" />
                         <Button.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="{properties:TextBinding FolderTreeLayout.Top}" IsChecked="{Binding FolderTreeLayout, Converter={StaticResource FolderTreeLayoutToBooleanConverter}, ConverterParameter={x:Static local:FolderTreeLayout.Top}}"
@@ -105,20 +99,20 @@
                 <WrapPanel MinWidth="150">
                     <Button x:Name="PrevButton" Style="{StaticResource FolderListButtonStyle}" Command="{Binding MoveToPreviousCommand}" TabIndex="1" ContextMenuService.Placement="Bottom"
                             ContextMenuOpening="PrevButton_ContextMenuOpening" ToolTip="{Binding MoveToPreviousCommandToolTip}">
-                        <Image Source="{StaticResource ic_arrow_back_24px_a}" />
+                        <Image Style="{StaticResource ArrowBackIconImageStyle}" />
                         <Button.ContextMenu>
                             <ContextMenu x:Name="PrevButtonContextMenu" ItemContainerStyle="{StaticResource HistoryMenuItemContainerStyle}" />
                         </Button.ContextMenu>
                     </Button>
                     <Button x:Name="NextButton" Style="{StaticResource FolderListButtonStyle}" Command="{Binding MoveToNextCommand}" TabIndex="1" ContextMenuService.Placement="Bottom"
                             ContextMenuOpening="NextButton_ContextMenuOpening" ToolTip="{Binding MoveToNextCommandToolTip}">
-                        <Image Source="{StaticResource ic_arrow_forward_24px_a}" />
+                        <Image Style="{StaticResource ArrowForwardIconImageStyle}" />
                         <Button.ContextMenu>
                             <ContextMenu x:Name="NextButtonContextMenu" ItemContainerStyle="{StaticResource HistoryMenuItemContainerStyle}" />
                         </Button.ContextMenu>
                     </Button>
                     <Button x:Name="UpButton" Style="{StaticResource FolderListButtonStyle}" Command="{Binding MoveToUpCommand}" TabIndex="1" ToolTip="{Binding MoveToUpCommandToolTip}">
-                        <Image Source="{StaticResource ic_arrow_up_24px_a}" />
+                        <Image Style="{StaticResource ArrowUpIconImageStyle}" />
                     </Button>
                     <ComboBox x:Name="FormatComboBox" TabIndex="1"
                           ItemsSource="{Binding FormatList}" SelectedValuePath="Key" DisplayMemberPath="Value" SelectedValue="{Binding Source={x:Static local:Config.Current}, Path=PageList.Format, Delay=1}">

@@ -17,12 +17,6 @@
 
         <ResourceDictionary>
 
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/NeeView/Windows/Property/PropertyValueTemplateDictionary.xaml" />
-                <ResourceDictionary Source="/SidePanels/PanelIconDictionary.xaml" />
-                <ResourceDictionary Source="/Styles/MoreButtonIcons.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <!--#region  image sources -->
 
             <DrawingImage x:Key="ic_navigate_g">
@@ -71,15 +65,6 @@
                         <DrawingGroup.Transform>
                             <ScaleTransform ScaleX="-1" />
                         </DrawingGroup.Transform>
-                    </DrawingGroup>
-                </DrawingImage.Drawing>
-            </DrawingImage>
-
-            <DrawingImage x:Key="ic_clear_24px_b2">
-                <DrawingImage.Drawing>
-                    <DrawingGroup>
-                        <GeometryDrawing Brush="Transparent" Geometry="{StaticResource g_rect24x24}" />
-                        <GeometryDrawing Brush="{DynamicResource Control.Accent}" Pen="{x:Null}" Geometry="{StaticResource g_clear_24px}" />
                     </DrawingGroup>
                 </DrawingImage.Drawing>
             </DrawingImage>
@@ -355,7 +340,7 @@
                                             <Image Source="{StaticResource ic_rotate_right_90_24px_b}" />
                                         </Button>
                                         <Button Style="{StaticResource NavigateButtonStyle}" Command="{Binding RotateResetCommand}" ToolTip="{properties:TextBinding Navigator.RotateReset}">
-                                            <Image Source="{StaticResource ic_clear_24px_b2}" />
+                                            <Image Style="{StaticResource ClearIconImageStyle}" />
                                         </Button>
                                         <ToggleButton Style="{StaticResource NavigateToggleButtonStyle}" IsChecked="{Binding IsRotateStretchEnabled}"
                                                 ToolTip="{properties:TextBinding Navigator.RotateStretch}">
@@ -406,7 +391,7 @@
                                             <Image Source="{StaticResource ic_add_circle_24px}" />
                                         </Button>
                                         <Button Style="{StaticResource NavigateButtonStyle}" Command="{Binding ScaleResetCommand}" ToolTip="{properties:TextBinding Navigator.ScaleReset}">
-                                            <Image Source="{StaticResource ic_clear_24px_b2}" />
+                                            <Image Style="{StaticResource ClearIconImageStyle}" />
                                         </Button>
                                         <Button Style="{StaticResource NavigateButtonStyle}" Command="{Binding StretchCommand}" ToolTip="{properties:TextBinding Navigator.Stretch}">
                                             <Image Source="{StaticResource ic_center_focus_strong_24px}" />

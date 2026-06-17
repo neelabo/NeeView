@@ -19,12 +19,6 @@
 
         <ResourceDictionary>
 
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/PanelIcons.xaml"/>
-                <ResourceDictionary Source="/Styles/MoreButtonIcons.xaml"/>
-                <ResourceDictionary Source="/NeeView/Windows/Property/PropertyValueTemplateDictionary.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
             <local:PathToFileNameWithoutExtensionConverter x:Key="PathToFileNameWithoutExtensionConverter" />
             <local:StringNullOrWhiteSpaceToVisibilityConverter x:Key="StringNullOrWhiteSpaceToVisibilityConverter" True="Collapsed" False="Visible" />
 
@@ -33,15 +27,6 @@
                     <DrawingGroup>
                         <GeometryDrawing Brush="Transparent" Geometry="{StaticResource g_rect24x24}" />
                         <GeometryDrawing Brush="Gray" Pen="{x:Null}" Geometry="{StaticResource g_toy_24px}" />
-                    </DrawingGroup>
-                </DrawingImage.Drawing>
-            </DrawingImage>
-
-            <DrawingImage x:Key="ic_clear_24px_b2">
-                <DrawingImage.Drawing>
-                    <DrawingGroup>
-                        <GeometryDrawing Brush="Transparent" Geometry="{StaticResource g_rect24x24}" />
-                        <GeometryDrawing Brush="{DynamicResource Control.Accent}" Pen="{x:Null}" Geometry="{StaticResource g_clear_24px}" />
                     </DrawingGroup>
                 </DrawingImage.Drawing>
             </DrawingImage>
@@ -196,7 +181,7 @@
                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
                         <Button Style="{StaticResource NavigateButtonStyle}" HorizontalAlignment="Left" Command="{Binding AddEffectLayerCommand}"
                                 Visibility="{Binding Source={x:Static local:Config.Current}, Path=ImageEffect.IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <Image Source="{StaticResource ic_add_24px_a}" />
+                            <Image Style="{StaticResource AddIconImageStyle}" />
                         </Button>
                         <nwc:ToggleSwitch DockPanel.Dock="Right" IsChecked="{Binding Source={x:Static local:Config.Current}, Path=ImageEffect.IsEnabled}"
                             VerticalAlignment="Center" />
@@ -224,13 +209,13 @@
                                                 </Style>
                                             </StackPanel.Style>
                                             <Button DockPanel.Dock="Right" Style="{StaticResource NavigateButtonStyle}" Command="{Binding MoveUpCommand}">
-                                                <Image Source="{StaticResource ic_keyboard_arrow_up_24px}" />
+                                                <Image Style="{StaticResource KeyboardArrowUpIconImageStyle}" />
                                             </Button>
                                             <Button DockPanel.Dock="Right" Style="{StaticResource NavigateButtonStyle}" Command="{Binding MoveDownCommand}">
-                                                <Image Source="{StaticResource ic_keyboard_arrow_down_24px}" />
+                                                <Image Style="{StaticResource KeyboardArrowDownIconImageStyle}" />
                                             </Button>
                                             <Button DockPanel.Dock="Right" Style="{StaticResource NavigateButtonStyle}" Command="{Binding DeleteCommand}">
-                                                <Image Source="{StaticResource ic_clear_24px_b2}" />
+                                                <Image Style="{StaticResource ClearIconImageStyle}" />
                                             </Button>
                                         </StackPanel>
 

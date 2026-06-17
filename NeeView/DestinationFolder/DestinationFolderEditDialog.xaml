@@ -13,10 +13,6 @@
 
     <Window.Resources>
         <ResourceDictionary>
-            
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/TextBoxIcons.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="ButtonStyle" TargetType="Button" BasedOn="{StaticResource NVDialogButton}" />
 

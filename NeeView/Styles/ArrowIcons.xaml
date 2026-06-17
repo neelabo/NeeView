@@ -28,4 +28,18 @@
         </DrawingImage.Drawing>
     </DrawingImage>
 
+
+    <Style x:Key="ArrowBackIconImageStyle" TargetType="Image">
+        <Setter Property="Source" Value="{StaticResource ic_arrow_back_24px_a}"/>
+    </Style>
+
+    <Style x:Key="ArrowForwardIconImageStyle" TargetType="Image">
+        <Setter Property="Source" Value="{StaticResource ic_arrow_forward_24px_a}"/>
+    </Style>
+
+    <Style x:Key="ArrowUpIconImageStyle" TargetType="Image">
+        <Setter Property="Source" Value="{StaticResource ic_arrow_up_24px_a}"/>
+    </Style>
+
+
 </ResourceDictionary>

@@ -16,10 +16,6 @@
 
             <ResourceDictionary>
 
-                <ResourceDictionary.MergedDictionaries>
-                    <ResourceDictionary Source="PropertyValueTemplateDictionary.xaml"/>
-                </ResourceDictionary.MergedDictionaries>
-
                 <DataTemplate DataType="{x:Type local:PropertyTitleElement}">
                     <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0,10,0,5" />
                 </DataTemplate>

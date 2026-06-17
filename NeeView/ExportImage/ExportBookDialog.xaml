@@ -15,10 +15,6 @@
     <Window.Resources>
         <ResourceDictionary>
 
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/PanelIcons.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-
             <Style x:Key="TextButton" TargetType="Button" BasedOn="{StaticResource NVDialogButton}">
                 <Setter Property="Margin" Value="10,10,0,0" />
                 <Setter Property="MaxWidth" Value="512" />
@@ -77,7 +73,7 @@
                     <nwp:PropertyInspector Document="{Binding ExportBookTypeDocument}" Margin="0" />
                     <DockPanel KeyboardNavigation.TabNavigation="Local" >
                         <Button x:Name="DestinationFolderOptionButton" DockPanel.Dock="Right" Style="{StaticResource IconButton}" Padding="5,0" Click="DestinationFolderOptionButton_Click" TabIndex="2">
-                            <Image Source="{StaticResource ic_setting_24px_a}" Width="16" Height="16" />
+                            <Image Style="{StaticResource SettingIconImageStyle}" Width="16" Height="16" />
                         </Button>
                         <ComboBox DockPanel.Dock="Right" ItemsSource="{Binding DestinationFolderList}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedDestinationFolder}" TabIndex="1" />
                         <TextBlock Style="{StaticResource Header}" Text="{properties:TextBinding ExportImageWindow.Folder}" />

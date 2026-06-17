@@ -13,9 +13,6 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/TextBoxIcons.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
 
             <nv:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
 

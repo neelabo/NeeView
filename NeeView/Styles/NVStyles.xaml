@@ -5,10 +5,6 @@
     xmlns:nrl="clr-namespace:NeeView.Runtime.LayoutPanel"
     xmlns:local="clr-namespace:NeeView">
 
-    <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/Styles/Colors.xaml" />
-    </ResourceDictionary.MergedDictionaries>
-
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     <BorderGapMaskConverter x:Key="BorderGapMaskConverter" />
 

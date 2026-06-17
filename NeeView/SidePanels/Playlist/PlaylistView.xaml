@@ -14,10 +14,6 @@
     <UserControl.Resources>
         <ResourceDictionary>
 
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/MoreButtonIcons.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-
             <local:PathToFileNameWithoutExtensionConverter x:Key="PathToFileNameWithoutExtensionConverter" />
             <local:StringNullOrWhiteSpaceToVisibilityConverter x:Key="StringNullOrWhiteSpaceToVisibilityConverter" True="Collapsed" False="Visible" />
 

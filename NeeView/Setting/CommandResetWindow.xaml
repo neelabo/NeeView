@@ -17,7 +17,6 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Styles/SettingTheme.xaml" />
-                <ResourceDictionary Source="/NeeView/Windows/Property/PropertyValueTemplateDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate DataType="{x:Type nwp:PropertyValue_Boolean}">

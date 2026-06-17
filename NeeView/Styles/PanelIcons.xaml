@@ -102,7 +102,6 @@
         </DrawingImage.Drawing>
     </DrawingImage>
 
-
     <DrawingImage x:Key="ic_content_copy_24px">
         <DrawingImage.Drawing>
             <DrawingGroup>
@@ -111,5 +110,54 @@
             </DrawingGroup>
         </DrawingImage.Drawing>
     </DrawingImage>
+
+
+    <Style x:Key="HomeIconImageStyle" TargetType="Image">
+        <Setter Property="Source" Value="{StaticResource ic_home_24px_a}"/>
+    </Style>
+
+    <Style x:Key="SyncIconImageStyle" TargetType="Image">
+        <Setter Property="Source" Value="{StaticResource ic_sync_24px_a}"/>
+    </Style>
+
+    <Style x:Key="AddIconImageStyle" TargetType="Image">
+        <Setter Property="Source" Value="{StaticResource ic_add_24px_a}"/>
+    </Style>
+
+    <Style x:Key="ClearIconImageStyle" TargetType="Image">
+        <Setter Property="Source" Value="{StaticResource ic_clear_24px_a}"/>
+    </Style>
+
+    <Style x:Key="TreeViewIconImageStyle" TargetType="Image">
+        <Setter Property="Source" Value="{StaticResource ic_treeview_a}"/>
+    </Style>
+
+    <Style x:Key="TocIconImageStyle" TargetType="Image">
+        <Setter Property="Source" Value="{StaticResource ic_toc_a}"/>
+    </Style>
+
+    <Style x:Key="SettingIconImageStyle" TargetType="Image">
+        <Setter Property="Source" Value="{StaticResource ic_setting_24px_a}"/>
+    </Style>
+
+    <Style x:Key="KeyboardArrowDownIconImageStyle" TargetType="Image">
+        <Setter Property="Source" Value="{StaticResource ic_keyboard_arrow_down_24px}"/>
+    </Style>
+
+    <Style x:Key="KeyboardArrowUpIconImageStyle" TargetType="Image">
+        <Setter Property="Source" Value="{StaticResource ic_keyboard_arrow_up_24px}"/>
+    </Style>
+
+    <Style x:Key="KeyboardDoubleArrowDownIconImageStyle" TargetType="Image">
+        <Setter Property="Source" Value="{StaticResource ic_keyboard_double_arrow_down_24px}"/>
+    </Style>
+
+    <Style x:Key="KeyboardDoubleArrowUpIconImageStyle" TargetType="Image">
+        <Setter Property="Source" Value="{StaticResource ic_keyboard_double_arrow_up_24px}"/>
+    </Style>
+
+    <Style x:Key="ContentCopyIconImageStyle" TargetType="Image">
+        <Setter Property="Source" Value="{StaticResource ic_content_copy_24px}"/>
+    </Style>
 
 </ResourceDictionary>

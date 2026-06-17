@@ -14,12 +14,6 @@
     <UserControl.Resources>
         <ResourceDictionary>
 
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/ArrowIcons.xaml"/>
-                <ResourceDictionary Source="/Styles/PanelIcons.xaml"/>
-                <ResourceDictionary Source="/Styles/MoreButtonIcons.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-
             <!--#region Icons -->
 
             <DrawingImage x:Key="ic_star_24px">
@@ -86,7 +80,7 @@
                     <Button x:Name="FoderTreeButton" Style="{StaticResource FolderListButtonStyle}" TabIndex="2"
                             ToolTip="{properties:TextBinding Word.FoldersTree}"
                             Command="{Binding ToggleVisibleFoldersTreeCommand}">
-                        <Image Source="{StaticResource ic_treeview_a}" />
+                        <Image Style="{StaticResource TreeViewIconImageStyle}" />
                         <Button.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="{properties:TextBinding FolderTreeLayout.Top}" IsChecked="{Binding Model.FolderTreeLayout, Converter={StaticResource FolderTreeLayoutToBooleanConverter}, ConverterParameter={x:Static local:FolderTreeLayout.Top}}"
@@ -100,15 +94,15 @@
                 </StackPanel>
                 <WrapPanel Orientation="Horizontal" MinWidth="90">
                     <Button x:Name="AddBookmarkButton" Style="{StaticResource FolderListButtonStyle}" Command="{Binding AddBookmarkCommand}" ToolTip="{properties:TextBinding BookmarkList.Add.ToolTip}" TabIndex="1">
-                        <Image Source="{StaticResource ic_add_24px_a}" />
+                        <Image Style="{StaticResource AddIconImageStyle}"/>
                     </Button>
                     <Button x:Name="FolderUpButton" Style="{StaticResource FolderListButtonStyle}" Command="{Binding MoveToUpCommand}" TabIndex="1"
                         ToolTip="{Binding MoveToUpToolTip}">
-                        <Image Source="{StaticResource ic_arrow_up_24px_a}" />
+                        <Image Style="{StaticResource ArrowUpIconImageStyle}" />
                     </Button>
                     <Button x:Name="SyncButton" Style="{StaticResource FolderListButtonStyle}" Command="{Binding SyncCommand}" TabIndex="1"
                         ToolTip="{properties:TextBinding Bookshelf.Sync.ToolTip}">
-                        <Image Source="{StaticResource ic_sync_24px_a}" />
+                        <Image Style="{StaticResource SyncIconImageStyle}" />
                     </Button>
                     <ComboBox x:Name="FolderOrderComboBox" FontFamily="{DynamicResource ArrowFontFamily}" TabIndex="1"
                           ItemsSource="{Binding FolderOrderList}" SelectedValuePath="Key" DisplayMemberPath="Value" SelectedValue="{Binding FolderCollection.FolderParameter.FolderOrder, Delay=1}"
