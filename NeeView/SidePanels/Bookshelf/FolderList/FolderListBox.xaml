@@ -106,6 +106,22 @@
                 <Setter Property="ItemTemplate" Value="{StaticResource TagTemplate}" />
             </Style>
 
+            <Style x:Key="ContentIsolatedTagsControlStyle" TargetType="{x:Type local:TagItemsControl}" BasedOn="{StaticResource TagsControlStyle}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Source={x:Static local:Config.Current}, Path=Panels.ContentItemProfile.IsTextWrapped}" Value="True">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="ContentConnectedTagsControlStyle" TargetType="{x:Type local:TagItemsControl}" BasedOn="{StaticResource TagsControlStyle}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Source={x:Static local:Config.Current}, Path=Panels.ContentItemProfile.IsTextWrapped}" Value="False">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
             <Style x:Key="ThumbnailIconOverlayBorderStyle" TargetType="{x:Type Border}">
                 <Setter Property="Visibility" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.ThumbnailItemProfile.IsIconOverlay, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 <Setter Property="Background" Value="{Binding Source={StaticResource PanelBackgroundProxy}, Path=Data, Converter={StaticResource BrushOpacityConverter}, ConverterParameter=0.5}"/>
@@ -143,8 +159,9 @@
                                             </MultiBinding>
                                         </TextBlock.Text>
                                     </TextBlock>
-                                    <local:TagItemsControl Style="{StaticResource TagsControlStyle}" />
+                                    <local:TagItemsControl Style="{StaticResource ContentConnectedTagsControlStyle}" />
                                 </StackPanel>
+                                <local:TagItemsControl Style="{StaticResource ContentIsolatedTagsControlStyle}" />
                                 <TextBlock x:Name="FileNameTextBlock" Style="{StaticResource ContentNameStyle}" />
                             </StackPanel>
                         </DockPanel>
