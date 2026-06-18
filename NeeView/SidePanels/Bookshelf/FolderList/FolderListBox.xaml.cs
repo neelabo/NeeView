@@ -1394,10 +1394,8 @@ namespace NeeView
                 contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Delete"), Command = RemoveCommand });
                 contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Rename"), Command = RenameCommand });
                 contextMenu.Items.Add(new Separator());
-                var menu = new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.Thumbnail"), IsEnabled = item.CanThumbnail() };
-                menu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.SetThumbnail"), Command = SetThumbnailCommand });
-                menu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.RegenerateThumbnail"), Command = RegenerateThumbnailCommand });
-                contextMenu.Items.Add(menu);
+                contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.SetThumbnail"), Command = SetThumbnailCommand });
+                contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.RegenerateThumbnail"), Command = RegenerateThumbnailCommand });
 
                 if (item.IsPlaylist)
                 {
