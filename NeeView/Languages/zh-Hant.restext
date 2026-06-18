@@ -2470,6 +2470,7 @@ WindowAccessor.State=
 WindowAccessor.Top=
 WindowAccessor.Width=
 WindowChromeFrame.WindowFrame=標準
+WindowConfig.AllowActivateOnDrop=
 WindowConfig.IsAutoHideInFullDesktop=
 WindowConfig.IsAutoHideInFullScreen=在全螢幕套用自動隱藏模式
 WindowConfig.IsAutoHideInMaximized=在最大化視窗套用自動隱藏模式

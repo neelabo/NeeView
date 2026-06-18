@@ -2470,6 +2470,7 @@ WindowAccessor.State=窗口状态
 WindowAccessor.Top=窗口上边距位置
 WindowAccessor.Width=窗口宽度
 WindowChromeFrame.WindowFrame=标准
+WindowConfig.AllowActivateOnDrop=
 WindowConfig.IsAutoHideInFullDesktop=
 WindowConfig.IsAutoHideInFullScreen=全屏时应用自动隐藏模式
 WindowConfig.IsAutoHideInMaximized=最大化窗口时应用自动隐藏模式

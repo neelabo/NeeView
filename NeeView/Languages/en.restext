@@ -2478,6 +2478,7 @@ WindowAccessor.State=Window state
 WindowAccessor.Top=Position of the window's top edge
 WindowAccessor.Width=Window width
 WindowChromeFrame.WindowFrame=Standard
+WindowConfig.AllowActivateOnDrop=Make the window active when a file is dropped
 WindowConfig.IsAutoHideInFullDesktop=Apply auto-hide mode in full desktop
 WindowConfig.IsAutoHideInFullScreen=Apply auto-hide mode in full screen
 WindowConfig.IsAutoHideInMaximized=Apply auto-hide mode in maximized window

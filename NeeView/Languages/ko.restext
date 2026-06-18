@@ -2470,6 +2470,7 @@ WindowAccessor.State=창 상태
 WindowAccessor.Top=창 상단 위치
 WindowAccessor.Width=창 너비
 WindowChromeFrame.WindowFrame=표준
+WindowConfig.AllowActivateOnDrop=
 WindowConfig.IsAutoHideInFullDesktop=
 WindowConfig.IsAutoHideInFullScreen=전체 화면에서 자동 숨김 모드 적용
 WindowConfig.IsAutoHideInMaximized=최대화 창에서 자동 숨김 모드 적용

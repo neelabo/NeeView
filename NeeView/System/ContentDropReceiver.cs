@@ -71,7 +71,11 @@ namespace NeeView
         // ドラッグ＆ドロップで処理を開始する
         private async void Element_Drop(object sender, DragEventArgs e)
         {
-            FocusWindow(sender as DependencyObject);
+            if (Config.Current.Window.AllowActivateOnDrop)
+            {
+                FocusWindow(sender as DependencyObject);
+            }
+
             await LoadDataObjectAsync(sender, e.Data);
         }
 

@@ -2478,6 +2478,7 @@ WindowAccessor.State=Estado de ventana
 WindowAccessor.Top=Posición del borde superior de la ventana
 WindowAccessor.Width=Ancho de ventana
 WindowChromeFrame.WindowFrame=Estándar
+WindowConfig.AllowActivateOnDrop=
 WindowConfig.IsAutoHideInFullDesktop=
 WindowConfig.IsAutoHideInFullScreen=Aplicar modo de ocultación automática en pantalla completa
 WindowConfig.IsAutoHideInMaximized=Aplicar modo de ocultación automática en ventana maximizada

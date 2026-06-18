@@ -2478,6 +2478,7 @@ WindowAccessor.State=
 WindowAccessor.Top=
 WindowAccessor.Width=
 WindowChromeFrame.WindowFrame=Стандартная
+WindowConfig.AllowActivateOnDrop=
 WindowConfig.IsAutoHideInFullDesktop=
 WindowConfig.IsAutoHideInFullScreen=Применять автоскрытие в полноэкранном режиме
 WindowConfig.IsAutoHideInMaximized=Применять автоскрытие в развёрнутом окне

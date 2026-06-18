@@ -2484,6 +2484,7 @@ WindowAccessor.State=
 WindowAccessor.Top=
 WindowAccessor.Width=
 WindowChromeFrame.WindowFrame=Standard
+WindowConfig.AllowActivateOnDrop=
 WindowConfig.IsAutoHideInFullDesktop=
 WindowConfig.IsAutoHideInFullScreen=Applica modalità auto-nascondi a schermo pieno
 WindowConfig.IsAutoHideInMaximized=Applica modalità auto-nascondi in finestra massimizzata

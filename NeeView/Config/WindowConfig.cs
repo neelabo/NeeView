@@ -14,6 +14,7 @@ namespace NeeView
         [IgnoreEquality] private WindowStateEx _state;
         [DefaultEquality] private bool _isCaptionEmulateInFullScreen;
         [DefaultEquality] private bool _mouseActivateAndEat;
+        [DefaultEquality] private bool _allowActivateOnDrop = true;
         [DefaultEquality] private bool _isAeroSnapPlacementEnabled = true;
         [DefaultEquality] private bool _isAutoHideInNormal = false;
         [DefaultEquality] private bool _isAutoHideInMaximized = false;
@@ -36,12 +37,18 @@ namespace NeeView
             set { SetProperty(ref _isCaptionEmulateInFullScreen, value); }
         }
 
-
         [PropertyMember]
         public bool MouseActivateAndEat
         {
             get { return _mouseActivateAndEat; }
             set { SetProperty(ref _mouseActivateAndEat, value); }
+        }
+
+        [PropertyMember]
+        public bool AllowActivateOnDrop
+        {
+            get { return _allowActivateOnDrop; }
+            set { SetProperty(ref _allowActivateOnDrop, value); }
         }
 
         /// <summary>
