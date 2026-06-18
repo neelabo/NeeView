@@ -44,13 +44,13 @@ namespace NeeView
         [DefaultEquality] private WidePageStretch _widePageStretch = WidePageStretch.UniformHeight;
         [DefaultEquality] private WidePageVerticalAlignment _widePageVerticalAlignment = WidePageVerticalAlignment.Center;
         [DefaultEquality] private Color _loadingPageColor = Color.FromRgb(0xE0, 0xE0, 0xE0);
-        [DefaultEquality] private string _bookThumbnailFileName = "folder.jpg";
+        [DefaultEquality] private string _bookThumbnailRegex = @"^folder\.jpg$";
         [DefaultEquality] private int _bookThumbnailDepth = 2;
         [DefaultEquality] private ExportImageParameter _exportImageParameter = new();
         [DefaultEquality] private ExportBookParameter _exportBookParameter = new();
 
-        [IgnoreEquality]
-        private readonly RegexCollectionCache _excludeRegexCache = new();
+        [IgnoreEquality] private readonly RegexCollectionCache _excludeRegexCache = new();
+        [IgnoreEquality] private readonly RegexCache _thumbnailRegexCache = new(RegexOptions.IgnoreCase);
 
         /// <summary>
         /// 横長画像判定用比率
@@ -279,10 +279,10 @@ namespace NeeView
         /// ブックサムネイル生成に優先されるファイル名
         /// </summary>
         [PropertyMember]
-        public string BookThumbnailFileName
+        public string BookThumbnailRegex
         {
-            get { return _bookThumbnailFileName; }
-            set { SetProperty(ref _bookThumbnailFileName, value.Trim()); }
+            get { return _bookThumbnailRegex; }
+            set { SetProperty(ref _bookThumbnailRegex, value.Trim()); }
         }
 
         /// <summary>
@@ -371,6 +371,14 @@ namespace NeeView
             set { ResetNextBookPageMode = value ? ResetNextBookPageMode.Continue : ResetNextBookPageMode.None; }
         }
 
+        [Obsolete("no used"), Alternative(nameof(BookThumbnailRegex), 46, ScriptErrorLevel.Warning)] // v46.0
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
+        public string? BookThumbnailFileName
+        {
+            get { return null; }
+            set { BookThumbnailRegex = string.IsNullOrWhiteSpace(value) ? "" : $"^{Regex.Escape(value)}$"; }
+        }
+
         #endregion
 
 
@@ -381,6 +389,14 @@ namespace NeeView
         public List<Regex> GetExcludeRegexes()
         {
             return _excludeRegexCache.GetRegexs(ExcludeRegexes);
+        }
+
+        /// <summary>
+        /// ブックサムネイル生成に優先されるファイル名正規表現を取得する
+        /// </summary>
+        public Regex? GetBookThumbnailRegex()
+        {
+            return _thumbnailRegexCache.GetRegex(BookThumbnailRegex);
         }
     }
 

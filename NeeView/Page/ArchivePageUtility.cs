@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeeLaboratory.Text;
+using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -46,9 +47,11 @@ namespace NeeView
                     Debug.WriteLine(ex.Message);
                 }
 
-                var fileName = Config.Current.Book.BookThumbnailFileName;
                 var depth = Config.Current.Book.BookThumbnailDepth;
-                return await ArchiveEntryUtility.CreateFirstImageArchiveEntryAsync(entry, fileName, depth, decrypt, token) ?? entry;
+                var regex = Config.Current.Book.GetBookThumbnailRegex();
+                var match = regex is not null ? new RegexStringMatch(regex) : null;
+
+                return await ArchiveEntryUtility.CreateFirstImageArchiveEntryAsync(entry, match, depth, decrypt, token) ?? entry;
             }
             else
             {

@@ -10,6 +10,7 @@ AutoRotateType=@Word.AutoRotate
 BackgroundConfig.CustomBackground=@Word.CustomBackground
 BookAccessor.CreationTime=@Word.CreationTime
 BookAccessor.LastWriteTime=@Word.LastWriteTime
+BookConfig.BookThumbnailRegex.Remarks=@BookshelfConfig.ExcludeRegexes.Remarks
 BookConfig.ExcludeRegexes.Remarks=@BookshelfConfig.ExcludeRegexes.Remarks
 BookConfig.FolderSortOrder=@FolderSortOrder
 BookConfig.FrameSpace.Remarks=@BookConfig.ContentsSpace.Remarks

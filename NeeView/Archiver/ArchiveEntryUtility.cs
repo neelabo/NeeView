@@ -1,4 +1,5 @@
-﻿using NeeView.Properties;
+﻿using NeeLaboratory.Text;
+using NeeView.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -123,7 +124,7 @@ namespace NeeView
         /// </summary>
         /// <param name="source">対象のエントリ</param>
         /// <param name="depth">検索範囲</param>
-        public static async Task<ArchiveEntry?> CreateFirstImageArchiveEntryAsync(ArchiveEntry source, string fileName, int depth, bool decrypt, CancellationToken token)
+        public static async Task<ArchiveEntry?> CreateFirstImageArchiveEntryAsync(ArchiveEntry source, IStringMatch? match, int depth, bool decrypt, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
@@ -153,9 +154,9 @@ namespace NeeView
                 entries = EntrySort.SortEntries(entries, PageSortMode.FileName).ToList();
 
                 // 指定ファイル名を取得
-                if (!string.IsNullOrEmpty(fileName))
+                if (match is not null)
                 {
-                    var thumb = entries.FirstOrDefault(e => string.Compare(e.EntryLastName, fileName, StringComparison.OrdinalIgnoreCase) == 0);
+                    var thumb = entries.FirstOrDefault(e => match.IsMatch(e.EntryLastName));
                     if (thumb != null)
                     {
                         thumb.Attributes |= ArchiveEntryAttributes.SpecifiedBookThumbnail;
@@ -175,7 +176,7 @@ namespace NeeView
                     // NOTE: 検索サブディレクトリ数も depth で制限
                     foreach (var entry in entries.Where(e => e.IsArchive()).Take(depth))
                     {
-                        select = await CreateFirstImageArchiveEntryAsync(entry, fileName, depth - 1, decrypt, token);
+                        select = await CreateFirstImageArchiveEntryAsync(entry, match, depth - 1, decrypt, token);
                         if (select != null)
                         {
                             return select;
