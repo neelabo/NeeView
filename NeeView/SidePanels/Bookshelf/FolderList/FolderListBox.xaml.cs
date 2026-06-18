@@ -1,11 +1,10 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.Input;
 using NeeLaboratory.ComponentModel;
+using NeeLaboratory.IO;
 using NeeLaboratory.Linq;
 using NeeView.Collections.Generic;
 using NeeView.Properties;
 using NeeView.Windows;
-using NeeView.Windows.Property;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -18,7 +17,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace NeeView
 {
@@ -133,6 +131,7 @@ namespace NeeView
         public static readonly RoutedCommand SetThumbnailCommand = new("SetThumbnailCommand", typeof(FolderListBox));
         public static readonly RoutedCommand BookmarkFolderPropertyCommand = new("BookmarkFolderPropertyCommand", typeof(FolderListBox));
         public static readonly RoutedCommand BookmarkPropertyCommand = new("BookmarkPropertyCommand", typeof(FolderListBox));
+        public static readonly RoutedCommand FilePropertyCommand = new("FilePropertyCommand", typeof(FolderListBox));
 
         private static void InitializeCommandStatic()
         {
@@ -167,7 +166,9 @@ namespace NeeView
             this.ListBox.CommandBindings.Add(new CommandBinding(SetThumbnailCommand, SetThumbnailCommand_Execute, SetThumbnailCommand_CanExecute));
             this.ListBox.CommandBindings.Add(new CommandBinding(BookmarkFolderPropertyCommand, BookmarkFolderPropertyCommand_Executed));
             this.ListBox.CommandBindings.Add(new CommandBinding(BookmarkPropertyCommand, BookmarkPropertyCommand_Executed));
+            this.ListBox.CommandBindings.Add(new CommandBinding(FilePropertyCommand, FilePropertyCommand_Executed));
         }
+
 
         /// <summary>
         /// ブックマーク登録/解除可能？
@@ -638,6 +639,20 @@ namespace NeeView
                 // サムネイル更新
                 item.ClearThumbnailCache();
                 _thumbnailLoader?.Load(true);
+            }
+        }
+
+
+        private void FilePropertyCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (sender is ListBox { SelectedItem: FolderItem item })
+            {
+                var path = item.TargetPath.SimplePath;
+                path = item.Attributes.AnyFlagFast(FolderItemAttribute.Bookmark | FolderItemAttribute.ArchiveEntry | FolderItemAttribute.Empty) ? ArchiveManager.Current.GetExistPathName(path) : path;
+                if (!string.IsNullOrWhiteSpace(path))
+                {
+                    FileSystem.OpenProperty(Window.GetWindow(this), path);
+                }
             }
         }
 
@@ -1389,6 +1404,9 @@ namespace NeeView
                     contextMenu.Items.Add(new Separator());
                     contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("BookshelfItem.Menu.OpenInPlaylist"), Command = OpenInPlaylistCommand });
                 }
+
+                contextMenu.Items.Add(new Separator());
+                contextMenu.Items.Add(new MenuItem() { Header = TextResources.GetString("Menu.Property"), Command = FilePropertyCommand });
             }
         }
 

@@ -53,6 +53,7 @@ PostMessage
 RegisterClipboardFormat
 RemoveClipboardFormatListener
 ScreenToClient
+SEE_MASK_INVOKEIDLIST
 SetClassLongPtr
 SetCursorPos
 SetDllDirectory
@@ -64,11 +65,11 @@ SHAppBarMessage
 SHChangeNotify
 SHChangeNotifyRegister
 SHCreateItemFromParsingName
+ShellExecuteEx
 SHGetFileInfo
 SHGetImageList
 SHGetNameFromIDList
 SHIL_*
-SHObjectProperties
 ShowWindow
 ShowWindowAsync
 StrCmpLogical

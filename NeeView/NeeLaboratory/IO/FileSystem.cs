@@ -5,6 +5,7 @@ using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Storage.FileSystem;
 using Windows.Win32.UI.Shell;
+using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace NeeLaboratory.IO
 {
@@ -170,13 +171,23 @@ namespace NeeLaboratory.IO
         /// プロパティウィンドウを開く
         /// </summary>
         /// <param name="path"></param>
-        public static void OpenProperty(System.Windows.Window window, string path)
+        public static unsafe void OpenProperty(System.Windows.Window window, string path)
         {
             var handle = new System.Windows.Interop.WindowInteropHelper(window).Handle;
 
-            if (!PInvoke.SHObjectProperties((HWND)handle, SHOP_TYPE.SHOP_FILEPATH, path, ""))
+            fixed (char* pVerb = "properties", pFile = path)
             {
-                throw new ApplicationException($"Cannot open file property window. {path}");
+                var sei = new SHELLEXECUTEINFOW
+                {
+                    cbSize = (uint)sizeof(SHELLEXECUTEINFOW),
+                    fMask = PInvoke.SEE_MASK_INVOKEIDLIST,
+                    hwnd = (HWND)handle,
+                    lpVerb = pVerb,
+                    lpFile = pFile,
+                    nShow = (int)SHOW_WINDOW_CMD.SW_SHOW
+                };
+
+                _ = PInvoke.ShellExecuteEx(ref sei);
             }
         }
     }

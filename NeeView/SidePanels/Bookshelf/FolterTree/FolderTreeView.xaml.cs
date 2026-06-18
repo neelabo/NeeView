@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using NeeLaboratory.IO;
 using NeeView.Collections.Generic;
 using NeeView.Properties;
 using NeeView.Windows;
@@ -119,6 +120,10 @@ namespace NeeView
 
                 case BookmarkFolderNode bookmarkFolder:
                     BookmarkFolderTools.ShowPropertyDialog(Window.GetWindow(this), bookmarkFolder.BookmarkSource);
+                    break;
+
+                case DirectoryNode directoryNode:
+                    FileSystem.OpenProperty(Window.GetWindow(this), directoryNode.Path);
                     break;
             }
         }
@@ -434,6 +439,8 @@ namespace NeeView
                 case DirectoryNode:
                     contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.Explorer"), OpenExplorerCommand));
                     contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.AddQuickAccess"), AddQuickAccessCommand));
+                    contextMenu.Items.Add(new Separator());
+                    contextMenu.Items.Add(CreateMenuItem(TextResources.GetString("FolderTree.Menu.Property"), OpenPropertyCommand));
                     break;
 
                 case RootBookmarkFolderNode:
