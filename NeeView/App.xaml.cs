@@ -95,6 +95,10 @@ namespace NeeView
 
             try
             {
+#if !DEBUG
+                Trace.Listeners.Clear();
+#endif
+
                 // [開発用] ログ出力設定
                 if (!string.IsNullOrEmpty(Environment.LogFile))
                 {
@@ -138,7 +142,7 @@ namespace NeeView
                 bootLock.Dispose();
             }
 
-            Trace.WriteLine($"App.Initialized: {Stopwatch.ElapsedMilliseconds}ms");
+            Debug.WriteLine($"App.Initialized: {Stopwatch.ElapsedMilliseconds}ms");
 
             // ToolTipService default properties
             ToolTipService.BetweenShowDelayProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(0));
@@ -146,10 +150,13 @@ namespace NeeView
             this.ShutdownMode = ShutdownMode.OnMainWindowClose;
 
             // メインウィンドウ起動
+            Trace.WriteLine("Create MainWindow");
             var mainWindow = new MainWindow();
             WindowParameters.Initialize(mainWindow);
 
             NVInterop.NVFpReset();
+
+            Trace.WriteLine("Show MainWindow");
             mainWindow.Show();
 
             MessageDialog.IsShowInTaskBar = false;
@@ -181,24 +188,29 @@ namespace NeeView
             this.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
             // コマンドライン引数処理
+            Trace.WriteLine("Parse commandline options");
             _option = ParseCommandLineOption(e.Args);
 
             // 待機プロセス指定があれば、そのプロセスの終了を待つ
             if (_option.WaitProcess is not null && int.TryParse(_option.WaitProcess, out var pid))
             {
+                Trace.WriteLine($"Wait other process exit ({pid})");
                 await WaitForProcessExitAsync(pid);
             }
 
             // AnimatedImage ライブラリ初期化
+            Trace.WriteLine("Initialize AnimatedImage");
             AnimatedImageChecker.InitializeLibrary();
 
             // APPXデータフォルダ移動 (ver.38)
+            Trace.WriteLine("Correct LocalAppDataFolder (v38.0)");
             Environment.CorrectLocalAppDataFolder();
 
             // カレントディレクトリを実行ファイルの場所に変更。ファイルロック回避のため
             System.IO.Directory.SetCurrentDirectory(Environment.AssemblyFolder);
 
             // 多重起動サービス起動
+            Trace.WriteLine("Run multi boot service");
             _multiBootService = new MultiBootService();
             await _multiBootService.UpdateServerProcess();
 
@@ -208,13 +220,16 @@ namespace NeeView
             DebugStamp("UserSettingLoading...");
 
             // load UserSetting bytes
+            Trace.WriteLine("Load UserSetting bytes");
             UserSetting? setting = null;
             var settingResource = new UserSettingResource(_option.SettingFilename);
 
             // create boot setting
+            Trace.WriteLine("Create boot setting");
             var boot = settingResource.LoadBootSetting();
             if (boot is null)
             {
+                Trace.WriteLine("Create full setting");
                 setting = CreateUserSetting(settingResource);
                 Debug.Assert(setting.Config is not null);
                 boot = BootSetting.Create(setting.Config);
@@ -223,23 +238,32 @@ namespace NeeView
             // If multiple launches are not possible, send parameters to the main app to terminate.
             if (!CanStart(boot.IsMultiBootEnabled))
             {
+                Trace.WriteLine("Call main app...");
                 await _multiBootService.RemoteRestartAsync(e.Args);
                 throw new OperationCanceledException("Already started.");
             }
 
             // run remote command server
+            Trace.WriteLine("Run remote command server");
             AppRemoteCommandServer.Current.Start();
 
             // show splash screen
+            Trace.WriteLine("Show splash screen");
             ShowSplashScreen(boot);
 
             // initialize before UserSetting
+            Trace.WriteLine("Initialize Text Resource");
             var language = _option.Language ?? boot.Language;
             InitializeTextResource(language);
+
+            Trace.WriteLine("Initialize HtmlNode");
             InitializeHtmlNode();
+
+            Trace.WriteLine("Initialize CommandTable");
             InitializeCommandTable();
 
             // ensure UserSetting
+            Trace.WriteLine("Ensure UserSetting");
             setting ??= CreateUserSetting(settingResource);
             SaveData.Current.SetUserSettingFileStamp(setting.FileStamp);
             UserSettingTools.Restore(setting, UserSettingLoadOption.ReplaceConfig);
@@ -260,8 +284,13 @@ namespace NeeView
             }
 
             // initialize after UserSetting
+            Trace.WriteLine("Initialize temporary");
             InitializeTemporary(Config.Current);
+
+            Trace.WriteLine("Initialize ImeKey");
             InitializeImeKey(Config.Current);
+
+            Trace.WriteLine("Initialize theme");
             InitializeTheme();
 
             AppState.Current.Initialize();

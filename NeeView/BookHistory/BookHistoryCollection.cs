@@ -224,7 +224,7 @@ namespace NeeView
         // 無効な履歴削除
         public async Task<int> RemoveUnlinkedAsync(CancellationToken token)
         {
-            LocalDebug.WriteLine($"RemoveUnlinked...");
+            Trace.WriteLine($"BookHistory.RemoveUnlinked...");
 
             var unlinked = new List<BookHistory>();
             foreach (var item in this.ToList())
@@ -241,7 +241,7 @@ namespace NeeView
                 HistoryChanged?.Invoke(this, new BookMementoCollectionChangedArgs(BookMementoCollectionChangedType.Remove, null, unlinked));
             }
 
-            LocalDebug.WriteLine($"RemoveUnlinked done.");
+            Trace.WriteLine($"BookHistory.RemoveUnlinked done.");
             return unlinked.Count;
         }
 

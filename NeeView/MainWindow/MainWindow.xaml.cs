@@ -67,19 +67,24 @@ namespace NeeView
             DragDropHelper.AttachDragOverTerminator(this);
 
             // Window状態初期化
+            Trace.WriteLine("Initialize WindowShapeSnap");
             InitializeWindowShapeSnap();
 
             // win proc
             _windowProcedure = new WindowProcedure(this);
 
+            Trace.WriteLine("Initialize WindowStateManager");
             _windowStateManager = new WindowStateManager(this);
             _windowController = new MainWindowController(this, _windowStateManager);
 
+            Trace.WriteLine("Initialize ContextMenuWatcher");
             ContextMenuWatcher.Initialize();
 
+            Trace.WriteLine("Initialize MouseHorizontalWheelService");
             MouseHorizontalWheelService.SubscribeHorizontalWheelEvent(this);
 
             // 固定画像初期化
+            Trace.WriteLine("Initialize StaticImages");
             ThumbnailResource.InitializeStaticImages();
             _ = FileIconCollection.Current.InitializeAsync();
 
@@ -90,6 +95,7 @@ namespace NeeView
             //ContentDropManager.Current.SetDragDropEvent(MainView);
 
             // ViewComponent
+            Trace.WriteLine("Initialize MainViewComponent");
             MainViewComponent.Initialize();
             _viewComponent = MainViewComponent.Current;
 
@@ -123,6 +129,7 @@ namespace NeeView
             RoutedCommandTable.Current.AddMouseInput(new MouseInput(mouseContext));
 
             // サイドパネル初期化
+            Trace.WriteLine("Initialize CustomLayoutPanelManager");
             CustomLayoutPanelManager.Initialize();
 
             // 各コントロールとモデルを関連付け
@@ -172,12 +179,11 @@ namespace NeeView
                 }
             });
 
-
-
             _windowController.SubscribePropertyChanged(nameof(MainWindowController.AutoHideMode),
                 (s, e) => AutoHideModeChanged());
 
             // initialize routed commands
+            Trace.WriteLine("Initialize RoutedCommandTable");
             RoutedCommandTable.Current.UpdateInputGestures();
 
             // watch menu bar visibility
@@ -194,6 +200,7 @@ namespace NeeView
             this.PreviewStylusDown += MainWindow_PreviewStylusDown;
 
             // mouse activate
+            Trace.WriteLine("Mouse activate");
             _mouseActivate = new MouseActivate(this);
 
             // key event for window
@@ -209,9 +216,11 @@ namespace NeeView
             CompositionTarget.Rendering += OnRendering;
 
             // message layer space
+            Trace.WriteLine("Initialize MessageLayerSpace");
             InitializeMessageLayerSpace();
 
             // page caption
+            Trace.WriteLine("Initialize PageCaption");
             InitializePageCaption();
 
             // side panel quick hide
@@ -224,6 +233,7 @@ namespace NeeView
             Debug_Initialize();
 
             Debug.WriteLine($"App.MainWindow.Initialize.Done: {App.Current.Stopwatch.ElapsedMilliseconds}ms");
+            Trace.WriteLine("App.MainWindow.Initialize Done");
         }
 
 
@@ -452,6 +462,7 @@ namespace NeeView
 
             if (App.Current.Resources["Window.Background"] is SolidColorBrush brush)
             {
+                Trace.WriteLine("Win32 Background Brushes");
                 // Win32 の背景ブラシを設定して起動時のちらつきを軽減するテスト
                 var hwnd = new WindowInteropHelper(this).Handle;
                 uint color = (uint)(brush.Color.B << 16 | brush.Color.G << 8 | brush.Color.R);
@@ -461,13 +472,16 @@ namespace NeeView
             }
 
             // Chrome の情報を最新にする
+            Trace.WriteLine("Refresh window state");
             _windowController.Refresh();
 
             // ウィンドウ座標の復元
             // NOTE: PInvoke.SetWindowPlacement() を呼ぶとLoadedイベントが発生する。WindowPlacementの処理順番に注意
+            Trace.WriteLine("Initialize window place");
             InitializeWindowPlace();
 
             Debug.WriteLine($"App.MainWindow.SourceInitialized.Done: {App.Current.Stopwatch.ElapsedMilliseconds}ms");
+            Trace.WriteLine("App.MainWindow.SourceInitialized Done");
         }
 
         private void MainWindow_SourceInitialized(object sender, EventArgs e)
@@ -483,16 +497,20 @@ namespace NeeView
 
             _dpiProvider.SetDipScale(VisualTreeHelper.GetDpi(this));
 
+            Trace.WriteLine("Initialize PendingItemManager");
             PendingItemManager.Initialize(this);
 
+            Trace.WriteLine("Update MainViewManager");
             MainViewManager.Current.Update(false);
 
             // レイアウト更新
             DirtyWindowLayout();
 
             // WinProc登録
+            Trace.WriteLine("Initialize SystemDeviceWatcher");
             SystemDeviceWatcher.Current.Initialize(this);
 
+            Trace.WriteLine("ViewModel.Loaded");
             _vm.Loaded();
 
             if (InputGestureDisplayString.ErrorMessages.Count > 0)
@@ -508,7 +526,8 @@ namespace NeeView
                 this.Activate();
             }
 
-            Trace.WriteLine($"App.MainWindow.Loaded.Done: {App.Current.Stopwatch.ElapsedMilliseconds}ms");
+            Debug.WriteLine($"App.MainWindow.Loaded.Done: {App.Current.Stopwatch.ElapsedMilliseconds}ms");
+            Trace.WriteLine("App.MainWindow.Loaded Done");
         }
 
         // ウィンドウコンテンツ表示開始
@@ -516,6 +535,7 @@ namespace NeeView
         {
             Debug.WriteLine($"App.MainWindow.ContentRendered: {App.Current.Stopwatch.ElapsedMilliseconds}ms");
 
+            Trace.WriteLine("ViewModel.ContentRenderedAsync");
             await _vm.ContentRenderedAsync();
 
             // focus
@@ -525,6 +545,7 @@ namespace NeeView
             }
 
             Debug.WriteLine($"App.MainWindow.ContentRendered.Done: {App.Current.Stopwatch.ElapsedMilliseconds}ms");
+            Trace.WriteLine("App.MainWindow.ContentRendered Done");
 
             // 初回起動ダイアログ
             if (!Config.Current.System.IsLoadedSettings)
@@ -1036,6 +1057,7 @@ namespace NeeView
         [Conditional("DEBUG")]
         private static void Debug_Initialize()
         {
+            Trace.WriteLine("Initialize Debug");
             DebugGesture.Initialize(App.Current.MainWindow);
         }
 

@@ -64,6 +64,7 @@ namespace NeeView
         public async Task InitializeAsync()
         {
             await AppDispatcher.BeginInvoke(() => CreateDefaultFolderIcon());
+            Trace.WriteLine("Initialize StaticImages done.");
         }
 
 

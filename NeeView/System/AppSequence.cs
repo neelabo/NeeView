@@ -1,4 +1,5 @@
 ﻿using NeeLaboratory.ComponentModel;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -40,10 +41,12 @@ namespace NeeView
             _initializeMinimized = true;
 
             // サイドパネル復元
+            Trace.WriteLine("Restore layout panels");
             CustomLayoutPanelManager.Current.Restore();
 
             // Susie起動
             // TODO: 非同期化できないか？
+            Trace.WriteLine("Initialize Susie");
             SusiePluginManager.Current.Initialize();
 
             // データ読み込み
@@ -61,6 +64,7 @@ namespace NeeView
             InitializeMinimize();
 
             // SaveDataSync活動開始
+            Trace.WriteLine("Initialize SaveDataSync");
             SaveDataSync.Current.Initialize();
 
             await StartAsync();
@@ -97,19 +101,25 @@ namespace NeeView
         private async Task StartAsync()
         {
             // 非同期初期化処理を待機
+            Trace.WriteLine("Wait Process..");
             await ProcessJobEngine.Current.WaitPropertyAsync(nameof(ProcessJobEngine.IsBusy), x => x.IsBusy == false);
 
             // ブック初期化
+            Trace.WriteLine("Load first book");
             LoadFirstBook();
 
             // スライドショーの自動再生
             PlaySlideshow();
 
             // パネル初期化待機
+            Trace.WriteLine("Wait bookmark panel");
             await BookmarkFolderList.Current.WaitAsync(CancellationToken.None);
+            
+            Trace.WriteLine("Wait bookshelf panel");
             await BookshelfFolderList.Current.WaitAsync(CancellationToken.None);
 
             // 最初のスクリプト実行
+            Trace.WriteLine("Run start script");
             RunStartupScript();
         }
 
@@ -119,18 +129,23 @@ namespace NeeView
         private static void LoadData()
         {
             // 履歴読み込み
+            Trace.WriteLine("Load History");
             SaveData.Current.LoadHistory();
 
             // フォルダー設定読み込み
+            Trace.WriteLine("Load FolderConfig");
             SaveData.Current.LoadFolderConfig();
 
             // ブックマーク読み込み
+            Trace.WriteLine("Load Bookmark");
             SaveData.Current.LoadBookmark();
 
             // クイックアクセス読み込み
+            Trace.WriteLine("Load QuickAccess");
             SaveData.Current.LoadQuickAccess();
 
             // プレイリスト読み込み
+            Trace.WriteLine("Initialize PlaylistHub");
             PlaylistHub.Current.Initialize();
         }
 
@@ -156,6 +171,7 @@ namespace NeeView
         {
             if (App.Current.Option.IsSlideShow != null ? App.Current.Option.IsSlideShow == SwitchOption.on : Config.Current.StartUp.IsAutoPlaySlideShow)
             {
+                Trace.WriteLine("Play slideshow");
                 SlideShow.Current.Play();
             }
         }
