@@ -282,7 +282,7 @@ namespace NeeView.Windows
 
                 if (window != null)
                 {
-                    var dragCount = GetDragCount();
+                    var dragCount = args.DragCount > 0 ? args.DragCount : GetDragCount();
                     if (window.Content is UIElement root && _adornerVisual != null)
                     {
                         layer = AdornerLayer.GetAdornerLayer(root);

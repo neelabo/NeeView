@@ -179,7 +179,7 @@ namespace NeeView
                 return 0;
             }
 
-            if (Items.Count >= 1 && Items[0].Type == FolderItemType.ParentDirectory)
+            if (Items.Count >= 1 && Items[0].IsParent())
             {
                 return Items.Count - 1;
             }
@@ -550,12 +550,12 @@ namespace NeeView
                 else if (FolderOrder.IsEntryCategory() || Config.Current.Bookshelf.IsInsertItem)
                 {
                     // 別にリストを作ってソートを実行し、それで挿入位置を決める
-                    var list = Sort(this.Items.Where(e => e.Type != FolderItemType.ParentDirectory).Concat(new List<FolderItem>() { item }), CancellationToken.None);
+                    var list = Sort(this.Items.Where(e => !e.IsParent()).Concat(new List<FolderItem>() { item }), CancellationToken.None);
                     var index = list.IndexOf(item);
 
                     if (index >= 0)
                     {
-                        if (this.Items.FirstOrDefault()?.Type == FolderItemType.ParentDirectory)
+                        if (this.Items.FirstOrDefault()?.IsParent() == true)
                         {
                             index++;
                         }

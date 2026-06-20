@@ -266,8 +266,8 @@ namespace NeeView
         /// <param name="e"></param>
         private void Cut_CanExecute(object? sender, CanExecuteRoutedEventArgs e)
         {
-            var items = this.ListBox.SelectedItems.Cast<FolderItem>();
-            e.CanExecute = Config.Current.System.IsFileWriteAccessEnabled && items != null && items.All(x => x.IsEditable && x.IsFileSystem());
+            var items = this.ListBox.SelectedItems.Cast<FolderItem>().ToList();
+            e.CanExecute = Config.Current.System.IsFileWriteAccessEnabled && items != null && items.Count > 0 && items.All(x => x.IsEditable && x.IsFileSystem());
         }
 
         /// <summary>
@@ -277,7 +277,7 @@ namespace NeeView
         /// <param name="e"></param>
         public void Cut_Executed(object? sender, ExecutedRoutedEventArgs e)
         {
-            var items = this.ListBox.SelectedItems.Cast<FolderItem>();
+            var items = this.ListBox.SelectedItems.Cast<FolderItem>().ToList();
             if (items != null && items.Any())
             {
                 CutToClipboard(items);
@@ -289,7 +289,7 @@ namespace NeeView
         /// </summary>
         private static void CutToClipboard(IEnumerable<FolderItem> items)
         {
-            var selectedItems = items.Where(e => !e.IsEmpty() && e.IsEditable && e.IsFileSystem()).ToList();
+            var selectedItems = items.Where(e => e.IsEditable && e.IsFileSystem()).ToList();
             if (selectedItems.Count == 0)
             {
                 return;
@@ -315,8 +315,8 @@ namespace NeeView
         /// <param name="e"></param>
         private void Copy_CanExecute(object? sender, CanExecuteRoutedEventArgs e)
         {
-            var items = this.ListBox.SelectedItems.Cast<FolderItem>();
-            e.CanExecute = items != null;
+            var items = this.ListBox.SelectedItems.Cast<FolderItem>().ToList();
+            e.CanExecute = items != null && items.Count > 0 && items.All(e => !e.IsSystem());
         }
 
         /// <summary>
@@ -352,7 +352,7 @@ namespace NeeView
         private static async Task CopyToClipboard(IEnumerable<FolderItem> items, CancellationToken token)
         {
             var collection = new System.Collections.Specialized.StringCollection();
-            foreach (var item in items.Where(e => !e.IsEmpty()).Select(e => e.EntityPath.SimplePath).Where(e => new QueryPath(e).Scheme == QueryScheme.File))
+            foreach (var item in items.Where(e => !e.IsSystem()).Select(e => e.EntityPath.SimplePath).Where(e => new QueryPath(e).Scheme == QueryScheme.File))
             {
                 try
                 {
@@ -386,8 +386,8 @@ namespace NeeView
 
         private bool CopyToFolder_CanExecute()
         {
-            var items = this.ListBox.SelectedItems.Cast<FolderItem>();
-            return items != null; // && items.All(x => x.IsEditable);
+            var items = this.ListBox.SelectedItems.Cast<FolderItem>().ToList();
+            return items != null && items.Count > 0 && items.All(e => !e.IsSystem());
         }
 
         public async void CopyToFolder_Execute(object? sender, ExecutedRoutedEventArgs e)
@@ -401,7 +401,7 @@ namespace NeeView
                     throw new DirectoryNotFoundException();
                 }
 
-                var items = this.ListBox.SelectedItems.Cast<FolderItem>();
+                var items = this.ListBox.SelectedItems.Cast<FolderItem>().ToList();
                 if (items != null && items.Any())
                 {
                     ////Debug.WriteLine($"CopyToFolder: to {folder.Path}");
@@ -428,8 +428,8 @@ namespace NeeView
 
         private bool MoveToFolder_CanExecute()
         {
-            var items = this.ListBox.SelectedItems.Cast<FolderItem>();
-            return Config.Current.System.IsFileWriteAccessEnabled && items != null && items.All(x => x.IsEditable && x.IsFileSystem());
+            var items = this.ListBox.SelectedItems.Cast<FolderItem>().ToList();
+            return Config.Current.System.IsFileWriteAccessEnabled && items != null && items.Count > 0 && items.All(x => x.IsEditable && x.IsFileSystem());
         }
 
         public async void MoveToFolder_Execute(object? sender, ExecutedRoutedEventArgs e)
@@ -443,7 +443,7 @@ namespace NeeView
                     throw new DirectoryNotFoundException();
                 }
 
-                var items = this.ListBox.SelectedItems.Cast<FolderItem>();
+                var items = this.ListBox.SelectedItems.Cast<FolderItem>().ToList();
                 if (items != null && items.Any())
                 {
                     ////Debug.WriteLine($"MoveToFolder: to {folder.Path}");
@@ -463,8 +463,8 @@ namespace NeeView
 
         public void Remove_CanExecute(object? sender, CanExecuteRoutedEventArgs e)
         {
-            var items = this.ListBox.SelectedItems.Cast<FolderItem>();
-            e.CanExecute = items != null && _vm.FolderCollection is not PlaylistFolderCollection && items.All(x => x.CanRemove());
+            var items = this.ListBox.SelectedItems.Cast<FolderItem>().ToList();
+            e.CanExecute = _vm.FolderCollection is not PlaylistFolderCollection && items != null && items.Count > 0 && items.All(x => x.CanRemove());
         }
 
         public async void Remove_Executed(object? sender, ExecutedRoutedEventArgs e)
@@ -538,20 +538,20 @@ namespace NeeView
         /// </summary>
         private void OpenExternalApp_CanExecute(object? sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = CopyToFolder_CanExecute();
+            e.CanExecute = OpenExternalApp_CanExecute();
         }
 
         private bool OpenExternalApp_CanExecute()
         {
-            var items = this.ListBox.SelectedItems.Cast<FolderItem>();
-            return items != null && items.All(x => x.IsEditable);
+            var items = this.ListBox.SelectedItems.Cast<FolderItem>().ToList();
+            return items != null && items.Count > 0 && items.All(x => !x.IsSystem());
         }
 
         public void OpenExternalApp_Executed(object? sender, ExecutedRoutedEventArgs e)
         {
             if (e.Parameter is not ExternalApp externalApp) return;
 
-            var items = this.ListBox.SelectedItems.Cast<FolderItem>();
+            var items = this.ListBox.SelectedItems.Cast<FolderItem>().ToList();
             if (items != null && items.Any())
             {
                 var paths = items.Select(x => x.TargetPath.SimplePath).ToList();
@@ -569,7 +569,7 @@ namespace NeeView
 
         public void OpenBook_Executed(object? sender, ExecutedRoutedEventArgs e)
         {
-            if (sender is ListBox { SelectedItem: FolderItem item } && !item.IsEmpty())
+            if (sender is ListBox { SelectedItem: FolderItem item } && !item.IsSystem())
             {
                 _vm.Model.LoadBook(item);
             }
@@ -598,7 +598,7 @@ namespace NeeView
         {
             if (sender is not ListBox listBox) return;
 
-            var items = listBox.SelectedItems.OfType<FolderItem>().Where(e => !e.IsEmpty());
+            var items = listBox.SelectedItems.OfType<FolderItem>().Where(e => !e.IsSystem());
             foreach (var item in items)
             {
                 item.ClearThumbnailCache();
@@ -695,24 +695,15 @@ namespace NeeView
             BookmarkFolderList.Current.RequestPlace(path, select, FolderSetPlaceOption.None);
         }
 
-#endregion
+        #endregion
 
         #region DragDrop
 
         public async Task DragStartBehavior_DragBeginAsync(object? sender, DragStartEventArgs e, CancellationToken token)
         {
-            var items = this.ListBox.SelectedItems
-                .Cast<FolderItem>()
-                .Where(x => !x.Attributes.HasFlag(FolderItemAttribute.Empty))
-                .ToList();
+            var items = this.ListBox.SelectedItems.Cast<FolderItem>().ToList();
 
-            if (!items.Any())
-            {
-                e.Cancel = true;
-                return;
-            }
-
-            if (items.Any(e => e.Type == FolderItemType.ParentDirectory))
+            if (!items.Any() || items.Any(x => x.IsSystem()))
             {
                 e.Cancel = true;
                 return;
@@ -754,6 +745,8 @@ namespace NeeView
                 var text = string.Join(System.Environment.NewLine, items.Select(e => e.TargetPath.SimplePath));
                 e.Data.SetText(text);
             }
+
+            e.DragCount = items.Count;
         }
 
         private void ListBox_PreviewDragEnter(object sender, DragEventArgs e)
@@ -881,7 +874,7 @@ namespace NeeView
         {
             if (target.Item is ListBoxItem listBoxItem && listBoxItem.Content is FolderItem folderItem)
             {
-                if (folderItem.Type == FolderItemType.ParentDirectory && target.IsOver)
+                if (folderItem.IsParent() && target.IsOver)
                 {
                     return BookmarkCollection.Current.FindNode(folderItem.TargetPath);
                 }
@@ -1225,7 +1218,7 @@ namespace NeeView
         {
             if (Keyboard.Modifiers != ModifierKeys.None) return;
 
-            if (!Config.Current.Panels.OpenWithDoubleClick && !item.IsEmpty())
+            if (!Config.Current.Panels.OpenWithDoubleClick && !item.IsSystem())
             {
                 _vm.Model.LoadBook(item);
             }
@@ -1235,7 +1228,7 @@ namespace NeeView
         private void FolderListItem_MouseDoubleClick(object? sender, MouseButtonEventArgs e)
         {
             var item = (sender as ListBoxItem)?.Content as FolderItem;
-            if (Config.Current.Panels.OpenWithDoubleClick && item != null && !item.IsEmpty())
+            if (Config.Current.Panels.OpenWithDoubleClick && item != null && !item.IsSystem())
             {
                 _vm.Model.LoadBook(item);
             }
@@ -1486,8 +1479,5 @@ namespace NeeView
             throw new NotImplementedException();
         }
     }
-
-
-
 
 }

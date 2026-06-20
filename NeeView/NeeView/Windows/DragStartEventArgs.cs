@@ -26,6 +26,8 @@ namespace NeeView.Windows
         public DragDropEffects AllowedEffects { get; set; }
 
         public Action? DragEndAction { get; set; }
+        
+        public int DragCount { get; set; }
 
 
         public Point GetPosition(IInputElement relativeTo)

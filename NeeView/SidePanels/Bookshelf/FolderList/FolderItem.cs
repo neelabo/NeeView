@@ -32,6 +32,7 @@ namespace NeeView
         PlaylistMember = (1 << 10),
         ReparsePoint = (1 << 11),
         Unlinked = (1 << 12),
+        Parent = (1 << 13),
     }
 
     /// <summary>
@@ -186,7 +187,7 @@ namespace NeeView
         /// <summary>
         /// 編集可能
         /// </summary>
-        public bool IsEditable => (this.Attributes & (FolderItemAttribute.Empty | FolderItemAttribute.Drive | FolderItemAttribute.ArchiveEntry | FolderItemAttribute.ReadOnly | FolderItemAttribute.System)) == 0;
+        public bool IsEditable => (this.Attributes & (FolderItemAttribute.Empty | FolderItemAttribute.Parent | FolderItemAttribute.Drive | FolderItemAttribute.ArchiveEntry | FolderItemAttribute.ReadOnly | FolderItemAttribute.System)) == 0;
 
         /// <summary>
         /// アクセス可能？(ドライブの準備ができているか)
@@ -316,6 +317,7 @@ namespace NeeView
         public bool IsSystem() => (Attributes & FolderItemAttribute.System) == FolderItemAttribute.System;
         public bool IsDrive() => (Attributes & FolderItemAttribute.Drive) == FolderItemAttribute.Drive;
         public bool IsEmpty() => (Attributes & FolderItemAttribute.Empty) == FolderItemAttribute.Empty;
+        public bool IsParent() => (Attributes & FolderItemAttribute.Parent) == FolderItemAttribute.Empty;
         public bool IsDisable() => IsDirectory && !IsReady;
         public bool IsBookmark() => (Attributes & FolderItemAttribute.Bookmark) == FolderItemAttribute.Bookmark;
         public bool IsFileSystem() => (Attributes & (FolderItemAttribute.System | FolderItemAttribute.Bookmark | FolderItemAttribute.QuickAccess | FolderItemAttribute.Empty | FolderItemAttribute.None)) == 0;
@@ -330,7 +332,7 @@ namespace NeeView
         public bool IsHideExtension() => IsShortcut || IsPlaylist;
 
         // サムネイル変更可能
-        public bool CanThumbnail() => !IsEmpty() && !IsDrive() && !IsBookmark();
+        public bool CanThumbnail() => !IsSystem() && !IsDrive() && !IsBookmark();
 
         /// <summary>
         /// ターゲットパスと名前の設定

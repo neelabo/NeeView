@@ -794,7 +794,7 @@ namespace NeeView
 
             var currentBookAddress = BookOperation.Current.Book?.Path;
 
-            var items = _folderCollection.Where(e => !e.IsEmpty() && e.EntityPath.Scheme == QueryScheme.File && e.EntityPath.SimplePath != currentBookAddress);
+            var items = _folderCollection.Where(e => !e.IsSystem() && e.EntityPath.Scheme == QueryScheme.File && e.EntityPath.SimplePath != currentBookAddress);
             if (!items.Any())
             {
                 return false;

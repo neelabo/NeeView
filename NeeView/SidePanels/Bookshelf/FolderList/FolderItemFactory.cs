@@ -34,7 +34,7 @@ namespace NeeView
                 Name = ".",
                 TargetPath = _place with { Path = LoosePath.Combine(_place.Path, ".") },
                 DisplayName = TextResources.GetString("Notice.NoFiles"),
-                Attributes = FolderItemAttribute.Empty,
+                Attributes = FolderItemAttribute.System | FolderItemAttribute.Empty,
             };
         }
 
@@ -51,7 +51,7 @@ namespace NeeView
                 CreationTime = default,
                 LastWriteTime = default,
                 Length = -1,
-                Attributes = FolderItemAttribute.Directory | FolderItemAttribute.System,
+                Attributes = FolderItemAttribute.Directory | FolderItemAttribute.System | FolderItemAttribute.Parent,
                 IsReady = true
             };
 
