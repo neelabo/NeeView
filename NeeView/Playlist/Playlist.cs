@@ -665,8 +665,6 @@ namespace NeeView
             if (!IsEditable) return false;
             if (items is null || items.Count == 0) return false;
 
-            Debug.Assert(items.SequenceEqual(items.OrderBy(e => _items.IndexOf(e))));
-
             if (Config.Current.Playlist.IsGroupBy)
             {
                 var place = items.First().Place;
@@ -707,8 +705,6 @@ namespace NeeView
         {
             if (!IsEditable) return false;
             if (items is null || items.Count == 0) return false;
-
-            Debug.Assert(items.SequenceEqual(items.OrderBy(e => _items.IndexOf(e))));
 
             if (Config.Current.Playlist.IsGroupBy)
             {

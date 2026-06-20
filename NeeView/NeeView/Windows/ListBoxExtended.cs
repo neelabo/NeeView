@@ -64,6 +64,15 @@ namespace NeeView.Windows
         public static readonly DependencyProperty MouseWheelSpeedRateProperty =
             DependencyProperty.Register(nameof(MouseWheelSpeedRate), typeof(double), typeof(ListBoxExtended), new PropertyMetadata(1.0));
 
+        public bool IsNavigateWithWrapEnabled
+        {
+            get { return (bool)GetValue(IsNavigateWithWrapEnabledProperty); }
+            set { SetValue(IsNavigateWithWrapEnabledProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsNavigateWithWrapEnabledProperty =
+            DependencyProperty.Register(nameof(IsNavigateWithWrapEnabled), typeof(bool), typeof(ListBoxExtended), new PropertyMetadata(false));
+
 
         public int ItemsCount => this.Items is not null ? this.Items.Count : 0;
 
@@ -101,22 +110,107 @@ namespace NeeView.Windows
             }
         }
 
-        protected override void OnKeyDown(KeyEventArgs e)
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
         {
-            base.OnKeyDown(e);
+            NavigateLeftAndRightKey(e);
+            if (e.Handled) return;
 
-            // Home/Endキーで正しくリストの先頭/末尾項目を選択するようにする
-            if (FixHomeAndEndKeyBehavior && ItemsCount > 0)
+            NavigateHomeAndEndKey(e);
+            if (e.Handled) return;
+
+            base.OnPreviewKeyDown(e);
+        }
+
+        /// <summary>
+        /// 左右キーで SelectedIndex 増減 (左右キーでの折り返し)
+        /// </summary>
+        private void NavigateLeftAndRightKey(KeyEventArgs e)
+        {
+            if (!IsNavigateWithWrapEnabled || this.ItemsCount <= 0)
             {
-                if (e.Key == Key.Home)
+                return;
+            }
+
+            if ((Keyboard.Modifiers & ModifierKeys.Alt) != 0)
+            {
+                return;
+            }
+
+            var delta = e.Key switch
+            {
+                Key.Left => -1,
+                Key.Right => +1,
+                _ => 0
+            };
+
+            if (delta == 0)
+            {
+                return;
+            }
+
+            e.Handled = true;
+
+            var focusedItem = Keyboard.FocusedElement as ListBoxItem;
+            if (focusedItem == null)
+            {
+                return;
+            }
+
+            int currentIndex = this.ItemContainerGenerator.IndexFromContainer(focusedItem);
+            int targetIndex = currentIndex + delta;
+
+            Navigate(targetIndex);
+        }
+
+        /// <summary>
+        /// Home/Endキーで正しくリストの先頭/末尾項目を選択するようにする
+        /// </summary>
+        private void NavigateHomeAndEndKey(KeyEventArgs e)
+        {
+            if (!FixHomeAndEndKeyBehavior || ItemsCount <= 0)
+            {
+                return;
+            }
+
+            if (e.Key == Key.Home)
+            {
+                Navigate(0);
+                e.Handled = true;
+            }
+            else if (e.Key == Key.End)
+            {
+                Navigate(ItemsCount - 1);
+                e.Handled = true;
+            }
+        }
+
+        /// <summary>
+        /// 指定項目へナビゲート
+        /// </summary>
+        /// <param name="targetIndex"></param>
+        private void Navigate(int targetIndex)
+        {
+            if (targetIndex < 0 || targetIndex >= this.ItemsCount)
+            {
+                return;
+            }
+
+            var targetContainer = this.ItemContainerGenerator.ContainerFromIndex(targetIndex) as ListBoxItem;
+
+            if (targetContainer == null)
+            {
+                this.ScrollIntoView(this.Items[targetIndex]);
+                this.UpdateLayout();
+                targetContainer = this.ItemContainerGenerator.ContainerFromIndex(targetIndex) as ListBoxItem;
+            }
+
+            if (targetContainer != null)
+            {
+                targetContainer.Focus();
+
+                if ((Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == 0)
                 {
-                    this.SelectedIndex = 0;
-                    FocusSelectedItem(false);
-                }
-                else if (e.Key == Key.End)
-                {
-                    this.SelectedIndex = ItemsCount - 1;
-                    FocusSelectedItem(false);
+                    this.SelectedIndex = targetIndex;
                 }
             }
         }

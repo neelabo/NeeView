@@ -287,6 +287,7 @@
                             <Setter Property="ItemTemplate" Value="{StaticResource ThumbnailTemplate}"/>
                             <Setter Property="ItemContainerStyle" Value="{StaticResource ListBoxItemThumbnailStyle}" />
                             <Setter Property="FixHomeAndEndKeyBehavior" Value="True"/>
+                            <Setter Property="IsNavigateWithWrapEnabled" Value="True"/>
                             <Setter Property="MouseWheelSpeedRate" Value="{Binding Source={x:Static local:Config.Current}, Path=Panels.MouseWheelSpeedRate}"/>
                             <Setter Property="ItemsPanel">
                                 <Setter.Value>
