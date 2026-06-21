@@ -569,7 +569,6 @@ EffectLayerAccessor=Acessador da camada de efeitos
 EffectLayerAccessor.Effect=Parâmetro de efeito
 EffectPanelAccessor=Acessador de painel de efeitos
 EffectProfileDeleteDialog.Title=
-EffectProfiles.SelectedId=
 EffectType=Tipo de efeito de imagem
 EffectType.Bloom=Florescer
 EffectType.Blur=Desfoque

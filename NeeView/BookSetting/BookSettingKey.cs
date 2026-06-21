@@ -13,5 +13,6 @@
         SortMode,
         AutoRotate,
         BaseScale,
+        EffectProfileId,
     }
 }

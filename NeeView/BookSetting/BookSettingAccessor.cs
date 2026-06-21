@@ -97,6 +97,12 @@ namespace NeeView
             set => _setting.BaseScale = value;
         }
 
+        public int EffectProfileId
+        {
+            get => _setting.EffectProfileId;
+            set => _setting.EffectProfileId = value;
+        }
+
         // ページ数での可否
         public bool CanPageSizeSubSetting(int size)
         {
@@ -228,6 +234,13 @@ namespace NeeView
         {
             if (!CanEdit) return;
             _setting.BaseScale = baseScale;
+        }
+
+        // エフェクトプロファイルID
+        public void SetEffectProfileId(int effectProfileId)
+        {
+            if (!CanEdit) return;
+            _setting.EffectProfileId = effectProfileId;
         }
     }
 

@@ -569,7 +569,6 @@ EffectLayerAccessor=
 EffectLayerAccessor.Effect=
 EffectPanelAccessor=Объект доступа к панели эффектов
 EffectProfileDeleteDialog.Title=
-EffectProfiles.SelectedId=
 EffectType=Тип эффекта изображения
 EffectType.Bloom=Свечение
 EffectType.Blur=Размытие

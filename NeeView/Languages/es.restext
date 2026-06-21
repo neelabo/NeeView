@@ -569,7 +569,6 @@ EffectLayerAccessor=
 EffectLayerAccessor.Effect=
 EffectPanelAccessor=Acceso a panel de efectos
 EffectProfileDeleteDialog.Title=
-EffectProfiles.SelectedId=
 EffectType=Tipo de efecto de imagen
 EffectType.Bloom=Resplandor
 EffectType.Blur=Desenfoque

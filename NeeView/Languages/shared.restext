@@ -597,3 +597,6 @@ WindowConfig.State=@WindowStateEx
 WindowSettingTitle=@Word.Settings
 WindowStateEx.FullDesktop=@Word.FullDesktop
 WindowStateEx.FullScreen=@Word.FullScreen
+BookSettingConfig.EffectProfileId=@Word.EffectProfile
+BookConfigAccessor.EffectProfileId=@Word.EffectProfile
+BookSettingPolicyConfig.EffectProfileId=@Word.EffectProfile

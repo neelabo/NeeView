@@ -81,5 +81,12 @@ namespace NeeView
             get { return BookSettings.Current.BaseScale; }
             set { AppDispatcher.Invoke(() => BookSettings.Current.SetBaseScale(value)); }
         }
+
+        [WordNodeMember]
+        public int EffectProfileId
+        {
+            get { return BookSettings.Current.EffectProfileId; }
+            set { AppDispatcher.Invoke(() => BookSettings.Current.SetEffectProfileId(value)); }
+        }
     }
 }

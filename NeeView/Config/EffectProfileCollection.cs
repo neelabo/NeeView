@@ -14,18 +14,21 @@ namespace NeeView
 {
     public partial class EffectProfileCollection : ObservableObject
     {
-        private static Lazy<EffectProfileCollection> _current = new(() => new(Config.Current.EffectProfiles));
+        private static Lazy<EffectProfileCollection> _current = new();
         public static EffectProfileCollection Current => _current.Value;
 
 
         private readonly EffectProfileCollectionConfig _config;
+        private readonly BookSettingConfig _bookSetting;
 
 
-        public EffectProfileCollection(EffectProfileCollectionConfig config)
+        public EffectProfileCollection()
         {
-            _config = config;
-            _config.SubscribePropertyChanged(nameof(_config.SelectedId), OnSelectedIndexChanged);
+            _config = Config.Current.EffectProfiles;
             _config.Profiles.SubscribeCollectionChanged(OnProfilesCollectionChanged);
+
+            _bookSetting = Config.Current.BookSetting;
+            _bookSetting.SubscribePropertyChanged(nameof(_bookSetting.EffectProfileId), OnSelectedIndexChanged);
         }
 
 
@@ -33,6 +36,12 @@ namespace NeeView
 
         [ObservableProperty]
         public partial EffectProfile? SelectedProfile { get; set; }
+
+        public int SelectedId
+        {
+            get => _bookSetting.EffectProfileId;
+            set => _bookSetting.EffectProfileId = value;
+        }
 
 
         partial void OnSelectedProfileChanging(EffectProfile? oldValue, EffectProfile? newValue)
@@ -44,18 +53,18 @@ namespace NeeView
         {
             if (value is null) return;
             value.Restore(Config.Current);
-          
-            _config.SelectedId = value.Id;
+
+            SelectedId = value.Id;
         }
 
         private void OnSelectedIndexChanged(object? sender, PropertyChangedEventArgs e)
         {
-            ResolveSelectedProfile();
+            AppDispatcher.Invoke(() => ResolveSelectedProfile());
         }
 
         private void OnProfilesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
-            ResolveSelectedProfile();
+            AppDispatcher.Invoke(() => ResolveSelectedProfile());
         }
 
         public void Store()
@@ -74,15 +83,10 @@ namespace NeeView
         [MemberNotNull(nameof(SelectedProfile))]
         public void ResolveSelectedProfile()
         {
-            var profile = Profiles.FirstOrDefault(p => p.Id == _config.SelectedId);
+            var profile = Profiles.FirstOrDefault(p => p.Id == SelectedId);
             if (profile is not null)
             {
                 SelectedProfile = profile;
-                return;
-            }
-
-            if (SelectedProfile is not null)
-            {
                 return;
             }
 
@@ -203,7 +207,7 @@ namespace NeeView
         {
             if (!Profiles.Any(e => e.Id == id)) return;
 
-            _config.SelectedId = id;
+            SelectedId = id;
         }
 
         public EffectProfile? GetNext(int offset)

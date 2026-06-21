@@ -130,7 +130,12 @@ namespace NeeView.Setting
             section.Children.Add(new SettingItemMultiProperty(
                 PropertyMemberElement.Create(defaultSetting, nameof(BookSettingConfig.BaseScale)),
                 PropertyMemberElement.Create(settingPolicy, nameof(BookSettingPolicyConfig.BaseScale))));
-
+            section.Children.Add(new SettingItemMultiProperty(
+                PropertyMemberElement.Create(defaultSetting, nameof(BookSettingConfig.EffectProfileId)),
+                PropertyMemberElement.Create(settingPolicy, nameof(BookSettingPolicyConfig.EffectProfileId)))
+            {
+                Content1 = TextResources.GetString("Word.Default"),
+            });
             this.Items.Add(section);
 
             section = new SettingItemSection(TextResources.GetString("SettingPage.Book.SubFolder"));

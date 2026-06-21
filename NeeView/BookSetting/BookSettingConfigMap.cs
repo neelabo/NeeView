@@ -29,6 +29,7 @@ namespace NeeView
                     case BookSettingKey.SortMode: return _setting.SortMode;
                     case BookSettingKey.AutoRotate: return _setting.AutoRotate;
                     case BookSettingKey.BaseScale: return _setting.BaseScale;
+                    case BookSettingKey.EffectProfileId: return _setting.EffectProfileId;
                     default: throw new IndexOutOfRangeException();
                 }
             }
@@ -47,6 +48,7 @@ namespace NeeView
                     case BookSettingKey.SortMode: _setting.SortMode = (PageSortMode)value; break;
                     case BookSettingKey.AutoRotate: _setting.AutoRotate = (AutoRotateType)value; break;
                     case BookSettingKey.BaseScale: _setting.BaseScale = (double)value; break;
+                    case BookSettingKey.EffectProfileId: _setting.EffectProfileId = (int)value; break;
                     default: throw new IndexOutOfRangeException();
                 }
             }

@@ -277,6 +277,7 @@ namespace NeeView
                 SortSeed = _source.Pages.SortSeed,
                 AutoRotate = _setting.AutoRotate,
                 BaseScale = _setting.BaseScale,
+                EffectProfileId = _setting.EffectProfileId,
             };
 
             return memento;

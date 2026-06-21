@@ -10,6 +10,7 @@
         PageMode PageMode { get; set; }
         AutoRotateType AutoRotate { get; set; }
         double BaseScale { get; set; }
+        int EffectProfileId { get; set; }
 
         bool IsEquals(IBookPageViewSetting? other)
         {
@@ -21,7 +22,8 @@
                    IsSupportedSingleLastPage == other.IsSupportedSingleLastPage &&
                    IsSupportedWidePage == other.IsSupportedWidePage &&
                    AutoRotate == other.AutoRotate &&
-                   BaseScale == other.BaseScale;
+                   BaseScale == other.BaseScale &&
+                   EffectProfileId == other.EffectProfileId;
         }
     }
 }

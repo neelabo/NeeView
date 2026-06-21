@@ -17,6 +17,7 @@
             setting.SortMode = memento.SortMode;
             setting.AutoRotate = memento.AutoRotate;
             setting.BaseScale = memento.BaseScale;
+            setting.EffectProfileId = memento.EffectProfileId;
 
             return setting;
         }

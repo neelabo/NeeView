@@ -569,7 +569,6 @@ EffectLayerAccessor=
 EffectLayerAccessor.Effect=
 EffectPanelAccessor=Effect panel accessor
 EffectProfileDeleteDialog.Title=
-EffectProfiles.SelectedId=
 EffectType=Tipo effetti immagine
 EffectType.Bloom=Bloom
 EffectType.Blur=Blur

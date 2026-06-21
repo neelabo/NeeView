@@ -20,6 +20,7 @@ namespace NeeView
         [DefaultEquality] private PageSortMode _sortMode = PageSortMode.Entry;
         [DefaultEquality] private AutoRotateType _autoRotate;
         [DefaultEquality] private double _baseScale = 1.0;
+        [DefaultEquality] private int _effectProfile;
 
 
         // ページ
@@ -109,6 +110,14 @@ namespace NeeView
         {
             get { return _baseScale; }
             set { SetProperty(ref _baseScale, AppMath.Round(value)); }
+        }
+
+        // エフェクトプロファイルID
+        [PropertyMember]
+        public int EffectProfileId
+        {
+            get { return _effectProfile; }
+            set { SetProperty(ref _effectProfile, value); }
         }
 
 

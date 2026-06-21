@@ -19,6 +19,7 @@
             memento.SortSeed = 0;
             memento.AutoRotate = self.AutoRotate;
             memento.BaseScale = self.BaseScale;
+            memento.EffectProfileId = self.EffectProfileId;
 
             return memento;
         }
@@ -38,6 +39,7 @@
             self.SortMode = memento.SortMode;
             self.AutoRotate = memento.AutoRotate;
             self.BaseScale = memento.BaseScale;
+            self.EffectProfileId = memento.EffectProfileId;
         }
 
         public static void CopyTo(this BookSettingConfig self, BookSettingConfig target)
@@ -53,6 +55,7 @@
             target.SortMode = self.SortMode;
             target.AutoRotate = self.AutoRotate;
             target.BaseScale = self.BaseScale;
+            target.EffectProfileId = self.EffectProfileId;
         }
     }
 

@@ -567,7 +567,6 @@ EffectLayerAccessor=
 EffectLayerAccessor.Effect=
 EffectPanelAccessor=효과 패널 접근자
 EffectProfileDeleteDialog.Title=
-EffectProfiles.SelectedId=
 EffectType=사진 효과 종류
 EffectType.Bloom=블룸
 EffectType.Blur=흐리게

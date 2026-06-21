@@ -17,6 +17,7 @@ namespace NeeView
         private const string AutoRotateLabel = "Rot";
         private const string BaseScaleLabel = "Base";
         private const string SortSeedLabel = "Seed";
+        private const string EffectProfileLabel = "Fx";
 
         // フォルダーの場所
         public string Path { get; set; } = "";
@@ -60,6 +61,9 @@ namespace NeeView
 
         // 基底スケール
         public double BaseScale { get; set { field = AppMath.Round(value); } } = 1.0;
+
+        // エフェクトプロファイルID
+        public int EffectProfileId { get; set; }
 
         /// <summary>
         /// 複製
@@ -160,6 +164,11 @@ namespace NeeView
                 list.Add(string.Create(CultureInfo.InvariantCulture, $"{SortSeedLabel}={SortSeed}"));
             }
 
+            if (EffectProfileId != 0)
+            {
+                list.Add(string.Create(CultureInfo.InvariantCulture, $"{EffectProfileLabel}={EffectProfileId}"));
+            }
+
             return string.Join(' ', list);
         }
 
@@ -243,6 +252,11 @@ namespace NeeView
                     case SortSeedLabel:
                         if (value is null) throw new FormatException();
                         memento.SortSeed = int.Parse(value, CultureInfo.InvariantCulture);
+                        break;
+
+                    case EffectProfileLabel:
+                        if (value is null) throw new FormatException();
+                        memento.EffectProfileId = int.Parse(value, CultureInfo.InvariantCulture);
                         break;
 
                     default:

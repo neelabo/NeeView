@@ -19,7 +19,7 @@ namespace NeeView
         [DefaultEquality] private BookSettingSelectMode _sortMode = BookSettingSelectMode.RestoreOrDefault;
         [DefaultEquality] private BookSettingSelectMode _autoRotate = BookSettingSelectMode.RestoreOrContinue;
         [DefaultEquality] private BookSettingSelectMode _baseScale = BookSettingSelectMode.RestoreOrDefault;
-
+        [DefaultEquality] private BookSettingSelectMode _effectProfileId = BookSettingSelectMode.Continue;
 
         [PropertyMember]
         public BookSettingPageSelectMode Page
@@ -96,6 +96,13 @@ namespace NeeView
         {
             get { return _baseScale; }
             set { SetProperty(ref _baseScale, value); }
+        }
+
+        [PropertyMember]
+        public BookSettingSelectMode EffectProfileId
+        {
+            get { return _effectProfileId; }
+            set { SetProperty(ref _effectProfileId, value); }
         }
 
         public object Clone()

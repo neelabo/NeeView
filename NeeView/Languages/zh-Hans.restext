@@ -567,7 +567,6 @@ EffectLayerAccessor=
 EffectLayerAccessor.Effect=
 EffectPanelAccessor=效果面板访问器
 EffectProfileDeleteDialog.Title=
-EffectProfiles.SelectedId=
 EffectType=图像效果类型
 EffectType.Bloom=泛光
 EffectType.Blur=模糊

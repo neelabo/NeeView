@@ -11,9 +11,6 @@ namespace NeeView
         [PropertyMapIgnore]
         public int IdCounter { get; set; }
 
-        [ObservableProperty]
-        public partial int SelectedId { get; set; }
-
         [PropertyMapIgnore]
         public ObservableCollection<EffectProfile> Profiles { get; set; } = new() { new() };
 
@@ -27,7 +24,6 @@ namespace NeeView
                 var def = new EffectProfileCollectionConfig();
 
                 return x.IdCounter == def.IdCounter
-                    && x.SelectedId == def.SelectedId
                     && x.Profiles.SequenceEqual(def.Profiles, new EffectProfileEqualityComparer());
             }
         }

@@ -567,7 +567,6 @@ EffectLayerAccessor=エフェクト レイヤーのアクセサ
 EffectLayerAccessor.Effect=エフェクト パラメーター
 EffectPanelAccessor=エフェクト パネルのアクセサ
 EffectProfileDeleteDialog.Title=エフェクト プロファイルを削除します
-EffectProfiles.SelectedId=エフェクト プロファイル選択ID
 EffectType=画像エフェクトの種類
 EffectType.Bloom=ブルーム
 EffectType.Blur=ぼかし
