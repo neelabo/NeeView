@@ -27,6 +27,12 @@ namespace NeeLaboratory.ComponentModel
             var isActiveChanged = (count == 0);
             Changed?.Invoke(this, new ReferenceCounterChangedEventArgs(count, isActiveChanged));
         }
+
+        public IDisposable IncrementScoped()
+        {
+            Increment();
+            return new AnonymousDisposable(Decrement);
+        }
     }
 
 

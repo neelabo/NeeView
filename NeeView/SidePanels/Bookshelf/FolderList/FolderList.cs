@@ -495,12 +495,20 @@ namespace NeeView
                 return;
             }
 
-            path = path.ResolvePath().Normalize();
-
             using var busyLock = _busyLockEvent.CreateBusyLock();
 
             // 現在フォルダーの情報を記憶
             SavePlace(Place, SelectedItem, GetFolderItemIndex(SelectedItem));
+
+            // コレクション生成中ならばキャンセル
+            _updateFolderCancellationTokenSource?.Cancel();
+            _updateFolderCancellationTokenSource?.Dispose();
+            _updateFolderCancellationTokenSource = new CancellationTokenSource();
+            var token = _updateFolderCancellationTokenSource.Token;
+
+            using var busyScope = _busyCount.IncrementScoped();
+
+            path = await AsyncWrapper.ToAsync(() => path.ResolvePath().Normalize(), token);
 
             // 初期項目
             if (select == null)
@@ -512,12 +520,6 @@ namespace NeeView
             {
                 select = null;
             }
-
-            // コレクション生成中ならばキャンセル
-            _updateFolderCancellationTokenSource?.Cancel();
-            _updateFolderCancellationTokenSource?.Dispose();
-            _updateFolderCancellationTokenSource = new CancellationTokenSource();
-            var token = _updateFolderCancellationTokenSource.Token;
 
             // 更新が必要であれば、新しいFolderListBoxを作成する
             if (CheckFolderListUpdateIfNecessary(path, options))
