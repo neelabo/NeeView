@@ -26,13 +26,23 @@ namespace NeeView
         }
 
         /// <summary>
+        /// エントリ仮作成
+        /// </summary>
+        /// <remarks>
+        /// 指定したパスがファイルシステム上に存在すると仮定して発行する。アーカイブ内等の実エントリーにするにはCreateAsync()を使用する。
+        /// </remarks>
+        public FolderArchiveEntry CreateTempArchiveEntry(string path, ArchiveHint archiveHint)
+        {
+            return new FolderArchiveEntry(this) { RawEntryName = path, IsTemporary = true, ArchiveHint = archiveHint };
+        }
+
+        /// <summary>
         /// エントリ作成
         /// </summary>
         /// <param name="path">ファイルパス</param>
-        /// <param name="isForce">パスが存在しなくてもエントリを作成する</param>
         /// <returns></returns>
         /// <exception cref="FileNotFoundException">パスが存在しない</exception>
-        public FolderArchiveEntry CreateArchiveEntry(string path, ArchiveHint archiveHint, bool isForce = false)
+        public FolderArchiveEntry CreateArchiveEntry(string path, ArchiveHint archiveHint)
         {
             var fullPath = System.IO.Path.GetFullPath(path);
             var directoryInfo = new DirectoryInfo(fullPath);
@@ -44,10 +54,6 @@ namespace NeeView
             if (FileIO.Exists(fileInfo))
             {
                 return CreateArchiveEntry(fileInfo, 0, archiveHint);
-            }
-            else if (isForce)
-            {
-                return new FolderArchiveEntry(this) { RawEntryName = path, IsTemporary = true, ArchiveHint = archiveHint };
             }
 
             throw new FileNotFoundException("File not found.", fullPath);

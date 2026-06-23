@@ -26,7 +26,7 @@ namespace NeeView
         /// <returns></returns>
         public static ArchiveEntry CreateTemporaryEntry(string path)
         {
-            return StaticFolderArchive.Default.CreateArchiveEntry(path, ArchiveHint.None, true);
+            return StaticFolderArchive.Default.CreateTempArchiveEntry(path, ArchiveHint.None);
         }
 
 
