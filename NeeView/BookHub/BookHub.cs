@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
+using NeeLaboratory.Threading;
 using NeeLaboratory.Threading.Jobs;
 using NeeLaboratory.Threading.Tasks;
 using NeeView.Properties;
@@ -189,74 +190,22 @@ namespace NeeView
         /// <param name="option"></param>
         /// <param name="isRefreshFolderList">フォルダーリストを同期する？</param>
         /// <returns></returns>
-        public BookHubCommandLoad? RequestLoad(object? sender, string? path, string? start, BookLoadOption option, bool isRefreshFolderList)
+        public void RequestLoad(object? sender, string? path, string? start, BookLoadOption option, bool isRefreshFolderList)
         {
-            return RequestLoad(sender, path, start, option, isRefreshFolderList, ArchiveHint.None, null);
+            RequestLoad(sender, path, start, option, isRefreshFolderList, ArchiveHint.None, null);
         }
 
-        public BookHubCommandLoad? RequestLoad(object? sender, string? path, string? start, BookLoadOption option, bool isRefreshFolderList, ArchiveHint archiveHint, BookMemento? bookMemento)
+        public void RequestLoad(object? sender, string? path, string? start, BookLoadOption option, bool isRefreshFolderList, ArchiveHint archiveHint, BookMemento? bookMemento)
         {
-            if (path == null) return null;
+            if (path == null) return;
 
-            if (_disposedValue) return null;
+            if (_disposedValue) return;
 
-            if (!this.IsEnabled) return null;
+            if (!this.IsEnabled) return;
 
-            if (AppState.Current.IsProcessingBook) return null;
+            if (AppState.Current.IsProcessingBook) return;
 
-            var query = new QueryPath(path).Normalize();
-            var sourcePath = query.SimpleQuery;
-
-            // パスの追跡解決
-            var archivePath = FileResolver.Current.ResolveArchivePath(sourcePath);
-            if (archivePath != null)
-            {
-                // 復元？
-                if (archivePath.Path != sourcePath)
-                {
-                    // FileResolveデータ修正
-                    var src = archivePath.IsArchivePath ? sourcePath.Substring(0, sourcePath.Length - archivePath.EntryPathLength) : sourcePath;
-                    var dst = archivePath.SystemPath;
-
-                    // Rename伝播
-                    BookMementoTools.RenameRecursive(src, dst);
-
-                    query = new QueryPath(archivePath.Path).Normalize();
-                    sourcePath = query.SimpleQuery;
-                }
-            }
-
-
-            query = query.ResolvePath();
-
-            // Legacy:
-            if (query.SimplePath.StartsWith("pagemark:", StringComparison.Ordinal) == true)
-            {
-                query = new QueryPath(Config.Current.Playlist.PagemarkPlaylist);
-            }
-
-            if (_address == query.SimplePath && option.HasFlag(BookLoadOption.KeepArchiveHint) && archiveHint == ArchiveHint.None)
-            {
-                archiveHint = _book?.ArchiveHint ?? archiveHint;
-            }
-
-            ////DebugTimer.Start($"\nStart: {sourcePath}");
-            if (_address == query.SimplePath && option.HasFlag(BookLoadOption.SkipSamePlace) && _book?.ArchiveHint == archiveHint)
-            {
-                return null;
-            }
-
-            // ブック固定ならば同じアドレスでのみ有効
-            if (this.IsBookLocked && _address != query.SimplePath)
-            {
-                return null;
-            }
-
-            this.Address = query.SimplePath;
-
-            Interlocked.Increment(ref _requestLoadCount);
-
-            var command = new BookHubCommandLoad(this, new BookHubCommandLoadArgs(query.SimpleQuery, sourcePath)
+            var command = new BookHubCommandLoad(this, new BookHubCommandLoadArgs(path, path)
             {
                 Sender = sender,
                 StartEntry = start,
@@ -267,14 +216,13 @@ namespace NeeView
             });
 
             command.Completed += JobCommand_Completed;
-            LoadRequesting?.Invoke(this, new BookPathEventArgs(query.SimplePath));
+            LoadRequesting?.Invoke(this, new BookPathEventArgs(path));
             _commandEngine.Enqueue(command);
-            return command;
 
             void JobCommand_Completed(object? sender, JobCompletedEventArgs e)
             {
                 command.Completed -= JobCommand_Completed;
-                LoadRequested?.Invoke(this, new BookPathEventArgs(query.SimplePath));
+                LoadRequested?.Invoke(this, new BookPathEventArgs(path));
             }
         }
 
@@ -399,15 +347,104 @@ namespace NeeView
         /// </summary>
         public async Task LoadAsync(BookHubCommandLoadArgs args, CancellationToken token)
         {
+            ////DebugTimer.Check("LoadAsync...");
+
             if (_disposedValue) return;
+
+            NVDebug.AssertMTA();
 
             token.ThrowIfCancellationRequested();
 
-            ////DebugTimer.Check("LoadAsync...");
+            // Now Loading ON
+            NotifyLoading(args.Path);
+            using (var nowLoading = new AnonymousDisposable(() => NotifyLoading(null)))
+            {
+                // パス修正
+                await CorrectLoadPathAsync(args, token);
 
+                ////DebugTimer.Start($"\nStart: {sourcePath}");
+                if (_address == args.Path && args.Option.HasFlag(BookLoadOption.SkipSamePlace) && _book?.ArchiveHint == args.ArchiveHint)
+                {
+                    return;
+                }
+
+                // ブック固定ならば同じアドレスでのみ有効
+                if (this.IsBookLocked && _address != args.Path)
+                {
+                    return;
+                }
+
+                // Load Main
+                await LoadMainAsync(args, token);
+            }
+
+            // ページがなかった時の処理
+            if (_book is not null && _book.Pages.Count <= 0)
+            {
+                BookMementoTools.ResetBookMementoPage(_book.Path);
+
+                if (Config.Current.Book.IsConfirmRecursive && (args.Option & BookLoadOption.ReLoad) == 0 && !_book.Source.IsRecursiveFolder && _book.Source.SubFolderCount > 0)
+                {
+                    AppDispatcher.Invoke(() => ConfirmRecursive(args.Sender, _book, token));
+                }
+            }
+        }
+
+        /// <summary>
+        /// パス修正
+        /// </summary>
+        private async Task CorrectLoadPathAsync(BookHubCommandLoadArgs args, CancellationToken token)
+        {
+            var query = await AsyncWrapper.ToAsync(() => new QueryPath(args.Path).Normalize(), token);
+            var sourcePath = query.SimpleQuery;
+
+            // パスの追跡解決
+            var archivePath = FileResolver.Current.ResolveArchivePath(sourcePath);
+            if (archivePath != null)
+            {
+                // 復元？
+                if (archivePath.Path != sourcePath)
+                {
+                    // FileResolveデータ修正
+                    var src = archivePath.IsArchivePath ? sourcePath.Substring(0, sourcePath.Length - archivePath.EntryPathLength) : sourcePath;
+                    var dst = archivePath.SystemPath;
+
+                    // Rename伝播
+                    AppDispatcher.Invoke(() => BookMementoTools.RenameRecursive(src, dst));
+
+                    query = new QueryPath(archivePath.Path).Normalize();
+                    sourcePath = query.SimpleQuery;
+                }
+            }
+
+            query = await AsyncWrapper.ToAsync(() => query.ResolvePath(), token);
+
+            // Legacy:
+            if (query.SimplePath.StartsWith("pagemark:", StringComparison.Ordinal) == true)
+            {
+                query = new QueryPath(Config.Current.Playlist.PagemarkPlaylist);
+            }
+
+            if (_address == query.SimplePath && args.Option.HasFlag(BookLoadOption.KeepArchiveHint) && args.ArchiveHint == ArchiveHint.None)
+            {
+                args.ArchiveHint = _book?.ArchiveHint ?? args.ArchiveHint;
+            }
+
+            // set fix paths
+            args.Path = query.SimpleQuery;
+            args.SourcePath = sourcePath;
+        }
+
+        /// <summary>
+        /// 本を読み込む メイン処理
+        /// </summary>
+        private async Task LoadMainAsync(BookHubCommandLoadArgs args, CancellationToken token)
+        {
             // 現在の設定を記憶
             var oldBook = _book;
             var lastBookMemento = oldBook?.Path != null ? oldBook.CreateMemento() : null;
+
+            Interlocked.Increment(ref _requestLoadCount);
 
             this.Address = args.SourcePath;
 
@@ -416,15 +453,15 @@ namespace NeeView
             var bookChangedEventArgs = new BookChangedEventArgs(Address, null, BookMementoType.None);
             var isEmptyBook = false;
 
+            // Now Loading ON
+            NotifyLoading(args.Path);
+
+            // 本の変更開始通知
+            // NOTE: パスはまだページの可能性があるので不完全
+            BookChanging?.Invoke(this, new BookChangingEventArgs(Address));
+
             try
             {
-                // Now Loading ON
-                NotifyLoading(args.Path);
-
-                // 本の変更開始通知
-                // NOTE: パスはまだページの可能性があるので不完全
-                BookChanging?.Invoke(this, new BookChangingEventArgs(Address));
-
                 // 現在の本を開放
                 UnloadCore();
 
@@ -466,7 +503,7 @@ namespace NeeView
 
                 // Load本体
                 var loadOption = args.Option | (isResetLastPage ? BookLoadOption.ResetLastPage : BookLoadOption.None);
-                var book = await LoadAsyncCore(args.Sender, address, loadOption, setting, isNew, args.ArchiveHint, token);
+                var book = await CreateBookAsync(args.Sender, address, loadOption, setting, isNew, args.ArchiveHint, token);
 
                 //_historyEntry = false;
                 //_historyRemoved = false;
@@ -527,17 +564,6 @@ namespace NeeView
                 NotifyLoading(null);
                 BookChanged?.Invoke(this, bookChangedEventArgs);
                 ////DebugTimer.Check("Done.");
-            }
-
-            // ページがなかった時の処理
-            if (_book is not null && isEmptyBook)
-            {
-                BookMementoTools.ResetBookMementoPage(_book.Path);
-
-                if (Config.Current.Book.IsConfirmRecursive && (args.Option & BookLoadOption.ReLoad) == 0 && !_book.Source.IsRecursiveFolder && _book.Source.SubFolderCount > 0)
-                {
-                    AppDispatcher.Invoke(() => ConfirmRecursive(args.Sender, _book, token));
-                }
             }
         }
 
@@ -603,7 +629,7 @@ namespace NeeView
         /// <summary>
         /// ブックを読み込む(本体)
         /// </summary>
-        private static async Task<Book> LoadAsyncCore(object? sender, BookAddress address, BookLoadOption option, BookMemento setting, bool isNew, ArchiveHint archiveHint, CancellationToken token)
+        private static async Task<Book> CreateBookAsync(object? sender, BookAddress address, BookLoadOption option, BookMemento setting, bool isNew, ArchiveHint archiveHint, CancellationToken token)
         {
             token.ThrowIfCancellationRequested();
 
