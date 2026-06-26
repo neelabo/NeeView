@@ -70,6 +70,24 @@ namespace NeeView.Windows.Property
         }
 
 
+        public bool IsHeaderVisible
+        {
+            get { return (bool)GetValue(IsHeaderVisibleProperty); }
+            set { SetValue(IsHeaderVisibleProperty, value); }
+        }
+
+        public static readonly DependencyProperty IsHeaderVisibleProperty =
+            DependencyProperty.Register(nameof(IsHeaderVisible), typeof(bool), typeof(PropertyControl), new PropertyMetadata(true, IsHeaderVisibleProperty_Changed));
+
+        private static void IsHeaderVisibleProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is PropertyControl control)
+            {
+                control.Update();
+            }
+        }
+
+
         public double ColumnRate
         {
             get { return (double)GetValue(ColumnRateProperty); }
@@ -143,6 +161,8 @@ namespace NeeView.Windows.Property
         {
             this.Root.SizeChanged -= Root_SizeChanged;
 
+            this.ValueHeader.Visibility = IsHeaderVisible ? Visibility.Visible : Visibility.Collapsed;
+
             if (Value == null) return;
 
             if (Orientation == Orientation.Horizontal)
@@ -168,7 +188,7 @@ namespace NeeView.Windows.Property
 
             if (isStretch)
             {
-                this.ValueUI.Width = this.Root.ActualWidth * ColumnRate;
+                this.ValueUI.Width = GetValueUIWidth();
                 this.Root.SizeChanged += Root_SizeChanged;
             }
             else
@@ -177,11 +197,17 @@ namespace NeeView.Windows.Property
             }
         }
 
+        private double GetValueUIWidth()
+        {
+            var columnRate = IsHeaderVisible ? ColumnRate : 1.0;
+            return Math.Max(this.Root.ActualWidth * columnRate - 20.0, 0.0); //20.0 is layout margin
+        }
+
         private void Root_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (e.WidthChanged)
             {
-                this.ValueUI.Width = e.NewSize.Width * ColumnRate;
+                this.ValueUI.Width = GetValueUIWidth();
             }
         }
 

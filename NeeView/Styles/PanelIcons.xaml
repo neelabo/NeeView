@@ -160,4 +160,20 @@
         <Setter Property="Source" Value="{StaticResource ic_content_copy_24px}"/>
     </Style>
 
+
+    <Style x:Key="NavigateButtonStyle" TargetType="Button" BasedOn="{StaticResource IconButton}">
+        <Setter Property="Width" Value="28" />
+        <Setter Property="MinHeight" Value="{DynamicResource FontIconSize}" />
+    </Style>
+
+    <Style x:Key="NavigateToggleButtonStyle" TargetType="ToggleButton" BasedOn="{StaticResource IconToggleButton}">
+        <Setter Property="Width" Value="28" />
+        <Setter Property="MinHeight" Value="{DynamicResource FontIconSize}" />
+    </Style>
+
+    <Style x:Key="NavigateRepeatButtonStyle" TargetType="RepeatButton" BasedOn="{StaticResource IconRepeatButton}">
+        <Setter Property="Width" Value="28" />
+        <Setter Property="MinHeight" Value="{DynamicResource FontIconSize}" />
+    </Style>
+
 </ResourceDictionary>

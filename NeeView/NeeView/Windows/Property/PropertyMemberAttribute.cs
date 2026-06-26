@@ -2,6 +2,7 @@
 using NeeView.Properties;
 using NeeView.Windows.Controls;
 using System;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Media;
 
@@ -18,8 +19,18 @@ namespace NeeView.Windows.Property
         public bool HasDecimalPoint;
         public bool IsRegex;
         public Type? NoteConverter;
+        public Type? Reset;
 
         public PropertyMemberAttribute() { }
+
+        public IProeprtyResetable? GetPropertyReset()
+        {
+            if (Reset is null) return null;
+
+            var resetable = Activator.CreateInstance(Reset) as IProeprtyResetable;
+            Debug.Assert(resetable is not null);
+            return resetable;
+        }
     }
 
     [AttributeUsage(AttributeTargets.Property)]

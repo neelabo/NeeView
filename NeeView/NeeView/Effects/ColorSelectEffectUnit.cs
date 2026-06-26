@@ -13,6 +13,10 @@ namespace NeeView.Effects
         [DefaultEquality] private double _range = 0.1;
         [DefaultEquality] private double _curve = 0.1;
 
+        public ColorSelectEffectUnit() : base(EffectSampleType.Tone)
+        {
+        }
+
         [PropertyRange(0.0, 360.0)]
         [DefaultValue(15.0)]
         public double Hue

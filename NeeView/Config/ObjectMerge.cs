@@ -1,7 +1,9 @@
 ﻿//#define LOCAL_DEBUG
 using NeeLaboratory.Generators;
+using NeeView.Collections.ObjectModel;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -77,13 +79,26 @@ namespace NeeView
                             throw new NotSupportedException("List instance is null");
                         }
 
-                        listA1.Clear();
+                        var newList = new List<object>();
                         foreach (var item in listA2)
                         {
                             var itemType = item.GetType();
                             var newItem = Activator.CreateInstance(itemType)!;
                             Merge(newItem, item, options);
-                            listA1.Add(newItem);
+                            newList.Add(newItem);
+                        }
+
+                        if (listA1 is IResetCollection listResetA1)
+                        {
+                            listResetA1.Reset(newList);
+                        }
+                        else
+                        {
+                            listA1.Clear();
+                            foreach (var item in newList)
+                            {
+                                listA1.Add(item);
+                            }
                         }
                     }
                     else

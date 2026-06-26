@@ -10,6 +10,17 @@ namespace NeeView.Effects
     [JsonConverter(typeof(JsonEffectUnitConverter))]
     public partial class EffectUnit : ObservableObject
     {
+        public EffectUnit()
+        {
+        }
+
+        public EffectUnit(EffectSampleType sampleType)
+        {
+            SampleType = sampleType;
+        }
+
+        public EffectSampleType SampleType { get; }
+
         public void RaisePropertyChangedAll()
         {
             OnPropertyChanged("");
@@ -36,6 +47,7 @@ namespace NeeView.Effects
             new(typeof(BloomEffectUnit)),
             new(typeof(MonochromeEffectUnit)),
             new(typeof(ColorToneEffectUnit)),
+            new(typeof(ColorizeEffectUnit)),
             new(typeof(SharpenEffectUnit)),
             new(typeof(EmbossedEffectUnit)),
             new(typeof(PixelateEffectUnit)),
@@ -58,7 +70,6 @@ namespace NeeView.Effects
         {
             return data.TypeDiscriminator ?? ClassTools.CreateName(data.DerivedType.Name, _typeNamePostfix);
         }
-
-
     }
+
 }

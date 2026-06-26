@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 
 namespace NeeView.Collections.ObjectModel
 {
-    public class ObservableCollectionEx<T> : ObservableCollection<T>
+    public class ObservableCollectionEx<T> : ObservableCollection<T>, IResetCollrction<T>, IResetCollection
     {
         public ObservableCollectionEx() : base()
         {
@@ -20,13 +21,19 @@ namespace NeeView.Collections.ObjectModel
         {
         }
 
-        public void Reset(IEnumerable<T> collection)
+
+        void IResetCollection.Reset(IEnumerable<object> newItems)
         {
-            if (collection == null) throw new ArgumentNullException(nameof(collection));
+            Reset(newItems.Cast<T>());
+        }
+
+        public void Reset(IEnumerable<T> newItems)
+        {
+            if (newItems == null) throw new ArgumentNullException(nameof(newItems));
             if (Items is not List<T> items) throw new InvalidCastException("ObservableCollection.Items is not List<T>");
 
             items.Clear();
-            items.AddRange(collection);
+            items.AddRange(newItems);
 
             OnPropertyChanged(EventArgsCache.CountPropertyChanged);
             OnPropertyChanged(EventArgsCache.IndexerPropertyChanged);

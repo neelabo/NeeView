@@ -16,6 +16,10 @@ namespace NeeView.Effects
         [DefaultEquality] private double _toneAmount = 0.5;
         [DefaultEquality] private double _desaturation = 0.5;
 
+        public ColorToneEffectUnit() : base(EffectSampleType.Luminance)
+        {
+        }
+
         [PropertyMember]
         [DefaultValue(typeof(Color), "#FF338000")]
         public Color DarkColor

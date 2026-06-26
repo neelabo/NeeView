@@ -134,5 +134,25 @@
             <TextBlock Text="{Binding Note}" Margin="5,2" HorizontalAlignment="Right" />
         </StackPanel>
     </DataTemplate>
-    
+
+    <DataTemplate DataType="{x:Type local:PropertyValue_ColorizeControlPoint}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <nwc:ColorizeControlPointEdit Grid.Column="0" ControlPoint="{Binding Value, Mode=TwoWay}" />
+            <StackPanel Grid.Column="1">
+                <Button Style="{StaticResource NavigateButtonStyle}" 
+                        Command="{Binding DataContext.DeleteItemCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}">
+                    <Image Style="{StaticResource ClearIconImageStyle}" />
+                </Button>
+                <Button Style="{StaticResource NavigateButtonStyle}" 
+                        Command="{Binding DataContext.NewItemCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}">
+                    <Image Style="{StaticResource AddIconImageStyle}" />
+                </Button>
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+
 </ResourceDictionary>

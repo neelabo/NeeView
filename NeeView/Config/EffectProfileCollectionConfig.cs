@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using NeeView.Collections.ObjectModel;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace NeeView
         public int IdCounter { get; set; }
 
         [PropertyMapIgnore]
-        public ObservableCollection<EffectProfile> Profiles { get; set; } = new() { new() };
+        public ObservableCollectionEx<EffectProfile> Profiles { get; set; } = new() { new() };
 
 
         public class Defaultable : IDefaultable

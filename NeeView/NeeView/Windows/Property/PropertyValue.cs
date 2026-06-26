@@ -1,9 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using NeeLaboratory.Collection;
 using NeeLaboratory.ComponentModel;
+using NeeView.Collections.ObjectModel;
+using NeeView.Effects;
 using NeeView.Windows.Controls;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -38,6 +44,13 @@ namespace NeeView.Windows.Property
         public virtual void SetValueFromString(string value)
         {
             throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// 再構築
+        /// </summary>
+        public virtual void Refresh()
+        {
         }
     }
 
@@ -404,7 +417,7 @@ namespace NeeView.Windows.Property
             DefaultColor = defaultColor;
         }
 
-        public Color? DefaultColor { get;  }
+        public Color? DefaultColor { get; }
 
         public override void SetValueFromString(string value)
         {
@@ -656,6 +669,93 @@ namespace NeeView.Windows.Property
         public override void SetValueFromString(string value)
         {
             _propertyValue.SetValueFromString(value);
+        }
+    }
+
+
+    public partial class PropertyValue_ColorizeControlPoint : PropertyValue<ColorizeControlPoint>
+    {
+        public PropertyValue_ColorizeControlPoint(PropertyMemberElement setter) : base(setter)
+        {
+        }
+    }
+
+
+    public partial class PropertyValue_Collection : PropertyValue<object>
+    {
+        private readonly IList _collection;
+        private readonly IEditCollection? _editCollection;
+        private readonly PropertyMemberElement _element;
+
+        public PropertyValue_Collection(PropertyMemberElement setter, IList collection) : base(setter)
+        {
+            _element = setter;
+            _collection = collection;
+            _editCollection = collection as IEditCollection;
+
+            Refresh();
+        }
+
+        public ObservableCollection<PropertyMemberElement> Elements { get; set; } = new();
+
+        public override void Refresh()
+        {
+            var collectionType = _collection.GetType();
+
+            Elements.Clear();
+
+            for (int i = 0; i < _collection.Count; i++)
+            {
+                var item = _collection[i];
+                var indexerProp = collectionType.GetProperty("Item", [typeof(int)]);
+                Debug.Assert(indexerProp is not null);
+
+                var element = new PropertyMemberElement(_collection, indexerProp, [i], _element.MemberAttribute, _element.Options, _element.Data);
+                element.Name = $"{i}.";
+                element.IsHeaderVisible = false;
+                Elements.Add(element);
+            }
+
+            DeleteItemCommand.NotifyCanExecuteChanged();
+            NewItemCommand.NotifyCanExecuteChanged();
+        }
+
+        public bool CanDeleteItem(PropertyValue item)
+        {
+            return _editCollection?.CanDeleteItem(item) ?? false;
+        }
+
+        [RelayCommand(CanExecute = nameof(CanDeleteItem))]
+        public void DeleteItem(PropertyValue item)
+        {
+            if (_editCollection is null) return;
+
+            var element = Elements.FirstOrDefault(e => e.TypeValue == item);
+            if (element is null) return;
+
+            var value = element.GetValue();
+            _editCollection.DeleteItem(value);
+
+            Refresh();
+        }
+
+        public bool CanNewItem(PropertyValue item)
+        {
+            return _editCollection?.CanNewItem(item) ?? false;
+        }
+
+        [RelayCommand(CanExecute = nameof(CanNewItem))]
+        public void NewItem(PropertyValue item)
+        {
+            if (_editCollection is null) return;
+
+            var element = Elements.FirstOrDefault(e => e.TypeValue == item);
+            if (element is null) return;
+
+            var value = element.GetValue();
+            _editCollection.NewItem(value);
+
+            Refresh();
         }
     }
 }

@@ -23,6 +23,7 @@
                 <DataTemplate DataType="{x:Type local:PropertyMemberElement}">
                     <local:PropertyControl Header="{Binding Name}" Value="{Binding TypeValue}" Tips="{Binding Tips}"
                         Orientation="{Binding Orientation}"
+                        IsHeaderVisible="{Binding IsHeaderVisible}"
                         IsStretch="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=IsStretch}"
                         ColumnRate="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=ColumnRate}"
                         VisibilityValue="{Binding Options.VisibilityValue}"/>
@@ -36,7 +37,11 @@
                 <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
                     <Setter Property="HorizontalAlignment" Value="Right"/>
                 </Style>
-                
+
+                <DataTemplate DataType="{x:Type local:PropertyValue_Collection}">
+                    <ItemsControl ItemsSource="{Binding Elements}" IsTabStop="False"/>
+                </DataTemplate>
+
             </ResourceDictionary>
         </Grid.Resources>
 

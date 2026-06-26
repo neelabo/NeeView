@@ -21,6 +21,11 @@
 
             <local:PathToFileNameWithoutExtensionConverter x:Key="PathToFileNameWithoutExtensionConverter" />
             <local:StringNullOrWhiteSpaceToVisibilityConverter x:Key="StringNullOrWhiteSpaceToVisibilityConverter" True="Collapsed" False="Visible" />
+            <local:NullableToVisibilityConverter x:Key="NullableToVisibilityConverter"/>
+
+            <local:EffectUnitToSampleVisibilityConverter x:Key="EffectUnitToSampleVisibilityConverter"/>
+            <local:EffectUnitToBushConverter x:Key="EffectUnitToBushConverter"/>
+            <local:EffectUnitToEffectConverter x:Key="EffectUnitToEffectConverter"/>
 
             <DrawingImage x:Key="ic_toy_24px">
                 <DrawingImage.Drawing>
@@ -38,16 +43,6 @@
             </DataTemplate>
 
             <Style TargetType="Button" BasedOn="{StaticResource IconButton}">
-            </Style>
-
-            <Style x:Key="NavigateButtonStyle" TargetType="Button" BasedOn="{StaticResource IconButton}">
-                <Setter Property="Width" Value="28" />
-                <Setter Property="MinHeight" Value="{DynamicResource FontIconSize}" />
-            </Style>
-
-            <Style x:Key="NavigateRepeatButtonStyle" TargetType="RepeatButton" BasedOn="{StaticResource IconRepeatButton}">
-                <Setter Property="Width" Value="28" />
-                <Setter Property="MinHeight" Value="{DynamicResource FontIconSize}" />
             </Style>
 
             <Style TargetType="nwc:EnterTriggerTextBox" BasedOn="{StaticResource NVEnterTriggerTextBox}">
@@ -224,23 +219,22 @@
 
                                     </DockPanel>
 
-                                    <nwp:PropertyInspector x:Name="inspector" Document="{Binding EffectParameters}" IsResetButtonVisible="True"
-                                                    IsHsvMode="{Binding Source={x:Static local:Config.Current}, Path=ImageEffect.IsHsvMode}">
-                                        <nwp:PropertyInspector.Style>
-                                            <Style TargetType="nwp:PropertyInspector">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding EffectParameters}" Value="{x:Null}">
-                                                        <Setter Property="Visibility" Value="Collapsed" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding IsEnabled}" Value="False">
-                                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </nwp:PropertyInspector.Style>
-                                    </nwp:PropertyInspector>
-                                    <Separator/>
+                                    <StackPanel Visibility="{Binding IsEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
 
+                                        <StackPanel HorizontalAlignment="Stretch" Margin="8,0" Visibility="{Binding EffectUnit, Converter={StaticResource EffectUnitToSampleVisibilityConverter}}">
+                                            <Border Background="{Binding EffectUnit, Converter={StaticResource EffectUnitToBushConverter}}" Height="16" Margin="1" CornerRadius="4,4,0,0"/>
+                                            <Border Background="{Binding EffectUnit, Converter={StaticResource EffectUnitToBushConverter}}" Height="16" Margin="1" CornerRadius="0,0,4,4"
+                                            Effect="{Binding EffectUnit, Converter={StaticResource EffectUnitToEffectConverter}}"/>
+                                        </StackPanel>
+
+                                        <nwp:PropertyInspector x:Name="inspector" Document="{Binding EffectParameters}" IsResetButtonVisible="True"
+                                                    Visibility="{Binding EffectParameters, Converter={StaticResource NullableToVisibilityConverter}}"
+                                                    IsHsvMode="{Binding Source={x:Static local:Config.Current}, Path=ImageEffect.IsHsvMode}">
+                                        </nwp:PropertyInspector>
+
+                                    </StackPanel>
+
+                                    <Separator/>
                                 </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

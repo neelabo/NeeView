@@ -2,7 +2,6 @@
 using NeeLaboratory.ComponentModel;
 using NeeView.Collections.ObjectModel;
 using System;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -32,7 +31,7 @@ namespace NeeView
         }
 
 
-        public ObservableCollection<EffectProfile> Profiles => _config.Profiles;
+        public ObservableCollectionEx<EffectProfile> Profiles => _config.Profiles;
 
         [ObservableProperty]
         public partial EffectProfile? SelectedProfile { get; set; }

@@ -17,6 +17,9 @@ namespace NeeView.Effects
         [DefaultEquality] private double _minimum = 0.0;
         [DefaultEquality] private double _maximum = 1.0;
 
+        public LevelEffectUnit() : base(EffectSampleType.Luminance)
+        {
+        }
 
         [PropertyRange(0, 1, Title = "Input")]
         [DefaultValue(0.0)]

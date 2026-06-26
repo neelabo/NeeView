@@ -1,5 +1,8 @@
-﻿using System;
+﻿using NeeView.Effects;
+using System;
+using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
@@ -32,13 +35,15 @@ namespace NeeView.Windows.Property
     {
         private readonly object _source;
         private readonly PropertyInfo _info;
+        private readonly object?[]? _index;
 
-        public PropertyValueSource(object source, PropertyInfo? info)
+        public PropertyValueSource(object source, PropertyInfo? info, object?[]? index)
         {
             if (info is null) throw new ArgumentNullException(nameof(info));
 
             _source = source;
             _info = info;
+            _index = index;
 
             if (source is INotifyPropertyChanged notify)
             {
@@ -52,7 +57,7 @@ namespace NeeView.Windows.Property
             }
         }
 
-        public PropertyValueSource(object source, string propertyName) : this(source, source.GetType().GetProperty(propertyName))
+        public PropertyValueSource(object source, string propertyName, object?[]? index) : this(source, source.GetType().GetProperty(propertyName), index)
         {
         }
 
@@ -60,17 +65,27 @@ namespace NeeView.Windows.Property
         public event EventHandler? ValueChanged;
 
 
+        public object Source => _source;
+        public PropertyInfo Info => _info;
+        public object?[]? Index => _index;
+
         public string Name => _info.Name;
+        public Type PropertyType => _info.PropertyType;
 
 
         public void SetValue(object? value)
         {
-            _info.SetValue(_source, value);
+            _info.SetValue(_source, value, _index);
         }
 
         public object? GetValue()
         {
-            return _info.GetValue(_source);
+            return _info.GetValue(_source, _index);
+        }
+
+        public object? GetValue(object source)
+        {
+            return _info.GetValue(source, _index);
         }
     }
 
@@ -91,9 +106,14 @@ namespace NeeView.Windows.Property
         /// <param name="attribute">PropertyMember属性</param>
         /// <param name="options">オプション</param>
         /// <param name="data">プロパティの代わりに表示するデータ</param>
-        public PropertyMemberElement(object source, PropertyInfo info, PropertyMemberAttribute attribute, PropertyMemberElementOptions options, object? data = null)
+        public PropertyMemberElement(object source, PropertyInfo info, object?[]? index, PropertyMemberAttribute attribute, PropertyMemberElementOptions options, object? data = null)
         {
-            InitializeCommon(source, info, attribute, options);
+            MemberAttribute = attribute;
+            Data = data;
+
+            PropSource = new PropertyValueSource(source, info, index);
+
+            InitializeCommon(PropSource, attribute, options);
 
             if (data != null)
             {
@@ -142,7 +162,9 @@ namespace NeeView.Windows.Property
         public event EventHandler? ValueChanged;
 
 
+        public PropertyValueSource PropSource { get; set; }
         public object Source { get; set; }
+        public PropertyInfo PropertyInfo => _info;
         public string Path => _info.Name;
         public string Name { get; set; }
         public string? Tips { get; set; }
@@ -150,27 +172,30 @@ namespace NeeView.Windows.Property
         public object? Default { get; set; }
         public bool IsObsolete { get; set; }
         public string? EmptyMessage { get; set; }
+        public PropertyMemberAttribute MemberAttribute { get; } 
         public PropertyMemberElementOptions Options { get; set; }
         public PropertyValue TypeValue { get; set; }
         public Orientation Orientation { get; set; } = Orientation.Horizontal;
+        public object? Data { get; }
+        public bool IsHeaderVisible { get; set; } = true;
 
 
         [MemberNotNull(nameof(_info), nameof(Source), nameof(Name), nameof(Options))]
-        private void InitializeCommon(object source, PropertyInfo info, PropertyMemberAttribute attribute, PropertyMemberElementOptions options)
+        private void InitializeCommon(PropertyValueSource propSource, PropertyMemberAttribute attribute, PropertyMemberElementOptions options)
         {
-            Source = source;
-            Name = options.Name ?? PropertyMemberAttributeExtensions.GetPropertyName(info, attribute) ?? info.Name;
-            Tips = options.Tips ?? PropertyMemberAttributeExtensions.GetPropertyTips(info, attribute);
+            _info = propSource.Info;
+
+            Source = propSource.Source;
+            Name = options.Name ?? PropertyMemberAttributeExtensions.GetPropertyName(_info, attribute) ?? _info.Name;
+            Tips = options.Tips ?? PropertyMemberAttributeExtensions.GetPropertyTips(_info, attribute);
             IsVisible = attribute == null || attribute.IsVisible;
             EmptyMessage = attribute?.EmptyMessage;
             Options = options;
 
-            this.Default = GetDefaultValue(source, info);
-            this.IsObsolete = GetObsoleteAttribute(info) != null;
+            this.Default = GetDefaultValue(propSource);
+            this.IsObsolete = GetObsoleteAttribute(_info) != null;
 
-            _info = info;
-
-            if (source is INotifyPropertyChanged notify)
+            if (Source is INotifyPropertyChanged notify)
             {
                 notify.PropertyChanged += (s, e) =>
                 {
@@ -207,6 +232,14 @@ namespace NeeView.Windows.Property
             if (_info.PropertyType.IsEnum)
             {
                 return new PropertyValue_Enum(this, _info.PropertyType);
+            }
+
+            if (typeof(IList).IsAssignableFrom(_info.PropertyType))
+            {
+                this.Orientation = Orientation.Vertical;
+                var collection = _info.GetValue(Source) as IList;
+                Debug.Assert(collection != null);
+                return new PropertyValue_Collection(this, collection);
             }
 
             TypeCode typeCode = Type.GetTypeCode(_info.PropertyType);
@@ -251,6 +284,10 @@ namespace NeeView.Windows.Property
                     {
                         return new PropertyValue_TimeSpan(this);
                     }
+                    else if (_info.PropertyType == typeof(ColorizeControlPoint))
+                    {
+                        return new PropertyValue_ColorizeControlPoint(this);
+                    }
                     else
                     {
                         return new PropertyValue_Object(this);
@@ -261,7 +298,7 @@ namespace NeeView.Windows.Property
         [MemberNotNull(nameof(TypeValue))]
         private void InitializeByRangeAttribute(PropertyRangeAttribute attribute)
         {
-            IValueSetter value = attribute.RangeProperty != null ? (IValueSetter)new PropertyValueSource(this.Source, attribute.RangeProperty) : this;
+            IValueSetter value = attribute.RangeProperty != null ? (IValueSetter)new PropertyValueSource(this.Source, attribute.RangeProperty, null) : this;
 
             TypeCode typeCode = Type.GetTypeCode(_info.PropertyType);
             this.TypeValue = typeCode switch
@@ -299,7 +336,7 @@ namespace NeeView.Windows.Property
         [MemberNotNull(nameof(TypeValue))]
         private void InitializeByPercentAttribute(PropertyPercentAttribute attribute)
         {
-            IValueSetter value = attribute.RangeProperty != null ? (IValueSetter)new PropertyValueSource(this.Source, attribute.RangeProperty) : this;
+            IValueSetter value = attribute.RangeProperty != null ? (IValueSetter)new PropertyValueSource(this.Source, attribute.RangeProperty, null) : this;
 
             TypeCode typeCode = Type.GetTypeCode(_info.PropertyType);
             this.TypeValue = typeCode switch
@@ -312,7 +349,7 @@ namespace NeeView.Windows.Property
         [MemberNotNull(nameof(TypeValue))]
         private void InitializeByPercentFontSizeAttribute(PropertyPercentFontSizeAttribute attribute)
         {
-            IValueSetter value = attribute.RangeProperty != null ? (IValueSetter)new PropertyValueSource(this.Source, attribute.RangeProperty) : this;
+            IValueSetter value = attribute.RangeProperty != null ? (IValueSetter)new PropertyValueSource(this.Source, attribute.RangeProperty, null) : this;
 
             TypeCode typeCode = Type.GetTypeCode(_info.PropertyType);
             if (typeCode != TypeCode.Double) throw new NotSupportedException();
@@ -376,16 +413,17 @@ namespace NeeView.Windows.Property
             }
         }
 
-        private static object? GetDefaultValue(object source, PropertyInfo info)
+        private static object? GetDefaultValue(PropertyValueSource propSource)
         {
-            var attributes = Attribute.GetCustomAttributes(info, typeof(DefaultValueAttribute));
+            var attributes = Attribute.GetCustomAttributes(propSource.Info, typeof(DefaultValueAttribute));
             if (attributes != null && attributes.Length > 0)
             {
                 return ((DefaultValueAttribute)attributes[0]).Value;
             }
             else
             {
-                return info.GetValue(source); // もとの値
+                // 未定の場合は現在値
+                return propSource.GetValue();
             }
         }
 
@@ -393,7 +431,6 @@ namespace NeeView.Windows.Property
         {
             return (ObsoleteAttribute?)(Attribute.GetCustomAttribute(info, typeof(ObsoleteAttribute)));
         }
-
 
         public Type GetValueType()
         {
@@ -405,15 +442,20 @@ namespace NeeView.Windows.Property
             return TypeValue.GetValueString();
         }
 
-
-        public bool HasCustomValue
-        {
-            get { return !object.Equals(Default, GetValue()); }
-        }
-
         public void ResetValue()
         {
-            SetValue(Default);
+            var resetable = MemberAttribute.GetPropertyReset();
+            if (resetable is not null)
+            {
+                resetable.ResetProperties(PropSource);
+            }
+            else
+            {
+                // TODO: DefaultValue はここで生成
+                SetValue(Default);
+            }
+
+            TypeValue.Refresh();
         }
 
         public void InitializeValue()
@@ -441,7 +483,8 @@ namespace NeeView.Windows.Property
 
         public void SetValue(object? value)
         {
-            _info.SetValue(this.Source, value);
+            //_info.SetValue(this.Source, value);
+            PropSource.SetValue(value);
         }
 
         public void SetValueFromString(string value)
@@ -451,12 +494,12 @@ namespace NeeView.Windows.Property
 
         public object? GetValue()
         {
-            return _info.GetValue(this.Source);
+            return PropSource.GetValue();
         }
 
         public object? GetValue(object source)
         {
-            return _info.GetValue(source);
+            return PropSource.GetValue(source);
         }
 
 
@@ -483,7 +526,7 @@ namespace NeeView.Windows.Property
             var attribute = GetPropertyMemberAttribute(info);
             if (attribute is null) throw new InvalidOperationException($"Need PropertyMemberAttribute at {source.GetType()}.{name}");
 
-            return new PropertyMemberElement(source, info, attribute, options, data);
+            return new PropertyMemberElement(source, info, null, attribute, options, data);
         }
 
         /// <summary>
@@ -521,4 +564,5 @@ namespace NeeView.Windows.Property
             return new PropertyDocumentElement(document, options);
         }
     }
+
 }

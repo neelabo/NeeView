@@ -187,16 +187,6 @@
                 <Setter Property="Margin" Value="0,5" />
             </Style>
 
-            <Style x:Key="NavigateButtonStyle" TargetType="Button" BasedOn="{StaticResource IconButton}">
-                <Setter Property="Width" Value="28" />
-                <Setter Property="MinHeight" Value="{DynamicResource FontIconSize}" />
-            </Style>
-
-            <Style x:Key="NavigateToggleButtonStyle" TargetType="ToggleButton" BasedOn="{StaticResource IconToggleButton}">
-                <Setter Property="Width" Value="28" />
-                <Setter Property="MinHeight" Value="{DynamicResource FontIconSize}" />
-            </Style>
-
             <Style x:Key="PushPinImage" TargetType="Image">
                 <Setter Property="Source" Value="{StaticResource ic_push_pin_b}"/>
                 <Style.Triggers>

@@ -13,6 +13,10 @@ namespace NeeView.Effects
         [DefaultEquality] private double _saturation;
         [DefaultEquality] private double _value;
 
+        public HsvEffectUnit() : base(EffectSampleType.Tone)
+        {
+        }
+
         [PropertyRange(0.0, 360.0)]
         [DefaultValue(0.0)]
         public double Hue

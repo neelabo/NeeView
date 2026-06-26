@@ -76,6 +76,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="NeeView\Effects\Shaders\Colorize.ps" />
     <Resource Include="NeeView\Effects\Shaders\ColorSelectEffect.ps" />
     <Resource Include="NeeView\Effects\Shaders\HsvEffect.ps" />
     <Resource Include="NeeView\Effects\Shaders\LevelEffect.ps" />

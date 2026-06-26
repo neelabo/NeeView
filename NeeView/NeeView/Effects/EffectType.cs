@@ -16,6 +16,9 @@
         ColorSelect,
 
         [AliasName]
+        Colorize,
+
+        [AliasName]
         Blur,
 
         [AliasName]

@@ -6,6 +6,10 @@ using NeeView.Windows.Property;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
+using System.Windows.Media;
 
 namespace NeeView
 {
@@ -53,6 +57,11 @@ namespace NeeView
         {
             get => _layer.EffectType;
             set => _layer.EffectType = value;
+        }
+
+        public EffectUnit? EffectUnit
+        {
+            get => _layer.Effect;
         }
 
         [ObservableProperty]
@@ -125,6 +134,73 @@ namespace NeeView
             {
                 EffectParameters = new PropertyDocument(_layer.Effect);
             }
+
+            OnPropertyChanged(nameof(EffectUnit));
+        }
+    }
+
+
+    public class EffectUnitToSampleVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is EffectUnit effectUnit && effectUnit.SampleType != EffectSampleType.None)
+            {
+                return Visibility.Visible;
+            }
+
+            return Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+    public class EffectUnitToBushConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is EffectUnit effectUnit)
+            {
+                return effectUnit.SampleType switch
+                {
+                    EffectSampleType.Luminance
+                        => BrushTools.LuminanceBrush,
+                    EffectSampleType.Tone
+                        => BrushTools.ToneBrush,
+                    _
+                        => Brushes.Black,
+                };
+            }
+
+            return Brushes.Black;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
+    public class EffectUnitToEffectConverter : IValueConverter
+    {
+        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is EffectUnit effectUnit && effectUnit.SampleType != EffectSampleType.None)
+            {
+                return effectUnit.CreateEffectAdapter()?.Effect;
+            }
+
+            return null;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
         }
     }
 

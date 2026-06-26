@@ -320,6 +320,7 @@ namespace NeeView
             options.Converters.Add(new DiffJsonConverter<BloomEffectUnit>());
             options.Converters.Add(new DiffJsonConverter<MonochromeEffectUnit>());
             options.Converters.Add(new DiffJsonConverter<ColorToneEffectUnit>());
+            options.Converters.Add(new DiffJsonConverter<ColorizeEffectUnit>());
             options.Converters.Add(new DiffJsonConverter<SharpenEffectUnit>());
             options.Converters.Add(new DiffJsonConverter<EmbossedEffectUnit>());
             options.Converters.Add(new DiffJsonConverter<PixelateEffectUnit>());

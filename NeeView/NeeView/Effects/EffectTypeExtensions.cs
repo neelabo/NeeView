@@ -18,6 +18,7 @@ namespace NeeView
                 EffectType.Bloom => typeof(BloomEffectUnit),
                 EffectType.Monochrome => typeof(MonochromeEffectUnit),
                 EffectType.ColorTone => typeof(ColorToneEffectUnit),
+                EffectType.Colorize => typeof(ColorizeEffectUnit),
                 EffectType.Sharpen => typeof(SharpenEffectUnit),
                 EffectType.Embossed => typeof(EmbossedEffectUnit),
                 EffectType.Pixelate => typeof(PixelateEffectUnit),

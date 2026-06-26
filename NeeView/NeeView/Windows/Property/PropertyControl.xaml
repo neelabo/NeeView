@@ -38,9 +38,9 @@
 
     <Border x:Name="Root" Style="{Binding Value, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource PropertyValueToClickStyleConverter}}">
         <DockPanel Margin="5,10,0,10">
-            <ContentControl x:Name="ValueUI" DockPanel.Dock="Right" UseLayoutRounding="True" Grid.Column="1" VerticalAlignment="Center" Margin="5,0" IsTabStop="False"
+            <ContentControl x:Name="ValueUI" DockPanel.Dock="Right" UseLayoutRounding="True" Grid.Column="1" VerticalAlignment="Center" Margin="5,0" IsTabStop="False" 
                 Content="{Binding Value, RelativeSource={RelativeSource AncestorType=UserControl}}" ContentTemplateSelector="{StaticResource PropertyValueTemplateSelector}" />
-            <StackPanel VerticalAlignment="Center" UseLayoutRounding="True" MinWidth="50">
+            <StackPanel x:Name="ValueHeader" VerticalAlignment="Center" UseLayoutRounding="True" MinWidth="50">
                 <TextBlock Text="{Binding Header, RelativeSource={RelativeSource AncestorType=UserControl}}" TextTrimming="CharacterEllipsis" />
                 <TextBlock Style="{StaticResource NoteTextBlockStyle}" Text="{Binding Tips, RelativeSource={RelativeSource AncestorType=UserControl}}" />
             </StackPanel>

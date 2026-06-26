@@ -105,7 +105,7 @@ namespace NeeView.Windows.Property
                         list.Add(new PropertyTitleElement(title));
                     }
 
-                    var element = new PropertyMemberElement(source, info, attribute, PropertyMemberElementOptions.Default);
+                    var element = new PropertyMemberElement(source, info, null, attribute, PropertyMemberElementOptions.Default);
                     if (element.IsVisible)
                     {
                         list.Add(element);
