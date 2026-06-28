@@ -135,10 +135,11 @@ namespace NeeView
                 }
                 else
                 {
+                    using var suspendScope = EffectProfileCollection.Current.Suspend();
                     ObjectMerge.Merge(Config.Current, setting.Config, CreateConfigMergeOption(options));
                 }
 
-                EffectProfileCollection.Current.ResolveSelectedProfile();
+                EffectProfileCollection.Current.Restore();
             }
 
             if (!options.HasFlag(UserSettingLoadOption.KeepPanelLayout))

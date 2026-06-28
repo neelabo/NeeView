@@ -19,6 +19,8 @@ namespace NeeView
 
         private readonly EffectProfileCollectionConfig _config;
         private readonly BookSettingConfig _bookSetting;
+        private EffectProfile? _selectedProfile;
+        private bool _isSuspend;
 
 
         public EffectProfileCollection()
@@ -33,8 +35,20 @@ namespace NeeView
 
         public ObservableCollectionEx<EffectProfile> Profiles => _config.Profiles;
 
-        [ObservableProperty]
-        public partial EffectProfile? SelectedProfile { get; set; }
+        public EffectProfile? SelectedProfile
+        {
+            get => _selectedProfile;
+            set
+            {
+                if (_selectedProfile != value)
+                {
+                    OnSelectedProfileChanging(_selectedProfile, value);
+                    _selectedProfile = value;
+                    OnSelectedProfileChanged(_selectedProfile);
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public int SelectedId
         {
@@ -43,13 +57,17 @@ namespace NeeView
         }
 
 
-        partial void OnSelectedProfileChanging(EffectProfile? oldValue, EffectProfile? newValue)
+        private void OnSelectedProfileChanging(EffectProfile? oldValue, EffectProfile? newValue)
         {
+            if (_isSuspend) return;
+
             oldValue?.Store(Config.Current);
         }
 
-        partial void OnSelectedProfileChanged(EffectProfile? value)
+        private void OnSelectedProfileChanged(EffectProfile? value)
         {
+            if (_isSuspend) return;
+
             if (value is null) return;
             value.Restore(Config.Current);
 
@@ -58,25 +76,41 @@ namespace NeeView
 
         private void OnSelectedIndexChanged(object? sender, PropertyChangedEventArgs e)
         {
+            if (_isSuspend) return;
+
             AppDispatcher.Invoke(() => ResolveSelectedProfile());
         }
 
         private void OnProfilesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
+            if (_isSuspend) return;
+
             AppDispatcher.Invoke(() => ResolveSelectedProfile());
+        }
+
+        public IDisposable Suspend()
+        {
+            _isSuspend = true;
+            var selectedId = SelectedId;
+
+            return new AnonymousDisposable(() =>
+            {
+                SelectedId = selectedId;
+                _isSuspend = false;
+            });
+        }
+
+        public void Restore()
+        {
+            Debug.Assert(!_isSuspend);
+
+            _selectedProfile = null;
+            ResolveSelectedProfile();
         }
 
         public void Store()
         {
             SelectedProfile?.Store(Config.Current);
-        }
-
-        public void Restore()
-        {
-            Store();
-
-            ResolveSelectedProfile();
-            SelectedProfile.Restore(Config.Current);
         }
 
         [MemberNotNull(nameof(SelectedProfile))]
