@@ -14,6 +14,7 @@ namespace NeeView
         public partial bool IsEnabled { get; set; } = true;
 
         [JsonIgnore]
+        [ObjectMergeIgnore]
         public EffectType EffectType
         {
             get => Effect.ToEffectType();

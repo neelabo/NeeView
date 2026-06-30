@@ -110,7 +110,8 @@ namespace NeeView
                 {
                     if (v1 == null)
                     {
-                        v1 = Activator.CreateInstance(property.PropertyType);
+                        var instanceType = v2 == null ? property.PropertyType : v2.GetType();
+                        v1 = Activator.CreateInstance(instanceType);
                         if (v1 is null) throw new InvalidOperationException();
                         property.SetValue(a1, v1);
                     }
