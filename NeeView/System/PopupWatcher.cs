@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Windows;
 
 namespace NeeView
@@ -8,17 +11,38 @@ namespace NeeView
     /// </summary>
     public static class PopupWatcher
     {
-        public static event EventHandler<TargetElementChangedEventArgs>? PopupElementChanged;
+        public static readonly Lock _lock = new();
+        public static readonly List<UIElement> _elements = new();
 
-        public static UIElement? PopupElement { get; private set; }
+        public static UIElement? TargetElement { get; private set; }
 
-        public static void SetPopupElement(object sender, UIElement? element)
+        public static event EventHandler<TargetElementChangedEventArgs>? TargetElementChanged;
+
+        public static void AddTargetElement(object sender, UIElement targetElement)
         {
-            if (PopupElement != element)
+            if (targetElement is null) return;
+
+            lock (_lock)
             {
-                PopupElement = element;
-                PopupElementChanged?.Invoke(sender, new TargetElementChangedEventArgs(element));
+                _elements.Remove(targetElement);
+                _elements.Add(targetElement);
+                TargetElement = _elements.LastOrDefault();
             }
+
+            TargetElementChanged?.Invoke(sender, new TargetElementChangedEventArgs(targetElement));
+        }
+
+        public static void RemoveTargetElement(object sender, UIElement targetElement)
+        {
+            if (targetElement is null) return;
+
+            lock (_lock)
+            {
+                _elements.Remove(targetElement);
+                TargetElement = _elements.LastOrDefault();
+            }
+
+            TargetElementChanged?.Invoke(sender, new TargetElementChangedEventArgs(TargetElement));
         }
     }
 }

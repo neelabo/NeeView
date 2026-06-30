@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -153,14 +154,14 @@ namespace NeeView.Windows.Controls
             _isPropertyLocked = false;
         }
 
-        private bool CanOpenPopup(UIElement popupElement)
+        private bool CanOpenPopup(UIElement targetElement)
         {
-            return PopupWatcher.PopupElement != popupElement;
+            return PopupWatcher.TargetElement != targetElement;
         }
 
         private void ColorButton_Click(object sender, RoutedEventArgs e)
         {
-            if (CanOpenPopup(this.EditPopup))
+            if (CanOpenPopup((UIElement)sender))
             {
                 this.EditPopup.IsOpen = true;
             }
@@ -174,7 +175,7 @@ namespace NeeView.Windows.Controls
 
         private void EditPopup_Opened(object sender, EventArgs e)
         {
-            PopupWatcher.SetPopupElement(sender, (UIElement)sender);
+            PopupWatcher.AddTargetElement(sender, ((Popup)sender).PlacementTarget);
 
             _popupClosedFocusElement = null;
 
@@ -185,7 +186,7 @@ namespace NeeView.Windows.Controls
 
         private void EditPopup_Closed(object sender, EventArgs e)
         {
-            PopupWatcher.SetPopupElement(sender, null);
+            PopupWatcher.RemoveTargetElement(sender, ((Popup)sender).PlacementTarget);
 
             LeaveDropper();
 

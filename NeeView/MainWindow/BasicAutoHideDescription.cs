@@ -31,10 +31,10 @@ namespace NeeView
                 return VisualTreeUtility.HasParentElement(dragElement, _target, true);
             }
 
-            var popupElement = PopupWatcher.PopupElement;
-            if (popupElement != null)
+            var popupTargetElement = PopupWatcher.TargetElement;
+            if (popupTargetElement != null)
             {
-                return VisualTreeUtility.HasParentElement(popupElement, _target, true);
+                return VisualTreeUtility.HasParentElement(popupTargetElement, _target, true);
             }
 
             var renameElement = MainWindow.Current.RenameManager.RenameElement;

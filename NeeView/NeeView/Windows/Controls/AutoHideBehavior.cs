@@ -253,6 +253,7 @@ namespace NeeView.Windows.Controls
             this.AssociatedObject.LostFocus += AssociatedObject_LostFocus;
             this.AssociatedObject.PreviewKeyDown += AssociatedObject_PreviewKeyDown;
             this.AssociatedObject.Loaded += AssociatedObject_Loaded;
+            this.AssociatedObject.Unloaded += AssociatedObject_Unloaded;
 
             _isAttached = true;
             UpdateVisibility(UpdateVisibilityOption.All);
@@ -269,8 +270,9 @@ namespace NeeView.Windows.Controls
             this.AssociatedObject.IsKeyboardFocusWithinChanged -= AssociatedObject_IsKeyboardFocusWithinChanged;
             this.AssociatedObject.GotFocus -= AssociatedObject_GotFocus;
             this.AssociatedObject.LostFocus -= AssociatedObject_LostFocus;
-            this.AssociatedObject.PreviewKeyDown += AssociatedObject_PreviewKeyDown;
-            this.AssociatedObject.Unloaded += AssociatedObject_Unloaded;
+            this.AssociatedObject.PreviewKeyDown -= AssociatedObject_PreviewKeyDown;
+            this.AssociatedObject.Loaded -= AssociatedObject_Loaded;
+            this.AssociatedObject.Unloaded -= AssociatedObject_Unloaded;
 
             BindingOperations.ClearBinding(this.AssociatedObject, FrameworkElement.VisibilityProperty);
         }
@@ -281,6 +283,8 @@ namespace NeeView.Windows.Controls
             _window.MouseMove += Screen_MouseMove;
             _window.MouseLeave += Screen_MouseLeave;
             _window.StateChanged += Window_StateChanged;
+
+            PopupWatcher.TargetElementChanged += PopupWatcher_TargetElementChanged;
         }
 
         private void AssociatedObject_Unloaded(object? sender, RoutedEventArgs e)
@@ -292,6 +296,8 @@ namespace NeeView.Windows.Controls
                 _window.StateChanged -= Window_StateChanged;
                 _window = null;
             }
+
+            PopupWatcher.TargetElementChanged -= PopupWatcher_TargetElementChanged;
         }
 
 
@@ -361,6 +367,11 @@ namespace NeeView.Windows.Controls
             {
                 SetVisibility(isVisible: false, isVisibleDelay: false, now: false, isForce: true);
             }
+        }
+        private void PopupWatcher_TargetElementChanged(object? sender, TargetElementChangedEventArgs e)
+        {
+            if (!IsEnabled) return;
+            UpdateVisibility(UpdateVisibilityOption.None);
         }
 
         private void Screen_MouseMove(object? sender, MouseEventArgs e)

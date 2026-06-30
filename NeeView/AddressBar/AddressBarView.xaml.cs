@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace NeeView
@@ -133,7 +134,7 @@ namespace NeeView
 
         private void PageSortModeButton_Click(object sender, RoutedEventArgs e)
         {
-            if (CanOpenPopup(this.PageSortModePopup))
+            if (CanOpenPopup((UIElement)sender))
             {
                 this.PageSortModePopup.IsOpen = true;
             }
@@ -141,7 +142,7 @@ namespace NeeView
 
         private void BookButton_Click(object sender, RoutedEventArgs e)
         {
-            if (CanOpenPopup(this.BookPopup))
+            if (CanOpenPopup((UIElement)sender))
             {
                 this.BookPopup.IsOpen = true;
             }
@@ -151,7 +152,7 @@ namespace NeeView
         {
             if (Config.Current.MenuBar.IsBookmarkDialogEnabled)
             {
-                if (CanOpenPopup(this.BookmarkPopup))
+                if (CanOpenPopup((UIElement)sender))
                 {
                     this.BookmarkPopup.IsOpen = true;
                 }
@@ -162,20 +163,20 @@ namespace NeeView
             }
         }
 
-        private bool CanOpenPopup(UIElement popupElement)
+        private bool CanOpenPopup(UIElement targetElement)
         {
-            return PopupWatcher.PopupElement != popupElement;
+            return PopupWatcher.TargetElement != targetElement;
         }
 
         private void Popup_Opened(object sender, EventArgs e)
         {
-            PopupWatcher.SetPopupElement(sender, (UIElement)sender);
+            PopupWatcher.AddTargetElement(sender, ((Popup)sender).PlacementTarget);
             _popupClosedFocusElement = null;
         }
 
         private void Popup_Closed(object sender, EventArgs e)
         {
-            PopupWatcher.SetPopupElement(sender, null);
+            PopupWatcher.RemoveTargetElement(sender, ((Popup)sender).PlacementTarget);
             _popupClosedFocusElement?.Focus();
         }
 

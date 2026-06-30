@@ -248,6 +248,12 @@ namespace NeeView
                 return _self.ElementContainsFunc(targetElement);
             }
 
+            var popupElement = PopupWatcher.TargetElement;
+            if (popupElement != null)
+            {
+                return _self.ElementContainsFunc(popupElement);
+            }
+
             var dragElement = DragDropWatcher.DragElement;
             if (dragElement != null)
             {
