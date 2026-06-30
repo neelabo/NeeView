@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NeeView.Setting"
              xmlns:osc="clr-namespace:OpenSourceControls"
-             xmlns:nlc="clr-namespace:NeeView.Windows.Controls"
+             xmlns:nwc="clr-namespace:NeeView.Windows.Controls"
              xmlns:nv="clr-namespace:NeeView"
              xmlns:properties="clr-namespace:NeeView.Properties"
              mc:Ignorable="d" 
@@ -30,12 +30,11 @@
 
                 <DockPanel Margin="5" KeyboardNavigation.TabNavigation="Local">
                     <TextBlock Text="{properties:TextBinding CustomBackgroundControl.Color}" MinWidth="50" VerticalAlignment="Center"/>
-                    <TextBox DockPanel.Dock="Right" Text="{Binding Color}" MinWidth="100" BorderThickness="1" Padding="0,0,2,0" VerticalContentAlignment="Center" TabIndex="2"/>
-                    <osc:ComboColorPicker SelectedColor="{Binding Color, Mode=TwoWay}" TabIndex="1"/>
+                    <nwc:ColorPicker Color="{Binding Color}" ColorMode="{Binding Source={x:Static nv:Config.Current}, Path=System.ColorMode}" />
                 </DockPanel>
                 <DockPanel Margin="5">
                     <TextBlock Text="{properties:TextBinding CustomBackgroundControl.Image}" MinWidth="50" VerticalAlignment="Center"/>
-                    <nlc:FileNameBox FileDialogType="OpenFile" Title="{properties:TextBinding CustomBackgroundControl.ImageSelect}" Filter="All|*.*" MinHeight="24"
+                    <nwc:FileNameBox FileDialogType="OpenFile" Title="{properties:TextBinding CustomBackgroundControl.ImageSelect}" Filter="All|*.*" MinHeight="24"
                             Note="{properties:TextBinding CustomBackgroundControl.ImageSelect.Remarks}"
                                  Text="{Binding ImageFileName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                 </DockPanel>

@@ -147,7 +147,7 @@ namespace NeeView.Windows.Property
                         InitializeByStringsAttribute(stringsAttribute);
                         break;
 
-                    case  PropertyColorAttribute colorAttribute:
+                    case PropertyColorAttribute colorAttribute:
                         InitializeByColorAttribute(colorAttribute);
                         break;
 
@@ -172,7 +172,7 @@ namespace NeeView.Windows.Property
         public object? Default { get; set; }
         public bool IsObsolete { get; set; }
         public string? EmptyMessage { get; set; }
-        public PropertyMemberAttribute MemberAttribute { get; } 
+        public PropertyMemberAttribute MemberAttribute { get; }
         public PropertyMemberElementOptions Options { get; set; }
         public PropertyValue TypeValue { get; set; }
         public Orientation Orientation { get; set; } = Orientation.Horizontal;
@@ -403,14 +403,7 @@ namespace NeeView.Windows.Property
         {
             if (_info.PropertyType != typeof(Color)) throw new NotSupportedException();
 
-            if (colorAttribute.IsColorPicker)
-            {
-                this.TypeValue = new PropertyValue_ColorPicker(this, colorAttribute.GetDefaultColor());
-            }
-            else
-            {
-                this.TypeValue = new PropertyValue_Color(this, colorAttribute.GetDefaultColor());
-            }
+            this.TypeValue = new PropertyValue_Color(this, colorAttribute.GetDefaultColor());
         }
 
         private static object? GetDefaultValue(PropertyValueSource propSource)

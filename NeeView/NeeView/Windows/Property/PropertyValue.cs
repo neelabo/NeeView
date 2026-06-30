@@ -419,18 +419,14 @@ namespace NeeView.Windows.Property
 
         public Color? DefaultColor { get; }
 
+        public SystemConfig System => Config.Current.System;
+
         public override void SetValueFromString(string value)
         {
             Value = (Color)ColorConverter.ConvertFromString(value);
         }
     }
 
-    public class PropertyValue_ColorPicker : PropertyValue_Color
-    {
-        public PropertyValue_ColorPicker(PropertyMemberElement setter, Color? defaultColor) : base(setter, defaultColor)
-        {
-        }
-    }
 
     public class PropertyValue_Size : PropertyValue<Size>
     {

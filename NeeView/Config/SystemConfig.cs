@@ -45,7 +45,7 @@ namespace NeeView
         [DefaultEquality] private string? _fileManagerFileArgs;
         [DefaultEquality] private string? _fileManagerFolderArgs;
         [DefaultEquality] private bool _isTaskTrayEnabled;
-
+        [DefaultEquality] private ColorMode _colorMode;
 
         /// <summary>
         /// 言語
@@ -339,6 +339,13 @@ namespace NeeView
 
         #region HiddenParameters
 
+        // ColorPicker のカラーモード
+        public ColorMode ColorMode
+        {
+            get { return _colorMode; }
+            set { SetProperty(ref _colorMode, value); }
+        }
+
         /// <summary>
         /// 読み込まれた設定であるか
         /// </summary>
@@ -430,5 +437,11 @@ namespace NeeView
         Ascii = 0,
         Native = 1,
         Natural = 2,
+    }
+
+    public enum ColorMode
+    {
+        RGB = 0,
+        HSV = 1,
     }
 }

@@ -98,7 +98,7 @@ namespace NeeView
                     var dic = type
                         .GetProperties(BindingFlags.Public | BindingFlags.Instance)
                         .OrderBy(e => e.Name)
-                        .Where(e => e.CanRead && e.GetCustomAttribute<ObsoleteAttribute>() is null)
+                        .Where(e => e.CanRead && e.GetCustomAttribute<ObsoleteAttribute>() is null && e.GetCustomAttribute<PropertyMapIgnoreAttribute>() is null)
                         .ToDictionary(e => e.Name, e => e.GetValue(source));
                     return AppendDictionary(builder, dic, depth);
                 }

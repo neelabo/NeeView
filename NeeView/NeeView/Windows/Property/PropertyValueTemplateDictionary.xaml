@@ -106,27 +106,17 @@
         <nwc:SizeInspector Size="{Binding Value, Mode=TwoWay}"/>
     </DataTemplate>
 
-    <!-- TODO: IsHsvModeの参照の一般化 -->
     <DataTemplate DataType="{x:Type local:PropertyValue_Color}">
-        <nwc:ColorPicker Color="{Binding Value, Mode=TwoWay}" IsHsvMode="{Binding IsHsvMode, RelativeSource={RelativeSource AncestorType=UserControl,AncestorLevel=2}}"/>
-    </DataTemplate>
-
-    <DataTemplate DataType="{x:Type local:PropertyValue_ColorPicker}">
-        <DockPanel KeyboardNavigation.TabNavigation="Local">
-            <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding Value}" MinWidth="100" BorderThickness="1" VerticalContentAlignment="Center" TabIndex="2"/>
-            <osc:ComboColorPicker SelectedColor="{Binding Value, Mode=TwoWay}" DefaultColor="{Binding DefaultColor}" TabIndex="1"/>
-        </DockPanel>
+        <nwc:ColorPicker Color="{Binding Value}" DefaultColor="{Binding DefaultColor}" ColorMode="{Binding System.ColorMode}"  />
     </DataTemplate>
 
     <DataTemplate DataType="{x:Type local:PropertyValue_FilePath}">
         <nwc:FileNameBox Text="{Binding Value, Mode=TwoWay}" DefaultText="{Binding DefaultFileName}" Filter="{Binding Filter}" FileDialogType="{Binding FileDialogType}" Note="{Binding Note}"/>
     </DataTemplate>
 
-
     <DataTemplate x:Key="PropertyValue_Boolean_ToggleSwitch">
         <nwc:ToggleSwitch IsChecked="{Binding Value}" Height="30" HorizontalAlignment="Right" VerticalAlignment="Center" />
     </DataTemplate>
-
 
     <DataTemplate DataType="{x:Type local:PropertyValue_PropertyValueWithNote}">
         <StackPanel>
@@ -141,8 +131,8 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <nwc:ColorizeControlPointEdit Grid.Column="0" ControlPoint="{Binding Value, Mode=TwoWay}" />
-            <StackPanel Grid.Column="1">
+            <nwc:ColorizeControlPointEdit Grid.Column="0" ControlPoint="{Binding Value, Mode=TwoWay}" VerticalAlignment="Center" />
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
                 <Button Style="{StaticResource NavigateButtonStyle}" 
                         Command="{Binding DataContext.DeleteItemCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}">
                     <Image Style="{StaticResource ClearIconImageStyle}" />

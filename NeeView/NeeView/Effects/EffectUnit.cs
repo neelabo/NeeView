@@ -19,6 +19,7 @@ namespace NeeView.Effects
             SampleType = sampleType;
         }
 
+        [PropertyMapIgnore]
         public EffectSampleType SampleType { get; }
 
         public void RaisePropertyChangedAll()

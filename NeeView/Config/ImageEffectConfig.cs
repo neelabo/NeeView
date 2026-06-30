@@ -11,7 +11,6 @@ namespace NeeView
     public partial class ImageEffectConfig : ObservableObject
     {
         [DefaultEquality] private bool _isEnabled;
-        [DefaultEquality] private bool _isHsvMode;
         [DefaultEquality] private EffectLayerCollection _layers = new EffectLayerCollection() { new EffectLayer() };
 
         private EffectUnitCache? _cache;
@@ -27,15 +26,6 @@ namespace NeeView
             set { SetProperty(ref _isEnabled, value); }
         }
 
-        /// <summary>
-        /// 色をHSV表示
-        /// </summary>
-        [PropertyMember]
-        public bool IsHsvMode
-        {
-            get { return _isHsvMode; }
-            set { SetProperty(ref _isHsvMode, value); }
-        }
 
         /// <summary>
         /// エフェクトレイヤー
@@ -48,6 +38,10 @@ namespace NeeView
         }
 
         #region Obsolete
+
+        [Obsolete, Alternative(null, 46, ErrorLevel = ScriptErrorLevel.Warning)]
+        [JsonIgnore]
+        public bool IsHsvMode { get; set; }
 
         [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
         [JsonIgnore]

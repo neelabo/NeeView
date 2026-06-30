@@ -45,6 +45,7 @@ namespace NeeView.Effects
 
         [ObservableProperty]
         [JsonIgnore]
+        [PropertyMapIgnore]
         public partial Brush LutBrush { get; private set; } = Effect.ImplicitInput;
 
         private void UpdateLutBrush()

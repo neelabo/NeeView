@@ -21,11 +21,14 @@ FindNextVolume
 FindVolumeClose
 GET_WHEEL_DELTA_WPARAM
 GetCursorPos
+GetDC
 GetDoubleClickTime
 GetFileInformationByHandleEx
 GetFinalPathNameByHandle
+GetForegroundWindow
 GetLongPathName
 GetMonitorInfo
+GetPixel
 GetSystemMenu
 GetWindowLong
 GetWindowPlacement
@@ -51,6 +54,7 @@ OpenFileById
 PickIconDlg
 PostMessage
 RegisterClipboardFormat
+ReleaseDC
 RemoveClipboardFormatListener
 ScreenToClient
 SEE_MASK_INVOKEIDLIST

@@ -171,7 +171,6 @@ namespace NeeView.Setting
         {
             var section = new SettingItemSection(TextResources.GetString("SettingPage.Effect.Visual"));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.ImageDotKeep, nameof(ImageDotKeepConfig.Threshold))));
-            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.ImageEffect, nameof(ImageEffectConfig.IsHsvMode))));
 
             this.Items = new List<SettingItem>() { section };
         }

@@ -5,20 +5,21 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NeeView.Windows.Controls"
              xmlns:nwc="clr-namespace:NeeView.Windows.Controls"
+             xmlns:nv="clr-namespace:NeeView"
              xmlns:osc="clr-namespace:OpenSourceControls"
              xmlns:properties="clr-namespace:NeeView.Properties"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <StackPanel x:Name="Root" >
-        <DockPanel Margin="0,1" KeyboardNavigation.TabNavigation="Local">
+        <DockPanel Margin="0">
             <TextBlock Width="64" Text="{properties:TextBinding ColorizeControlPoint.Color}" VerticalAlignment="Center" />
-            <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Text="{Binding Color}" MinWidth="100" BorderThickness="1" VerticalContentAlignment="Center" TabIndex="2"/>
-            <osc:ComboColorPicker SelectedColor="{Binding Color, Mode=TwoWay}" TabIndex="1"/>
+            <nwc:ColorPicker DockPanel.Dock="Right" Color="{Binding Color}" VerticalAlignment="Center"
+                ColorMode="{Binding Source={x:Static nv:Config.Current}, Path=System.ColorMode}"/>
         </DockPanel>
-        <DockPanel Margin="0,1" KeyboardNavigation.TabNavigation="Local">
+        <DockPanel Margin="0,4,0,0" KeyboardNavigation.TabNavigation="Local">
             <TextBlock Width="64" Text="{properties:TextBinding ColorizeControlPoint.Strength}" VerticalAlignment="Center" />
             <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Width="70" Text="{Binding Strength}" Slider="{Binding ElementName=SliderS}" />
-            <Slider x:Name="SliderS" Value="{Binding Strength}" Minimum="0.0" Maximum="10.0" TickFrequency="1" IsSnapToTickEnabled="True" Margin="5,0" TabIndex="1" />
+            <Slider x:Name="SliderS" Value="{Binding Strength}" Minimum="0.0" Maximum="10.0" TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,0,5,0" TabIndex="1" />
         </DockPanel>
     </StackPanel>
 </UserControl>

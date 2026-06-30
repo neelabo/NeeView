@@ -9,7 +9,7 @@ namespace NeeView.Effects
     {
         public static Brush LuminanceBrush { get; } = CreateLuminanceSampleBrush();
         public static Brush ToneBrush { get; } = CreateToneSampeBrush();
-
+        public static Brush Check4x4Brush { get; } = CreateChecker4x4Brush();
 
         private static Brush CreateLuminanceSampleBrush()
         {
@@ -44,6 +44,36 @@ namespace NeeView.Effects
             brush.Freeze();
 
             return brush;
+        }
+
+        public static Brush CreateChecker4x4Brush()
+        {
+            // from http://msdn.microsoft.com/en-us/library/aa970904.aspx
+
+            var checkerBrush = new DrawingBrush();
+
+            var backgroundSquare =
+                new GeometryDrawing(
+                    Brushes.White,
+                    null,
+                    new RectangleGeometry(new Rect(0, 0, 8, 8)));
+
+            var aGeometryGroup = new GeometryGroup();
+            aGeometryGroup.Children.Add(new RectangleGeometry(new Rect(0, 0, 4, 4)));
+            aGeometryGroup.Children.Add(new RectangleGeometry(new Rect(4, 4, 4, 4)));
+
+            var checkers = new GeometryDrawing(Brushes.Black, null, aGeometryGroup);
+
+            var checkersDrawingGroup = new DrawingGroup();
+            checkersDrawingGroup.Children.Add(backgroundSquare);
+            checkersDrawingGroup.Children.Add(checkers);
+
+            checkerBrush.Drawing = checkersDrawingGroup;
+            checkerBrush.Viewport = new Rect(0, 0, 0.5, 0.5);
+            checkerBrush.TileMode = TileMode.Tile;
+            checkerBrush.Freeze();
+
+            return checkerBrush;
         }
     }
 

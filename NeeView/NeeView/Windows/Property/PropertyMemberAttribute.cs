@@ -132,13 +132,11 @@ namespace NeeView.Windows.Property
     [AttributeUsage(AttributeTargets.Property)]
     public class PropertyColorAttribute : PropertyMemberAttribute
     {
-        public bool IsColorPicker;
         public Color? DefaultColor;
         public Type? DefaultColorFactory;
 
-        public PropertyColorAttribute(bool isColorPicker = false)
+        public PropertyColorAttribute()
         { 
-            IsColorPicker = isColorPicker;
         }
 
         public Color? GetDefaultColor()

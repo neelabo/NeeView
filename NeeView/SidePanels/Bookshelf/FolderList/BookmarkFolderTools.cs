@@ -54,7 +54,7 @@ namespace NeeView
         }
 
         [ObservableProperty]
-        [PropertyColor(true, DefaultColorFactory = typeof(TagDefaultColorFactory), Name = "Word.TagColor")]
+        [PropertyColor(DefaultColorFactory = typeof(TagDefaultColorFactory), Name = "Word.TagColor")]
         public partial Color TagColor { get; set; }
 
         public void Decide()

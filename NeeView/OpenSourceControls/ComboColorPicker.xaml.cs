@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NeeView.Effects;
+using NeeView.Properties;
+using System;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
@@ -20,6 +22,7 @@ namespace OpenSourceControls
     public partial class ComboColorPicker : UserControl
     {
         private bool _hasDefaultColor;
+        private ColorViewModel? _customColor;
 
         // Todo: should this be disposed somewhere?
 
@@ -76,7 +79,14 @@ namespace OpenSourceControls
                 // Add the color if not found
                 if (!cp.ListContains(newColor))
                 {
-                    cp.AddColor(newColor, newColor.ToString(CultureInfo.InvariantCulture));
+                    if (cp.UseCustomColor)
+                    {
+                        cp.SetCustomColor(newColor);
+                    }
+                    else
+                    {
+                        cp.AddColor(newColor, newColor.ToString(CultureInfo.InvariantCulture));
+                    }
                 }
             }
 
@@ -133,9 +143,20 @@ namespace OpenSourceControls
             var defaultColor = (Color?)e.NewValue;
             cp.SetDefaultColor(defaultColor);
         }
+
+        public bool UseCustomColor
+        {
+            get { return (bool)GetValue(UseCustomColorProperty); }
+            set { SetValue(UseCustomColorProperty, value); }
+        }
+
+        public static readonly DependencyProperty UseCustomColorProperty =
+            DependencyProperty.Register(nameof(UseCustomColor), typeof(bool), typeof(ComboColorPicker), new PropertyMetadata(false));
+
+
         #endregion
 
-        public static Brush CheckerBrush { get; } = CreateCheckerBrush();
+        public static Brush CheckerBrush { get; } = BrushTools.Check4x4Brush;
 
 
         public void InitializeColors()
@@ -185,7 +206,7 @@ namespace OpenSourceControls
         {
             if (defaultColor == null) return;
 
-            var cvm = new ColorViewModel() { Color = defaultColor.Value, Name = "Default" };
+            var cvm = new ColorViewModel() { Color = defaultColor.Value, Name = TextResources.GetString("ColorPalette.Default") };
 
             if (_hasDefaultColor)
             {
@@ -197,6 +218,20 @@ namespace OpenSourceControls
                 ColorList1.Items.Insert(1, new SeparatorWithColorProperty());
                 _hasDefaultColor = true;
             }
+        }
+
+        private void SetCustomColor(Color color)
+        {
+            if (_customColor is null)
+            {
+                ColorList1.Items.Add(new SeparatorWithColorProperty());
+            }
+            else
+            {
+                ColorList1.Items.Remove(_customColor);
+            }
+            _customColor = new ColorViewModel() { Color = color, Name = TextResources.GetString("ColorPalette.Custom") };
+            ColorList1.Items.Add(_customColor);
         }
 
         private ColorViewModel AddColor(Color color, string name)
@@ -218,35 +253,6 @@ namespace OpenSourceControls
                 sb.Append(name[i]);
             }
             return sb.ToString();
-        }
-
-        public static Brush CreateCheckerBrush()
-        {
-            // from http://msdn.microsoft.com/en-us/library/aa970904.aspx
-
-            var checkerBrush = new DrawingBrush();
-
-            var backgroundSquare =
-                new GeometryDrawing(
-                    Brushes.White,
-                    null,
-                    new RectangleGeometry(new Rect(0, 0, 8, 8)));
-
-            var aGeometryGroup = new GeometryGroup();
-            aGeometryGroup.Children.Add(new RectangleGeometry(new Rect(0, 0, 4, 4)));
-            aGeometryGroup.Children.Add(new RectangleGeometry(new Rect(4, 4, 4, 4)));
-
-            var checkers = new GeometryDrawing(Brushes.Black, null, aGeometryGroup);
-
-            var checkersDrawingGroup = new DrawingGroup();
-            checkersDrawingGroup.Children.Add(backgroundSquare);
-            checkersDrawingGroup.Children.Add(checkers);
-
-            checkerBrush.Drawing = checkersDrawingGroup;
-            checkerBrush.Viewport = new Rect(0, 0, 0.5, 0.5);
-            checkerBrush.TileMode = TileMode.Tile;
-
-            return checkerBrush;
         }
     }
 

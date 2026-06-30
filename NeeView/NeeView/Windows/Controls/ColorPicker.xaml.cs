@@ -1,10 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using NeeView.Windows.Media;
 using System;
-using System.ComponentModel;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace NeeView.Windows.Controls
@@ -16,8 +17,11 @@ namespace NeeView.Windows.Controls
     public partial class ColorPicker : UserControl
     {
         private bool _isPropertyLocked;
-        private Color _rgb;
-        public HSVColor _hsv;
+        private Color _rgb = Colors.Black;
+        private HSVColor _hsv = Colors.Black.ToHSV();
+        private DisablePopupBackgroundWheel? _disablePopupBackgroundWheel;
+        private UIElement? _popupClosedFocusElement;
+        private bool _isDraggingDropper;
 
 
         public ColorPicker()
@@ -28,18 +32,14 @@ namespace NeeView.Windows.Controls
         }
 
 
-        /// <summary>
-        /// Color property
-        /// </summary>
         public Color Color
         {
             get { return (Color)GetValue(ColorProperty); }
             set { SetValue(ColorProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for Color.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty ColorProperty =
-            DependencyProperty.Register("Color", typeof(Color), typeof(ColorPicker), new PropertyMetadata(Colors.Black, ColorProperty_Changed));
+            DependencyProperty.Register("Color", typeof(Color), typeof(ColorPicker), new FrameworkPropertyMetadata(Colors.Black, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, ColorProperty_Changed));
 
         private static void ColorProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -49,90 +49,77 @@ namespace NeeView.Windows.Controls
             }
         }
 
-        public bool IsHsvMode
+
+        public Color? DefaultColor
         {
-            get { return (bool)GetValue(IsHsvModeProperty); }
-            set { SetValue(IsHsvModeProperty, value); }
+            get { return (Color?)GetValue(DefaultColorProperty); }
+            set { SetValue(DefaultColorProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for IsHsvMode.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty IsHsvModeProperty =
-            DependencyProperty.Register("IsHsvMode", typeof(bool), typeof(ColorPicker), new PropertyMetadata(false, IsHsvModeProperty_Changed));
+        public static readonly DependencyProperty DefaultColorProperty =
+            DependencyProperty.Register(nameof(DefaultColor), typeof(Color?), typeof(ColorPicker), new PropertyMetadata(null));
 
-        private static void IsHsvModeProperty_Changed(DependencyObject d, DependencyPropertyChangedEventArgs e)
+
+        public ColorMode ColorMode
         {
-            if (d is ColorPicker control)
-            {
-                control.OnPropertyChanged(nameof(IsRgbVisible));
-                control.OnPropertyChanged(nameof(IsHsvVisible));
-            }
+            get { return (ColorMode)GetValue(ColorModeProperty); }
+            set { SetValue(ColorModeProperty, value); }
         }
 
+        public static readonly DependencyProperty ColorModeProperty =
+            DependencyProperty.Register(nameof(ColorMode), typeof(ColorMode), typeof(ColorPicker), new FrameworkPropertyMetadata(ColorMode.RGB, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-        /// <summary>
-        /// Property: R
-        /// </summary>
+
+        public List<ColorMode> ColorModeList { get; } = Enum.GetValues(typeof(ColorMode)).Cast<ColorMode>().ToList();
+
+
         public byte R
         {
             get { return _rgb.R; }
             set { UpdateColor(Color.FromArgb(_rgb.A, value, _rgb.G, _rgb.B)); }
         }
 
-        /// <summary>
-        /// Property: G
-        /// </summary>
         public byte G
         {
             get { return _rgb.G; }
             set { UpdateColor(Color.FromArgb(_rgb.A, _rgb.R, value, _rgb.B)); }
         }
 
-        /// <summary>
-        /// Property: B
-        /// </summary>
         public byte B
         {
             get { return _rgb.B; }
             set { UpdateColor(Color.FromArgb(_rgb.A, _rgb.R, _rgb.G, value)); }
         }
 
+        public byte A
+        {
+            get { return _rgb.A; }
+            set { UpdateColor(Color.FromArgb(value, _rgb.R, _rgb.G, _rgb.B)); }
+        }
+
         public int H
         {
             get { return (int)_hsv.H; }
-            set
-            {
-                UpdateColor(HSVColor.FromHSV(_hsv.A, value, _hsv.S, _hsv.V));
-            }
+            set { UpdateColor(HSVColor.FromHSV(_hsv.A, value, _hsv.S, _hsv.V)); OnPropertyChanged(); }
         }
 
         public double S
         {
             get { return _hsv.S; }
-            set
-            {
-                UpdateColor(HSVColor.FromHSV(_hsv.A, _hsv.H, value, _hsv.V));
-            }
+            set { UpdateColor(HSVColor.FromHSV(_hsv.A, _hsv.H, value, _hsv.V)); OnPropertyChanged(); }
         }
 
         public double V
         {
             get { return _hsv.V; }
-            set
-            {
-                UpdateColor(HSVColor.FromHSV(_hsv.A, _hsv.H, _hsv.S, value));
-            }
+            set { UpdateColor(HSVColor.FromHSV(_hsv.A, _hsv.H, _hsv.S, value)); OnPropertyChanged(); }
         }
 
-        /// <summary>
-        /// Property: IsRgbVisible
-        /// </summary>
-        public bool IsRgbVisible => !IsHsvMode;
-
-        /// <summary>
-        /// Property: IsHsvVisible
-        /// </summary>
-        public bool IsHsvVisible => IsHsvMode;
-
+        public double HsvA
+        {
+            get { return _hsv.A; }
+            set { UpdateColor(HSVColor.FromHSV(value, _hsv.H, _hsv.S, _hsv.V)); OnPropertyChanged(); }
+        }
 
 
         private void Flush()
@@ -165,30 +152,126 @@ namespace NeeView.Windows.Controls
             Color = _rgb;
             _isPropertyLocked = false;
         }
-    }
 
-
-    /// <summary>
-    /// 
-    /// </summary>
-    [ValueConversion(typeof(Color), typeof(string))]
-    public class ColorToStringConverter : IValueConverter
-    {
-        public object? Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        private bool CanOpenPopup(UIElement popupElement)
         {
-            return value.ToString();
+            return PopupWatcher.PopupElement != popupElement;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        private void ColorButton_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (CanOpenPopup(this.EditPopup))
             {
-                return (Color)ColorConverter.ConvertFromString(value as string);
-            }
-            catch
-            {
-                return DependencyProperty.UnsetValue;
+                this.EditPopup.IsOpen = true;
             }
         }
+
+        private void DropperButton_Click(object sender, RoutedEventArgs e)
+        {
+            EnterDropper();
+            e.Handled = true;
+        }
+
+        private void EditPopup_Opened(object sender, EventArgs e)
+        {
+            PopupWatcher.SetPopupElement(sender, (UIElement)sender);
+
+            _popupClosedFocusElement = null;
+
+            _disablePopupBackgroundWheel = new DisablePopupBackgroundWheel((UIElement)sender, this.EditPopup);
+
+            this.ColorComboBox.Focus();
+        }
+
+        private void EditPopup_Closed(object sender, EventArgs e)
+        {
+            PopupWatcher.SetPopupElement(sender, null);
+
+            LeaveDropper();
+
+            _disablePopupBackgroundWheel?.Dispose();
+            _disablePopupBackgroundWheel = null;
+
+            _popupClosedFocusElement?.Focus();
+            _popupClosedFocusElement = null;
+        }
+
+        private void EditPopup_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void EditPopup_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                if (Mouse.Captured == this.PopupRoot)
+                {
+                    LeaveDropper();
+                }
+                else
+                {
+                    _popupClosedFocusElement = this.ColorButton;
+                    this.EditPopup.IsOpen = false;
+                }
+                e.Handled = true;
+            }
+        }
+
+
+        private void EditPopup_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (Mouse.Captured == this.PopupRoot)
+            {
+                if (e.LeftButton == MouseButtonState.Pressed && !ColorDropper.IsClickOutsideApp(sender, e))
+                {
+                    Color = ColorDropper.GetColorUnderCursor();
+                    EnterDragDropper();
+                }
+                e.Handled = true;
+            }
+        }
+
+        private void EditPopup_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (Mouse.Captured == this.PopupRoot)
+            {
+                LeaveDropper();
+                e.Handled = true;
+            }
+        }
+
+        private void EditPopup_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (_isDraggingDropper)
+            {
+                Color = ColorDropper.GetColorUnderCursor();
+            }
+        }
+
+        private void EnterDropper()
+        {
+            Mouse.Capture(this.PopupRoot);
+            this.PopupRoot.Cursor = Cursors.Cross;
+            _isDraggingDropper = false;
+        }
+
+        private void EnterDragDropper()
+        {
+            Mouse.Capture(this.PopupRoot);
+            this.PopupRoot.Cursor = Cursors.Cross;
+            _isDraggingDropper = true;
+        }
+
+        private void LeaveDropper()
+        {
+            if (Mouse.Captured == this.PopupRoot)
+            {
+                Mouse.Capture(null);
+            }
+            this.PopupRoot.Cursor = null;
+            _isDraggingDropper = false;
+        }
     }
+
 }
