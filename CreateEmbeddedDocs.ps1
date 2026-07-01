@@ -141,7 +141,10 @@ function Write-CultureDocs {
     $content | Get-JekyllSource -Title $title > "$output\search-options.html"
 }
 
-$neeview = "NeeView\bin\x64\Debug\net9.0-windows"
+$projectPath = ".\NeeView"
+$projectFile = Join-Path $projectPath "NeeView.csproj"
+$outputPath = dotnet msbuild $projectFile -getProperty:OutputPath
+$neeview = Join-Path $projectPath $outputPath
 $neeview_profile = "$neeview\Profile"
 
 Write-Host "Create en-us Embedded Documents..."
