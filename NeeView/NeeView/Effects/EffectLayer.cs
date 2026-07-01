@@ -7,6 +7,7 @@ using System.Text.Json.Serialization;
 
 namespace NeeView
 {
+    [Equatable(Explicit = true, IgnoreInheritedMembers = true)]
     public partial class EffectLayer : ObservableObject
     {
         [ObservableProperty]

@@ -11,7 +11,7 @@ namespace NeeView
     public partial class ImageEffectConfig : ObservableObject
     {
         [DefaultEquality] private bool _isEnabled;
-        [DefaultEquality] private EffectLayerCollection _layers = new EffectLayerCollection() { new EffectLayer() };
+        [OrderedEquality] private EffectLayerCollection _layers = new EffectLayerCollection() { new EffectLayer() };
 
         private EffectUnitCache? _cache;
 

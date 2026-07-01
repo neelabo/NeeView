@@ -39,7 +39,7 @@
   <ItemGroup>
     <PackageReference Include="bblanchon.PDFium.Win32" Version="149.0.7825" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
-    <PackageReference Include="Generator.Equals" Version="3.3.0" />
+    <PackageReference Include="Generator.Equals" Version="4.0.1" />
     <PackageReference Include="H.NotifyIcon.Wpf" Version="2.4.1" />
     <PackageReference Include="Jint" Version="4.9.3" />
     <PackageReference Include="MetadataExtractor" Version="2.9.3" />
@@ -52,7 +52,7 @@
     <PackageReference Include="PhotoSauce.MagicScaler" Version="0.15.0" />
     <PackageReference Include="SharpVectors" Version="1.8.5" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.113.7" />
-    <PackageReference Include="VirtualizingWrapPanel" Version="2.5.1" />
+    <PackageReference Include="VirtualizingWrapPanel" Version="2.5.2" />
   </ItemGroup>
 
   <ItemGroup>

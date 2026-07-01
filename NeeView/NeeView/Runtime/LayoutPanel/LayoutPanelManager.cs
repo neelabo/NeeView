@@ -301,8 +301,10 @@ namespace NeeView.Runtime.LayoutPanel
     [Equatable]
     public partial class LayoutPanelManagerMemento
     {
+        [OrderedEquality]
         public Dictionary<string, LayoutPanelMemento>? Panels { get; set; }
 
+        [OrderedEquality]
         public LayoutPanelDocksMemento? Docks { get; set; }
 
         public LayoutPanelWindowManagerMemento Windows { get; set; } = new();

@@ -31,8 +31,8 @@ namespace NeeView
         [DefaultEquality] private bool _isOpenBookAtCurrentPlace;
         [DefaultEquality] private StringComparerType _stringComparer = StringComparerType.Native;
         [DefaultEquality] private bool _isInputMethodEnabled;
-        [DefaultEquality] private DestinationFolderCollection _destinationFolderCollection = new();
-        [DefaultEquality] private ExternalAppCollection _externalAppCollection = new() { new ExternalApp() };
+        [OrderedEquality] private DestinationFolderCollection _destinationFolderCollection = new();
+        [OrderedEquality] private ExternalAppCollection _externalAppCollection = new() { new ExternalApp() };
         [DefaultEquality] private string? _textEditor;
         [DefaultEquality] private string? _webBrowser;
         [DefaultEquality] private string? _fileManager;
