@@ -41,6 +41,10 @@ namespace NeeView.IO
 
                 return new FolderOperatonResult(sink.Results);
             }
+            catch (Exception ex) when (IsUserCancellation(ex))
+            {
+                return new FolderOperatonResult();
+            }
             finally
             {
                 fileOp.Unadvise(cookie);
@@ -73,6 +77,10 @@ namespace NeeView.IO
                 fileOp.PerformOperations();
 
                 return new FolderOperatonResult(sink.Results);
+            }
+            catch (Exception ex) when (IsUserCancellation(ex))
+            {
+                return new FolderOperatonResult();
             }
             finally
             {
@@ -107,6 +115,10 @@ namespace NeeView.IO
 
                 return new FolderOperatonResult(sink.Results);
             }
+            catch (Exception ex) when (IsUserCancellation(ex))
+            {
+                return new FolderOperatonResult();
+            }
             finally
             {
                 fileOp.Unadvise(cookie);
@@ -140,6 +152,10 @@ namespace NeeView.IO
                 fileOp.PerformOperations();
 
                 return new FolderOperatonResult(sink.Results);
+            }
+            catch (Exception ex) when (IsUserCancellation(ex))
+            {
+                return new FolderOperatonResult();
             }
             finally
             {
@@ -176,11 +192,33 @@ namespace NeeView.IO
 
                 return new FolderOperatonResult(sink.Results);
             }
+            catch (Exception ex) when (IsUserCancellation(ex))
+            {
+                return new FolderOperatonResult();
+            }
             finally
             {
                 fileOp.Unadvise(cookie);
             }
         }
+
+        /// <summary>
+        /// Check user cancellation exception
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <returns></returns>
+        private static bool IsUserCancellation(Exception ex)
+        {
+            if (ex is OperationCanceledException) return true;
+
+            if (ex is not COMException comException) return false;
+
+            uint hResult = (uint)comException.HResult;
+
+            return hResult == 0x80270000 // COPYENGINE_E_USER_CANCELLED (IFileOperation)
+                || hResult == 0x800704C7; // ERROR_CANCELLED (Win32)
+        }
+
 
         /// <summary>
         /// Split the path into directory and filename

@@ -5,6 +5,10 @@ namespace NeeView.IO
 {
     public class FolderOperatonResult
     {
+        public FolderOperatonResult()
+        {
+        }
+
         public FolderOperatonResult(IEnumerable<FolderOperatonItemResult> items)
         {
             Items = items.ToList();
