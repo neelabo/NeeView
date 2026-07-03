@@ -8,8 +8,7 @@
 Enhanced effect-related features.
 
 - Added support for **Effect Profiles**, allowing batch switching of all settings in the Effects panel (#689)  
-    - Implemented commands for switching effect profiles (#689)  
-    - "Set effect profile", "Next effect profile", "Previous effect profile"  
+    - Implemented the commands "Set effect profile", "Next effect profile", and "Previous effect profile" (#689)
     - Book settings can now store the selected effect profile. The default is "Continue", preserving previous behavior (#1339)
 
 - Image effects now support **multiple layers** (#377)  
@@ -51,7 +50,7 @@ Items registered directly under the root continue to show ★ only.
 
 #### Full Desktop Mode
 
-Added a **Full Desktop Mode** that expands across all monitors.  
+Added a **Full Desktop Mode** that expands across all monitors.  C
 *Note: Does not work correctly in multi-DPI multi-monitor environments.*
 
 - Added Full Desktop mode to window modes (#1848)
