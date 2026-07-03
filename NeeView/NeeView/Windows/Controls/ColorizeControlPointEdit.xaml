@@ -11,15 +11,25 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <StackPanel x:Name="Root" >
-        <DockPanel Margin="0">
-            <TextBlock Width="64" Text="{properties:TextBinding ColorizeControlPoint.Color}" VerticalAlignment="Center" />
-            <nwc:ColorPicker DockPanel.Dock="Right" Color="{Binding Color}" VerticalAlignment="Center"
+        <Grid Margin="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="25*"/>
+                <ColumnDefinition Width="75*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="{properties:TextBinding ColorizeControlPoint.Color}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+            <nwc:ColorPicker Grid.Column="1" DockPanel.Dock="Right" Color="{Binding Color}" VerticalAlignment="Center" Margin="5,0,0,0"
                 ColorMode="{Binding Source={x:Static nv:Config.Current}, Path=System.ColorMode}"/>
-        </DockPanel>
-        <DockPanel Margin="0,4,0,0" KeyboardNavigation.TabNavigation="Local">
-            <TextBlock Width="64" Text="{properties:TextBinding ColorizeControlPoint.Strength}" VerticalAlignment="Center" />
-            <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Width="70" Text="{Binding Strength}" Slider="{Binding ElementName=SliderS}" />
-            <Slider x:Name="SliderS" Value="{Binding Strength}" Minimum="0.0" Maximum="10.0" TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,0,5,0" TabIndex="1" />
-        </DockPanel>
+        </Grid>
+        <Grid Margin="0,4,0,0" KeyboardNavigation.TabNavigation="Local">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="25*"/>
+                <ColumnDefinition Width="75*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="{properties:TextBinding ColorizeControlPoint.Strength}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+            <DockPanel Grid.Column="1" Margin="5,0,0,0">
+                <nwc:EnterTriggerTextBox DockPanel.Dock="Right" Width="70" Text="{Binding Strength}" Slider="{Binding ElementName=SliderS}" />
+                <Slider x:Name="SliderS" Value="{Binding Strength}" Minimum="0.0" Maximum="10.0" TickFrequency="1" IsSnapToTickEnabled="True" Margin="0,0,5,0" TabIndex="1" />
+            </DockPanel>
+        </Grid>
     </StackPanel>
 </UserControl>
