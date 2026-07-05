@@ -250,6 +250,7 @@ namespace NeeView.PageFrames
             var comparer = new PointToContainerDistanceComparer(orientation, point);
 
             return CollectNode<PageFrameContent>()
+                .Where(e => e.Value.IsHitTestVisible)
                 .MinBy(e => e.Value, comparer);
         }
 
