@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="NeeView.MessageDialogControl"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            xmlns:local="clr-namespace:NeeView"
+            xmlns:nw="clr-namespace:NeeView.Windows"
+            xmlns:properties="clr-namespace:NeeView.Properties"
+            mc:Ignorable="d" 
+            MinWidth="480" MaxWidth="800"
+            d:DesignHeight="200" d:DesignWidth="600">
+
+    <UserControl.Resources>
+        <local:DialogIconToFontTextConverter x:Key="DialogIconToFontTextConverter" />
+        <local:DialogIconToVisibilityConverter x:Key="DialogIconToVisibilityConverter" />
+    </UserControl.Resources>
+
+    <Grid>
+        <DockPanel  Margin="40,20" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <DockPanel DockPanel.Dock="Bottom" Margin="0,20,0,0">
+                <StackPanel x:Name="ButtonPanel" DockPanel.Dock="Right" Orientation="Horizontal">
+                    <Button Style="{StaticResource NVDialogAccentButton}" Content="OK" />
+                </StackPanel>
+                <StackPanel x:Name="SubButtonPanel" Orientation="Horizontal" Margin="-20,0,0,0">
+                </StackPanel>
+            </DockPanel>
+            <DockPanel DockPanel.Dock="Top">
+                <TextBlock FontFamily="Segoe MDL2 Assets" x:Name="FontIcon" FontSize="48" VerticalAlignment="Top" Margin="0,10,20,0" 
+                    Text="{Binding Icon, Converter={StaticResource DialogIconToFontTextConverter }}" d:Text="&#xE7BA;"
+                    Visibility="{Binding Icon, Converter={StaticResource DialogIconToVisibilityConverter }}" d:Visibility="Visible"/>
+                <TextBlock x:Name="Caption" DockPanel.Dock="Top" TextWrapping="Wrap" FontSize="{DynamicResource SystemFontSizeHuge}" Margin="0,5"
+                    Text="{Binding Caption, Mode=Default}" d:Text="Title"/>
+                <ContentControl x:Name="Message" Margin="0,5" IsTabStop="False"
+                    Content="{Binding Content, Mode=OneTime}" d:Content="Message" />
+            </DockPanel>
+            <DockPanel.ContextMenu>
+                <ContextMenu x:Name="CopyContextMenu">
+                    <MenuItem Header="{properties:TextBinding Common.Menu.Copy}" Command="{x:Static local:MessageDialogControl.CopyCommand}" />
+                </ContextMenu>
+            </DockPanel.ContextMenu>
+        </DockPanel>
+    </Grid>
+</UserControl>

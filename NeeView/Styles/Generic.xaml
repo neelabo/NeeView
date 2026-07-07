@@ -854,4 +854,22 @@
 
     <!--#endregion Tag-->
 
+    <!--#region ModalPopup -->
+
+    <Style x:Key="ModalDialogBorderStyle" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource Window.Background}"/>
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource Window.Foreground}"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Window.Border}"/>
+        <Setter Property="BorderThickness" Value="{DynamicResource Window.Dialog.BorderThickness}"/>
+        <Setter Property="Margin" Value="20"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect BlurRadius="15" Direction="270" RenderingBias="Quality" ShadowDepth="3" Opacity="0.3"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--#endregion ModalPopup -->
+
 </ResourceDictionary>

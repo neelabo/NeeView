@@ -179,16 +179,19 @@ namespace NeeView
         private void PageEndAction_DialogCore(object? sender, PageTerminatedEventArgs e)
         {
             var title = (e.Direction < 0) ? TextResources.GetString("Notice.FirstPage") : TextResources.GetString("Notice.LastPage");
-            var dialog = new MessageDialog(title, TextResources.GetString("PageEndDialog.Message"));
+            var dialog = new MessageDialogContext(title, TextResources.GetString("PageEndDialog.Message"));
             var nextCommand = new UICommand("PageEndAction.NextBook");
             var loopCommand = new UICommand("PageEndAction.Loop");
             var noneCommand = new UICommand("PageEndAction.None");
             dialog.Commands.Add(nextCommand);
             dialog.Commands.Add(loopCommand);
             dialog.Commands.Add(noneCommand);
-            dialog.CloseWhenDeactivated = true;
 
-            var result = dialog.ShowDialog(App.Current.MainWindow);
+            var owner = MainViewManager.Current.GetWindowContainingMainView() ?? App.Current.MainWindow;
+            var result = dialog.ShowPopupDialog(owner);
+
+            // 枠外クリックによるページ移動に反応しないよう、マウス入力をキャンセルする
+            MainViewManager.Current.CancelMouseInput();
 
             if (result.Command == nextCommand)
             {

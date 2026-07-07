@@ -62,10 +62,15 @@ namespace NeeView
         public Window? GetWindowContainingMainView() => System.Windows.Window.GetWindow(_mainView);
 
 
-        private void BookOperation_BookChanging(object? sender, BookChangingEventArgs e)
+        public void CancelMouseInput()
         {
             _mainView.MouseInput?.Cancel();
             _mainViewBay.MouseInput.Cancel();
+        }
+
+        private void BookOperation_BookChanging(object? sender, BookChangingEventArgs e)
+        {
+            CancelMouseInput();
         }
 
         private void BookOperation_BookChanged(object? sender, BookChangedEventArgs e)
