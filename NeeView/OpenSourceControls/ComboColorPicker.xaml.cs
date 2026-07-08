@@ -218,6 +218,11 @@ namespace OpenSourceControls
                 ColorList1.Items.Insert(1, new SeparatorWithColorProperty());
                 _hasDefaultColor = true;
             }
+
+            if (SelectedColor == defaultColor)
+            {
+                ColorList1.SelectedItem = cvm;
+            }
         }
 
         private void SetCustomColor(Color color)

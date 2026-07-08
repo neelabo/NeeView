@@ -833,10 +833,11 @@
     <local:TagBackgroundConverter x:Key="TagBackgroundConverter" />
     <local:BackgroundBrushToForegroundBrushConverter x:Key="BackgroundBrushToForegroundBrushConverter" />
 
-    <nw:BindingProxy x:Key="TagBackgroundProxy" Data="{DynamicResource Tag.Background}" />
-
     <DataTemplate x:Key="TagTemplate">
         <Border x:Name="RootBorder" CornerRadius="8" Margin="2,0" VerticalAlignment="Center" HorizontalAlignment="Left">
+            <Border.Resources>
+                <nw:BindingProxy x:Key="TagBackgroundProxy" Data="{DynamicResource Tag.Background}" />
+            </Border.Resources>
             <Border.Background>
                 <MultiBinding Converter="{StaticResource TagBackgroundConverter}">
                     <Binding Path="Background"/>
