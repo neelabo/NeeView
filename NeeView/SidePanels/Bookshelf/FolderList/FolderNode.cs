@@ -12,15 +12,13 @@ namespace NeeView
     /// HACK: パスをQueryPathで管理
     public class FolderNode
     {
-        // Fields
-
-        private readonly System.Threading.Lock _lock = new();
-
+        private readonly Lock _lock = new();
         private bool _isParentValid;
         private FolderCollection? _collection;
+        private FolderNode? _parent;
+        private List<FolderNode>? _children;
+        private string? _place;
 
-
-        // Constructors
 
         public FolderNode(FolderNode? parent, string? name, FolderItem? content)
         {
@@ -56,23 +54,18 @@ namespace NeeView
         }
 
 
-        // Properties
-
-        private FolderNode? _parent;
         public FolderNode? Parent
         {
             get => _isParentValid ? _parent : throw new InvalidOperationException("parent not initialize");
             private set => _parent = value;
         }
 
-        private List<FolderNode>? _children;
         public List<FolderNode>? Children
         {
             get => _children ?? throw new InvalidOperationException("children not initialize");
             private set => _children = value;
         }
 
-        private string? _place;
         public string? Place
         {
             get { return _parent != null ? _parent.FullName : _place; }
@@ -85,8 +78,6 @@ namespace NeeView
 
         public FolderItem? Content { get; set; }
 
-
-        // Methods
 
         public async Task<FolderNode?> GetParent(CancellationToken token)
         {
@@ -149,34 +140,76 @@ namespace NeeView
 
         public async Task<FolderNode?> GetPrev(CancellationToken token)
         {
-            var parent = await GetParent(token);
-            if (parent == null) return null;
-
-            var brother = await parent.GetChildren(token);
-            var index = brother.IndexOf(this);
-            if (index - 1 >= 0)
-            {
-                return brother[index - 1];
-            }
-
-            return null;
+            return await GetValidPrev(token);
         }
 
         public async Task<FolderNode?> GetNext(CancellationToken token)
         {
+            return await GetValidNext(token);
+        }
+
+        private async Task<FolderNode?> GetValidPrev(CancellationToken token)
+        {
             var parent = await GetParent(token);
             if (parent == null) return null;
 
-            var brother = await parent.GetChildren(token);
-            var index = brother.IndexOf(this);
-            if (index + 1 < brother.Count)
+            var children = await parent.GetChildren(token);
+
+            var currentIndex = children.IndexOf(this);
+            if (currentIndex < 0) return null;
+
+            for (var index = currentIndex - 1; index >= 0; index--)
             {
-                return brother[index + 1];
+                var node = children[index];
+                if (node.IsValidNode())
+                {
+                    return node;
+                }
             }
 
             return null;
         }
 
+        private async Task<FolderNode?> GetValidNext(CancellationToken token)
+        {
+            var parent = await GetParent(token);
+            if (parent == null) return null;
+
+            var children = await parent.GetChildren(token);
+
+            var currentIndex = children.IndexOf(this);
+            if (currentIndex < 0) return null;
+
+            for (var index = currentIndex + 1; index < children.Count; index++)
+            {
+                var node = children[index];
+                if (node.IsValidNode())
+                {
+                    return node;
+                }
+            }
+
+            return null;
+        }
+
+        private async Task<FolderNode?> GetValidFirstChild(CancellationToken token)
+        {
+            var children = await GetChildren(token);
+
+            return children.FirstOrDefault(e => e.IsValidNode());
+        }
+
+        private async Task<FolderNode?> GetValidLastChild(CancellationToken token)
+        {
+            var children = await GetChildren(token);
+
+            return children.LastOrDefault(e => e.IsValidNode());
+        }
+
+        private bool IsValidNode()
+        {
+            return this.Content is null || !this.Content.IsSystem();
+        }
 
         public async Task<List<FolderNode>> GetChildren(CancellationToken token)
         {
@@ -214,7 +247,7 @@ namespace NeeView
             using (var collection = await folderCollectionFactory.CreateFolderCollectionAsync(path, false, false, false, token))
             {
                 var children = collection.Items
-                    .Where(e => !e.IsEmpty())
+                    .Where(e => !e.IsSystem())
                     .Select(e => new FolderNode(this, e.Name, e) { Place = collection.Place.FullPath })
                     .ToList();
 
@@ -249,11 +282,10 @@ namespace NeeView
             if (parent == null) return null;
 
             // 兄の末裔
-            var brother = await parent.GetChildren(token);
-            var index = brother.IndexOf(this);
-            if (index - 1 >= 0)
+            var node = await GetValidPrev(token);
+            if (node is not null)
             {
-                return await brother[index - 1].CruiseDescendant(token);
+                return await node.CruiseDescendant(token);
             }
 
             // 親
@@ -265,10 +297,10 @@ namespace NeeView
         {
             if (CanCruiseChildren(this))
             {
-                var children = await GetChildren(token);
-                if (children.Count > 0)
+                var node = await GetValidLastChild(token);
+                if (node is not null)
                 {
-                    return await children.Last().CruiseDescendant(token);
+                    return await node.CruiseDescendant(token);
                 }
             }
 
@@ -301,10 +333,10 @@ namespace NeeView
             if (CanCruiseChildren(this))
             {
                 // 長男
-                var children = await GetChildren(token);
-                if (children.Count > 0)
+                var node = await GetValidFirstChild(token);
+                if (node is not null)
                 {
-                    return children.First();
+                    return node;
                 }
             }
 
@@ -317,11 +349,10 @@ namespace NeeView
             if (parent == null) return null;
 
             // 弟
-            var brother = await parent.GetChildren(token);
-            var index = brother.IndexOf(this);
-            if (index + 1 < brother.Count)
+            var node = await GetValidNext(token);
+            if (node is not null)
             {
-                return brother[index + 1];
+                return node;
             }
 
             // 親へ
