@@ -1381,7 +1381,10 @@ namespace NeeView
 
             if (next < 0 || next >= this.FolderCollection.Items.Count) return null;
 
-            return this.FolderCollection[next];
+            var nextItem = this.FolderCollection[next];
+            if (nextItem.IsSystem()) return null;
+
+            return nextItem;
         }
 
         internal int GetFolderItemIndex(FolderItem? item)
