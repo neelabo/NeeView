@@ -110,9 +110,8 @@ namespace NeeView
 
         #region Obsolete
 
-        [Obsolete, Alternative("FileNameFormat0,1,2", 46, ScriptErrorLevel.Warning)] // ver.46
+        [Obsolete("no used"), Alternative("FileNameFormat0,1,2", 46, ScriptErrorLevel.Warning)] // ver.46
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWriting)]
-        [PropertyMapIgnore]
         public ExportImageFileNameMode? FileNameMode
         {
             get => ExportImageFileNameMode.Original;
