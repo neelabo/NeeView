@@ -1,5 +1,6 @@
 ﻿using Generator.Equals;
 using NeeView.Windows.Property;
+using System.Windows.Controls;
 
 namespace NeeView
 {
@@ -9,7 +10,7 @@ namespace NeeView
         [DefaultEquality] private string? _argument;
         [DefaultEquality] private bool _isChecked;
 
-        [PropertyMember]
+        [PropertyMember(Orientation = Orientation.Vertical)]
         public string? Argument
         {
             get { return _argument; }

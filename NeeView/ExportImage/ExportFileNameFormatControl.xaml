@@ -15,7 +15,7 @@
         <nw:BindingProxy x:Key="RuleData" Data="{Binding RuleData}" />
     </UserControl.Resources>
 
-    <StackPanel Width="180" >
+    <StackPanel MinWidth="180">
 
         <nwc:TextBoxWithMessage x:Name="FormatTextBox" EmptyMessage="{Binding EmptyMessage}"  d:Text="{}{Index:000}">
             <nwc:TextBoxWithMessage.Text>

@@ -1,6 +1,7 @@
 ﻿using Generator.Equals;
 using NeeView.Windows.Property;
 using System.ComponentModel;
+using System.Windows.Controls;
 
 namespace NeeView
 {
@@ -31,7 +32,7 @@ namespace NeeView
 
         // コマンドパラメータ
         // {File} = 渡されるファイルパス
-        [PropertyMember]
+        [PropertyMember(Orientation = Orientation.Vertical)]
         public string Parameter
         {
             get { return _parameter; }

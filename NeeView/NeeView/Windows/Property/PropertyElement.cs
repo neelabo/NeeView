@@ -30,6 +30,9 @@ namespace NeeView.Windows.Property
         }
     }
 
+    public class PropertySeparatorElement : PropertyDrawElement
+    {
+    }
 
     public class PropertyValueSource : IValueSetter
     {
@@ -191,6 +194,7 @@ namespace NeeView.Windows.Property
             IsVisible = attribute == null || attribute.IsVisible;
             EmptyMessage = attribute?.EmptyMessage;
             Options = options;
+            Orientation = attribute?.Orientation ?? Orientation.Horizontal;
 
             this.Default = GetDefaultValue(propSource);
             this.IsObsolete = GetObsoleteAttribute(_info) != null;

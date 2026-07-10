@@ -20,8 +20,13 @@
                     <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" FontWeight="Bold" Margin="0,10,0,5" />
                 </DataTemplate>
 
+                <DataTemplate DataType="{x:Type local:PropertySeparatorElement}">
+                    <Separator BorderBrush="{DynamicResource Panel.Splitter}" BorderThickness="1" Margin="0,0,0,10" />
+                </DataTemplate>
+
                 <DataTemplate DataType="{x:Type local:PropertyMemberElement}">
                     <local:PropertyControl Header="{Binding Name}" Value="{Binding TypeValue}" Tips="{Binding Tips}"
+                        UseToolTip="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=UseToolTip}"
                         Orientation="{Binding Orientation}"
                         IsHeaderVisible="{Binding IsHeaderVisible}"
                         IsStretch="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=IsStretch}"
@@ -31,6 +36,7 @@
 
                 <DataTemplate DataType="{x:Type local:PropertyDocumentElement}">
                     <local:PropertyInspector Document="{Binding Document}"
+                        UseToolTip="{Binding UseToolTip, RelativeSource={RelativeSource AncestorType=local:PropertyInspector}}"
                         VisibilityValue="{Binding Options.VisibilityValue}"/>
                 </DataTemplate>
 

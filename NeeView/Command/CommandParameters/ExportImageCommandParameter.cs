@@ -3,6 +3,7 @@ using NeeView.Windows.Controls;
 using NeeView.Windows.Property;
 using System;
 using System.Text.Json.Serialization;
+using System.Windows.Controls;
 
 namespace NeeView
 {
@@ -58,21 +59,21 @@ namespace NeeView
             set => SetProperty(ref _exportFolder, value);
         }
 
-        [PropertyMember(Name = "ExportImageParameter.FileNameFormat0")]
+        [PropertyMember(Name = "ExportImageParameter.FileNameFormat0", Orientation = Orientation.Vertical)]
         public string FileNameFormat0
         {
             get { return _fileNameFormat0; }
             set { SetProperty(ref _fileNameFormat0, value); }
         }
 
-        [PropertyMember(Name = "ExportImageParameter.FileNameFormat1")]
+        [PropertyMember(Name = "ExportImageParameter.FileNameFormat1", Orientation = Orientation.Vertical)]
         public string FileNameFormat1
         {
             get { return _fileNameFormat1; }
             set { SetProperty(ref _fileNameFormat1, value); }
         }
 
-        [PropertyMember(Name = "ExportImageParameter.FileNameFormat2")]
+        [PropertyMember(Name = "ExportImageParameter.FileNameFormat2", Orientation = Orientation.Vertical)]
         public string FileNameFormat2
         {
             get { return _fileNameFormat2; }

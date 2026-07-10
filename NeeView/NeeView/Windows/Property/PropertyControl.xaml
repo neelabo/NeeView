@@ -34,16 +34,47 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="HeaderStackPanelStyle" TargetType="StackPanel">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="UseLayoutRounding" Value="True"/>
+            <Setter Property="MinWidth" Value="50"/>
+        </Style>
+
+        <Style x:Key="HeaderTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="Text" Value="{Binding Header, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        </Style>
+
+        <DataTemplate x:Key="ValueHeaderTemplate">
+            <StackPanel Style="{StaticResource HeaderStackPanelStyle}">
+                <TextBlock Style="{StaticResource HeaderTextBlockStyle}" />
+                <TextBlock Style="{StaticResource NoteTextBlockStyle}" Text="{Binding Tips, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ToolTipValueHeaderTemplate">
+            <StackPanel Style="{StaticResource HeaderStackPanelStyle}">
+                <TextBlock Style="{StaticResource HeaderTextBlockStyle}" ToolTip="{Binding Tips, RelativeSource={RelativeSource AncestorType=UserControl}}" />
+            </StackPanel>
+        </DataTemplate>
+
+        <Style x:Key="ValueHeaderStyle" TargetType="ContentControl">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="ContentTemplate" Value="{StaticResource ValueHeaderTemplate}"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding UseToolTip, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                    <Setter Property="ContentTemplate" Value="{StaticResource ToolTipValueHeaderTemplate}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
     </UserControl.Resources>
 
     <Border x:Name="Root" Style="{Binding Value, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource PropertyValueToClickStyleConverter}}">
-        <DockPanel Margin="5,10,0,10">
+        <DockPanel Margin="5,5,0,5">
             <ContentControl x:Name="ValueUI" DockPanel.Dock="Right" UseLayoutRounding="True" Grid.Column="1" VerticalAlignment="Center" Margin="5,0" IsTabStop="False" 
                 Content="{Binding Value, RelativeSource={RelativeSource AncestorType=UserControl}}" ContentTemplateSelector="{StaticResource PropertyValueTemplateSelector}" />
-            <StackPanel x:Name="ValueHeader" VerticalAlignment="Center" UseLayoutRounding="True" MinWidth="50">
-                <TextBlock Text="{Binding Header, RelativeSource={RelativeSource AncestorType=UserControl}}" TextTrimming="CharacterEllipsis" />
-                <TextBlock Style="{StaticResource NoteTextBlockStyle}" Text="{Binding Tips, RelativeSource={RelativeSource AncestorType=UserControl}}" />
-            </StackPanel>
+            <ContentControl x:Name="ValueHeader" Style="{StaticResource ValueHeaderStyle}" />
         </DockPanel>
     </Border>
 

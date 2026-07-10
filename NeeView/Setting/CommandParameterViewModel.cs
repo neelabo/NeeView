@@ -47,7 +47,6 @@ namespace NeeView.Setting
                 if (_commandElement is ScriptCommand)
                 {
                     var argsParam = _propertyDocument.GetPropertyMember(nameof(ScriptCommandParameter.Argument));
-                    argsParam?.Orientation = System.Windows.Controls.Orientation.Vertical;
 
                     // ScriptCommand の @argsDescription 置き換え
                     string? argsNode = _commandElement.ParameterSource.ArgsDescription;

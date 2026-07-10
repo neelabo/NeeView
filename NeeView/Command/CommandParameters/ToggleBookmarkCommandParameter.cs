@@ -1,5 +1,6 @@
 ﻿using Generator.Equals;
 using NeeView.Windows.Property;
+using System.Windows.Controls;
 
 namespace NeeView
 {
@@ -8,7 +9,7 @@ namespace NeeView
     {
         [DefaultEquality] private string? _folder;
 
-        [PropertyMember]
+        [PropertyMember(Orientation = Orientation.Vertical)]
         public string? Folder
         {
             get => _folder;

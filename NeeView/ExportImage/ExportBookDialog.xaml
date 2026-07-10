@@ -10,7 +10,7 @@
     xmlns:properties="clr-namespace:NeeView.Properties" 
     mc:Ignorable="d"
     Style="{StaticResource ChromeWindowStyle}"
-    Title="{properties:TextBinding ExportBookAsCommand}" Height="600" Width="800" ResizeMode="CanResizeWithGrip">
+    Title="{properties:TextBinding ExportBookAsCommand}" Height="650" Width="800" ResizeMode="CanResizeWithGrip">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -56,7 +56,7 @@
     <Grid>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="400" MinWidth="{Binding ElementName=Buttons, Path=ActualWidth}" />
+            <ColumnDefinition Width="350" MinWidth="{Binding ElementName=Buttons, Path=ActualWidth}" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
@@ -71,7 +71,7 @@
                 <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Margin="10,0"
                         KeyboardNavigation.TabNavigation="Local" KeyboardNavigation.TabIndex="2">
                     <nwp:PropertyInspector Document="{Binding ExportBookTypeDocument}" Margin="0" />
-                    <DockPanel KeyboardNavigation.TabNavigation="Local" >
+                    <DockPanel KeyboardNavigation.TabNavigation="Local" Margin="5,0,0,0" >
                         <Button x:Name="DestinationFolderOptionButton" DockPanel.Dock="Right" Style="{StaticResource IconButton}" Padding="5,0" Click="DestinationFolderOptionButton_Click" TabIndex="2">
                             <Image Style="{StaticResource SettingIconImageStyle}" Width="16" Height="16" />
                         </Button>
@@ -83,7 +83,7 @@
                 <Border BorderThickness="0,0,0,1" BorderBrush="{DynamicResource Panel.Splitter}">
                     <ScrollViewer Style="{StaticResource NVScrollViewer}" Margin="10,10,0,0" CanContentScroll="False"
                             KeyboardNavigation.TabNavigation="Local" KeyboardNavigation.TabIndex="1">
-                        <nwp:PropertyInspector Document="{Binding ExportBookDocument}" Margin="0"/>
+                        <nwp:PropertyInspector Document="{Binding ExportBookDocument}" Margin="0" UseToolTip="True"/>
                     </ScrollViewer>
                 </Border>
             </DockPanel>

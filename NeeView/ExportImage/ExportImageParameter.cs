@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Generator.Equals;
 using NeeView.Windows.Property;
+using System.Windows.Controls;
 
 namespace NeeView
 {
@@ -88,21 +89,21 @@ namespace NeeView
             set => SetProperty(ref _fileFormat, value);
         }
 
-        [PropertyMember]
+        [PropertyMember(Orientation = Orientation.Vertical)]
         public string FileNameFormat0
         {
             get { return _fileNameFormat0; }
             set { SetProperty(ref _fileNameFormat0, value); }
         }
 
-        [PropertyMember]
+        [PropertyMember(Orientation = Orientation.Vertical)]
         public string FileNameFormat1
         {
             get { return _fileNameFormat1; }
             set { SetProperty(ref _fileNameFormat1, value); }
         }
 
-        [PropertyMember]
+        [PropertyMember(Orientation = Orientation.Vertical)]
         public string FileNameFormat2
         {
             get { return _fileNameFormat2; }

@@ -105,6 +105,16 @@ namespace NeeView.Windows.Property
         }
 
 
+        public bool UseToolTip
+        {
+            get { return (bool)GetValue(UseToolTipProperty); }
+            set { SetValue(UseToolTipProperty, value); }
+        }
+
+        public static readonly DependencyProperty UseToolTipProperty =
+            DependencyProperty.Register(nameof(UseToolTip), typeof(bool), typeof(PropertyInspector), new PropertyMetadata(false));
+
+
         public PropertyInspector()
         {
             InitializeComponent();

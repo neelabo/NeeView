@@ -42,7 +42,7 @@ namespace NeeView
 
             this.ExportBookDocument = new PropertyDocument();
             this.ExportBookDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.Mode)));
-
+            this.ExportBookDocument.AddProperty(new PropertySeparatorElement());
 
             var originalDocument = new PropertyDocument();
 
@@ -82,7 +82,15 @@ namespace NeeView
             viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.IsOriginalSize)));
             viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.IsDotKeep)));
             viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.FileFormat)));
-            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.QualityLevel)));
+
+            viewDocument.AddProperty(PropertyMemberElement.Create(_parameter, nameof(_parameter.QualityLevel), new PropertyMemberElementOptions()
+            {
+                VisibilityValue = new Setting.VisibilityPropertyValue(new Binding(nameof(_parameter.FileFormat))
+                {
+                    Source = _parameter,
+                    Converter = new ValueToVisibilityConverter<BitmapImageFormat>() { Visible = BitmapImageFormat.Jpeg }
+                })
+            }));
 
             viewDocument.SetVisualType<PropertyValue_Boolean>(PropertyVisualType.ToggleSwitch);
 

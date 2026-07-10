@@ -4,6 +4,7 @@ using NeeView.Windows.Controls;
 using System;
 using System.Diagnostics;
 using System.Reflection;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace NeeView.Windows.Property
@@ -20,6 +21,7 @@ namespace NeeView.Windows.Property
         public bool IsRegex;
         public Type? NoteConverter;
         public Type? Reset;
+        public Orientation Orientation;
 
         public PropertyMemberAttribute() { }
 
@@ -94,6 +96,7 @@ namespace NeeView.Windows.Property
 
         public PropertyPathAttribute() : base()
         {
+            Orientation = Orientation.Vertical;
         }
     }
 
