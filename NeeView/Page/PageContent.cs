@@ -23,13 +23,14 @@ namespace NeeView
         /// </reamerks>
         public static Size UndefinedSize { get; set; } = DefaultSize;
 
-        private readonly ArchiveEntry _archiveEntry;
+        private ArchiveEntry _archiveEntry;
         private PageDataSource? _pageDataSource;
         private readonly BookMemoryService? _bookMemoryService;
         public PageContentState _state;
         private readonly AsyncLock _asyncLock = new();
         private CancellationTokenSource? _cancellationTokenSource;
         private bool _disposedValue;
+        private bool _isArchiveEntryResolved;
 
         public PageContent(ArchiveEntry archiveEntry, BookMemoryService? bookMemoryService)
         {
@@ -245,6 +246,41 @@ namespace NeeView
             }
 
             ContentChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// IsTemporary な ArchiveEntry を解決する
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<bool> ResolveArchiveEntryAsync(CancellationToken token)
+        {
+            if (_disposedValue) return false;
+
+            if (_isArchiveEntryResolved)
+            {
+                return false;
+            }
+
+            _isArchiveEntryResolved = true;
+
+            if (!_archiveEntry.IsTemporary)
+            {
+                return false;
+            }
+
+            var query = new QueryPath(_archiveEntry.SystemPath);
+            query = query.ResolvePath();
+            try
+            {
+                _archiveEntry = await ArchiveEntryUtility.CreateAsync(query.SimplePath, ArchiveHint.None, false, token);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"ArchiveContent.Entry: {ex.Message}");
+                return false;
+            }
         }
     }
 

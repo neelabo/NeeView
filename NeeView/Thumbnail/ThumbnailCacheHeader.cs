@@ -45,5 +45,10 @@ namespace NeeView
         {
             return !string.IsNullOrEmpty(Key);
         }
+
+        public override string ToString()
+        {
+            return $"Key={Key}, Size={Size}, AccessTime={AccessTime}, GenerateHash={GenerateHash}";
+        }
     }
 }

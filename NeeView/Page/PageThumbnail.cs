@@ -34,6 +34,11 @@ namespace NeeView
                 return;
             }
 
+            if (await _content.ResolveArchiveEntryAsync(token))
+            {
+                Thumbnail.SetHeader(_content.ArchiveEntry);
+            }
+
             await Thumbnail.InitializeFromCacheAsync(token);
             if (Thumbnail.IsValid)
             {

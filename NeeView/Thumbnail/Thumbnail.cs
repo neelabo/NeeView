@@ -5,6 +5,7 @@ using NeeLaboratory.ComponentModel;
 using NeeLaboratory.Generators;
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -63,38 +64,7 @@ namespace NeeView
 
         public Thumbnail(ArchiveEntry entry)
         {
-            // NOTE: シンボリックリンクはターゲットのファイル情報を使う。パスはそのまま。
-            // NOTE: ディレクトリは更新日をサイズとする
-            try
-            {
-                var linkTarget = entry.ResolveLinkTarget();
-                if (linkTarget is not null)
-                {
-                    if (FileIO.Exists(linkTarget))
-                    {
-                        var path = entry.TargetPath;
-                        var length = linkTarget.Attributes.HasFlag(FileAttributes.Directory) ? linkTarget.GetSafeLastWriteTime().ToBinary() : (linkTarget as FileInfo)?.Length ?? 0;
-                        var ghash = Config.Current.Thumbnail.GetThumbnailImageGenerateHash();
-                        _header = new ThumbnailCacheHeader(path, length, null, ghash);
-                    }
-                    else
-                    {
-                        _header = ThumbnailCacheHeader.None;
-                    }
-                }
-                else
-                {
-                    var path = entry.TargetPath;
-                    var length = entry.IsDirectory ? entry.LastWriteTime.ToBinary() : entry.Length;
-                    var ghash = Config.Current.Thumbnail.GetThumbnailImageGenerateHash();
-                    _header = new ThumbnailCacheHeader(path, length, null, ghash);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                _header = ThumbnailCacheHeader.None;
-            }
+            SetHeader(entry);
         }
 
 
@@ -215,6 +185,49 @@ namespace NeeView
             }
         }
 
+
+        [MemberNotNull(nameof(_header))]
+        public void SetHeader(ArchiveEntry entry)
+        {
+            if (entry.IsTemporary)
+            {
+                _header = ThumbnailCacheHeader.None;
+                return;
+            }
+
+            // NOTE: シンボリックリンクはターゲットのファイル情報を使う。パスはそのまま。
+            // NOTE: ディレクトリは更新日をサイズとする
+            try
+            {
+                var linkTarget = entry.ResolveLinkTarget();
+                if (linkTarget is not null)
+                {
+                    if (FileIO.Exists(linkTarget))
+                    {
+                        var path = entry.TargetPath;
+                        var length = linkTarget.Attributes.HasFlag(FileAttributes.Directory) ? linkTarget.GetSafeLastWriteTime().ToBinary() : (linkTarget as FileInfo)?.Length ?? 0;
+                        var ghash = Config.Current.Thumbnail.GetThumbnailImageGenerateHash();
+                        _header = new ThumbnailCacheHeader(path, length, null, ghash);
+                    }
+                    else
+                    {
+                        _header = ThumbnailCacheHeader.None;
+                    }
+                }
+                else
+                {
+                    var path = entry.TargetPath;
+                    var length = entry.IsDirectory ? entry.LastWriteTime.ToBinary() : entry.Length;
+                    var ghash = Config.Current.Thumbnail.GetThumbnailImageGenerateHash();
+                    _header = new ThumbnailCacheHeader(path, length, null, ghash);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                _header = ThumbnailCacheHeader.None;
+            }
+        }
 
         private void LoadImageSourceAsync()
         {
