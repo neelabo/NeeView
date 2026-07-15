@@ -34,10 +34,13 @@ namespace NeeView
                 return;
             }
 
-            if (await _content.ResolveArchiveEntryAsync(token))
+            // NOTE: 解決処理はキャンセル無効
+            if (await _content.ResolveArchiveEntryAsync(CancellationToken.None))
             {
                 Thumbnail.SetHeader(_content.ArchiveEntry);
             }
+
+            token.ThrowIfCancellationRequested();
 
             await Thumbnail.InitializeFromCacheAsync(token);
             if (Thumbnail.IsValid)
