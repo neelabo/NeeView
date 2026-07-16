@@ -11,7 +11,6 @@ namespace NeeView
     {
         private readonly PlaylistSourceItem _item;
         private string? _place;
-        private string? _displayPlace;
         private Page? _archivePage;
         private ArchiveType? _archiveType;
 
@@ -85,21 +84,9 @@ namespace NeeView
             }
         }
 
-        public string? DisplayPlace
+        public string DisplayPlace
         {
-            get
-            {
-                if (_displayPlace is null)
-                {
-                    Task.Run(() =>
-                    {
-                        _displayPlace = SidePanelProfile.GetDecoratePlaceName(Place);
-                        OnPropertyChanged(nameof(DisplayPlace));
-                        OnPropertyChanged(nameof(Detail));
-                    });
-                }
-                return _displayPlace;
-            }
+            get { return SidePanelProfile.GetDecoratePlaceName(Place); }
         }
 
         public ArchiveType ArchiveType
@@ -108,23 +95,18 @@ namespace NeeView
             {
                 if (_archiveType is null)
                 {
-                    Task.Run(() =>
+                    var targetPath = Path;
+                    if (FileShortcut.IsShortcut(Path))
                     {
-                        var targetPath = Path;
-                        if (FileShortcut.IsShortcut(Path))
-                        {
-                            targetPath = new FileShortcut(Path).TargetPath ?? Path;
-                        }
-                        _archiveType = ArchiveManager.Current.GetSupportedType(targetPath);
-                        if (_archiveType == ArchiveType.None && FileIO.DirectoryExists(targetPath))
-                        {
-                            _archiveType = ArchiveType.FolderArchive;
-                        }
-                        OnPropertyChanged(nameof(ArchiveType));
-                        OnPropertyChanged(nameof(IsArchiveIconVisible));
-                    });
+                        targetPath = new FileShortcut(Path).TargetPath ?? Path;
+                    }
+                    _archiveType = ArchiveManager.Current.GetSupportedType(targetPath);
+                    if (_archiveType == ArchiveType.None && FileIO.DirectoryExists(targetPath))
+                    {
+                        _archiveType = ArchiveType.FolderArchive;
+                    }
                 }
-                return _archiveType.HasValue ? _archiveType.Value : ArchiveType.None;
+                return _archiveType.Value;
             }
         }
 
