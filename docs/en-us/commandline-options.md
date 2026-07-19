@@ -1,6 +1,6 @@
 # NeeView Startup options
 
-Version 45.0
+Version 46.0
 
 ### Usage
 
@@ -21,7 +21,8 @@ Option|Description
 \-x, \-\-setting=\<string\>|Specify the path of the setting file "UserSetting.json"
 \-\-clear\-registry|Clear registries for NeeView
 \-\-script=\<string\>|Executes the specified script file at startup. You can specify a file in the scripts folder by specifying 'script:\foobar.nvjs'.
-\-\-window=\<normal\|min\|max\|full\>|Start with the specified window state
+\-\-tray[=off\|on]|Launch the application in the system tray
+\-\-window=\<normal\|min\|max\|full\|desktop\>|Start with the specified window state
 \-\-|Indicates the end of option list. Subsequent arguments are considered file names.
 
 ### Examples

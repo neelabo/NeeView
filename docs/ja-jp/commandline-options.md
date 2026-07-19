@@ -1,6 +1,6 @@
 # NeeView 起動オプション
 
-Version 45.0
+Version 46.0
 
 ### Usage
 
@@ -19,9 +19,10 @@ Option|Description
 \-s, \-\-slideshow[=off\|on]|スライドショウを開始するかを指定します
 \-v, \-\-version|バージョン情報を表示します
 \-x, \-\-setting=\<string\>|設定ファイル "UserSetting.json" のパスを指定します
-\-\-clear\-registry|NeeView 用のレジストリをクリアする
+\-\-clear\-registry|NeeView 用のレジストリをクリアします
 \-\-script=\<string\>|指定されたスクリプト ファイルを起動時に実行します。'script:\foobar.nvjs' と指定することでスクリプト フォルダーのファイルを指定できます。
-\-\-window=\<normal\|min\|max\|full\>|指定されたウィンドウ状態で起動します
+\-\-tray[=off\|on]|アプリケーションをタスクトレイで起動します
+\-\-window=\<normal\|min\|max\|full\|desktop\>|指定されたウィンドウ状態で起動します
 \-\-|オプション リストの終りを示す。これ以後の引数はファイル名とみなされます
 
 ### Examples
