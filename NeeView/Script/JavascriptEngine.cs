@@ -25,6 +25,8 @@ namespace NeeView
 
             var options = new Jint.Options()
                 .DebugMode(true)
+                .SetTypeConverter(e => new JintCustomTypeConverter(e))
+                .AddObjectConverter(new JintCustomObjectConverter())
                 .AllowClr(typeof(System.Diagnostics.Process).Assembly);
 
             if (Config.Current.Script.IsSQLiteEnabled)
