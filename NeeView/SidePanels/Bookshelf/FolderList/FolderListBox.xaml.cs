@@ -1102,6 +1102,7 @@ namespace NeeView
             this.ListBox.ScrollIntoView(this.ListBox.SelectedItem);
             this.ListBox.UpdateLayout();
             this.ListBox.FocusSelectedItem(false);
+            this.ListBox.SetSelectedItems([this.ListBox.SelectedItem]);
 
             _thumbnailLoader?.Load();
 
