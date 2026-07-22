@@ -13,7 +13,7 @@ namespace NeeView
         [DefaultEquality] private bool _isEnabled;
         [OrderedEquality] private EffectLayerCollection _layers = new EffectLayerCollection() { new EffectLayer() };
 
-        private EffectUnitCache? _cache;
+        private EffectUnitCache _cache = new();
 
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace NeeView
         public LevelEffectUnit LevelEffect
         {
             get => new();
-            set => _cache?.Add(value);
+            set => _cache.Add(value);
         }
 
         [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
@@ -69,7 +69,7 @@ namespace NeeView
         public HsvEffectUnit HsvEffect
         {
             get => new();
-            set => _cache?.Add(value);
+            set => _cache.Add(value);
         }
 
         [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
@@ -77,7 +77,7 @@ namespace NeeView
         public ColorSelectEffectUnit ColorSelectEffect
         {
             get => new();
-            set => _cache?.Add(value);
+            set => _cache.Add(value);
         }
 
         [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
@@ -85,7 +85,7 @@ namespace NeeView
         public BlurEffectUnit BlurEffect
         {
             get => new();
-            set => _cache?.Add(value);
+            set => _cache.Add(value);
         }
 
         [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
@@ -93,7 +93,7 @@ namespace NeeView
         public BloomEffectUnit BloomEffect
         {
             get => new();
-            set => _cache?.Add(value);
+            set => _cache.Add(value);
         }
 
         [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
@@ -101,7 +101,7 @@ namespace NeeView
         public MonochromeEffectUnit MonochromeEffect
         {
             get => new();
-            set => _cache?.Add(value);
+            set => _cache.Add(value);
         }
 
         [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
@@ -109,7 +109,7 @@ namespace NeeView
         public ColorToneEffectUnit ColorToneEffect
         {
             get => new();
-            set => _cache?.Add(value);
+            set => _cache.Add(value);
         }
 
         [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
@@ -117,7 +117,7 @@ namespace NeeView
         public SharpenEffectUnit SharpenEffect
         {
             get => new();
-            set => _cache?.Add(value);
+            set => _cache.Add(value);
         }
 
         [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
@@ -125,7 +125,7 @@ namespace NeeView
         public EmbossedEffectUnit EmbossedEffect
         {
             get => new();
-            set => _cache?.Add(value);
+            set => _cache.Add(value);
         }
 
         [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
@@ -133,7 +133,7 @@ namespace NeeView
         public PixelateEffectUnit PixelateEffect
         {
             get => new();
-            set => _cache?.Add(value);
+            set => _cache.Add(value);
         }
 
         [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
@@ -141,7 +141,7 @@ namespace NeeView
         public MagnifyEffectUnit MagnifyEffect
         {
             get => new();
-            set => _cache?.Add(value);
+            set => _cache.Add(value);
         }
 
         [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
@@ -149,7 +149,7 @@ namespace NeeView
         public RippleEffectUnit RippleEffect
         {
             get => new();
-            set => _cache?.Add(value);
+            set => _cache.Add(value);
         }
 
         [Obsolete, Alternative("nv.ImageEffect", 46, ErrorLevel = ScriptErrorLevel.Warning, IsFullName = true)]
@@ -157,12 +157,17 @@ namespace NeeView
         public SwirlEffectUnit SwirlEffect
         {
             get => new();
-            set => _cache?.Add(value);
+            set => _cache.Add(value);
         }
 
-        internal void SetCacheSource(EffectUnitCache cache)
+        public void SetCacheSource(EffectUnitCache cache)
         {
             _cache = cache;
+        }
+
+        public EffectUnit? GetCacheEffect(Type? type)
+        {
+            return _cache.Get(type);
         }
 
         #endregion
