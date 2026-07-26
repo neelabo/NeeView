@@ -1,5 +1,16 @@
 # Changelog
 
+## 46.1
+(2026-07-27)
+
+#### Fixed
+
+- Fixed an issue where the language setting was not saved (#1974)
+- Fixed an issue where effect parameters were not carried over when updating the version (#1973)
+- Fixed an issue where multiple items were selected when the Shift‑key shortcut was assigned to book navigation (#1971)
+- Fixed an issue where color properties of effects could not be set via script (#1970)
+
+
 ## 46.0
 (2026-07-19)
 
