@@ -51,6 +51,7 @@ namespace NeeView
         /// 言語
         /// </summary>
         [PropertyStrings]
+        [DiffJsonDefault(typeof(FalseDefaultable))]
         public string Language
         {
             get { return _language ?? CultureInfo.CurrentCulture.Name; }

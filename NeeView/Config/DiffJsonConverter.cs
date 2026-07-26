@@ -233,4 +233,12 @@ namespace NeeView
     {
         bool IsDefault(object? obj);
     }
+
+    public class FalseDefaultable : IDefaultable
+    {
+        public bool IsDefault(object? obj)
+        {
+            return false;
+        }
+    }
 }
