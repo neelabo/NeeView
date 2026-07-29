@@ -173,10 +173,13 @@ namespace NeeView.IO
         {
             var fileOp = CreateFileOperation(owner);
 
+            var flags = FILEOPERATION_FLAGS.FOF_NOCONFIRMATION;
             if (wantNukeWarning)
             {
-                fileOp.SetOperationFlags(FILEOPERATION_FLAGS.FOF_ALLOWUNDO | FILEOPERATION_FLAGS.FOF_WANTNUKEWARNING);
+                flags |= FILEOPERATION_FLAGS.FOF_ALLOWUNDO | FILEOPERATION_FLAGS.FOF_WANTNUKEWARNING;
             }
+
+            fileOp.SetOperationFlags(flags);
 
             var sink = new DeleteItemsSink();
             fileOp.Advise(sink, out uint cookie);
