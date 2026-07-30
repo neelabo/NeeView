@@ -165,6 +165,11 @@ namespace NeeView
             _cache = cache;
         }
 
+        public EffectUnitCache GetCacheEffects()
+        {
+            return _cache;
+        }
+
         public EffectUnit? GetCacheEffect(Type? type)
         {
             return _cache.Get(type);

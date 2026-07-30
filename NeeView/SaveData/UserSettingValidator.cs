@@ -301,6 +301,11 @@ namespace NeeView
                 effectProfile.Store(self.Config);
                 self.Config.EffectProfiles.Profiles = [effectProfile];
 
+                foreach (var effect in self.Config.ImageEffect.GetCacheEffects())
+                {
+                    self.Config.ImageEffectCache.Add(effect);
+                }
+
                 self.Config.Panels.ThumbnailItemProfile.IsIconOverlay = !self.Config.Panels.ThumbnailItemProfile.IsTextVisible;
 
                 if (self.Commands != null)
