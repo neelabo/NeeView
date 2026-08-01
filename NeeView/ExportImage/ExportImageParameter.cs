@@ -43,6 +43,9 @@ namespace NeeView
             _exportFolder = parameter.ExportFolder;
             _qualityLevel = parameter.QualityLevel;
             _fileFormat = parameter.FileFormat;
+            _fileNameFormat0 = parameter.FileNameFormat0;
+            _fileNameFormat1 = parameter.FileNameFormat1;
+            _fileNameFormat2 = parameter.FileNameFormat2;
             _overwriteMode = parameter.OverwriteMode;
         }
 
