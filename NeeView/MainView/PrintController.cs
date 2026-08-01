@@ -85,7 +85,7 @@ namespace NeeView
                     viewTransform: transform,
                     viewWidth: width,
                     viewHeight: height,
-                    effectLayers: Config.Current.ImageEffect.Layers,
+                    effectLayers: Config.Current.ImageEffect.IsEnabled ? Config.Current.ImageEffect.Layers : [],
                     background: bg1,
                     backgroundFront: bg2
                 );

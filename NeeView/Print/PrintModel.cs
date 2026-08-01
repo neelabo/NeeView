@@ -431,7 +431,7 @@ namespace NeeView
             var effectLayer = effectLayerRoot;
             if (isEffect)
             {
-                foreach (var layer in _context.EffectLayers.Where(e => e.Effect is not null))
+                foreach (var layer in _context.EffectLayers.Where(e => e.Effect is not null && e.IsEnabled))
                 {
                     var child = new Border();
                     child.Effect = EffectUnitExtensions.CreateEffectAdapter(layer.Effect)?.Effect;

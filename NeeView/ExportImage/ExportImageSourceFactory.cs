@@ -46,7 +46,7 @@ namespace NeeView
                 Pages = pages,
                 View = element,
                 ViewTransform = transform,
-                EffectLayers = Config.Current.ImageEffect.Layers,
+                EffectLayers = Config.Current.ImageEffect.IsEnabled ? Config.Current.ImageEffect.Layers : [],
                 Background = bg1,
                 BackgroundFront = bg2
             };
