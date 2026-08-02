@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: ZIP-fd Version
+permalink: /en-us/package-zip-fd.html
 ---
 
 # About ZIP-fd Version

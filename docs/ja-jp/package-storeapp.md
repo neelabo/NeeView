@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Microsoft Store版
+permalink: /ja-jp/package-storeapp.html
 ---
 
 # ストアアプリ版について

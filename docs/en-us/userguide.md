@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: User's Guide
+permalink: /en-us/userguide.html
 ---
 
 # User's Guide

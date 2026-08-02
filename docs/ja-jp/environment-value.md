@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: 環境変数
+permalink: /ja-jp/environment-value.html
 ---
 
 # 環境変数

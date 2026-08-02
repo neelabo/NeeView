@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Параметры командной строки
+permalink: /ru-ru/commandline-options.html
 ---
 
 # Параметры запуска NeeView

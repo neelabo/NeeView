@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Q&A
+permalink: /en-us/question-and-answer.html
 ---
 
 # Q&A

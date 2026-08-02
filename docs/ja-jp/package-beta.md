@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Beta版
+permalink: /ja-jp/package-beta.html
 ---
 
 # Beta 版について

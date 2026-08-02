@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Спецификация темы
+permalink: /ru-ru/theme.html
 ---
 
 # Спецификация файла темы v1.0.0

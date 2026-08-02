@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Переменные окружения
+permalink: /ru-ru/environment-value.html
 ---
 
 # Переменные окружения

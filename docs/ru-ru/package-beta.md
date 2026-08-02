@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Beta версия
+permalink: /ru-ru/package-beta.html
 ---
 
 # Beta версия

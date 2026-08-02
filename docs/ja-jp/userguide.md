@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: ユーザーガイド
+permalink: /ja-jp/userguide.html
 ---
 
 # ユーザーガイド

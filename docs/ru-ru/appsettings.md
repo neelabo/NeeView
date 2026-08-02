@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Файл настроек приложения
+permalink: /ru-ru/appsettings.html
 ---
 
 # Файл настроек приложения

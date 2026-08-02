@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Alpha版
+permalink: /ja-jp/package-alpha.html
 ---
 
 # Alpha 版について

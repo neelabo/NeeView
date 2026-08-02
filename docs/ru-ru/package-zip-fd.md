@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: ZIP-fd версия
+permalink: /ru-ru/package-zip-fd.html
 ---
 
 # ZIP-fd версия

@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Контакты
+permalink: /ru-ru/contact.html
 ---
 
 # Служба поддержки и контакты

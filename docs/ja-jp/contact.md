@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: お問い合わせ
+permalink: /ja-jp/contact.html
 ---
 
 # 問い合わせ先

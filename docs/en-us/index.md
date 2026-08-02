@@ -1,5 +1,6 @@
----
+--- 
 title: HOME
+permalink: /en-us/index.html
 ---
 
 ![NeeView39.jpg](../assets/images/NeeView42.en-us.jpg)

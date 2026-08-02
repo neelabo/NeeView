@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Alpha версия
+permalink: /ru-ru/package-alpha.html
 ---
 
 # Alpha версия

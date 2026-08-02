@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Политика конфиденциальности
+permalink: /ru-ru/privacy-policy.html
 ---
 
 # Политика конфиденциальности

@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: История изменений
+permalink: /ru-ru/changelog.html
 ---
 
 # Changelog

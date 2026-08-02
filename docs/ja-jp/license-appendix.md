@@ -1,3 +1,8 @@
+---
+layout: default
+permalink: /ja-jp/license-appendix.html
+---
+
 ### (参考：MITライセンス日本語訳)
 
 以下に定める条件に従い、本ソフトウェアおよび関連文書のファイル（以下「ソフトウェア」）の

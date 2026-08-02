@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: ZIP版
+permalink: /ja-jp/package-zip.html
 ---
 
 # ZIP版について

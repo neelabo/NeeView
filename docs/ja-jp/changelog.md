@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: 更新履歴
+permalink: /ja-jp/changelog.html
 ---
 
 # 更新履歴

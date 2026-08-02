@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: ZIP версия
+permalink: /ru-ru/package-zip.html
 ---
 
 # ZIP версия

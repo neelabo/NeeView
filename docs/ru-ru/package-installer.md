@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Инсталлятор
+permalink: /ru-ru/package-installer.html
 ---
 
 # Инсталлятор (Installer)

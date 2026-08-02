@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Theme File Specification
+permalink: /en-us/theme.html
 ---
 
 # Theme File Specification v1.0.0

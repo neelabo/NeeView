@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: ZIP Version
+permalink: /en-us/package-zip.html
 ---
 
 # About ZIP Version

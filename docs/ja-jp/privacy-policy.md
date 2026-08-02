@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: プライバシーポリシー
+permalink: /ja-jp/privacy-policy.html
 ---
 
 # 個人情報保護方針

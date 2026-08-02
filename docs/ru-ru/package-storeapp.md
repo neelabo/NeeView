@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Microsoft Store версия
+permalink: /ru-ru/package-storeapp.html
 ---
 
 # Microsoft Store версия

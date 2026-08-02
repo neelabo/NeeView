@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Store App
+permalink: /en-us/package-storeapp.html
 ---
 
 # About Store App

@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: インストーラー版
+permalink: /ja-jp/package-installer.html
 ---
 
 # インストーラー版について

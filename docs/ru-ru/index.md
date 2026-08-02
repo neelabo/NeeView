@@ -1,5 +1,6 @@
----
+--- 
 title: ГЛАВНАЯ
+permalink: /ru-ru/index.html
 ---
 
 ![NeeView39.jpg](../assets/images/NeeView42.en-us.jpg)

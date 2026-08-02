@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Q&A
+permalink: /ja-jp/question-and-answer.html
 ---
 
 # Q&A

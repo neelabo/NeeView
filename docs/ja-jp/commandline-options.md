@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: コマンドラインオプション
+permalink: /ja-jp/commandline-options.html
 ---
 
 # NeeView 起動オプション

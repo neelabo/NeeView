@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: アプリ設定ファイル
+permalink: /ja-jp/appsettings.html
 ---
 
 # アプリ設定ファイル

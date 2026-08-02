@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Environment Variable
+permalink: /en-us/environment-value.html
 ---
 
 # Environment Variable

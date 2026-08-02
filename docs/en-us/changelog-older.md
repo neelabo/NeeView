@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Changelog (Archive)
+permalink: /en-us/changelog-older.html
 ---
 
 # Changelog (Before 39.0)

@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: ZIP-fd版
+permalink: /ja-jp/package-zip-fd.html
 ---
 
 # ZIP-fd版について

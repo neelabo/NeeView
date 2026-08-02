@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Alpha Version
+permalink: /en-us/package-alpha.html
 ---
 
 # About Alpha Version

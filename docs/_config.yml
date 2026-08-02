@@ -3,6 +3,7 @@ theme: jekyll-theme-slate
 repository: neelabo/NeeView
 title: NeeView
 description: Image viewer that allows you to browse images in folders like a book.
+permalink: /:path/:basename.html
 
 defaults:
 - scope:

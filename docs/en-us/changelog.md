@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Changelog
+permalink: /en-us/changelog.html
 ---
 
 # Changelog

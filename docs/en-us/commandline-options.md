@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Commandline Options
+permalink: /en-us/commandline-options.html
 ---
 
 # NeeView Startup options

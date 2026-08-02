@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: История изменений (архив)
+permalink: /ru-ru/changelog-older.html
 ---
 
 # Changelog (Before 39.0)

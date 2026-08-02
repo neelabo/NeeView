@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Beta Version
+permalink: /en-us/package-beta.html
 ---
 
 # About Beta Version

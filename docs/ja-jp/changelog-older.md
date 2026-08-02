@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: 更新履歴 (アーカイブ)
+permalink: /ja-jp/changelog-older.html
 ---
 
 # 更新履歴 (39.0 より前)

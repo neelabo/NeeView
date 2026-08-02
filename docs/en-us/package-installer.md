@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Installer Version
+permalink: /en-us/package-installer.html
 ---
 
 # About Installer Version

@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: App Settings File
+permalink: /en-us/appsettings.html
 ---
 
 # App Settings File

@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: Contact
+permalink: /en-us/contact.html
 ---
 
 # Support Contact

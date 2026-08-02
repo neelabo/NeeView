@@ -1,6 +1,7 @@
----
+--- 
 layout: default
 title: テーマファイル仕様
+permalink: /ja-jp/theme.html
 ---
 
 # テーマファイル仕様 v1.0.0
