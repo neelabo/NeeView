@@ -1,3 +1,8 @@
+---
+layout: default
+title: Installer Version
+---
+
 # About Installer Version
 
 Installer in .msi format.

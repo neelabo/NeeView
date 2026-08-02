@@ -1,3 +1,8 @@
+---
+layout: default
+title: Environment Variable
+---
+
 # Environment Variable
 
 |name|description

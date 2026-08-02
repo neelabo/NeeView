@@ -1,3 +1,8 @@
+---
+layout: default
+title: Commandline Options
+---
+
 # NeeView Startup options
 
 Version 46.0

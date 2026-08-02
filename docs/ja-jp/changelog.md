@@ -1,3 +1,8 @@
+---
+layout: default
+title: 更新履歴
+---
+
 # 更新履歴
 
 ## 46.1

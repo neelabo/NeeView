@@ -1,3 +1,8 @@
+---
+layout: default
+title: アプリ設定ファイル
+---
+
 # アプリ設定ファイル
 
 アプリの挙動を定義する設定ファイル **NeeView.settings.json** について説明します。

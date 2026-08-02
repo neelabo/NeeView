@@ -1,3 +1,8 @@
+---
+layout: default
+title: ZIP-fd版
+---
+
 # ZIP-fd版について
 
 ポータブル パッケージのフレームワーク依存版です。  

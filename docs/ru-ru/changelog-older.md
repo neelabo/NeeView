@@ -1,3 +1,8 @@
+---
+layout: default
+title: История изменений (архив)
+---
+
 # Changelog (Before 39.0)
 
 ## 38.3

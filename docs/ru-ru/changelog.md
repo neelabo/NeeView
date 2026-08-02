@@ -1,3 +1,8 @@
+---
+layout: default
+title: История изменений
+---
+
 # Changelog
 
 ## 46.1

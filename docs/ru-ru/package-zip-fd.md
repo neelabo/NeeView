@@ -1,3 +1,8 @@
+---
+layout: default
+title: ZIP-fd версия
+---
+
 # ZIP-fd версия
 
 Версия в ZIP-архиве, зависящая от .NET Framework (-fd).

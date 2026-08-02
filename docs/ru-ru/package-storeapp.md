@@ -1,3 +1,8 @@
+---
+layout: default
+title: Microsoft Store версия
+---
+
 # Microsoft Store версия
 
 Версия приложения для Microsoft Store.

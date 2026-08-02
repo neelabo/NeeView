@@ -1,3 +1,8 @@
+---
+layout: default
+title: Microsoft Store版
+---
+
 # ストアアプリ版について
 
 [Microsoft Store](https://www.microsoft.com/store/apps/9p24z53hc1jr) からインストールを行います。  

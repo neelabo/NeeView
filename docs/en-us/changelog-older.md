@@ -1,3 +1,8 @@
+---
+layout: default
+title: Changelog (Archive)
+---
+
 # Changelog (Before 39.0)
 
 ## 38.3

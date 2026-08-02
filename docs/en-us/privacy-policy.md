@@ -1,3 +1,8 @@
+---
+layout: default
+title: Privacy Policy
+---
+
 # Privacy Policy
 
 This application "NeeView" does not collect or share your personal information or information about the device at all.  

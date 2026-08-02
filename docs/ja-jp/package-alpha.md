@@ -1,3 +1,8 @@
+---
+layout: default
+title: Alpha版
+---
+
 # Alpha 版について
 
 <custom-revision/>

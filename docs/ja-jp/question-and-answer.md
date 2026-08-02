@@ -1,3 +1,8 @@
+---
+layout: default
+title: Q&A
+---
+
 # Q&A
 
 <style>

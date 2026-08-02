@@ -1,3 +1,8 @@
+---
+layout: default
+title: Contact
+---
+
 # Support Contact
 
 Create your issue on GitHub.

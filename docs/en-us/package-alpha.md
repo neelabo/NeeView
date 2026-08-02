@@ -1,3 +1,8 @@
+---
+layout: default
+title: Alpha Version
+---
+
 # About Alpha Version
 
 <custom-revision/>

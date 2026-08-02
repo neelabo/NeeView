@@ -1,3 +1,8 @@
+---
+layout: default
+title: Beta Version
+---
+
 # About Beta Version
 
 <custom-revision/>

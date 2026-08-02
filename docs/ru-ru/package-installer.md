@@ -1,3 +1,8 @@
+---
+layout: default
+title: Инсталлятор
+---
+
 # Инсталлятор (Installer)
 
 Дистрибутив с мастером установки (Installer).

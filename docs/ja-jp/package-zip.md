@@ -1,3 +1,8 @@
+---
+layout: default
+title: ZIP版
+---
+
 # ZIP版について
 
 ポータブル パッケージです。  

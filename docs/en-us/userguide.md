@@ -1,3 +1,8 @@
+---
+layout: default
+title: User's Guide
+---
+
 # User's Guide
 
 ## Quick Start

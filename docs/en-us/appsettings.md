@@ -1,3 +1,8 @@
+---
+layout: default
+title: App Settings File
+---
+
 # App Settings File
 
 This section describes the configuration file **NeeView.settings.json**, which defines the behavior of the app.

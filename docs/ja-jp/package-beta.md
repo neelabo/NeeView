@@ -1,3 +1,8 @@
+---
+layout: default
+title: Beta版
+---
+
 # Beta 版について
 
 <custom-revision/>

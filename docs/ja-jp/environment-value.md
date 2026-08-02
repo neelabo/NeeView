@@ -1,3 +1,8 @@
+---
+layout: default
+title: 環境変数
+---
+
 # 環境変数
 
 |名前|説明

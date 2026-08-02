@@ -1,3 +1,8 @@
+---
+layout: default
+title: Store App
+---
+
 # About Store App
 
 Install from  [Microsoft Store](https://www.microsoft.com/store/apps/9p24z53hc1jr).
