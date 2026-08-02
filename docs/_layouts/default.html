@@ -19,7 +19,7 @@
     <div id="header_wrap" class="outer">
         <header class="inner">
           {% if site.github.is_project_page %}
-            <a id="forkme_banner" href="{{ site.github.repository_url }}">View on GitHub</a>
+            <a id="forkme_banner" href="{{ site.github.repository_url }}">{% if page.language == 'ru-RU' %}Смотреть на GitHub{% elsif page.language == 'ja-JP' %}GitHubで見る{% else %}View on GitHub{% endif %}</a>
           {% endif %}
 
           <div id="project_title"><img id="project_icon" src="{{ site.baseurl }}/assets/images/AppIcon.png" align="absmiddle"/> {{ site.title | default: site.github.repository_name }}</div>
@@ -27,8 +27,8 @@
 
           {% if site.show_downloads %}
             <section id="downloads">
-              <a class="zip_download_link" href="{{ site.github.zip_url }}">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="{{ site.github.tar_url }}">Download this project as a tar.gz file</a>
+              <a class="zip_download_link" href="{{ site.github.zip_url }}">{% if page.language == 'ru-RU' %}Скачать проект (.zip){% elsif page.language == 'ja-JP' %}ZIP形式でダウンロード{% else %}Download this project as a .zip file{% endif %}</a>
+              <a class="tar_download_link" href="{{ site.github.tar_url }}">{% if page.language == 'ru-RU' %}Скачать проект (.tar.gz){% elsif page.language == 'ja-JP' %}tar.gz形式でダウンロード{% else %}Download this project as a tar.gz file{% endif %}</a>
             </section>
           {% endif %}
 
