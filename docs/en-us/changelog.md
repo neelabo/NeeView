@@ -1,5 +1,16 @@
 # Changelog
 
+## 46.2
+(2026-08-02)
+
+#### Fixed
+
+- Suppressed the OS‑level confirmation dialog when deleting files (#1977)
+- Fixed an issue where unselected effect settings were not carried over from older versions (#1978)
+- Fixed an issue where filename formatting was not applied when using the “Save” command (#1979)
+- Fixed an issue where disabled effects were still applied during image saving and printing (#1980)
+
+
 ## 46.1
 (2026-07-27)
 
