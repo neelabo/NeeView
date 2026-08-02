@@ -116,7 +116,7 @@ include("Sample.nvjs")</code></pre></p>
 <p><table>
 <tr><td>Args</td><td>dictionary</td><td>r</td><td class="td-middle">Аргументы команды хранятся в этом массиве.<br/></td></tr>
 <tr><td>Book</td><td><a href="#BookAccessor">BookAccessor</a></td><td>r</td><td class="td-middle">Объект доступа к текущей книге<br/></td></tr>
-<tr><td>Bookmark</td><td><a href="#BookmarkPanelAccessor">BookmarkPanelAccessor</a></td><td>r</td><td class="td-middle">Объект доступа к панели закладок<br/></td></tr>
+<tr><td>Закладка</td><td><a href="#BookmarkPanelAccessor">BookmarkPanelAccessor</a></td><td>r</td><td class="td-middle">Объект доступа к панели закладок<br/></td></tr>
 <tr><td>Bookshelf</td><td><a href="#BookshelfPanelAccessor">BookshelfPanelAccessor</a></td><td>r</td><td class="td-middle">Объект доступа к панели книжной полки<br/></td></tr>
 <tr><td>Command</td><td><a href="#CommandAccessor">CommandAccessor</a>[]</td><td>r</td><td class="td-middle">An associative array of command accessors. The commands are the same as those displayed under "Settings &gt; Редактировать команды". For details, refer to <a href="#CommandList"></a>Список команд.<br/><details><h4>e.g.</h4>
 <p><pre><code class="example">// Execute "NextPage" command
@@ -130,7 +130,7 @@ nv.Config.Theme.ThemeType = "Dark"</code></pre></p>
 </details></td></tr>
 <tr><td>CurrentCommand</td><td><a href="#CommandAccessor">CommandAccessor</a></td><td>r</td><td class="td-middle">Текущая выполняемая команда<br/></td></tr>
 <tr><td>DestinationFolderCollection</td><td><a href="#DestinationFolderCollectionAccessor">DestinationFolderCollectionAccessor</a></td><td>r</td><td class="td-middle">Объект доступа к списку папок назначения<br/></td></tr>
-<tr><td>Effect</td><td><a href="#EffectPanelAccessor">EffectPanelAccessor</a></td><td>r</td><td class="td-middle">Объект доступа к панели эффектов<br/></td></tr>
+<tr><td>Эффект</td><td><a href="#EffectPanelAccessor">EffectPanelAccessor</a></td><td>r</td><td class="td-middle">Объект доступа к панели эффектов<br/></td></tr>
 <tr><td>Environment</td><td><a href="#EnvironmentAccessor">EnvironmentAccessor</a></td><td>r</td><td class="td-middle">Объект доступа к окружению<br/></td></tr>
 <tr><td>ExternalAppCollection</td><td><a href="#ExternalAppCollectionAccessor">ExternalAppCollectionAccessor</a></td><td>r</td><td class="td-middle">Объект доступа к списку внешних приложений<br/></td></tr>
 <tr><td>History</td><td><a href="#HistoryPanelAccessor">HistoryPanelAccessor</a></td><td>r</td><td class="td-middle">Объект доступа к панели истории<br/></td></tr>
@@ -288,7 +288,7 @@ if (isYes) {
 <tr><td>Index</td><td>int</td><td>r</td><td class="td-middle">Номер индекса<br/></td></tr>
 <tr><td>IsDisposed</td><td>bool</td><td>r</td><td class="td-middle">"true", если узел уничтожен.<br/></td></tr>
 <tr><td>IsExpanded</td><td>bool</td><td>rw</td><td class="td-middle">"true", если узел в развёрнутом состоянии<br/></td></tr>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Имя узла<br/></td></tr>
+<tr><td>Имя</td><td>string</td><td>r</td><td class="td-middle">Имя узла<br/></td></tr>
 <tr><td>Parent</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>r</td><td class="td-middle">Родительский узел<br/></td></tr>
 <tr><td>Value</td><td><a href="#BookmarkFolderNodeSource">BookmarkFolderNodeSource</a></td><td>r</td><td class="td-middle">Свойства папки закладок<br/></td></tr>
 <tr><td>ValueType</td><td>string</td><td>r</td><td class="td-middle">Тип значения узла<br/></td></tr>
@@ -327,7 +327,7 @@ nv.Bookshelf.FolderTree.BookmarkNode.Add({Name:"AAA"})</code></pre></p>
 <p>Свойства папки закладок</p>
 <h4>Свойства</h4>
 <p><table>
-<tr><td>Name</td><td>string</td><td>rw</td><td class="td-middle">Name<br/></td></tr>
+<tr><td>Имя</td><td>string</td><td>rw</td><td class="td-middle">Имя<br/></td></tr>
 <tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Путь к папке закладок<br/></td></tr>
 </table></p>
 <h3 id="BookmarkFolderTreeAccessor">[Class] BookmarkFolderTreeAccessor</h3>
@@ -343,7 +343,7 @@ nv.Bookshelf.FolderTree.BookmarkNode.Add({Name:"AAA"})</code></pre></p>
 <p><table>
 <tr><td>CreationTime</td><td>Date</td><td>r</td><td class="td-middle">Время создания<br/></td></tr>
 <tr><td>LastWriteTime</td><td>Date</td><td>r</td><td class="td-middle">Время последней записи<br/></td></tr>
-<tr><td>Name</td><td>string</td><td>rw</td><td class="td-middle">Name<br/></td></tr>
+<tr><td>Имя</td><td>string</td><td>rw</td><td class="td-middle">Имя<br/></td></tr>
 <tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Path<br/></td></tr>
 <tr><td>Size</td><td>int</td><td>r</td><td class="td-middle">Размер файла. Для папки -1.<br/></td></tr>
 </table></p>
@@ -378,7 +378,7 @@ nv.Bookshelf.FolderTree.BookmarkNode.Add({Name:"AAA"})</code></pre></p>
 <tr><td>MoveToParent()</td><td>void</td><td class="td-middle">Up<br/></td></tr>
 <tr><td>NewFolder(string)</td><td>void</td><td class="td-middle">Создать новую папку закладок<br/><details><h4>Параметры</h4>
 <p><table>
-<tr><td>name</td><td>string</td><td class="td-middle">Name<br/></td></tr>
+<tr><td>name</td><td>string</td><td class="td-middle">Имя<br/></td></tr>
 </table></p>
 </details></td></tr>
 <tr><td>Open()</td><td>void</td><td class="td-middle">Открыть панель<br/></td></tr>
@@ -409,7 +409,7 @@ nv.Bookshelf.FolderTree.BookmarkNode.Add({Name:"AAA"})</code></pre></p>
 <p><table>
 <tr><td>CreationTime</td><td>Date</td><td>r</td><td class="td-middle">Время создания<br/></td></tr>
 <tr><td>LastWriteTime</td><td>Date</td><td>r</td><td class="td-middle">Время последней записи<br/></td></tr>
-<tr><td>Name</td><td>string</td><td>rw</td><td class="td-middle">Name<br/></td></tr>
+<tr><td>Имя</td><td>string</td><td>rw</td><td class="td-middle">Имя<br/></td></tr>
 <tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Path<br/></td></tr>
 <tr><td>Size</td><td>int</td><td>r</td><td class="td-middle">Размер файла. Для папки -1.<br/></td></tr>
 </table></p>
@@ -443,7 +443,7 @@ nv.Bookshelf.FolderTree.BookmarkNode.Add({Name:"AAA"})</code></pre></p>
 <h4>Методы</h4>
 <p><table>
 <tr><td>Close()</td><td>void</td><td class="td-middle">Закрыть панель<br/></td></tr>
-<tr><td>MoveToNext()</td><td>void</td><td class="td-middle">Next<br/></td></tr>
+<tr><td>MoveToNext()</td><td>void</td><td class="td-middle">Вперед<br/></td></tr>
 <tr><td>MoveToParent()</td><td>void</td><td class="td-middle">Up<br/></td></tr>
 <tr><td>MoveToPrevious()</td><td>void</td><td class="td-middle">Back<br/></td></tr>
 <tr><td>Open()</td><td>void</td><td class="td-middle">Открыть панель<br/></td></tr>
@@ -461,7 +461,7 @@ nv.Bookshelf.FolderTree.BookmarkNode.Add({Name:"AAA"})</code></pre></p>
 <p><pre><code class="example">// Set "↑←↓" to the mouse gesture of ViewRotateLeft command
 nv.Command.ViewRotateLeft.MouseGesture = "ULD"</code></pre></p>
 </details></td></tr>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Имя команды<br/></td></tr>
+<tr><td>Имя</td><td>string</td><td>r</td><td class="td-middle">Имя команды<br/></td></tr>
 <tr><td>Parameter</td><td>dictionary</td><td>r</td><td class="td-middle">Можно получать и устанавливать параметры команды. Настройки постоянны. Свойства различаются для каждой команды. Подробности см. в списке команд ниже.<br/><details><h4>e.g.</h4>
 <p><pre><code class="example">// Change the rotation amount of "ViewRotateLeft" command to 45 degrees
 nv.Command.ViewRotateLeft.Parameter.Angle = 45</code></pre></p>
@@ -506,7 +506,7 @@ nv.Command.ViewRotateLeft.Patch({"Angle": 5}).Execute()</code></pre></p>
 <p>Объект доступа к папке назначения</p>
 <h4>Свойства</h4>
 <p><table>
-<tr><td>Name</td><td>string</td><td>rw</td><td class="td-middle">Name<br/></td></tr>
+<tr><td>Имя</td><td>string</td><td>rw</td><td class="td-middle">Имя<br/></td></tr>
 <tr><td>Path</td><td>string</td><td>rw</td><td class="td-middle">Path<br/></td></tr>
 </table></p>
 <h4>Методы</h4>
@@ -580,7 +580,7 @@ nv.Command.ViewRotateLeft.Patch({"Angle": 5}).Execute()</code></pre></p>
 <tr><td>Index</td><td>int</td><td>r</td><td class="td-middle">Номер индекса<br/></td></tr>
 <tr><td>IsDisposed</td><td>bool</td><td>r</td><td class="td-middle">"true", если узел уничтожен.<br/></td></tr>
 <tr><td>IsExpanded</td><td>bool</td><td>rw</td><td class="td-middle">"true", если узел в развёрнутом состоянии<br/></td></tr>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Имя узла<br/></td></tr>
+<tr><td>Имя</td><td>string</td><td>r</td><td class="td-middle">Имя узла<br/></td></tr>
 <tr><td>Parent</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>r</td><td class="td-middle">Родительский узел<br/></td></tr>
 <tr><td>Value</td><td><a href="#DirectoryNodeSource">DirectoryNodeSource</a></td><td>r</td><td class="td-middle">Свойства узла папки<br/></td></tr>
 <tr><td>ValueType</td><td>string</td><td>r</td><td class="td-middle">Тип значения узла<br/></td></tr>
@@ -589,14 +589,14 @@ nv.Command.ViewRotateLeft.Patch({"Angle": 5}).Execute()</code></pre></p>
 <p>Свойства узла папки</p>
 <h4>Свойства</h4>
 <p><table>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Name<br/></td></tr>
+<tr><td>Имя</td><td>string</td><td>r</td><td class="td-middle">Имя<br/></td></tr>
 <tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Path<br/></td></tr>
 </table></p>
 <h3 id="EffectLayerAccessor">[Class] EffectLayerAccessor</h3>
 <p>Доступ к слою эффекта</p>
 <h4>Свойства</h4>
 <p><table>
-<tr><td>Effect</td><td><a href="#EffectUnit">EffectUnit</a></td><td>r</td><td class="td-middle">Параметр эффекта<br/></td></tr>
+<tr><td>Эффект</td><td><a href="#EffectUnit">EffectUnit</a></td><td>r</td><td class="td-middle">Параметр эффекта<br/></td></tr>
 <tr><td>EffectType</td><td>string (<a href="#EffectType">EffectType</a>)</td><td>rw</td><td class="td-middle">Тип эффекта изображения<br/></td></tr>
 <tr><td>IsEnabled</td><td>bool</td><td>rw</td><td class="td-middle">Enabled<br/></td></tr>
 </table></p>
@@ -646,7 +646,7 @@ nv.Command.ViewRotateLeft.Patch({"Angle": 5}).Execute()</code></pre></p>
 <p><table>
 <tr><td>ArchivePolicy</td><td>string (<a href="#ArchivePolicy">ArchivePolicy</a>)</td><td>rw</td><td class="td-middle">Политика обработки сжатых файлов<br/></td></tr>
 <tr><td>Command</td><td>string</td><td>rw</td><td class="td-middle">Путь к внешнему приложению<br/></td></tr>
-<tr><td>Name</td><td>string</td><td>rw</td><td class="td-middle">Отображаемое имя<br/></td></tr>
+<tr><td>Имя</td><td>string</td><td>rw</td><td class="td-middle">Отображаемое имя<br/></td></tr>
 <tr><td>Parameter</td><td>string</td><td>rw</td><td class="td-middle">Параметры внешнего приложения<br/></td></tr>
 <tr><td>WorkingDirectory</td><td>string</td><td>rw</td><td class="td-middle">Рабочая папка<br/></td></tr>
 </table></p>
@@ -697,7 +697,7 @@ nv.Command.ViewRotateLeft.Patch({"Angle": 5}).Execute()</code></pre></p>
 <h4>Свойства</h4>
 <p><table>
 <tr><td>LastAccessTime</td><td>Date</td><td>r</td><td class="td-middle">Время последнего доступа<br/></td></tr>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Имя элемента<br/></td></tr>
+<tr><td>Имя</td><td>string</td><td>r</td><td class="td-middle">Имя элемента<br/></td></tr>
 <tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Путь, соответствующий элементу<br/></td></tr>
 </table></p>
 <h4>Методы</h4>
@@ -805,7 +805,7 @@ nv.Command.ViewRotateLeft.Patch({"Angle": 5}).Execute()</code></pre></p>
 <tr><td>Index</td><td>int</td><td>r</td><td class="td-middle">Номер индекса<br/></td></tr>
 <tr><td>IsDisposed</td><td>bool</td><td>r</td><td class="td-middle">"true", если узел уничтожен.<br/></td></tr>
 <tr><td>IsExpanded</td><td>bool</td><td>rw</td><td class="td-middle">"true", если узел в развёрнутом состоянии<br/></td></tr>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Имя узла<br/></td></tr>
+<tr><td>Имя</td><td>string</td><td>r</td><td class="td-middle">Имя узла<br/></td></tr>
 <tr><td>Parent</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>r</td><td class="td-middle">Родительский узел<br/></td></tr>
 <tr><td>Value</td><td>object</td><td>r</td><td class="td-middle">Значение узла<br/></td></tr>
 <tr><td>ValueType</td><td>string</td><td>r</td><td class="td-middle">Тип значения узла<br/></td></tr>
@@ -900,7 +900,7 @@ nv.Command.ViewRotateLeft.Patch({"Angle": 5}).Execute()</code></pre></p>
 <p>Объект доступа к элементу плейлиста</p>
 <h4>Свойства</h4>
 <p><table>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Имя элемента<br/></td></tr>
+<tr><td>Имя</td><td>string</td><td>r</td><td class="td-middle">Имя элемента<br/></td></tr>
 <tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Путь, соответствующий элементу<br/></td></tr>
 </table></p>
 <h4>Методы</h4>
@@ -915,7 +915,7 @@ nv.Command.ViewRotateLeft.Patch({"Angle": 5}).Execute()</code></pre></p>
 <tr><td>IsSelected</td><td>bool</td><td>rw</td><td class="td-middle">Панель выбрана<br/></td></tr>
 <tr><td>IsVisible</td><td>bool</td><td>r</td><td class="td-middle">Видимость панели<br/></td></tr>
 <tr><td>Items</td><td><a href="#PlaylistItemAccessor">PlaylistItemAccessor</a>[]</td><td>r</td><td class="td-middle">Элементы списка<br/></td></tr>
-<tr><td>Name</td><td>string</td><td>rw</td><td class="td-middle">Имя текущего плейлиста<br/></td></tr>
+<tr><td>Имя</td><td>string</td><td>rw</td><td class="td-middle">Имя текущего плейлиста<br/></td></tr>
 <tr><td>Path</td><td>string</td><td>rw</td><td class="td-middle">Путь к текущему плейлисту<br/></td></tr>
 <tr><td>SelectedItems</td><td><a href="#PlaylistItemAccessor">PlaylistItemAccessor</a>[]</td><td>rw</td><td class="td-middle">Выбранные элементы<br/></td></tr>
 <tr><td>Style</td><td>string (<a href="#PanelListItemStyle">PanelListItemStyle</a>)</td><td>rw</td><td class="td-middle">Стиль элементов списка<br/></td></tr>
@@ -937,7 +937,7 @@ nv.Command.ViewRotateLeft.Patch({"Angle": 5}).Execute()</code></pre></p>
 <tr><td>Index</td><td>int</td><td>r</td><td class="td-middle">Номер индекса<br/></td></tr>
 <tr><td>IsDisposed</td><td>bool</td><td>r</td><td class="td-middle">"true", если узел уничтожен.<br/></td></tr>
 <tr><td>IsExpanded</td><td>bool</td><td>rw</td><td class="td-middle">"true", если узел в развёрнутом состоянии<br/></td></tr>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Имя узла<br/></td></tr>
+<tr><td>Имя</td><td>string</td><td>r</td><td class="td-middle">Имя узла<br/></td></tr>
 <tr><td>Parent</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>r</td><td class="td-middle">Родительский узел<br/></td></tr>
 <tr><td>Value</td><td><a href="#QuickAccessFolderNodeSource">QuickAccessFolderNodeSource</a></td><td>r</td><td class="td-middle">Свойства папки быстрого доступа<br/></td></tr>
 <tr><td>ValueType</td><td>string</td><td>r</td><td class="td-middle">Тип значения узла<br/></td></tr>
@@ -990,7 +990,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <p>Свойства папки быстрого доступа</p>
 <h4>Свойства</h4>
 <p><table>
-<tr><td>Name</td><td>string</td><td>rw</td><td class="td-middle">Name<br/></td></tr>
+<tr><td>Имя</td><td>string</td><td>rw</td><td class="td-middle">Имя<br/></td></tr>
 </table></p>
 <h3 id="QuickAccessNodeAccessor">[Class] QuickAccessNodeAccessor</h3>
 <p>Объект доступа к узлу быстрого доступа</p>
@@ -999,7 +999,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <p><table>
 <tr><td>Index</td><td>int</td><td>r</td><td class="td-middle">Номер индекса<br/></td></tr>
 <tr><td>IsDisposed</td><td>bool</td><td>r</td><td class="td-middle">"true", если узел уничтожен.<br/></td></tr>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Имя узла<br/></td></tr>
+<tr><td>Имя</td><td>string</td><td>r</td><td class="td-middle">Имя узла<br/></td></tr>
 <tr><td>Parent</td><td><a href="#NodeAccessor">NodeAccessor</a></td><td>r</td><td class="td-middle">Родительский узел<br/></td></tr>
 <tr><td>Value</td><td><a href="#QuickAccessNodeSource">QuickAccessNodeSource</a></td><td>r</td><td class="td-middle">Свойства быстрого доступа<br/></td></tr>
 <tr><td>ValueType</td><td>string</td><td>r</td><td class="td-middle">Тип значения узла<br/></td></tr>
@@ -1021,7 +1021,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <p>Свойства быстрого доступа</p>
 <h4>Свойства</h4>
 <p><table>
-<tr><td>Name</td><td>string</td><td>rw</td><td class="td-middle">Name<br/></td></tr>
+<tr><td>Имя</td><td>string</td><td>rw</td><td class="td-middle">Имя<br/></td></tr>
 <tr><td>Path</td><td>string</td><td>rw</td><td class="td-middle">Путь быстрого доступа<br/></td></tr>
 </table></p>
 <h3 id="SusiePluginAccessor">[Class] SusiePluginAccessor</h3>
@@ -1035,7 +1035,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <tr><td>IsCacheEnabled</td><td>bool</td><td>rw</td><td class="td-middle">Кэшировать плагин<br/></td></tr>
 <tr><td>IsEnabled</td><td>bool</td><td>rw</td><td class="td-middle">Enable<br/></td></tr>
 <tr><td>IsPreExtract</td><td>bool</td><td>rw</td><td class="td-middle">Предварительная распаковка<br/></td></tr>
-<tr><td>Name</td><td>string</td><td>r</td><td class="td-middle">Name<br/></td></tr>
+<tr><td>Имя</td><td>string</td><td>r</td><td class="td-middle">Имя<br/></td></tr>
 <tr><td>Path</td><td>string</td><td>r</td><td class="td-middle">Path<br/></td></tr>
 <tr><td>PluginType</td><td>string (<a href="#SusiePluginType">SusiePluginType</a>)</td><td>r</td><td class="td-middle">Тип плагина Susie<br/></td></tr>
 <tr><td>PluginVersion</td><td>string</td><td>r</td><td class="td-middle">Версия плагина<br/></td></tr>
@@ -1158,26 +1158,26 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <p>Порядок элементов списка</p>
 <h4>Fields</h4>
 <p><table>
-<tr><td>FileName</td><td>Name↑</td></tr>
-<tr><td>FileNameDescending</td><td>Name↓</td></tr>
+<tr><td>FileName</td><td>Имя↑</td></tr>
+<tr><td>FileNameDescending</td><td>Имя↓</td></tr>
 <tr><td>Path</td><td>Path↑</td></tr>
 <tr><td>PathDescending</td><td>Path↓</td></tr>
-<tr><td>FileType</td><td>Type↑</td></tr>
-<tr><td>FileTypeDescending</td><td>Type↓</td></tr>
-<tr><td>TimeStamp</td><td>Date↑</td></tr>
-<tr><td>TimeStampDescending</td><td>Date↓</td></tr>
-<tr><td>Size</td><td>Size↑</td></tr>
-<tr><td>SizeDescending</td><td>Size↓</td></tr>
-<tr><td>EntryTime</td><td>Entry↑</td></tr>
-<tr><td>EntryTimeDescending</td><td>Entry↓</td></tr>
-<tr><td>Random</td><td>Shuffle</td></tr>
+<tr><td>FileType</td><td>Тип↑</td></tr>
+<tr><td>FileTypeDescending</td><td>Тип↓</td></tr>
+<tr><td>TimeStamp</td><td>Дата↑</td></tr>
+<tr><td>TimeStampDescending</td><td>Дата↓</td></tr>
+<tr><td>Size</td><td>Размер↑</td></tr>
+<tr><td>SizeDescending</td><td>Размер↓</td></tr>
+<tr><td>EntryTime</td><td>Запись↑</td></tr>
+<tr><td>EntryTimeDescending</td><td>Запись↓</td></tr>
+<tr><td>Random</td><td>Перемешать</td></tr>
 </table></p>
 <h3 id="PageNameFormat">[Перечисление] PageNameFormat</h3>
 <p>Формат имени элемента в списке страниц</p>
 <h4>Fields</h4>
 <p><table>
 <tr><td>Smart</td><td>Smart</td></tr>
-<tr><td>NameOnly</td><td>Name</td></tr>
+<tr><td>NameOnly</td><td>Имя</td></tr>
 <tr><td>Raw</td><td>Raw</td></tr>
 <tr><td>PageNumber</td><td>Номер страницы</td></tr>
 </table></p>
@@ -1192,17 +1192,17 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <p>Режим сортировки страниц</p>
 <h4>Fields</h4>
 <p><table>
-<tr><td>FileName</td><td>Name↑</td></tr>
-<tr><td>FileNameDescending</td><td>Name↓</td></tr>
-<tr><td>FileType</td><td>Type↑</td></tr>
-<tr><td>FileTypeDescending</td><td>Type↓</td></tr>
-<tr><td>TimeStamp</td><td>Date↑</td></tr>
-<tr><td>TimeStampDescending</td><td>Date↓</td></tr>
-<tr><td>Size</td><td>Size↑</td></tr>
-<tr><td>SizeDescending</td><td>Size↓</td></tr>
-<tr><td>Entry</td><td>Entry↑</td></tr>
-<tr><td>EntryDescending</td><td>Entry↓</td></tr>
-<tr><td>Random</td><td>Shuffle</td></tr>
+<tr><td>FileName</td><td>Имя↑</td></tr>
+<tr><td>FileNameDescending</td><td>Имя↓</td></tr>
+<tr><td>FileType</td><td>Тип↑</td></tr>
+<tr><td>FileTypeDescending</td><td>Тип↓</td></tr>
+<tr><td>TimeStamp</td><td>Дата↑</td></tr>
+<tr><td>TimeStampDescending</td><td>Дата↓</td></tr>
+<tr><td>Size</td><td>Размер↑</td></tr>
+<tr><td>SizeDescending</td><td>Размер↓</td></tr>
+<tr><td>Entry</td><td>Запись↑</td></tr>
+<tr><td>EntryDescending</td><td>Запись↓</td></tr>
+<tr><td>Random</td><td>Перемешать</td></tr>
 </table></p>
 <h3 id="PanelListItemStyle">[Перечисление] PanelListItemStyle</h3>
 <p>Стиль элементов списка</p>
@@ -1235,8 +1235,8 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <h2 id="ConfigList">Список настроек</h2>
 <table>
 <tr>
-<th class="nowrap">Name</th>
-<th class="td-middle">Type</th>
+<th class="nowrap">Имя</th>
+<th class="td-middle">Тип</th>
 <th class="td-middle">Описание</th>
 </tr>
 <tr><td>nv.Config.Archive.Media.DefaultSubtitle</td><td><dl><dt>"Default"</dt><dd>Default</dd><dt>"Disable"</dt><dd>Disable</dd></dl></td><td><b>Субтитры по умолчанию</b></td></tr>
@@ -1327,7 +1327,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <tr><td>nv.Config.Book.WidePageVerticalAlignment</td><td><dl><dt>"Top"</dt><dd>Top</dd><dt>"Center"</dt><dd>Center</dd><dt>"Bottom"</dt><dd>Bottom</dd></dl></td><td><b>Vertial alignment in "Две страницы"</b></td></tr>
 <tr><td>nv.Config.Book.WideRatio</td><td>double</td><td><b>Соотношение сторон для определения широкого изображения (ширина / высота)</b><p class="remarks">It is used in "Разделять широкие страницы".</p></td></tr>
 <tr><td>nv.Config.Bookmark.BookmarkFilePath</td><td>string</td><td><b>Bookmark: Расположение файла закладок</b></td></tr>
-<tr><td>nv.Config.Bookmark.BookmarkFolderOrder</td><td><dl><dt>"FileName"</dt><dd>Name↑</dd><dt>"FileNameDescending"</dt><dd>Name↓</dd><dt>"Path"</dt><dd>Path↑</dd><dt>"PathDescending"</dt><dd>Path↓</dd><dt>"FileType"</dt><dd>Type↑</dd><dt>"FileTypeDescending"</dt><dd>Type↓</dd><dt>"TimeStamp"</dt><dd>Date↑</dd><dt>"TimeStampDescending"</dt><dd>Date↓</dd><dt>"Size"</dt><dd>Size↑</dd><dt>"SizeDescending"</dt><dd>Size↓</dd><dt>"EntryTime"</dt><dd>Entry↑</dd><dt>"EntryTimeDescending"</dt><dd>Entry↓</dd><dt>"Random"</dt><dd>Shuffle</dd></dl></td><td><b>Bookmark: Порядок закладок по умолчанию</b></td></tr>
+<tr><td>nv.Config.Bookmark.BookmarkFolderOrder</td><td><dl><dt>"FileName"</dt><dd>Имя↑</dd><dt>"FileNameDescending"</dt><dd>Имя↓</dd><dt>"Path"</dt><dd>Path↑</dd><dt>"PathDescending"</dt><dd>Path↓</dd><dt>"FileType"</dt><dd>Тип↑</dd><dt>"FileTypeDescending"</dt><dd>Тип↓</dd><dt>"TimeStamp"</dt><dd>Дата↑</dd><dt>"TimeStampDescending"</dt><dd>Дата↓</dd><dt>"Size"</dt><dd>Размер↑</dd><dt>"SizeDescending"</dt><dd>Размер↓</dd><dt>"EntryTime"</dt><dd>Запись↑</dd><dt>"EntryTimeDescending"</dt><dd>Запись↓</dd><dt>"Random"</dt><dd>Перемешать</dd></dl></td><td><b>Bookmark: Порядок закладок по умолчанию</b></td></tr>
 <tr><td>nv.Config.Bookmark.FolderTreeLayout</td><td><dl><dt>"Top"</dt><dd>Сверху</dd><dt>"Left"</dt><dd>Слева</dd></dl></td><td><b>Bookmark: Расположение дерева папок</b></td></tr>
 <tr><td>nv.Config.Bookmark.IsFolderTreeVisible</td><td>bool</td><td><b>Bookmark: Отображать дерево папок</b></td></tr>
 <tr><td>nv.Config.Bookmark.IsSaveBookmark</td><td>bool</td><td><b>Bookmark: Сохранять файл закладок</b></td></tr>
@@ -1346,7 +1346,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <tr><td>nv.Config.BookSetting.IsSupportedSingleLastPage</td><td>bool</td><td><b>Показывать последнюю страницу отдельно</b></td></tr>
 <tr><td>nv.Config.BookSetting.IsSupportedWidePage</td><td>bool</td><td><b>Считать широкие страницы за две</b></td></tr>
 <tr><td>nv.Config.BookSetting.PageMode</td><td><dl><dt>"SinglePage"</dt><dd>Одна страница</dd><dt>"WidePage"</dt><dd>Две страницы</dd></dl></td><td><b>Режим размера страницы</b></td></tr>
-<tr><td>nv.Config.BookSetting.SortMode</td><td><dl><dt>"FileName"</dt><dd>Name↑</dd><dt>"FileNameDescending"</dt><dd>Name↓</dd><dt>"FileType"</dt><dd>Type↑</dd><dt>"FileTypeDescending"</dt><dd>Type↓</dd><dt>"TimeStamp"</dt><dd>Date↑</dd><dt>"TimeStampDescending"</dt><dd>Date↓</dd><dt>"Size"</dt><dd>Size↑</dd><dt>"SizeDescending"</dt><dd>Size↓</dd><dt>"Entry"</dt><dd>Entry↑</dd><dt>"EntryDescending"</dt><dd>Entry↓</dd><dt>"Random"</dt><dd>Shuffle</dd></dl></td><td><b>Режим сортировки страниц</b></td></tr>
+<tr><td>nv.Config.BookSetting.SortMode</td><td><dl><dt>"FileName"</dt><dd>Имя↑</dd><dt>"FileNameDescending"</dt><dd>Имя↓</dd><dt>"FileType"</dt><dd>Тип↑</dd><dt>"FileTypeDescending"</dt><dd>Тип↓</dd><dt>"TimeStamp"</dt><dd>Дата↑</dd><dt>"TimeStampDescending"</dt><dd>Дата↓</dd><dt>"Size"</dt><dd>Размер↑</dd><dt>"SizeDescending"</dt><dd>Размер↓</dd><dt>"Entry"</dt><dd>Запись↑</dd><dt>"EntryDescending"</dt><dd>Запись↓</dd><dt>"Random"</dt><dd>Перемешать</dd></dl></td><td><b>Режим сортировки страниц</b></td></tr>
 <tr><td>nv.Config.BookSettingDefault.AutoRotate</td><td><dl><dt>"None"</dt><dd>Default</dd><dt>"Left"</dt><dd>Автоповорот влево</dd><dt>"Right"</dt><dd>Автоповорот вправо</dd><dt>"ForcedLeft"</dt><dd>Принудительный поворот влево</dd><dt>"ForcedRight"</dt><dd>Принудительный поворот вправо</dd></dl></td><td><b>Автоповорот</b></td></tr>
 <tr><td>nv.Config.BookSettingDefault.BaseScale</td><td>double</td><td><b>Базовый масштаб</b></td></tr>
 <tr><td>nv.Config.BookSettingDefault.BookReadOrder</td><td><dl><dt>"RightToLeft"</dt><dd>Справа налево</dd><dt>"LeftToRight"</dt><dd>Слева направо</dd></dl></td><td><b>Порядок чтения страниц</b></td></tr>
@@ -1357,7 +1357,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <tr><td>nv.Config.BookSettingDefault.IsSupportedSingleLastPage</td><td>bool</td><td><b>Показывать последнюю страницу отдельно</b></td></tr>
 <tr><td>nv.Config.BookSettingDefault.IsSupportedWidePage</td><td>bool</td><td><b>Считать широкие страницы за две</b></td></tr>
 <tr><td>nv.Config.BookSettingDefault.PageMode</td><td><dl><dt>"SinglePage"</dt><dd>Одна страница</dd><dt>"WidePage"</dt><dd>Две страницы</dd></dl></td><td><b>Режим размера страницы</b></td></tr>
-<tr><td>nv.Config.BookSettingDefault.SortMode</td><td><dl><dt>"FileName"</dt><dd>Name↑</dd><dt>"FileNameDescending"</dt><dd>Name↓</dd><dt>"FileType"</dt><dd>Type↑</dd><dt>"FileTypeDescending"</dt><dd>Type↓</dd><dt>"TimeStamp"</dt><dd>Date↑</dd><dt>"TimeStampDescending"</dt><dd>Date↓</dd><dt>"Size"</dt><dd>Size↑</dd><dt>"SizeDescending"</dt><dd>Size↓</dd><dt>"Entry"</dt><dd>Entry↑</dd><dt>"EntryDescending"</dt><dd>Entry↓</dd><dt>"Random"</dt><dd>Shuffle</dd></dl></td><td><b>Режим сортировки страниц</b></td></tr>
+<tr><td>nv.Config.BookSettingDefault.SortMode</td><td><dl><dt>"FileName"</dt><dd>Имя↑</dd><dt>"FileNameDescending"</dt><dd>Имя↓</dd><dt>"FileType"</dt><dd>Тип↑</dd><dt>"FileTypeDescending"</dt><dd>Тип↓</dd><dt>"TimeStamp"</dt><dd>Дата↑</dd><dt>"TimeStampDescending"</dt><dd>Дата↓</dd><dt>"Size"</dt><dd>Размер↑</dd><dt>"SizeDescending"</dt><dd>Размер↓</dd><dt>"Entry"</dt><dd>Запись↑</dd><dt>"EntryDescending"</dt><dd>Запись↓</dd><dt>"Random"</dt><dd>Перемешать</dd></dl></td><td><b>Режим сортировки страниц</b></td></tr>
 <tr><td>nv.Config.BookSettingPolicy.AutoRotate</td><td><dl><dt>"Default"</dt><dd>Default</dd><dt>"Continue"</dt><dd>Continue</dd><dt>"RestoreOrDefault"</dt><dd>Восстановить, иначе по умолчанию</dd><dt>"RestoreOrContinue"</dt><dd>Восстановить, иначе продолжить</dd></dl></td><td><b>Автоповорот</b></td></tr>
 <tr><td>nv.Config.BookSettingPolicy.BaseScale</td><td><dl><dt>"Default"</dt><dd>Default</dd><dt>"Continue"</dt><dd>Continue</dd><dt>"RestoreOrDefault"</dt><dd>Восстановить, иначе по умолчанию</dd><dt>"RestoreOrContinue"</dt><dd>Восстановить, иначе продолжить</dd></dl></td><td><b>Базовый масштаб</b></td></tr>
 <tr><td>nv.Config.BookSettingPolicy.BookReadOrder</td><td><dl><dt>"Default"</dt><dd>Default</dd><dt>"Continue"</dt><dd>Continue</dd><dt>"RestoreOrDefault"</dt><dd>Восстановить, иначе по умолчанию</dd><dt>"RestoreOrContinue"</dt><dd>Восстановить, иначе продолжить</dd></dl></td><td><b>Setting policy of "Порядок чтения страниц" when opening a book</b></td></tr>
@@ -1370,7 +1370,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <tr><td>nv.Config.BookSettingPolicy.Page</td><td><dl><dt>"Default"</dt><dd>Default</dd><dt>"RestoreOrDefault"</dt><dd>Восстановить, иначе по умолчанию</dd><dt>"RestoreOrDefaultReset"</dt><dd>Восстановить, иначе по умолчанию, сбросив последнюю страницу</dd></dl></td><td><b>Setting policy of "Позиция страницы" when opening a book</b></td></tr>
 <tr><td>nv.Config.BookSettingPolicy.PageMode</td><td><dl><dt>"Default"</dt><dd>Default</dd><dt>"Continue"</dt><dd>Continue</dd><dt>"RestoreOrDefault"</dt><dd>Восстановить, иначе по умолчанию</dd><dt>"RestoreOrContinue"</dt><dd>Восстановить, иначе продолжить</dd></dl></td><td><b>Setting policy of "Режим размера страницы" when opening a book</b></td></tr>
 <tr><td>nv.Config.BookSettingPolicy.SortMode</td><td><dl><dt>"Default"</dt><dd>Default</dd><dt>"Continue"</dt><dd>Continue</dd><dt>"RestoreOrDefault"</dt><dd>Восстановить, иначе по умолчанию</dd><dt>"RestoreOrContinue"</dt><dd>Восстановить, иначе продолжить</dd></dl></td><td><b>Setting policy of "Режим сортировки страниц" when opening a book</b></td></tr>
-<tr><td>nv.Config.Bookshelf.DefaultFolderOrder</td><td><dl><dt>"FileName"</dt><dd>Name↑</dd><dt>"FileNameDescending"</dt><dd>Name↓</dd><dt>"Path"</dt><dd>Path↑</dd><dt>"PathDescending"</dt><dd>Path↓</dd><dt>"FileType"</dt><dd>Type↑</dd><dt>"FileTypeDescending"</dt><dd>Type↓</dd><dt>"TimeStamp"</dt><dd>Date↑</dd><dt>"TimeStampDescending"</dt><dd>Date↓</dd><dt>"Size"</dt><dd>Size↑</dd><dt>"SizeDescending"</dt><dd>Size↓</dd><dt>"EntryTime"</dt><dd>Entry↑</dd><dt>"EntryTimeDescending"</dt><dd>Entry↓</dd><dt>"Random"</dt><dd>Shuffle</dd></dl></td><td><b>Bookshelf: Стандартный порядок по умолчанию</b></td></tr>
+<tr><td>nv.Config.Bookshelf.DefaultFolderOrder</td><td><dl><dt>"FileName"</dt><dd>Имя↑</dd><dt>"FileNameDescending"</dt><dd>Имя↓</dd><dt>"Path"</dt><dd>Path↑</dd><dt>"PathDescending"</dt><dd>Path↓</dd><dt>"FileType"</dt><dd>Тип↑</dd><dt>"FileTypeDescending"</dt><dd>Тип↓</dd><dt>"TimeStamp"</dt><dd>Дата↑</dd><dt>"TimeStampDescending"</dt><dd>Дата↓</dd><dt>"Size"</dt><dd>Размер↑</dd><dt>"SizeDescending"</dt><dd>Размер↓</dd><dt>"EntryTime"</dt><dd>Запись↑</dd><dt>"EntryTimeDescending"</dt><dd>Запись↓</dd><dt>"Random"</dt><dd>Перемешать</dd></dl></td><td><b>Bookshelf: Стандартный порядок по умолчанию</b></td></tr>
 <tr><td>nv.Config.Bookshelf.ExcludeRegexes</td><td>"str1;str2;str3"</td><td><b>Bookshelf: Шаблон имён файлов для исключения из отображения</b><p class="remarks">Задаётся с помощью регулярного выражения .NET. Заглавные и строчные буквы не различаются.</p></td></tr>
 <tr><td>nv.Config.Bookshelf.FolderConfigFilePath</td><td>string</td><td><b>Bookshelf: Расположение файла настроек папки</b></td></tr>
 <tr><td>nv.Config.Bookshelf.FolderSortOrder</td><td><dl><dt>"None"</dt><dd>Без различий</dd><dt>"First"</dt><dd>Сначала</dd><dt>"Last"</dt><dd>В конце</dd></dl></td><td><b>Bookshelf: Порядок сортировки папок</b></td></tr>
@@ -1390,7 +1390,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <tr><td>nv.Config.Bookshelf.IsVisibleItemsCount</td><td>bool</td><td><b>Bookshelf: Показывать количество элементов</b></td></tr>
 <tr><td>nv.Config.Bookshelf.IsVisibleSearchBox</td><td>bool</td><td><b>Bookshelf: Показывать поле поиска</b></td></tr>
 <tr><td>nv.Config.Bookshelf.PanelListItemStyle</td><td><dl><dt>"Normal"</dt><dd>Text</dd><dt>"Content"</dt><dd>Content</dd><dt>"Banner"</dt><dd>Banner</dd><dt>"Thumbnail"</dt><dd>Thumbnail</dd></dl></td><td><b>Bookshelf: Стиль элементов списка</b></td></tr>
-<tr><td>nv.Config.Bookshelf.PlaylistFolderOrder</td><td><dl><dt>"FileName"</dt><dd>Name↑</dd><dt>"FileNameDescending"</dt><dd>Name↓</dd><dt>"Path"</dt><dd>Path↑</dd><dt>"PathDescending"</dt><dd>Path↓</dd><dt>"FileType"</dt><dd>Type↑</dd><dt>"FileTypeDescending"</dt><dd>Type↓</dd><dt>"TimeStamp"</dt><dd>Date↑</dd><dt>"TimeStampDescending"</dt><dd>Date↓</dd><dt>"Size"</dt><dd>Size↑</dd><dt>"SizeDescending"</dt><dd>Size↓</dd><dt>"EntryTime"</dt><dd>Entry↑</dd><dt>"EntryTimeDescending"</dt><dd>Entry↓</dd><dt>"Random"</dt><dd>Shuffle</dd></dl></td><td><b>Bookshelf: Порядок плейлистов по умолчанию</b></td></tr>
+<tr><td>nv.Config.Bookshelf.PlaylistFolderOrder</td><td><dl><dt>"FileName"</dt><dd>Имя↑</dd><dt>"FileNameDescending"</dt><dd>Имя↓</dd><dt>"Path"</dt><dd>Path↑</dd><dt>"PathDescending"</dt><dd>Path↓</dd><dt>"FileType"</dt><dd>Тип↑</dd><dt>"FileTypeDescending"</dt><dd>Тип↓</dd><dt>"TimeStamp"</dt><dd>Дата↑</dd><dt>"TimeStampDescending"</dt><dd>Дата↓</dd><dt>"Size"</dt><dd>Размер↑</dd><dt>"SizeDescending"</dt><dd>Размер↓</dd><dt>"EntryTime"</dt><dd>Запись↑</dd><dt>"EntryTimeDescending"</dt><dd>Запись↓</dd><dt>"Random"</dt><dd>Перемешать</dd></dl></td><td><b>Bookshelf: Порядок плейлистов по умолчанию</b></td></tr>
 <tr><td>nv.Config.Bookshelf.QuickAccessFilePath</td><td>string</td><td><b>Bookshelf: Расположение файла быстрого доступа</b></td></tr>
 <tr><td>nv.Config.Command.IsAccessKeyEnabled</td><td>bool</td><td><b>Разрешить клавиши доступа</b><p class="remarks">При выключении системные операции с клавишей Alt отключаются, что устраняет сбои с горячими клавишами команд. Однако Alt+F4 всегда активен.</p></td></tr>
 <tr><td>nv.Config.Command.IsHorizontalWheelLimitedOnce</td><td>bool</td><td><b>Ограничить операцию колеса наклона одним разом</b><p class="remarks">Колесо наклона выполняет одну команду за одну операцию. Если вы используете мышь без шага, выключите это.</p></td></tr>
@@ -1541,7 +1541,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <tr><td>nv.Config.Notice.ViewTransformShowMessageStyle</td><td><dl><dt>"None"</dt><dd>None</dd><dt>"Normal"</dt><dd>Visible</dd><dt>"NormalIconOnly"</dt><dd>Только значок</dd><dt>"Tiny"</dt><dd>Tiny</dd><dt>"TinyIconOnly"</dt><dd>Маленький значок</dd></dl></td><td><b>Показывать изменение статуса при перетаскивании</b></td></tr>
 <tr><td>nv.Config.PageList.FocusMainView</td><td>bool</td><td><b>Фокус на главный вид</b><p class="remarks">После выбора страницы переместить фокус на главный вид.</p></td></tr>
 <tr><td>nv.Config.PageList.FolderTreeLayout</td><td><dl><dt>"Top"</dt><dd>Сверху</dd><dt>"Left"</dt><dd>Слева</dd></dl></td><td><b>Расположение дерева папок</b></td></tr>
-<tr><td>nv.Config.PageList.Format</td><td><dl><dt>"Smart"</dt><dd>Smart</dd><dt>"NameOnly"</dt><dd>Name</dd><dt>"Raw"</dt><dd>Raw</dd><dt>"PageNumber"</dt><dd>Номер страницы</dd></dl></td><td><b>Формат отображения имени страницы в списке страниц</b></td></tr>
+<tr><td>nv.Config.PageList.Format</td><td><dl><dt>"Smart"</dt><dd>Smart</dd><dt>"NameOnly"</dt><dd>Имя</dd><dt>"Raw"</dt><dd>Raw</dd><dt>"PageNumber"</dt><dd>Номер страницы</dd></dl></td><td><b>Формат отображения имени страницы в списке страниц</b></td></tr>
 <tr><td>nv.Config.PageList.IsFolderTreeVisible</td><td>bool</td><td><b>Отображать дерево папок</b></td></tr>
 <tr><td>nv.Config.PageList.IsGroupBy</td><td>bool</td><td><b>Группировать по</b></td></tr>
 <tr><td>nv.Config.PageList.IsVisibleItemsCount</td><td>bool</td><td><b>Показывать количество элементов</b></td></tr>
@@ -2001,7 +2001,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <td><b>Разрешить уменьшение при растяжении</b><p class="remarks">Разрешает уменьшение при растяжении.</p></td>
 </tr>
 </table>
-<h3>Effect</h3>
+<h3>Эффект</h3>
 <table>
 <tr>
 <th>Имя команды</th>
@@ -2574,13 +2574,13 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <td class="nowrap">PrevPage</td>
 <td></td>
 <td><dl><dt><b>IsReverse</b>: bool</dt><dd>Включить замену операций в зависимости от направления ползунка. Позволяет заменять операции при изменении направления ползунка.<dd></dd></dd></dl></td>
-<td><b>Prev</b><p class="remarks">Перейти на предыдущую страницу. При 2-страничном отображении перемещается на 2 страницы.</p></td>
+<td><b>Назад</b><p class="remarks">Перейти на предыдущую страницу. При 2-страничном отображении перемещается на 2 страницы.</p></td>
 </tr>
 <tr>
 <td class="nowrap">NextPage</td>
 <td></td>
 <td><dl><p style="color:red">Параметры to share with "PrevPage"</p><dt><b>IsReverse</b>: bool</dt><dd>Включить замену операций в зависимости от направления ползунка. Позволяет заменять операции при изменении направления ползунка.<dd></dd></dd></dl></td>
-<td><b>Next</b><p class="remarks">Перейти на следующую страницу. При 2-страничном отображении перемещается на 2 страницы.</p></td>
+<td><b>Вперед</b><p class="remarks">Перейти на следующую страницу. При 2-страничном отображении перемещается на 2 страницы.</p></td>
 </tr>
 <tr>
 <td class="nowrap">PrevOnePage</td>
@@ -3028,10 +3028,10 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <td class="nowrap">SetSortModeRandom</td>
 <td></td>
 <td></td>
-<td><b>Shuffle</b><p class="remarks">Перемешать порядок страниц.</p></td>
+<td><b>Перемешать</b><p class="remarks">Перемешать порядок страниц.</p></td>
 </tr>
 </table>
-<h3>Bookmark</h3>
+<h3>Закладка</h3>
 <table>
 <tr>
 <th>Имя команды</th>
@@ -3197,7 +3197,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <tr>
 <td class="nowrap">ImportBackup</td>
 <td></td>
-<td><dl><dt><b>FileName</b>: string</dt><dd>Путь к файлу резервной копии.<dd></dd><dt><b>UserSetting</b>: enum</dt><dd>"Undefined": Не определено / "Skip": Пропустить / "Import": Импортировать<br/>Settings.<dd></dd><dt><b>History</b>: enum</dt><dd>"Undefined": Не определено / "Skip": Пропустить / "Import": Импортировать<br/>History.<dd></dd><dt><b>Bookmark</b>: enum</dt><dd>"Undefined": Не определено / "Skip": Пропустить / "Import": Импортировать<br/>Bookmark.<dd></dd><dt><b>Playlists</b>: enum</dt><dd>"Undefined": Не определено / "Skip": Пропустить / "Import": Импортировать<br/>Playlist.<dd></dd><dt><b>Themes</b>: enum</dt><dd>"Undefined": Не определено / "Skip": Пропустить / "Import": Импортировать<br/>Пользовательские темы.<dd></dd><dt><b>Scripts</b>: enum</dt><dd>"Undefined": Не определено / "Skip": Пропустить / "Import": Импортировать<br/>Scripts.<dd></dd></dd></dd></dd></dd></dd></dd></dd></dl></td>
+<td><dl><dt><b>FileName</b>: string</dt><dd>Путь к файлу резервной копии.<dd></dd><dt><b>UserSetting</b>: enum</dt><dd>"Undefined": Не определено / "Skip": Пропустить / "Import": Импортировать<br/>Settings.<dd></dd><dt><b>History</b>: enum</dt><dd>"Undefined": Не определено / "Skip": Пропустить / "Import": Импортировать<br/>History.<dd></dd><dt><b>Закладка</b>: enum</dt><dd>"Undefined": Не определено / "Skip": Пропустить / "Import": Импортировать<br/>Bookmark.<dd></dd><dt><b>Playlists</b>: enum</dt><dd>"Undefined": Не определено / "Skip": Пропустить / "Import": Импортировать<br/>Playlist.<dd></dd><dt><b>Themes</b>: enum</dt><dd>"Undefined": Не определено / "Skip": Пропустить / "Import": Импортировать<br/>Пользовательские темы.<dd></dd><dt><b>Scripts</b>: enum</dt><dd>"Undefined": Не определено / "Skip": Пропустить / "Import": Импортировать<br/>Scripts.<dd></dd></dd></dd></dd></dd></dd></dd></dd></dl></td>
 <td><b>Импорт настроек</b><p class="remarks">Выберите восстанавливаемый элемент из файла резервной копии и восстановите его. Если все параметры определены, диалог не будет отображаться.</p></td>
 </tr>
 <tr>
@@ -3231,7 +3231,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <h3>Version 46.0</h3><table>
 <tr>
 <th>Severity</th>
-<th>Name</th>
+<th>Имя</th>
 <th class="nowrap">Category</th>
 <th class="td-middle">Alternative</th>
 </tr>
@@ -3425,7 +3425,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <h3>Version 45.0</h3><table>
 <tr>
 <th>Severity</th>
-<th>Name</th>
+<th>Имя</th>
 <th class="nowrap">Category</th>
 <th class="td-middle">Alternative</th>
 </tr>
@@ -3457,7 +3457,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <h3>Version 44.0</h3><table>
 <tr>
 <th>Severity</th>
-<th>Name</th>
+<th>Имя</th>
 <th class="nowrap">Category</th>
 <th class="td-middle">Alternative</th>
 </tr>
@@ -3495,7 +3495,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <h3>Version 42.0</h3><table>
 <tr>
 <th>Severity</th>
-<th>Name</th>
+<th>Имя</th>
 <th class="nowrap">Category</th>
 <th class="td-middle">Alternative</th>
 </tr>
@@ -3569,7 +3569,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <h3>Version 41.0</h3><table>
 <tr>
 <th>Severity</th>
-<th>Name</th>
+<th>Имя</th>
 <th class="nowrap">Category</th>
 <th class="td-middle">Alternative</th>
 </tr>
@@ -3607,7 +3607,7 @@ nv.Bookshelf.FolderTree.QuickAccessNode.Insert(0, {Type:"folder"})</code></pre><
 <h3>Version 40.0</h3><table>
 <tr>
 <th>Severity</th>
-<th>Name</th>
+<th>Имя</th>
 <th class="nowrap">Category</th>
 <th class="td-middle">Alternative</th>
 </tr>
