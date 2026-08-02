@@ -52,7 +52,7 @@ permalink: /ru-ru/index.html
 
 #### История изменений
 
- * [История изменений](changelog.md)
+ * [История изменений](../en-us/changelog.md)
 
 ## Документация
 
