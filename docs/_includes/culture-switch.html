@@ -46,7 +46,8 @@
         if (culture == null) return;
         const element = document.getElementById("culture_home");
         if (element == null) return;
-        element.innerHTML = `<a href="{{ site.baseurl }}/${culture}/">HOME</a>`;
+        const homeLabel = culture === "ru-ru" ? "ГЛАВНАЯ" : culture === "ja-jp" ? "ホーム" : "HOME";
+        element.innerHTML = `<a href="{{ site.baseurl }}/${culture}/">${homeLabel}</a>`;
     }
 
     function setCultureElement() {

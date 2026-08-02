@@ -20,23 +20,43 @@
 
     {% capture new_node %}<blockquote>{{ node }}{% endcapture %}
 
-    {% capture alert_note %}<blockquote class="alert note"><p class="alert note">Note</p><p>{% endcapture %}
+    {% if page.language == 'ru-RU' %}
+      {% assign title_note = "Примечание" %}
+      {% assign title_tip = "Совет" %}
+      {% assign title_important = "Важно" %}
+      {% assign title_warning = "Предупреждение" %}
+      {% assign title_caution = "Внимание" %}
+    {% elsif page.language == 'ja-JP' %}
+      {% assign title_note = "注記" %}
+      {% assign title_tip = "ヒント" %}
+      {% assign title_important = "重要" %}
+      {% assign title_warning = "警告" %}
+      {% assign title_caution = "注意" %}
+    {% else %}
+      {% assign title_note = "Note" %}
+      {% assign title_tip = "Tip" %}
+      {% assign title_important = "Important" %}
+      {% assign title_warning = "Warning" %}
+      {% assign title_caution = "Caution" %}
+    {% endif %}
+
+    {% capture alert_note %}<blockquote class="alert note"><p class="alert note">{{ title_note }}</p><p>{% endcapture %}
     {% assign new_node = new_node | replace_first: '<blockquote><p>[!NOTE]<br />', alert_note %}
     {% assign new_node = new_node | replace_first: '<blockquote><p>[!NOTE]', alert_note %}
 
-    {% capture alert_tip %}<blockquote class="alert tip"><p class="alert tip">Tip</p><p>{% endcapture %}
+    {% capture alert_tip %}<blockquote class="alert tip"><p class="alert tip">{{ title_tip }}</p><p>{% endcapture %}
     {% assign new_node = new_node | replace_first: '<blockquote><p>[!TIP]<br />', alert_tip %}
     {% assign new_node = new_node | replace_first: '<blockquote><p>[!TIP]', alert_tip %}
 
-    {% capture alert_important %}<blockquote class="alert important"><p class="alert important">Important</p><p>{% endcapture %}
+    {% capture alert_important %}<blockquote class="alert important"><p class="alert important">{{ title_important }}</p><p>{% endcapture %}
     {% assign new_node = new_node | replace_first: '<blockquote><p>[!IMPORTANT]<br />', alert_important %}
     {% assign new_node = new_node | replace_first: '<blockquote><p>[!IMPORTANT]', alert_important %}
 
-    {% capture alert_warning %}<blockquote class="alert warning"><p class="alert warning">Warning</p><p>{% endcapture %}
+    {% capture alert_warning %}<blockquote class="alert warning"><p class="alert warning">{{ title_warning }}</p><p>{% endcapture %}
     {% assign new_node = new_node | replace_first: '<blockquote><p>[!WARNING]<br />', alert_warning %}
     {% assign new_node = new_node | replace_first: '<blockquote><p>[!WARNING]', alert_warning %}
 
-    {% capture alert_caution %}<blockquote class="alert caution"><p class="alert caution">Caution</p><p>{% endcapture %}
+    {% capture alert_caution %}<blockquote class="alert caution"><p class="alert caution">{{ title_caution }}</p><p>{% endcapture %}
     {% assign new_node = new_node | replace_first: '<blockquote><p>[!CAUTION]<br />', alert_caution %}
     {% assign new_node = new_node | replace_first: '<blockquote><p>[!CAUTION]', alert_caution %}
     
