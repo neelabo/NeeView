@@ -1,0 +1,1121 @@
+# Changelog
+
+## 46.1
+(2026-07-27)
+
+#### Fixed
+
+- Fixed an issue where the language setting was not saved (#1974)
+- Fixed an issue where effect parameters were not carried over when updating the version (#1973)
+- Fixed an issue where multiple items were selected when the Shift‑key shortcut was assigned to book navigation (#1971)
+- Fixed an issue where color properties of effects could not be set via script (#1970)
+
+
+## 46.0
+(2026-07-19)
+
+#### Effects
+
+Enhanced effect-related features.
+
+- Added support for **Effect Profiles**, allowing batch switching of all settings in the Effects panel (#689)  
+    - Implemented the commands "Set effect profile", "Next effect profile", and "Previous effect profile" (#689)
+    - Book settings can now store the selected effect profile. The default is "Continue", preserving previous behavior (#1339)
+
+- Image effects now support **multiple layers** (#377)  
+    - Added a "+" button to add effect layers
+
+- Added a **Colorize** effect, which applies color based on luminance (#1716)
+- In the Levels effect, changing Black/White values now preserves the Center ratio (#1194)
+
+#### Slideshow
+
+Enhanced slideshow functionality. Most options are available under **Settings → Slideshow**.
+
+- Added slideshow UI to the address bar and navigator panel (#882)
+- Added command settings for slideshow page navigation (#716)
+- Added settings for selecting end-of-book behavior during slideshow (#1934)
+- Added auto-scroll settings for slideshow (#1531)
+- Added option to wait for animations during slideshow (#1770)
+- Added timer-reset operation settings (#1939)
+
+#### Settings File Optimization
+
+Reduced the size of the settings file by omitting default values.  
+Various save-data formats were also optimized, and some data structures may differ from previous versions.
+
+- Omit default values from the settings file (#848)
+- Separated Quick Access file storage (#1902)
+
+#### Bookmark Tags
+
+When a bookmark is registered inside a bookmark folder, it can now be displayed as a **tag** in the Bookshelf.  
+Items inside bookmark folders show both ★ and the tag.  
+Items registered directly under the root continue to show ★ only.
+
+- Display bookmark folders as tags in bookshelf items (#1851)
+- Panel settings allow toggling tag visibility per display mode
+- Tag colors can be configured from the bookmark folder’s context menu → Properties
+- Default tag color is defined by the theme key "Tag.Background"
+- Added ability to open the corresponding bookmark folder from the bookshelf context menu
+
+#### Full Desktop Mode
+
+Added a **Full Desktop Mode** that expands across all monitors.  C
+*Note: Does not work correctly in multi-DPI multi-monitor environments.*
+
+- Added Full Desktop mode to window modes (#1848)
+- Added "Toggle full desktop" command (Shift+F11)
+
+#### Task Tray Resident Mode
+
+Added a task-tray resident mode for faster startup.
+
+- Implemented task-tray resident functionality (#446)
+- Holding Shift while exiting the app also terminates the resident process
+
+#### Book Menu
+
+Expanded the Book menu.
+
+- Added "Open book in explorer" command (#1678)
+- Added "Open book in external app" command (#1678)
+- Added "Cut book" and "Copy book" commands (#1678)
+- Added "Copy book to folder" and "Move book to folder" commands (#1678)
+- Added "Export book" command. Outputs the current book to a folder or file (#758)
+- Added "Rename book" command. Renames the current book’s file (#1837)
+
+#### Table of Contents in Page List
+
+Added **Table of Contents** to the page list.  
+Displayed via the "Contents" button in the Page List panel.  
+Shows archive folder hierarchy or PDF outlines as a tree.
+
+- Added Table of Contents to the page list (#1201)
+- Added TOC support for playlist books (#655)
+- Added "Open as book" to TOC tree item menu (#655)
+
+#### Standard page navigation direction
+
+The default book opening direction is now set at first launch or when initializing commands.  
+Page-navigation shortcuts are initialized based on this direction.
+
+- Added page-direction settings to command presets (#1870)
+
+#### Added
+
+- System: Added option to delete only invalid thumbnail cache entries (#879)
+- App Settings: Added "SoftwareRendering" flag to settings.json (#1896)
+- Theme: Added item for coloring critical-action buttons red (#1904)
+- Command: Added "Preset scroll" command. Scrolls to a position specified by parameters (#1277)
+- Command: Added "Rewind video" and "Fast forward video" commands (#1882)
+- Book: Added **Sort by Type** (Sort by Extension) to page sorting (#708)  
+- Book: Added book-page initialization mode for end-of-book navigation (#1644)
+- View: Improved **Movement Constraints** under "View operation".  
+  "Snap" keeps the view centered when possible (#1645)  
+- View: Added setting for initial horizontal alignment based on book opening direction
+- View: Added ratio setting for initial center alignment (#1760)
+- Slider: Added mouse-wheel behavior settings for page slider and filmstrip (#449)
+- Bookmark: Added option to restore bookmark-folder location at startup (#1919)
+- Bookshelf: Added item for moving to parent folder (#1015)
+- Script: Added "@argsDescription" doc comment for script arguments (#1846)
+- Script: Added multi-line support for script doc comments (#1938)
+
+#### Changed
+
+- System: Unified placeholder format from "$Name" to C#-style "{Name}" (#1905)
+- System: When expanding archive entries, duplicate filenames are now placed in subdirectories (#1808)
+- System: Playlist and bookmark link-broken flags are now saved (#1871)
+- System: Added ".cbt" to standard archive extensions (#1921)
+- System: Suppressed automatic syncing of book settings and panel layout settings (#1884)
+- System: Book-thumbnail priority filename now uses regular expressions (#1949)
+- System: Added filename format options when saving images (#1477)
+- Command: "Move to folder" now updates bookmark paths and similar items (#1873)
+- Command: Added toggle-mode settings to toggle-type command parameters (#1718)
+- Book: When sorting pages by name, sorting is now performed per directory hierarchy (#1918)
+- Book: End-of-book dialog now closes when it becomes inactive (#1860)
+- Book: Applied "Static two pages" correction to the "Prev/Next x pages" command (#1191)  
+- Window: Added setting for activating window on file drop (#1954)
+- Window: Main window is now activated when closing a subwindow (#1143)
+- UI: Updated scrollbar style (#1099)
+- UI: Added auto-hide setting for scrollbars (#1901)
+- UI: Improved behavior of auto-hide panels and show/hide commands (#1499)
+- UI: Version dialog can now be closed with ESC (#1924)
+- UI: Wheel scroll amount now reflects OS settings (#1941)
+- UI: Improved color picker; color button now opens edit popup (#1956)
+- View: Other operations are now allowed during auto-scroll (#1910)
+- View: Added "Scroll" and "Fade" options for page transitions when not in panorama mode (#1883)
+- View: Removed "Scaling (horizontal slide, **centered**)" from mouse operations; replaced by "Snap" in Movement Constraints
+- Panel: Smoothed thumbnail popup switching (#1346)
+- Panel: Added icon overlay settings for thumbnail display (#1946)
+- Panel: Added wrap-around support for left/right keys in thumbnail view (#1832)
+- Bookshelf: Added ability to register multiple bookmarks at once (#1923)
+- Bookshelf: When auto-syncing folder tree, selection is not changed if the tree already has focus (#1161)
+- Bookshelf: Multiple exclusion patterns can now be stored (#1877)
+- Bookshelf: Subfolder loading settings now propagate to child folders (#673)
+- Bookshelf: Moved thumbnail assignment to the top of the context menu; added menu shortcuts (#1950)
+- History: Added confirmation dialog when deleting history (#935)
+- Navigator: Auto-rotation is now reflected in navigator thumbnails (#1641)
+- Bookmark: Added "Last Updated" timestamp to bookmark folders (#1928)
+
+#### Fixed
+
+- System: Fixed issue where closing the settings window via the settings button did not trigger save processing (#1897)
+- System: Fixed issue where settings might not update when NeeView is launched via external commands (#1915)
+- System: Fixed issue where closed-book state was not saved (#1927)
+- Book: Improved issue where toggling "Show first/last page alone" did not update display (#1937)
+- UI: Fixed issue where system accent color could be difficult to see (#1917)
+- View: Fixed incorrect behavior of 1:1 display when trimming or splitting pages
+- View: Fixed blurring under certain conditions when resize filter was ON (#1911)
+- View: Fixed page-movement issue in panorama mode when the reference position was not centered (#1914)
+- Playlist: Fixed path-following issues (#1893)
+- Playlist: Fixed issue where non-default playlists were not registered for file tracking (#1888)
+- Playlist: Fixed issue where playlists could fail to update under multiple instances (#1887)
+- Playlist: Fixed issue where underscores in destination playlist names were omitted in item menu (#1944)
+- Script: Fixed occasional failures in long-running **CopyPage()** operations (#1862)
+
+
+## 45.3
+(2026-03-17)
+
+### Fixed
+
+- Playlist: Fixed a file locking issue related to playlist updates (#1887)
+- Playlist: Ensured that old playlists are registered in file tracking when loaded (#1888)
+- Playlist: Fixed an issue when adding items after path resolution (#1893)
+
+
+## 45.2
+(2026-03-02)
+
+### Fixed
+
+- History: Fixed an issue with the update timing of the registration order for items registered in the history (#1881)
+
+
+## 45.1
+(2026-02-23)
+
+### Fixed
+
+- System: Fixed TAB key navigation (#1880)
+- Panel: Fixed an issue where wheel scrolling in thumbnail view did not function properly (#1878)
+- Setting: Fixed an issue where the "Explorer" page might not display (#1875)
+
+
+## 45.0
+(2026-02-16)
+
+#### Important changes
+
+> [!IMPORTANT]
+> Installer version: The installation type has been changed to Per-User.
+
+The installation type has been changed to per-user, and administrator privileges are no longer required for installation.   
+The previous per-machine installation cannot coexist and must be uninstalled first. If an older version is already installed, a dialog box prompting you to uninstall will be displayed and the installation process will be aborted. User data will remain even after uninstallation, so it will be carried over, but we recommend backing it up by exporting it just in case.  
+Context menu registration to Explorer is done in the settings window, just like the ZIP version.
+
+#### Added
+
+- Language: Added Spanish (#1820)
+- System: Automatically update broken links such as bookmarks to the same NTFS local drive. This also applies to changes made when the app is not running. (#1784)
+- Views: Added WebP animation support (#1798)
+- View: Added hover scroll sensitivity setting (Settings > Mouse Settings > Hover Scroll Sensitivity) (#1804)
+- View: Added a setting to keep the main view window on top (Preferences > Main view > MainView window stays on top when possible) (#1706)
+- View: Add time priority setting to slideshow (Settings > Slideshow > Prioritize time) (#1843)
+- View: Added a setting to set the magnification of the loupe to the original size (Settings > Loupe > Magnification is based on the original size) (#1347)
+- Address bar: Add a settings button to the address bar (#1788)
+- Address bar: Added setting to show bookmark dialog in address bar (Settings > Menu bar) (#1824)
+- Settings: Added file association settings. Icons can also be changed. Only available in the ZIP and installer versions. (Settings > Explorer) (#1697, #1717)
+- Bookshelf: Added "Automatically synchronize the folder tree" to Bookshelf settings (Settings > Bookshelf) (#1295)
+- Bookshelf: Added a preferred image filename setting for book thumbnails. By default, it is set to "folder.jpg" (Settings > Book > Preferred image filename for book thumbnail) (#1853)
+- Bookshelf: Allows individual book thumbnails to be specified (Bookshelf item context menu) (#389)
+- Bookshelf: Bookshelf sorting and thumbnail settings are now saved in Folders.json.
+
+#### Changed
+
+- System: Changed to .NET 10 based. (#1839)
+- System: Prevent duplicate entries in history etc. due to differences in case of UNC paths (#1778)
+- System: Changed the path of the thumbnail cache for symbolic links to the path of the symbolic link itself (#1803)
+- Books: Change page exclusion patterns to regular expressions (#1844)
+- Books: Fix to not reopen a book when opening a page of the same book in a playlist (#1775)
+- Book: Support for deleting and renaming pages in playlist books (#1805)
+- View: Optimized resize filter application timing (#1799)
+- View: Reduced playback delay when moving video position (#1774)
+- View: Apply EXIF ​​Orientation to RAW images (#1813)
+- Filmstrip: Changed the centering of the filmstrip to always center the view (#1845)
+- Panel: Number of items and search box display for each panel can now be configured from the respective detail menus (#1835)
+- Bookmarks: Added confirmation dialog when deleting invalid bookmarks (#1854, #1857)
+- Playlist: Added confirmation dialog when deleting disabled playlist items (#1854, #1857)
+- History: For books with only one page, the history is now registered when you try to move beyond the page (#1776)
+- Settings: Preset options are now card-like (#1789)
+- Settings: Added "Page read order" to welcome dialog
+
+#### Fixed
+
+- System: Fixed a bug where the menu shortcut display did not change when switching commands with the slider direction (#1828)
+- Book: Fixed a bug where deleted pages could reappear (#1807)
+- Book: Fixed a bug that prevented symbolic link images from being displayed in the playlist book.
+- Views: WebP with alpha now displays correctly (#1822)
+- View: Prevent the main view window from momentarily appearing in front when restored (#1815)
+- View: Fixed bug where Unsharp Mask slider operation was not reflected immediately (#1830)
+- View: Fixed a bug in detecting semi-transparent images (#1825)
+- View: Fixed a bug where resize filters were not working for some image formats (#1809)
+- View: Fixed a bug (#1821) where a white line would sometimes appear on the edge when changing from full screen to maximized window.
+- Panel: Fixed HOME/END key behavior when panel thumbnails are displayed (#1817)
+- Bookshelf: Fixed an issue where the quick list in the Home button menu might not display fully (#1869)
+- Bookmarks: Fixed a bug where renaming in the bookmark panel was sometimes not possible. Renaming in the bookmark panel no longer opens a book (#1811)
+- PageList: Fixed a bug where page list thumbnails sometimes did not load (#1816)
+- PageList: Fixed an issue where folders and compressed files were not distinguished (#1868)
+- History: Fixed a bug where history information was not updated when opening a book from history (#1818)
+
+
+## 44.1
+(2025-08-30)
+
+### Fixed
+
+- Fixed an issue where some images displayed color distortion when using SusiePlugin. (#1796)
+- Fixed an issue where shuffle order was not restored when restoring books. (#1801)
+- Mitigate issues that may cause import failures. (#1802)
+
+
+## 44.0
+(2025-08-15)
+
+#### Added
+
+- Language: Russian added.
+- System: Added "Search depth for generating book thumbnail" setting. (Settings > Book)
+- System: Added "Number of recent books" setting. (Settings > History)
+- AppSettings: Added app setting to create a temporary folder in the profile. For details, refer to the [App Configuration File](https://neelabo.github.io/NeeView/appsettings.html).
+- Command: "Next playlist" and "Prev playlist" commands added. Switches between playlists.
+- Command: Added the ability to specify the destination bookmark folder in the "Toggle bookmark" command parameters.
+- Command: Added "Register bookmark" command. Calls up the Bookmark Registration dialog.
+- Command: Added "Select Archiver" command. Selects the archiver that opens the current book.
+- Command: Commandize "Recently books."
+- Settings: Added a reset button to each settings page.
+- Book: Password support for archives. Only valid when using 7z.dll.
+- View: Added "Start with movement locked" setting. (Settings > View operation)
+- View: Added setting to display only icons while loading books. (Settings > Notification > Show Now Loading)
+- Panels: Added top and bottom margin size settings for when side panels overlap with menus, etc. (Settings > Panels)
+- Panels: Added setting to enable/disable detailed pop-ups for panel items. (Settings > Panels)
+- Panels: Added plural form to relative date specification for search keywords (e.g., -5days). Singular form (e.g., -5day) can still be used as before.
+- Bookshelf: Added the option to select Quick Access from the context menu of the Home button.
+- History: Thumbnail display of history, group display support.
+- PageList: Group display support for page list.
+- Playlist: Support for thumbnail display in playlist.
+- Script: Add nv.OpenFileDialog() and nv.OpenFolderDialog().
+- Script: Added WindowAccessor. Allows you to get/set window size, etc.
+- Script: Corresponds to the page end event OnPageEnd.nvjs.
+
+#### Changed
+
+- System: When restoring the bookshelf at startup, selected items are now also restored.
+- System: When both books and bookshelves are specified for restoration at startup, the restoration information for each is respected.
+- System: Synchronization of saved data is now performed by file monitoring rather than interprocess communication.
+- System: Susie Plug-in Server has been AOT-ized. Installation of .NET Runtime x86 is no longer required.
+- System: The thumbnails cache retention period can now be edited directly. (Settings > Thumbnail)
+- System: Changed the "Use natural sort" setting to "Name order type" to enable sorting by "Character code order." (Settings > General)
+- Susie: Only valid Susie plugins are loaded.
+- Settings: Organize the order of pages in the settings menu.
+- Settings: New context menu editing based on drag-and-drop editing.
+- Settings: Display point size in font size settings.
+- Printing: Printing settings are now saved. However, printer settings are not saved and are only maintained while the app is running.
+- Book: Changed the "Sort pages by file first" setting to "Folder sort order." (Settings > Book)
+- Book: Restored the order of pages when the order is set to "Shuffle."
+- View: Enabled cursor movement without restrictions while using the loupe.
+- View: In hover scroll, the initial position is now immediately reflected when switching pages.
+- AddressBar: Address is now displayed as a breadcrumb bar.
+- AddressBar: Changed so that the bookmark registration dialog box is displayed when the bookmark button on the address bar is clicked.
+- Menu: Removed "Bookmark" from the menu and added "Book."
+- Panels: Added the ability to set automatic hiding of side panels separately for the left and right panels.
+- Panels: If there are no icons in the sidebar, hide it.
+- Panels: Suppress continuous display of tooltips.
+- Panels: Added display of drag insertion position in list.
+- Panels: When searching for "/bookmark," exclude bookmark folders.
+- Bookshelf: Display addresses as breadcrumb bar.
+- Bookshelf: Changed the "Sort without types" setting in the bookshelf to "Folder sort order" and made it possible to specify the sort position of folders. (Settings > Bookshelf)
+- Bookshelf: Restored the order of books when the order is set to "Shuffle."
+- Bookshelf: Quick access adapted to hierarchy.
+- Bookshelf: Added the location of each item to the tooltips for bookshelf search results.
+- History: Direct editing of retention period and number of entries now possible. (Settings > History)
+- History: When closing the app, the history is saved regardless of the number of page changes.
+- Bookmark: You can now change the names of bookmarks. The actual file names will remain unchanged. 
+- Bookmarks: Manual sorting is now possible only when the sorting order is set to "Entry."
+- Playlist: Supports manual sorting.
+- Slideshow: Minimum transition time limited to 0.1 seconds.
+- Script: Made it possible to change Name in BookItemAccessor.
+
+#### Fixed
+
+- System: Fixed a bug where the bookshelf would sometimes be restored to the root folder of the bookmarks when starting up.
+- System: Fixed an issue where window size might not be adjusted properly.
+- Susie: Fixed a bug where short path names were not used for archives. 
+- Printing: Fixed a bug where margin settings were not reflected in the preview.
+- Panels: Fixed a bug where the drag display and drag content sometimes differed.
+- Bookshelf: Fixed a bug where the bookshelf item selection was deselected when deleting a ZIP file page.
+- Script: Fixed a bug where script command arguments were not passed.
+
+
+## 43.3
+(2025-05-09)
+
+#### Fixed
+
+- System: Fixed an issue where the taskbar was not displayed when maximizing the window when the taskbar was set to hide automatically.  (#1721)
+- Bookshelf: Fixed a bug that the bookshelf location icon remained a magnifying glass even after deleting the search key. (#1714)
+- Bookshelf: Fixed a bug that bookshelf sometimes becomes empty list when moving bookmarks. (#1720)
+- View: Fixed a bug when a modifier key shortcut was assigned to auto scroll. (#1713)
+
+
+## 43.2
+(2025-04-13)
+
+#### Fixed
+
+- System: Fixed a bug in the toggle switch when changing font size. (#1701)
+- System: Fixed a bug that could cause a crash in the file selection dialog. (#1707)
+- Playlist: Fixed a bug that could cause a crash when "Current book only" was turned on. (#1708)
+- View: Fixed a problem with animated scrolling when changing the order of pages. (#1709)
+
+#### Changed
+
+- Language: pt-BR Updated.
+
+
+## 43.1
+(2025-04-07)
+
+#### Fixed
+
+- System: Fixed a bug that window size could not be restored correctly. (#1698)
+- System: Fixed a bug in which commands were sometimes not restored correctly on import. (#1699)
+
+
+## 43.0
+(2025-04-05)
+
+#### Welcome Dialogue
+
+- Minimal settings, such as the selection of command presets, are made at initial startup.
+- This setting can be changed later.
+
+#### Added
+
+- Language: Korean added.
+- System: Display a slideshow playing icon in the title.
+- System: Symbolic link supported.
+- System: File export from compressed files now also copies Zone.Identifier.
+- System: Supports multiple file drops from compressed folders.
+- System: Added command line option "--language" to set temporary language.
+- System: Added command line option "--clear-registry" to clear registry settings.
+- Command: "Cut (Ctrl+X)" command added.
+- Command: "Toggle trimming" command added.
+- Command: "Overwrite mode" setting added to "Save" command.
+- Command: "Scroll + Next/Prev" and "N-type scroll" commands added "Horizontal/Vertical scroll" to the scroll type parameter.
+- Theme: Added missing mouse-over theme color setting.
+- Book: Page reset setting added when moving to the next book in a page move. (Settings > Move > Reset next book page)
+- View: Mouse wheel scrolling implemented. (Settings > Mouse operation > Mouse wheel scroll)
+- View: Auto scroll sensitivity setting added. (Settings > Mouse operation > Auto scroll sensitivity)
+- View: Added setting of conditions for automatic rotation. (Settings > View operation > Auto rotate policy)
+- View: Added "Auto" to "Center of scaling". The center point will be set to fit within the screen as much as possible. (Settings > View operation > Center of scaling)
+- View: Added color setting for the page being loaded. (Settings > Book > Loading page color)
+- Panel: Added the ability to select list items by input text. (Settings > Panels > Select item with input text)
+- History: Added the ability to display date/time groups in the history panel.
+- PageList: "Page number" added to page list name format
+- Video: Added video playback speed setting.
+- Video: "Default Subtitle" setting added. (Settings > Video > Default Subtitle)
+- Video: Noted that libVLC support is for 3.x only.
+
+#### Changed
+
+- System: Changed to .NET 9 based.
+- System: Delayed panel generation to speed up startup a bit.
+- System: When multiple startups are used, the window state is not changed even if the configuration file is updated in one of them.
+- System: Date and time are now inherited in file copying.
+- System: Export data selection dialog now inherits the location to be opened.
+- System: renaming cursor movement made the same as in Explorer.
+- System: added configuration importer is invoked when .nvzip file is specified as a command line argument.
+- Command: Apply copy policy setting for compressed files when "Copy to folder"
+- Command: "Save" is not available for directories as is.
+- Command: "Focus on main view" command is now switchable.
+- Settings: Command names for scripts can be found in the Command Parameters dialog.
+- Book: Tried to avoid reloading when deleting pages.
+- Book: The current page is not restored to the top page when it is deleted.
+- Book: History saved when page settings are changed.
+- View: Adjusting focus when a book is opened with file drop. Try the bookshelf first, then the focus to the main view.
+- View: Support for auto-hiding the autoscroll cursor.
+- Filmstrip: Filmstrip allows multiple selections.
+- Panels: Compressed file icons and media file icons added to folder icons in PageList and Playlist.
+- PageList: File drop to PageList now opens book.
+
+#### Fixed
+
+- System: Flash reduction at start of window display.
+- System: Pages can now be loaded even with invalid file dates and times.
+- System: Fixed a bug that if the application is terminated while deleting a ZIP entry, it will not be deleted correctly.
+- System: Fixed a bug that sometimes caused file names to change when exporting files from compressed files.
+- System: Fixed a bug that could cause an error if the destination folder for images did not exist.
+- System: Fixed a bug when registering a context menu for a command whose menu hierarchy changes depending on the command parameters.
+- System: Reduces file path case differences.
+- Command: Fixed a bug in which the "External app" command did not work when a number was specified.
+- View: Fixed a bug that sometimes left the page title displayed.
+- View: Fixed a bug that caused the vertical and horizontal wheel counters to reset each other.
+- View: Fixed a bug in image inversion by mouse dragging.
+- Panels: Fixed a bug that panels were sometimes not displayed in the window when trying to display them.
+- Navigator: Fixed an issue where the drag position of the navigator thumbnail could shift.
+- Script: Fixed a bug that video operations in scripts were not reflected when the video page was refreshed.
+
+
+## 42.6
+(2025-01-22)
+
+#### Changed
+
+- 7z.dll 24.09
+- Language: Updated zh-Hans
+
+
+## 42.5
+(2025-01-12)
+
+#### Fixed
+
+- Bookshelf: Fixed a bug that compressed files may disappear from the list when they are edited.
+
+
+## 42.4
+(2024-12-23)
+
+#### Fixed
+
+- System: Fixed a bug that caused multi-boot to fail under certain conditions.
+
+
+## 42.3
+(2024-12-22)
+
+#### Fixed
+
+- System: Fixed a bug that caused startup to fail with old language settings.
+
+#### Changed
+
+- Language: Updated zh-Hans.
+
+
+## 42.2
+(2024-12-08)
+
+#### Fixed
+
+- Bookshelf: Corrected a bug in file name case-only renaming.
+- PageList: Fixed a bug that the display was not updated when the file name was changed in the page list.
+- View: Corrected a bug in the behavior of automatic rotation under certain conditions in the main view window.
+- View: Reduced application error on loading corrupted GIFs.
+- Pages: Width, Height set to 0 for archive pages and other pages with no size.
+- Script: Fixed a bug that ViewPageAccessor's Width and Height could not be obtained in videos.
+
+#### Changed
+
+- Language: Updated zh-Hans.
+
+
+## 42.1
+(2024-12-01)
+
+#### Fixed
+
+- System: Fixed a bug in version check.
+- Script: Fixed a bug about CreationTime. 
+
+
+## 42.0
+(2024-11-24)
+
+#### Added
+
+- System: Dialog and toast notification text can now be copied to the clipboard.
+- System: File manager can be configured to replace Explorer.  (Settings > General)
+- System: Added the ability to select "Open as book" from the context menu of the video page.
+- System: Support for copying per archive folder.
+- System: Embedded a link to a wiki page explaining the format in the JSON file of the sample theme.
+- Command: Added toast notification flag to "Save" command parameter.
+- Command: Added selective "External app" command. It is equivalent to the command in the page menu.
+- Command: Added selective "Copy to folder" command. Equivalent to the command in the page menu.
+- Command: Added selective "Move to folder" command. Equivalent to the command in the page menu.
+- Book: Added split rate setting for page splitting. (Settings > Book > Rete of divide page) 
+- Book: Added setting to determine the reference page only by number when "Two pages" is selected.  (Settings > Book)
+- Book: Added setting for how to align the size of each page in "Two pages". (Settings > Book)
+- Book: Image start position can be set horizontally and vertically respectively.  (Settings > View operation) 
+- Address bar: Add button to address bar to prohibit book switching.
+- Panel: The same operations as in the PageList context menu, such as rename, can now be performed in the Information panel and Filmstrip page context menus.
+- Panel: Selection mark displayed on side panel icon.
+- MainView window: Added setting to disable the MainView window mode when the MainView window is closed.  (Settings > Main view) 
+- MainView window: Added "MainView window auto show" setting. (Settings >Main view)
+- Playlist: Added confirmation dialog to "Sort by path" in playlist.
+- Playlist: Added the ability to move multiple specified items in the playlist panel.
+- Playlist: Playlist books are supported in "Current book only" in the Playlist panel.
+- Playlist: Ctrl-click on the move button of a playlist item to move it to the end of the playlist.
+- Playlist: "Open source file" added to context menu of playlist items only when playlist book is open.
+- Script: Added setting to call OnBookLoaded.nvjs script when renaming a book. (Settings > Script)
+- Script: Apply theme to Script Console.
+- Script: Added setting to add SQLite access to scripts. (Settings > Script)
+- Script: Added IsChecked flag for menus to command parameters of script commands.
+- Script: Added "script:foobar.nvjs" in the command line startup script specification to allow specifying files in the scripts folder.
+- Script: Event script for startup OnStartup.nvjs Supported.
+- Script: Window state change event OnWindowStateChanged.nvjs Supported.
+- Script: Added "@args" to script doc comment.
+- Script: Added nv.Bookshelf.FolderTree to manipulate the Bookshelf tree view.
+- Script: Added nv.Bookmark.FolderTree to manipulate the tree view of the Bookmark panel.
+- Script: Added nv.ShowInputDialog(title, message, text).
+- Script: Added nv.Bookshelf.Wait() to wait until bookshelf display is complete.
+- Script: Added nv.Book.ViewPages[].Player to control video.
+- Script: Added nv.SusiePluginCollection to manipulate Susie plugins.
+- Script: Added nv.DestinationFolderCollection to manage move and copy destination folders.
+- Script: Added nv.ExternalAppCollection to manage external app settings.
+- Script: Added PageAccessor.Index for page index.
+- Script:  Added CommandAccessor.Name.
+- Script:  Added nv.Book.IsBookmarked.
+- Script:  Added MoveToParent(), etc. to BookshelfPanelAccessor.
+- Script:  Added file manipulation commands nv.FileCopy(), nv.FileMove(), and nv.FileDelete().
+- Script:  Maintain the package information nv.Environment.
+- Script:  Size, LastWriteTime, and CreationTime of books and pages are maintained.
+- Script:  Added accessor nv.CurrentCommand for the currently executing command.
+- Script:  Add nv.ScriptPath, the path of the currently running script file.
+
+#### Changed
+
+- System: Window is now activated by dropping a file.
+- System: Activate at the start of the main window display.
+- System: Moved some of the copy content settings from file copy command parameters to system settings. (Settings > General > Copy Contents Policy)
+- System: Limit multiple launches only if the executable file paths are the same.
+- System: Optimization of startup process.
+- Book: End-of-page judgment is now performed even when moving a set number of pages. 
+- Book: Loop notifications even for seamless loops. 
+- Address bar: The path text is now selected when the address bar is selected.
+- Address bar: When an image file path is entered in the address bar, it can now be opened as a book containing that page.
+- MainView window: The page list panel has been restored to its original state as much as possible when returning from the main view window mode.
+- Bookshelf: Reloading a book no longer changes the bookshelf selections.
+- Bookshelf: Added the ability to delete multiple histories at once from the bookshelf.
+- Playlist: When the current playlist is opened as a book, opening a playlist item will now page through the current book.
+- Playlist: When registering a playlist book page to the playlist, the entity is now registered.
+- Playlist: Enabled "Load subfolders" in playlist book.
+- Information panel: If there are no Extras, "None" is displayed.
+- Script: Change PageAccessor.Path to the entity path.
+- Script: Changed the type of date/time values, such as LastWriteTime, from string to Date.
+
+####  Fixed
+
+- System: Fixed a bug that multiple launch restrictions may not work.
+- System: Fixed a bug that history may not be merged when multiple startups are performed.
+- System: Fixed a bug that videos are not included when decompressed in units of compressed files.
+- System: Fixed garbled command line help.
+- System: Fixed a bug that UI animations such as menus do not follow Windows settings.
+- System: Countermeasure for a bug that may cause an error when selecting print.
+- Book: Fixed page position bug in seamless loop.
+- Book: Fixed a bug that could cause an error when moving a folder page during a seamless loop.
+- Book: Fixed an issue where the loading display sometimes did not disappear when pages were split.
+- Book: Fixed a bug that title text scale did not change after stretch change.
+- Book: Fixed a bug in which specifying the start page by archive path sometimes did not work when "Expand for each directory" was selected.
+- Panel: Fixed a bug in which single selection from multiple selections did not execute the selection process.
+- Playlist: Fixed a behavior bug with the + button in the playlist panel.
+- Playlist: Fixed a bug that could cause incorrect playlist item paths on drag-and-drop.
+- Playlist: File names are no longer duplicated when registering video books.
+- Playlist: Fixed bug when copying compressed file pages in playlist book.
+
+
+
+
+## 41.3
+(2024-07-14)
+
+#### Changed
+
+- .NET 8.0.7
+- 7z.dll ver 24.07
+
+#### Fixed
+
+- Fixed a bug that sometimes caused an error when switching page filters.
+- Fixed a bug that caused a huge popup with a dummy icon in the page list.
+- Fixed a bug that sometimes caused an error when switching books during animation frame generation.
+
+
+## 41.2
+(2024-05-31)
+
+#### Changed
+
+- Update 7z.dll to ver 24.06
+
+#### Fixed
+
+- Fixed a bug that the focus was not set correctly when switching lists in the thumbnail layout. 
+- Fixed a problem updating the search filter in the PageList.
+
+
+## 41.1
+(2024-05-18)
+
+#### Changed
+
+- Update various libraries
+
+#### Fixed
+
+- Fixed a bug that prevented seamless loops from working.
+- Fixed an issue where automatic background color setting is not reflected when a book is opened.
+
+
+## 41.0
+(2024-05-10)
+
+#### Added
+
+- Added Italian language.
+- Direct editing of language resources. (/Languages/*.restext) 
+- Auto scrolling is implemented. Long press also supported. By default, the wheel button toggles between modes.
+- Added a new command parameter "In panorama mode, all pages are considered as one page" to the N-type scrolling command.
+- Added book move priority setting. (Settings > Move > Book movement priority)
+- Add ability to switch display when page is ready. Suppresses temporary display on page switching. (Settings > Move > Ready to page move)
+- Added the ability to drop the bookshelf location icon and the information icon in the address bar to other apps
+
+#### Changed
+
+- ZIP version places DLL files in the Libraries folder.
+- The current view is maintained as much as possible when switching books.
+- Asynchronous pre-decompression of solid compressed archives
+- Various library updates
+
+#### Fixed
+
+- Fixed a bug where the mouse button would sometimes enter long-press mode even when it was released.
+- Fixed a bug in file manipulation of network folder search results in the bookshelf.
+- Fixed a bug where an incorrect page was sometimes created when a playlist was opened as a book.
+- Fixed a bug that sometimes caused incorrect behavior in bookshelf range selection. 
+- Fixed a bug that prevented the Susie Plug-in all ON/OFF settings from working properly.
+- Fixed incorrect panel display status flag in menus. 
+- Reduced the problem of book thumbnails not being generated when files are added.
+- Fixed a bug that window dragging did not work when a book was closed.
+- Fixed a bug that shortcut archives were not recognized as pages.
+- Fixed an issue where the app would sometimes crash when creating a bookmark folder in the folder tree.
+
+
+
+## 40.8
+(2024-05-01)
+
+#### Security
+
+- Updated to .NET 8.0.4. For more information on this vulnerability, please visit [.NET Blog](https://devblogs.microsoft.com/dotnet/april-2024-updates/).
+- Change explorer path to absolute path.
+
+
+## 40.7
+(2024-02-10)
+
+#### Fixed
+
+- Copy command parameters are now reflected in copying page lists, etc. only for text settings. Fixed the same when dragging.
+
+
+## 40.6
+(2024-02-09)
+
+#### Changed
+
+- Language files pt-BR, zh-Hans updated.
+- "Play/Stop" command now works for video pages and animated images.
+
+#### Fixed
+
+- Corrected timing of address bar button updates.
+- Fixed a bug that search history may not be saved.
+- Fixed a bug that the "Apply image resolution information" setting did not work.
+- Fixed a problem in which the parameters of the copy command were not reflected when copying a page list, etc.
+- Fixed thumbnail bug in file renaming.
+- Error sometimes occurring when deleting bookmarks from search results fixed.
+- Fixed a bug that page history was not functioning properly.
+- Fixed a bug that the playlist registered flag in the context menu was not displayed correctly.
+- Fixed a bug that caused an error when enabling loupe when no book is open.
+- Fixed a bug that caused the loupe to stop functioning when another book was opened with the loupe open.
+
+
+## 40.5
+(2024-01-12)
+
+#### New
+
+- Added "Stretch Tracking" toggle button to the Scale section of the Navigator panel. This function corrects the scale according to the stretch mode for images that are rotated, etc.
+- Added "Stretch" command to apply stretching to scale.
+
+#### Changed
+
+- Changed the display start position setting to selective. Added "Direction dependent, top". (Settings > View operation > Display start position)
+- Script: nv.Config.View.IsViewStartPositionCenter is obsolete. Use nv.Config.View.ViewOrigin instead.
+- Set the default for the "Toggle page mode" command to loop. The default for the mouse gesture to set the page mode is now a dedicated command and behaves the same as before.
+- Switching is now performed when the same stretch mode is specified in the stretch mode specification command, so that the behavior is the same as before.
+- Changed scale calculation method for "Auto stretch window" to be more natural.
+
+#### Fixed
+
+- Fixed a bug that the stretch mode was not applied to the stretch apply button in the navigator.
+- Fixed a bug that sometimes prevented alphabetic word searches.
+- Reduced frame dropping in VLC video.
+- Fixed a bug that sometimes caused application errors with VLC videos.
+- Fixed a bug that rotation information was not reflected correctly in VLC videos.
+- Fixed a bug that disabled track designation when switching repeat settings in VLC video.
+- Fixed a bug in VLC video where media with audio information only was sometimes not determined to be audio.
+
+
+## 40.4
+(2023-12-22)
+
+#### New
+
+- Added encoding setting for ZIP files when the UTF-8 flag is not set.
+
+#### Fixed
+
+- ZIP files now load in UTF-8 when the UTF-8 flag is set.
+- Fixed a bug in which the file exclusion attribute differs between bookshelf and bookshelf search.
+- Fixed a bug where changes were not applied even if the book was reopened after changing archive settings.
+- Fixed a bug where QuickAccess property changes were sometimes not saved.
+- Fixed a bug where the keyboard focus was not following the change of selected items on the bookshelf.
+- Reduces flash when switching books
+
+
+## 40.3
+(2023-12-16)
+
+#### New
+
+- Add "Added dummy page to the first/last page" settings.
+
+#### Fixed
+
+- Fixed a bug that caused an error in copying.
+- Fixed a bug that "Start loupe at standard magnification" of loupe did not work.
+- Fixed an issue with page slider movement in two-page display that caused misalignment when moving from a single page.
+- Corrected the number of pages displayed by the "Last Page" command in the two-page display.
+- Fixed a bug in seamless loop in two-page display where "First/Last page alone" did not work.
+- Adjust button widths on the settings page.
+- Fixed an issue with the number of pages displayed when returning to the previous book in an end-of-page book move.
+- Fixed a bug that sometimes moved two pages when moving one page.
+
+
+## 40.2
+(2023-12-12)
+
+#### New
+
+- Added Portuguese (pt-BR)
+
+#### Fixed
+
+- Fixed a bug that sometimes only one page is displayed even though the display mode is 2-page display mode.
+- Fixed a bug that film centering did not work immediately after the start of filmstrip display.
+- Fixed a bug that history may not be saved.
+- Fixed a bug that the loupe did not work immediately after switching to panorama mode.
+- Fixed a bug that loupe release on page move did not work.
+- Fixed a bug that prevented searching by network path in the bookshelf.
+- Fixed a bug in which the sub archive loading failure skip process did not work.
+- Susie plugin Improved access timeout handling.
+
+
+## 40.1
+(2023-12-06)
+
+#### Fixed
+
+- Fixed a bug that data could not be read if the drag operation "Move (scale dependent)" parameter was specified in the previous version.
+- Fixed a bug that sometimes only one page is displayed even though the display mode is 2-page display mode.
+- Fixed a bug in which exclusion patterns were not applied in bookshelf searches.
+- Corrected a typo in the help.
+
+
+## 40.0
+(2023-12-05)
+
+#### Important
+
+- Windows 10, Windows 11, and 64-bit operating systems only; packages for Windows 7, Windows 8.1, and 32-bit operating systems are not provided after version 40.0.
+- It runs on .NET8. This framework is included as part of the application. There is no need to install it separately.
+- For environments that already have .NET8 installed, we have prepared a package "NeeView40-fd.zip" that does not include. .NET8 runtime for x86 must also be installed when using the Susie plugin.
+- The ZIP version cannot be overwritten and updated because the file structure has changed significantly. Please use Export/Import to migrate your data. The installer version can be updated as is.
+
+#### User data storage location
+
+- The user data storage location for the ZIP version has been consolidated into the "Profile" folder.
+- The default storage location for user data can be specified with the NEEVIEW_PROFILE environment variable.
+
+#### Revamped page display code
+
+The page display program has been reworked to accommodate the implementation of panorama mode. We have tried to match the previous behavior as much as possible, but there is a possibility that the behavior when changing the scale or rotation may have changed.
+
+- Added "Panorama" mode, which connects pages together.
+- The page connection direction can be switched between portrait and landscape.
+- Scroll time settings for various scroll commands are combined into one. (Settings > View operation > Scroll time)
+- Enabled to switch pages with scrolling animation. (Settings > View operation > Page move time)
+
+#### MainView window
+
+The MainView window now functions as a new viewing mode, not just a windowed display.
+
+- Assigned the F12 shortcut to the MainView window switching command.
+- Added setting to display page list in main area when MainView window is displayed. (Settings > Main view)
+- Added auto-hide setting for MainView window. (Settings > Main view)
+- Changed behavior so that the MainView window is minimized with the close button.
+- Minimize when ESC key is pressed in the MainView window.
+- Added "Auto stretch window" to the main view window. (MainView window > Title bar context menu)
+- Added a setting to the page list to move the focus to the main view when a page is selected. (PageList panel > Detail Menu)
+
+#### Enhanced search 
+
+- Search box added to various panels.
+- Added search option. You can now search by tags contained in bookmarks and images. See "Search options help" for details.
+- Individual deletion button of search history added.
+- Added search history size setting. (Settings > General)
+
+#### Enhanced video play
+
+- Added setting to use libVLC (VLC media player) for video play. (Settings > Video)
+- Added setting to display videos as pages. (Settings > Video)
+- Added a control bar to the Navigator panel for control of videos displayed as pages. (Navigator panel > Detail Menu)
+- Use AnimatedImage for GIF animation.
+- Supports PNG animation.
+
+#### Base scale
+
+- Added base scale change command and mouse drag operation.
+- Base scale values are now stored in book units.
+
+#### Auto rotate
+
+- Added forced left rotate and forced right rotate to Auto rotate.
+- Auto rotate settings are now saved per book.
+
+#### Other
+
+- Many bug fixes.
+- App icon change.
+- Changed window maximization correction process. The window frame width setting when maximized has been abolished.
+- Add "$FullPath" to the window title keyword.
+- Added a setting to swap left and right commands by slider direction using the tilt wheel operation.
+- The SusiePlugin folder can now be specified by relative path.
+- Faster operation in panel thumbnail view.
+- Added setting to limit panel width to within the window. (Settings > Panels)
+- Panels can now be connected horizontally; the second and subsequent panels can only be connected in the current orientation.
+- The date/time format of the panel is culture-dependent. This format is configurable. (Settings > General)
+- panels, etc., to accept mouse commands when possible.
+- The natural order was made closer to the Explorer's order.
+- Additional text embedded in PNGs can now be displayed in the "Extras" group of the Information panel.
+- History is now saved automatically.
+- History update date and time are now displayed in the contents view of the history list.
+- Implemented file renaming in the PageList.
+- Supports deleting files in ZIP. To make it work, enable ZIP file editability in the settings.
+- Added original size and keep dot settings to image output.
+- Added "Seamless loop" for end-of-page behavior.
+- Improved accuracy of slideshow timer.
+- Added timer display to slideshow. (Settings > Slideshow)
+- The target of the "Grid" can now be selected between the image and the screen.
+- Redesigned book page. Images are now displayed as they are instead of thumbnails.
+- The text element when copying a file is now basically absent.
+- Playlist items can also be used to copy files.
+- Script: Levels were introduced for compatibility. Changes that do not affect the operation, such as parameter name changes, are now only notified in the console.
+- Script: nv.Playlist.Name Add. The name of the current playlist can be changed by assigning.
+- Script: Added GetMetaValue method to PageAccessor. You can get the meta information of an image.
+
+
+
+
+## 39.5
+(2022-08-11)
+
+#### Fixed
+
+- Restored the SQLite library to the previous one to reduce the error phenomenon when closing the application.
+- Fixed a bug that read-only shortcuts could not be processed.
+- Fixed a bug where loading a book with subfolders could not be canceled.
+- Language file update (zh-TW).
+
+
+## 39.4
+(2022-07-04)
+
+#### New
+- Supports Windows11 snap layouts
+
+#### Fixed
+- Fixed a bug that the bookshelf exclusion filter does not work when adding files
+- Fixed a bug that caused the thumbnail operation to become very slow due to certain operations.
+- Fixed a bug that the coordinates of the image shift when returning from minimization to full screen.
+- Fixed a bug that folder thumbnails are not updated.
+- Fixed a bug that the "Move focus to search box" command may not be focused.
+- Fixed a bug that the "Load subfolders at this location" setting does not work when opening previous or next workbooks.
+- Fixed a bug when cruising from a book loading a subfolder.
+- Fixed a bug when an invalid path is passed to the path specification dialog.
+- Fixed a bug that shortcut files are not recognized when opening playlists as books.
+- Fixed a bug when dragging and dropping shortcuts for multiple archive files.
+- Fixed a bug that the shortcut of UNICODE name could not be recognized.
+- Fixed a bug that may not be reflected even if deleted from the history list.
+- Fixed a bug that an error occurs in the "Prev(Next) playlist item" command when the playlist is "Current book only".
+- Fixed the problem that the brightness may change when applying the resize filter.
+- Script: Fixed a bug where the effects of Patch() would continue to remain.
+- Script: Fixed an issue with large arrays.
+- Correcting typographical errors.
+
+#### Changed
+- Libraries update.
+- Language file update (zh-TW).
+
+
+## 39.3
+(2021-07-17)
+
+####  New
+
+- Language: Supports 中文(中国)
+
+#### Fixed
+
+- Fixed a bug that the taskbar is displayed when returning from minimization to full screen
+- Improved the problem that the taskbar is not displayed when the window is maximized when the taskbar is set to be hidden automatically.
+- Fixed a bug that an error occurs in the "Prev/Next History" command.
+- Fixed a bug where you couldn't rename in a floating panel
+- Fixed initial selection bug when renaming Quick Access
+- Fixed a bug that shortcut keys are not displayed in the context menu of the folder tree
+- Fixed a bug that theme loading fails when the app is placed in the path containing "#"
+
+#### Changed
+
+- Added "Text copy" setting to "Copy file" command parameter. Select the type of text that will be copied to the clipboard.
+
+
+## 39.2
+(2021-06-26)
+
+#### Fixed
+
+- Fixed the main menu not to take focus.
+- Fixed a bug where the layout of the startup help dialog was broken.
+- Fixed tilt wheel operation to be one command. (Settings > Command > Limit tilt wheel operation to one time)
+
+
+## 39.1
+(2021-06-20)
+
+#### Fixed
+
+- Fixed a bug that the scroll type changes to "Diagonal scroll" when the parameter of "Scroll + Prev" command is set.
+- Fixed a bug that could cause blurring when applying the resize filter.
+- Fixed a bug where the README file could not be opened when the application was placed in a path containing multibyte characters or spaces.
+
+
+## 39.0
+(2021-06-18)
+
+#### Important: Integrate Pagemark into Playlist
+
+- Pagemark have been abolished. The previous pagemarks will be carried over as a playlist named "Pagemark".
+- A new playlist panel has been added.
+- You can create multiple playlists and switch between them. You can treat the selected playlist like a Pagemark.
+- The playlists managed in the Playlist panel are limited to those placed in a dedicated folder, but existing playlist files can still be used.
+- In the page mark, it was grouped by book, but in the playlist, it is grouped by folder or compressed file.
+
+#### Important: Renewal of appearance
+
+- Almost all UI controls have been tuned.
+- We increased the theme. The theme color setting in the menu section has been abolished. (Settings > Window > Theme)
+- It is now possible to freely color by creating a custom theme. See [here](https://neelabo.github.io/NeeView/en-us/theme.html) for the theme file format.
+- Themes are now applied to the settings window as well.
+- The font settings have been totally revised. (Settings > Fonts)
+
+#### Important: Information panel renewal
+
+- Changed to display a lot of EXIF information.
+- Enabled to switch the display information when displaying 2 pages.
+
+#### New
+
+- Language: Compatible with Chinese(Taiwan). (Thanks to the provider!)
+- Setting: Added settings for the web browser and text editor to be used. (Settings > General)
+- Setting: Add scripts and custom themes to your export data.
+- Command: The command can be cloned. Right-click the command in the command list of settings and select "Clone" to create it. Only commands with parameters can be cloned.
+- Command: Added "Delete invalid history items".
+- Command: Tilt wheel compatible.
+- MainView: Hover scroll. (Menu > Image > Hover scroll)
+- MainView: Added view margin settings. (Settings > Window > Main view margin)
+- MainView: Corresponds to the loupe by pressing and holding the touch.
+- QuickAccess: Enabled to change the name. You can also change the reference path from the quick access properties.
+- Navigator: Added display area thumbnails. (Detailed menu in the navigator panel)
+- Navigator: Added settings to maintain rotation expansion and contraction even when the book is changed. Change from the context menu of the pushpin button in the navigator panel.
+- PageSlider: Added slider display ON / OFF command. (Menu > View > Slider)
+- PageSlider: Added playlist registration mark display ON / OFF setting for slider. (Setting > Slider)
+- Filmstrip: Display the playlist registration mark. (Setting > Filmstrip)
+- Filmstrip: Implemented context menu on filmstrip.
+- Script: Added error level setting. (Setting > Script > Obsolete member access error level)
+- Script: Changed to monitor changes in the script folder.
+- Script: Added script command argument nv.Args[]. Specify in the command parameter of the script command.
+- Script: Added page switching event OnPageChanged.
+- Script: Added instruction nv.Book.Wait() to wait for page loading to complete.
+- Script: Added nv.Environment
+- Develop: We have prepared a multilingual development environment. See [here](https://github.com/neelabo/NeeView/tree/master/NeeView/Languages) for more information.
+
+#### Fixed
+
+- Setting: Fixed a bug that data is incorrect when using a semicolon in the extension setting.
+- Setting: Fixed a bug that the initialization button of the extension setting does not work.
+- Setting: Fixed a bug that the list box disappears after searching for settings.
+- Other: Fixed a bug that page recording is not working.
+- Window: Fixed a bug that thumbnail images pop up in rare cases.
+- Window: Fixed a bug that the panel may also be hidden when the context menu is closed.
+- Window: Fixed a bug that the display size of certain pop-up thumbnails is incorrect.
+- Window: Fixed multiple selection behavior of list.
+- MainView: Fixed a bug that the aspect ratio may be incorrect when rotating the RAW camera image.
+- Bookshelf: Fixed a bug that the mark indicating the current book may not be displayed.
+- ScriptConsole: Fixed a bug that the application terminates abnormally with "exit".
+- Script: Fixed a bug that the image size was the value after the limit.
+- Script: Fixed a bug that the Enter key input of ShowInputDialog affects the main window.
+- Script: Enabled to get the path with the default path setting.
+
+#### Changed
+
+- Setting: The file operation permission in the initial state has been turned off. (Menu > Option > File operation)
+- Network: When the network access permission setting is OFF, when connecting to the Internet with a Web browser, a confirmation dialog is displayed instead of being invalid.
+- Command: Added command parameters to change N-type scroll to Z-type scroll.
+- Command: Added a stop parameter for line breaks to the N-type scroll command.
+- Command: Added working directory settings for external apps.
+- Command: Added a mode to open from the left page when opening multiple pages with an external application.
+- Command: Added command parameters to import and export commands.
+- Book: Added registration order in page order. Only works for playlists. Otherwise it works as a name order.
+- Window: Added automatic display judgment setting for the overlapping part of the side panel and menus and sliders. (Settings > Panels)
+- Window: The area width of the automatic display judgment is divided into the vertical direction and the horizontal direction. (Settings > Panels)
+- Window: The tab movement of the entire main window has been adjusted from the upper left to the lower right.
+- MainView: Changed to process non-animated GIF as an image.
+- MainView: Added parameters to mouse drag operation. (Settings > Mouse operation)
+- Bookshelf: A search path is also valid for "Home Location".
+- PageList: Changed to open the current book as a selection page by moving the parent.
+- Effect: Expanded custom size function.
+- PageSlider: Added thickness setting. (Settings > Slider)
+- PageSlider: Changed the playlist registration mark display design.
+- Script: Changed to create folders and samples when first opening the script folder.
+
+#### Removed
+
+- Command: Removed "Toggle title bar" command.
+- Panels: Supplemental text opacity setting is abolished. Can be set with a custom theme.
+- Bookshelf: Removed "Save playlist" from the details menu.
+- Filmstrip: Abolished the "Display background" setting. Linked to the opacity of the page slider.
+- Script: Some members have been deleted. See "Obsolete members" in Script Help for more information.
+
+
+&nbsp;
+&nbsp;
+
+----
+
+> [!NOTE]
+> [For older version change logs, see here.](changelog-older)

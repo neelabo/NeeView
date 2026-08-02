@@ -10,41 +10,43 @@
         else if (path.includes("en-us")) {
             return "en-us";
         }
+        else if (path.includes("ru-ru")) {
+            return "ru-ru";
+        }
         else {
             return null;
         }
     }
 
     function setCultureSwitch(culture) {
-        switch (culture) {
-            case "ja-jp":
-                var nextCulture = "en-us";
-                var nextCultureString = "ENGLISH"
-                break;
-            case "en-us":
-                var nextCulture = "ja-jp";
-                var nextCultureString = "日本語"
-                break;
-            default:
-                return;
-        }
+        const cultures = [
+            { code: "ja-jp", label: "日本語" },
+            { code: "en-us", label: "ENGLISH" },
+            { code: "ru-ru", label: "РУССКИЙ" }
+        ];
 
         const path = location.pathname.split('/');
         const index = path.indexOf(culture);
         if (index < 0) return;
-        path[index] = nextCulture;
-        const nextPath = path.join('/');
+
+        const otherLinks = cultures
+            .filter(c => c.code !== culture)
+            .map(c => {
+                const newPath = [...path];
+                newPath[index] = c.code;
+                return `<a href="${newPath.join('/')}">${c.label}</a>`;
+            });
 
         const element = document.getElementById("culture_switch");
         if (element == null) return;
-        element.innerHTML = `<a href=\"${nextPath}\">${nextCultureString}</a>`;
+        element.innerHTML = otherLinks.join(' / ');
     }
 
     function setCultureHome(culture) {
         if (culture == null) return;
         const element = document.getElementById("culture_home");
         if (element == null) return;
-        element.innerHTML = `<a href=\"{{ site.baseurl }}/${culture}/\">HOME</a>`;
+        element.innerHTML = `<a href="{{ site.baseurl }}/${culture}/">HOME</a>`;
     }
 
     function setCultureElement() {

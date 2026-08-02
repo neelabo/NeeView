@@ -15,4 +15,10 @@ defaults:
   values:
     language: ja-JP
     description: フォルダ内の画像を本のように閲覧できる画像ビューア
+- scope:
+    path: 'ru-ru'
+  values:
+    language: ru-RU
+    description: Просмотрщик изображений, позволяющий просматривать изображения в папках как книгу.
+
 
