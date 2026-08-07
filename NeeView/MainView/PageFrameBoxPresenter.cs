@@ -57,8 +57,10 @@ namespace NeeView
         private readonly BookHub _bookHub;
         private readonly BookShareContext _shareContext;
         private bool _isLoading;
+        private string? _loadingPath;
         private string? _emptyMessage;
         private readonly ReferenceCounter _loadRequestCount = new();
+        private readonly FlagMonitor<LoadingStateFlags> _loadingMonitor = new();
         private CancellationTokenSource _openCancellationTokenSource = new();
 
         private List<Page> _viewPages = new();
@@ -80,10 +82,13 @@ namespace NeeView
 
             _shareContext = new BookShareContext(_config);
 
+            _bookHub.IsLoadingChanged += BookHub_IsLoadingChanged;
             _bookHub.LoadRequesting += BookHub_LoadRequesting;
             _bookHub.LoadRequested += BookHub_LoadRequested;
             _bookHub.BookChanging += BookHub_BookChanging;
             _bookHub.BookChanged += BookHub_BookChanged;
+
+            _loadingMonitor.Changed += LoadingMonitor_Changed;
 
             // アプリ終了前の開放予約
             ApplicationDisposer.Current.Add(this);
@@ -123,6 +128,9 @@ namespace NeeView
         // ロード中通知
         [Subscribable]
         public event EventHandler<BookPathEventArgs>? Loading;
+
+        [Subscribable]
+        public event EventHandler<BookLoadingChangedEventArgs>? IsLoadingChanged;
 
         [Subscribable]
         public event EventHandler<ViewPageChangedEventArgs>? ViewPageChanged;
@@ -230,6 +238,23 @@ namespace NeeView
             }
         }
 
+        private void LoadingMonitor_Changed(object? sender, FlagMonitorChangedEventArgs<LoadingStateFlags> e)
+        {
+            if (e.IsActiveChanged)
+            {
+                _isLoading = e.IsActive;
+                IsLoadingChanged?.Invoke(this, new BookLoadingChangedEventArgs(e.IsActive));
+            }
+        }
+
+        private void BookHub_IsLoadingChanged(object? sender, BookLoadingChangedEventArgs e)
+        {
+            AppDispatcher.BeginInvoke(() =>
+            {
+                _loadingMonitor.SetFlag(LoadingStateFlags.IsLoading, e.IsLoading);
+            });
+        }
+
         private void BookHub_LoadRequesting(object? sender, BookPathEventArgs e)
         {
             _loadRequestCount.Increment();
@@ -258,6 +283,7 @@ namespace NeeView
             AppDispatcher.BeginInvoke(() =>
             {
                 SetLoading(e.Address);
+                _loadingMonitor.SetFlag(LoadingStateFlags.IsChanging);
                 PageFrameBoxChanging?.Invoke(this, new PageFrameBoxChangingEventArgs(null, e));
             });
         }
@@ -278,6 +304,7 @@ namespace NeeView
                     EmptyMessage = null;
                     await OpenAsync(_bookHub.GetCurrentBook(), token);
                     SetLoading(null);
+                    _loadingMonitor.ClearFlag(LoadingStateFlags.IsChanging);
                     EmptyMessage = e.EmptyMessage;
                     PageFrameBoxChanged?.Invoke(this, new PageFrameBoxChangedEventArgs(_box?.Box, e));
                     RaiseViewPageChanged();
@@ -290,9 +317,11 @@ namespace NeeView
 
         private void SetLoading(string? address)
         {
-            _isLoading = !string.IsNullOrEmpty(address);
-            OnPropertyChanged(nameof(IsLoading));
-            Loading?.Invoke(this, new BookPathEventArgs(address));
+            if (_loadingPath != address)
+            {
+                _loadingPath = address;
+                Loading?.Invoke(this, new BookPathEventArgs(address));
+            }
         }
 
         private async Task OpenAsync(Book? book, CancellationToken token)
@@ -743,6 +772,14 @@ namespace NeeView
         }
 
         #endregion
+
+        [Flags]
+        private enum LoadingStateFlags
+        {
+            None = 0,
+            IsLoading = 1 << 0,
+            IsChanging = 1 << 1,
+        }
     }
 
 }

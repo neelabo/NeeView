@@ -75,6 +75,10 @@ namespace NeeView
         [Subscribable]
         public event EventHandler<BookChangedEventArgs>? BookChanged;
 
+        // ロード中状態通知
+        [Subscribable]
+        public event EventHandler<BookLoadingChangedEventArgs>? IsLoadingChanged;
+
         // ロードリクエスト開始
         [Subscribable]
         public event EventHandler<BookPathEventArgs>? LoadRequesting;
@@ -138,6 +142,7 @@ namespace NeeView
                 if (SetProperty(ref _isLoading, value))
                 {
                     BookSettings.Current.CanEdit = !_isLoading;
+                    IsLoadingChanged?.Invoke(this, new BookLoadingChangedEventArgs(_isLoading));
                 }
             }
         }

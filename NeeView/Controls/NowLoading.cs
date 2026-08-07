@@ -14,8 +14,8 @@ namespace NeeView
 
         private NowLoading()
         {
-            PageFrameBoxPresenter.Current.Loading +=
-                (s, e) => IsDisplayNowLoading = e.Path != null;
+            PageFrameBoxPresenter.Current.SubscribeIsLoadingChanged(
+                (s, e) => IsDisplayNowLoading = e.IsLoading);
         }
 
         /// <summary>
