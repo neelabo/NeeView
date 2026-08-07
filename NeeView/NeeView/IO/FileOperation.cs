@@ -173,10 +173,10 @@ namespace NeeView.IO
         {
             var fileOp = CreateFileOperation(owner);
 
-            var flags = FILEOPERATION_FLAGS.FOF_NOCONFIRMATION;
+            var flags = FILEOPERATION_FLAGS.FOF_ALLOWUNDO | FILEOPERATION_FLAGS.FOF_NOCONFIRMATION;
             if (wantNukeWarning)
             {
-                flags |= FILEOPERATION_FLAGS.FOF_ALLOWUNDO | FILEOPERATION_FLAGS.FOF_WANTNUKEWARNING;
+                flags |= FILEOPERATION_FLAGS.FOF_WANTNUKEWARNING;
             }
 
             fileOp.SetOperationFlags(flags);
