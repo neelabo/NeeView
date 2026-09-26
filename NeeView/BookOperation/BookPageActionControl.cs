@@ -231,26 +231,63 @@ namespace NeeView
             await parameter.TryCopyAsync(entries, token);
         }
 
-        // NOTE: parameter は未使用
+        /// <summary>
+        /// 目标文件夹移动是否可执行。
+        /// </summary>
+        /// <param name="parameter">目标文件夹</param>
+        /// <param name="multiPagePolicy">当前页面的选择策略</param>
+        /// <returns>目标有效、当前页可移动且服务空闲时返回 true</returns>
         public bool CanMoveToFolder(DestinationFolder parameter, MultiPagePolicy multiPagePolicy)
         {
             var items = CollectPages(_book, multiPagePolicy);
             return Config.Current.System.IsFileWriteAccessEnabled
+                && !DestinationMoveService.Current.IsBusy
+                && parameter.IsValid()
                 && items != null
                 && items.Any()
-                && items.All(e => e.ArchiveEntry.IsFileSystem && e.ArchiveEntry.Archive is not PlaylistArchive);
+                && items.All(IsOrdinaryFolderImage);
         }
 
+        /// <summary>
+        /// 异步启动目标文件夹移动；忙碌时服务会立即拒绝而不会排队。
+        /// </summary>
+        /// <param name="parameter">目标文件夹</param>
+        /// <param name="multiPagePolicy">当前页面的选择策略</param>
         public void MoveToFolder(DestinationFolder parameter, MultiPagePolicy multiPagePolicy)
         {
             _ = MoveToFolderAsync(parameter, multiPagePolicy, CancellationToken.None);
         }
 
+        /// <summary>
+        /// 移动当前真实文件并将成功结果写入会话级撤销历史。
+        /// </summary>
+        /// <param name="parameter">目标文件夹</param>
+        /// <param name="multiPagePolicy">当前页面的选择策略</param>
+        /// <param name="token">取消令牌</param>
+        /// <returns>文件移动流程完成时结束的异步任务</returns>
         public async Task MoveToFolderAsync(DestinationFolder parameter, MultiPagePolicy multiPagePolicy, CancellationToken token)
         {
-            var pages = CollectPages(_book, multiPagePolicy).Where(e => e.ArchiveEntry.IsFileSystem);
-            var paths = pages.Select(e => e.GetFilePlace()).WhereNotNull().Distinct().ToList();
-            await parameter.TryMoveAsync(paths, token);
+            var pages = CollectPages(_book, multiPagePolicy);
+            if (pages.Count == 0 || pages.Any(e => !IsOrdinaryFolderImage(e))) return;
+
+            // 这里只使用已验证的真实文件路径，避免把媒体、快捷方式或归档本体加入移动历史。
+            var paths = pages.Select(e => e.ArchiveEntry.EntityPath).WhereNotNull().Distinct().ToList();
+            await DestinationMoveService.Current.TryMoveAsync(paths, parameter.Path, token);
+        }
+
+        /// <summary>
+        /// 判断页面是否为直接来自文件夹的真实图片文件。
+        /// </summary>
+        /// <param name="page">待检查的当前页面。</param>
+        /// <returns>普通图片存在于文件系统且不是快捷方式时返回 true。</returns>
+        private static bool IsOrdinaryFolderImage(Page page)
+        {
+            return page.ArchiveEntry is FolderArchiveEntry entry
+                && entry.Archive is FolderArchive
+                && entry.Link is null
+                && entry.IsImage(includeMedia: false)
+                && entry.EntityPath is { } path
+                && FileIO.FileExists(path);
         }
 
         public bool CanOpenApplication(IExternalApp parameter, MultiPagePolicy multiPagePolicy)

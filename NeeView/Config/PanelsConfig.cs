@@ -26,6 +26,10 @@ namespace NeeView
         [DefaultEquality] private bool _isLimitPanelWidth;
         [DefaultEquality] private bool? _isVisibleItemsCount;
         [DefaultEquality] private bool _isTextSearchEnabled;
+        [DefaultEquality] private int _destinationMoveHistoryCapacity = 300;
+        [DefaultEquality] private bool _isDestinationFolderCopyMode;
+        [DefaultEquality] private bool _isDestinationFolderAutoRefreshEnabled = true;
+        [DefaultEquality] private double _destinationFolderSectionRatio = 0.5;
         [DefaultEquality] private double _conflictTopMargin = 32.0;
         [DefaultEquality] private double _conflictBottomMargin = 20.0;
 
@@ -157,6 +161,36 @@ namespace NeeView
             set { SetProperty(ref _isTextSearchEnabled, value); }
         }
 
+        /// <summary>
+        /// セッション中に保持する移動履歴の最大数を取得または設定する。0 は履歴を無効にする。
+        /// </summary>
+        [PropertyRange(0, 1000, TickFrequency = 50, IsEditable = true)]
+        public int DestinationMoveHistoryCapacity
+        {
+            get { return _destinationMoveHistoryCapacity; }
+            set { SetProperty(ref _destinationMoveHistoryCapacity, Math.Clamp(value, 0, 1000)); }
+        }
+
+        /// <summary>
+        /// 获取或设置目标文件夹面板和内置数字键是否使用复制模式；默认使用移动模式。
+        /// </summary>
+        [PropertyMember]
+        public bool IsDestinationFolderCopyMode
+        {
+            get { return _isDestinationFolderCopyMode; }
+            set { SetProperty(ref _isDestinationFolderCopyMode, value); }
+        }
+
+        /// <summary>
+        /// 获取或设置切换当前图片所在目录时是否自动刷新直接子文件夹；不进行定时轮询。
+        /// </summary>
+        [PropertyMember]
+        public bool IsDestinationFolderAutoRefreshEnabled
+        {
+            get { return _isDestinationFolderAutoRefreshEnabled; }
+            set { SetProperty(ref _isDestinationFolderAutoRefreshEnabled, value); }
+        }
+
         [PropertyMember]
         public double ConflictTopMargin
         {
@@ -212,6 +246,24 @@ namespace NeeView
         [ObjectMergeReferenceCopy]
         [DefaultEquality]
         public LayoutPanelManagerMemento? Layout { get; set; }
+
+        /// <summary>
+        /// 获取或设置目标文件夹面板是否已经完成首次布局补全。
+        /// </summary>
+        [PropertyMapIgnore]
+        [ObjectMergeReferenceCopy]
+        [DefaultEquality]
+        public bool IsDestinationFolderPanelInitialized { get; set; }
+
+        /// <summary>
+        /// 获取或设置手动目标文件夹区域在两组列表中所占的高度比例。
+        /// </summary>
+        [PropertyMapIgnore]
+        public double DestinationFolderSectionRatio
+        {
+            get { return _destinationFolderSectionRatio; }
+            set { SetProperty(ref _destinationFolderSectionRatio, double.IsFinite(value) ? Math.Clamp(value, 0.1, 0.9) : 0.5); }
+        }
 
         #endregion HiddenParameters
 

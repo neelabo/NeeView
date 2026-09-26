@@ -1,0 +1,6 @@
+// @name Move to destination 2
+// @description 将当前主图移动到第 2 个目标文件夹。
+// @shortCutKey 2
+
+// 索引遵循当前“目标文件夹”配置中的顺序。
+nv.Command.MoveToFolderAs.Patch({"Index": 2, "MultiPagePolicy": "Once"}).Execute()

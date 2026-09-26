@@ -1,0 +1,10 @@
+// @name Classify to destination 4
+// @description 按面板模式将当前主图移动或复制到第 4 个目标文件夹。
+// @shortCutKey 4
+
+// fork 专用脚本读取持久化模式，并按当前目标文件夹顺序选择第 4 项。
+if (nv.Config.Panels.IsDestinationFolderCopyMode) {
+    nv.Command.CopyToFolderAs.Patch({"Index": 4, "MultiPagePolicy": "Once"}).Execute()
+} else {
+    nv.Command.MoveToFolderAs.Patch({"Index": 4, "MultiPagePolicy": "Once"}).Execute()
+}

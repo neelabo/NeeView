@@ -223,6 +223,7 @@ ModelManifest.xml
 /MakePackage/*.msix*
 /MakePackage/*.appx*
 /MakePackage/_*
+/MakePackage/Deliverables/
 /MakePackage/Appx/_*
 /MakePackage/Appx/resources.pri.xml
 /MakePackage/Appx/Icons/Png-*
