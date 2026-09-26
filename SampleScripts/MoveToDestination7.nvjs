@@ -1,0 +1,6 @@
+// @name Move to destination 7
+// @description Move the current main image to destination folder 7.
+// @shortCutKey 7
+
+// The index follows the current Destination Folders order.
+nv.Command.MoveToFolderAs.Patch({"Index": 7, "MultiPagePolicy": "Once"}).Execute()

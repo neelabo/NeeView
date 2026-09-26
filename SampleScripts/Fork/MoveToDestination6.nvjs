@@ -1,0 +1,10 @@
+// @name Classify to destination 6
+// @description Move or copy the current main image to destination 6, following panel mode.
+// @shortCutKey 6
+
+// Fork-only script reads the saved mode and selects destination 6 in the current order.
+if (nv.Config.Panels.IsDestinationFolderCopyMode) {
+    nv.Command.CopyToFolderAs.Patch({"Index": 6, "MultiPagePolicy": "Once"}).Execute()
+} else {
+    nv.Command.MoveToFolderAs.Patch({"Index": 6, "MultiPagePolicy": "Once"}).Execute()
+}

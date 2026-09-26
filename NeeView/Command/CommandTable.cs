@@ -119,6 +119,18 @@ namespace NeeView
                 new PasteCommand(),
                 new CopyToFolderAsCommand(),
                 new MoveToFolderAsCommand(),
+                // Native numbered commands keep 1-9 available even when the optional script folder is disabled.
+                new MoveToFolderAsCommand(1),
+                new MoveToFolderAsCommand(2),
+                new MoveToFolderAsCommand(3),
+                new MoveToFolderAsCommand(4),
+                new MoveToFolderAsCommand(5),
+                new MoveToFolderAsCommand(6),
+                new MoveToFolderAsCommand(7),
+                new MoveToFolderAsCommand(8),
+                new MoveToFolderAsCommand(9),
+                new UndoDestinationMoveCommand(),
+                new RedoDestinationMoveCommand(),
 
                 new ExportImageAsCommand(),
                 new ExportImageCommand(),

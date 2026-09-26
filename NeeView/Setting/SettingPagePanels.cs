@@ -59,6 +59,12 @@ namespace NeeView.Setting
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Panels, nameof(PanelsConfig.IsLimitPanelWidth))));
             section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Panels, nameof(PanelsConfig.IsTextSearchEnabled))));
             this.Items.Add(section);
+
+            section = new SettingItemSection(TextResources.GetString("DestinationFolderPanel.Title"));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Panels, nameof(PanelsConfig.IsDestinationFolderCopyMode))));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Panels, nameof(PanelsConfig.IsDestinationFolderAutoRefreshEnabled))));
+            section.Children.Add(new SettingItemProperty(PropertyMemberElement.Create(Config.Current.Panels, nameof(PanelsConfig.DestinationMoveHistoryCapacity))));
+            this.Items.Add(section);
         }
     }
 

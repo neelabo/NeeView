@@ -26,6 +26,10 @@ namespace NeeView
         [DefaultEquality] private bool _isLimitPanelWidth;
         [DefaultEquality] private bool? _isVisibleItemsCount;
         [DefaultEquality] private bool _isTextSearchEnabled;
+        [DefaultEquality] private int _destinationMoveHistoryCapacity = 300;
+        [DefaultEquality] private bool _isDestinationFolderCopyMode;
+        [DefaultEquality] private bool _isDestinationFolderAutoRefreshEnabled = true;
+        [DefaultEquality] private double _destinationFolderSectionRatio = 0.5;
         [DefaultEquality] private double _conflictTopMargin = 32.0;
         [DefaultEquality] private double _conflictBottomMargin = 20.0;
 
@@ -157,6 +161,36 @@ namespace NeeView
             set { SetProperty(ref _isTextSearchEnabled, value); }
         }
 
+        /// <summary>
+        /// セッション中に保持する移動履歴の最大数を取得または設定する。0 は履歴を無効にする。
+        /// </summary>
+        [PropertyRange(0, 1000, TickFrequency = 50, IsEditable = true)]
+        public int DestinationMoveHistoryCapacity
+        {
+            get { return _destinationMoveHistoryCapacity; }
+            set { SetProperty(ref _destinationMoveHistoryCapacity, Math.Clamp(value, 0, 1000)); }
+        }
+
+        /// <summary>
+        /// Get or set whether the destination panel and built-in number shortcuts use copy mode.
+        /// </summary>
+        [PropertyMember]
+        public bool IsDestinationFolderCopyMode
+        {
+            get { return _isDestinationFolderCopyMode; }
+            set { SetProperty(ref _isDestinationFolderCopyMode, value); }
+        }
+
+        /// <summary>
+        /// Get or set whether immediate child folders refresh on directory changes, without polling.
+        /// </summary>
+        [PropertyMember]
+        public bool IsDestinationFolderAutoRefreshEnabled
+        {
+            get { return _isDestinationFolderAutoRefreshEnabled; }
+            set { SetProperty(ref _isDestinationFolderAutoRefreshEnabled, value); }
+        }
+
         [PropertyMember]
         public double ConflictTopMargin
         {
@@ -212,6 +246,24 @@ namespace NeeView
         [ObjectMergeReferenceCopy]
         [DefaultEquality]
         public LayoutPanelManagerMemento? Layout { get; set; }
+
+        /// <summary>
+        /// Get or set whether the destination-folder panel has completed its one-time layout migration.
+        /// </summary>
+        [PropertyMapIgnore]
+        [ObjectMergeReferenceCopy]
+        [DefaultEquality]
+        public bool IsDestinationFolderPanelInitialized { get; set; }
+
+        /// <summary>
+        /// 获取或设置手动目标文件夹区域在两组列表中所占的高度比例。
+        /// </summary>
+        [PropertyMapIgnore]
+        public double DestinationFolderSectionRatio
+        {
+            get { return _destinationFolderSectionRatio; }
+            set { SetProperty(ref _destinationFolderSectionRatio, double.IsFinite(value) ? Math.Clamp(value, 0.1, 0.9) : 0.5); }
+        }
 
         #endregion HiddenParameters
 

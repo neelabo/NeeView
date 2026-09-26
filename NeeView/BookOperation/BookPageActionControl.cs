@@ -231,26 +231,63 @@ namespace NeeView
             await parameter.TryCopyAsync(entries, token);
         }
 
-        // NOTE: parameter は未使用
+        /// <summary>
+        /// Determine whether the current pages can be moved to a destination folder.
+        /// </summary>
+        /// <param name="parameter">Destination folder.</param>
+        /// <param name="multiPagePolicy">Page selection policy.</param>
+        /// <returns>True when the destination is valid, every selected page is movable, and the service is idle.</returns>
         public bool CanMoveToFolder(DestinationFolder parameter, MultiPagePolicy multiPagePolicy)
         {
             var items = CollectPages(_book, multiPagePolicy);
             return Config.Current.System.IsFileWriteAccessEnabled
+                && !DestinationMoveService.Current.IsBusy
+                && parameter.IsValid()
                 && items != null
                 && items.Any()
-                && items.All(e => e.ArchiveEntry.IsFileSystem && e.ArchiveEntry.Archive is not PlaylistArchive);
+                && items.All(IsOrdinaryFolderImage);
         }
 
+        /// <summary>
+        /// Start a destination-folder move without queueing another request while busy.
+        /// </summary>
+        /// <param name="parameter">Destination folder.</param>
+        /// <param name="multiPagePolicy">Page selection policy.</param>
         public void MoveToFolder(DestinationFolder parameter, MultiPagePolicy multiPagePolicy)
         {
             _ = MoveToFolderAsync(parameter, multiPagePolicy, CancellationToken.None);
         }
 
+        /// <summary>
+        /// Move the current files and add successful results to the session undo history.
+        /// </summary>
+        /// <param name="parameter">Destination folder.</param>
+        /// <param name="multiPagePolicy">Page selection policy.</param>
+        /// <param name="token">Cancellation token.</param>
+        /// <returns>A task that completes when the move finishes.</returns>
         public async Task MoveToFolderAsync(DestinationFolder parameter, MultiPagePolicy multiPagePolicy, CancellationToken token)
         {
-            var pages = CollectPages(_book, multiPagePolicy).Where(e => e.ArchiveEntry.IsFileSystem);
-            var paths = pages.Select(e => e.GetFilePlace()).WhereNotNull().Distinct().ToList();
-            await parameter.TryMoveAsync(paths, token);
+            var pages = CollectPages(_book, multiPagePolicy);
+            if (pages.Count == 0 || pages.Any(e => !IsOrdinaryFolderImage(e))) return;
+
+            // Only verified file paths are recorded so media, links, and archive containers never enter move history.
+            var paths = pages.Select(e => e.ArchiveEntry.EntityPath).WhereNotNull().Distinct().ToList();
+            await DestinationMoveService.Current.TryMoveAsync(paths, parameter.Path, token);
+        }
+
+        /// <summary>
+        /// Determine whether a page is a real image directly contained in a folder.
+        /// </summary>
+        /// <param name="page">Page to validate.</param>
+        /// <returns>True when the page is an existing ordinary image and is not a link.</returns>
+        private static bool IsOrdinaryFolderImage(Page page)
+        {
+            return page.ArchiveEntry is FolderArchiveEntry entry
+                && entry.Archive is FolderArchive
+                && entry.Link is null
+                && entry.IsImage(includeMedia: false)
+                && entry.EntityPath is { } path
+                && FileIO.FileExists(path);
         }
 
         public bool CanOpenApplication(IExternalApp parameter, MultiPagePolicy multiPagePolicy)

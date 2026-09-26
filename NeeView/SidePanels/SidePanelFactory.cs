@@ -24,6 +24,7 @@ namespace NeeView
                 nameof(BookmarkPanel) => new BookmarkPanel(BookmarkFolderList.Current),
                 nameof(PageListPanel) => new PageListPanel(PageList.Current),
                 nameof(PlaylistPanel) => new PlaylistPanel(PlaylistHub.Current),
+                nameof(DestinationFolderPanel) => new DestinationFolderPanel(),
                 _ => throw new NotSupportedException(),
             };
         }

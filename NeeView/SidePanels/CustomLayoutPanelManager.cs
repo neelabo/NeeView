@@ -48,7 +48,9 @@ namespace NeeView
                     new LayoutDockPanelLayout(Orientation.Vertical, [nameof(ImageEffectPanel)]),
                     new LayoutDockPanelLayout(Orientation.Vertical, [nameof(BookmarkPanel)]),
                     new LayoutDockPanelLayout(Orientation.Vertical, [nameof(PlaylistPanel)]),
-                ]
+                    new LayoutDockPanelLayout(Orientation.Vertical, [nameof(DestinationFolderPanel)]),
+                ],
+                SelectedItem = nameof(DestinationFolderPanel)
             }
         };
 
@@ -256,6 +258,13 @@ namespace NeeView
             if (_initialized)
             {
                 Restore(Config.Current.Panels.Layout);
+
+                // Open once for old layouts, then preserve the user's saved hidden or floating state.
+                if (!Config.Current.Panels.IsDestinationFolderPanelInitialized)
+                {
+                    OpenDock(nameof(DestinationFolderPanel), false);
+                    Config.Current.Panels.IsDestinationFolderPanelInitialized = true;
+                }
             }
         }
 
